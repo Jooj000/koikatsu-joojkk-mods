@@ -1,0 +1,63 @@
+# Builds KK_CampusLife.dll, KK_HMaleWardrobe.dll and KK_SchoolOptimizer.dll with the Roslyn csc from VS 2019.
+# Usage:  powershell -ExecutionPolicy Bypass -File build.ps1 [-Install]
+#   -Install  copies the DLLs (and the CampusLife data folder) into the game's
+#             BepInEx\plugins\Joojkk\ folder.
+#   -Game     the Koikatsu folder (with Koikatu_Data and BepInEx);  -Csc  the Roslyn csc.exe to use.
+param([switch]$Install, [switch]$Dev,
+      [string]$Game = 'E:\SteamLibrary\steamapps\settings\KK',
+      [string]$Csc = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Roslyn\csc.exe')
+
+$ErrorActionPreference = 'Stop'
+$root    = Split-Path -Parent $MyInvocation.MyCommand.Path
+$game    = $Game
+$csc     = $Csc
+$managed = Join-Path $game 'Koikatu_Data\Managed'
+$core    = Join-Path $game 'BepInEx\core'
+$plugins = Join-Path $game 'BepInEx\plugins'
+$out     = Join-Path $root 'dist'
+New-Item -ItemType Directory -Force $out | Out-Null
+
+$refs = @(
+  "$managed\mscorlib.dll", "$managed\System.dll", "$managed\System.Core.dll", "$managed\System.Xml.dll",
+  "$managed\UnityEngine.dll", "$managed\UnityEngine.UI.dll",
+  "$managed\Assembly-CSharp.dll", "$managed\Assembly-CSharp-firstpass.dll",
+  "$managed\TextMeshPro-1.0.55.56.0b12.dll",
+  "$core\BepInEx.dll", "$core\0Harmony.dll",
+  "$plugins\KKAPI.dll", "$plugins\KK_BepisPlugins\ExtensibleSaveFormat.dll"
+) | ForEach-Object { "-r:$_" }
+
+# BepInEx rejects config sections/keys containing = \n \t \ " ' [ ] and the plugin then
+# fails in Awake. Check every B(c, section, "key", ...) and Config.Bind(section, "key", ...).
+$bad = @()
+Get-ChildItem -Recurse -Filter *.cs (Join-Path $root 'src') | ForEach-Object {
+  $text = [IO.File]::ReadAllText($_.FullName)
+  foreach ($m in [regex]::Matches($text, '(?:\bB\(c,\s*[^,]+|Config\.Bind\([^,]+),\s*"((?:[^"\\]|\\.)*)"')) {
+    if ($m.Groups[1].Value -match "[=\t\\""'\[\]]") { $bad += "$($_.Name): $($m.Groups[1].Value)" }
+  }
+}
+if ($bad.Count -gt 0) { $bad | ForEach-Object { Write-Host "Invalid config key: $_" }; throw 'Config key check failed' }
+
+function Build($name) {
+  $src = Get-ChildItem -Recurse -Filter *.cs (Join-Path $root "src\$name") | ForEach-Object { $_.FullName }
+  $dll = Join-Path $out "$name.dll"
+  $cscArgs = @('-nologo', '-noconfig', '-nostdlib+', '-target:library', '-optimize+', '-debug-',
+            '-langversion:7.3', '-warn:4', '-nowarn:1591,0649,0169,0414,0618',
+            "-out:$dll") + $refs + $src
+  if ($Dev) { $cscArgs += '-define:DEBUG_TOOLS' }
+  & $csc @cscArgs
+  if ($LASTEXITCODE -ne 0) { throw "Build failed: $name" }
+  Write-Host "Built $dll"
+}
+
+Build 'KK_CampusLife'
+Build 'KK_HMaleWardrobe'
+Build 'KK_SchoolOptimizer'
+
+if ($Install) {
+  $dest = Join-Path $plugins 'Joojkk'
+  New-Item -ItemType Directory -Force $dest | Out-Null
+  Copy-Item (Join-Path $out 'KK_CampusLife.dll') $dest -Force
+  Copy-Item (Join-Path $out 'KK_HMaleWardrobe.dll') $dest -Force
+  Copy-Item (Join-Path $out 'KK_SchoolOptimizer.dll') $dest -Force
+  Write-Host "Installed to $dest"
+}

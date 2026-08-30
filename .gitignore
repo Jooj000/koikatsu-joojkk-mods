@@ -1,0 +1,10 @@
+# Build output and local research (decompiled game/plugin code is never published)
+dist/
+research/
+obj/
+bin/
+*.user
+*.suo
+.vs/
+# Local helper for session transcripts
+tools/extract_commands.py
