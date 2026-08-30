@@ -316,8 +316,9 @@ namespace Joojkk.CampusLife
             {
                 var b = GameUi.Block(_right, "recent");
                 Header(b, "Recently closed", false);
-                foreach (var r in recent)
+                foreach (var r in recent.Take(5))
                     Line(b, (r.State == RequestState.Done ? "Done: " : "Missed: ") + r.Title, 19f, r.State == RequestState.Done ? GameUi.Green : GameUi.Warn);
+                if (recent.Count > 5) Line(b, "+" + (recent.Count - 5) + " more in the Calendar tab.", 18f, GameUi.Dim);
             }
         }
 
@@ -372,8 +373,14 @@ namespace Joojkk.CampusLife
                 var map = GirlInfo.CurrentMap(h);
                 where = GirlInfo.IsSpawned(h) && map >= 0 ? "She is at: " + Places.MapLabel(map) : "She isn't at school right now.";
             }
-            Line(b, "<color=" + Hex(GameUi.Dim) + ">How:</color> " + Board.HowTo(r) + "   <color=" + Hex(GameUi.Dim) + ">When:</color> " + StatusUi.DueLabel(r), 18f);
-            Line(b, "<color=" + Hex(GameUi.Dim) + ">Reward:</color> " + r.Reward.Describe() + (where == "" ? "" : "   <color=" + Hex(GameUi.Dim) + ">" + where + "</color>"), 18f);
+            // One line of facts under the text; "How" only when it is more than talking to her.
+            var dim = "<color=" + Hex(GameUi.Dim) + ">";
+            var facts = new List<string>();
+            if (r.Kind != RequestKind.Talk || r.Source == "arc") facts.Add(dim + "How:</color> " + Board.HowTo(r));
+            facts.Add(dim + "When:</color> " + StatusUi.DueLabel(r));
+            facts.Add(dim + "Reward:</color> " + r.Reward.Describe());
+            if (where != "") facts.Add(dim + where + "</color>");
+            Line(b, string.Join("   ", facts.ToArray()), 18f);
         }
 
         // ---------------- Calendar ----------------
@@ -535,9 +542,9 @@ namespace Joojkk.CampusLife
 
             var e = GameUi.Block(_left, "energy");
             Header(e, "Energy, time and reputation");
-            Para(e, "Energy", "spent on activities (study, training, jobs, club work); refills every morning. Naps, rest, hearty lunches, energy drinks and a girl at devotion level 2 restore it.");
-            Para(e, "Time", "a free period lasts " + Mathf.RoundToInt(500f * Cfg.PeriodLength.Value) + " s while you walk around. Activities use time when they end; menus, conversations and teleports from the menu use none.");
-            Para(e, "Reputation", "raises what requests pay (+" + s.Reputation + "% now), adds a daily request at 60 and makes fundraising pay more. Helping people raises it, being seen in odd places lowers it.");
+            Para(e, "Energy", "for activities; refills every morning. Naps, rest, hearty lunches, energy drinks and devotion level 2 restore it.");
+            Para(e, "Time", "a free period lasts " + Mathf.RoundToInt(500f * Cfg.PeriodLength.Value) + " s of walking around. Activities take time; menus, talks and menu teleports don't.");
+            Para(e, "Reputation", "+" + s.Reputation + "% on request pay now, a daily request at 60, better fundraising. Helping raises it; odd places lower it.");
 
             if (Cfg.DevotionEnabled.Value)
             {
@@ -569,14 +576,14 @@ namespace Joojkk.CampusLife
 
             var r = GameUi.Block(_right, "requests");
             Header(r, "Requests and stories");
-            Para(r, "Board", "requests appear once you know about them: she tells you (Let her talk), a friend tells you, or you see it happen. The shape next to a request is the mark on her minimap icon and card.");
-            Para(r, "Stories", "every school day one story heroine with a pending event is chosen; the others walk around school like everyone else.");
-            Para(r, "Gifts", "a gift she likes beats any chat and adds devotion. Learn likes by asking about her day or reading magazines in the library.");
+            Para(r, "Board", "requests show once you learn of them (she or a friend tells you, or you see it). Its shape is the mark on her minimap icon.");
+            Para(r, "Stories", "one story heroine with a pending event is chosen each school day.");
+            Para(r, "Gifts", "a liked gift beats any chat and adds devotion. Learn likes by asking about her day or from library magazines.");
 
             var a = GameUi.Block(_right, "activities");
             Header(a, "Activities");
-            Para(a, "Spots", "every activity has its own icon at its place (next to the game's desks and training corners). Using it plays the game's animation, or a short black screen for chores and jobs. \"Do it\" in the Activities tab takes you there.");
-            Para(a, "Moving a spot", "turn on 11. Position tools > Show position readout, stand where you want it and press \"Spot here\" in the Activities tab.");
+            Para(a, "Spots", "each activity has an icon at its place and plays the game's animation (or a short black screen). \"Do it\" takes you there.");
+            Para(a, "Moving a spot", "11. Position tools > Show position readout, stand there and press \"Spot here\".");
         }
 
         // ---------------- School store ----------------
