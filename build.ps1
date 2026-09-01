@@ -59,5 +59,9 @@ if ($Install) {
   Copy-Item (Join-Path $out 'KK_CampusLife.dll') $dest -Force
   Copy-Item (Join-Path $out 'KK_HMaleWardrobe.dll') $dest -Force
   Copy-Item (Join-Path $out 'KK_SchoolOptimizer.dll') $dest -Force
+  # Painted event backgrounds.
+  $bgDest = Join-Path $dest 'backgrounds'
+  New-Item -ItemType Directory -Force $bgDest | Out-Null
+  Copy-Item (Join-Path $root 'data\backgrounds\*.jpg') $bgDest -Force
   Write-Host "Installed to $dest"
 }

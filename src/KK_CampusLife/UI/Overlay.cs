@@ -19,7 +19,7 @@ namespace Joojkk.CampusLife
         public static void Update()
         {
             var list = Toasts.Current.ToList();
-            var hide = list.Count == 0 || GameAPI.InsideHScene || !Cfg.ShowToasts.Value;
+            var hide = list.Count == 0 || GameAPI.InsideHScene || !Cfg.ShowToasts.Value || TransitionScreen.Visible;
             if (hide)
             {
                 if (_canvas != null && _canvas.gameObject.activeSelf) _canvas.gameObject.SetActive(false);

@@ -9,9 +9,12 @@ namespace Joojkk.SchoolOptimizer
     /// <summary>
     /// Hair, skirt and accessory physics (DynamicBone) is the most expensive thing students do. Each bone simulates at
     /// 60 Hz and catches up with up to 3 steps per frame, so the lower the FPS the more it costs (a busy gym at 20 FPS
-    /// pays 3 steps for every bone of every student). Near the camera nothing changes; farther away the physics runs
-    /// at a lower rate, and past a set distance it stops (the game's own "distant disable", which resets the bones
-    /// smoothly when she comes closer again). Only in free roaming: talks, H and events are untouched.
+    /// pays 3 steps for every bone of every student). Near the camera nothing changes; farther away the physics takes
+    /// exactly one step per frame (update rate 0), and past a set distance it stops (the game's own "distant disable").
+    /// A lower fixed rate (the 20 Hz of 1.3/1.4) made hair jump while girls walked: on frames without a step the game
+    /// only carries the hair along rigidly (SkipUpdateParticles), and the next step catches up at once. Students out of
+    /// view stop too, judged by the camera's view with a margin, so the physics is back (and its reset done) before she
+    /// comes into view. Only in free roaming: talks, H and events are untouched.
     /// Works together with IllusionFixes' "Throttle dynamic bone updates" (that one stops bones of unseen students).
     /// </summary>
     internal static class DynamicBoneLod
@@ -23,7 +26,7 @@ namespace Joojkk.SchoolOptimizer
             public bool[] Distant;
             public float[] Distance;
             public Transform[] Reference;
-            public Renderer[] Renderers;
+
             public float Scanned;
             public int Tier = -1;
         }
@@ -45,6 +48,7 @@ namespace Joojkk.SchoolOptimizer
             if (cam == null) return;
             var act = Singleton<Game>.Instance.actScene;
             var camPos = cam.transform.position;
+            _planes = GeometryUtility.CalculateFrustumPlanes(cam);
             float near = SchoolOptimizerPlugin.BoneFullDistance.Value, far = SchoolOptimizerPlugin.BoneOffDistance.Value;
             Near = Mid = Far = 0;
             foreach (var npc in act.npcList)
@@ -61,8 +65,8 @@ namespace Joojkk.SchoolOptimizer
                     e = Scan(cha);
                     Chars[cha] = e;
                 }
-                // Off screen (no renderer seen by any camera this frame) and past full physics: off like the far ones.
-                if (tier > 0 && SchoolOptimizerPlugin.BoneOffScreen.Value && !Seen(e)) tier = 3;
+                // Out of view (with a margin, so it is back before she shows up) and past full physics: off like the far ones.
+                if (tier > 0 && SchoolOptimizerPlugin.BoneOffScreen.Value && !InView(cha)) tier = 3;
                 if (tier == 0) Near++; else if (tier == 1) Mid++; else Far++;
                 if (e.Tier == tier) continue;
                 e.Tier = tier;
@@ -70,8 +74,8 @@ namespace Joojkk.SchoolOptimizer
                 {
                     var b = e.Bones[i];
                     if (b == null) continue;
-                    // Mid range: 20 Hz is still smooth at that size on screen and costs a third.
-                    b.m_UpdateRate = tier == 0 ? e.Rate[i] : Mathf.Min(e.Rate[i], 20f);
+                    // Mid range: one step every frame. Smooth (no frames without a step) and, below 60 FPS, cheaper.
+                    b.m_UpdateRate = tier == 0 ? e.Rate[i] : 0f;
                     // Every bone checks its own distance each frame; the reference avoids a Camera.main lookup per bone.
                     b.m_DistantDisable = true;
                     b.m_DistanceToObject = tier == 3 ? 0f : far; // 0: the bone's own distance check always switches it off
@@ -91,14 +95,14 @@ namespace Joojkk.SchoolOptimizer
             return !scene.IsNowLoading && !scene.IsNowLoadingFade;
         }
 
-        private static bool Seen(Entry e)
+        private static Plane[] _planes = new Plane[0];
+        private const float ViewMargin = 3f;
+
+        /// <summary>Her body, grown by a margin, is inside the camera's view.</summary>
+        private static bool InView(ChaControl cha)
         {
-            for (var i = 0; i < e.Renderers.Length; i++)
-            {
-                var r = e.Renderers[i];
-                if (r != null && r.enabled && r.isVisible) return true;
-            }
-            return false;
+            var c = cha.objBodyBone != null ? cha.objBodyBone.transform.position : cha.transform.position;
+            return GeometryUtility.TestPlanesAABB(_planes, new Bounds(c + Vector3.up * 0.8f, new Vector3(1f, 2f, 1f) + Vector3.one * (2f * ViewMargin)));
         }
 
         private static Entry Scan(ChaControl cha)
@@ -106,7 +110,7 @@ namespace Joojkk.SchoolOptimizer
             var bones = cha.GetComponentsInChildren<DynamicBone>(true);
             var e = new Entry
             {
-                Renderers = cha.GetComponentsInChildren<SkinnedMeshRenderer>(true),
+
                 Bones = bones, Rate = new float[bones.Length], Distant = new bool[bones.Length], Distance = new float[bones.Length],
                 Reference = new Transform[bones.Length], Scanned = Time.realtimeSinceStartup
             };
@@ -127,16 +131,34 @@ namespace Joojkk.SchoolOptimizer
             return false;
         }
 
+        private static readonly System.Reflection.FieldInfo AsleepField = HarmonyLib.AccessTools.Field(typeof(DynamicBone), "m_DistantDisabled");
+        public static int WokenWithReset;
+
         private static void Restore(Entry e)
         {
             for (var i = 0; i < e.Bones.Length; i++)
             {
                 var b = e.Bones[i];
                 if (b == null) continue;
+                // A bone we put to sleep (far or out of view) keeps the particles of the moment it slept. DynamicBone only
+                // resets them when its own distance check wakes it; turning m_DistantDisable off skips that check, so the
+                // first step pulled the hair toward where she was before (another map, or before the talk moved her: the
+                var asleep = false;
+                try { asleep = b.m_DistantDisable && AsleepField != null && (bool)AsleepField.GetValue(b); } catch { }
                 b.m_UpdateRate = e.Rate[i];
                 b.m_DistantDisable = e.Distant[i];
                 b.m_DistanceToObject = e.Distance[i];
                 b.m_ReferenceObject = e.Reference[i];
+                if (asleep && !b.m_DistantDisable)
+                {
+                    try
+                    {
+                        AsleepField.SetValue(b, false);
+                        b.ResetParticlesPosition();
+                        WokenWithReset++;
+                    }
+                    catch (System.Exception ex) { SchoolOptimizerPlugin.Log.LogDebug("Bone wake: " + ex.Message); }
+                }
             }
             e.Tier = -1;
         }

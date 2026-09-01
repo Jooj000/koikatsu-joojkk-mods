@@ -231,13 +231,12 @@ namespace Joojkk.CampusLife
 
         // ---------------- activities ----------------
 
-        /// <param name="addTime">False when the caller adds the time cost itself (after the animation).</param>
-        public static ActivityResult DoActivity(ActivityDef a, bool addTime = true)
+        /// <summary>The activity's result. It costs energy, not period time: only the real time of its animation passes.</summary>
+        public static ActivityResult DoActivity(ActivityDef a)
         {
             var block = Activities.Blocker(S, a);
             if (block != null) { Toasts.Show(block); return null; }
             if (!SpendEnergy(a.Energy)) return null;
-            if (addTime) G.AddPeriodSeconds(a.Seconds * Cfg.ActivityTimeScale.Value);
             if (a.OncePerDay) S.Buffs["done:" + a.Id] = S.Day;
 
             var res = Activities.Do(S, a);
@@ -318,6 +317,12 @@ namespace Joojkk.CampusLife
             if (!Cfg.ShowToasts.Value) return;
             Active.Add(new Toast { Text = text, Until = Time.realtimeSinceStartup + Cfg.ToastSeconds.Value });
             if (Active.Count > 5) Active.RemoveAt(0);
+        }
+
+        /// <summary>While a loading screen covers them, toasts wait: their time runs only once it is gone.</summary>
+        public static void Hold(float seconds)
+        {
+            foreach (var t in Active) t.Until += seconds;
         }
 
         public static IEnumerable<string> Current

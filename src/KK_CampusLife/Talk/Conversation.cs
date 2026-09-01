@@ -349,7 +349,7 @@ namespace Joojkk.CampusLife
             }
             else if (Board.HiddenFor(GirlInfo.Key(h)).Any() && (G.Int >= 40 || Random.value < 0.3f))
             {
-                b.Narr(ConvoLines.WorriedHint(GirlInfo.FirstName(h)) + " <color=#6ab4ff>[INT]</color> Let her talk.");
+                b.Narr(ConvoLines.WorriedHint(GirlInfo.FirstName(h)) + " <color=#6ab4ff>[INT]</color> Ask her... > Just listen.");
             }
             else return false;
 
@@ -397,14 +397,22 @@ namespace Joojkk.CampusLife
                 var have = ((RectTransform)x.Txt.transform).rect.width;
                 if (have > 1f) extra = Mathf.Max(extra, need - have);
             }
-            if (extra <= 0f) return;
-            extra = Mathf.Min(extra, 320f);
+            // Widen a little (all buttons alike); a label still too long gets a smaller size and, at worst, an ellipsis,
+            // so its text never runs out of the button over the game's buttons beside the list.
+            extra = Mathf.Clamp(extra, 0f, 140f);
             foreach (var x in items)
             {
-                var rt = (RectTransform)x.Go.transform;
-                rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rt.rect.width + extra);
-                var le = x.Go.GetComponent<LayoutElement>();
-                if (le != null && le.preferredWidth > 0f) le.preferredWidth += extra;
+                if (extra > 0f)
+                {
+                    var rt = (RectTransform)x.Go.transform;
+                    rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rt.rect.width + extra);
+                    var le = x.Go.GetComponent<LayoutElement>();
+                    if (le != null && le.preferredWidth > 0f) le.preferredWidth += extra;
+                }
+                var have = ((RectTransform)x.Txt.transform).rect.width + extra - 16f;
+                var need = x.Txt.GetPreferredValues(x.Txt.text).x;
+                if (have > 1f && need > have) x.Txt.fontSize = Mathf.Max(size * 0.72f, Mathf.Floor(size * have / need));
+                x.Txt.overflowMode = TextOverflowModes.Ellipsis;
             }
         }
 
@@ -434,6 +442,27 @@ namespace Joojkk.CampusLife
             catch { return false; }
         }
 
+        // ---------------- grouping ----------------
+
+        /// <summary>
+        /// Related options under one entry that opens a sub-page (with Back). When there are fewer than
+        /// <paramref name="minForSub"/> of them they are listed as they are: no sub-page for a single option.
+        /// The list is built again each time, so it always matches what she allows right now.
+        /// </summary>
+        private static void Group(string label, Func<List<KeyValuePair<string, Action>>> make, int minForSub = 3)
+        {
+            var items = make();
+            if (items.Count == 0) return;
+            if (items.Count < minForSub) { foreach (var i in items) Add(i.Key, i.Value); return; }
+            Add(label, () => ShowSub(() =>
+            {
+                foreach (var i in make()) Add(i.Key, i.Value);
+                Add("Back", Back);
+            }));
+        }
+
+        private static KeyValuePair<string, Action> Opt(string label, Action a) { return new KeyValuePair<string, Action>(label, a); }
+
         // ---------------- speech bubble: talking ----------------
 
         private static void TalkPage()
@@ -442,14 +471,13 @@ namespace Joojkk.CampusLife
             var h = s.Her;
             var req = Board.CompletableInTalk(h);
             if (req != null) Add("<color=#FFD27A>★</color> " + Board.ButtonLabel(req), () => { var r = Board.CompletableInTalk(h); if (r != null) { Hide(); Board.PlayInTalk(r, h); } });
-            Add("Chat about...", () => ShowSub(TopicPage));
-            Add("Let her talk", LetHerTalk);
-            Add("Ask about...", () => ShowSub(AskPage));
-            Add("Joke around" + JokeOdds(s), Joke);
-            Add("Compliment her...", () => ShowSub(ComplimentPage));
             if (NeedsClearing(h, s)) Add("<color=#ff9b6a>Clear the air...</color>", () => ShowSub(ClearPage));
-            Add("<color=#b0b0b0>Small talk (game)</color>", () => Game(0));
-            Add("<color=#b0b0b0>Listen (game)</color>", () => Game(3));
+            // Four entries at most besides the two that only show when needed:
+            // listening lives under "Ask her...", the game's own talk under "Chat about...".
+            Add("Chat about...", () => ShowSub(TopicPage));
+            Add("Ask her...", () => ShowSub(AskPage));
+            Add("Compliment her...", () => ShowSub(ComplimentPage));
+            Add("Joke around" + JokeOdds(s), Joke);
         }
 
         // ---------------- heart: romance and H ----------------
@@ -458,13 +486,37 @@ namespace Joojkk.CampusLife
         {
             var s = Sess;
             var h = s.Her;
-            if (CanFlirt(h)) Add("<color=#ff8ad8>Be sweet to her</color>" + FlirtOdds(s), Flirt);
-            Add("Love talk (game)", () => Game(1));
-            Add("Lewd talk (game)", () => Game(2));
-            if (GameAllows(1)) Add("<color=#ff8ad8>Confess your feelings</color>", () => Game(11));
-            if (GameAllows(7)) Add("<color=#ff8ad8>Ask her on a date</color>", () => Game(17));
+            Group("<color=#ff8ad8>Sweet talk...</color>", () =>
+            {
+                var l = new List<KeyValuePair<string, Action>>();
+                if (CanFlirt(h)) l.Add(Opt("<color=#ff8ad8>Be sweet to her</color>" + FlirtOdds(s), Flirt));
+                if (CanFlirt(h) && !s.Did.Contains("hand")) l.Add(Opt("<color=#ff8ad8>Hold her hand</color>", HoldHand));
+                if (!s.Did.Contains("feelings")) l.Add(Opt("What am I to you?", AskFeelings));
+                l.Add(Opt("Love talk (game)", () => Game(1)));
+                return l;
+            }, 2);
+            Group("<color=#ff8ad8>Flirt...</color>", () =>
+            {
+                var l = new List<KeyValuePair<string, Action>>();
+                if (CanFlirt(h) && !s.Did.Contains("tease") && (h.isGirlfriend || h.lewdness >= 30 || MoodOf(h) == CampusLife.Mood.Flirty))
+                    l.Add(Opt("<color=#ff8ad8>Tease her</color>" + Odds(TeaseChance(s)), Tease));
+                if (Cfg.LewdRequests.Value && !s.Did.Contains("whisper") && (h.isGirlfriend || h.lewdness >= 60))
+                    l.Add(Opt("<color=#ff8ad8>Whisper to her</color>" + Odds(WhisperChance(s)), Whisper));
+                if (Cfg.LewdRequests.Value && !s.Did.Contains("memories") && h.hCount > 0) l.Add(Opt("<color=#ff8ad8>Talk about last time</color>", Memories));
+                if (Cfg.LewdRequests.Value && !s.Did.Contains("sneak") && (h.isGirlfriend || h.lewdness >= 50))
+                    l.Add(Opt("<color=#ff8ad8>Sneak off together</color>" + Odds(SneakChance(s)), Sneak));
+                l.Add(Opt("Lewd talk (game)", () => Game(2)));
+                return l;
+            }, 2);
             if (GameAllows(3)) Add("<color=#ff8ad8>Invite her to H</color>", () => Game(13));
-            if (GameAllows(2)) Add("<color=#9a9a9a>Break up</color>", () => Game(12));
+            Group("<color=#ff8ad8>Us two...</color>", () =>
+            {
+                var l = new List<KeyValuePair<string, Action>>();
+                if (GameAllows(1)) l.Add(Opt("<color=#ff8ad8>Confess your feelings</color>", () => Game(11)));
+                if (GameAllows(7)) l.Add(Opt("<color=#ff8ad8>Ask her on a date</color>", () => Game(17)));
+                if (GameAllows(2)) l.Add(Opt("<color=#9a9a9a>Break up</color>", () => Game(12)));
+                return l;
+            }, 2);
         }
 
         // ---------------- question mark: invitations, gifts, company ----------------
@@ -473,21 +525,21 @@ namespace Joojkk.CampusLife
         {
             var s = Sess;
             var h = s.Her;
-            if (GameAllows(4)) Add("Have lunch together", () => Game(14));
-            if (GameAllows(8)) Add("Study together", () => Game(18));
-            if (GameAllows(9)) Add("Exercise together", () => Game(19));
-            if (GameAllows(5)) Add("Club activities together", () => Game(15));
-            if (GameAllows(6)) Add("Go home together", () => Game(16));
-            if (GameAllows(11)) Add("Come with me", () => Game(21));
-            if (GameAllows(10)) Add("Invite her to the Koikatsu Club", () => Game(20));
-            if (Cfg.GiftsEnabled.Value) Add("Give a gift", () => { var t = Created.Select(c => c.GetComponent<Button>()).FirstOrDefault(b => b != null); if (t == null) return; GiftMenu.Open(t, h); });
-            foreach (var other in OtherModButtons())
+            Group("Invite her...", () =>
             {
-                var b = other;
-                Add(LabelOf(b), () => { Hide(); b.onClick.Invoke(); });
-            }
+                var l = new List<KeyValuePair<string, Action>>();
+                if (GameAllows(4)) l.Add(Opt("Have lunch together", () => Game(14)));
+                if (GameAllows(8)) l.Add(Opt("Study together", () => Game(18)));
+                if (GameAllows(9)) l.Add(Opt("Exercise together", () => Game(19)));
+                if (GameAllows(5)) l.Add(Opt("Club activities together", () => Game(15)));
+                if (GameAllows(6)) l.Add(Opt("Go home together", () => Game(16)));
+                if (GameAllows(10)) l.Add(Opt("To the Koikatsu Club", () => Game(20)));
+                return l;
+            });
+            if (GameAllows(11)) Add("Come with me", () => Game(21));
+            if (Cfg.GiftsEnabled.Value) Add("Give a gift", () => { var t = Created.Select(c => c.GetComponent<Button>()).FirstOrDefault(b => b != null); if (t == null) return; GiftMenu.Open(t, h); });
+            Group("Other mods...", () => OtherModButtons().Select(b => Opt(LabelOf(b), () => { Hide(); b.onClick.Invoke(); })).ToList());
         }
-
         /// <summary>Buttons other mods put in the game's lists, still offered (we press them for the player).</summary>
         private static List<Button> OtherModButtons()
         {
@@ -565,10 +617,15 @@ namespace Joojkk.CampusLife
             foreach (var t in all.Where(t => !s.Used.Contains(t)).OrderBy(_ => Random.value).Take(4).ToList())
             {
                 var topic = t;
-                var label = TopicName(t) + (t == HotTopic ? "  <color=#9AD0FF>(everyone's talking about it)</color>" : "");
+                var label = TopicName(t) + (t == HotTopic ? " <color=#9AD0FF>(hot)</color>" : "");
                 if (read && Score(s.Her, t, s) >= 3) label = "<color=#FFD27A>★</color> " + label;
                 Add(label, () => PickTopic(topic));
             }
+            Group("<color=#b0b0b0>The game's talk...</color>", () => new List<KeyValuePair<string, Action>>
+            {
+                Opt("<color=#b0b0b0>Small talk (game)</color>", () => Game(0)),
+                Opt("<color=#b0b0b0>Listen (game)</color>", () => Game(3)),
+            }, 2);
             Add("Back", Back);
         }
 
@@ -653,14 +710,15 @@ namespace Joojkk.CampusLife
         private static void AskPage()
         {
             var s = Sess;
+            Add("Just listen", LetHerTalk);
             Add("How's your day?", AskDay);
-            foreach (var f in Social.FriendsOf(s.Her).Take(3).ToList())
+            foreach (var f in Social.FriendsOf(s.Her).Take(2).ToList())
             {
                 var friend = f;
                 Add("About " + GirlInfo.FirstName(f), () => AskFriend(friend));
             }
             var rival = Social.Students.Where(o => o != s.Her && Social.Bond(s.Her, o) <= -30).OrderBy(_ => Random.value).FirstOrDefault();
-            if (rival != null && Random.value < 0.5f) Add("About " + GirlInfo.FirstName(rival), () => AskFriend(rival));
+            if (rival != null && Random.value < 0.5f && Created.Count < 4) Add("About " + GirlInfo.FirstName(rival), () => AskFriend(rival));
             Add("About the school", AskSchool);
             Add("Back", Back);
         }
@@ -831,7 +889,7 @@ namespace Joojkk.CampusLife
             var tone = GirlInfo.ToneOf(h);
             var close = Lines.Closeness(h);
             var b = new SceneBuilder(h, true);
-            b.Me(ConvoLines.PlayerFlirt(close));
+            b.Me(RomanceLines.PlayerSweet(close));
             if (s.Did.Contains("flirt")) { b.Her_(Lines.T(tone, "Y-you already said something like that...", "Okay, okay, I get it! Hehe!", "Once is enough.", "Laying it on thick, aren't you?")); Play(b, 0, null); return; }
             s.Did.Add("flirt");
             var ok = Random.value < FlirtChance(s);
@@ -843,6 +901,131 @@ namespace Joojkk.CampusLife
                 if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.Add(h, 2);
                 Social.Add(Social.Kinds.Flirted, h, witnesses);
             }) : null, ok ? 4 : 0);
+        }
+
+        /// <summary>The odds in pink once SEN is 40, like the flirting ones.</summary>
+        private static string Odds(float chance) { return G.Sens >= 40 ? "  <color=#ff8ad8>(" + Mathf.RoundToInt(chance * 100) + "%)</color>" : ""; }
+
+        private static float Bonus(SaveData.Heroine h)
+        {
+            var c = MoodOf(h) == CampusLife.Mood.Flirty ? 0.2f : 0f;
+            var tone = GirlInfo.ToneOf(h);
+            if (tone == Tone.Teasing) c += 0.1f;
+            else if (tone == Tone.Cool) c -= 0.1f;
+            return c;
+        }
+
+        private static void HoldHand()
+        {
+            var s = Sess;
+            var h = s.Her;
+            var tone = GirlInfo.ToneOf(h);
+            var close = Lines.Closeness(h);
+            s.Did.Add("hand");
+            var chance = h.isGirlfriend ? 1f : Mathf.Clamp(0.25f + h.favor / 150f + G.Sens / 400f + Bonus(h), 0.05f, 0.95f);
+            var ok = Random.value < chance;
+            var b = new SceneBuilder(h, true);
+            b.Me(RomanceLines.PlayerHand(close));
+            b.Her_(ok ? RomanceLines.HandYes(tone, close) : RomanceLines.HandNo(tone));
+            var witnesses = Social.GirlsOnMyMap().Where(o => o != h).ToList();
+            Play(b, ok ? 2 : -1, ok ? "♥ " + GirlInfo.FirstName(h) + " holds your hand." : null, ok ? (Action)(() =>
+            {
+                Social.AddTrust(h, 2);
+                if (witnesses.Count > 0) Social.Add(Social.Kinds.Flirted, h, witnesses);
+            }) : null, ok ? 2 : 0);
+        }
+
+        private static void AskFeelings()
+        {
+            var s = Sess;
+            var h = s.Her;
+            s.Did.Add("feelings");
+            var b = new SceneBuilder(h, true);
+            b.Me(RomanceLines.PlayerAskFeelings());
+            b.Her_(RomanceLines.Feelings(GirlInfo.ToneOf(h), h));
+            Play(b, h.favor >= 50 ? 1 : 0, null);
+        }
+
+        private static float TeaseChance(Session s)
+        {
+            var h = s.Her;
+            if (h.isGirlfriend) return 0.85f;
+            return Mathf.Clamp(0.15f + h.lewdness / 150f + G.Sens / 250f + s.Interest * 0.04f + Bonus(h), 0.05f, 0.9f);
+        }
+
+        private static void Tease()
+        {
+            var s = Sess;
+            var h = s.Her;
+            var tone = GirlInfo.ToneOf(h);
+            var close = Lines.Closeness(h);
+            s.Did.Add("tease");
+            var ok = Random.value < TeaseChance(s);
+            var b = new SceneBuilder(h, true);
+            b.Me(RomanceLines.PlayerTease(close));
+            b.Her_(ok ? RomanceLines.TeaseGood(tone, close) : RomanceLines.TeaseBad(tone));
+            Play(b, ok ? 1 : -1, ok ? "♥ " + GirlInfo.FirstName(h) + " is flustered." : null, null, ok ? 6 : 0);
+        }
+
+        private static float WhisperChance(Session s)
+        {
+            var h = s.Her;
+            if (h.isGirlfriend) return 0.9f;
+            return Mathf.Clamp(0.3f + h.lewdness / 200f + G.Sens / 300f + Bonus(h), 0.05f, 0.9f);
+        }
+
+        private static void Whisper()
+        {
+            var s = Sess;
+            var h = s.Her;
+            var tone = GirlInfo.ToneOf(h);
+            s.Did.Add("whisper");
+            var ok = Random.value < WhisperChance(s);
+            var b = new SceneBuilder(h, true);
+            b.Me(RomanceLines.PlayerWhisper(h.isGirlfriend));
+            b.Her_(ok ? RomanceLines.WhisperGood(tone, h.isGirlfriend) : RomanceLines.WhisperBad(tone));
+            Play(b, ok ? 1 : -2, ok ? "♥ " + GirlInfo.FirstName(h) + " is breathing faster." : "She didn't like that. (-trust)", () =>
+            {
+                if (!ok) { Social.AddTrust(h, -2); return; }
+                if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.Add(h, 1);
+            }, ok ? 10 : 0);
+        }
+
+        private static void Memories()
+        {
+            var s = Sess;
+            var h = s.Her;
+            s.Did.Add("memories");
+            var b = new SceneBuilder(h, true);
+            b.Me(RomanceLines.PlayerMemories(h.hCount));
+            b.Her_(RomanceLines.Memories(GirlInfo.ToneOf(h), h.hCount));
+            Play(b, 1, "♥ " + GirlInfo.FirstName(h) + " remembers it too.", () =>
+            {
+                if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.Add(h, 1);
+            }, 8);
+        }
+
+        private static float SneakChance(Session s)
+        {
+            var h = s.Her;
+            var c = (h.isGirlfriend ? 0.6f : 0.15f) + h.lewdness / 250f + G.Sens / 400f + Bonus(h);
+            return Mathf.Clamp(c, 0.05f, 0.95f);
+        }
+
+        /// <summary>She agrees: straight into the game's own H invitation when the game allows it here, else the H bar rises.</summary>
+        private static void Sneak()
+        {
+            var s = Sess;
+            var h = s.Her;
+            var tone = GirlInfo.ToneOf(h);
+            s.Did.Add("sneak");
+            var ok = Random.value < SneakChance(s);
+            var b = new SceneBuilder(h, true);
+            b.Me(RomanceLines.PlayerSneak());
+            b.Her_(ok ? RomanceLines.SneakYes(tone) : RomanceLines.SneakNo(tone));
+            var invite = ok && GameAllows(3);
+            Play(b, ok ? 1 : -1, ok && !invite ? "♥ She's in the mood. Somewhere private, the game will let you invite her to H." : null, null, ok ? 12 : 0,
+                invite ? (Action)(() => Game(13)) : null);
         }
 
         // ---------------- clearing the air ----------------
@@ -939,14 +1122,19 @@ namespace Joojkk.CampusLife
 
         // ================= turns and results =================
 
-        /// <summary>Favor for one turn, from how it went (delta -1..2).</summary>
+        /// <summary>
+        /// Favor for one turn, from how it went (delta -1..2). Balanced against the game: a right answer in its
+        /// small talk gives +5 to +10 after its corrections, so 4 of them (the whole blue bar) about +40; a perfect
+        /// conversation of ours (8 turns of half a point) gives 8 x 5 = 40 too, before the INT bonus of Campus.Apply.
+        /// </summary>
         private static int TurnFavor(int delta)
         {
-            return delta >= 2 ? 6 : delta == 1 ? 3 : delta == 0 ? 1 : -3;
+            return delta >= 2 ? 5 : delta == 1 ? 3 : delta == 0 ? 1 : -3;
         }
 
         /// <summary>Plays a turn: the scene, then favor and H right away (the game's bars move), the talk time, and the page again.</summary>
-        private static void Play(SceneBuilder b, int delta, string toast, Action done = null, int lewd = 0)
+        /// <param name="next">Instead of our page again: the next thing to run (a command of the game's).</param>
+        private static void Play(SceneBuilder b, int delta, string toast, Action done = null, int lewd = 0, Action next = null)
         {
             var s = Sess;
             Hide();
@@ -960,6 +1148,7 @@ namespace Joojkk.CampusLife
                 s.LewdGained += applied.Lewd;
                 if (done != null) { try { done(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); } }
                 if (!string.IsNullOrEmpty(toast)) Toasts.Show(toast);
+                if (next != null) { next(); return; }
                 if (SpendTalkTime(s.Her))
                 {
                     // The blue bar is empty: the game's own goodbye, like after its own topics.

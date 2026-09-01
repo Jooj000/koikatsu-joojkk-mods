@@ -179,7 +179,7 @@ namespace Joojkk.SchoolOptimizer
                 }
                 _lastMap = map;
             }
-            NearGates(act, map);
+            NearGates(act, map, GateNear, NearMaps);
 
             var now = Time.realtimeSinceStartup;
             NPC unload = null;
@@ -207,23 +207,23 @@ namespace Joojkk.SchoolOptimizer
                 foreach (var k in LastNeeded.Keys.Where(k => k == null || !act.npcList.Contains(k)).ToList()) LastNeeded.Remove(k);
         }
 
-        /// <summary>Maps behind the gates the player is standing near.</summary>
-        private static void NearGates(ActionScene act, int map)
+        /// <summary>Maps behind the gates the player is standing near (within <paramref name="radius"/> meters).</summary>
+        internal static void NearGates(ActionScene act, int map, float radius, HashSet<int> into)
         {
-            NearMaps.Clear();
+            into.Clear();
             var gates = act.Map.gateInfoDic;
             if (gates == null) return;
             var p = act.Player.position;
             foreach (var g in gates.Values)
             {
-                if (g == null || g.mapNo != map || (g.pos - p).sqrMagnitude > GateNear * GateNear) continue;
+                if (g == null || g.mapNo != map || (g.pos - p).sqrMagnitude > radius * radius) continue;
                 ActionGame.Point.GateInfo other;
-                if (gates.TryGetValue(g.linkID, out other) && other != null) NearMaps.Add(other.mapNo);
+                if (gates.TryGetValue(g.linkID, out other) && other != null) into.Add(other.mapNo);
             }
         }
 
         /// <summary>Her route crosses into the player's map within the next two gates.</summary>
-        private static bool Coming(ActionScene act, NPC npc, int map)
+        internal static bool Coming(ActionScene act, NPC npc, int map)
         {
             var route = npc.AI == null ? null : npc.AI.route;
             if (route == null || route.Count == 0) return false;

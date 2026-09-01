@@ -1,6 +1,6 @@
 # Campus Life - dialogue written for the mod
 
-Total lines (counting every personality version): 1288
+Total lines (counting every personality version): 1905
 
 Every line below was written for Campus Life (author: Joojkk). Lines of the game itself
 (normal conversations, story events, H) are not listed. Lines marked 'by personality' have four
@@ -316,7 +316,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### Conversation / Opening
 - **Choice:** Promise to keep it secret. | Tease her about it.
-- **Narration:** {WorriedHint} <color=#6ab4ff>[INT]</color> Let her talk.
+- **Narration:** {WorriedHint} <color=#6ab4ff>[INT]</color> Ask her... > Just listen.
 
 ### Conversation / PickTopic
 - **Her:** {T}
@@ -1039,6 +1039,242 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _energetic:_ Ugh, can we talk later? I'm beat!
   - _cool:_ Not now.
   - _teasing:_ I've talked enough today. Come back tomorrow.
+
+## Romance and H (heart page: hands, teasing, whispers, last time, sneaking off)
+`Dialogue/RomanceLines.cs`
+
+### RomanceLines / PlayerHand
+- **Variants:** Come here. Give me your hand. | I missed holding your hand. | Let's walk like this for a while.
+- **Variants:** Can I... hold your hand for a bit? | Your hands look cold. Here. | Would it be weird if I held your hand?
+
+### RomanceLines / HandYes / step 0
+- **Her (by personality)**
+  - _gentle:_ Mm... your hand is so warm. I could stay like this all day.
+  - _energetic:_ Hehe, fingers laced! That's the official couple grip!
+  - _cool:_ ...Don't let go yet.
+  - _teasing:_ Holding hands in public? How bold. ...I'm not complaining.
+
+### RomanceLines / HandYes / step 1
+- **Her (by personality)**
+  - _gentle:_ Every time we do this my heart races like the first time...
+  - _energetic:_ Swing, swing! Ehehe, I love this!
+  - _cool:_ Your hand fits mine. Funny how that works.
+  - _teasing:_ Squeeze back if you love me. ...Hm. Good answer.
+- **Her (by personality)**
+  - _gentle:_ People are looking... but I don't mind. Not with you.
+  - _energetic:_ Let's walk the long way so this lasts longer!
+  - _cool:_ ...This is nice. Don't tell anyone I said that.
+  - _teasing:_ If you let go first, you lose. Got it?
+
+### RomanceLines / HandYes / step 0
+- **Her (by personality)**
+  - _gentle:_ Eh...? O-okay... just for a little while...
+  - _energetic:_ Whoa! Um. Okay! Sure! This is fine! Totally fine!
+  - _cool:_ ...Fine. Your hand's warmer than I expected.
+  - _teasing:_ Oh? Taking the initiative today? ...I'll allow it.
+
+### RomanceLines / HandYes / step 1
+- **Her (by personality)**
+  - _gentle:_ My face is so hot right now... please don't look...
+  - _energetic:_ Ahaha, my hand's all sweaty, sorry! ...Don't let go though.
+  - _cool:_ ...I suppose it's not unpleasant.
+  - _teasing:_ Careful. If you hold on too long, I might not give it back.
+- **Her (by personality)**
+  - _gentle:_ It's... kind of nice, isn't it?
+  - _energetic:_ Okay, this is kinda cute. Don't make it weird!
+  - _cool:_ Hm. Only until the end of the hallway.
+  - _teasing:_ You're shaking a little. Nervous? How cute.
+
+### RomanceLines / HandNo
+- **Her (by personality)**
+  - _gentle:_ Ah... s-sorry, not here... people might see...
+  - _energetic:_ Whoa, whoa! Hands to yourself, mister!
+  - _cool:_ No.
+  - _teasing:_ Holding hands already? Earn it first.
+
+### RomanceLines / PlayerAskFeelings
+- **Variants:** Can I ask you something? What do you think of me? | Be honest. How do you see me? | What am I to you, exactly?
+
+### RomanceLines / Feelings
+- **Her (by personality)**
+  - _gentle:_ You're my boyfriend... and the only one who gets to see me like... that. Don't make me say more!
+  - _energetic:_ You're my favorite person! And, um... I kinda can't stop thinking about you. In every way. Ehehe...
+  - _cool:_ You're mine. All of you. That's what I think.
+  - _teasing:_ You're my boyfriend and my favorite toy. Is that honest enough for you?
+- **Her (by personality)**
+  - _gentle:_ You're the most important person in the world to me. That's all.
+  - _energetic:_ You're my boyfriend, silly! The best one in the whole school!
+  - _cool:_ You're the person I chose. I don't regret it.
+  - _teasing:_ You're mine. Isn't that obvious? Or do you just like hearing it?
+- **Her (by personality)**
+  - _gentle:_ I... I think about you a lot. More than I should, maybe...
+  - _energetic:_ Honestly? You're kind of my favorite person right now. Don't let it go to your head!
+  - _cool:_ You're... important to me. More than I planned.
+  - _teasing:_ Hmm... let's just say if you asked me out, I wouldn't say no right away.
+- **Her (by personality)**
+  - _gentle:_ You're a really good friend. I'm glad we met.
+  - _energetic:_ You're super fun to be around! Like, top three people, easy!
+  - _cool:_ You're reliable. I like that.
+  - _teasing:_ You're interesting. That's rare around here. Keep it up.
+- **Her (by personality)**
+  - _gentle:_ Um... you seem nice? I don't know you that well yet...
+  - _energetic:_ Hmm, you're okay! We should hang out more, then I'll tell you!
+  - _cool:_ I don't have an opinion yet.
+  - _teasing:_ Ask me again when you've done something worth talking about.
+
+### RomanceLines / PlayerTease
+- **Variants:** You know what you look like right now? Very kissable. | That skirt's a little short today. Not that I'm complaining. | Is it hot in here, or is it just you?
+- **Variants:** You've been staring at me, haven't you? | Careful, if you keep smiling like that I'll get ideas. | You look really good today. Like, distractingly good.
+
+### RomanceLines / TeaseGood / step 0
+- **Her (by personality)**
+  - _gentle:_ Y-you can't just say things like that at school...! ...Say it again later.
+  - _energetic:_ Ehehe, you dummy! ...Okay, maybe a little kiss. Later!
+  - _cool:_ ...Keep that energy for when we're alone.
+  - _teasing:_ Kissable? Then why are you still talking?
+
+### RomanceLines / TeaseGood / step 1
+- **Her (by personality)**
+  - _gentle:_ I wore it for you... is that embarrassing?
+  - _energetic:_ Hey! Eyes up here! ...Or not. I'm not your boss. Hehe.
+  - _cool:_ Noticed, did you. Good.
+  - _teasing:_ Short? Oh, you mean this? *She tugs the hem up a little, then lets it fall.* Oops.
+- **Her (by personality)**
+  - _gentle:_ It's you... you make me feel hot all over...
+  - _energetic:_ Hot?! Wh- you're the one making it hot! Jerk! ...Hehe.
+  - _cool:_ It's me. Obviously.
+  - _teasing:_ Both. Want to find out which is hotter?
+
+### RomanceLines / TeaseGood / step 0
+- **Her (by personality)**
+  - _gentle:_ I-I wasn't staring! ...Maybe a little.
+  - _energetic:_ Me?! Staring?! Pfft, no way! ...Okay, a tiny bit.
+  - _cool:_ ...You noticed. Annoying.
+  - _teasing:_ And if I was? What would you do about it?
+
+### RomanceLines / TeaseGood / step 1
+- **Her (by personality)**
+  - _gentle:_ Ideas...? W-what kind of ideas...?
+  - _energetic:_ Ideas, huh? Hehe, you're kinda bold! I like it!
+  - _cool:_ Ideas. Hm. Keep them to yourself for now.
+  - _teasing:_ Get them, then. I want to see what you come up with.
+- **Her (by personality)**
+  - _gentle:_ Th-thank you... I tried a little harder today...
+  - _energetic:_ Distractingly?! Ahaha, I'll take it!
+  - _cool:_ ...I'll accept the compliment.
+  - _teasing:_ Distracting you was the plan. Glad it's working.
+
+### RomanceLines / TeaseBad
+- **Her (by personality)**
+  - _gentle:_ Th-that's embarrassing... please don't say that...
+  - _energetic:_ Ew, gross! ...Kidding. But no.
+  - _cool:_ That was unnecessary.
+  - _teasing:_ Is that the best you've got? Pathetic. Try again someday.
+
+### RomanceLines / PlayerWhisper
+- **Variants:** *You lean in.* I can't stop thinking about last time. About your skin. | *Quietly.* I want you. Right now. Here. | *In her ear.* You smell amazing. I want to taste you.
+- **Variants:** *You lean in.* You have no idea what I'm thinking about right now. | *Quietly.* I keep imagining what you look like without the uniform. | *In her ear.* If we were alone right now...
+
+### RomanceLines / WhisperGood / step 0
+- **Her (by personality)**
+  - _gentle:_ Hah... d-don't breathe on my ear like that... my legs are going weak...
+  - _energetic:_ Ahh, stop it! I'm getting all tingly! ...Don't stop.
+  - _cool:_ ...Careful. I might drag you somewhere private.
+  - _teasing:_ Taste me? Then hurry up and take me somewhere nobody can hear.
+
+### RomanceLines / WhisperGood / step 1
+- **Her (by personality)**
+  - _gentle:_ Me too... I keep remembering your hands on me...
+  - _energetic:_ Ehehe, same! I even dreamt about it! ...Was that too honest?
+  - _cool:_ Then don't make me wait.
+  - _teasing:_ Right now? Here? ...You're lucky I like it when you're reckless.
+- **Her (by personality)**
+  - _gentle:_ I-I'm all yours... just not in front of everyone...
+  - _energetic:_ Ahh, my face is on fire! You're the worst! ...I love it.
+  - _cool:_ ...You'll pay for saying that in a hallway. Later.
+  - _teasing:_ Mm, keep whispering. I want to see how red you can make me.
+
+### RomanceLines / WhisperGood / step 0
+- **Her (by personality)**
+  - _gentle:_ W-without the uniform?! ...D-don't imagine too hard...
+  - _energetic:_ Hey! Pervert! ...What were you imagining, exactly?
+  - _cool:_ ...That's indecent. Continue.
+  - _teasing:_ Imagining is free. Seeing costs extra.
+
+### RomanceLines / WhisperGood / step 1
+- **Her (by personality)**
+  - _gentle:_ If we were alone... I-I don't know what I'd do...
+  - _energetic:_ Alone, huh? Then you'd better make it worth my time!
+  - _cool:_ If we were alone, you'd find out.
+  - _teasing:_ If we were alone, you'd already be on your knees.
+- **Her (by personality)**
+  - _gentle:_ My heart's beating so fast... you can't say that so close...
+  - _energetic:_ Ahaha! Ticklish! And, um... kinda hot. Don't tell anyone!
+  - _cool:_ ...You're bold. I'll remember it.
+  - _teasing:_ Oh? Tell me more. In detail.
+
+### RomanceLines / WhisperBad
+- **Her (by personality)**
+  - _gentle:_ Eek! I-I don't know you like that...!
+  - _energetic:_ Whoa, way too much, way too fast! Down, boy!
+  - _cool:_ Do that again and I'm reporting you.
+  - _teasing:_ Cute. But you haven't earned the right to talk to me like that.
+
+### RomanceLines / PlayerMemories
+- **Variants:** I keep thinking about our first time. | Do you ever think about... that day? | That day... I haven't forgotten a single thing.
+- **Variants:** I keep replaying last time in my head. | You were incredible the other day. | When can we do that again?
+
+### RomanceLines / Memories
+- **Her (by personality)**
+  - _gentle:_ Our first time... I was so nervous, but you were gentle. I'll treasure it forever.
+  - _energetic:_ Ahh, don't bring it up out of nowhere! ...It was amazing, okay? Way better than I imagined!
+  - _cool:_ ...I think about it more than I'd like to admit.
+  - _teasing:_ You were so nervous. It was adorable. Next time, I'm in charge.
+
+### RomanceLines / Memories / step 0
+- **Her (by personality)**
+  - _gentle:_ Me too... I can't focus in class when I remember your voice...
+  - _energetic:_ Hehe, you mean when I couldn't stop making noise? So embarrassing! ...Let's do it again!
+  - _cool:_ You weren't bad. I want more.
+  - _teasing:_ Incredible? I was holding back. Want to see what I can really do?
+
+### RomanceLines / Memories / step 1
+- **Her (by personality)**
+  - _gentle:_ I still blush when I walk past... that place...
+  - _energetic:_ I still have a mark, you know! Right here. *She tugs her collar.* Your fault!
+  - _cool:_ ...Same place, next time. I liked it there.
+  - _teasing:_ Again? You're insatiable. ...Good. So am I.
+- **Her (by personality)**
+  - _gentle:_ Whenever you want... I-I mean... soon, please...
+  - _energetic:_ Soon! Tomorrow! Today?! Okay, I'm too excited, sorry!
+  - _cool:_ When I say so. Which might be soon.
+  - _teasing:_ Beg nicely and I'll think about it.
+
+### RomanceLines / PlayerSneak
+- **Variants:** Hey... want to sneak off somewhere quiet? Just the two of us. | I know a spot where nobody goes. Come with me? | Let's skip the next bit and find somewhere private.
+
+### RomanceLines / SneakYes / step 0
+- **Her (by personality)**
+  - _gentle:_ ...Okay. Lead the way. Just... be gentle, okay?
+  - _energetic:_ Ooh, a secret mission! I'm in! Don't get us caught!
+  - _cool:_ Fine. But if a teacher finds us, it was your idea.
+  - _teasing:_ Finally. I was wondering how long you'd make me wait.
+- **Her (by personality)**
+  - _gentle:_ M-my heart won't calm down... let's go before I lose my nerve...
+  - _energetic:_ Race you there! Loser has to... ehehe, you'll see!
+  - _cool:_ ...Somewhere with a lock on the door.
+  - _teasing:_ Somewhere private? You read my mind. Hurry.
+
+### RomanceLines / SneakNo
+- **Her (by personality)**
+  - _gentle:_ N-not today... I'm not ready for something like that...
+  - _energetic:_ Ehh? Sneak off? With you? Pfft, no way! ...Not yet, anyway.
+  - _cool:_ No. Don't push your luck.
+  - _teasing:_ Sneak off with you? You wish. Try harder.
+
+### RomanceLines / PlayerSweet
+- **Variants:** I was looking forward to seeing you all day. | You're the best part of my day, you know. | Being with you is my favorite thing. | I keep thinking about our last date. | You look cute when you're thinking hard about something. | I'd skip every class just to sit here with you.
+- **Variants:** I really like spending time with you. | You're kind of amazing, you know that? | Talking to you always cheers me up. | I'm glad I met you. | Your laugh is really cute. | I find myself looking for you in the hallway.
 
 ## Two-girl scenes
 `Systems/Duo.cs`
@@ -1804,65 +2040,34 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ ...You're an idiot. Thank you.
   - _teasing:_ My knight in soaked armor~
 
-## School events (exams, festivals, trips, seasonal days)
-`Systems/Calendar.cs`
+## School events (long scenes over painted backgrounds: exams, festivals, trip, seasonal days)
+`Systems/CalendarEvents.cs`
 
-### Calendar / Exam
-- **Narration:** Exam day. The classroom is silent except for pencils scratching on paper.
-- **Girl:** {T}
-- **Her (by personality)**
-  - _gentle:_ Good luck... let's both do our best.
-  - _energetic:_ Let's crush this test!
-  - _cool:_ Don't distract me.
-  - _teasing:_ If you fail, I'm laughing at you~
-- **Narration:** You take a deep breath and start writing.
-- **Narration:** You mutter formulas until the last second. Your head is spinning, but they're in there.
-- **Narration:** While the teacher looks away, you lean over... 
-
-### Calendar / Sports
-- **Narration:** The Sports Festival! Flags everywhere, the whole school is on the field.
-- **Girl:** {T}
-- **Her (by personality)**
-  - _gentle:_ Which event are you entering? I'll cheer for you!
-  - _energetic:_ Let's WIN this! Which event are you in?
-  - _cool:_ Try not to embarrass our class.
-  - _teasing:_ I'll be watching you~ Don't trip.
-- **Narration:** You grab the baton and run like your life depends on it...
-- **Narration:** Everyone grabs the rope. Pull!
-- **Narration:** You lead the cheering section with all your heart.
-- **Narration:** Your ankle is tied to hers. You'll have to move together.
-
-### Calendar / Culture
-- **Narration:** The Culture Festival! Your class has to decide what to run.
-- **Choice:** Maid cafe (SEN) | Haunted house (STR) | Science exhibit (INT)
+### Choco
+- **Narration:** February 14th. Chocolate Day.
+- **Narration:** The whole school smells of cocoa. Every boy is pretending not to care, and every boy is failing.
+- **Narration:** Your shoe locker is right in front of you. It might be empty. It might not be.
+- **Choice:** Open it calmly | Open it with your eyes closed | Walk past it like a cool guy
 - **Narration:** {"}
-- **Narration:** In the afternoon you have some free time to walk around the festival.
-- **Girl:** {T}
+- **Narration:** You open it slowly, whispering a prayer to every god of romance you know...
+- **Narration:** {"}
+- **Narration:** You walk past without looking. Then you walk back. Then you look.
+- **Narration:** {"}
+- **Narration:** Classes drag on forever. The room is full of whispered plans and rustling paper bags.
+- **Narration:** Lunch comes and goes. Nobody walks up to your desk. You eat your bread very slowly, just in case.
+- **Narration:** Right before the bell, {N} stops next to you.
+- **Girl:** {")}
 - **Her (by personality)**
-  - _gentle:_ You want to walk with me? ...I'd love to.
-  - _energetic:_ Yes! Let's hit every food stand!
-  - _cool:_ ...Fine. You can escort me.
-  - _teasing:_ A festival date? Bold~ I accept.
-- **Narration:** You spend the afternoon helping backstage. The teachers are impressed.
-
-### Calendar / Trip
-- **Narration:** Field trip day! The whole class takes the bus to {dest}.
-- **Narration:** Swimsuits, sunscreen and sand everywhere. This is a dangerous place for your heart.
-- **Narration:** Temples, old streets, and way too many souvenir shops.
-- **Narration:** Steam rises from the outdoor baths. The girls' bath is right behind that bamboo fence...
-- **Girl:** {T}
-- **Her (by personality)**
-  - _gentle:_ Just the two of us? I was hoping you'd ask...
-  - _energetic:_ Yay! Let's go everywhere!
-  - _cool:_ I suppose you can come along.
-  - _teasing:_ Sneaking away with me? I like it~
-- **Narration:** You wander around on your own and pick up some souvenirs.
-- **Narration:** You climb the rocks behind the fence, holding your breath...
-
-### Calendar / Seasonal / step "choco"
-- **Narration:** Chocolate Day. The whole school smells of cocoa, and every boy is pretending not to care.
-- **Narration:** ...Nobody gave you anything this year. Next year, for sure.
-- **Girl:** {T}
+  - _gentle:_ Um... I made too many for my club. You can have the extra one... if you want.
+  - _energetic:_ Leftover chocolate! Catch! ...Nice catch!
+  - _cool:_ I had one left over. Don't make it weird.
+  - _teasing:_ Pity chocolate~ Don't cry, it's still chocolate.
+- **You:** Thanks. Really.
+- **Narration:** Next year, for sure.
+- **Narration:** At lunch, it starts.
+- **Narration:** {N} walks up to your desk, hands hidden behind her back.
+- **Girl:** {")
+                        : T}
 - **Her (by personality)**
   - _gentle:_ I made these myself... for you. Only for you.
   - _energetic:_ Homemade! Eat them all, okay?!
@@ -1873,14 +2078,345 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _energetic:_ Here, friendship chocolate! Don't get the wrong idea!
   - _cool:_ Obligation chocolate. Obviously.
   - _teasing:_ Don't get your hopes up. ...Unless you want to.
+- **Narration:** And {value} more boxes appear on your desk while you're not looking. The boys at the back are glaring.
+- **Narration:** {N} is still standing there, watching you hold her box.
+- **Choice:** Eat one right now | Ask if it's homemade | Save it for later
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ R-right now? ...How is it? Is it okay?
+  - _energetic:_ Well?! Well?! Is it good?!
+  - _cool:_ ...You have chocolate on your lip. Idiot.
+  - _teasing:_ Mmh, you eat it so happily~ I should feed you more often.
+- **Narration:** It's sweet, a little bitter at the end. Perfect.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Y-yes... I stayed up late. Don't tell anyone.
+  - _energetic:_ Totally homemade! The kitchen is a disaster now!
+  - _cool:_ Store bought. ...Fine. Homemade. Happy?
+  - _teasing:_ Homemade, with a secret ingredient. Guess what it is~
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Oh... okay. Eat it when you're alone, then.
+  - _energetic:_ Saving it? Don't let it melt!
+  - _cool:_ Hmph. Suit yourself.
+  - _teasing:_ Saving the best for last? Smart boy~
+- **Narration:** After school. Snow falls softly on the way home, and the streetlights come on one by one.
+- **Narration:** Footsteps run up behind you. {N}, out of breath, cheeks red from the cold.
+- **Girl:** { Got it?")}
+- **Her (by personality)**
+  - _gentle:_ Wait! The one this morning was... not the real one. This is the real one.
+  - _energetic:_ Hah... hah... I forgot to give you the SPECIAL one!
+  - _cool:_ ...That one at school was for show. This one is honmei. Don't make me say it twice.
+  - _teasing:_ The one at school was obligation. This one's... not. Got it?
+- **Choice:** Promise to return it on White Day | Take her cold hand | Just say thank you
+- **You:** I'll give you something back on White Day. Something good.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ ...I'll be waiting. Every day until then.
+  - _energetic:_ Three times as good, that's the rule! I'm counting!
+  - _cool:_ I'll hold you to that.
+  - _teasing:_ Something good? Then I'll expect something very good~
+- **Narration:** Her fingers are freezing. She doesn't pull away. For a while, neither of you says anything.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ ...Your hand is warm.
+  - _energetic:_ W-what's this all of a sudden?! ...Don't let go.
+  - _cool:_ ...Only because it's cold.
+  - _teasing:_ Took you long enough~
+- **You:** Thank you. I mean it.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Mm. That's all I wanted to hear.
+  - _energetic:_ Hehe! You're welcome!
+  - _cool:_ ...You're welcome.
+  - _teasing:_ Just 'thank you'? Well, it's a start~
+- **Narration:** You walk home alone, counting the boxes in your bag. Not a bad day at all.
+- **Narration:** Chocolate Day is over. Your bag is heavier, and somehow so is your heart.
 
-### Calendar / Seasonal / step "tanabata"
-- **Narration:** Tanabata. Bamboo branches in the courtyard are covered in paper wishes. You write yours...
+### Sports
+- **Narration:** The Sports Festival! Flags snap in the wind and the whole school is out on the field.
+- **Narration:** Tents, tables, a mountain of traffic cones and a teacher with a megaphone who is already hoarse.
+- **Girl:** {")}
+- **Her (by personality)**
+  - _gentle:_ Here's your class headband... Tie it tight, okay? Good luck today.
+  - _energetic:_ HEADBANDS! Everybody gets one! Our class is winning this!
+  - _cool:_ Headband. Put it on properly. We're not losing to the other classes.
+  - _teasing:_ Headband~ Let me tie it for you. ...There. Now you look like you mean it.
+- **Girl:** {")}
+- **Her (by personality)**
+  - _gentle:_ Which event are you entering? I'll cheer for you from the tent!
+  - _energetic:_ Let's WIN this! Which event are you in?
+  - _cool:_ Try not to embarrass our class.
+  - _teasing:_ I'll be watching you~ Don't trip.
+- **Narration:** The sign-up sheet is in front of you. Pick your event.
+- **Narration:** Anchor leg. The baton is coming toward you, and your class is in third place.
+- **Narration:** You grab it and run like your life depends on it. The crowd becomes one long roar.
+- **Narration:** {"}
+- **Narration:** Thirty students on one rope. The referee raises the flag.
+- **Narration:** PULL! Your feet slide in the dirt. Somebody behind you is screaming a war cry.
+- **Narration:** {"}
+- **Narration:** You grab the megaphone and lead the cheering section with all your heart.
+- **Narration:** {"}
+- **Narration:** Your ankle is tied to hers. You'll have to move together.
+- **Girl:** {")}
+- **Her (by personality)**
+  - _gentle:_ W-we're really close like this... Left foot first, okay?
+  - _energetic:_ Okay! One-two, one-two! Don't let go of me!
+  - _cool:_ Keep up. And don't hold me that tight.
+  - _teasing:_ Arm around my waist~ For balance, of course.
+- **Narration:** The starting pistol fires. Her shoulder bumps yours with every step.
+- **Narration:** {"}
+- **Narration:** Afternoon. The girls' 200 meters is next.
+- **Narration:** {N} is in lane four, bouncing on her toes, glancing toward your class's tent.
+- **Choice:** Shout her name as loud as you can | Wait at the finish line with water | Film it for her
+- **Narration:** {"}
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ I heard you... It was so embarrassing. ...Thank you.
+  - _energetic:_ THAT WAS YOU?! I ran faster because of that!
+  - _cool:_ You're loud. ...I didn't hate it.
+  - _teasing:_ Shouting my name in front of everyone? Bold~
+- **Narration:** She crosses the line and nearly collapses. You're right there with a cold bottle.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ You waited for me...? Thank you, I'm so thirsty.
+  - _energetic:_ Water! You're a lifesaver!
+  - _cool:_ ...Thoughtful. Thanks.
+  - _teasing:_ Waiting at the finish line for me? How devoted~
+- **Narration:** You record the whole race on your phone. Later she watches it three times, pretending she isn't.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Don't show anyone how my face looks when I run!
+  - _energetic:_ Again! Play it again! Look how fast I was!
+  - _cool:_ Delete the part where I almost tripped.
+  - _teasing:_ Keeping a video of me? What else do you keep~?
+- **Narration:** You cheer from the tent until your throat hurts.
+- **Narration:** Closing ceremony in the gym. The scoreboard is covered with a cloth while the principal talks... and talks.
+- **Narration:** {"}
+- **Girl:** {", "Winners deserve a reward, don't they~?")
+                                       : T}
+- **Her (by personality)**
+  - _gentle:_ We won... we really won! I'm so glad I was on your team.
+  - _energetic:_ WE WON WE WON WE WON!
+  - _cool:_ Of course we won. ...Okay, I'm happy. A little.
+  - _teasing:_ Winners deserve a reward, don't they~?
+- **Her (by personality)**
+  - _gentle:_ We did our best. That's what matters.
+  - _energetic:_ Argh! Next year we crush them!
+  - _cool:_ Second place. Acceptable. Barely.
+  - _teasing:_ Losing is fine. You looked cool anyway~
+- **Choice:** Walk her home | Stay and help clean up
+- **Narration:** The two of you walk home in the orange evening, sore and sunburned and very happy.
+- **Narration:** You fold tents and carry cones until dark. The teachers notice. So does she: she stays to help.
+- **Narration:** The Sports Festival is over. Tomorrow, everything will hurt.
+
+### Exam
+- **Narration:** Exam day. Desks pulled apart, the schedule written on the board, and a silence you could cut with a ruler.
+- **Narration:** Ten minutes before the start. Everyone is flipping through notes as if the pages might change.
+- **Narration:** {N} leans over from the next desk, notebook clutched to her chest.
+- **Girl:** {")}
+- **Her (by personality)**
+  - _gentle:_ Um... could you quiz me? Just the formulas... I'm so nervous.
+  - _energetic:_ Help! I forgot EVERYTHING! Quick, ask me something!
+  - _cool:_ Ask me three questions. I want to be sure.
+  - _teasing:_ Quiz me~ If I get them all right, you owe me something.
+- **Choice:** Quiz her on the formulas [INT] | Calm her down | Review on your own
+- **Narration:** {"}
+- **You:** You studied. You know this. Breathe.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ ...Okay. Breathe. Thank you. I feel better.
+  - _energetic:_ Breathe! Right! Hooo... okay! I'm ready!
+  - _cool:_ ...Fine. I'm calm. I was always calm.
+  - _teasing:_ You're cute when you try to comfort me~
+- **Narration:** You bury your face in your notes. One last look at everything.
+- **Narration:** The teacher hands out the papers face down. "Begin."
+- **Narration:** Deep breath. Question one. You know this. Question two. You know this too.
+- **Narration:** You scribble every formula you crammed into the margin before they leak out of your head.
+- **Narration:** The teacher steps out to answer the phone. The answer key is right there, on the desk...
+- **Narration:** {"}
+- **Narration:** Question seven. Nothing you studied looks anything like question seven.
+- **Choice:** Skip it and come back later | Fight it to the end [INT]
+- **Narration:** You leave it and finish the rest. At the end you come back with five minutes left and write something reasonable.
+- **Narration:** {"}
+- **Narration:** "Pencils down." The room exhales all at once.
+- **Girl:** {", "You looked so serious~ Was it hard, or were you thinking about me?")}
+- **Her (by personality)**
+  - _gentle:_ How did it go? I... think I did okay. Thanks to you, maybe.
+  - _energetic:_ DONE! Wanna compare answers? No? Okay, food then!
+  - _cool:_ Don't ask me about question seven.
+  - _teasing:_ You looked so serious~ Was it hard, or were you thinking about me?
+- **Narration:** The sun sets over the empty desks. Results tomorrow.
+
+### Culture
+- **Narration:** Two weeks before the Culture Festival. The class meeting has been going in circles for an hour.
+- **Narration:** Three ideas are left on the board. The class rep looks at you: you get the deciding vote.
+- **Choice:** Maid cafe [SEN] | Haunted house [STR] | Science exhibit [INT]
+- **Narration:** {"}
+- **Narration:** You stay late to work on it with {N}.
+- **Girl:** {", "I'll play the ghost who drags boys into the dark~")
+                        : T}
+- **Her (by personality)**
+  - _gentle:_ The aprons are done... Do you think this one suits me?
+  - _energetic:_ Look, look! I'm practicing my 'Welcome home, master'!
+  - _cool:_ I'm in charge of the menu. Nobody touches the menu.
+  - _teasing:_ Want a private preview of the uniform~?
+- **Her (by personality)**
+  - _gentle:_ I'm painting the blood... it's just red paint, right? Right?
+  - _energetic:_ BOO! Hahaha, your face!
+  - _cool:_ The lighting is wrong. Move that lamp. No, the other one.
+  - _teasing:_ I'll play the ghost who drags boys into the dark~
+- **Her (by personality)**
+  - _gentle:_ The volcano works! I'm so happy I could cry.
+  - _energetic:_ Can we make it BIGGER? Like, way bigger?
+  - _cool:_ The numbers check out. It'll work.
+  - _teasing:_ Explaining chemistry to strangers? I'll do it in a lab coat~
+- **Narration:** Festival day! Lanterns over every gate, music from the gym, and the smell of takoyaki everywhere.
+- **Narration:** Visitors pour in. Your class's booth opens its doors, and all morning you work without a break.
+- **Narration:** {"}
+- **Narration:** {"}
+- **Narration:** {"}
+- **Narration:** In the afternoon you finally get some free time.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ You want to walk with me? ...I'd love to.
+  - _energetic:_ Yes! Let's hit every food stand!
+  - _cool:_ ...Fine. You can escort me.
+  - _teasing:_ A festival date? Bold~ I accept.
+- **Narration:** Where to first?
+- **Choice:** Share some takoyaki | Brave the haunted house together | Visit the fortune teller
+- **Narration:** The takoyaki stand is run by the cooking club. The octopus pieces are suspiciously big.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Hot, hot... Ah, you have sauce right here. Hold still.
+  - _energetic:_ Mmh! Okay, the next stand is on me!
+  - _cool:_ ...It's good. Don't watch me eat.
+  - _teasing:_ Say 'ah'~ Come on, nobody's looking.
+- **You:** This is the best takoyaki I've ever had.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Maybe because you're eating it with me...?
+  - _energetic:_ Right?! Let's get another box!
+  - _cool:_ It's average. ...The company isn't bad.
+  - _teasing:_ Of course. I made it taste better just by being here~
+- **Narration:** The third-years built the haunted house. Paper lanterns, cobwebs, and a corridor that goes on far too long.
+- **Narration:** It's pitch dark. Something wet touches your neck. A scream. She grabs your arm and doesn't let go.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ I-I wasn't scared! ...Don't let go yet, okay?
+  - _energetic:_ AAAH! Ha... haha! Again! Let's go again!
+  - _cool:_ I'm not holding on to you. You're holding on to me.
+  - _teasing:_ You screamed louder than me~ Cute.
+- **Narration:** You come out the other side still arm in arm. Neither of you mentions it.
+- **Narration:** A tent of purple curtains, a crystal ball, and a third-year in a veil who takes this very seriously.
+- **Narration:** She looks at the two of you, then at your joined shadows, and smiles.
+- **Narration:** {\""}
+- **Girl:** {What did she say about us, exactly?", "Well? Going to argue with fate?")}
+- **Her (by personality)**
+  - _gentle:_ She said... we're compatible. W-what do you think?
+  - _energetic:_ Did you hear that?! Ha, she says that to everyone. ...Right?
+  - _cool:_ Fortune telling is nonsense. ...What did she say about us, exactly?
+  - _teasing:_ Well? Going to argue with fate?
+- **Narration:** Evening. The stalls glow red and orange. In the schoolyard, the bonfire for the closing dance is lit.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ The folk dance is starting... um...
+  - _energetic:_ Bonfire! Dance! Come on, come on!
+  - _cool:_ Are you going to dance? ...Just asking.
+  - _teasing:_ Everyone's pairing up. Don't keep a girl waiting~
+- **Choice:** Ask her to dance | Watch the fire together
+- **Narration:** You hold out your hand. She takes it. You step on her foot twice. She doesn't care.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ I'll remember this festival forever.
+  - _energetic:_ Again! One more song!
+  - _cool:_ ...You're a terrible dancer. Don't stop.
+  - _teasing:_ Your hand's sweaty~ Nervous?
+- **Narration:** You sit on the steps and watch the sparks rise into the dark. Her shoulder leans against yours.
+- **Narration:** You spend the afternoon backstage: fixing lights, carrying boxes, saving a play from a broken curtain.
+- **Narration:** By evening, the teachers know your name. In a good way, for once.
+- **Narration:** The last song ends. The Culture Festival is over, and nobody wants to go home.
+
+### Tanabata
+- **Narration:** July 7th. Tanabata.
+- **Narration:** Once a year, the weaver princess Orihime and the cowherd Hikoboshi cross the river of stars to meet.
+- **Narration:** On earth, people write their wishes on strips of paper and tie them to bamboo, hoping the stars will read them.
+- **Narration:** The old street near school is full of bamboo branches heavy with colored paper. Lanterns sway overhead.
+- **Narration:** Someone tugs your sleeve. {N}, in a summer yukata.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Ah... you came too. Does it... look okay on me?
+  - _energetic:_ Ta-da! Yukata! Say it's cute!
+  - _cool:_ My mother made me wear it. Don't stare.
+  - _teasing:_ Like what you see~? It took an hour to tie.
+- **Narration:** She has a paper strip in her hand and hides it the moment you look.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Ah! Don't look at mine... It's embarrassing.
+  - _energetic:_ I wished for something HUGE. Not telling!
+  - _cool:_ Mine is private. Turn around.
+  - _teasing:_ Want to know what I wished for? It involves you~
+- **Narration:** She ties it up high, out of your reach.
+- **Narration:** Your turn. You hold the pen over the paper for a long moment...
 - **Choice:** 'I want to get smarter.' | 'I want to get stronger.' | 'I want to be more charming.' | 'I want to be loved.'
-- **Narration:** You hang your wish on the highest branch you can reach.
+- **Narration:** You hang your wish on the highest branch you can reach. The paper turns slowly in the warm wind.
+- **Narration:** Night falls. The stalls along the shrine road light up one after another.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Will you walk with me a little...?
+  - _energetic:_ Stalls! Let's try everything!
+  - _cool:_ I'm hungry. You're paying.
+  - _teasing:_ A summer night, a girl in a yukata... You're lucky, you know~
+- **Choice:** Goldfish scooping | Shaved ice | Walk under the lanterns
+- **Narration:** Your paper net tears on the first try. Hers tears on the second. The old man gives you one goldfish out of pity.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ He's so small... Can I keep him? I'll name him after you.
+  - _energetic:_ WE CAUGHT ONE! Kind of! He counts!
+  - _cool:_ ...I'll take care of him. Since you can't.
+  - _teasing:_ Our first pet together~
+- **Narration:** Strawberry for her, melon for you. Brain freeze for both.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Want to try mine...? It's strawberry.
+  - _energetic:_ Ow ow ow, my head! Worth it!
+  - _cool:_ Your tongue is green. Very dignified.
+  - _teasing:_ Indirect kiss~ Just kidding. Unless...?
+- **Narration:** You walk slowly under the paper lanterns. The crowd pushes you closer together. Neither of you steps away.
+- **Narration:** On the way back you pass her bamboo branch. Her paper strip has come loose and flutters down at your feet.
+- **Narration:** You can't help reading it.
+- **Narration:** {T}
+- **Her (by personality)**
+  - _gentle:_ "I hope he notices how I feel."
+  - _energetic:_ "Let me spend every summer with him!"
+  - _cool:_ "I want to be honest with him. Just once."
+  - _teasing:_ "Make him fall for me. Hard."
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Y-you read it...! ...Well? Is it going to come true?
+  - _energetic:_ AAAH! Forget you saw that! ...Or don't. Whatever!
+  - _cool:_ ...Now you know. Don't make it weird.
+  - _teasing:_ Oops~ Well, now you know. What are you going to do about it?
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Don't read it! Please!
+  - _energetic:_ Mine! Give it! No peeking!
+  - _cool:_ Hand it over. Now.
+  - _teasing:_ Curious? Earn it first~
+- **Narration:** She ties it back up, higher this time.
+- **Narration:** Above the street, the Milky Way is clear tonight. Somewhere up there, two lovers are meeting.
 
-### Calendar / Seasonal / step "halloween"
-- **Narration:** Halloween! Some girls came to school with cat ears and little capes.
+### Halloween
+- **Narration:** Halloween. The classroom is covered in paper bats, jack-o'-lanterns and orange streamers.
+- **Narration:** There's a costume contest after school, and the class rep says nobody leaves without a costume.
+- **Choice:** Vampire, cape and all [SEN] | A bedsheet ghost | No costume. You're too cool.
+- **Narration:** Fake fangs, a red-lined cape, hair slicked back. In the mirror, you look... surprisingly good?
+- **Narration:** {"}
+- **Narration:** A bedsheet with two holes. You bump into three desks on the way to your seat.
+- **Narration:** At the contest the whole class laughs when your ghost walks into the door. Special prize: most dedicated ghost.
+- **Narration:** The class rep sighs and sticks cat ears on your head. They stay there all day.
+- **Narration:** At the contest you're not even entered. The cat ears get three votes anyway.
+- **Narration:** At lunch, the trick-or-treaters arrive.
 - **Girl:** {T}
 - **Her (by personality)**
   - _gentle:_ T-trick or treat...?
@@ -1889,14 +2425,186 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _teasing:_ Trick or treat~ I'm hoping for the trick.
 - **Narration:** You hand out sweets from your bag. Everyone's happy.
 - **Narration:** You don't have enough sweets... Time for some tricks.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Then... I'll draw a cat face on your cheek. Hold still...
+  - _energetic:_ No candy? TICKLE ATTACK!
+  - _cool:_ No sweets. Then you carry my bag all day.
+  - _teasing:_ No treats? Then close your eyes~ This trick is a secret.
+- **Narration:** After dark: the test of courage. Pairs walk the old hallway with one flashlight and no adults.
+- **Narration:** You draw lots. Your partner is {N}.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ I-it's really dark... You'll stay close, right?
+  - _energetic:_ This is gonna be AWESOME! Let's go!
+  - _cool:_ It's a hallway. Hallways aren't scary.
+  - _teasing:_ Alone in the dark with you~ Should I be scared of the ghosts, or of you?
+- **Narration:** Halfway down, the flashlight flickers. Somewhere behind you, a locker door slowly creaks open.
+- **Choice:** Take her hand | Jump out and scare her | Walk ahead bravely
+- **Narration:** You find her hand in the dark. She squeezes it so hard it hurts. You don't let go until the end.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ ...Thank you. I'm okay now. Just... don't let go.
+  - _energetic:_ Ha! I wasn't scared! ...Keep holding it though.
+  - _cool:_ ...This is for your sake. You looked scared.
+  - _teasing:_ Bold~ Should we walk slower?
+- **Narration:** "BOO!" She screams, then punches your arm, then laughs so hard she has to sit down.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ That was so mean! ...My heart's still racing.
+  - _energetic:_ AHAHA! Okay, okay, you got me! Revenge later!
+  - _cool:_ ...I will remember this.
+  - _teasing:_ Scaring a girl in the dark? You're worse than the ghosts~
+- **Narration:** You walk in front, flashlight high. Behind you, she holds the hem of your jacket the whole way.
+- **Narration:** Back in the classroom, the jack-o'-lanterns are lit for the party.
+- **Narration:** Pumpkin cake, orange juice and the bad horror movie somebody brought. Happy Halloween.
 
-### Calendar / Seasonal / step "xmas"
-- **Narration:** Christmas Eve. Lights on every street, couples everywhere.
-- **Narration:** You spend it with the Koikatsu Club, eating cake. Next year will be different.
+### Trip
+- **Narration:** Field trip day! The whole class boards the bullet train to {value}.
+- **Narration:** Rice fields fly past the window. Somebody already opened the snacks. The teacher has given up.
+- **Narration:** There's a free seat next to you.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ You saved me a seat...? Thank you.
+  - _energetic:_ Window seat neighbor! Want some chips?
+  - _cool:_ Fine. Don't hog the armrest.
+  - _teasing:_ Two hours sitting next to me. Lucky you~
+- **Narration:** You play cards for an hour. She cheats. You let her.
+- **Narration:** Kyoto. Temples, old streets and far too many souvenir shops. The class splits up for free time.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Just the two of us? I was hoping you'd ask...
+  - _energetic:_ Yay! Let's go everywhere!
+  - _cool:_ I suppose you can come along.
+  - _teasing:_ Sneaking away with me? I like it~
+- **Choice:** Rent kimonos and walk the old streets | Write a wish on an ema together
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ How do I look...? You're staring.
+  - _energetic:_ Look, look! I'm a real princess now!
+  - _cool:_ Stop taking pictures. ...Fine, one more.
+  - _teasing:_ Help me with the obi? It's so hard to tie alone~
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Don't read mine! ...It's about you. A little.
+  - _energetic:_ I wished for ten more trips like this one!
+  - _cool:_ Wishes are childish. ...I wrote one anyway.
+  - _teasing:_ Mine says 'that he notices me'. Oops, you read it~
+- **Narration:** The inn is old and beautiful: tatami rooms, sliding doors, a garden with a stone lantern. Steam rises behind the bamboo fence.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ It's so pretty here... I'm glad I came with you.
+  - _energetic:_ Hot springs! Ping-pong! Milk in glass bottles! Let's go!
+  - _cool:_ Quiet. Good. I like this place.
+  - _teasing:_ Mixed bathing is around the back, I heard~ Just saying.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ Ah, my yukata is coming loose... D-don't look!
+  - _energetic:_ SMASH! Ha! Another one, loser buys milk!
+  - _cool:_ You're going down. ...Stop looking at my collar.
+  - _teasing:_ If I win, you do whatever I say tonight~
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ It's so quiet... I can hear the water. I like being here with you.
+  - _energetic:_ Look! A frog! A HUGE frog!
+  - _cool:_ ...This is nice. Don't ruin it by talking.
+  - _teasing:_ A garden, a quiet afternoon, just us~ What are you thinking about?
+- **Narration:** While the others nap, you climb the rocks behind the bamboo fence, holding your breath...
+- **Narration:** Night at the inn. Lights out at ten, the teacher said. It's eleven-thirty and nobody is asleep.
+- **Narration:** A soft knock on the sliding door. It's {N}, in her yukata, whispering.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ I couldn't sleep... Can I stay for a bit?
+  - _energetic:_ Psst! The girls are having a pillow fight, I escaped! Hide me!
+  - _cool:_ My roommates snore. I'm staying here for ten minutes.
+  - _teasing:_ Sneaking into the boys' room~ If we get caught, it's your fault.
+- **Narration:** Footsteps in the corridor. The teacher's flashlight sweeps under the door.
+- **Choice:** Hide her in the closet | Talk quietly until it passes | Send her back before you're caught
+- **Narration:** You both squeeze into the futon closet. It's very dark and very small. You can hear her heartbeat. Or yours.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ ...Your heart is so loud.
+  - _energetic:_ Mmmph! Don't make me laugh!
+  - _cool:_ ...Don't move. Don't breathe. Don't think.
+  - _teasing:_ Cozy~ We should get caught more often.
+- **Narration:** The footsteps pass. You talk in whispers until two in the morning: families, dreams, the stupid things you did as kids.
+- **Narration:** You slide the door open just in time. She tiptoes back. The teacher only sees you, waving awkwardly.
+- **Narration:** You watch the mountains go by and listen to music. Peaceful.
+- **Narration:** {"}
+- **Narration:** The train home. Everyone is exhausted. The car is quiet except for snoring.
+- **Narration:** Something warm settles on your shoulder. Somebody fell asleep on you. You don't move for the rest of the trip.
+- **Narration:** A trip to remember.
+
+### Xmas
+- **Narration:** Christmas Eve. Snow on the rooftops, lights in every window, couples on every corner.
+- **Narration:** For once, you're one of them. {N} is waiting under the streetlight, her breath white in the cold.
+- **Girl:** {")}
+- **Her (by personality)**
+  - _gentle:_ You came... Merry Christmas. I've been looking forward to this all month.
+  - _energetic:_ MERRY CHRISTMAS! Look, it's snowing! It's actually snowing!
+  - _cool:_ You're late. ...By two minutes. I'll allow it. Merry Christmas.
+  - _teasing:_ Merry Christmas~ Did you dress up for me? You did, didn't you.
+- **Narration:** You walk through the quiet streets. She slips her hand into your coat pocket, next to yours.
+- **Narration:** The park is empty. Fresh snow on the bench, one lamp glowing gold. It feels like the whole world is holding its breath.
+- **Narration:** You take out the present you've been hiding all evening.
+- **Choice:** A warm scarf | A small necklace | A handmade card
+- **Narration:** You wrap it around her neck yourself. It covers her up to the nose.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ It's so warm... It smells like you.
+  - _energetic:_ SO FLUFFY! I'm never taking it off!
+  - _cool:_ ...Practical. I like practical. ...I like it a lot.
+  - _teasing:_ Wrapping me up like a present? Who's unwrapping me later~?
+- **Narration:** Her eyes go wide when she opens the little box. Her hands are shaking as you fasten it.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ It's beautiful... I'll treasure it forever.
+  - _energetic:_ Shiny! It's so pretty! Was it expensive?! Don't tell me!
+  - _cool:_ ...You didn't have to. ...I'm wearing it every day.
+  - _teasing:_ Jewelry? Someone's serious about me~
+- **Narration:** A card you drew yourself, a little crooked, with everything you never managed to say out loud.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ ...I'm crying. I'm sorry. It's the best present ever.
+  - _energetic:_ You DREW this?! It's so bad! I love it!
+  - _cool:_ ...I'll read it again. Later. Alone.
+  - _teasing:_ Such sweet words~ I'm keeping this to tease you for years.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ This is from me... Open it.
+  - _energetic:_ My turn! Open it, open it!
+  - _cool:_ Here. It's nothing special. ...Open it.
+  - _teasing:_ My present is in this box. The other one comes later~
+- **Narration:** Gloves. Hand-knitted, a little uneven. One finger is longer than the others. They're perfect.
+- **Narration:** Later. Your room, the lights off, snow falling past the window.
 - **Girl:** {T}
 - **Her (by personality)**
   - _gentle:_ Merry Christmas... I'm so happy to spend it with you.
-  - _energetic:_ Merry Christmas! Let's eat ALL the cake!
+  - _energetic:_ Merry Christmas! Best. Christmas. Ever.
   - _cool:_ Merry Christmas. ...Stay with me tonight.
-  - _teasing:_ Merry Christmas~ Your present is... me. Kidding. Maybe.
+  - _teasing:_ Merry Christmas~ Your last present is... me. Kidding. Maybe.
+- **Narration:** Outside, the snow keeps falling. Inside, nobody is cold anymore.
+- **Narration:** Christmas Eve. Lights on every street, couples everywhere.
+- **Narration:** You spend it with the Koikatsu Club: a cake too big for the club room, paper hats, and a gift exchange.
+- **Narration:** You get socks. Somebody else gets your socks. It's that kind of party.
+- **Narration:** On the way home the snow starts. The street is quiet and the houses glow warm behind their curtains.
+- **Narration:** Your phone buzzes. A message from {N}.
+- **Girl:** {")}
+- **Her (by personality)**
+  - _gentle:_ Merry Christmas... I just wanted to say it to you first.
+  - _energetic:_ MERRY CHRISTMAS!!! Save me some cake!!
+  - _cool:_ Merry Christmas. That's all. ...Don't read into it.
+  - _teasing:_ Merry Christmas~ Next year, keep the evening free for me.
+- **Narration:** Another buzz. "...I'm at the park near the station. If you're close."
+- **Choice:** Run to the park | Reply and go home
+- **Narration:** She's on the bench under the lamp, snow on her hair, holding two cans of hot cocoa. One for you.
+- **Girl:** {T}
+- **Her (by personality)**
+  - _gentle:_ You actually came... Merry Christmas. For real this time.
+  - _energetic:_ YOU CAME! I bet myself you would!
+  - _cool:_ ...You're out of breath. Idiot. Sit.
+  - _teasing:_ Running to me on Christmas Eve? That's practically a confession~
+- **Narration:** You sit together until the cocoa goes cold, watching the snow.
+- **You:** Merry Christmas to you too. See you at school.
+- **Narration:** Next year will be different.
 

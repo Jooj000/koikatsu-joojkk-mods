@@ -82,7 +82,7 @@ namespace Joojkk.CampusLife
             string tl;
             try
             {
-                if (KKAPI.Utilities.TranslationHelper.TryTranslate(raw, out tl) && !string.IsNullOrEmpty(tl)) return tl;
+                if (KKAPI.Utilities.TranslationHelper.TryTranslate(raw, out tl) && !string.IsNullOrEmpty(tl) && tl.IndexOf("{{", System.StringComparison.Ordinal) < 0) return tl;
             }
             catch { }
             return string.IsNullOrEmpty(raw) ? "map " + mapNo : raw;

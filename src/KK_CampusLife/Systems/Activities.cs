@@ -13,7 +13,6 @@ namespace Joojkk.CampusLife
         public string Place;            // place id, or "" for anywhere
         public PeriodMask Periods = PeriodMask.Any;
         public int Energy = 1;
-        public int Seconds = 50;        // period clock cost in game seconds (a period is 500, 750 with longer periods)
         public int MoneyCost;
         public bool OncePerDay;
         public bool IsJob;
@@ -34,43 +33,43 @@ namespace Joojkk.CampusLife
         public static readonly List<ActivityDef> All = new List<ActivityDef>
         {
             // classroom
-            new ActivityDef { Id = "review_notes", Name = "Review lecture notes", Place = "classroom", Energy = 1, Seconds = 40, Desc = "+INT. Quiet, steady progress." },
-            new ActivityDef { Id = "class_duty", Name = "Classroom cleaning duty", Place = "classroom", Periods = PeriodMask.After, Energy = 1, Seconds = 50, OncePerDay = true, Desc = "+Reputation, +STR. Teachers notice." },
+            new ActivityDef { Id = "review_notes", Name = "Review lecture notes", Place = "classroom", Energy = 1, Desc = "+INT. Quiet, steady progress." },
+            new ActivityDef { Id = "class_duty", Name = "Classroom cleaning duty", Place = "classroom", Periods = PeriodMask.After, Energy = 1, OncePerDay = true, Desc = "+Reputation, +STR. Teachers notice." },
             // library
-            new ActivityDef { Id = "study", Name = "Study session", Place = "library", Energy = 1, Seconds = 60, Desc = "+INT (more with a study guide). Exams use INT." },
-            new ActivityDef { Id = "romance_novel", Name = "Read a romance novel", Place = "library", Energy = 1, Seconds = 50, Desc = "+SEN, +INT. Learn how hearts work." },
-            new ActivityDef { Id = "browse_magazines", Name = "Browse girls' magazines", Place = "library", Energy = 1, Seconds = 40, Desc = "Discover what a classmate likes (better with high INT)." },
-            new ActivityDef { Id = "library_job", Name = "Library assistant shift", Place = "library", Periods = PeriodMask.After, Energy = 2, Seconds = 100, OncePerDay = true, IsJob = true, Desc = "Part-time job. Pay scales with INT." },
+            new ActivityDef { Id = "study", Name = "Study session", Place = "library", Energy = 1, Desc = "+INT (more with a study guide). Exams use INT." },
+            new ActivityDef { Id = "romance_novel", Name = "Read a romance novel", Place = "library", Energy = 1, Desc = "+SEN, +INT. Learn how hearts work." },
+            new ActivityDef { Id = "browse_magazines", Name = "Browse girls' magazines", Place = "library", Energy = 1, Desc = "Discover what a classmate likes (better with high INT)." },
+            new ActivityDef { Id = "library_job", Name = "Library assistant shift", Place = "library", Periods = PeriodMask.After, Energy = 2, OncePerDay = true, IsJob = true, Desc = "Part-time job. Pay scales with INT." },
             // gym
-            new ActivityDef { Id = "workout", Name = "Work out", Place = "gym", Energy = 1, Seconds = 60, Desc = "+STR (more with a protein shake). STR gives energy and festival wins." },
-            new ActivityDef { Id = "basketball", Name = "Pickup basketball", Place = "gym", Energy = 1, Seconds = 60, Desc = "+STR, +Reputation. Sporty girls like it." },
-            new ActivityDef { Id = "gym_job", Name = "Set up equipment for the teams", Place = "gym", Periods = PeriodMask.After | PeriodMask.Club, Energy = 2, Seconds = 90, OncePerDay = true, IsJob = true, MinStr = 15, Desc = "Part-time job. Pay scales with STR." },
+            new ActivityDef { Id = "workout", Name = "Work out", Place = "gym", Energy = 1, Desc = "+STR (more with a protein shake). STR gives energy and festival wins." },
+            new ActivityDef { Id = "basketball", Name = "Pickup basketball", Place = "gym", Energy = 1, Desc = "+STR, +Reputation. Sporty girls like it." },
+            new ActivityDef { Id = "gym_job", Name = "Set up equipment for the teams", Place = "gym", Periods = PeriodMask.After | PeriodMask.Club, Energy = 2, OncePerDay = true, IsJob = true, MinStr = 15, Desc = "Part-time job. Pay scales with STR." },
             // pool
-            new ActivityDef { Id = "swim", Name = "Swim laps", Place = "pool", Energy = 1, Seconds = 60, Desc = "+STR. Good for stamina." },
-            new ActivityDef { Id = "lifeguard", Name = "Lifeguard shift", Place = "pool", Periods = PeriodMask.After | PeriodMask.Club, Energy = 2, Seconds = 100, OncePerDay = true, IsJob = true, MinStr = 30, Desc = "Part-time job (STR 30+). Good pay." },
+            new ActivityDef { Id = "swim", Name = "Swim laps", Place = "pool", Energy = 1, Desc = "+STR. Good for stamina." },
+            new ActivityDef { Id = "lifeguard", Name = "Lifeguard shift", Place = "pool", Periods = PeriodMask.After | PeriodMask.Club, Energy = 2, OncePerDay = true, IsJob = true, MinStr = 30, Desc = "Part-time job (STR 30+). Good pay." },
             // field / courtyard / park
-            new ActivityDef { Id = "run", Name = "Go for a run", Place = "field", Energy = 1, Seconds = 50, Desc = "+STR." },
-            new ActivityDef { Id = "garden", Name = "Help the gardening committee", Place = "courtyard", Energy = 1, Seconds = 60, OncePerDay = true, Desc = "+Reputation, small pay." },
-            new ActivityDef { Id = "feed_cats", Name = "Feed the stray cats", Place = "courtyard", Energy = 0, Seconds = 25, OncePerDay = true, Desc = "Needs cat food. Animal lovers will hear about it." },
-            new ActivityDef { Id = "park_walk", Name = "Walk around the park", Place = "park", Energy = 0, Seconds = 50, OncePerDay = true, Desc = "Recover 1 energy and clear your head." },
+            new ActivityDef { Id = "run", Name = "Go for a run", Place = "field", Energy = 1, Desc = "+STR." },
+            new ActivityDef { Id = "garden", Name = "Help the gardening committee", Place = "courtyard", Energy = 1, OncePerDay = true, Desc = "+Reputation, small pay." },
+            new ActivityDef { Id = "feed_cats", Name = "Feed the stray cats", Place = "courtyard", Energy = 0, OncePerDay = true, Desc = "Needs cat food. Animal lovers will hear about it." },
+            new ActivityDef { Id = "park_walk", Name = "Walk around the park", Place = "park", Energy = 0, OncePerDay = true, Desc = "Recover 1 energy and clear your head." },
             // cafeteria
-            new ActivityDef { Id = "hearty_lunch", Name = "Eat a hearty lunch", Place = "cafeteria", Periods = PeriodMask.Lunch, Energy = 0, Seconds = 50, MoneyCost = 500, OncePerDay = true, Desc = "Costs 500 yen. +2 energy." },
-            new ActivityDef { Id = "kitchen_job", Name = "Kitchen helper shift", Place = "cafeteria", Periods = PeriodMask.Lunch | PeriodMask.After, Energy = 2, Seconds = 90, OncePerDay = true, IsJob = true, Desc = "Part-time job. Tips scale with SEN (charm)." },
+            new ActivityDef { Id = "hearty_lunch", Name = "Eat a hearty lunch", Place = "cafeteria", Periods = PeriodMask.Lunch, Energy = 0, MoneyCost = 500, OncePerDay = true, Desc = "Costs 500 yen. +2 energy." },
+            new ActivityDef { Id = "kitchen_job", Name = "Kitchen helper shift", Place = "cafeteria", Periods = PeriodMask.Lunch | PeriodMask.After, Energy = 2, OncePerDay = true, IsJob = true, Desc = "Part-time job. Tips scale with SEN (charm)." },
             // club room
-            new ActivityDef { Id = "club_meeting", Name = "Plan club activities", Place = "clubroom", Energy = 1, Seconds = 60, Desc = "+Club points (vanilla club level), +INT." },
-            new ActivityDef { Id = "club_report", Name = "Write the club report", Place = "clubroom", Energy = 1, Seconds = 50, OncePerDay = true, Desc = "+INT, +Club points, +Reputation." },
-            new ActivityDef { Id = "research_material", Name = "Study 'research material'", Place = "clubroom", Energy = 1, Seconds = 50, Desc = "+SEN. It's for the club. Really." },
-            new ActivityDef { Id = "fundraise", Name = "Club fundraising", Place = "clubroom", Periods = PeriodMask.After, Energy = 2, Seconds = 90, OncePerDay = true, IsJob = true, MinSens = 20, Desc = "Sell club goods. Pay scales with SEN and Reputation." },
+            new ActivityDef { Id = "club_meeting", Name = "Plan club activities", Place = "clubroom", Energy = 1, Desc = "+Club points (vanilla club level), +INT." },
+            new ActivityDef { Id = "club_report", Name = "Write the club report", Place = "clubroom", Energy = 1, OncePerDay = true, Desc = "+INT, +Club points, +Reputation." },
+            new ActivityDef { Id = "research_material", Name = "Study 'research material'", Place = "clubroom", Energy = 1, Desc = "+SEN. It's for the club. Really." },
+            new ActivityDef { Id = "fundraise", Name = "Club fundraising", Place = "clubroom", Periods = PeriodMask.After, Energy = 2, OncePerDay = true, IsJob = true, MinSens = 20, Desc = "Sell club goods. Pay scales with SEN and Reputation." },
             // rooftop
-            new ActivityDef { Id = "nap", Name = "Nap in the sun", Place = "rooftop", Energy = 0, Seconds = 80, OncePerDay = true, Desc = "+2 energy." },
-            new ActivityDef { Id = "practice_lines", Name = "Practice smooth lines", Place = "rooftop", Energy = 1, Seconds = 40, Desc = "+SEN." },
-            new ActivityDef { Id = "stargaze", Name = "Watch the sunset", Place = "rooftop", Periods = PeriodMask.After, Energy = 1, Seconds = 60, Desc = "+SEN, +INT. Romantic spot." },
+            new ActivityDef { Id = "nap", Name = "Nap in the sun", Place = "rooftop", Energy = 0, OncePerDay = true, Desc = "+2 energy." },
+            new ActivityDef { Id = "practice_lines", Name = "Practice smooth lines", Place = "rooftop", Energy = 1, Desc = "+SEN." },
+            new ActivityDef { Id = "stargaze", Name = "Watch the sunset", Place = "rooftop", Periods = PeriodMask.After, Energy = 1, Desc = "+SEN, +INT. Romantic spot." },
             // infirmary
-            new ActivityDef { Id = "rest", Name = "Rest in bed", Place = "infirmary", Energy = 0, Seconds = 90, OncePerDay = true, Desc = "+2 energy." },
-            new ActivityDef { Id = "nurse_job", Name = "Help the school nurse", Place = "infirmary", Periods = PeriodMask.After | PeriodMask.Club, Energy = 2, Seconds = 90, OncePerDay = true, IsJob = true, MinInt = 20, Desc = "Part-time job (INT 20+). +INT." },
+            new ActivityDef { Id = "rest", Name = "Rest in bed", Place = "infirmary", Energy = 0, OncePerDay = true, Desc = "+2 energy." },
+            new ActivityDef { Id = "nurse_job", Name = "Help the school nurse", Place = "infirmary", Periods = PeriodMask.After | PeriodMask.Club, Energy = 2, OncePerDay = true, IsJob = true, MinInt = 20, Desc = "Part-time job (INT 20+). +INT." },
             // staff room
-            new ActivityDef { Id = "tutoring", Name = "Ask for extra tutoring", Place = "staffroom", Energy = 1, Seconds = 70, MoneyCost = 1500, OncePerDay = true, Desc = "Costs 1500 yen. Big +INT." },
-            new ActivityDef { Id = "teacher_errands", Name = "Run errands for teachers", Place = "staffroom", Energy = 1, Seconds = 60, OncePerDay = true, Desc = "+Reputation, small pay." },
+            new ActivityDef { Id = "tutoring", Name = "Ask for extra tutoring", Place = "staffroom", Energy = 1, MoneyCost = 1500, OncePerDay = true, Desc = "Costs 1500 yen. Big +INT." },
+            new ActivityDef { Id = "teacher_errands", Name = "Run errands for teachers", Place = "staffroom", Energy = 1, OncePerDay = true, Desc = "+Reputation, small pay." },
         };
 
         public static ActivityDef Get(string id) { return All.FirstOrDefault(a => a.Id == id); }

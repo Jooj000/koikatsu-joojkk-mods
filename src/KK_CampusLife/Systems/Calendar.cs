@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>School events: exams, sports festival, culture festival, field trips and seasonal days.</summary>
-    internal static class Calendar
+    internal static partial class Calendar
     {
         private static CampusState S { get { return Campus.S; } }
         private static float _periodStartedAt;
@@ -32,52 +32,43 @@ namespace Joojkk.CampusLife
             }
         }
 
-        private static int Interval(string id)
+        private struct Slot
         {
-            switch (id)
-            {
-                case "exam": return Cfg.ExamInterval.Value;
-                case "sports": return Cfg.SportsInterval.Value;
-                case "culture": return Cfg.CultureInterval.Value;
-                default: return Cfg.TripInterval.Value;
-            }
+            public int Week;
+            public Cycle.Week Day;
+            public string Id;
+            public Slot(int week, Cycle.Week day, string id) { Week = week; Day = day; Id = id; }
         }
 
-        private static int LastWeek(string id)
+        /// <summary>
+        /// One event a week on changing days, in a 9-week loop, so there are never more than 10 days between two events
+        /// (with the old separate intervals the first seasonal day came after 2-3 weeks and the festivals after 6-10).
+        /// A new game starts on a Sunday that is still week 0, so week 1 holds the first event (Chocolate Day, day 4).
+        /// </summary>
+        private static readonly Slot[] Schedule =
         {
-            int w;
-            return S.EventLastWeek.TryGetValue(id, out w) ? w : 0;
-        }
+            new Slot(1, Cycle.Week.Wednesday, "choco"),
+            new Slot(2, Cycle.Week.Saturday, "sports"),
+            new Slot(3, Cycle.Week.Friday, "exam"),
+            new Slot(4, Cycle.Week.Thursday, "tanabata"),
+            new Slot(5, Cycle.Week.Saturday, "culture"),
+            new Slot(6, Cycle.Week.Thursday, "halloween"),
+            new Slot(7, Cycle.Week.Saturday, "trip"),
+            new Slot(8, Cycle.Week.Friday, "exam"),
+            new Slot(0, Cycle.Week.Wednesday, "xmas"),
+        };
 
-        /// <summary>Weeks until the event is due (0 = this week).</summary>
-        public static int WeeksUntil(string id)
+        private const int Loop = 9;
+
+        private static int LoopWeek { get { return ((S.Week % Loop) + Loop) % Loop; } }
+
+        private static string EventOn(Cycle.Week day)
         {
-            return Math.Max(0, LastWeek(id) + Interval(id) - S.Week);
-        }
-
-        public static bool IsExamWeek { get { return Cfg.CalendarEnabled.Value && WeeksUntil("exam") == 0; } }
-
-        /// <summary>Which Saturday event happens this week (only one per Saturday).</summary>
-        public static string SaturdayEvent
-        {
-            get
-            {
-                foreach (var id in new[] { "sports", "culture", "trip" })
-                    if (WeeksUntil(id) == 0) return id;
-                return "";
-            }
-        }
-
-        private static string SeasonalFor(Cycle.Week day)
-        {
-            // A 12-week "season" loop so the special days come around regularly.
-            var w = S.Week % 12;
-            if (w == 2 && day == Cycle.Week.Wednesday) return "choco";
-            if (w == 5 && day == Cycle.Week.Thursday) return "tanabata";
-            if (w == 8 && day == Cycle.Week.Tuesday) return "halloween";
-            if (w == 11 && day == Cycle.Week.Wednesday) return "xmas";
+            foreach (var s in Schedule) if (s.Week == LoopWeek && s.Day == day) return s.Id;
             return "";
         }
+
+        public static bool IsExamWeek { get { return Cfg.CalendarEnabled.Value && Schedule.Any(s => s.Id == "exam" && s.Week == LoopWeek); } }
 
         // ---------------- day / period hooks ----------------
 
@@ -88,15 +79,10 @@ namespace Joojkk.CampusLife
             S.PendingEvent = "";
 
             if (day == Cycle.Week.Monday)
-            {
-                if (IsExamWeek) Toasts.Show("Exams this Friday! Study (INT) to do well.");
-                var sat = SaturdayEvent;
-                if (sat != "") Toasts.Show(EventName(sat) + " this Saturday!");
-            }
+                foreach (var s in Schedule.Where(x => x.Week == LoopWeek && x.Day != Cycle.Week.Monday))
+                    Toasts.Show(EventName(s.Id) + " this " + DayNames[(int)s.Day] + "!" + (s.Id == "exam" ? " Study (INT) to do well." : ""));
 
-            if (day == Cycle.Week.Friday && IsExamWeek) S.PendingEvent = "exam";
-            else if (day == Cycle.Week.Saturday && SaturdayEvent != "") S.PendingEvent = SaturdayEvent;
-            else S.PendingEvent = SeasonalFor(day);
+            S.PendingEvent = EventOn(day);
 
             if (S.PendingEvent != "") Toasts.Show("Today: " + EventName(S.PendingEvent) + ".");
         }
@@ -144,13 +130,13 @@ namespace Joojkk.CampusLife
                 case "sports": ok = Sports(); break;
                 case "culture": ok = Culture(); break;
                 case "trip": ok = Trip(); break;
-                default: ok = Seasonal(id); break;
+                case "choco": ok = Choco(); break;
+                case "tanabata": ok = Tanabata(); break;
+                case "halloween": ok = Halloween(); break;
+                case "xmas": ok = Xmas(); break;
+                default: ok = false; break;
             }
-            if (ok)
-            {
-                S.PendingEvent = "";
-                if (Array.IndexOf(EventIds, id) >= 0) S.EventLastWeek[id] = S.Week;
-            }
+            if (ok) S.PendingEvent = "";
             return ok;
         }
 
@@ -172,7 +158,6 @@ namespace Joojkk.CampusLife
                 S.Log("You skipped the exam room... the teacher made you take it after class: " + score + " points.");
             }
             else S.Log("You missed the " + EventName(id) + ".");
-            if (Array.IndexOf(EventIds, id) >= 0) S.EventLastWeek[id] = S.Week;
         }
 
         // ---------------- helpers ----------------
@@ -230,262 +215,6 @@ namespace Joojkk.CampusLife
             Pay(r, null, "Exam score " + score + "/100. " + verdict);
         }
 
-        private static bool Exam()
-        {
-            var b = new SceneBuilder(null, false);
-            var girl = AnyGirl();
-            b.Narr("Exam day. The classroom is silent except for pencils scratching on paper.");
-            if (girl != null)
-                b.Say(girl, Lines.T(GirlInfo.ToneOf(girl), "Good luck... let's both do our best.", "Let's crush this test!", "Don't distract me.", "If you fail, I'm laughing at you~"));
-            var opts = new List<string> { "Stay calm and focus.", "calm", "Cram the formulas at the last minute.", "cram" };
-            var peek = G.Sens >= 60;
-            if (peek) { opts.Add("Peek at the answer key on the teacher's desk. [SEN]"); opts.Add("peek"); }
-            b.Choice(opts.ToArray());
-            b.Branch("calm"); b.Narr("You take a deep breath and start writing."); b.End();
-            b.Branch("cram"); b.Narr("You mutter formulas until the last second. Your head is spinning, but they're in there."); b.End();
-            b.Branch("peek"); b.Narr("While the teacher looks away, you lean over... "); b.End();
-            return Scenes.PlayOnMap(b, choice =>
-            {
-                var score = ExamScore(choice == "cram");
-                if (choice == "cram") Campus.SpendEnergy(1);
-                if (choice == "peek")
-                {
-                    int roll;
-                    if (Campus.Check(G.Sens, 85, out roll)) { score = Mathf.Min(100, score + 20); Toasts.Show("Nobody noticed. Smooth."); }
-                    else
-                    {
-                        score = Mathf.Max(0, score - 25);
-                        S.Reputation = Mathf.Clamp(S.Reputation - 10, 0, 100);
-                        Toasts.Show("Caught! The teacher confiscates your test. (-10 reputation)");
-                    }
-                }
-                RecordExam(score);
-            });
-        }
-
-        // ---------------- sports festival ----------------
-
-        private static bool Sports()
-        {
-            var partner = TopGirls(1).FirstOrDefault();
-            var b = new SceneBuilder(null, false);
-            b.Narr("The Sports Festival! Flags everywhere, the whole school is on the field.");
-            if (partner != null)
-                b.Say(partner, Lines.T(GirlInfo.ToneOf(partner), "Which event are you entering? I'll cheer for you!", "Let's WIN this! Which event are you in?", "Try not to embarrass our class.", "I'll be watching you~ Don't trip."));
-            var opts = new List<string> { "Relay race (STR)", "relay", "Tug of war (STR, team)", "tug", "Cheer squad (SEN)", "cheer" };
-            if (partner != null) { opts.Add("Three-legged race with " + GirlInfo.FirstName(partner)); opts.Add("three"); }
-            b.Choice(opts.ToArray());
-            b.Branch("relay"); b.Narr("You grab the baton and run like your life depends on it..."); b.End();
-            b.Branch("tug"); b.Narr("Everyone grabs the rope. Pull!"); b.End();
-            b.Branch("cheer"); b.Narr("You lead the cheering section with all your heart."); b.End();
-            b.Branch("three"); b.Narr("Your ankle is tied to hers. You'll have to move together."); b.End();
-            return Scenes.PlayOnMap(b, choice =>
-            {
-                int roll;
-                switch (choice)
-                {
-                    case "tug":
-                        if (Campus.Check(G.Str / 2 + 25, 55, out roll)) Pay(new Rewards { Rep = 4, Str = 1, Club = 2 }, null, "Your team won the tug of war!");
-                        else Pay(new Rewards { Rep = 1, Str = 1 }, null, "Your team lost the tug of war.");
-                        break;
-                    case "cheer":
-                        if (Campus.Check(G.Sens, 60, out roll)) Pay(new Rewards { Rep = 5, Sens = 1 }, null, "Your cheering became the talk of the school!");
-                        else Pay(new Rewards { Rep = 1 }, null, "Your cheering was... enthusiastic.");
-                        foreach (var g in TopGirls(3)) G.AddFavor(g, 2, 0);
-                        break;
-                    case "three":
-                        if (partner == null) goto default;
-                        var together = (G.Str + partner.favor) / 2;
-                        if (Campus.Check(together, 70, out roll)) Pay(new Rewards { Favor = 10, Lewd = 3, Rep = 3 }, partner, "You and " + GirlInfo.FirstName(partner) + " won the three-legged race!");
-                        else Pay(new Rewards { Favor = 6, Lewd = 2 }, partner, "You and " + GirlInfo.FirstName(partner) + " fell over laughing");
-                        break;
-                    default:
-                        if (Campus.Check(G.Str, 65, out roll)) Pay(new Rewards { Rep = 6, Str = 2, Club = 2 }, null, "You won the relay race!");
-                        else Pay(new Rewards { Rep = 1, Str = 1 }, null, "You finished the relay race in the middle of the pack.");
-                        break;
-                }
-                foreach (var h in Board.Students.Where(x => GirlInfo.InSportsClub(x) || GirlInfo.Likes(x, "exercise")))
-                    if (G.Str >= 50) G.AddFavor(h, 2, 0); // sporty girls noticed you
-            });
-        }
-
-        // ---------------- culture festival ----------------
-
-        private static bool Culture()
-        {
-            var tops = TopGirls(3);
-            var b = new SceneBuilder(null, false);
-            b.Narr("The Culture Festival! Your class has to decide what to run.");
-            b.Choice("Maid cafe (SEN)", "maid", "Haunted house (STR)", "haunt", "Science exhibit (INT)", "science");
-            foreach (var t in new[] { "maid", "haunt", "science" })
-            {
-                b.Branch(t);
-                b.Narr(t == "maid" ? "Your class runs a maid cafe. You're in charge of bringing in customers." :
-                    t == "haunt" ? "Your class builds a haunted house. You haul props and play a monster." :
-                    "Your class sets up a science exhibit. You explain the experiments to visitors.");
-                b.Narr("In the afternoon you have some free time to walk around the festival.");
-                var opts = new List<string>();
-                foreach (var g in tops) { opts.Add("Walk around with " + GirlInfo.FirstName(g)); opts.Add(t + "_g" + tops.IndexOf(g)); }
-                opts.Add("Help backstage"); opts.Add(t + "_help");
-                b.Choice(opts.ToArray());
-                for (var i = 0; i < tops.Count; i++)
-                {
-                    b.Branch(t + "_g" + i);
-                    b.Say(tops[i], Lines.T(GirlInfo.ToneOf(tops[i]), "You want to walk with me? ...I'd love to.", "Yes! Let's hit every food stand!", "...Fine. You can escort me.", "A festival date? Bold~ I accept."));
-                    b.End();
-                }
-                b.Branch(t + "_help");
-                b.Narr("You spend the afternoon helping backstage. The teachers are impressed.");
-                b.End();
-            }
-            return Scenes.PlayOnMap(b, choice =>
-            {
-                var parts = (choice ?? "").Split('_');
-                var booth = parts[0];
-                int stat = booth == "maid" ? G.Sens : booth == "haunt" ? G.Str : G.Int;
-                int roll;
-                if (Campus.Check(stat, 65, out roll)) Pay(new Rewards { Money = 2500, Rep = 5, Club = 3 }, null, "Your class booth was a hit");
-                else Pay(new Rewards { Money = 800, Rep = 2, Club = 1 }, null, "Your class booth did okay");
-                if (parts.Length > 1 && parts[1].StartsWith("g"))
-                {
-                    int idx;
-                    try { idx = int.Parse(parts[1].Substring(1)); } catch { idx = -1; }
-                    if (idx >= 0 && idx < tops.Count) Pay(new Rewards { Favor = 10, Lewd = 4 }, tops[idx], "Festival date with " + GirlInfo.FirstName(tops[idx]));
-                }
-                else if (parts.Length > 1) Pay(new Rewards { Rep = 3, Int = 1 }, null, "You helped backstage");
-            });
-        }
-
-        // ---------------- field trip ----------------
-
-        private static bool Trip()
-        {
-            var dests = new[] { "Kyoto", "the beach", "a hot spring inn" };
-            var dest = dests[Random.Range(0, dests.Length)];
-            var tops = TopGirls(3);
-            var b = new SceneBuilder(null, false);
-            b.Narr("Field trip day! The whole class takes the bus to " + dest + ".");
-            if (dest == "the beach") b.Narr("Swimsuits, sunscreen and sand everywhere. This is a dangerous place for your heart.");
-            if (dest == "Kyoto") b.Narr("Temples, old streets, and way too many souvenir shops.");
-            if (dest == "a hot spring inn") b.Narr("Steam rises from the outdoor baths. The girls' bath is right behind that bamboo fence...");
-            var opts = new List<string>();
-            for (var i = 0; i < tops.Count; i++) { opts.Add("Spend the free time with " + GirlInfo.FirstName(tops[i])); opts.Add("g" + i); }
-            opts.Add("Explore on your own"); opts.Add("solo");
-            if (dest == "a hot spring inn" && G.Sens >= 50) { opts.Add("Peek over the bamboo fence [SEN]"); opts.Add("peek"); }
-            b.Choice(opts.ToArray());
-            for (var i = 0; i < tops.Count; i++)
-            {
-                b.Branch("g" + i);
-                b.Say(tops[i], Lines.T(GirlInfo.ToneOf(tops[i]), "Just the two of us? I was hoping you'd ask...", "Yay! Let's go everywhere!", "I suppose you can come along.", "Sneaking away with me? I like it~"));
-                b.End();
-            }
-            b.Branch("solo"); b.Narr("You wander around on your own and pick up some souvenirs."); b.End();
-            b.Branch("peek"); b.Narr("You climb the rocks behind the fence, holding your breath..."); b.End();
-            return Scenes.PlayOnMap(b, choice =>
-            {
-                if (choice == "peek")
-                {
-                    int roll;
-                    if (Campus.Check(G.Sens, 80, out roll))
-                    {
-                        Pay(new Rewards { Sens = 3 }, null, "You saw... paradise. Nobody noticed");
-                        foreach (var g in tops) G.AddFavor(g, 0, 3);
-                    }
-                    else
-                    {
-                        var g = tops.FirstOrDefault();
-                        if (g != null) G.AddFavor(g, -5, 2);
-                        Pay(new Rewards { Rep = -6, Sens = 1 }, null, "Caught peeking! A bucket flies at your head");
-                    }
-                    return;
-                }
-                if (choice == "solo")
-                {
-                    S.AddItem("omamori", 1);
-                    Pay(new Rewards { Int = 1 }, null, "You bought a lucky charm (omamori) as a souvenir");
-                    return;
-                }
-                int idx;
-                try { idx = int.Parse((choice ?? "g0").Substring(1)); } catch { idx = 0; }
-                if (idx >= 0 && idx < tops.Count) Pay(new Rewards { Favor = 12, Lewd = dest == "Kyoto" ? 2 : 6 }, tops[idx], "A trip to remember with " + GirlInfo.FirstName(tops[idx]));
-            });
-        }
-
-        // ---------------- seasonal days ----------------
-
-        private static bool Seasonal(string id)
-        {
-            var b = new SceneBuilder(null, false);
-            switch (id)
-            {
-                case "choco":
-                {
-                    var givers = Board.Students.Where(h => h.isGirlfriend || h.favor >= 60).OrderByDescending(h => h.favor).Take(6).ToList();
-                    b.Narr("Chocolate Day. The whole school smells of cocoa, and every boy is pretending not to care.");
-                    if (givers.Count == 0) b.Narr("...Nobody gave you anything this year. Next year, for sure.");
-                    foreach (var g in givers.Take(3))
-                        b.Say(g, g.isGirlfriend
-                            ? Lines.T(GirlInfo.ToneOf(g), "I made these myself... for you. Only for you.", "Homemade! Eat them all, okay?!", "Handmade. Don't make a fuss.", "Handmade, with love~ And maybe a little something extra.")
-                            : Lines.T(GirlInfo.ToneOf(g), "Um, these are... thank-you chocolates! Just thanks!", "Here, friendship chocolate! Don't get the wrong idea!", "Obligation chocolate. Obviously.", "Don't get your hopes up. ...Unless you want to."));
-                    return Scenes.PlayOnMap(b, _ =>
-                    {
-                        foreach (var g in givers) { S.AddItem("chocolate", 1); G.AddFavor(g, 2, 0); }
-                        if (givers.Count > 0) Pay(new Rewards { Rep = Math.Min(5, givers.Count) }, null, "You received " + givers.Count + " chocolate(s)");
-                    });
-                }
-                case "tanabata":
-                    b.Narr("Tanabata. Bamboo branches in the courtyard are covered in paper wishes. You write yours...");
-                    b.Choice("'I want to get smarter.'", "int", "'I want to get stronger.'", "str", "'I want to be more charming.'", "sen", "'I want to be loved.'", "love");
-                    foreach (var t in new[] { "int", "str", "sen", "love" }) { b.Branch(t); b.Narr("You hang your wish on the highest branch you can reach."); b.End(); }
-                    return Scenes.PlayOnMap(b, c =>
-                    {
-                        switch (c)
-                        {
-                            case "int": Pay(new Rewards { Int = 3 }, null, "Your wish was heard"); break;
-                            case "str": Pay(new Rewards { Str = 3 }, null, "Your wish was heard"); break;
-                            case "sen": Pay(new Rewards { Sens = 3 }, null, "Your wish was heard"); break;
-                            default: foreach (var g in TopGirls(5)) G.AddFavor(g, 3, 0); Toasts.Show("Somehow, everyone seems a bit warmer today."); break;
-                        }
-                    });
-                case "halloween":
-                {
-                    var girls = TopGirls(3);
-                    var sweets = new[] { "chocolate", "cookies", "daifuku" };
-                    var have = sweets.Sum(x => S.Count(x));
-                    b.Narr("Halloween! Some girls came to school with cat ears and little capes.");
-                    foreach (var g in girls) b.Say(g, Lines.T(GirlInfo.ToneOf(g), "T-trick or treat...?", "TRICK OR TREAT!", "Trick or treat. Choose wisely.", "Trick or treat~ I'm hoping for the trick."));
-                    if (have >= girls.Count) b.Narr("You hand out sweets from your bag. Everyone's happy.");
-                    else b.Narr("You don't have enough sweets... Time for some tricks.");
-                    return Scenes.PlayOnMap(b, _ =>
-                    {
-                        var left = girls.Count;
-                        foreach (var x in sweets) while (left > 0 && S.Count(x) > 0) { S.AddItem(x, -1); left--; }
-                        for (var i = 0; i < girls.Count; i++)
-                        {
-                            if (i < girls.Count - left) G.AddFavor(girls[i], 5, 0);
-                            else G.AddFavor(girls[i], 1, 4); // a playful trick
-                        }
-                        Toasts.Show("Happy Halloween!");
-                    });
-                }
-                case "xmas":
-                {
-                    var gfs = Board.Students.Where(h => h.isGirlfriend).ToList();
-                    b.Narr("Christmas Eve. Lights on every street, couples everywhere.");
-                    if (gfs.Count == 0) b.Narr("You spend it with the Koikatsu Club, eating cake. Next year will be different.");
-                    foreach (var g in gfs.Take(3))
-                        b.Say(g, Lines.T(GirlInfo.ToneOf(g), "Merry Christmas... I'm so happy to spend it with you.", "Merry Christmas! Let's eat ALL the cake!", "Merry Christmas. ...Stay with me tonight.", "Merry Christmas~ Your present is... me. Kidding. Maybe."));
-                    return Scenes.PlayOnMap(b, _ =>
-                    {
-                        foreach (var g in gfs) G.AddFavor(g, 6, 5);
-                        if (gfs.Count == 0) Pay(new Rewards { Club = 2, Rep = 1 }, null, "Club Christmas party");
-                        else Toasts.Show("A Christmas to remember.");
-                    });
-                }
-            }
-            return false;
-        }
-
         // ---------------- planner info ----------------
 
         public sealed class Upcoming
@@ -520,14 +249,12 @@ namespace Joojkk.CampusLife
                 list.Add(new Upcoming { Days = days, Id = id, Name = EventName(id), When = WhenLabel(days, weekday) });
             };
             if (!string.IsNullOrEmpty(S.PendingEvent)) add(S.PendingEvent, 0, today);
-            foreach (var id in EventIds) add(id, WeeksUntil(id), id == "exam" ? 4 : 5);
-            var seasonWeek = S.Week % 12;
-            foreach (var kv in new[] { new[] { 2, 2 }, new[] { 5, 3 }, new[] { 8, 1 }, new[] { 11, 2 } })
+            // The next two loops, so each event shows its next date (the exams come twice a loop).
+            foreach (var s in Schedule.OrderBy(x => ((x.Week - LoopWeek + Loop) % Loop) * 7 + (int)x.Day))
             {
-                var id = kv[0] == 2 ? "choco" : kv[0] == 5 ? "tanabata" : kv[0] == 8 ? "halloween" : "xmas";
-                var weeks = (kv[0] - seasonWeek + 12) % 12;
-                if (weeks == 0 && kv[1] < today) weeks = 12;
-                add(id, weeks, kv[1]);
+                var weeks = (s.Week - LoopWeek + Loop) % Loop;
+                if (weeks == 0 && (int)s.Day < today) weeks = Loop;
+                add(s.Id, weeks, (int)s.Day);
             }
             return list.OrderBy(u => u.Days).ToList();
         }

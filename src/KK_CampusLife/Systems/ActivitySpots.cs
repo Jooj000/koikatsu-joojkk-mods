@@ -108,17 +108,12 @@ namespace Joojkk.CampusLife
             finally { _own = false; }
         }
 
-        /// <summary>The activity's result, without its time cost (added once the animation or black screen is over).</summary>
+        /// <summary>The activity's result.</summary>
         private static ActivityResult OwnDo(ActivityDef a)
         {
             _own = true;
-            try { return Campus.DoActivity(a, false); }
+            try { return Campus.DoActivity(a); }
             finally { _own = false; }
-        }
-
-        private static void SpendTime(ActivityDef a)
-        {
-            G.AddPeriodSeconds(a.Seconds * Cfg.ActivityTimeScale.Value);
         }
 
         public static bool On { get { return Cfg.ActivitiesEnabled.Value && Cfg.ActivitySpots.Value; } }
@@ -400,29 +395,12 @@ namespace Joojkk.CampusLife
             CampusLifePlugin.Instance.StartCoroutine(RunCo(a, fromMenu).PreventFromCrashing());
         }
 
-        /// <summary>
-        /// The period clock stands still while an activity plays (animation, black screen, the walk there from the menu):
-        /// only the activity's own time is added, once it ends. Without this the clock ran on in real time during the
-        /// animation and the activity's time came on top of it (a nap of 80 s cost 135).
-        /// </summary>
-        private static IEnumerator HoldClock()
-        {
-            var c = G.Cycle;
-            if (c == null) yield break;
-            var at = c.timer;
-            var t0 = Time.realtimeSinceStartup;
-            while (Busy && Time.realtimeSinceStartup - t0 < 90f) // never hold it for good if something went wrong
-            {
-                try { if (G.Cycle == c && c.timer > at) c.AddTimer((at - c.timer) / ActionGame.Cycle.TIME_LIMIT); }
-                catch { }
-                yield return null;
-            }
-        }
+        // Like the game's own action points, an activity costs only the real time its animation (or black screen) takes:
+        // the period clock keeps running meanwhile, and nothing is added afterwards. Energy is what limits activities.
 
         private static IEnumerator RunCo(ActivityDef a, bool fromMenu)
         {
             Busy = true;
-            CampusLifePlugin.Instance.StartCoroutine(HoldClock());
             if (fromMenu)
             {
                 var t0 = Time.realtimeSinceStartup;
@@ -449,7 +427,6 @@ namespace Joojkk.CampusLife
                     CampusLifePlugin.Log.LogInfo(a.Name + ": game action " + ga.No + " (" + ga.State + ") played for " + (Time.realtimeSinceStartup - t0).ToString("0.0") + " s.");
                 }
                 Finish(a, false);
-                SpendTime(a);
                 Busy = false;
                 yield break;
             }
@@ -462,7 +439,6 @@ namespace Joojkk.CampusLife
             yield return CampusLifePlugin.Instance.StartCoroutine(DarkScreen.Show(res.Text.Split('\n')));
             if (player != null) { try { player.agent.enabled = true; } catch { } player.isActionNow = false; }
             Report(a, res, true);
-            SpendTime(a);
             Busy = false;
         }
 

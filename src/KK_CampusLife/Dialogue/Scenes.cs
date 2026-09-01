@@ -23,11 +23,15 @@ namespace Joojkk.CampusLife
     internal sealed class SceneBuilder
     {
         public const string ChoiceVar = "cl_choice";
+        public const string PickPrefix = "cl_pick_";
         public const string HerSpeaker = "[H名]";
         public const string PlayerSpeaker = "[P名]";
 
         public readonly List<Program.Transfer> List;
         public readonly Dictionary<string, VoiceTag> Voices = new Dictionary<string, VoiceTag>();
+        /// <summary>Text line -> background picture shown when that line appears (see <see cref="Bg"/>).</summary>
+        public readonly Dictionary<string, string> Backgrounds = new Dictionary<string, string>();
+        private string _pendingBg;
         public readonly SaveData.Heroine Her;
         private readonly bool _inTalk;
         private readonly HashSet<string> _registeredNames = new HashSet<string>();
@@ -41,9 +45,27 @@ namespace Joojkk.CampusLife
             List = EventUtils.CreateNewEvent(!inTalk, true);
         }
 
+        /// <summary>
+        /// The next line is shown over this painted background (an id from BepInEx\plugins\Joojkk\backgrounds, or "map"
+        /// to see the map again). Missing pictures are skipped, so the scene still plays over the map.
+        /// </summary>
+        public SceneBuilder Bg(string id)
+        {
+            _pendingBg = string.IsNullOrEmpty(id) ? "map" : id;
+            return this;
+        }
+
+        private void Line(string text)
+        {
+            if (_pendingBg == null) return;
+            if (!Backgrounds.ContainsKey(text)) Backgrounds[text] = _pendingBg;
+            _pendingBg = null;
+        }
+
         public SceneBuilder Narr(string text)
         {
             if (string.IsNullOrEmpty(text)) return this;
+            Line(text);
             List.Add(Program.Transfer.Text(EventUtils.Narrator, text));
             Voices[text] = new VoiceTag { IsNarrator = true };
             return this;
@@ -52,6 +74,7 @@ namespace Joojkk.CampusLife
         public SceneBuilder Me(string text)
         {
             if (string.IsNullOrEmpty(text)) return this;
+            Line(text);
             List.Add(Program.Transfer.Text(PlayerSpeaker, text));
             Voices[text] = new VoiceTag { IsPlayer = true };
             return this;
@@ -61,7 +84,7 @@ namespace Joojkk.CampusLife
         public SceneBuilder Her_(string text)
         {
             if (string.IsNullOrEmpty(text)) return this;
-            if (_inTalk) List.Add(Program.Transfer.Text(HerSpeaker, text));
+            if (_inTalk) { Line(text); List.Add(Program.Transfer.Text(HerSpeaker, text)); }
             else return Say(Her, text);
             Voices[text] = new VoiceTag { GirlKey = GirlInfo.Key(Her) };
             return this;
@@ -76,6 +99,7 @@ namespace Joojkk.CampusLife
             var name = GirlInfo.FirstName(girl);
             if (_registeredNames.Add(name))
                 List.Add(Program.Transfer.Create(true, Command.FontColor, "Color2", name));
+            Line(text);
             List.Add(Program.Transfer.Text(name, text));
             Voices[text] = new VoiceTag { GirlKey = GirlInfo.Key(girl) };
             return this;
@@ -87,7 +111,9 @@ namespace Joojkk.CampusLife
             var args = new List<string> { "true" };
             for (var i = 0; i + 1 < labelsAndTags.Length; i += 2)
                 args.Add(labelsAndTags[i].Replace(",", " ") + "," + labelsAndTags[i + 1]);
-            List.Add(Program.Transfer.Create(true, Command.Choice, args.ToArray()));
+            // Not "multi", as the game's own choices (Communication.Info): a multi choice let the ADV run on into the first
+            // branch's tag and variables before the click, so every first option counted as taken.
+            List.Add(Program.Transfer.Create(false, Command.Choice, args.ToArray()));
             return this;
         }
 
@@ -96,6 +122,20 @@ namespace Joojkk.CampusLife
         {
             List.Add(Program.Transfer.Create(true, Command.Tag, tag));
             List.Add(Program.Transfer.VAR("string", ChoiceVar, tag));
+            List.Add(Program.Transfer.VAR("string", PickPrefix + tag, "1")); // every choice taken, for long scenes (Scenes.Picks)
+            return this;
+        }
+
+        /// <summary>Continues at <see cref="Label"/>(tag): branches of a long scene meet again instead of ending.</summary>
+        public SceneBuilder Goto(string tag)
+        {
+            List.Add(Program.Transfer.Create(true, Command.Jump, tag));
+            return this;
+        }
+
+        public SceneBuilder Label(string tag)
+        {
+            List.Add(Program.Transfer.Create(true, Command.Tag, tag));
             return this;
         }
 
@@ -123,6 +163,10 @@ namespace Joojkk.CampusLife
     {
         public static bool Running { get; private set; }
         public static Dictionary<string, VoiceTag> CurrentVoices = new Dictionary<string, VoiceTag>();
+        public static Dictionary<string, string> CurrentBackgrounds = new Dictionary<string, string>();
+
+        /// <summary>Every branch tag taken in the scene that just ended (read it in the onDone callback).</summary>
+        public static HashSet<string> Picks = new HashSet<string>();
         private static float _startedAt;
 
         /// <summary>A multi-step scene (two girls) holds the map between its parts: other map scenes wait.</summary>
@@ -132,11 +176,15 @@ namespace Joojkk.CampusLife
 
         private static string ReadChoice()
         {
+            Picks = new HashSet<string>();
             try
             {
                 var act = G.Act;
                 if (act == null || act.AdvScene == null || act.AdvScene.Scenario == null) return "";
                 var vars = act.AdvScene.Scenario.Vars;
+                if (vars != null)
+                    foreach (var k in new List<string>(vars.Keys))
+                        if (k.StartsWith(SceneBuilder.PickPrefix, StringComparison.Ordinal)) { Picks.Add(k.Substring(SceneBuilder.PickPrefix.Length)); vars.Remove(k); }
                 ValData v;
                 if (vars != null && vars.TryGetValue(SceneBuilder.ChoiceVar, out v) && v != null && v.o != null)
                 {
@@ -154,10 +202,14 @@ namespace Joojkk.CampusLife
             Running = true;
             _startedAt = Time.realtimeSinceStartup;
             CurrentVoices = b.Voices;
+            CurrentBackgrounds = b.Backgrounds;
+            try { EventBackdrop.Preload(b.Backgrounds.Values); } catch (Exception e) { CampusLifePlugin.Log.LogDebug(e); }
             yield return co;
             var choice = ReadChoice();
             Running = false;
             CurrentVoices = new Dictionary<string, VoiceTag>();
+            CurrentBackgrounds = new Dictionary<string, string>();
+            EventBackdrop.Hide();
             Tts.StopSpeaking();
             if (onDone != null)
             {
@@ -195,6 +247,7 @@ namespace Joojkk.CampusLife
             if (Running && Time.realtimeSinceStartup - _startedAt > 600f)
             {
                 Running = false;
+                EventBackdrop.Hide();
                 CampusLifePlugin.Log.LogWarning("Scene watchdog released a stuck scene flag.");
             }
         }

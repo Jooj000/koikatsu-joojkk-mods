@@ -24,7 +24,7 @@ namespace Joojkk.CampusLife
     {
         public const string GUID = "joojkk.campuslife";
         public const string PluginName = "Campus Life";
-        public const string Version = "1.5.0";
+        public const string Version = "1.6.0";
 
         internal static CampusLifePlugin Instance;
         internal static ManualLogSource Log;
@@ -40,6 +40,8 @@ namespace Joojkk.CampusLife
                 ClassLoan.Install(harmony);
                 ActivitySpots.Install(harmony);
                 InviteOdds.Install(harmony);
+                try { TransitionScreen.Install(harmony); }
+                catch (Exception e) { Log.LogWarning("Loading screen destination not available: " + e.Message); }
             }
             catch (Exception e)
             {
@@ -61,6 +63,7 @@ namespace Joojkk.CampusLife
                 ClassLoan.Sweep();
                 Scenes.Watchdog();
                 Tts.Update();
+                TransitionScreen.Update();
                 ToastUi.Update();
                 StatusUi.WatchBroken();
                 if (!Cfg.Enabled.Value) return;

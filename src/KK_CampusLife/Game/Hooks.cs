@@ -102,16 +102,19 @@ namespace Joojkk.CampusLife
             catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
         }
 
-        /// <summary>A text line is shown: speak it if it belongs to a Campus Life scene and voice is on.</summary>
+        /// <summary>A text line is shown: its painted background (if the scene set one), and its voice if voice is on.</summary>
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ADV.Commands.Base.Text), "Do")]
         private static void AdvTextShown(ADV.Commands.Base.Text __instance)
         {
             try
             {
-                if (!Cfg.VoiceEnabled.Value || !Scenes.Running || __instance == null || __instance.args == null || __instance.args.Length < 2) return;
-                VoiceTag tag;
+                if (!Scenes.Running || __instance == null || __instance.args == null || __instance.args.Length < 2) return;
                 var text = __instance.args[1];
+                string bg;
+                if (!string.IsNullOrEmpty(text) && Scenes.CurrentBackgrounds.TryGetValue(text, out bg)) EventBackdrop.Show(bg, __instance.scenario);
+                if (!Cfg.VoiceEnabled.Value) return;
+                VoiceTag tag;
                 if (string.IsNullOrEmpty(text) || !Scenes.CurrentVoices.TryGetValue(text, out tag)) return;
                 Tts.OnLine(text, tag);
             }

@@ -27,7 +27,7 @@ namespace Joojkk.CampusLife
                 var r = CurrentRequest();
                 return r == null ? null : Board.ButtonLabel(r);
             }), TalkSceneActionKind.Event));
-            // With the new conversation these live inside it (Talk > Give a gift / Ask about > How's your day?).
+            // With the new conversation these live inside it (Talk > Give a gift / Ask her > How's your day?).
             Registered.Add(GameAPI.AddTalkButton("Give a gift", btn => Setup(btn, () => GiftMenu.Open(btn, Target), () => Cfg.GiftsEnabled.Value && !Conversation.Active), TalkSceneActionKind.Event));
             Registered.Add(GameAPI.AddTalkButton("How are you today?", btn => Setup(btn, OnAsk, () => Cfg.AskAboutDayButton.Value && !Conversation.Active), TalkSceneActionKind.Talk));
         }

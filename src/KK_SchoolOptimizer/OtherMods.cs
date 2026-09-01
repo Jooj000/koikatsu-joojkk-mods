@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
@@ -38,6 +40,8 @@ namespace Joojkk.SchoolOptimizer
             catch (Exception e) { SchoolOptimizerPlugin.Log.LogWarning("UncensorSelector hidden part fix not available: " + e.Message); }
             try { PatchMaterialEditor(harmony); }
             catch (Exception e) { SchoolOptimizerPlugin.Log.LogWarning("MaterialEditor texture size limit not available: " + e.Message); }
+            try { PatchMeRefresh(harmony); }
+            catch (Exception e) { SchoolOptimizerPlugin.Log.LogWarning("MaterialEditor re-apply after slow loads not available: " + e.Message); }
             PatchAnal(harmony);
         }
 
@@ -87,6 +91,105 @@ namespace Joojkk.SchoolOptimizer
                 __result = dst;
             }
             catch (Exception e) { SchoolOptimizerPlugin.Log.LogDebug("MaterialEditor texture: " + e.Message); }
+        }
+
+        // ---------- MaterialEditor and HairAccessoryCustomizer: edits missing on pieces built over several frames ----------
+        public static int MeRefreshes;
+        private static Type _meCtrl, _hacCtrl;
+        private static MethodInfo _meLoad, _hacUpdate;
+        private static readonly HashSet<int> _shownOnce = new HashSet<int>();
+
+        /// <summary>
+        /// Outside the maker, MaterialEditor (by DeathWeasel1337 and contributors) applies a card's edits (textures,
+        /// colours, renderers switched off, such as the vanilla hair a card hides) once, a frame or two after the character
+        /// or outfit load event. HairAccessoryCustomizer (same authors) does the same with "Match color with hair": one
+        /// frame after the event it colours the hair accessories that exist. When the outfit is built over several frames
+        /// (IllusionFixes' async loading, outfits changed in the background), pieces created after that pass never get
+        /// their edits: white or untextured clothes, white hair accessories, hidden hair showing again. In the maker every
+        /// piece change applies them again, so the card looks right there. When a <c>ChaControl.ReloadAsync</c> that
+        /// changed clothes or hair took more than one frame, and the first time each character is shown on the map,
+        /// both plugins' own update is run once more for her. Their files are not changed.
+        /// </summary>
+        private static void PatchMeRefresh(Harmony harmony)
+        {
+            _meCtrl = AccessTools.TypeByName("KK_Plugins.MaterialEditor.MaterialEditorCharaController");
+            if (_meCtrl != null)
+            {
+                _meLoad = AccessTools.Method(_meCtrl, "LoadData", new[] { typeof(bool), typeof(bool), typeof(bool) });
+                if (_meLoad != null && _meLoad.ReturnType != typeof(IEnumerator)) _meLoad = null;
+                if (_meLoad == null) SchoolOptimizerPlugin.Log.LogWarning("MaterialEditor changed; re-applying its edits after slow loads is off.");
+            }
+            _hacCtrl = AccessTools.TypeByName("KK_Plugins.HairAccessoryCustomizer+HairAccessoryController");
+            if (_hacCtrl != null)
+            {
+                _hacUpdate = AccessTools.Method(_hacCtrl, "UpdateAccessories", new[] { typeof(bool) });
+                if (_hacUpdate == null) SchoolOptimizerPlugin.Log.LogWarning("HairAccessoryCustomizer changed; re-applying its colours after slow loads is off.");
+            }
+            if (_meLoad == null && _hacUpdate == null) return;
+            harmony.Patch(AccessTools.Method(typeof(ChaControl), nameof(ChaControl.ReloadAsync)), postfix: new HarmonyMethod(typeof(OtherMods), nameof(ReloadAsyncPostfix)));
+            harmony.Patch(AccessTools.Method(typeof(ChaControl), nameof(ChaControl.SetActiveTop)), postfix: new HarmonyMethod(typeof(OtherMods), nameof(SetActiveTopPostfix)));
+            SchoolOptimizerPlugin.Log.LogInfo("Re-apply of " + (_meLoad != null ? "MaterialEditor" : "") + (_meLoad != null && _hacUpdate != null ? " and " : "") +
+                                              (_hacUpdate != null ? "HairAccessoryCustomizer" : "") + " after slow loads installed.");
+        }
+
+        private static bool ReapplyOn
+        {
+            get { return SchoolOptimizerPlugin.Enabled.Value && SchoolOptimizerPlugin.MeRefresh.Value && KKAPI.KoikatuAPI.GetCurrentGameMode() == KKAPI.GameMode.MainGame; }
+        }
+
+        private static void ReloadAsyncPostfix(ChaControl __instance, bool noChangeClothes, bool noChangeHair, ref IEnumerator __result)
+        {
+            try
+            {
+                if (__result == null || (noChangeClothes && noChangeHair) || !ReapplyOn) return;
+                __result = AfterSlowLoad(__result, __instance, !noChangeHair);
+            }
+            catch (Exception e) { SchoolOptimizerPlugin.Log.LogDebug("Re-apply after slow load: " + e.Message); }
+        }
+
+        /// <summary>The first time a student is shown on the map (her pieces may have been built over several frames).</summary>
+        private static void SetActiveTopPostfix(ChaControl __instance, bool active)
+        {
+            try
+            {
+                if (!active || __instance == null || !__instance.loadEnd || !ReapplyOn) return;
+                if (!_shownOnce.Add(__instance.GetInstanceID())) return;
+                if (_shownOnce.Count > 400) _shownOnce.Clear();
+                Reapply(__instance, true);
+            }
+            catch (Exception e) { SchoolOptimizerPlugin.Log.LogDebug("Re-apply when shown: " + e.Message); }
+        }
+
+        /// <summary>The same steps as the game's coroutine (what it yields passes through unchanged), then the re-apply.</summary>
+        private static IEnumerator AfterSlowLoad(IEnumerator inner, ChaControl cha, bool hair)
+        {
+            var start = Time.frameCount;
+            while (inner.MoveNext()) yield return inner.Current;
+            if (Time.frameCount == start) yield break; // all in one frame: the plugins' own pass sees every piece
+            Reapply(cha, hair);
+        }
+
+        /// <summary>
+        /// Runs HairAccessoryCustomizer's UpdateAccessories and MaterialEditor's LoadData (clothes and accessories, and hair
+        /// if asked) for this character again.
+        /// </summary>
+        public static void Reapply(ChaControl cha, bool hair)
+        {
+            if (cha == null) return;
+            try
+            {
+                var h = _hacUpdate != null ? cha.GetComponent(_hacCtrl) : null;
+                if (h != null) _hacUpdate.Invoke(h, new object[] { true });
+            }
+            catch (Exception ex) { SchoolOptimizerPlugin.Log.LogDebug("HairAccessoryCustomizer re-apply for " + cha.name + ": " + (ex.InnerException ?? ex).Message); }
+            try
+            {
+                var c = _meLoad != null ? cha.GetComponent(_meCtrl) as MonoBehaviour : null;
+                var e = c != null ? _meLoad.Invoke(c, new object[] { true, true, hair }) as IEnumerator : null;
+                if (e != null) cha.StartCoroutine(e);
+            }
+            catch (Exception ex) { SchoolOptimizerPlugin.Log.LogDebug("MaterialEditor re-apply for " + cha.name + ": " + (ex.InnerException ?? ex).Message); }
+            MeRefreshes++;
         }
 
         private static void PatchUncensor(Harmony harmony)

@@ -236,10 +236,13 @@ namespace Joojkk.CampusLife
             string cached;
             if (NameCache.TryGetValue(jp, out cached)) return cached;
             var result = jp;
+            // Only Japanese needs translating. AutoTranslator's sync lookup can hand back its name templates unfilled
+            // ("Migurdia Roxy" -> "{{A}} Roxy"), so plain ASCII stays as is and a result with a placeholder is ignored.
+            if (jp.All(ch => ch < 128)) { NameCache[jp] = jp; return jp; }
             try
             {
                 string tl;
-                if (TranslationHelper.TryTranslate(jp, out tl) && !string.IsNullOrEmpty(tl)) result = tl;
+                if (TranslationHelper.TryTranslate(jp, out tl) && !string.IsNullOrEmpty(tl) && tl.IndexOf("{{", StringComparison.Ordinal) < 0) result = tl;
             }
             catch { }
             // Only cache when it actually changed or is plain ASCII, so async translations can still land later.

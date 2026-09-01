@@ -615,39 +615,56 @@ namespace Joojkk.CampusLife
             return agents;
         }
 
+        /// <summary>
+        /// Both walk over. A girl sitting or busy at one of the map's action points has her agent switched off and may stand
+        /// off the navmesh: she is put back on it first (otherwise she never moved and the scene started with one girl).
+        /// One who cannot get there (no path, or no progress for 2.5 s) goes straight to her spot.
+        /// </summary>
         private static IEnumerator WalkTo(NPC na, NPC nb, Vector3[] spots)
         {
             var girls = new[] { na, nb };
+            var done = new bool[2];
+            var best = new float[2];
+            var bestAt = new float[2];
             for (var i = 0; i < 2; i++)
             {
+                var n = girls[i];
+                best[i] = float.MaxValue;
+                bestAt[i] = Time.realtimeSinceStartup;
                 try
                 {
-                    var n = girls[i];
-                    if (n.agent == null) continue;
+                    if (n == null || n.agent == null) { done[i] = true; continue; }
+                    var was = "agent " + (n.agent.enabled ? "on" : "off") + (n.agent.enabled && !n.agent.isOnNavMesh ? " off navmesh" : "") + ", " + (n.transform.position - spots[i]).magnitude.ToString("0.0") + " m away";
                     n.agent.enabled = true;
-                    n.agent.SetDestination(spots[i]);
+                    NavMeshHit hit;
+                    if (!n.agent.isOnNavMesh && NavMesh.SamplePosition(n.transform.position, out hit, 3f, NavMesh.AllAreas)) n.agent.Warp(hit.position);
+                    var ok = n.agent.isOnNavMesh && n.agent.SetDestination(spots[i]);
+                    Step(GirlInfo.FirstName(n.heroine) + " walks over (" + was + (ok ? "" : ", no path") + ")");
+                    if (!ok) Arrive(n, spots[i], done, i);
                 }
-                catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo walk: " + e.Message); }
+                catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo walk: " + e.Message); if (n != null) Arrive(n, spots[i], done, i); }
             }
             var t0 = Time.realtimeSinceStartup;
-            while (Time.realtimeSinceStartup - t0 < 12f)
+            while (Time.realtimeSinceStartup - t0 < 12f && !(done[0] && done[1]))
             {
-                var arrived = 0;
                 for (var i = 0; i < 2; i++)
                 {
+                    if (done[i]) continue;
                     var n = girls[i];
                     try
                     {
-                        if (n == null || n.agent == null || !n.agent.enabled) { arrived++; continue; }
-                        if (!n.agent.pathPending && (n.transform.position - spots[i]).sqrMagnitude < 0.25f * 0.25f) { arrived++; n.agent.ResetPath(); }
+                        var d = (n.transform.position - spots[i]).magnitude;
+                        if (!n.agent.pathPending && d < 0.25f) { done[i] = true; n.agent.ResetPath(); continue; }
+                        if (!n.agent.pathPending && n.agent.pathStatus != NavMeshPathStatus.PathComplete) { Step(GirlInfo.FirstName(n.heroine) + " has no path"); Arrive(n, spots[i], done, i); continue; }
+                        if (d < best[i] - 0.1f) { best[i] = d; bestAt[i] = Time.realtimeSinceStartup; }
+                        else if (Time.realtimeSinceStartup - bestAt[i] > 2.5f) { Step(GirlInfo.FirstName(n.heroine) + " stuck " + d.ToString("0.0") + " m away"); Arrive(n, spots[i], done, i); continue; }
                         n.AgentVelocityMoveAnimeUpdate();
                         var v = n.agent.velocity;
                         v.y = 0f;
                         if (v.sqrMagnitude > 0.04f) n.transform.rotation = Quaternion.Slerp(n.transform.rotation, Quaternion.LookRotation(v), 0.25f);
                     }
-                    catch { arrived++; }
+                    catch { Arrive(n, spots[i], done, i); }
                 }
-                if (arrived == 2) break;
                 yield return null;
             }
             for (var i = 0; i < 2; i++)
@@ -667,6 +684,18 @@ namespace Joojkk.CampusLife
                 catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo arrive: " + e.Message); }
             }
             Face(na, nb);
+        }
+
+        /// <summary>She cannot walk there: put her on her spot.</summary>
+        private static void Arrive(NPC n, Vector3 spot, bool[] done, int i)
+        {
+            done[i] = true;
+            try
+            {
+                if (n.agent != null && n.agent.enabled) { if (n.agent.isOnNavMesh) n.agent.ResetPath(); n.agent.Warp(spot); }
+                else n.transform.position = spot;
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo arrive: " + e.Message); n.transform.position = spot; }
         }
 
         private static void Face(NPC na, NPC nb)

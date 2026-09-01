@@ -389,7 +389,6 @@ namespace Joojkk.CampusLife
             foreach (var r in Active.Where(x => x.Kind == RequestKind.Errand && x.Progress == 0 && x.Place == here && InWindow(x)).ToList())
             {
                 r.Progress = 1;
-                G.AddPeriodSeconds(30f * Cfg.ActivityTimeScale.Value);
                 Toasts.Show((r.Source == "arc" ? "Found it! " : "Errand done. ") + "Now talk to " + GirlInfo.FirstName(r.Girl) + ".");
             }
         }

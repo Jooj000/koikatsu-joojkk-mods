@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using HarmonyLib;
 using Manager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,6 +16,13 @@ namespace Joojkk.SchoolOptimizer
     /// at the world origin forever, owned by nobody. Every 2 seconds, pieces at the scene root that no character points
     /// at are noted; still there on the next pass, they are destroyed. A piece being attached right now is at the root for
     /// a frame only, so it is never touched.
+    ///
+    /// Also: accessories of KK_AccessoryClothes (KK_Plugins, by DeathWeasel1337 and contributors) that were never bound to
+    /// the body. Its component moves the piece's armature to the scene root in Awake and binds the piece to her bones in
+    /// Start. When the piece is loaded over several frames (IllusionFixes' async clothes loading, background outfits),
+    /// Start runs while the piece is still loose at the root, finds no character, throws, and is never called again: the
+    /// piece (nails, for example) stays drawn at the world origin. Once such a piece hangs from a character, its Start is
+    /// run again. KK_AccessoryClothes' files are not changed.
     /// </summary>
     internal static class Orphans
     {
@@ -48,6 +57,49 @@ namespace Joojkk.SchoolOptimizer
                 }
             }
             _seen = next;
+            try { Rebind(); }
+            catch (Exception e) { SchoolOptimizerPlugin.Log.LogDebug("AccessoryClothes rebind: " + e.Message); }
+        }
+
+        // ---------- KK_AccessoryClothes pieces never bound ----------
+        public static int Rebound;
+        private static Type _accClothes;
+        private static FieldInfo _armature;
+        private static MethodInfo _start;
+        private static bool _looked;
+        private static HashSet<int> _unbound = new HashSet<int>();
+
+        private static void Rebind()
+        {
+            if (!_looked)
+            {
+                _looked = true;
+                _accClothes = AccessTools.TypeByName("KK_Plugins.ChaAccessoryClothes");
+                if (_accClothes != null)
+                {
+                    _armature = AccessTools.Field(_accClothes, "ArmatureRoot");
+                    _start = AccessTools.Method(_accClothes, "Start");
+                    if (_armature == null || _start == null) { _accClothes = null; SchoolOptimizerPlugin.Log.LogWarning("KK_AccessoryClothes changed; its rebind fix is off."); }
+                }
+            }
+            if (_accClothes == null) return;
+            var next = new HashSet<int>();
+            foreach (var o in UnityEngine.Object.FindObjectsOfType(_accClothes)) // active ones only: Unity has called (or tried) their Start
+            {
+                var c = o as Component;
+                if (c == null || _armature.GetValue(c) as Transform == null) continue; // bound: Start destroys the armature
+                if (c.GetComponentInParent<ChaControl>() == null) continue;            // still loose: being attached
+                var id = c.GetInstanceID();
+                if (!_unbound.Contains(id)) { next.Add(id); continue; }              // give Unity's own Start a pass first
+                try
+                {
+                    _start.Invoke(c, null);
+                    Rebound++;
+                    SchoolOptimizerPlugin.Log.LogDebug("Bound an AccessoryClothes piece left unbound: " + c.name);
+                }
+                catch (Exception e) { SchoolOptimizerPlugin.Log.LogDebug("AccessoryClothes piece " + c.name + ": " + (e.InnerException ?? e).Message); }
+            }
+            _unbound = next;
         }
 
         private static bool Piece(string name)

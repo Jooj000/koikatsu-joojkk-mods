@@ -339,12 +339,6 @@ namespace Joojkk.CampusLife
 
         // ================= romance =================
 
-        public static string PlayerFlirt(int close)
-        {
-            if (close >= 2) return P("I was looking forward to seeing you all day.", "You're the best part of my day, you know.", "Being with you is my favorite thing.", "I keep thinking about our last date.");
-            return P("I really like spending time with you.", "You're kind of amazing, you know that?", "Talking to you always cheers me up.", "I'm glad I met you.");
-        }
-
         public static string FlirtGood(Tone t, int close)
         {
             if (close >= 2)

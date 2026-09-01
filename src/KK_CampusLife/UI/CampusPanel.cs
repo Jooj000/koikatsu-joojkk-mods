@@ -491,9 +491,8 @@ namespace Joojkk.CampusLife
             {
                 var b = GameUi.Block(_right, a.Id);
                 var r = GameUi.Row(b, "row", 44f);
-                var cost = (Cfg.EnergyEnabled.Value ? a.Energy + " energy, " : "") + Mathf.RoundToInt(a.Seconds * Cfg.ActivityTimeScale.Value) + " s" +
-                           (a.MoneyCost > 0 ? ", " + a.MoneyCost + " yen" : "") + (a.IsJob ? ", job" : "") + (a.OncePerDay ? ", once a day" : "");
-                RowText(r, a.Name + "  <size=18><color=" + Hex(GameUi.Dim) + ">(" + cost + ")</color></size>", 23f, Color.white);
+                var cost = string.Join(", ", new[] { Cfg.EnergyEnabled.Value ? a.Energy + " energy" : null, a.MoneyCost > 0 ? a.MoneyCost + " yen" : null, a.IsJob ? "job" : null, a.OncePerDay ? "once a day" : null }.Where(x => x != null).ToArray());
+                RowText(r, a.Name + (cost.Length > 0 ? "  <size=18><color=" + Hex(GameUi.Dim) + ">(" + cost + ")</color></size>" : ""), 23f, Color.white);
                 if (here)
                 {
                     var block = Activities.Blocker(s, a);
@@ -543,7 +542,7 @@ namespace Joojkk.CampusLife
             var e = GameUi.Block(_left, "energy");
             Header(e, "Energy, time and reputation");
             Para(e, "Energy", "for activities; refills every morning. Naps, rest, hearty lunches, energy drinks and devotion level 2 restore it.");
-            Para(e, "Time", "a free period lasts " + Mathf.RoundToInt(500f * Cfg.PeriodLength.Value) + " s of walking around. Activities take time; menus, talks and menu teleports don't.");
+            Para(e, "Time", "a free period lasts " + Mathf.RoundToInt(500f * Cfg.PeriodLength.Value) + " s of walking around. Activities cost energy and only the time their animation plays; menus, talks and menu teleports cost none.");
             Para(e, "Reputation", "+" + s.Reputation + "% on request pay now, a daily request at 60, better fundraising. Helping raises it; odd places lower it.");
 
             if (Cfg.DevotionEnabled.Value)
@@ -572,7 +571,7 @@ namespace Joojkk.CampusLife
                 if (mood == Mood.None) continue;
                 Para(m, Lines.MoodName(mood), Lines.MoodTip(mood));
             }
-            Line(m, "Ask \"How's your day?\" (Ask about...) to learn her mood, or have INT " + Cfg.MoodHintMinIntelligence.Value + "+.", 18f);
+            Line(m, "Ask \"How's your day?\" (Ask her...) to learn her mood, or have INT " + Cfg.MoodHintMinIntelligence.Value + "+.", 18f);
 
             var r = GameUi.Block(_right, "requests");
             Header(r, "Requests and stories");

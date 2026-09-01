@@ -15,6 +15,7 @@ namespace Joojkk.CampusLife
         public static ConfigEntry<bool> Enabled;
         public static ConfigEntry<KeyboardShortcut> PlannerKey;
         public static ConfigEntry<bool> ShowToasts;
+        public static ConfigEntry<bool> LoadingScreen;
         public static ConfigEntry<float> ToastSeconds;
         public static ConfigEntry<bool> DebugMode;
 
@@ -26,7 +27,6 @@ namespace Joojkk.CampusLife
         public static ConfigEntry<KeyboardShortcut> MoveStoreKey;
         public static ConfigEntry<bool> StrengthReducesTalkCost;
         public static ConfigEntry<bool> ActivitiesEnabled;
-        public static ConfigEntry<float> ActivityTimeScale;
         public static ConfigEntry<bool> ActivitySpots;
         public static ConfigEntry<bool> EnergyEnabled;
         public static ConfigEntry<int> BaseEnergy;
@@ -75,10 +75,6 @@ namespace Joojkk.CampusLife
 
         // 7. School calendar
         public static ConfigEntry<bool> CalendarEnabled;
-        public static ConfigEntry<int> ExamInterval;
-        public static ConfigEntry<int> SportsInterval;
-        public static ConfigEntry<int> CultureInterval;
-        public static ConfigEntry<int> TripInterval;
         public static ConfigEntry<bool> AutoPlaySchoolEvents;
         public static ConfigEntry<bool> HappeningsEnabled;
         public static ConfigEntry<float> HappeningChance;
@@ -133,6 +129,7 @@ namespace Joojkk.CampusLife
             Enabled = B(c, g, "Enable Campus Life", true, "Master switch. When off, the school plays like vanilla (your mod data stays in the save).");
             PlannerKey = B(c, g, "Menu hotkey", new KeyboardShortcut(KeyCode.F7), "Opens the Campus Life menu inside the clipboard (Character Status). The same menu is in the clipboard (middle mouse button / F4) as the Campus Life card. Time is paused while it is open, like the clipboard itself. Do not use F8: in the game F8 ends the current period.");
             ShowToasts = B(c, g, "Show notifications", true, "Pop-up notes like 'Request completed' or 'New rumor on the board'.");
+            LoadingScreen = B(c, g, "Loading screen", true, "Replaces the game's white loading fade with a gray screen: a heart, where you are going (with a faint picture of the place) and a tip or a little joke. Story flashes are left alone.");
             ToastSeconds = B(c, g, "Notification duration (s)", 5f, "", new AcceptableValueRange<float>(1f, 20f));
             DebugMode = B(c, g, "Debug tools", false, "Verbose logging for bug reports.", null, true);
 
@@ -141,7 +138,6 @@ namespace Joojkk.CampusLife
             PeriodLength = B(c, t, "Period length multiplier", 1.5f, "How much longer each free period lasts while you walk around (1 = vanilla 500 s, 1.5 = 750 s). Conversations, menus and events never use up time.", new AcceptableValueRange<float>(1f, 4f));
             StrengthReducesTalkCost = B(c, t, "Strength reduces time cost", true, "Up to -40% conversation time cost at Strength 100 (stamina).");
             ActivitiesEnabled = B(c, t, "Enable school activities", true, "Study, work out, part-time jobs, club work, etc. depending on where you are.");
-            ActivityTimeScale = B(c, t, "Activity time multiplier", 1f, "Multiplies the time each activity takes.", new AcceptableValueRange<float>(0f, 3f));
             ActivitySpots = B(c, t, "Activity spots on the map", true, "Each activity is done at a real spot of its place (next to the game's study desks, training corners...), with its own action icon and the game's animation or black-screen narration. Off: activities happen instantly from the menu. Spots can be moved with the position tools (section 11).");
             ActivitySpots.SettingChanged += (o, ea) => Joojkk.CampusLife.ActivitySpots.Reset();
             ActivitiesEnabled.SettingChanged += (o, ea) => Joojkk.CampusLife.ActivitySpots.Reset();
@@ -192,10 +188,6 @@ namespace Joojkk.CampusLife
 
             const string ca = "7. School calendar";
             CalendarEnabled = B(c, ca, "Enable school events", true, "Exams, sports festival, culture festival, field trips and seasonal days.");
-            ExamInterval = B(c, ca, "Exams every N weeks", 4, "", new AcceptableValueRange<int>(2, 12));
-            SportsInterval = B(c, ca, "Sports festival every N weeks", 6, "", new AcceptableValueRange<int>(2, 20));
-            CultureInterval = B(c, ca, "Culture festival every N weeks", 8, "", new AcceptableValueRange<int>(2, 20));
-            TripInterval = B(c, ca, "Field trip every N weeks", 10, "", new AcceptableValueRange<int>(2, 30));
             AutoPlaySchoolEvents = B(c, ca, "Start school events automatically", true, "When off, events wait for you to press 'Attend' in the planner.");
             HappeningsEnabled = B(c, ca, "Enable everyday happenings", true, "Small random events during the day: lost items, pop quizzes, love letters, notes asking for help, helping teachers...");
             HappeningChance = B(c, ca, "Happening chance per period", 0.35f, "", new AcceptableValueRange<float>(0f, 1f));

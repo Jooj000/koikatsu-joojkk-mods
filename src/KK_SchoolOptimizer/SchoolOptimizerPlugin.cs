@@ -26,8 +26,9 @@ namespace Joojkk.SchoolOptimizer
     /// - makes students steer around each other instead of walking through one another;
     /// - stops animating the skeleton of students the camera does not see;
     /// - runs hair and clothes physics of far students at a lower rate (and not at all far away);
-    /// - switches off idle cameras other mods leave running (see <see cref="OtherMods"/>).
-    /// - keeps only the data of students on other maps and loads them back before they are seen (<see cref="OffMap"/>);
+    /// - switches off idle cameras other mods leave running and re-applies MaterialEditor edits lost by slow loads (see <see cref="OtherMods"/>).
+    /// - releases the clothes of students on other maps and rebuilds them before they are seen (<see cref="OffMapClothes"/>);
+    /// - keeps only the data of students on other maps and loads them back before they are seen (<see cref="OffMap"/>, experimental);
     /// - removes character pieces left lying at the middle of the map by interrupted reloads (<see cref="Orphans"/>).
     /// </summary>
     [BepInPlugin(GUID, "School Optimizer", Version)]
@@ -36,10 +37,12 @@ namespace Joojkk.SchoolOptimizer
     [BepInDependency(KKAPI.KoikatuAPI.GUID, "1.45")]
     // Optional: loaded first when installed, so OtherMods finds its types (without this the ANAL camera fix never ran).
     [BepInDependency("org.njaecha.plugins.anal", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.deathweasel.bepinex.materialeditor", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.deathweasel.bepinex.hairaccessorycustomizer", BepInDependency.DependencyFlags.SoftDependency)]
     public class SchoolOptimizerPlugin : BaseUnityPlugin
     {
         public const string GUID = "joojkk.schooloptimizer";
-        public const string Version = "1.4.0";
+        public const string Version = "1.5.1";
 
         internal static ManualLogSource Log;
         internal static SchoolOptimizerPlugin Instance;
@@ -64,7 +67,9 @@ namespace Joojkk.SchoolOptimizer
         public static ConfigEntry<bool> AnalCameras;
         public static ConfigEntry<bool> UncensorHiddenParts;
         public static ConfigEntry<int> MeMaxTexture;
+        public static ConfigEntry<bool> MeRefresh;
         public static ConfigEntry<bool> UnloadOffMap;
+        public static ConfigEntry<bool> StripOffMap;
         public static ConfigEntry<bool> OrphanCleanup;
 
         /// <summary>
@@ -109,6 +114,13 @@ namespace Joojkk.SchoolOptimizer
                 "background before you can see them: when they walk towards your map, when you walk up to a door that leads " +
                 "to theirs, or at once when you teleport there. Story characters are never unloaded.",
                 null, new ConfigurationManagerAttributes { Order = 3 }));
+            StripOffMap = Config.Bind(s, "Drop clothes of students on other maps", true, new ConfigDescription(
+                "Clothes and accessories hold most of a student's video memory (each piece is painted into its own texture: 30-200 MB " +
+                "per girl). Students away from your map for a while keep their body and only drop their clothes and accessories; " +
+                "what they wear stays in their data. The outfit is rebuilt in the background before you can see them: when they " +
+                "walk towards your map, when you walk up to a door that leads to theirs, and at once (hidden until it is ready) " +
+                "when you teleport there or they are called. Story characters are never touched.",
+                null, new ConfigurationManagerAttributes { Order = 2 }));
             const string c = "2. Crowds";
             FixCrowding = Config.Bind(c, "Students avoid each other", true, new ConfigDescription(
                 "Turns on high-quality avoidance with varied priorities so students walk around each other instead of through each other.",
@@ -124,11 +136,11 @@ namespace Joojkk.SchoolOptimizer
                 null, new ConfigurationManagerAttributes { Order = 4 }));
             BoneLod = Config.Bind(r, "Hair and clothes physics by distance", true, new ConfigDescription(
                 "Hair, skirt and accessory physics is the most expensive part of every student, and it gets more expensive the " +
-                "lower the FPS. Near the camera it stays as it is; farther away it updates less often, and far away it stops " +
-                "(it resets smoothly when she comes closer). Only while walking around school.",
+                "lower the FPS (the game catches up with up to 3 steps a frame). Near the camera it stays as it is; farther away it " +
+                "takes one smooth step a frame, and far away it stops (it resets smoothly when she comes closer). Only while walking around school.",
                 null, new ConfigurationManagerAttributes { Order = 3 }));
             BoneOffScreen = Config.Bind(r, "Physics off for students off screen", true, new ConfigDescription(
-                "With hair and clothes physics by distance on: students the camera cannot see (behind you, behind a wall) and " +
+                "With hair and clothes physics by distance on: students out of the camera's view (behind you; with a margin, so it is back before they show up) and " +
                 "farther than the full physics distance stop their physics too. It resets smoothly when she comes into view.",
                 null, new ConfigurationManagerAttributes { Order = 2 }));
             BoneFullDistance = Config.Bind(r, "Full physics distance (m)", 7f, new ConfigDescription(
@@ -154,6 +166,13 @@ namespace Joojkk.SchoolOptimizer
                 "In story mode, bigger ones are drawn at this size instead; the card itself keeps the full image (saving and " +
                 "exporting are unaffected). 0 = no limit. Applies to characters loaded after the change. MaterialEditor's " +
                 "files are not changed.", new AcceptableValueList<int>(0, 1024, 2048, 4096), new ConfigurationManagerAttributes { Order = 3 }));
+            MeRefresh = Config.Bind(m, "Re-apply MaterialEditor and hair accessory colors after slow loads", true, new ConfigDescription(
+                "Outside the maker, MaterialEditor and HairAccessoryCustomizer apply a card's edits once, right after the " +
+                "character loads. Pieces built later (outfits loaded over several frames) stayed without them: white clothes " +
+                "or hair accessories, or the vanilla hair the card hides showing again (fixed by opening the maker). When an " +
+                "outfit load takes more than one frame, and the first time each student appears, both plugins' own update is " +
+                "run again for her. Their files are not changed.",
+                null, new ConfigurationManagerAttributes { Order = 4 }));
 
             const string l = "4. Loading";
             SkipDuplicateReloads = Config.Bind(l, "Skip duplicate character rebuilds (experimental)", false, new ConfigDescription(
@@ -176,7 +195,8 @@ namespace Joojkk.SchoolOptimizer
                 null, new ConfigurationManagerAttributes { Order = 2 }));
             OrphanCleanup = Config.Bind(l, "Remove clothes left behind", true, new ConfigDescription(
                 "When a character's outfit reload is cut short, the game can leave an accessory lying at the middle of the map " +
-                "(it is created loose and attached to her only at the end). Pieces that belong to nobody are removed.",
+                "(it is created loose and attached to her only at the end). Pieces that belong to nobody are removed, and " +
+                "KK_AccessoryClothes pieces left unbound (drawn at the middle of the map) are bound to her body.",
                 null, new ConfigurationManagerAttributes { Order = 1 }));
             Log.LogDebug("Background loading priority at start: " + Application.backgroundLoadingPriority);
 
@@ -187,6 +207,8 @@ namespace Joojkk.SchoolOptimizer
             catch (Exception e) { Log.LogWarning("Duplicate rebuild skip not available: " + e.Message); }
             try { OtherMods.Patch(harmony); }
             catch (Exception e) { Log.LogWarning("Fixes for other mods not available: " + e.Message); }
+            try { OffMapClothes.Patch(harmony); }
+            catch (Exception e) { Log.LogWarning("Releasing clothes on other maps not available: " + e.Message); StripOffMap.Value = false; }
             try { OffMap.Patch(harmony); }
             catch (Exception e) { Log.LogWarning("Unloading students on other maps not available: " + e.Message); UnloadOffMap.Value = false; }
             BoneLod.SettingChanged += (o, ea) => { if (!BoneLod.Value) DynamicBoneLod.RestoreAll(); };
@@ -202,6 +224,8 @@ namespace Joojkk.SchoolOptimizer
             catch (Exception e) { Log.LogDebug("Loading priority: " + e.Message); }
             try { OutfitDefer.Update(); }
             catch (Exception e) { Log.LogDebug("Background outfits: " + e.Message); }
+            try { OffMapClothes.Update(); }
+            catch (Exception e) { Log.LogDebug("Off-map clothes: " + e.Message); }
             try { OffMap.Update(); }
             catch (Exception e) { Log.LogDebug("Off-map students: " + e.Message); }
             if (Time.realtimeSinceStartup >= _nextOrphans)
@@ -592,7 +616,7 @@ namespace Joojkk.SchoolOptimizer
         {
             try
             {
-                if (On && npc != null && npc.chaCtrl != null && npc.heroine != null && !OffMap.IsUnloaded(npc) && (Unseen(npc) || Reloading(npc)))
+                if (On && npc != null && npc.chaCtrl != null && npc.heroine != null && !OffMap.IsUnloaded(npc) && !OffMapClothes.IsStripped(npc) && (Unseen(npc) || Reloading(npc)))
                 {
                     if (!Pending.ContainsKey(npc)) Pending[npc] = false;
                     Deferred++;
@@ -635,9 +659,9 @@ namespace Joojkk.SchoolOptimizer
             try
             {
                 if (!SchoolOptimizerPlugin.Enabled.Value || __instance == null || __instance.chaCtrl == null || __instance.heroine == null) return true;
-                if (OffMap.IsUnloaded(__instance))
+                if (OffMap.IsUnloaded(__instance) || OffMapClothes.IsStripped(__instance))
                 {
-                    // No body on another map: only her data changes, the load builds the outfit.
+                    // No body (or no clothes) on another map: only her data changes, the load builds the outfit.
                     Pending.Remove(__instance);
                     Apply(__instance, isRemove);
                     return false;
@@ -681,14 +705,14 @@ namespace Joojkk.SchoolOptimizer
             var found = false;
             foreach (var kv in Pending)
             {
-                if (kv.Key == null || kv.Key.chaCtrl == null || OffMap.IsUnloaded(kv.Key) || !Reloading(kv.Key)) { pick = kv.Key; found = true; break; }
+                if (kv.Key == null || kv.Key.chaCtrl == null || OffMap.IsUnloaded(kv.Key) || OffMapClothes.IsStripped(kv.Key) || !Reloading(kv.Key)) { pick = kv.Key; found = true; break; }
             }
             if (!found) return; // every one of them is still being reloaded: next frame
             bool remove;
             Pending.TryGetValue(pick, out remove);
             Pending.Remove(pick);
             if (pick == null || pick.chaCtrl == null || pick.heroine == null) return;
-            if (OffMap.IsUnloaded(pick)) { Apply(pick, remove); return; }
+            if (OffMap.IsUnloaded(pick) || OffMapClothes.IsStripped(pick)) { Apply(pick, remove); return; }
             if (!On || !Unseen(pick))
             {
                 // Waited for a reload to finish and she is in view now (or background outfits are off): the game's own
@@ -751,6 +775,20 @@ namespace Joojkk.SchoolOptimizer
         private static IEnumerator Run(NPC npc, ChaControl cha)
         {
             var active = cha.GetActiveTop();
+            var inner = ReloadOutfit(npc, cha);
+            while (inner.MoveNext()) yield return inner.Current;
+            if (npc != null && cha != null) cha.SetActiveTop(npc.isActive || active);
+            Leave(npc, cha);
+            DoneInBackground++;
+        }
+
+        /// <summary>
+        /// Rebuilds her outfit from her current outfit data over several frames (hidden while it builds), as one of the
+        /// reloads <see cref="Reloading"/> knows about. The caller shows her again and then calls <see cref="Leave"/>.
+        /// </summary>
+        public static IEnumerator ReloadOutfit(NPC npc, ChaControl cha)
+        {
+            Busy.Add(npc);
             Singleton<Character>.Instance.enableCharaLoadGCClear = false;
             var inner = cha.ReloadAsync(false, true, true, true, true);
             while (true)
@@ -761,7 +799,11 @@ namespace Joojkk.SchoolOptimizer
                 if (!more) break;
                 yield return inner.Current;
             }
-            if (npc != null && cha != null) cha.SetActiveTop(npc.isActive || active);
+        }
+
+        /// <summary>Her reload is over: a whole rebuild that waited for it runs now.</summary>
+        public static void Leave(NPC npc, ChaControl cha)
+        {
             Busy.Remove(npc);
             bool[] wait;
             if (cha != null && Postponed.TryGetValue(cha, out wait))
@@ -771,7 +813,6 @@ namespace Joojkk.SchoolOptimizer
                 catch (Exception e) { SchoolOptimizerPlugin.Log.LogDebug("Postponed rebuild: " + e.Message); }
             }
             if (Busy.Count == 0) Singleton<Character>.Instance.enableCharaLoadGCClear = true;
-            DoneInBackground++;
         }
     }
 
