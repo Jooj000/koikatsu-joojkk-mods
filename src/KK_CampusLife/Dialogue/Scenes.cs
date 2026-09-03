@@ -32,6 +32,9 @@ namespace Joojkk.CampusLife
         /// <summary>Text line -> background picture shown when that line appears (see <see cref="Bg"/>).</summary>
         public readonly Dictionary<string, string> Backgrounds = new Dictionary<string, string>();
         private string _pendingBg;
+        /// <summary>Text line -> faces the girls make when that line appears (see <see cref="Face"/>).</summary>
+        public readonly Dictionary<string, List<FaceCue>> Faces = new Dictionary<string, List<FaceCue>>();
+        private List<FaceCue> _pendingFaces;
         public readonly SaveData.Heroine Her;
         private readonly bool _inTalk;
         private readonly HashSet<string> _registeredNames = new HashSet<string>();
@@ -55,8 +58,24 @@ namespace Joojkk.CampusLife
             return this;
         }
 
+        /// <summary>The girl makes this face from the next line on (staged scenes, where she stands on screen).</summary>
+        public SceneBuilder Face(SaveData.Heroine girl, Feel feel)
+        {
+            if (girl == null) return this;
+            if (_pendingFaces == null) _pendingFaces = new List<FaceCue>();
+            _pendingFaces.Add(new FaceCue { GirlKey = GirlInfo.Key(girl), Feel = feel });
+            return this;
+        }
+
         private void Line(string text)
         {
+            if (_pendingFaces != null)
+            {
+                List<FaceCue> l;
+                if (!Faces.TryGetValue(text, out l)) Faces[text] = l = new List<FaceCue>();
+                l.AddRange(_pendingFaces);
+                _pendingFaces = null;
+            }
             if (_pendingBg == null) return;
             if (!Backgrounds.ContainsKey(text)) Backgrounds[text] = _pendingBg;
             _pendingBg = null;
@@ -164,6 +183,10 @@ namespace Joojkk.CampusLife
         public static bool Running { get; private set; }
         public static Dictionary<string, VoiceTag> CurrentVoices = new Dictionary<string, VoiceTag>();
         public static Dictionary<string, string> CurrentBackgrounds = new Dictionary<string, string>();
+        public static Dictionary<string, List<FaceCue>> CurrentFaces = new Dictionary<string, List<FaceCue>>();
+
+        /// <summary>The scene now playing is staged in the talk screen (girls on screen in front of the backdrop).</summary>
+        public static bool Staged { get; private set; }
 
         /// <summary>Every branch tag taken in the scene that just ended (read it in the onDone callback).</summary>
         public static HashSet<string> Picks = new HashSet<string>();
@@ -197,19 +220,24 @@ namespace Joojkk.CampusLife
             return "";
         }
 
-        private static IEnumerator Wrap(IEnumerator co, SceneBuilder b, Action<string> onDone)
+        private static IEnumerator Wrap(IEnumerator co, SceneBuilder b, Action<string> onDone, bool staged)
         {
             Running = true;
+            Staged = staged;
             _startedAt = Time.realtimeSinceStartup;
             CurrentVoices = b.Voices;
             CurrentBackgrounds = b.Backgrounds;
+            CurrentFaces = b.Faces;
             try { EventBackdrop.Preload(b.Backgrounds.Values); } catch (Exception e) { CampusLifePlugin.Log.LogDebug(e); }
             yield return co;
             var choice = ReadChoice();
             Running = false;
             CurrentVoices = new Dictionary<string, VoiceTag>();
             CurrentBackgrounds = new Dictionary<string, string>();
+            if (CurrentFaces.Count > 0) Expressions.ResetAll();
+            CurrentFaces = new Dictionary<string, List<FaceCue>>();
             EventBackdrop.Hide();
+            Staged = false;
             Tts.StopSpeaking();
             if (onDone != null)
             {
@@ -225,7 +253,7 @@ namespace Joojkk.CampusLife
             if (ts == null || Running) return false;
             b.End();
             var co = EventUtils.StartTextSceneEvent(ts, b.List, false, useTalkTime);
-            CampusLifePlugin.Instance.StartCoroutine(Wrap(co, b, onDone).PreventFromCrashing());
+            CampusLifePlugin.Instance.StartCoroutine(Wrap(co, b, onDone, true).PreventFromCrashing());
             return true;
         }
 
@@ -237,7 +265,7 @@ namespace Joojkk.CampusLife
             if (pl == null || pl.transform == null) return false;
             b.End();
             var co = EventUtils.StartAdvEvent(b.List, true, pl.transform.position, pl.transform.rotation);
-            CampusLifePlugin.Instance.StartCoroutine(Wrap(co, b, onDone).PreventFromCrashing());
+            CampusLifePlugin.Instance.StartCoroutine(Wrap(co, b, onDone, false).PreventFromCrashing());
             return true;
         }
 
@@ -248,6 +276,7 @@ namespace Joojkk.CampusLife
             {
                 Running = false;
                 EventBackdrop.Hide();
+                Staged = false;
                 CampusLifePlugin.Log.LogWarning("Scene watchdog released a stuck scene flag.");
             }
         }

@@ -110,6 +110,7 @@ namespace Joojkk.CampusLife
             Social.DailySpread();
             Social.Tick();
             if (Time.realtimeSinceStartup - _periodStartedAt > 30f) Duo.Tick();
+            if (Time.realtimeSinceStartup - _periodStartedAt > 40f) Episodes.Tick();
             // Give the player a few seconds after each period starts.
             if (Time.realtimeSinceStartup - _periodStartedAt < 6f) return;
             if (!Scenes.CanPlayOnMap) return;

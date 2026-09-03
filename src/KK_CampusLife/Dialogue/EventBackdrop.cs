@@ -9,7 +9,9 @@ namespace Joojkk.CampusLife
     /// <summary>
     /// Painted backgrounds behind our event scenes.
     /// Uses the game's own ADV backdrop (<c>TextScenario.BGParam</c>, the one its BackGroundLoad command fills): the map is
-    /// hidden, the picture is drawn by the backdrop camera and the characters stay in front of it.
+    /// hidden and the picture is drawn by the backdrop camera. As in the game's story mode, a scene played in the talk
+    /// screen (<see cref="Scenes.Staged"/>) keeps the girls posed in front of the picture, with the color mask on; a map
+    /// narration has nobody posed, so the characters are hidden and the mask stays off.
     /// A scene picks a picture with <see cref="SceneBuilder.Bg"/>; it changes when that line shows and goes away when the
     /// scene ends.
     /// </summary>
@@ -66,10 +68,14 @@ namespace Joojkk.CampusLife
                 if (tex == null) return;
                 scenario.BGParam.SetTexture(tex);
                 scenario.BGParam.visibleAll = true;
-                // No color mask: it still draws the (hidden) characters into Amplify Color's mask and they came out as
-                // dark see-through silhouettes over the picture.
-                Mask(scenario, false);
-                HideCharacters(scenario);
+                if (Scenes.Staged) Mask(scenario, true); // girls posed in front of the picture keep their own colors
+                else
+                {
+                    // No color mask: it still draws the (hidden) characters into Amplify Color's mask and they came out
+                    // as dark see-through silhouettes over the picture.
+                    Mask(scenario, false);
+                    HideCharacters(scenario);
+                }
                 _shownOn = scenario;
                 _shownId = id;
             }

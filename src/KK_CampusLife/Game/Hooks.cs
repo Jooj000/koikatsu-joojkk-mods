@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ActionGame.Communication;
 using HarmonyLib;
 using UniRx;
@@ -113,6 +114,8 @@ namespace Joojkk.CampusLife
                 var text = __instance.args[1];
                 string bg;
                 if (!string.IsNullOrEmpty(text) && Scenes.CurrentBackgrounds.TryGetValue(text, out bg)) EventBackdrop.Show(bg, __instance.scenario);
+                List<FaceCue> faces;
+                if (!string.IsNullOrEmpty(text) && Scenes.CurrentFaces.TryGetValue(text, out faces)) Expressions.Apply(faces);
                 if (!Cfg.VoiceEnabled.Value) return;
                 VoiceTag tag;
                 if (string.IsNullOrEmpty(text) || !Scenes.CurrentVoices.TryGetValue(text, out tag)) return;

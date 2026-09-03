@@ -175,6 +175,8 @@ namespace Joojkk.CampusLife
         public List<int> Cleared = new List<int>();     // incidents you talked through with her
         public int DuoDay = -1;         // last day she came over in a two-girl scene
         public List<int> DuoHandled = new List<int>();  // incidents a two-girl scene was already about
+        public List<string> Episodes = new List<string>(); // spotlight episodes she starred in, oldest first (ids, "id:ending")
+        public int EpisodeDay = -1;     // last day she starred in one
         public ArcState Arc;
         public List<string> FinishedArcs = new List<string>();
         public Dictionary<string, int> Bonds = new Dictionary<string, int>(); // affinity to other girls (-100..100)
@@ -191,7 +193,8 @@ namespace Joojkk.CampusLife
                 {"td", TalkDay}, {"tt", TalksToday}, {"cd", ChatDay}, {"lto", LastTopics},
                 {"tr", Trust}, {"kn", Known.Cast<object>().ToList()}, {"um", Unmentioned.Cast<object>().ToList()},
                 {"tds", TalkDays.Cast<object>().ToList()}, {"clr", Cleared.Cast<object>().ToList()}, {"jd", JealousDay}, {"vd", VentDay}, {"cpd", ComplimentDay},
-                {"fa", FinishedArcs.Cast<object>().ToList()}, {"b", bonds}, {"dud", DuoDay}, {"duh", DuoHandled.Cast<object>().ToList()}
+                {"fa", FinishedArcs.Cast<object>().ToList()}, {"b", bonds}, {"dud", DuoDay}, {"duh", DuoHandled.Cast<object>().ToList()},
+                {"eps", Episodes.Cast<object>().ToList()}, {"epd", EpisodeDay}
             };
         }
 
@@ -212,8 +215,10 @@ namespace Joojkk.CampusLife
                 Arc = ArcState.FromDict(d.GetObj("arc")),
                 Trust = d.GetInt("tr", -1), JealousDay = d.GetInt("jd", -1), VentDay = d.GetInt("vd", -1), ComplimentDay = d.GetInt("cpd", -1),
                 Known = Ints(d.GetList("kn")), Unmentioned = Ints(d.GetList("um")), TalkDays = Ints(d.GetList("tds")), Cleared = Ints(d.GetList("clr")),
-                DuoDay = d.GetInt("dud", -1), DuoHandled = Ints(d.GetList("duh"))
+                DuoDay = d.GetInt("dud", -1), DuoHandled = Ints(d.GetList("duh")), EpisodeDay = d.GetInt("epd", -1)
             };
+            var eps = d.GetList("eps");
+            if (eps != null) g.Episodes = eps.Where(o => o != null).Select(o => o.ToString()).ToList();
             var fa = d.GetList("fa");
             if (fa != null) g.FinishedArcs = fa.Where(o => o != null).Select(o => o.ToString()).ToList();
             var b = d.GetObj("b");
@@ -281,6 +286,7 @@ namespace Joojkk.CampusLife
         public List<Incident> Incidents = new List<Incident>();
         public int NextIncidentId = 1;
         public int LastSpreadDay;
+        public int LastEpisodeDay = -1;      // last day a spotlight episode played
 
         /// <summary>Week number to show the player (a Sunday before the first school week still reads "Week 1").</summary>
         public int ShownWeek { get { return Math.Max(1, Week); } }
@@ -378,7 +384,7 @@ namespace Joojkk.CampusLife
                 {"hapD", LastHappeningDay}, {"hapP", LastHappeningPeriod},
                 {"exams", ExamScores.Cast<object>().ToList()},
                 {"dirP", DirectorPick}, {"dirD", DirectorDay}, {"dirE", DirectorEvents},
-                {"inc", Incidents.Select(i => (object)i.ToDict()).ToList()}, {"incN", NextIncidentId}, {"sprD", LastSpreadDay}
+                {"inc", Incidents.Select(i => (object)i.ToDict()).ToList()}, {"incN", NextIncidentId}, {"sprD", LastSpreadDay}, {"epD", LastEpisodeDay}
             };
             return MiniJson.Serialize(root);
         }
@@ -434,6 +440,7 @@ namespace Joojkk.CampusLife
             if (inc != null) s.Incidents = inc.OfType<Dictionary<string, object>>().Select(Incident.FromDict).ToList();
             s.NextIncidentId = Math.Max(1, d.GetInt("incN", 1));
             s.LastSpreadDay = d.GetInt("sprD");
+            s.LastEpisodeDay = d.GetInt("epD", -1);
             return s;
         }
     }

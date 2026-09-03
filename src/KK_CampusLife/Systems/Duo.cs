@@ -383,15 +383,46 @@ namespace Joojkk.CampusLife
         public static bool Play(Plan plan)
         {
             if (Busy || plan == null || plan.A == null || plan.B == null || G.Act == null || G.Act.Player == null) return false;
+            var intro = new SceneBuilder(null, false);
+            var show = new Show { A = plan.A, B = plan.B, Name = "motive " + plan, Intro = intro };
+            show.Main = inTalk =>
+            {
+                Action<string> r;
+                var sb = Compose(plan, inTalk, inTalk ? intro : new SceneBuilder(null, false), out r);
+                show.Result = r;
+                return sb;
+            };
+            show.Outro = () => Outro(plan.A.heroine, plan.B.heroine);
+            var main = show.Main(true); // fills the intro's narration too
+            CallOver(intro, plan.A.heroine, plan.B.heroine);
+            if (!Stage(show, main)) return false;
+            foreach (var h in new[] { plan.A.heroine, plan.B.heroine }) S.Girl(GirlInfo.Key(h)).DuoDay = S.Day;
+            return true;
+        }
+
+        /// <summary>
+        /// A staged scene: who walks over (one or two girls), what plays on the map as they arrive, the scene played in the
+        /// talk screen (and its map version if the talk screen cannot open), and their last words on the map.
+        /// </summary>
+        internal sealed class Show
+        {
+            public NPC A, B;                        // B may be null: one girl
+            public string Name = "";
+            public SceneBuilder Intro;              // on the map, when they arrive
+            public Func<bool, SceneBuilder> Main;   // true: the talk screen version; false: on the map
+            public Action<string> Result;           // set by Main
+            public Func<SceneBuilder> Outro;        // may be null
+        }
+
+        /// <summary>Starts a staged scene (Spotlight episodes use it too). <paramref name="main"/> is Main(true), already built.</summary>
+        internal static bool Stage(Show show, SceneBuilder main)
+        {
+            if (Busy || show == null || show.A == null || G.Act == null || G.Act.Player == null) return false;
             var spots = FindSpots();
             if (spots == null) { Step("no free spots in front of the player"); return false; }
-            Step("motive " + plan);
-            var intro = new SceneBuilder(null, false);
-            Action<string> result;
-            var main = Compose(plan, true, intro, out result);
-            CallOver(intro, plan.A.heroine, plan.B.heroine);
-            foreach (var h in new[] { plan.A.heroine, plan.B.heroine }) S.Girl(GirlInfo.Key(h)).DuoDay = S.Day;
-            CampusLifePlugin.Instance.StartCoroutine(Run(plan, spots, intro, main, result).PreventFromCrashing());
+            if (show.B == null) spots[0] = (spots[0] + spots[1]) * 0.5f;
+            Step(show.Name);
+            CampusLifePlugin.Instance.StartCoroutine(Run(show, spots, main).PreventFromCrashing());
             return true;
         }
 
@@ -417,10 +448,11 @@ namespace Joojkk.CampusLife
             while (!done() && Time.realtimeSinceStartup - t0 < seconds) yield return null;
         }
 
-        private static IEnumerator Run(Plan plan, Vector3[] spots, SceneBuilder intro, SceneBuilder main, Action<string> result)
+        private static IEnumerator Run(Show show, Vector3[] spots, SceneBuilder main)
         {
-            var na = plan.A;
-            var nb = plan.B;
+            var na = show.A;
+            var nb = show.B;
+            var intro = show.Intro ?? new SceneBuilder(null, false);
             Busy = true;
             var owner = new object();
             Scenes.Owner = owner;
@@ -457,7 +489,7 @@ namespace Joojkk.CampusLife
                     if (Ready(ts))
                     {
                         yield return Wait(() => MenuShown(ts), 25f); // her greeting first
-                        try { StandBeside(nb, na); }
+                        try { if (nb != null) StandBeside(nb, na); }
                         catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo beside: " + e.Message); }
                         done = false;
                         if (Scenes.PlayInTalk(main, c => { choice = c; done = true; }, false))
@@ -483,9 +515,7 @@ namespace Joojkk.CampusLife
                 // Fallback (talk scene off, or it could not open): the same scene on the map.
                 if (!talked && G.IsFreeRoaming)
                 {
-                    Action<string> mapResult;
-                    var onMap = Compose(plan, false, new SceneBuilder(null, false), out mapResult);
-                    result = mapResult;
+                    var onMap = show.Main(false);
                     done = false;
                     if (Scenes.PlayOnMap(onMap, c => { choice = c; done = true; }, owner))
                     {
@@ -500,17 +530,18 @@ namespace Joojkk.CampusLife
                 {
                     try
                     {
-                        if (result != null) result(choice ?? "");
+                        if (show.Result != null) show.Result(choice ?? "");
                         Social.RecordTalk(na.heroine);
-                        Social.RecordTalk(nb.heroine);
+                        if (nb != null) Social.RecordTalk(nb.heroine);
                     }
                     catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
 
                     // 4. Back on the map: a last word each.
-                    if (G.IsFreeRoaming)
+                    var outro = show.Outro != null ? show.Outro() : null;
+                    if (outro != null && G.IsFreeRoaming)
                     {
                         done = false;
-                        if (Scenes.PlayOnMap(Outro(na.heroine, nb.heroine), c => done = true, owner)) yield return Wait(() => done, 120f);
+                        if (Scenes.PlayOnMap(outro, c => done = true, owner)) yield return Wait(() => done, 120f);
                     }
                 }
             }
@@ -603,6 +634,7 @@ namespace Joojkk.CampusLife
             {
                 try
                 {
+                    if (n == null) { i++; continue; }
                     n.Pause(true);
                     if (n.move != null) n.move.animParamSpeed = 0f;
                     // Off her seat or wait point: without one the game plays the standing idle and clears the props.
@@ -706,6 +738,7 @@ namespace Joojkk.CampusLife
             {
                 try
                 {
+                    if (n == null) continue;
                     if (n.agent != null) n.agent.enabled = false;
                     var look = p.position - n.transform.position;
                     look.y = 0f;
