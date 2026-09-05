@@ -70,6 +70,7 @@ namespace Joojkk.CampusLife
             var player = act != null && act.Player != null ? act.Player.transform.position : Vector3.zero;
             return act.npcList.Where(n => n != null && n.heroine != null && n.isActive && n.mapNo == act.Map.no && GirlInfo.IsRegular(n.heroine)
                                           && (n.transform.position - player).sqrMagnitude < 20f * 20f && n.AI != null && n.AI.isRunning
+                                          && n.heroine.talkTime > 0 // the game would end the talk at once (she called you over, then sent you away)
                                           && Rested(n.heroine)).ToList();
         }
 
@@ -412,15 +413,20 @@ namespace Joojkk.CampusLife
             public Func<bool, SceneBuilder> Main;   // true: the talk screen version; false: on the map
             public Action<string> Result;           // set by Main
             public Func<SceneBuilder> Outro;        // may be null
+            public Func<bool> IntoH;                // may be null; true after the scene: the talk ends in the game's H
         }
 
         /// <summary>Starts a staged scene (Spotlight episodes use it too). <paramref name="main"/> is Main(true), already built.</summary>
+        internal static NPC LastA, LastB; // the last staged pair
+
         internal static bool Stage(Show show, SceneBuilder main)
         {
             if (Busy || show == null || show.A == null || G.Act == null || G.Act.Player == null) return false;
             var spots = FindSpots();
             if (spots == null) { Step("no free spots in front of the player"); return false; }
             if (show.B == null) spots[0] = (spots[0] + spots[1]) * 0.5f;
+            LastA = show.A;
+            LastB = show.B;
             Step(show.Name);
             CampusLifePlugin.Instance.StartCoroutine(Run(show, spots, main).PreventFromCrashing());
             return true;
@@ -459,6 +465,7 @@ namespace Joojkk.CampusLife
             bool[] agents = null;
             string choice = null;
             var talked = false;
+            var intoH = false;
             try { agents = Stop(na, nb); }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo stop: " + e.Message); }
 
@@ -477,9 +484,10 @@ namespace Joojkk.CampusLife
                 Step("intro over, free roaming " + G.IsFreeRoaming);
 
                 // 3. The talk scene, with the first girl as usual and the second one standing next to her.
-                if (Cfg.DuoInTalk.Value && G.IsFreeRoaming)
+                // With no talk time left the game ends the talk at once: the map version instead (episodes too).
+                if (Cfg.DuoInTalk.Value && G.IsFreeRoaming && na.heroine.talkTime > 0)
                 {
-                    Release(na, nb, agents); // the game pauses and hides everyone for the talk itself
+                    Release(na, nb, agents, false); // the game pauses and hides everyone for the talk itself
                     agents = null;
                     TalkHer = na.heroine;
                     G.Act.SceneEvent(na);
@@ -499,21 +507,27 @@ namespace Joojkk.CampusLife
                             Step("talk part over, choice '" + choice + "'");
                         }
                         else Step("could not play in the talk scene");
-                        try { if (G.TalkScene == ts) Traverse.Create(ts).Method("CommandFunc", new object[] { -1 }).GetValue(); }
+                        try { intoH = talked && show.IntoH != null && G.TalkScene == ts && show.IntoH() && IntoH(ts); }
+                        catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+                        try { if (!intoH && G.TalkScene == ts) Traverse.Create(ts).Method("CommandFunc", new object[] { -1 }).GetValue(); }
                         catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo end talk: " + e.Message); }
                     }
-                    yield return Wait(() => G.TalkScene == null && G.IsFreeRoaming, 60f);
+                    if (intoH) yield return Wait(() => G.TalkScene == null, 60f);
+                    else yield return Wait(() => G.TalkScene == null && G.IsFreeRoaming, 60f);
                     TalkHer = null;
-                    Step("back on the map, free roaming " + G.IsFreeRoaming);
-                    if (G.IsFreeRoaming)
+                    Step(intoH ? "talk closed into the game's H" : "back on the map, free roaming " + G.IsFreeRoaming);
+                    if (!intoH && G.IsFreeRoaming)
                     {
+                        // The second girl stood beside the talk scene's copy of the first one: back to her own spot.
+                        try { if (nb != null && spots.Length > 1) nb.transform.position = spots[1]; }
+                        catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo back to spot: " + e.Message); }
                         try { agents = Stop(na, nb); Face(na, nb); }
                         catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo stop again: " + e.Message); }
                     }
                 }
 
                 // Fallback (talk scene off, or it could not open): the same scene on the map.
-                if (!talked && G.IsFreeRoaming)
+                if (!talked && !intoH && G.IsFreeRoaming)
                 {
                     var onMap = show.Main(false);
                     done = false;
@@ -537,7 +551,7 @@ namespace Joojkk.CampusLife
                     catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
 
                     // 4. Back on the map: a last word each.
-                    var outro = show.Outro != null ? show.Outro() : null;
+                    var outro = show.Outro != null && !intoH ? show.Outro() : null;
                     if (outro != null && G.IsFreeRoaming)
                     {
                         done = false;
@@ -555,6 +569,21 @@ namespace Joojkk.CampusLife
         }
 
         private static void Step(string what) { CampusLifePlugin.Log.LogInfo("Duo: " + what); }
+
+        /// <summary>
+        /// Ends the talk the way the game does when she invites you to H and you accept (TalkScene, heroine event 1):
+        /// result H, her invitation flags, and the talk unloaded; the action scene then takes the two of you to H.
+        /// </summary>
+        private static bool IntoH(TalkScene ts)
+        {
+            if (ts == null || ts.resultInfo == null || ts.targetHeroine == null) return false;
+            ts.resultInfo.result = ActionGame.Communication.ResultEnum.H;
+            ts.targetHeroine.talkEvent.Add(12);
+            ts.targetHeroine.talkEvent.Add(8);
+            Singleton<Manager.Scene>.Instance.UnLoad();
+            Step("talk ends in H with " + GirlInfo.FirstName(ts.targetHeroine));
+            return true;
+        }
 
         private static bool Ready(TalkScene ts)
         {
@@ -702,6 +731,7 @@ namespace Joojkk.CampusLife
             for (var i = 0; i < 2; i++)
             {
                 var n = girls[i];
+                if (n == null) continue; // one-girl scenes (episodes)
                 try
                 {
                     if (n.agent != null && n.agent.enabled)
@@ -758,23 +788,37 @@ namespace Joojkk.CampusLife
         // "off", so Release never switched it on again and she stood there for good.
         private static NPC _besideAgentOff;
 
-        private static void Release(NPC na, NPC nb, bool[] agents)
+        // Their agents always go back on: they walked away from their seat or action point, so the state remembered by
+        // Stop() no longer applies. A girl who had been sitting was remembered "off" and, after the scene, stood there for
+        // good with her AI running (both girls of the gossip and "good listener" scenes, 2026-10-11).
+        private static void Release(NPC na, NPC nb, bool[] agents, bool over = true)
         {
-            var i = 0;
             foreach (var n in new[] { na, nb })
             {
                 try
                 {
                     if (n == null) continue;
-                    if (n.agent != null && (agents[i] || n == _besideAgentOff)) { n.agent.enabled = true; n.agent.Warp(n.transform.position); }
+                    if (n.agent != null)
+                    {
+                        n.agent.enabled = true;
+                        NavMeshHit hit;
+                        n.agent.Warp(NavMesh.SamplePosition(n.transform.position, out hit, 2f, NavMesh.AllAreas) ? hit.position : n.transform.position);
+                    }
                     if (n.chaCtrl != null) { n.chaCtrl.ChangeLookEyesPtn(0); n.chaCtrl.ChangeLookNeckPtn(3); }
+                    // Shown again when she is on this map (SetActive does nothing when the game already thinks she is).
+                    if (G.Act != null && G.Act.Map != null && n.mapNo == G.Act.Map.no)
+                    {
+                        n.SetActive(true);
+                        if (n.chaCtrl != null && !n.chaCtrl.GetActiveTop()) n.chaCtrl.SetActiveTop(true);
+                    }
                     n.Pause(false);
                     // Pause(true) only remembers a pause when the AI was running; the talk scene had already paused
                     // everyone else, so Pause(false) alone left them standing there for good.
                     if (n.AI != null && !n.AI.isRunning) n.AI.Start();
+                    // Her action (the seat she left) is over: she picks the next one and walks off.
+                    if (over && n.AI != null) n.AI.TimeEnd();
                 }
                 catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo release: " + e.Message); }
-                i++;
             }
         }
     }

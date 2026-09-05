@@ -148,7 +148,10 @@ namespace Joojkk.CampusLife
         /// <summary>Continues at <see cref="Label"/>(tag): branches of a long scene meet again instead of ending.</summary>
         public SceneBuilder Goto(string tag)
         {
-            List.Add(Program.Transfer.Create(true, Command.Jump, tag));
+            // Not "multi": the Jump command already reads on from the tag by itself (TextScenario.Jump -> RequestNextLine).
+            // As multi, the outer read went on too, past a choice right after the tag and into its first branch, so that
+            // branch counted as taken as well.
+            List.Add(Program.Transfer.Create(false, Command.Jump, tag));
             return this;
         }
 

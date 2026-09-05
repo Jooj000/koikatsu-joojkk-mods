@@ -24,7 +24,7 @@ namespace Joojkk.CampusLife
     {
         public const string GUID = "joojkk.campuslife";
         public const string PluginName = "Campus Life";
-        public const string Version = "1.7.0";
+        public const string Version = "1.9.0";
 
         internal static CampusLifePlugin Instance;
         internal static ManualLogSource Log;
@@ -65,6 +65,7 @@ namespace Joojkk.CampusLife
                 Tts.Update();
                 TransitionScreen.Update();
                 ToastUi.Update();
+                SpotHint.Update();
                 StatusUi.WatchBroken();
                 if (!Cfg.Enabled.Value) return;
                 if (Campus.On)

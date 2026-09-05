@@ -30,6 +30,9 @@ namespace Joojkk.CampusLife
         public static readonly Color Green = new Color(0.6f, 1f, 0.65f, 1f);
         public static readonly Color Warn = new Color(1f, 0.62f, 0.5f, 1f);
         public static readonly Color PanelBack = new Color(0f, 0f, 0f, 0.86f);
+        /// <summary>Behind notifications and hints: dark graphite, unlike any text color on it (white, gold, STR / INT /
+        /// SEN, warning orange); the game's blue bar hid the INT blue.</summary>
+        public static readonly Color NoteBack = new Color(0.07f, 0.07f, 0.09f, 0.9f);
 
         private static readonly Dictionary<string, Sprite> Sprites = new Dictionary<string, Sprite>();
         private static TMP_FontAsset _font;

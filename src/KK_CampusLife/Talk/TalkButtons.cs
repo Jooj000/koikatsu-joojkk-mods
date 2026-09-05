@@ -143,7 +143,7 @@ namespace Joojkk.CampusLife
             var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
 
-            if (gs.LastGiftDay == s.Day)
+            if (gs.LastGiftDay == s.Day && !Board.WantsGift(h, item))
             {
                 b.Her_(Lines.GiftAlreadyToday(tone));
                 Scenes.PlayInTalk(b, _ => Conversation.AfterGift(), false);

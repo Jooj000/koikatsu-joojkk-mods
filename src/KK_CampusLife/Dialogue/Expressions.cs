@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Joojkk.CampusLife
 {
     /// <summary>How a girl looks while she says a line in a staged scene.</summary>
-    internal enum Feel { Normal, Smile, Laugh, Shy, Sad, Surprised, Pout, Serious, Worried }
+    internal enum Feel { Normal, Smile, Laugh, Shy, Sad, Surprised, Pout, Serious, Worried, Love }
 
     internal sealed class FaceCue
     {
@@ -39,6 +39,7 @@ namespace Joojkk.CampusLife
             { Feel.Pout,      new Look { Brow = 3, Eyes = 2, Mouth = 4, Blush = 0.3f } },
             { Feel.Serious,   new Look { Brow = 3, Eyes = 2, Mouth = 0 } },
             { Feel.Worried,   new Look { Brow = 2, Eyes = 4, Mouth = 6 } },
+            { Feel.Love,      new Look { Brow = 2, Eyes = 6, Mouth = 1, Blush = 1f, EyesOpen = 0.8f } },
         };
 
         private static readonly Dictionary<string, Look> Saved = new Dictionary<string, Look>();

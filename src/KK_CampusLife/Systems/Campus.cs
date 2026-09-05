@@ -113,10 +113,25 @@ namespace Joojkk.CampusLife
             }
         }
 
+        private static int _energyPeriod = -1;
+
         public static void OnPeriodChange(Cycle.Type period)
         {
             if (!On) return;
             Board.ExpirePassedWindows();
+            // Each free period after lunch gives back one energy (the day starts full; this keeps an afternoon worth
+            // planning). The stamp keeps a repeated call from counting twice.
+            var mask = G.ToMask(period);
+            var stamp = S.Day * 16 + (int)mask;
+            if ((mask == PeriodMask.Club || mask == PeriodMask.After) && stamp != _energyPeriod && Cfg.EnergyEnabled.Value)
+            {
+                _energyPeriod = stamp;
+                if (S.Energy < Activities.MaxEnergy)
+                {
+                    S.Energy++;
+                    Toasts.Show("New period: energy +1 (" + S.Energy + "/" + Activities.MaxEnergy + ").");
+                }
+            }
             if (G.ToMask(period) != PeriodMask.None && G.IsSchoolDay)
             {
                 Calendar.OnPeriodStart(period);

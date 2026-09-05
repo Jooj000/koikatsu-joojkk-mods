@@ -13,8 +13,9 @@ namespace Joojkk.CampusLife
     /// painted backgrounds and changing faces as she talks. The choices are built for her (<see cref="Ctx"/>): how close you
     /// are, what she remembers (what you did for her, a grudge, your last outing), your reputation and stats, the items you
     /// carry, her likes, club and mood. Each episode ends in one of a few finales the player picks among the ones the
-    /// context opens: a heart-to-heart, talking about something you did, a laugh, or a promise of the next outing.
-    /// Friendship stories only. Episodes are written in <c>Dialogue/EpisodeScenes.cs</c>.
+    /// context opens: a heart-to-heart, talking about something you did, a laugh, or a promise of the next outing; alone
+    /// with her, also the romantic ones (her hand, a confession, somewhere private, which ends in the game's own H).
+    /// Episodes are written in <c>Dialogue/EpisodeScenes.cs</c>.
     /// </summary>
     internal static partial class Episodes
     {
@@ -34,6 +35,8 @@ namespace Joojkk.CampusLife
             public Tone Tone, PalTone;
             public string Name = "", PalName = "";
             public int Favor, Trust, Bond, Tier;  // Tier 0 stranger, 1 acquaintance, 2 friend, 3 close friend
+            public bool Girlfriend;
+            public int Lewd, HCount;
             public Incident Good;                 // the best thing you did for her that she knows about
             public Incident Bad;                  // something she holds against you and was not cleared
             public string LastEp = "";            // your last outing with her (episode id)
@@ -61,6 +64,9 @@ namespace Joojkk.CampusLife
             c.Favor = her.favor;
             c.Trust = Social.Trust(her);
             c.Tier = c.Favor < 25 ? 0 : c.Favor < 50 ? 1 : c.Favor < 75 ? 2 : 3;
+            c.Girlfriend = her.isGirlfriend;
+            c.Lewd = her.lewdness;
+            c.HCount = her.hCount;
             c.Mood = c.Gs.MoodDay == S.Day ? c.Gs.Mood : Mood.None;
             c.Bad = Social.Grudge(her);
             c.Good = S.Incidents.Where(i => i.Girl == key && S.Day - i.Day <= 21 && (i.Kind == Social.Kinds.Helped || i.Kind == Social.Kinds.Defended || i.Kind == Social.Kinds.KeptPromise))
@@ -148,12 +154,13 @@ namespace Joojkk.CampusLife
         internal sealed class Tally
         {
             public readonly Dictionary<string, Action> OnPick = new Dictionary<string, Action>();
-            public readonly Dictionary<SaveData.Heroine, int[]> Girls = new Dictionary<SaveData.Heroine, int[]>(); // favor, trust, devotion, attention
+            public readonly Dictionary<SaveData.Heroine, int[]> Girls = new Dictionary<SaveData.Heroine, int[]>(); // favor, trust, devotion, attention, lewd
             public int Rep, Int, Str, Sens, Money;
             public readonly List<string> ItemsUsed = new List<string>();
             public readonly List<string> ItemsGot = new List<string>();
             public readonly List<Action> Extra = new List<Action>();
             public string Ending = "";
+            public bool IntoH;                   // she said yes to somewhere private: the talk ends in the game's H
 
             public void On(string tag, Action a)
             {
@@ -161,12 +168,12 @@ namespace Joojkk.CampusLife
                 OnPick[tag] = OnPick.TryGetValue(tag, out old) ? old + a : a;
             }
 
-            public void Her(SaveData.Heroine h, int favor, int trust = 0, int devotion = 0)
+            public void Her(SaveData.Heroine h, int favor, int trust = 0, int devotion = 0, int lewd = 0)
             {
                 if (h == null) return;
                 int[] v;
-                if (!Girls.TryGetValue(h, out v)) Girls[h] = v = new int[4];
-                v[0] += favor; v[1] += trust; v[2] += devotion; v[3] += 10;
+                if (!Girls.TryGetValue(h, out v)) Girls[h] = v = new int[5];
+                v[0] += favor; v[1] += trust; v[2] += devotion; v[3] += 10; v[4] += lewd;
             }
 
             public void Use(string item) { ItemsUsed.Add(item); }
@@ -189,7 +196,7 @@ namespace Joojkk.CampusLife
             {
                 var h = kv.Key;
                 var v = kv.Value;
-                var applied = Campus.Apply(new Rewards { Favor = v[0], Devotion = v[2] }, h, true);
+                var applied = Campus.Apply(new Rewards { Favor = v[0], Devotion = v[2], Lewd = v[4] }, h, true);
                 var tr = Social.AddTrust(h, v[1]);
                 var gs = S.Girl(GirlInfo.Key(h));
                 gs.Attention = Mathf.Clamp(gs.Attention + v[3], 0, 100);
@@ -198,6 +205,7 @@ namespace Joojkk.CampusLife
                 if (applied.Favor != 0) bits.Add((applied.Favor > 0 ? "+" : "") + applied.Favor + " favor");
                 if (tr != 0) bits.Add((tr > 0 ? "+" : "") + tr + " trust");
                 if (applied.Devotion > 0) bits.Add("+" + applied.Devotion + " devotion");
+                if (applied.Lewd > 0) bits.Add("+" + applied.Lewd + " H");
                 if (bits.Count > 0) parts.Add(GirlInfo.FirstName(h) + " " + string.Join(", ", bits.ToArray()));
             }
             foreach (var id in t.ItemsUsed) if (S.Count(id) > 0) S.AddItem(id, -1);
@@ -217,7 +225,7 @@ namespace Joojkk.CampusLife
                 gs.EpisodeDay = S.Day;
             }
             if (c.Bad != null && picks.Contains("fin_sorry")) Social.Cleared(c.Her, c.Bad);
-            if (t.Ending == "heart" || t.Ending == "sorry") Social.Add(Social.Kinds.GoodTalk, c.Her);
+            if (t.Ending == "heart" || t.Ending == "sorry" || t.Ending == "close" || t.Ending == "confess") Social.Add(Social.Kinds.GoodTalk, c.Her);
             var who = c.Name + (c.Pal != null ? " and " + c.PalName : "");
             var msg = ep.Title + " with " + who + (parts.Count > 0 ? " (" + string.Join("; ", parts.ToArray()) + ")" : "");
             S.Log(msg);
@@ -320,19 +328,24 @@ namespace Joojkk.CampusLife
                 var intro = new SceneBuilder(null, false);
                 ep.Invite(c, intro);
                 var show = new Duo.Show { A = star, B = pal, Name = "episode " + ep.Id + " (" + c.Name + (pal != null ? " + " + c.PalName : "") + ")", Intro = intro };
+                Tally tally = null;
                 show.Main = inTalk =>
                 {
                     var t = new Tally();
+                    tally = t;
                     var b = new SceneBuilder(c.Her, inTalk);
                     b.Bg(ep.Bg);
                     ep.Write(c, b, t);
                     show.Result = _ => PayOut(ep, c, t, new HashSet<string>(Scenes.Picks));
                     return b;
                 };
+                show.IntoH = () => tally != null && tally.IntoH && Scenes.Picks.Contains("fin_h") && Cfg.LewdRequests.Value;
                 show.Outro = () =>
                 {
                     var o = new SceneBuilder(null, false);
-                    o.Narr("Back at school, the bell rings somewhere far away. That was a good one.");
+                    o.Narr(c.Girlfriend || Scenes.Picks.Contains("fin_close") || Scenes.Picks.Contains("fin_confess")
+                        ? "Back at school, the bell rings somewhere far away. Your hand still feels warm."
+                        : "Back at school, the bell rings somewhere far away. That was a good one.");
                     return o;
                 };
                 var main = show.Main(true);

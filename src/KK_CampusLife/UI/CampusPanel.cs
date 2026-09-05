@@ -324,19 +324,20 @@ namespace Joojkk.CampusLife
 
         private static void StoryBlock()
         {
-            var h = StoryCast.Waiting;
-            if (h == null) return;
-            var b = GameUi.Block(_right, "story");
-            var row = GameUi.Row(b, "title", 46f);
-            Icon(row, Markers.Get(Markers.StoryShape), 44f);
-            RowText(row, "Story: " + GirlInfo.FullName(h) + "'s next chapter", 24f, GameUi.Gold);
-            var map = StoryCast.EventMap;
-            if (map >= 0 && map != G.PlayerMapNo) SmallButton(row, Places.MapLabel(map), () => StatusUi.Warp(map), 190f);
-            if (map >= 0)
-                Line(b, "She is waiting at the " + Places.MapLabel(map) + " right now. Talk to her to play her story event.", 19f);
-            else
-                Line(b, "She was chosen for today. Her event can start in a free period (break, lunch or after school): look for her and talk to her.", 19f);
-
+            var n = 0;
+            foreach (var h in StoryCast.Shown)
+            {
+                var b = GameUi.Block(_right, "story" + n++);
+                var row = GameUi.Row(b, "title", 46f);
+                Icon(row, Markers.Get(Markers.StoryShape), 44f);
+                RowText(row, "Story: " + GirlInfo.FullName(h) + "'s next chapter", 24f, GameUi.Gold);
+                var map = StoryCast.MapOf(h);
+                if (map >= 0 && map != G.PlayerMapNo) SmallButton(row, Places.MapLabel(map), () => StatusUi.Warp(map), 190f);
+                if (map >= 0)
+                    Line(b, "She is waiting at the " + Places.MapLabel(map) + " right now. Talk to her to play her story event.", 19f);
+                else
+                    Line(b, "She was chosen for today. Her event can start in a free period (break, lunch or after school): look for her and talk to her.", 19f);
+            }
         }
 
         private static void RequestBlock(Request r)
@@ -492,6 +493,8 @@ namespace Joojkk.CampusLife
                 var b = GameUi.Block(_right, a.Id);
                 var r = GameUi.Row(b, "row", 44f);
                 var cost = string.Join(", ", new[] { Cfg.EnergyEnabled.Value ? a.Energy + " energy" : null, a.MoneyCost > 0 ? a.MoneyCost + " yen" : null, a.IsJob ? "job" : null, a.OncePerDay ? "once a day" : null }.Where(x => x != null).ToArray());
+                var gain = Activities.GainText(a, false);
+                var info = (gain.Length > 0 ? "<color=" + Hex(GameUi.Gold) + ">" + gain + "</color>  " : "") + a.Desc;
                 RowText(r, a.Name + (cost.Length > 0 ? "  <size=18><color=" + Hex(GameUi.Dim) + ">(" + cost + ")</color></size>" : ""), 23f, Color.white);
                 if (here)
                 {
@@ -514,9 +517,9 @@ namespace Joojkk.CampusLife
                         SmallButton(r, "Spot here", () => { ActivitySpots.MarkHere(act); Refresh(); }, 150f);
                         if (ActivitySpots.HasCustom(act)) SmallButton(r, "Default spot", () => { ActivitySpots.ResetSpot(act); Refresh(); }, 170f);
                     }
-                    Line(b, a.Desc + (block != null ? "  <color=" + Hex(GameUi.Warn) + ">" + block + "</color>" : ""), 19f, GameUi.Dim);
+                    Line(b, info + (block != null ? "  <color=" + Hex(GameUi.Warn) + ">" + block + "</color>" : ""), 19f, GameUi.Dim);
                 }
-                else Line(b, a.Desc, 19f, GameUi.Dim);
+                else Line(b, info, 19f, GameUi.Dim);
             }
         }
 
@@ -560,7 +563,7 @@ namespace Joojkk.CampusLife
             var c = GameUi.Block(_right, "talk");
             Header(c, "Conversations");
             Para(c, "Speech bubble", "talking: topics (a star marks what she likes when you can read her mood), let her talk (problems, gossip, what her friends need), ask about her day, her friends or the school, jokes, compliments, clearing the air, and the game's small talk and listen.");
-            Para(c, "Heart", "romance and H: being sweet to her, love and lewd talk, and the game's confession, date, H and break up when the game allows them.");
+            Para(c, "Heart", "romance and H: sweet talk, her hand, how she feels about you, teasing, whispers, talking about last time and sneaking off together, plus the game's confession, date, H and break up when the game allows them.");
             Para(c, "Question mark", "invitations (lunch, study, exercise, club, going home, the Koikatsu Club), \"come with me\", gifts, and buttons other mods add. Only what the game allows right now is shown.");
             Para(c, "Bars", "every turn moves her favor and H bars at once and uses " + Cfg.TurnTalkTime.Value.ToString("0.##") + " of the blue talk-time bar (the game's own options use 1). Her mood and trust change how invitations go: a hungry girl who likes you comes to lunch, a sleepy one won't exercise.");
 
@@ -577,6 +580,7 @@ namespace Joojkk.CampusLife
             Header(r, "Requests and stories");
             Para(r, "Board", "requests show once you learn of them (she or a friend tells you, or you see it). Its shape is the mark on her minimap icon.");
             Para(r, "Stories", "one story heroine with a pending event is chosen each school day.");
+            Para(r, "Outings", "a girl in the spotlight may invite you out (lunch, club time or after school). Alone with her, the last choice can turn romantic: her hand, a kiss, a confession, or somewhere private, which ends in H.");
             Para(r, "Gifts", "a liked gift beats any chat and adds devotion. Learn likes by asking about her day or from library magazines.");
 
             var a = GameUi.Block(_right, "activities");

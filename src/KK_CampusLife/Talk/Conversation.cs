@@ -204,6 +204,8 @@ namespace Joojkk.CampusLife
                     m.Key.SetSiblingIndex(Mathf.Min(m.Value, _list.childCount - 1));
                 }
             Moved.Clear();
+            if (_listRt != null) _listRt.anchoredPosition = _listHome;
+            _listRt = null;
             if (_holder != null) Object.Destroy(_holder);
             _holder = null;
             _s = null;
@@ -414,6 +416,63 @@ namespace Joojkk.CampusLife
                 if (have > 1f && need > have) x.Txt.fontSize = Mathf.Max(size * 0.72f, Mathf.Floor(size * have / need));
                 x.Txt.overflowMode = TextOverflowModes.Ellipsis;
             }
+            KeepClear();
+        }
+
+        private static RectTransform _listRt;
+        private static Vector2 _listHome;
+
+        /// <summary>
+        /// The widened buttons grew over the game's orange buttons (Talk / Listen / Event / End) beside the list. The
+        /// overlap is measured on screen and the list moves sideways just enough to clear them; it goes back to its
+        /// place when the talk closes.
+        /// </summary>
+        private static void KeepClear()
+        {
+            var lrt = _list as RectTransform;
+            if (lrt == null) return;
+            if (_listRt != lrt) { _listRt = lrt; _listHome = lrt.anchoredPosition; }
+            lrt.anchoredPosition = _listHome;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(lrt);
+            var canvas = lrt.GetComponentInParent<Canvas>();
+            var cam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+            var opts = Created.Where(g => g != null && g.activeInHierarchy).Select(g => OnScreen((RectTransform)g.transform, cam)).ToList();
+            if (opts.Count == 0) return;
+            Button end = null;
+            try { end = Traverse.Create(_scene).Field("buttonEnd").GetValue<Button>(); } catch { }
+            var shift = 0f;
+            foreach (var b in new[] { _talk, _listen, _event, end })
+            {
+                if (b == null || !b.gameObject.activeInHierarchy) continue;
+                var br = OnScreen((RectTransform)b.transform, cam);
+                foreach (var o in opts)
+                {
+                    if (!o.Overlaps(br)) continue;
+                    if (br.center.x >= o.center.x) shift = Mathf.Min(shift, br.xMin - o.xMax - 10f); // button on the right: list to the left
+                    else shift = Mathf.Max(shift, br.xMax - o.xMin + 10f);
+                }
+            }
+            if (Mathf.Abs(shift) < 0.5f) return;
+            var parent = lrt.parent as RectTransform;
+            if (parent == null) return;
+            Vector2 a, c;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, Vector2.zero, cam, out a);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, new Vector2(shift, 0f), cam, out c);
+            lrt.anchoredPosition = _listHome + new Vector2(c.x - a.x, 0f);
+            if (Mathf.Abs(shift - _lastShift) > 0.5f) CampusLifePlugin.Log.LogInfo("Conversation list moved " + shift.ToString("0") + " px clear of the game's buttons");
+            _lastShift = shift;
+        }
+
+        private static float _lastShift;
+
+        private static readonly Vector3[] Corners = new Vector3[4];
+
+        private static Rect OnScreen(RectTransform rt, Camera cam)
+        {
+            rt.GetWorldCorners(Corners);
+            var min = RectTransformUtility.WorldToScreenPoint(cam, Corners[0]);
+            var max = RectTransformUtility.WorldToScreenPoint(cam, Corners[2]);
+            return Rect.MinMaxRect(Mathf.Min(min.x, max.x), Mathf.Min(min.y, max.y), Mathf.Max(min.x, max.x), Mathf.Max(min.y, max.y));
         }
 
         private static void ShowSub(Action page)
@@ -1149,7 +1208,9 @@ namespace Joojkk.CampusLife
                 if (done != null) { try { done(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); } }
                 if (!string.IsNullOrEmpty(toast)) Toasts.Show(toast);
                 if (next != null) { next(); return; }
-                if (SpendTalkTime(s.Her))
+                var empty = SpendTalkTime(s.Her);
+                if (FriendsNow(s.Her)) return;
+                if (empty)
                 {
                     // The blue bar is empty: the game's own goodbye, like after its own topics.
                     Game(-1);
@@ -1187,7 +1248,45 @@ namespace Joojkk.CampusLife
             _s.Interest = Mathf.Clamp(_s.Interest + 1, 0, MaxInterest);
             _s.Turns++;
             _sub = null;
+            if (FriendsNow(_s.Her)) return;
             Reopen();
+        }
+
+        private static readonly MethodInfo StartAdvList = AccessTools.Method(typeof(TalkScene), "StartADV", new[] { typeof(List<ADV.Program.Transfer>) });
+        private static readonly MethodInfo TalkEndMethod = AccessTools.Method(typeof(TalkScene), "TalkEnd");
+
+        /// <summary>
+        /// Her favor reached 100 and she is not a friend yet: the game's own "we're friends now" ending plays at once
+        /// (end-of-talk ADV 10, which makes her a friend), the same check the game makes after each of its own topics.
+        /// Before, the bar sat full and the friend scene only came after closing the talk and opening it again.
+        /// </summary>
+        private static bool FriendsNow(SaveData.Heroine h)
+        {
+            if (_scene == null || h == null || h.relation != 0 || h.favor < 100 || h.isGirlfriend || StartAdvList == null || TalkEndMethod == null) return false;
+            try
+            {
+                var tr = Traverse.Create(_scene);
+                var info = tr.Property("info").GetValue<ActionGame.Communication.Info>();
+                if (info == null) return false;
+                int no;
+                var list = info.GetEndConversationADV(tr.Field("oldAnger").GetValue<bool>(), false, out no);
+                if (list == null || no != 10) return false;
+                Finish(true);
+                Clear();
+                _sub = null;
+                tr.Field("endADVNo").SetValue(no);
+                var canvas = tr.Field("canvas").GetValue<Canvas>();
+                if (canvas != null) canvas.enabled = false;
+                StartAdvList.Invoke(_scene, new object[] { list });
+                _scene.StartCoroutine((System.Collections.IEnumerator)TalkEndMethod.Invoke(_scene, null));
+                CampusLifePlugin.Log.LogInfo(GirlInfo.FullName(h) + ": favor full, the game's friend ending plays");
+                return true;
+            }
+            catch (Exception e)
+            {
+                CampusLifePlugin.Log.LogWarning("Friend ending: " + e.Message);
+                return false;
+            }
         }
 
         /// <summary>Applies the end of the conversation once: trust, attention, devotion and a summary.</summary>

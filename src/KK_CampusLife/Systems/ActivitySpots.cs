@@ -321,7 +321,17 @@ namespace Joojkk.CampusLife
             {
                 var anchor = an;
                 var kind = an.Acts.GroupBy(KindOf).OrderByDescending(g => g.Count()).First().Key;
-                try { list.Add(GameAPI.AddActionIcon(map, an.IconPos, ActivityIcon.Get(kind, true), ActivityIcon.Get(kind, false), () => Use(anchor), null, true, now)); }
+                try
+                {
+                    // Walking into the icon shows the activity's name and what it gives (SpotHint).
+                    Action<Illusion.Component.TriggerEnterExitEvent> created = evt =>
+                    {
+                        if (evt == null) return;
+                        evt.onTriggerEnter += c => { if (c != null && c.CompareTag("Player")) SpotHint.Enter(anchor); };
+                        evt.onTriggerExit += c => { if (c != null && c.CompareTag("Player")) SpotHint.Exit(anchor); };
+                    };
+                    list.Add(GameAPI.AddActionIcon(map, an.IconPos, ActivityIcon.Get(kind, true), ActivityIcon.Get(kind, false), () => Use(anchor), created, true, now));
+                }
                 catch (Exception e) { CampusLifePlugin.Log.LogError("Activity spot icon: " + e); }
             }
             CampusLifePlugin.Log.LogDebug("Activity spots on map " + map + ": " + string.Join(", ", AnchorsOn(map).Select(x => x.Key + "[" + string.Join(",", x.Acts.Select(y => y.Id).ToArray()) + "]").ToArray()));

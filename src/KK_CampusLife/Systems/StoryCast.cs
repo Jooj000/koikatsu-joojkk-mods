@@ -91,6 +91,46 @@ namespace Joojkk.CampusLife
             }
         }
 
+        private static SaveData.Heroine _periodGirl;
+        private static int _periodAsset = -1;
+
+        /// <summary>
+        /// The story heroine the game (or the director) placed this period whose event has not played yet, or null. The
+        /// game's own schedule can put a girl other than today's pick there (she was missing from the board).
+        /// </summary>
+        public static SaveData.Heroine ThisPeriod
+        {
+            get
+            {
+                var act = G.Act;
+                var h = act != null && act.fixChara != null ? act.fixChara.heroine : null;
+                if (h == null || h != _periodGirl || h.isTeacher || h.isTaked || !StoryGirls.Contains(h)) return null;
+                return _periodAsset >= 0 && !h.talkEvent.Contains(_periodAsset) ? h : null;
+            }
+        }
+
+        /// <summary>Story heroines to show on the board and the student cards: today's pick and this period's one.</summary>
+        public static List<SaveData.Heroine> Shown
+        {
+            get
+            {
+                var list = new List<SaveData.Heroine>();
+                var w = Waiting;
+                if (w != null) list.Add(w);
+                var p = ThisPeriod;
+                if (p != null && !list.Contains(p)) list.Add(p);
+                return list;
+            }
+        }
+
+        /// <summary>Map where the game put this heroine for her event this period, or -1.</summary>
+        public static int MapOf(SaveData.Heroine h)
+        {
+            var act = G.Act;
+            if (act == null || h == null || act.fixChara == null || act.fixChara.heroine != h) return -1;
+            try { return act.fixChara.mapNo; } catch { return -1; }
+        }
+
         /// <summary>Map where the game put her for the event this period, or -1.</summary>
         public static int EventMap
         {
@@ -107,6 +147,10 @@ namespace Joojkk.CampusLife
         public static void AfterFindFix(ActionScene act, ref SaveData.Heroine result, ref FixEventScheduler.Result info)
         {
             Direct(act, ref result, ref info);
+            _periodGirl = result;
+            _periodAsset = -1;
+            try { if (result != null && info != null && info.param != null) int.TryParse(info.param.Asset, out _periodAsset); }
+            catch { _periodAsset = -1; }
             // Any story heroine the game (or the director) placed today stands there in person, not only today's pick.
             var r = result;
             if (Campus.On && r != null && !r.isTeacher && StoryGirls.Contains(r)) InPerson(ref info);

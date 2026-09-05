@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace Joojkk.CampusLife
 {
-    /// <summary>The spotlight episodes' text (see <see cref="Episodes"/>). Friendship stories only.</summary>
+    /// <summary>The spotlight episodes' text (see <see cref="Episodes"/>): friendship stories, with romantic endings when you are alone with her.</summary>
     internal static partial class Episodes
     {
         private static bool Roll(int stat, int difficulty) { return stat + Random.Range(0, 41) >= difficulty; }
@@ -54,6 +54,9 @@ namespace Joojkk.CampusLife
             else if (c.Good != null)
                 Her(c, b, Feel.Shy, c.T("I never really thanked you for " + What(c.Good) + "... This is my way of saying it.", "This is a thank-you for " + What(c.Good) + "! So have fun, okay?!",
                     "Consider this payback for " + What(c.Good) + ". I don't like owing people.", "Think of this as a reward for " + What(c.Good) + ". Don't let it go to your head."));
+            else if (c.Girlfriend && c.Pal == null)
+                Her(c, b, Feel.Shy, c.T("Just the two of us... It feels like a real date. ...It is a real date, isn't it?", "Date! This is officially a date! I even fixed my hair, did you notice?!",
+                    "A date. With my boyfriend. ...Don't grin like that.", "My boyfriend finally takes me out. Took you long enough~"));
             else if (c.Tier == 0)
                 Her(c, b, Feel.Normal, c.T("We don't talk much, do we... I thought this could be a start.", "We barely know each other! Perfect, that makes it an adventure!",
                     "We're not exactly close. That's fine. I needed someone and you were there.", "We hardly know each other. Let's see if you're interesting."));
@@ -76,8 +79,135 @@ namespace Joojkk.CampusLife
             o.If(c.Good != null && c.Bad == null, "Ask about " + What(c.Good).Replace("me", "her"), "fin_thanks", () => Thanks(c, b, t), 2f);
             o.If(c.Pal != null, "Ask how they became friends", "fin_pals", () => Pals(c, b, t), 2f);
             o.If(c.Tier >= 1, "Plan the next outing", "fin_plan", () => Plan(c, b, t, id), 1.5f);
+            // Alone with her: the romantic endings.
+            var flirty = c.Mood == Mood.Flirty;
+            o.If(c.Pal == null && c.Bad == null && (c.Girlfriend || c.Tier >= 2 || flirty), c.Girlfriend ? "Walk back hand in hand" : "Reach for her hand", "fin_close", () => Close(c, b, t),
+                c.Girlfriend || flirty ? 3f : 1.8f);
+            o.If(c.Pal == null && c.Bad == null && !c.Girlfriend && c.Tier >= 3 && c.Trust >= 35, "Tell her how you feel", "fin_confess", () => Confess(c, b, t), 3.5f);
+            o.If(c.Pal == null && c.Bad == null && Cfg.LewdRequests.Value && (c.Girlfriend || c.Lewd >= 50 || c.HCount > 0), "Find somewhere private", "fin_h", () => Private(c, b, t),
+                flirty || c.Lewd >= 70 ? 4f : 2.2f);
             o.Keep("Make her laugh", "fin_laugh", () => Laugh(c, b, t));
             o.Play(b, "fin_end");
+        }
+
+        // ---------------- romantic endings (alone with her) ----------------
+
+        private static float CloseChance(Ctx c)
+        {
+            if (c.Girlfriend) return 1f;
+            return UnityEngine.Mathf.Clamp(0.2f + c.Favor / 150f + G.Sens / 400f + c.Trust / 400f + (c.Mood == Mood.Flirty ? 0.2f : 0f), 0.05f, 0.95f);
+        }
+
+        /// <summary>Her hand on the way back; when she takes it and you are close enough, maybe a kiss.</summary>
+        private static void Close(Ctx c, SceneBuilder b, Tally t)
+        {
+            var ok = Random.value < CloseChance(c);
+            b.Narr("On the way back, the street is quiet. Your hands keep almost touching.");
+            b.Me(c.Girlfriend ? Lines.Pick("Come here. Give me your hand.", "Let's walk like this for a while.") : Lines.Pick("Can I... hold your hand? Just until the station.", "Your hands look cold. Here."));
+            if (!ok)
+            {
+                Her(c, b, Feel.Surprised, c.T("Ah... s-sorry... not yet. I'm not ready for that...", "Whoa! Um! Hands! That's, uh, a lot! Maybe next time?!", "...No. Not yet.", "Holding hands already? Earn it first."));
+                Her(c, b, Feel.Shy, c.T("But... I'm happy you asked. Really.", "...But you can walk really close. That's allowed.", "...You can walk next to me, though.", "...But I'll think about it. Keep trying~"));
+                t.On("fin_close", () => { t.Ending = "close_no"; t.Her(c.Her, 1, 2); });
+                return;
+            }
+            b.Narr(c.Girlfriend ? "She laces her fingers through yours without even looking, like it's the most natural thing in the world." : "For a second she freezes. Then her fingers slowly close around yours.");
+            Her(c, b, Feel.Shy, c.Girlfriend
+                ? c.T("Mm... your hand is so warm. I could walk like this all night.", "Fingers laced! That's the official couple grip, you know!", "...Don't let go before the station.", "If you let go first, you lose. Got it?")
+                : c.T("My face is so hot right now... please don't look at me...", "Okay. This is fine. This is TOTALLY fine. ...It's really nice, actually.", "...Your hand is warmer than I expected.", "Oh? Taking the initiative today? ...I'll allow it."));
+            var o = new Opts();
+            o.Keep("Just walk with her", "cl_walk", () =>
+            {
+                b.Narr("You don't talk much after that. You don't need to. The streetlights come on one by one.");
+                Her(c, b, Feel.Smile, c.T("...I'll remember tonight. All of it.", "Today was the best. Like, the BEST best.", "...That was nice. Really nice.", "Not bad. Not bad at all."));
+                t.On("cl_walk", () => t.Her(c.Her, 6, 4, c.Girlfriend ? 2 : 1, 3));
+            });
+            o.If(c.Girlfriend || c.Tier >= 3 || c.Mood == Mood.Flirty, "Kiss her", "cl_kiss", () =>
+            {
+                b.Narr("You stop under a streetlight. She looks up at you, and doesn't look away.");
+                Her(c, b, Feel.Shy, c.T("...Here? Someone might... ...okay.", "W-wait, right here? ...Okay. Okay! I'm ready! Eyes closed!", "...Don't make me wait.", "You're thinking about it, aren't you? ...Then do it."));
+                b.Narr("Her lips are soft, and she's shaking a little. When you pull apart, she hides her face against your shoulder.");
+                Her(c, b, Feel.Love, c.T("...My heart is beating so fast I can't hear anything else.", "That was... wow. Again. No wait, not in public! ...Later!", "...Again. Later. Somewhere quieter.", "...Hmph. You're better at that than I expected."));
+                t.On("cl_kiss", () => t.Her(c.Her, 8, 5, c.Girlfriend ? 3 : 1, 8));
+            }, 2f);
+            o.Play(b, "cl_end", 2);
+            t.On("fin_close", () => t.Ending = "close");
+        }
+
+        /// <summary>A confession at the end of the day; if she says yes she becomes your girlfriend, as the game's own confession does.</summary>
+        private static void Confess(Ctx c, SceneBuilder b, Tally t)
+        {
+            var chance = UnityEngine.Mathf.Clamp(0.3f + (c.Favor - 75) / 60f + c.Trust / 250f + G.Sens / 400f + (c.Mood == Mood.Flirty ? 0.15f : 0f) - (c.Mood == Mood.Upset ? 0.2f : 0f), 0.1f, 0.95f);
+            var ok = Random.value < chance;
+            b.Narr("You stop walking. She notices and turns around.");
+            b.Me(Lines.Pick("I've been wanting to tell you for a while. I like you. Not as a friend. I really like you.",
+                "Today was one of the best days I've had. Because it was with you. ...I like you. A lot.",
+                "I don't want to just be your friend. I like you. Will you go out with me?"));
+            Her(c, b, Feel.Surprised, c.T("Eh...? Y-you mean... me...?", "W-WAIT. Wait wait wait. Say that again?!", "...Are you serious?", "...Huh. You actually said it."));
+            if (ok)
+            {
+                Her(c, b, Feel.Shy, c.T("I... I've liked you for so long. I thought it was only me...", "I like you too! I've liked you forever, you dummy! Why did you take so long?!",
+                    "...Fine. Yes. I like you too. I have for a while.", "Took you long enough. ...Yes. Obviously yes."));
+                b.Narr("She takes your hand, and this time neither of you lets go.");
+                Her(c, b, Feel.Love, c.T("So... from today, I'm your girlfriend. Please take care of me.", "We're dating! We're DATING! I have to tell everyone! ...Okay, maybe not everyone.",
+                    "From today, you're mine. Don't forget it.", "From today you're my boyfriend. No take-backs~"));
+                t.On("fin_confess", () =>
+                {
+                    t.Ending = "confess";
+                    t.Her(c.Her, 10, 10, 3, 4);
+                    t.Extra.Add(() => BecomeGirlfriend(c.Her));
+                });
+            }
+            else
+            {
+                Her(c, b, Feel.Worried, c.T("I... I'm really happy. But I'm not ready yet... Can you wait for me a little?", "Ah... um... I really like hanging out with you! But dating is... can I think about it?",
+                    "...Not yet. I need to be sure. Don't take it the wrong way.", "...You're sweet. But not yet. Ask me again when you've earned it."));
+                Her(c, b, Feel.Smile, c.T("Please don't stop talking to me because of this, okay?", "We're still friends! The best of friends! Okay?!", "...We're fine. Really.", "Don't make that face. I didn't say never."));
+                t.On("fin_confess", () => { t.Ending = "confess_no"; t.Her(c.Her, 2, 4); });
+            }
+        }
+
+        /// <summary>What the game does when she accepts a confession (TalkScene, heroine event 0).</summary>
+        private static void BecomeGirlfriend(SaveData.Heroine h)
+        {
+            if (h == null || h.isGirlfriend) return;
+            h.isGirlfriend = true;
+            h.confessed = true;
+            if (!h.isFirstGirlfriend)
+            {
+                h.isFirstGirlfriend = true;
+                Singleton<Manager.Game>.Instance.rankSaveData.girlfriendCount += 1U;
+            }
+            CampusLifePlugin.Log.LogInfo("Episodes: " + GirlInfo.FirstName(h) + " is your girlfriend now");
+        }
+
+        private static float PrivateChance(Ctx c)
+        {
+            var p = (c.Girlfriend ? 0.6f : 0.15f) + c.Lewd / 200f + G.Sens / 400f + (c.HCount > 0 ? 0.15f : 0f) + (c.Mood == Mood.Flirty ? 0.2f : 0f) - (c.Low ? 0.15f : 0f);
+            return UnityEngine.Mathf.Clamp(p, 0.05f, 0.95f);
+        }
+
+        /// <summary>Somewhere private: if she says yes, the talk ends in the game's own H with her (see Duo.IntoH).</summary>
+        private static void Private(Ctx c, SceneBuilder b, Tally t)
+        {
+            var ok = Random.value < PrivateChance(c);
+            b.Narr("It's getting late, and neither of you seems to want the day to end.");
+            b.Me(c.HCount > 0 ? Lines.Pick("I don't want to say goodbye yet. Want to go somewhere just the two of us? Like last time.", "Hey... nobody's around right now. Come with me?")
+                              : Lines.Pick("I don't want to say goodbye yet. Want to go somewhere just the two of us?", "Let's go somewhere quieter. Just you and me."));
+            if (!ok)
+            {
+                Her(c, b, Feel.Shy, c.T("S-somewhere just the two of us...? I... not today. My heart can't take it.", "Ehh?! Just us two, now?! N-no way, I'm way too nervous! ...Another day!",
+                    "...I know what you mean. Not today.", "Ohh? Bold. ...Not today, though. Make me want it more."));
+                t.On("fin_h", () => { t.Ending = "h_no"; t.Her(c.Her, 1, 0, 0, 3); });
+                return;
+            }
+            Her(c, b, Feel.Shy, c.T("...Okay. I was hoping you'd ask. I know a place nobody goes this late...", "Hehe... I was totally thinking the same thing. Follow me, quick, before someone sees!",
+                "...Fine. But we go now, before I change my mind.", "Finally. I was starting to think I'd have to drag you there myself~"));
+            b.Narr(c.HCount > 0 ? "She doesn't let go of your hand all the way back. You both know where you're going."
+                                : "She takes your hand and pulls you along, glancing back at you with red cheeks.");
+            Her(c, b, Feel.Love, c.T("...Be gentle with me, okay?", "Okay, nobody's here! ...Ehehe. I'm all yours.", "...Don't keep me waiting.", "Now then... let's see what you've got."));
+            t.IntoH = true;
+            t.On("fin_h", () => { t.Ending = "h"; t.Her(c.Her, 3, 2, c.Girlfriend ? 2 : 0, 10); });
         }
 
         private static void Sorry(Ctx c, SceneBuilder b, Tally t)

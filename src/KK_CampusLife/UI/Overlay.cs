@@ -34,7 +34,7 @@ namespace Joojkk.CampusLife
             GameUi.Clear(_stack);
             foreach (var text in list)
             {
-                var bar = GameUi.Image(_stack, "toast", GameUi.SprBlueBar, GameUi.Sprite(GameUi.SprBlueBar) == null ? new Color(0.1f, 0.25f, 0.55f, 0.92f) : (Color?)null);
+                var bar = GameUi.Image(_stack, "toast", null, GameUi.NoteBack);
                 var v = bar.gameObject.AddComponent<VerticalLayoutGroup>();
                 v.padding = new RectOffset(18, 18, 10, 12);
                 v.childControlHeight = true;

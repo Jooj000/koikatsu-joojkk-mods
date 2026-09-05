@@ -317,6 +317,14 @@ namespace Joojkk.CampusLife
             }
             else
             {
+                // Your girlfriend keeps it to herself (her lines already treat it as a tease, not a scandal).
+                var gf = here.Where(g => g.isGirlfriend).ToList();
+                here = here.Where(g => !g.isGirlfriend).ToList();
+                if (here.Count == 0)
+                {
+                    Toasts.Show(GirlInfo.FirstName(gf[0]) + " caught you here... and just shakes her head with a smile.");
+                    return;
+                }
                 Add(kind == "lockers" ? Kinds.SeenLockers : Kinds.SeenGirlsRoom, null, here);
                 Toasts.Show(here.Count == 1 ? GirlInfo.FirstName(here[0]) + " saw you here. This will get around." : here.Count + " girls saw you here. This will get around.");
             }

@@ -1477,7 +1477,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ Correct.
   - _teasing:_ Good taste.
 
-### Plan / CallOver
+### Show / CallOver
 - **Her (by personality)**
   - _gentle:_ Um... do you have a minute?
   - _energetic:_ Hey hey! Got a sec?
@@ -1489,7 +1489,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ It won't take long.
   - _teasing:_ Don't keep us waiting~
 
-### Plan / Outro
+### Show / Outro
 - **Her (by personality)**
   - _gentle:_ Thank you for listening...
   - _energetic:_ That was fun! See ya!

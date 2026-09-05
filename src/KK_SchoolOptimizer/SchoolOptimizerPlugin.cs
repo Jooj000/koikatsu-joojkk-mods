@@ -42,7 +42,7 @@ namespace Joojkk.SchoolOptimizer
     public class SchoolOptimizerPlugin : BaseUnityPlugin
     {
         public const string GUID = "joojkk.schooloptimizer";
-        public const string Version = "1.5.1";
+        public const string Version = "1.5.3";
 
         internal static ManualLogSource Log;
         internal static SchoolOptimizerPlugin Instance;
@@ -233,6 +233,8 @@ namespace Joojkk.SchoolOptimizer
                 _nextOrphans = Time.realtimeSinceStartup + 2f;
                 try { Orphans.Sweep(); }
                 catch (Exception e) { Log.LogDebug("Orphan sweep: " + e.Message); }
+                try { OutfitDefer.Sweep(); }
+                catch (Exception e) { Log.LogDebug("Changing state sweep: " + e.Message); }
             }
             if (Time.realtimeSinceStartup >= _nextBoneLod)
             {
@@ -282,6 +284,69 @@ namespace Joojkk.SchoolOptimizer
                 __result = Loader.Wrap(__instance, isShuffle, __result);
             }
             catch (Exception e) { SchoolOptimizerPlugin.Log.LogError(e); }
+        }
+
+        private static int _hairFixes;
+
+        /// <summary>
+        /// The game's hair length update throws a NullReferenceException every frame when one of its length bones was
+        /// without the optimizer). The dead bones are dropped from its arrays, so the rest keeps working and the log
+        /// stays clean. Nothing is skipped.
+        /// </summary>
+        [HarmonyPrefix, HarmonyPatch(typeof(ChaCustomHairComponent), "Update")]
+        private static void HairUpdatePrefix(ChaCustomHairComponent __instance)
+        {
+            try
+            {
+                var t = __instance.trfLength;
+                if (t == null) return;
+                var b = __instance.baseLength;
+                var bad = b == null || b.Length < t.Length;
+                for (var i = 0; !bad && i < t.Length; i++) bad = t[i] == null;
+                if (!bad) return;
+                var keepT = new List<Transform>();
+                var keepB = new List<float>();
+                for (var i = 0; i < t.Length; i++)
+                {
+                    if (t[i] == null) continue;
+                    keepT.Add(t[i]);
+                    keepB.Add(b != null && i < b.Length ? b[i] : t[i].localPosition.y);
+                }
+                __instance.trfLength = keepT.ToArray();
+                __instance.baseLength = keepB.ToArray();
+                if (_hairFixes++ < 20)
+                    SchoolOptimizerPlugin.Log.LogInfo("Hair length bones: dropped " + (t.Length - keepT.Count) + " destroyed bone(s) of " + __instance.name);
+            }
+            catch (Exception e) { SchoolOptimizerPlugin.Log.LogDebug("Hair length fix: " + e.Message); }
+        }
+
+        private static int _bustFixes;
+        private static readonly AccessTools.FieldRef<BustNormal, bool> BustInit = AccessTools.FieldRefAccess<BustNormal, bool>("initEnd");
+        private static readonly AccessTools.FieldRef<BustNormal, Dictionary<GameObject, SkinnedMeshRenderer>> BustSmr =
+            AccessTools.FieldRefAccess<BustNormal, Dictionary<GameObject, SkinnedMeshRenderer>>("dictSmr");
+
+        /// <summary>
+        /// The bust normals of a clothes piece are only let go when the game itself removes that piece. A piece gone
+        /// in BustNormal.Blend) left them pointing at a destroyed mesh. Such an entry is released the game's own way
+        /// (BustNormal.Release), so Blend just skips it; the next time the piece is built it is set up again.
+        /// </summary>
+        [HarmonyPrefix, HarmonyPatch(typeof(BustNormal), nameof(BustNormal.Blend))]
+        private static void BustBlendPrefix(BustNormal __instance)
+        {
+            try
+            {
+                if (__instance == null || !BustInit(__instance)) return;
+                var smr = BustSmr(__instance);
+                if (smr == null) return;
+                foreach (var kv in smr)
+                {
+                    if (kv.Key != null && kv.Value != null && kv.Value.sharedMesh != null) continue;
+                    __instance.Release();
+                    if (_bustFixes++ < 20) SchoolOptimizerPlugin.Log.LogInfo("Bust normals of a removed clothes piece released");
+                    return;
+                }
+            }
+            catch (Exception e) { SchoolOptimizerPlugin.Log.LogDebug("Bust normal fix: " + e.Message); }
         }
     }
 
@@ -712,6 +777,7 @@ namespace Joojkk.SchoolOptimizer
             Pending.TryGetValue(pick, out remove);
             Pending.Remove(pick);
             if (pick == null || pick.chaCtrl == null || pick.heroine == null) return;
+            remove = remove && Changing(pick); // she already left the locker room: only the outfit changes
             if (OffMap.IsUnloaded(pick) || OffMapClothes.IsStripped(pick)) { Apply(pick, remove); return; }
             if (!On || !Unseen(pick))
             {
@@ -760,7 +826,41 @@ namespace Joojkk.SchoolOptimizer
             var cha = npc.chaCtrl;
             var want = npc.heroine.NowCoordinate;
             if (cha.fileStatus.coordinateType != want) cha.ChangeCoordinateType((ChaFileDefine.CoordinateType)want, true);
-            if (remove) cha.RandomChangeOfClothesLowPoly(npc.heroine.lewdness);
+            if (remove && Changing(npc)) cha.RandomChangeOfClothesLowPoly(npc.heroine.lewdness);
+        }
+
+        /// <summary>
+        /// She is at a changing point right now (AI action 0; the game keeps the state through action 25). The game takes
+        /// some of her clothes off there (RandomChangeOfClothesLowPoly) and puts them back when her next action starts.
+        /// </summary>
+        private static bool Changing(NPC npc)
+        {
+            try { return npc != null && npc.AI != null && (npc.AI.actionNo == 0 || npc.AI.actionNo == 25); }
+            catch { return false; }
+        }
+
+        public static int LeftHalfDressed;
+
+        /// <summary>
+        /// A change of clothes that waited in the queue used to be applied after she had already left the locker room:
+        /// the game never put her clothes back (it does that only when her next action starts), so she walked around
+        /// with pieces missing, and the game saw it (her clothes state), until the period ended. Whoever still has the
+        /// changing-room state away from a changing point gets it ended, as the game would.
+        /// </summary>
+        public static void Sweep()
+        {
+            if (!SchoolOptimizerPlugin.Enabled.Value || !Singleton<Game>.IsInstance()) return;
+            var act = Singleton<Game>.Instance.actScene;
+            if (act == null || act.npcList == null) return;
+            var scene = Singleton<Scene>.Instance;
+            if (scene.IsNowLoading || scene.IsNowLoadingFade || !string.IsNullOrEmpty(scene.AddSceneName)) return;
+            foreach (var npc in act.npcList)
+            {
+                if (npc == null || npc.chaCtrl == null || !npc.chaCtrl.isChangeOfClothesRandom || Changing(npc)) continue;
+                npc.chaCtrl.RandomChangeOfClothesLowPolyEnd();
+                LeftHalfDressed++;
+                SchoolOptimizerPlugin.Log.LogDebug("Clothes of " + (npc.heroine != null ? npc.heroine.Name : "?") + " put back (changing state left over, action " + npc.AI.actionNo + ")");
+            }
         }
 
         /// <summary>She is about to be unloaded: a queued outfit change becomes data only.</summary>

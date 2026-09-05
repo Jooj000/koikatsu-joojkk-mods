@@ -212,7 +212,7 @@ namespace Joojkk.CampusLife
         private static void AddNote(ChaStatusComponent comp, SaveData.Heroine h)
         {
             var r = Markers.ShownFor(h);
-            var story = h != null && h == StoryCast.Waiting;
+            var story = h != null && StoryCast.Shown.Contains(h);
             if ((r == null && !story) || comp.cmpStudentCard == null) return;
             var card = comp.cmpStudentCard.transform as RectTransform;
             var bar = GameUi.Image(card, "cl_note", GameUi.SprBlueBar);

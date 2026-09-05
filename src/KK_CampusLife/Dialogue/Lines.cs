@@ -51,7 +51,7 @@ namespace Joojkk.CampusLife
                 case Mood.Bored: return "Invite her to exercise or to the club, or just chat.";
                 case Mood.Stressed: return "Study together or give her something sweet.";
                 case Mood.Lonely: return "Talk to her, walk her home.";
-                case Mood.Flirty: return "Lewd talk and intimacy go over well.";
+                case Mood.Flirty: return "Flirting, her hand, a kiss and sneaking off go over well.";
                 case Mood.Sleepy: return "Coffee helps. Don't drag her into exercise.";
                 case Mood.Upset: return "Apologize, give a gift, be gentle.";
                 default: return "";

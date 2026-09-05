@@ -67,6 +67,7 @@ namespace Joojkk.CampusLife
         protected override void OnStartH(MonoBehaviour proc, HFlag hFlag, bool vr)
         {
             Safe(GiftMenu.Close);
+            Safe(PeepReturn.OnStartH);
         }
 
         protected override void OnEndH(MonoBehaviour proc, HFlag hFlag, bool vr)
@@ -76,6 +77,7 @@ namespace Joojkk.CampusLife
                 if (hFlag == null) return;
                 Campus.OnHEnd(hFlag.lstHeroine, hFlag.isFreeH);
             });
+            Safe(PeepReturn.OnEndH);
         }
 
         private static void Safe(Action a)

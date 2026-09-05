@@ -106,6 +106,7 @@ namespace Joojkk.CampusLife
             Campus.FixWeekNumbering();
             Board.EnsureToday();
             Board.CheckErrands();
+            Board.KeepTalkTime();
             Rendezvous.Tick();
             Social.DailySpread();
             Social.Tick();

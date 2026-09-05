@@ -211,6 +211,8 @@ namespace Joojkk.CampusLife
                 case Mood.Upset: options.Add(RequestKind.Gift); break;
                 default: options.AddRange(new[] { RequestKind.Errand, RequestKind.MeetAt, RequestKind.Talk, RequestKind.Lunch, RequestKind.Study, RequestKind.Exercise }); break;
             }
+            // Already got her gift today: no request for another one.
+            if (gs.LastGiftDay == S.Day) { options.RemoveAll(k => k == RequestKind.Gift); if (options.Count == 0) options.Add(RequestKind.Talk); }
             if (Random.value < 0.25f) options.Add(RequestKind.Errand);
             var kind = options[Random.Range(0, options.Count)];
 
@@ -338,6 +340,38 @@ namespace Joojkk.CampusLife
             var key = GirlInfo.Key(h);
             foreach (var r in ActiveFor(key).Where(x => x.Kind == RequestKind.Intimate).ToList())
                 if (r.DeadlineDay >= S.Day) Complete(r, h);
+        }
+
+        private static readonly HashSet<string> TalkKept = new HashSet<string>();
+        private static int _talkKeptPeriod = -1;
+
+        /// <summary>
+        /// A girl with an open request for this period gets one point of talk time back (once a period) when she has
+        /// none: with an empty blue bar the game ends the talk at once, so the request could not be done at all (a gift
+        /// request with Nagatoro, 2026-10-11: no talk, no gift, and the next period "already got a gift today").
+        /// </summary>
+        public static void KeepTalkTime()
+        {
+            if (!G.InRoamingPeriod) return;
+            var period = S.Day * 16 + (int)G.CurrentMask;
+            if (period != _talkKeptPeriod) { _talkKeptPeriod = period; TalkKept.Clear(); }
+            foreach (var r in Active.Where(x => !string.IsNullOrEmpty(x.Girl) && x.Kind != RequestKind.Activity && InWindow(x)).ToList())
+            {
+                if (TalkKept.Contains(r.Girl)) continue;
+                var h = GirlInfo.Find(r.Girl);
+                if (h == null || h.talkTime > 0) continue;
+                h.talkTime = 1;
+                TalkKept.Add(r.Girl);
+                CampusLifePlugin.Log.LogDebug(GirlInfo.FullName(h) + ": one talk back for the request '" + r.Title + "'");
+            }
+        }
+
+        /// <summary>She asked for a gift and this one fits: the once-a-day limit does not apply.</summary>
+        public static bool WantsGift(SaveData.Heroine h, ItemDef item)
+        {
+            if (h == null || item == null) return false;
+            return ActiveFor(GirlInfo.Key(h)).Any(r => r.Kind == RequestKind.Gift && r.DeadlineDay >= S.Day
+                                                       && (string.IsNullOrEmpty(r.Item) || Items.MatchesCategory(item, r.Item) || r.Item == item.Id));
         }
 
         public static void OnGift(SaveData.Heroine h, ItemDef item)
