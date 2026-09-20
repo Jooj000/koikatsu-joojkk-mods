@@ -49,11 +49,8 @@ namespace Joojkk.CampusLife
                 var act = G.Act;
                 if (act == null || act.Player == null || !G.IsFreeRoaming || act.Player.mapNo == map) yield break;
                 CampusLifePlugin.Log.LogInfo("After peeping: the game moved the player to map " + act.Player.mapNo + "; back to map " + map);
-                act.Map.PlayerMapWarp(map, () =>
-                {
-                    try { act.Player.SetPositionAndRotation(pos, rot); }
-                    catch (Exception e) { CampusLifePlugin.Log.LogDebug("Peep return position: " + e.Message); }
-                });
+                // The position is set after the map loads (set in the callback, the door spawn overwrote it).
+                act.Map.PlayerMapWarp(map, () => act.Player.StartCoroutine(StatusUi.PlaceAfterLoad(map, () => pos, () => rot)));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogWarning("Peep return: " + e.Message); }
         }

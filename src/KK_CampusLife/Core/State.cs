@@ -146,7 +146,7 @@ namespace Joojkk.CampusLife
         }
     }
 
-    internal sealed class GirlState
+    internal sealed partial class GirlState
     {
         public string Key = "";
         public Mood Mood;
@@ -185,7 +185,7 @@ namespace Joojkk.CampusLife
         {
             var bonds = new Dictionary<string, object>();
             foreach (var kv in Bonds) bonds[kv.Key] = kv.Value;
-            return new Dictionary<string, object>
+            var d = new Dictionary<string, object>
             {
                 {"k", Key}, {"m", (int)Mood}, {"md", MoodDay}, {"mk", MoodKnownDay}, {"lt", LastTalkDay},
                 {"lg", LastGiftDay}, {"t", Talks}, {"g", Gifts}, {"kl", KnownLikes}, {"ls", LastSpotlightWeek},
@@ -196,6 +196,8 @@ namespace Joojkk.CampusLife
                 {"fa", FinishedArcs.Cast<object>().ToList()}, {"b", bonds}, {"dud", DuoDay}, {"duh", DuoHandled.Cast<object>().ToList()},
                 {"eps", Episodes.Cast<object>().ToList()}, {"epd", EpisodeDay}
             };
+            WriteWorld(d);
+            return d;
         }
 
         private static List<int> Ints(List<object> l)
@@ -223,6 +225,7 @@ namespace Joojkk.CampusLife
             if (fa != null) g.FinishedArcs = fa.Where(o => o != null).Select(o => o.ToString()).ToList();
             var b = d.GetObj("b");
             if (b != null) foreach (var kv in b) g.Bonds[kv.Key] = b.GetInt(kv.Key);
+            g.ReadWorld(d);
             return g;
         }
     }
@@ -250,7 +253,7 @@ namespace Joojkk.CampusLife
     }
 
     /// <summary>Everything Campus Life remembers about one save file.</summary>
-    internal sealed class CampusState
+    internal sealed partial class CampusState
     {
         public const int CurrentVersion = 2;
 
@@ -386,6 +389,7 @@ namespace Joojkk.CampusLife
                 {"dirP", DirectorPick}, {"dirD", DirectorDay}, {"dirE", DirectorEvents},
                 {"inc", Incidents.Select(i => (object)i.ToDict()).ToList()}, {"incN", NextIncidentId}, {"sprD", LastSpreadDay}, {"epD", LastEpisodeDay}
             };
+            WriteWorld(root);
             return MiniJson.Serialize(root);
         }
 
@@ -441,6 +445,7 @@ namespace Joojkk.CampusLife
             s.NextIncidentId = Math.Max(1, d.GetInt("incN", 1));
             s.LastSpreadDay = d.GetInt("sprD");
             s.LastEpisodeDay = d.GetInt("epD", -1);
+            s.ReadWorld(d);
             return s;
         }
     }

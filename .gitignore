@@ -8,3 +8,5 @@ bin/
 .vs/
 # Local helper for session transcripts
 tools/extract_commands.py
+tools/last_run_*.txt
+tools/iconpreview/iconpreview.png

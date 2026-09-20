@@ -36,7 +36,20 @@ namespace Joojkk.CampusLife
             if (Random.value > 0.35f) return; // a motive found on this map plays within a minute or two
             var plan = PickPlan();
             if (plan == null) return;
-            if (Play(plan)) _lastPeriod = period;
+            var kind = KindOf(plan.Why);
+            if (!Agenda.May("duo " + plan.Why, kind, plan.A.heroine, plan.B.heroine)) return;
+            if (Play(plan)) { _lastPeriod = period; Agenda.Took("duo " + plan.Why, kind, plan.A.heroine, plan.B.heroine); }
+        }
+
+        /// <summary>Where a motive sits in the director's agenda: what the player did comes back first.</summary>
+        internal static BeatKind KindOf(Motive m)
+        {
+            switch (m)
+            {
+                case Motive.Confront: case Motive.Thanks: case Motive.Rivals: return BeatKind.Consequence;
+                case Motive.Quarrel: case Motive.Gossip: return BeatKind.Social;
+                default: return BeatKind.Personal;
+            }
         }
 
         // ---------------- the director: why two girls come over ----------------
@@ -64,7 +77,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>Girls on the player's map within reach, walking about (not in an event or seated in class).</summary>
-        private static List<NPC> Candidates()
+        internal static List<NPC> Candidates()
         {
             var act = G.Act;
             var player = act != null && act.Player != null ? act.Player.transform.position : Vector3.zero;
@@ -129,11 +142,11 @@ namespace Joojkk.CampusLife
             if (bond <= -30) return MakePlan(na, nb, Motive.Quarrel, 2f, null);
             if (bond < 35) return null;
 
-            // A best friend you have never talked to.
+            // A best friend you have never talked to, brought by a girl who is already your friend (a stranger came to
             if (bond >= 45)
             {
-                if (S.Girl(GirlInfo.Key(b)).TalkDays.Count == 0 && S.Girl(GirlInfo.Key(a)).TalkDays.Count > 0) return MakePlan(na, nb, Motive.Introduce, 2f, null);
-                if (S.Girl(GirlInfo.Key(a)).TalkDays.Count == 0 && S.Girl(GirlInfo.Key(b)).TalkDays.Count > 0) return MakePlan(nb, na, Motive.Introduce, 2f, null);
+                if (S.Girl(GirlInfo.Key(b)).TalkDays.Count == 0 && YourFriend(a)) return MakePlan(na, nb, Motive.Introduce, 2f, null);
+                if (S.Girl(GirlInfo.Key(a)).TalkDays.Count == 0 && YourFriend(b)) return MakePlan(nb, na, Motive.Introduce, 2f, null);
             }
             // One of them left out while you spend your days with the other.
             if (bond >= 45)
@@ -150,6 +163,9 @@ namespace Joojkk.CampusLife
             if (bond >= 60 && Social.Trust(a) >= 40 && Social.Trust(b) >= 40) return MakePlan(na, nb, Motive.Hangout, 0.5f, null);
             return null;
         }
+
+        /// <summary>She knows you and is your friend (or more): only she brings a friend over or leaves you notes.</summary>
+        internal static bool YourFriend(SaveData.Heroine h) { return h != null && (h.relation >= 1 || h.isGirlfriend) && Social.KnowsYou(h); }
 
         private static Plan MakePlan(NPC a, NPC b, Motive why, float weight, Incident inc)
         {
@@ -414,6 +430,7 @@ namespace Joojkk.CampusLife
             public Action<string> Result;           // set by Main
             public Func<SceneBuilder> Outro;        // may be null
             public Func<bool> IntoH;                // may be null; true after the scene: the talk ends in the game's H
+            public Action<bool> Done;               // may be null; true when the scene really played
         }
 
         /// <summary>Starts a staged scene (Spotlight episodes use it too). <paramref name="main"/> is Main(true), already built.</summary>
@@ -469,12 +486,14 @@ namespace Joojkk.CampusLife
             try { agents = Stop(na, nb); }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo stop: " + e.Message); }
 
-            // 1. They walk over to two free spots in front of you (never through or behind a wall).
+            // 1. They walk over to two free spots in front of you (never through or behind a wall). The spots follow you
+            // if you walk on; if you leave the map or keep walking away, they give up and the scene does not happen.
+            _walkAborted = false;
             yield return CampusLifePlugin.Instance.StartCoroutine(WalkTo(na, nb, spots));
 
             // 2. On the map: they call you over.
             var done = false;
-            if (G.IsFreeRoaming && Scenes.PlayOnMap(intro, c => done = true, owner))
+            if (!_walkAborted && G.IsFreeRoaming && Scenes.PlayOnMap(intro, c => done = true, owner))
             {
                 Step("intro playing");
                 yield return Wait(() => done, 300f);
@@ -565,7 +584,10 @@ namespace Joojkk.CampusLife
             TalkHer = null;
             Scenes.Owner = null;
             Busy = false;
+            LastPlayed = talked;
             Step("done, talked " + talked);
+            try { if (show.Done != null) show.Done(talked); }
+            catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
         }
 
         private static void Step(string what) { CampusLifePlugin.Log.LogInfo("Duo: " + what); }
@@ -681,9 +703,42 @@ namespace Joojkk.CampusLife
         /// off the navmesh: she is put back on it first (otherwise she never moved and the scene started with one girl).
         /// One who cannot get there (no path, or no progress for 2.5 s) goes straight to her spot.
         /// </summary>
+        /// <summary>The last walk over was given up (the player left the map or kept walking away).</summary>
+        internal static bool _walkAborted;
+
+        /// <summary>True when the last staged scene really played (false: they never reached you). Read by the director.</summary>
+        internal static bool LastPlayed;
+
+        /// <summary>The player walked on: new spots in front of where he is now, and both girls head there.</summary>
+        private static bool Retarget(NPC[] girls, Vector3[] spots, bool[] done, float[] best, float[] bestAt)
+        {
+            var fresh = FindSpots();
+            if (fresh == null) return false;
+            if (girls[1] == null) fresh[0] = (fresh[0] + fresh[1]) * 0.5f;
+            for (var i = 0; i < 2; i++)
+            {
+                spots[i] = fresh[i];
+                var n = girls[i];
+                if (n == null || n.agent == null) continue;
+                try
+                {
+                    if (!n.agent.enabled) n.agent.enabled = true;
+                    if (n.agent.isOnNavMesh) n.agent.SetDestination(spots[i]);
+                    done[i] = false;
+                    best[i] = float.MaxValue;
+                    bestAt[i] = Time.realtimeSinceStartup;
+                }
+                catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo retarget: " + e.Message); }
+            }
+            return true;
+        }
+
         private static IEnumerator WalkTo(NPC na, NPC nb, Vector3[] spots)
         {
             var girls = new[] { na, nb };
+            var map = G.PlayerMapNo;
+            var anchor = G.Act.Player.position;
+            var retargets = 0;
             var done = new bool[2];
             var best = new float[2];
             var bestAt = new float[2];
@@ -706,8 +761,18 @@ namespace Joojkk.CampusLife
                 catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo walk: " + e.Message); if (n != null) Arrive(n, spots[i], done, i); }
             }
             var t0 = Time.realtimeSinceStartup;
-            while (Time.realtimeSinceStartup - t0 < 12f && !(done[0] && done[1]))
+            while (Time.realtimeSinceStartup - t0 < 12f + 6f * retargets && !(done[0] && done[1]))
             {
+                // The player changed map: they don't follow him through the door; the scene is off (the director keeps it).
+                if (G.PlayerMapNo != map || G.Act == null || G.Act.Player == null) { _walkAborted = true; Step("the player left the map; they give up"); break; }
+                // The player walked on: the spots move with him (before, they kept walking to where he had been).
+                var pp = G.Act.Player.position;
+                if ((pp - anchor).sqrMagnitude > 1.5f * 1.5f)
+                {
+                    anchor = pp;
+                    if (retargets >= 6) { _walkAborted = true; Step("the player keeps walking away; they give up"); break; }
+                    if (Retarget(girls, spots, done, best, bestAt)) { retargets++; Step("the player moved; new spots in front of him (" + retargets + ")"); }
+                }
                 for (var i = 0; i < 2; i++)
                 {
                     if (done[i]) continue;
@@ -728,10 +793,15 @@ namespace Joojkk.CampusLife
                 }
                 yield return null;
             }
+            // Still far from the player when time is up (he kept moving): no warp next to him, they give up.
+            if (!_walkAborted && G.Act != null && G.Act.Player != null)
+                for (var i = 0; i < 2; i++)
+                    if (girls[i] != null && (girls[i].transform.position - G.Act.Player.position).sqrMagnitude > 6f * 6f) { _walkAborted = true; Step(GirlInfo.FirstName(girls[i].heroine) + " never caught up; they give up"); }
             for (var i = 0; i < 2; i++)
             {
                 var n = girls[i];
                 if (n == null) continue; // one-girl scenes (episodes)
+                if (_walkAborted) { try { if (n.agent != null && n.agent.enabled && n.agent.isOnNavMesh) n.agent.ResetPath(); } catch { } continue; }
                 try
                 {
                     if (n.agent != null && n.agent.enabled)
@@ -805,6 +875,9 @@ namespace Joojkk.CampusLife
                         n.agent.Warp(NavMesh.SamplePosition(n.transform.position, out hit, 2f, NavMesh.AllAreas) ? hit.position : n.transform.position);
                     }
                     if (n.chaCtrl != null) { n.chaCtrl.ChangeLookEyesPtn(0); n.chaCtrl.ChangeLookNeckPtn(3); }
+                    // A talk still open (a wait above ran out): the game shows and restarts everyone when it closes. Showing
+                    // her now put her map body on top of the talk scene's copy of her (user, 2026-10-12).
+                    if (G.TalkSceneOpen) continue;
                     // Shown again when she is on this map (SetActive does nothing when the game already thinks she is).
                     if (G.Act != null && G.Act.Map != null && n.mapNo == G.Act.Map.no)
                     {

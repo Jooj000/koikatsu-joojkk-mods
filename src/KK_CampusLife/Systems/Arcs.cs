@@ -139,7 +139,7 @@ namespace Joojkk.CampusLife
 
         public static bool TryStartRandom()
         {
-            var students = Board.Students;
+            var students = Board.Students.Where(x => Truth.AtSchool(x)).ToList(); // a story starts with a girl who is here
             if (students.Count == 0) return false;
             var spot = Spotlight.IsActive ? S.Spotlight : null;
             var candidates = new List<KeyValuePair<SaveData.Heroine, ArcDef>>();
@@ -167,7 +167,7 @@ namespace Joojkk.CampusLife
             var st = new ArcState { Id = a.Id, StartedDay = S.Day, Counter = counter };
             if (a.NeedsOther)
             {
-                var others = Board.Students.Where(o => a.OtherOk(h, o) && S.Girl(GirlInfo.Key(o)).Arc == null).ToList();
+                var others = Board.Students.Where(o => a.OtherOk(h, o) && S.Girl(GirlInfo.Key(o)).Arc == null && Truth.AtSchool(o)).ToList();
                 if (others.Count == 0) return false;
                 st.Other = GirlInfo.Key(others[Random.Range(0, others.Count)]);
             }

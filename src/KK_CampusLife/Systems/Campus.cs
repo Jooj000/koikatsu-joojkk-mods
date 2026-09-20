@@ -111,6 +111,8 @@ namespace Joojkk.CampusLife
                 Arcs.OnNewDay();
                 Board.GenerateDaily();
             }
+            Director.OnDay(day);
+            try { Council.OnDay(day); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
         }
 
         private static int _energyPeriod = -1;
@@ -134,6 +136,7 @@ namespace Joojkk.CampusLife
             }
             if (G.ToMask(period) != PeriodMask.None && G.IsSchoolDay)
             {
+                Director.OnPeriod();
                 Calendar.OnPeriodStart(period);
                 if (period == Cycle.Type.LunchTime && S.Requests.Any(r => r.State == RequestState.Active))
                     Toasts.Show("Club board: " + S.Requests.Count(r => r.State == RequestState.Active) + " open request(s). Press " + Cfg.PlannerKey.Value + ".");
@@ -183,7 +186,9 @@ namespace Joojkk.CampusLife
                 var gs = S.Girl(GirlInfo.Key(h));
                 gs.Attention = Mathf.Clamp(gs.Attention + 20, 0, 100);
                 S.Stat("h");
+                Director.Changed(h, "H");
                 Board.OnIntimate(h);
+                try { Pairs.OnHWithPlayer(h); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
                 if (gs.Mood == Mood.Flirty) { G.AddFavor(h, Mathf.RoundToInt(5 * Cfg.MoodBonusMultiplier.Value), 0); gs.Mood = Mood.Cheerful; }
             }
         }

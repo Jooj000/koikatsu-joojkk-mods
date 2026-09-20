@@ -42,7 +42,7 @@ namespace Joojkk.SchoolOptimizer
     public class SchoolOptimizerPlugin : BaseUnityPlugin
     {
         public const string GUID = "joojkk.schooloptimizer";
-        public const string Version = "1.5.3";
+        public const string Version = "1.6.0";
 
         internal static ManualLogSource Log;
         internal static SchoolOptimizerPlugin Instance;
@@ -71,6 +71,7 @@ namespace Joojkk.SchoolOptimizer
         public static ConfigEntry<bool> UnloadOffMap;
         public static ConfigEntry<bool> StripOffMap;
         public static ConfigEntry<bool> OrphanCleanup;
+        public static ConfigEntry<bool> ParkAbsent;
 
         /// <summary>
         /// Other plugins add a scoring function here (higher = load her first, 0 = no opinion). Campus Life ranks girls
@@ -121,6 +122,12 @@ namespace Joojkk.SchoolOptimizer
                 "walk towards your map, when you walk up to a door that leads to theirs, and at once (hidden until it is ready) " +
                 "when you teleport there or they are called. Story characters are never touched.",
                 null, new ConfigurationManagerAttributes { Order = 2 }));
+            ParkAbsent = Config.Bind(s, "Absent students keep only game data", true, new ConfigDescription(
+                "Students who did not come to school today have no body, but their cards still held every texture of their " +
+                "look in memory (MaterialEditor, skin and clothes overlays: 282 MB for 30 absent girls in one test). For the day " +
+                "that appearance data is moved to a file in BepInEx/cache/joojkk_absent and comes back by itself the moment " +
+                "anything needs it (her body being built, the game saving). Game data such as Pregnancy and LewdCrestX stays.",
+                null, new ConfigurationManagerAttributes { Order = 1 }));
             const string c = "2. Crowds";
             FixCrowding = Config.Bind(c, "Students avoid each other", true, new ConfigDescription(
                 "Turns on high-quality avoidance with varied priorities so students walk around each other instead of through each other.",
@@ -211,6 +218,9 @@ namespace Joojkk.SchoolOptimizer
             catch (Exception e) { Log.LogWarning("Releasing clothes on other maps not available: " + e.Message); StripOffMap.Value = false; }
             try { OffMap.Patch(harmony); }
             catch (Exception e) { Log.LogWarning("Unloading students on other maps not available: " + e.Message); UnloadOffMap.Value = false; }
+            try { AbsentPark.Patch(harmony); }
+            catch (Exception e) { Log.LogWarning("Parking data of absent students not available: " + e.Message); ParkAbsent.Value = false; }
+            ParkAbsent.SettingChanged += (o, ea) => { if (!ParkAbsent.Value) AbsentPark.RestoreAll(); };
             BoneLod.SettingChanged += (o, ea) => { if (!BoneLod.Value) DynamicBoneLod.RestoreAll(); };
         }
 
@@ -411,12 +421,16 @@ namespace Joojkk.SchoolOptimizer
                 var t0 = Time.realtimeSinceStartup;
                 while (created.Any(n => n != null && !n.initialized) && Time.realtimeSinceStartup - t0 < 60f) yield return null;
                 if (added > 0) SchoolOptimizerPlugin.Log.LogInfo("Loaded " + added + " important (or fill-in) students on top of the random pick.");
+                var left = vip.Where(h => SchoolOptimizerPlugin.Score(h) > 0f && !act.npcList.Any(n => n != null && n.heroine == h)).Select(h => h.parameter.fullname).ToArray();
+                if (left.Length > 0) SchoolOptimizerPlugin.Log.LogInfo("Important students left out (limit " + cap + "): " + string.Join(", ", left));
             }
             LastLoaded = act.npcList.Count;
             SchoolOptimizerPlugin.Log.LogInfo("Students loaded this period: " + LastLoaded + " (limit " + cap + ")");
             if (OtherMods.MeTexturesShrunk > 0 || OtherMods.HiddenUncensorTextures > 0)
                 SchoolOptimizerPlugin.Log.LogInfo(string.Format("Smaller textures so far: {0} MaterialEditor ({1:0} MB less before mipmaps), {2} hidden uncensor parts.",
                     OtherMods.MeTexturesShrunk, OtherMods.MeBytesSaved / 1048576.0, OtherMods.HiddenUncensorTextures));
+
+            yield return AbsentPark.ParkAll(act);
 
             if (SchoolOptimizerPlugin.CleanupOnLoad.Value)
             {

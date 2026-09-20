@@ -83,6 +83,10 @@ namespace Joojkk.CampusLife
                     if (act == null || !act.isActiveAndEnabled) return false;
                     if (!InRoamingPeriod || GameAPI.InsideHScene) return false;
                     if (act.isEventNow) return false;
+                    // F8 (Cycle.ActionEnd) puts the clock at 500 and the period only changes a few frames later: a scene
+                    // opened in between stayed under the period's white fade for good.
+                    var cy = Cycle;
+                    if (cy != null && cy.isActionEnd) return false;
                     if (act.Map == null || act.Map.isMapLoading) return false;
                     if (!Singleton<Scene>.IsInstance()) return false;
                     var sc = Singleton<Scene>.Instance;

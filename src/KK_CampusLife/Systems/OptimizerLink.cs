@@ -11,6 +11,11 @@ namespace Joojkk.CampusLife
     /// </summary>
     internal static class OptimizerLink
     {
+        /// <summary>
+        /// share a key, and both would take a reserved slot.
+        /// </summary>
+        public static readonly HashSet<SaveData.Heroine> Pinned = new HashSet<SaveData.Heroine>();
+
         public static void Register()
         {
             try
@@ -28,7 +33,9 @@ namespace Joojkk.CampusLife
 
         private static float Score(SaveData.Heroine h)
         {
-            if (!Campus.On || h == null) return 0f;
+            if (h == null) return 0f;
+            if (Pinned.Count > 0 && Pinned.Contains(h)) return 1000f;
+            if (!Campus.On) return 0f;
             var key = GirlInfo.Key(h);
             var s = 0f;
             if (Board.ActiveFor(key).Any()) s += 20f;

@@ -68,7 +68,7 @@ namespace Joojkk.CampusLife
             c.Lewd = her.lewdness;
             c.HCount = her.hCount;
             c.Mood = c.Gs.MoodDay == S.Day ? c.Gs.Mood : Mood.None;
-            c.Bad = Social.Grudge(her);
+            c.Bad = Social.OwnGrudge(her);
             c.Good = S.Incidents.Where(i => i.Girl == key && S.Day - i.Day <= 21 && (i.Kind == Social.Kinds.Helped || i.Kind == Social.Kinds.Defended || i.Kind == Social.Kinds.KeptPromise))
                 .OrderByDescending(i => i.Kind == Social.Kinds.Defended ? 2 : i.Kind == Social.Kinds.Helped ? 1 : 0).ThenByDescending(i => i.Day).FirstOrDefault();
             c.Outings = c.Gs.Episodes.Count;
@@ -254,7 +254,7 @@ namespace Joojkk.CampusLife
         /// <summary>Girls who can star: the spotlight, or with a small class the ones closest to you and the ones feeling unseen.</summary>
         internal static List<SaveData.Heroine> Cast()
         {
-            var students = Board.Students;
+            var students = Board.Students.Where(x => Truth.AtSchool(x)).ToList(); // only girls who came today
             var spot = students.Where(Spotlight.InSpotlight).ToList();
             if (spot.Count > 0) return spot;
             return students.OrderByDescending(h => h.favor / 2 + (100 - S.Girl(GirlInfo.Key(h)).Attention) / 2 + Random.Range(0, 30)).Take(5).ToList();
@@ -273,8 +273,10 @@ namespace Joojkk.CampusLife
             if (Random.value > 0.4f) return;
             var near = NearbyStars();
             if (near.Count == 0) return;
+            var star = near[Random.Range(0, near.Count)];
+            if (!Agenda.May("episode", BeatKind.Personal, star.heroine)) return;
             _lastPeriod = period;
-            Play(near[Random.Range(0, near.Count)], null, null);
+            if (Play(star, null, null)) Agenda.Took("episode", BeatKind.Personal, star.heroine);
         }
 
         /// <summary>Stars on the player's map, near and walking about (as the duo director picks them).</summary>
@@ -284,7 +286,9 @@ namespace Joojkk.CampusLife
             if (act == null || act.Player == null || act.Map == null) return new List<NPC>();
             var cast = new HashSet<SaveData.Heroine>(Cast());
             var p = act.Player.transform.position;
+            // Only a girl who knows you invites you out, and not one sore at you over a friend (she would not ask you).
             return act.npcList.Where(n => n != null && n.heroine != null && n.isActive && n.mapNo == act.Map.no && cast.Contains(n.heroine)
+                                          && Social.KnowsYou(n.heroine) && (Social.Grudge(n.heroine) == null || Social.OwnGrudge(n.heroine) != null)
                                           && (n.transform.position - p).sqrMagnitude < 25f * 25f && n.AI != null && n.AI.isRunning
                                           && S.Girl(GirlInfo.Key(n.heroine)).EpisodeDay != S.Day).ToList();
         }
@@ -302,10 +306,15 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>The episode that fits her best today, weighted, skipping the last two she had.</summary>
+        /// <summary>Outings away from school (and at night): only a friend or a girlfriend asks you.</summary>
+        private static readonly HashSet<string> Outings = new HashSet<string> { "stalls", "fortune", "haunt", "snow", "trip", "tea", "wishes" };
+
         private static Ep Choose(Ctx c, bool withPal)
         {
             var recent = c.Gs.Episodes.Skip(Math.Max(0, c.Gs.Episodes.Count - 2)).Select(x => x.Split(':')[0]).ToList();
-            var pool = All.Where(e => (!withPal || e.PalOk) && !recent.Contains(e.Id)).Select(e => new { e, w = e.Weight(c) }).Where(x => x.w > 0f).ToList();
+            var friend = c.Her.relation >= 1 || c.Her.isGirlfriend;
+            var pool = All.Where(e => (!withPal || e.PalOk) && !recent.Contains(e.Id) && (friend || !Outings.Contains(e.Id)))
+                .Select(e => new { e, w = e.Weight(c) }).Where(x => x.w > 0f).ToList();
             if (pool.Count == 0) return null;
             var roll = Random.value * pool.Sum(x => x.w);
             foreach (var x in pool) { roll -= x.w; if (roll <= 0f) return x.e; }

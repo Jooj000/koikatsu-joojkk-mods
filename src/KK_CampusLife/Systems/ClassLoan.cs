@@ -49,11 +49,14 @@ namespace Joojkk.CampusLife
                 foreach (var npc in act.npcList)
                 {
                     var h = npc != null ? npc.heroine : null;
-                    if (h == null || h.fixCharaID > -5 || h.schoolClass >= 0) continue;
+                    if (h == null || h.fixCharaID > -5 && !h.isTeacher || h.schoolClass >= 0) continue;
                     FixCharaInfo.Param info;
-                    if (!act.fixCharaInfoDic.TryGetValue(h.fixCharaID, out info) || info == null) continue;
+                    int cls;
+                    if (act.fixCharaInfoDic.TryGetValue(h.fixCharaID, out info) && info != null) cls = info.ClassIndex;
+                    else if (h.isTeacher) cls = Math.Max(0, Singleton<Manager.Game>.Instance.Player.schoolClass); // a teacher walks with your class's timetable
+                    else continue;
                     Lent.Add(new KeyValuePair<SaveData.Heroine, int>(h, h.schoolClass));
-                    h.schoolClass = info.ClassIndex;
+                    h.schoolClass = cls;
                 }
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Class loan: " + e.Message); }

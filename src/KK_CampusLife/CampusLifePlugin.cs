@@ -24,7 +24,7 @@ namespace Joojkk.CampusLife
     {
         public const string GUID = "joojkk.campuslife";
         public const string PluginName = "Campus Life";
-        public const string Version = "1.9.0";
+        public const string Version = "2.0.0";
 
         internal static CampusLifePlugin Instance;
         internal static ManualLogSource Log;
@@ -39,7 +39,16 @@ namespace Joojkk.CampusLife
                 var harmony = Harmony.CreateAndPatchAll(typeof(Hooks), GUID);
                 ClassLoan.Install(harmony);
                 ActivitySpots.Install(harmony);
-                InviteOdds.Install(harmony);
+                try { Consent.Install(harmony); }
+                catch (Exception e) { Log.LogWarning("Director answers not installed, the game answers: " + e.Message); }
+                try { Reactions.Install(harmony); }
+                catch (Exception e) { Log.LogWarning("Girls react as in the game: " + e.Message); }
+                try { Brain.Install(harmony); }
+                catch (Exception e) { Log.LogError(e); }
+                try { Intents.Install(harmony); }
+                catch (Exception e) { Log.LogWarning("Students keep the game's own movement: " + e.Message); }
+                try { Sunday.Install(harmony); }
+                catch (Exception e) { Log.LogWarning("Sunday stories not available: " + e.Message); }
                 try { TransitionScreen.Install(harmony); }
                 catch (Exception e) { Log.LogWarning("Loading screen destination not available: " + e.Message); }
             }
@@ -50,7 +59,6 @@ namespace Joojkk.CampusLife
             GameAPI.RegisterExtraBehaviour<CampusController>(GUID);
             TalkButtons.Register();
             OptimizerLink.Register();
-            Tts.Init();
 #if DEBUG_TOOLS
             AutoTest.Init(gameObject);
 #endif
@@ -62,10 +70,15 @@ namespace Joojkk.CampusLife
             {
                 ClassLoan.Sweep();
                 Scenes.Watchdog();
-                Tts.Update();
+                Forms.KeepHeld();
+                Reactions.Tick();
+                Consent.Tick();
+                Stage.Tick();
+                Sunday.Tick();
                 TransitionScreen.Update();
                 ToastUi.Update();
                 SpotHint.Update();
+                WalkHint.Update();
                 StatusUi.WatchBroken();
                 if (!Cfg.Enabled.Value) return;
                 if (Campus.On)
@@ -77,6 +90,7 @@ namespace Joojkk.CampusLife
                     Conversation.Watch();
                     PositionTool.Update();
                     Markers.UpdateMinimap();
+                    RadarMap.Update();
                     CafeteriaStore.Update();
                 }
                 if (GiftMenu.IsOpen && !G.TalkSceneOpen) GiftMenu.Close();
@@ -105,9 +119,5 @@ namespace Joojkk.CampusLife
             catch (Exception e) { Log.LogDebug(e); }
         }
 
-        private void OnDestroy()
-        {
-            Tts.Shutdown();
-        }
     }
 }

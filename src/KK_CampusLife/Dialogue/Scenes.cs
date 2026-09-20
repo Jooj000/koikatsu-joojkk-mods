@@ -241,7 +241,6 @@ namespace Joojkk.CampusLife
             CurrentFaces = new Dictionary<string, List<FaceCue>>();
             EventBackdrop.Hide();
             Staged = false;
-            Tts.StopSpeaking();
             if (onDone != null)
             {
                 try { onDone(choice); }
@@ -270,6 +269,92 @@ namespace Joojkk.CampusLife
             var co = EventUtils.StartAdvEvent(b.List, true, pl.transform.position, pl.transform.rotation);
             CampusLifePlugin.Instance.StartCoroutine(Wrap(co, b, onDone, false).PreventFromCrashing());
             return true;
+        }
+
+        /// <summary>
+        /// A scene to yield from inside one of the game's own event coroutines (the Sunday date, before the day moves on),
+        /// opened the way the game opens its own event ADVs there (Cycle.EventADVStart: Program.Open, then Program.Wait).
+        /// The list must not wait for the scene fade (SceneFadeRegulate False, like the game's own lists): inside the
+        /// wake-up coroutine the fade only ends after that coroutine returns, so a regulated list waited for good and the
+        /// game sat on the loading screen (user, 2026-10-11). Null if another scene is playing.
+        /// </summary>
+        public static IEnumerator PlayInline(SceneBuilder b, Action<string> onDone)
+        {
+            if (Running || G.Act == null) return null;
+            b.End();
+            if (b.List.Count > 0) b.List[0] = Program.Transfer.Create(true, Command.SceneFadeRegulate, bool.FalseString);
+            return Wrap(OpenLikeGame(b), b, onDone, false).PreventFromCrashing();
+        }
+
+        private static IEnumerator OpenLikeGame(SceneBuilder b)
+        {
+            var act = G.Act;
+            var opened = false;
+            // The game's SimpleFade: Fade.In COVERS the screen (alpha 0 -> 1), Fade.Out uncovers it. The date ends with the
+            // screen covered (white); our story opened under it and nothing ever uncovered it: the text ran behind a white
+            // screen and the first choice waited for a click nobody could see (user, 2026-10-12, with the game's Skip on;
+            // then uncover it; at the end cover again, so the game carries on from the state it left.
+            var sc = Singleton<Scene>.IsInstance() ? Singleton<Scene>.Instance : null;
+            if (sc != null && sc.sceneFade != null && sc.sceneFade._Fade != SimpleFade.Fade.In)
+                yield return sc.Fade(SimpleFade.Fade.In, null);
+            var heroines = new List<SaveData.Heroine>();
+            if (b.Her != null) heroines.Add(b.Her);
+            yield return Program.Open(new ADV.Data
+            {
+                fadeInTime = 0f,
+                position = Vector3.zero,
+                rotation = Quaternion.identity,
+                camera = null,
+                heroineList = heroines,
+                scene = act,
+                transferList = b.List
+            }, new Program.OpenDataProc { onLoad = () => opened = true });
+            var t = Time.realtimeSinceStartup;
+            while (!opened && Time.realtimeSinceStartup - t < 15f) yield return null;
+            if (!opened) { CampusLifePlugin.Log.LogWarning("Inline scene: the ADV did not open; skipped."); yield break; }
+            if (sc != null && sc.sceneFade != null)
+            {
+                CampusLifePlugin.Log.LogInfo("Inline scene: open; uncovering the screen (was " + sc.sceneFade._Fade + ", alpha " + sc.sceneFade._Color.a.ToString("0.00") + ").");
+                sc.sceneFade.FadeSet(SimpleFade.Fade.Out, -1f, null);
+            }
+            var guard = new FadeGuardState();
+            if (CampusLifePlugin.Instance != null) CampusLifePlugin.Instance.StartCoroutine(FadeGuard(guard));
+            yield return Program.Wait(string.Empty);
+            guard.Done = true;
+            if (sc != null && sc.sceneFade != null)
+            {
+                yield return sc.Fade(SimpleFade.Fade.In, null);
+                try { sc.SetFadeColorDefault(); } catch (Exception e) { CampusLifePlugin.Log.LogDebug("Inline scene fade color: " + e.Message); }
+            }
+        }
+
+        private sealed class FadeGuardState { public bool Done; }
+
+        /// <summary>
+        /// While an inline story plays: if the screen stays covered by the scene fade (Fade.In finished) for 2 s, something left
+        /// it covered over our text (the game's Skip, a fade command cut short); uncover it so the player can read and choose.
+        /// </summary>
+        private static IEnumerator FadeGuard(FadeGuardState st)
+        {
+            var since = -1f;
+            while (!st.Done && Running)
+            {
+                try
+                {
+                    var sc = Singleton<Scene>.IsInstance() ? Singleton<Scene>.Instance : null;
+                    var covered = sc != null && sc.sceneFade != null && sc.sceneFade._Fade == SimpleFade.Fade.In && sc.sceneFade.IsEnd && sc.sceneFade._Color.a > 0.5f;
+                    if (!covered) since = -1f;
+                    else if (since < 0f) since = Time.realtimeSinceStartup;
+                    else if (Time.realtimeSinceStartup - since > 2f)
+                    {
+                        CampusLifePlugin.Log.LogWarning("Inline scene: the screen stayed faded over the story for 2 s (alpha " + sc.sceneFade._Color.a.ToString("0.00") + "); fading it in.");
+                        sc.sceneFade.FadeSet(SimpleFade.Fade.Out, -1f, null);
+                        since = -1f;
+                    }
+                }
+                catch (Exception e) { CampusLifePlugin.Log.LogDebug("Inline fade guard: " + e.Message); st.Done = true; }
+                yield return null;
+            }
         }
 
         /// <summary>Safety net: if an event got stuck for minutes, release the flag.</summary>

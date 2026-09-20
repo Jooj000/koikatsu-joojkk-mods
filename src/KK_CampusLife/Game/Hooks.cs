@@ -40,6 +40,28 @@ namespace Joojkk.CampusLife
             }
         }
 
+        /// <summary>
+        /// The talk scene stands its own copy of her where she was and hides every map body. Nothing may show her map body
+        /// again while the talk is open (a map warp, a duo letting go, a timer): her two bodies stood on top of each other
+        /// (user, 2026-10-12). The game shows her again itself once the talk has handed her root back.
+        /// </summary>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ActionGame.Chara.Base), "SetActive")]
+        private static void BodyShown(ActionGame.Chara.Base __instance, ref bool active)
+        {
+            try
+            {
+                if (!active || __instance == null) return;
+                var h = __instance.heroine;
+                if (h == null || h.chaCtrl == null || h.chaCtrl == __instance.chaCtrl) return;
+                var ts = G.TalkScene;
+                if (ts == null || ts.targetHeroine != h) return;
+                active = false;
+                CampusLifePlugin.Log.LogInfo("Talk: kept " + GirlInfo.FirstName(h) + "'s map body hidden (the talk scene has her).");
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug(e); }
+        }
+
         /// <summary>Before the clipboard builds its cards: every student must point at her own body.</summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(ChaStatusScene), "Start")]
@@ -119,7 +141,7 @@ namespace Joojkk.CampusLife
                 if (!Cfg.VoiceEnabled.Value) return;
                 VoiceTag tag;
                 if (string.IsNullOrEmpty(text) || !Scenes.CurrentVoices.TryGetValue(text, out tag)) return;
-                Tts.OnLine(text, tag);
+                LineVoice.OnLine(text, tag);
             }
             catch (Exception e)
             {

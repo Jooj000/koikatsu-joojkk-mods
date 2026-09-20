@@ -332,7 +332,7 @@ namespace Joojkk.CampusLife
                 Icon(row, Markers.Get(Markers.StoryShape), 44f);
                 RowText(row, "Story: " + GirlInfo.FullName(h) + "'s next chapter", 24f, GameUi.Gold);
                 var map = StoryCast.MapOf(h);
-                if (map >= 0 && map != G.PlayerMapNo) SmallButton(row, Places.MapLabel(map), () => StatusUi.Warp(map), 190f);
+                if (map >= 0 && map != G.PlayerMapNo) SmallButton(row, Places.MapLabel(map), () => { if (GirlInfo.IsSpawned(h)) StatusUi.WarpToGirl(h); else StatusUi.Warp(map); }, 190f);
                 if (map >= 0)
                     Line(b, "She is waiting at the " + Places.MapLabel(map) + " right now. Talk to her to play her story event.", 19f);
                 else
@@ -404,6 +404,20 @@ namespace Joojkk.CampusLife
             var ex = GameUi.Block(_left, "exams");
             Header(ex, "Exams");
             Line(ex, s.ExamScores.Count == 0 ? "No exams yet. Study (INT) before exam week." : "Scores: " + string.Join(", ", s.ExamScores.Select(x => x.ToString()).ToArray()), 20f);
+
+            if (Cfg.DirectorEnabled.Value)
+            {
+                var se = GameUi.Block(_left, "season");
+                Header(se, "Season " + s.Season);
+                Line(se, ClubProjects.Status(), 19f);
+                Line(se, Council.Status(), 19f);
+                var rumor = Rumors.Main;
+                if (rumor != null && rumor.Step >= 1) Line(se, "Rumor: " + Rumors.What(rumor, 1), 19f, GameUi.Dim);
+                var couples = Pairs.Couples.Count();
+                if (couples > 0) Line(se, couples + " couple" + (couples == 1 ? "" : "s") + " among the students.", 19f, GameUi.Dim);
+                var srow = GameUi.Row(se, "row", 44f);
+                SmallButton(srow, "Class anthology", () => ReportUi.Show(Anthology.PageLines()), 220f);
+            }
 
             var wk = GameUi.Block(_left, "week");
             Header(wk, "Last week");
@@ -487,16 +501,22 @@ namespace Joojkk.CampusLife
             var events = StatusUi.PlaceEvents(placeId);
             foreach (var e in events) Line(head, "Event here: " + e, 20f, GameUi.Gold);
             if (!here) Line(head, "Go there to do these. Time only passes while you walk around, not in this menu.", 18f, GameUi.Dim);
+            if (Cfg.EnergyEnabled.Value) Line(head, Activities.EnergyNow(s) + ",  " + s.Money.ToString("N0") + " yen", 18f, GameUi.Dim);
 
             foreach (var a in Activities.All.Where(x => x.Place == placeId))
             {
                 var b = GameUi.Block(_right, a.Id);
                 var r = GameUi.Row(b, "row", 44f);
-                var cost = string.Join(", ", new[] { Cfg.EnergyEnabled.Value ? a.Energy + " energy" : null, a.MoneyCost > 0 ? a.MoneyCost + " yen" : null, a.IsJob ? "job" : null, a.OncePerDay ? "once a day" : null }.Where(x => x != null).ToArray());
+                var cost = string.Join(", ", new[] { Activities.PeriodText(a), Cfg.EnergyEnabled.Value ? a.Energy + " energy" : null, a.MoneyCost > 0 ? a.MoneyCost + " yen" : null, a.IsJob ? "job" : null, a.OncePerDay ? "once a day" : null }.Where(x => x != null).ToArray());
                 var gain = Activities.GainText(a, false);
                 var info = (gain.Length > 0 ? "<color=" + Hex(GameUi.Gold) + ">" + gain + "</color>  " : "") + a.Desc;
                 RowText(r, a.Name + (cost.Length > 0 ? "  <size=18><color=" + Hex(GameUi.Dim) + ">(" + cost + ")</color></size>" : ""), 23f, Color.white);
-                if (here)
+                if (here && a.GameSleep)
+                {
+                    var block = Activities.Blocker(s, a);
+                    Line(b, info + "  <color=" + Hex(block == null ? GameUi.Green : GameUi.Warn) + ">" + (block ?? "Use the game's sleep icon here.") + "</color>", 19f, GameUi.Dim);
+                }
+                else if (here)
                 {
                     var block = Activities.Blocker(s, a);
                     var act = a;
@@ -519,7 +539,13 @@ namespace Joojkk.CampusLife
                     }
                     Line(b, info + (block != null ? "  <color=" + Hex(GameUi.Warn) + ">" + block + "</color>" : ""), 19f, GameUi.Dim);
                 }
-                else Line(b, info, 19f, GameUi.Dim);
+                else
+                {
+                    // From far away: what would stop it there, except the walk.
+                    var block = Activities.Blocker(s, a);
+                    var far = block != null && !block.StartsWith("Go to the") && !block.StartsWith("Only during") ? block : null;
+                    Line(b, info + (far != null ? "  <color=" + Hex(GameUi.Warn) + ">" + far + "</color>" : ""), 19f, GameUi.Dim);
+                }
             }
         }
 

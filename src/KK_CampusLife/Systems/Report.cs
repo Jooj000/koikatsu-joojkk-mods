@@ -57,6 +57,16 @@ namespace Joojkk.CampusLife
                 t.AddRange(arcs.Select(a => "  - " + a));
             }
 
+            if (Cfg.DirectorEnabled.Value)
+            {
+                var school = SchoolLife().ToList();
+                if (school.Count > 0)
+                {
+                    t.Add("School life:");
+                    t.AddRange(school.Select(a => "  - " + a));
+                }
+            }
+
             var upcoming = Calendar.UpcomingEvents().Take(4).Select(u => u.Name + ": " + u.When).ToList();
             if (upcoming.Count > 0)
             {
@@ -67,6 +77,22 @@ namespace Joojkk.CampusLife
             t.Add("");
             t.Add(Verdict(n("requests"), n("missed"), n("talks")));
             return t;
+        }
+
+        /// <summary>What happened between the students this week (couples, breakups, rumors, the season's events).</summary>
+        public static IEnumerable<string> SchoolLife()
+        {
+            var news = S.SchoolNews.Count > 0 ? S.SchoolNews : S.LastWeekNews;
+            foreach (var n in news.AsEnumerable().Reverse().Take(6)) yield return n;
+            var couples = Pairs.Couples.ToList();
+            if (couples.Count > 0) yield return "Couples: " + string.Join(", ", couples.Select(p => GirlInfo.FirstName(p.A) + " & " + GirlInfo.FirstName(p.B) + (p.Stage == PairStage.Strained ? " (rough patch)" : "")).ToArray());
+            var r = Rumors.Main;
+            if (r != null && r.Step >= 1) yield return "Rumor going around: " + Rumors.What(r, 1) + " (heat " + r.Heat + ")";
+            foreach (var h in Social.Students.Where(Pairs.IsScorned)) yield return GirlInfo.FirstName(h) + " is still hurt (" + S.Girl(GirlInfo.Key(h)).Redemption + "/3 to make amends).";
+            if (S.Harem.Count >= 2) yield return "Sharing you: " + string.Join(", ", Harem.Circle.Select(GirlInfo.FirstName).ToArray());
+            yield return ClubProjects.Status();
+            yield return Council.Status();
+            yield return Anthology.Status();
         }
 
         private static string Verdict(int done, int missed, int talks)

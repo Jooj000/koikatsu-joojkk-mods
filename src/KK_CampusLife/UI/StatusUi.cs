@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ActionGame.Chara;
@@ -38,6 +39,7 @@ namespace Joojkk.CampusLife
         private static readonly List<GameObject> PlaceCards = new List<GameObject>();
         private static readonly List<KeyValuePair<ChaStatusComponent, SaveData.Heroine>> Cards = new List<KeyValuePair<ChaStatusComponent, SaveData.Heroine>>();
         private static int _campusPageIndex = -1;
+        private static int _socialPageIndex = -1;
 
         public static bool IsOpen { get { return Scene != null; } }
 
@@ -91,6 +93,7 @@ namespace Joojkk.CampusLife
             Cards.Clear();
             PlaceCards.Clear();
             _campusPageIndex = -1;
+            _socialPageIndex = -1;
             GameUi.Capture(scene.gameObject);
             var canvas = scene.GetComponentsInChildren<Canvas>(true).FirstOrDefault(c => c.isRootCanvas);
             CanvasRoot = canvas != null ? canvas.transform : scene.transform;
@@ -142,30 +145,66 @@ namespace Joojkk.CampusLife
                 if (h == null || h.isTeacher) continue;
                 Cards.Add(new KeyValuePair<ChaStatusComponent, SaveData.Heroine>(comp, h));
                 AddCampusPage(comp, h);
+                if (Cfg.DirectorEnabled.Value) Safe("social page", () => AddInfoPage(comp, h, "info_social", SocialLabels, FillSocial, false));
                 AddNote(comp, h);
             }
         }
 
         private static readonly string[] PageLabels = { "Request", "When", "Mood", "Devotion", "Likes" };
 
+        private static readonly string[] SocialLabels = { "Right now", "Her heart", "Best friend", "Trust in you", "She remembers" };
+
         /// <summary>Clones the first info page into a "Campus" page and appends it to the card's pages.</summary>
         private static void AddCampusPage(ChaStatusComponent comp, SaveData.Heroine h)
+        {
+            AddInfoPage(comp, h, "info_campus", PageLabels, Fill, true);
+        }
+
+        /// <summary>The school life page: what she wants now, her love life, her best friend, trust, a shared memory.</summary>
+        private static void FillSocial(List<TextMeshProUGUI> v, SaveData.Heroine h)
+        {
+            var gs = Campus.S.Girl(GirlInfo.Key(h));
+            Action<int, string> set = (i, text) => { if (i < v.Count) v[i].text = text; };
+            // What she is really doing, not the plan the director made earlier.
+            var doing = Truth.Doing(h);
+            set(0, Pairs.IsScorned(h) ? "hurt, avoiding you" : !string.IsNullOrEmpty(doing) ? doing : Intents.Label(gs.Intent));
+            var partner = Pairs.PartnerOf(h);
+            var pair = Pairs.PairOf(h);
+            string heart;
+            if (partner != null) heart = "with " + GirlInfo.FirstName(partner) + (pair != null && pair.Stage == PairStage.Strained ? " (rough patch)" : "") + (Pairs.IsConflicted(h) ? ", torn" : "");
+            else if (h.isGirlfriend) heart = "your girlfriend" + (Campus.S.Harem.Contains(GirlInfo.Key(h)) ? " (shares you)" : "") + (string.IsNullOrEmpty(Seasons.ChapterLabel(h)) ? "" : ", ch. " + Mathf.Min(3, gs.Chapter + 1));
+            else
+            {
+                var k = GirlInfo.Key(h);
+                var crush = Campus.S.Pairs.Values.Where(p => (p.A == k || p.B == k) && (p.Stage == PairStage.Crush || p.Stage == PairStage.Talking) && p.RomanceOf(k) >= 35).OrderByDescending(p => p.RomanceOf(k)).FirstOrDefault();
+                heart = crush != null && Social.TalkDaysRecent(h, 30) >= 3 ? "a crush (" + GirlInfo.FirstName(crush.Other(k)) + "?)" : "free";
+            }
+            set(1, heart);
+            var bf = Social.BestFriend(h);
+            set(2, bf == null ? "-" : GirlInfo.FirstName(bf));
+            set(3, Social.TrustLabel(Social.Trust(h)));
+            var m = Memories.Last(h, 14);
+            set(4, m == null ? "-" : m.Text);
+        }
+
+        /// <summary>Clones the first info page into one of our pages and appends it to the card's pages.</summary>
+        private static void AddInfoPage(ChaStatusComponent comp, SaveData.Heroine h, string name, string[] labels, Action<List<TextMeshProUGUI>, SaveData.Heroine> fill, bool campus)
         {
             var infos = InfoRef(comp);
             if (infos == null || infos.Length == 0 || infos[0] == null || InfoObjRef(infos[0]) == null) return;
             var src = InfoObjRef(infos[0]);
             var page = Object.Instantiate(src, src.transform.parent, false);
-            page.name = "info_campus";
+            page.name = name;
             page.SetActive(false);
 
             // Rows alternate: label bar, value. Label bars hold a "text" child; values hold a "text" child.
             var values = new List<TextMeshProUGUI>();
             var row = 0;
-            for (var i = 0; i + 1 < page.transform.childCount && row < PageLabels.Length; i += 2, row++)
+            for (var i = 0; i + 1 < page.transform.childCount && row < labels.Length; i += 2, row++)
             {
                 var bar = page.transform.GetChild(i).GetComponentInChildren<TextMeshProUGUI>(true);
                 var val = page.transform.GetChild(i + 1).GetComponentInChildren<TextMeshProUGUI>(true);
-                if (bar != null) bar.text = PageLabels[row];
+                if (bar != null) bar.text = labels[row];
                 if (val != null)
                 {
                     val.enableAutoSizing = true;
@@ -176,7 +215,7 @@ namespace Joojkk.CampusLife
                     values.Add(val);
                 }
             }
-            Fill(values, h);
+            fill(values, h);
 
             var ours = new ChaStatusComponent.InfoObject();
             InfoObjRef(ours) = page;
@@ -184,7 +223,8 @@ namespace Joojkk.CampusLife
             // SetActiveInfoAll only cycles through enabled pages by index, so keep enabled pages first.
             var list = infos.Where(o => o != null && o.enabled).ToList();
             list.Add(ours);
-            _campusPageIndex = list.Count - 1;
+            if (campus) _campusPageIndex = list.Count - 1;
+            else _socialPageIndex = list.Count - 1;
             list.AddRange(infos.Where(o => o != null && !o.enabled));
             InfoRef(comp) = list.ToArray();
         }
@@ -271,6 +311,13 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>Requests first, then everyone else; all cards switch to the Campus page.</summary>
+        /// <summary>Every card on the School life page.</summary>
+        public static void ShowSocialPages()
+        {
+            if (_socialPageIndex < 0) return;
+            foreach (var kv in Cards.Where(k => k.Key != null)) kv.Key.SetActiveInfoAll(_socialPageIndex);
+        }
+
         public static void ShowCampusPages()
         {
             if (_campusPageIndex < 0) return;
@@ -419,24 +466,20 @@ namespace Joojkk.CampusLife
             if (act.Player != null && act.Player.mapNo == mapNo) { Close(); return; }
             Sfx.Ok();
             FreeTravel.Begin();
+            WalkTalk.OnTeleport();
             Spots.Spot spot;
-            if (Spots.TryGet("warp", mapNo, out spot))
+            var has = Spots.TryGet("warp", mapNo, out spot);
+            act.Map.PlayerMapWarp(mapNo, () =>
             {
-                act.Map.PlayerMapWarp(mapNo, () =>
-                {
-                    try
-                    {
-                        act.Player.position = spot.Pos;
-                        act.Player.rotation = Quaternion.Euler(0f, spot.Yaw, 0f);
-                    }
-                    catch { }
-                });
-            }
-            else act.Map.PlayerMapWarp(mapNo, null);
+                CarryChaser(act, mapNo);
+                if (has) act.Player.StartCoroutine(PlaceAfterLoad(mapNo, () => spot.Pos, () => Quaternion.Euler(0f, spot.Yaw, 0f)));
+            });
             Close();
         }
 
-        /// <summary>Warps next to a girl's NPC (or to her map).</summary>
+        /// <summary>
+        /// Warps in front of a girl's NPC, facing her, like the clipboard's own warp button (KK_WarpToCharacters).
+        /// </summary>
         public static void WarpToGirl(SaveData.Heroine h)
         {
             var act = G.Act;
@@ -448,18 +491,75 @@ namespace Joojkk.CampusLife
             if (act.Player.mapNo == target.mapNo) { Close(); return; }
             Sfx.Ok();
             FreeTravel.Begin();
-            act.Map.PlayerMapWarp(target.mapNo, () =>
+            WalkTalk.OnTeleport();
+            var map = target.mapNo;
+            act.Map.PlayerMapWarp(map, () =>
             {
-                try
-                {
-                    var player = act.Player;
-                    var pos = target.position + target.transform.forward * 1.2f;
-                    player.position = pos;
-                    player.rotation = Quaternion.LookRotation(target.position - pos);
-                }
-                catch { }
+                CarryChaser(act, map);
+                act.Player.StartCoroutine(PlaceAfterLoad(map, () => InFrontOf(target), () => Quaternion.identity, target));
             });
             Close();
+        }
+
+        /// <summary>A girl following the player comes along through the warp (as KK_WarpToCharacters does).</summary>
+        private static void CarryChaser(ActionScene act, int mapNo)
+        {
+            try
+            {
+                var chaser = act.Player.chaser;
+                if (chaser != null && chaser.mapNo == act.Player.mapNo) chaser.mapNo = mapNo;
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Warp chaser: " + e.Message); }
+        }
+
+        /// <summary>1.2 m in front of her, on the walkable floor (null: she left the map).</summary>
+        private static Vector3? InFrontOf(Base target)
+        {
+            if (target == null) return null;
+            var pos = target.position + target.transform.forward * 1.2f;
+            UnityEngine.AI.NavMeshHit hit;
+            if (UnityEngine.AI.NavMesh.SamplePosition(pos, out hit, 1.5f, UnityEngine.AI.NavMesh.AllAreas)) pos = hit.position;
+            else if (UnityEngine.AI.NavMesh.SamplePosition(target.position, out hit, 1.5f, UnityEngine.AI.NavMesh.AllAreas)) pos = hit.position;
+            return pos;
+        }
+
+        /// <summary>
+        /// The game's PlayerMapWarp runs its callback before the map changes, and the new map then puts the player at the
+        /// 2026-10-11). So the place is set once the new map has loaded and the player can move.
+        /// </summary>
+        internal static IEnumerator PlaceAfterLoad(int mapNo, Func<Vector3?> pos, Func<Quaternion> rot, Base faceTo = null)
+        {
+            var t0 = Time.realtimeSinceStartup;
+            while (Time.realtimeSinceStartup - t0 < 30f)
+            {
+                var act = G.Act;
+                if (act != null && act.Map != null && !act.Map.isMapLoading && act.Player != null && act.Player.mapNo == mapNo && G.IsFreeRoaming) break;
+                yield return null;
+            }
+            yield return null;
+            yield return null;
+            try
+            {
+                var act = G.Act;
+                if (act == null || act.Player == null || act.Player.mapNo != mapNo) yield break;
+                if (faceTo != null && faceTo.mapNo != mapNo) yield break; // she left meanwhile: stay at the door
+                var p = pos();
+                if (p == null) yield break;
+                var player = act.Player;
+                player.position = p.Value;
+                if (faceTo != null)
+                {
+                    var look = faceTo.position - p.Value;
+                    look.y = 0f;
+                    if (look.sqrMagnitude > 0.01f) player.rotation = Quaternion.LookRotation(look);
+                }
+                else player.rotation = rot();
+                // The camera kept the door's angle and turned the player back. The game's own
+                // summon turns the camera the same way.
+                act.CameraState.SetAngle(player.rotation.eulerAngles);
+                CampusLifePlugin.Log.LogInfo("Warp: placed on map " + mapNo + (faceTo != null ? " in front of " + faceTo.name : " at the saved spot"));
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Warp place: " + e.Message); }
         }
     }
 

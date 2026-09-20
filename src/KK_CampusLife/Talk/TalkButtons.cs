@@ -173,6 +173,7 @@ namespace Joojkk.CampusLife
                 s.AddItem(item.Id, -1);
                 gs.LastGiftDay = s.Day;
                 gs.Gifts++;
+                Pairs.OnGift(h, liked);
                 s.Stat("gifts");
 
                 // A gift she likes is the strongest thing you can do in a day: far more than a chat.

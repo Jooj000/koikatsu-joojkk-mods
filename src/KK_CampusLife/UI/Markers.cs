@@ -175,9 +175,10 @@ namespace Joojkk.CampusLife
                 var rt = img.rectTransform;
                 rt.anchorMin = rt.anchorMax = new Vector2(1f, 1f);
                 rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = new Vector2(-2f, -2f);
+                rt.anchoredPosition = new Vector2(1f, 1f);
+                // A small corner badge, not a second icon.
                 var parentRt = icon as RectTransform;
-                var s = parentRt != null ? Mathf.Max(14f, parentRt.rect.width * 0.7f) : 16f;
+                var s = parentRt != null ? Mathf.Clamp(parentRt.rect.width * 0.4f, 8f, 12f) : 10f;
                 rt.sizeDelta = new Vector2(s, s);
             }
             else img = t.GetComponent<Image>();

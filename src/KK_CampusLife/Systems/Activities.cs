@@ -18,6 +18,7 @@ namespace Joojkk.CampusLife
         public bool IsJob;
         public int MinStr, MinInt, MinSens;
         public string Desc;
+        public bool GameSleep;          // done with the game's own sleep spot (bed, bench), not a Campus Life icon
         /// <summary>
         /// What it gives, as "INT 3-5, REP 1": INT / STR / SEN / REP / CLUB with a number or a range (both ends
         /// included), EN (energy back) and PAY base+per-point/STAT ("PAY 700+12/INT"). Read by <see cref="Activities.Do"/>
@@ -59,7 +60,7 @@ namespace Joojkk.CampusLife
             new ActivityDef { Id = "feed_cats", Name = "Feed the stray cats", Place = "courtyard", Energy = 0, OncePerDay = true, Gain = "REP 1", Desc = "Needs cat food. Animal lovers will hear about it." },
             new ActivityDef { Id = "park_walk", Name = "Walk around the park", Place = "park", Energy = 0, OncePerDay = true, Gain = "EN 1", Desc = "Clear your head." },
             // cafeteria
-            new ActivityDef { Id = "hearty_lunch", Name = "Eat a hearty lunch", Place = "cafeteria", Periods = PeriodMask.Lunch, Energy = 0, MoneyCost = 500, OncePerDay = true, Gain = "EN 2", Desc = "Katsu curry, large." },
+            new ActivityDef { Id = "hearty_lunch", Name = "Eat a hearty lunch", Place = "cafeteria", Periods = PeriodMask.Lunch, Energy = 0, MoneyCost = 500, OncePerDay = true, Gain = "EN 3, STR 2", Desc = "Katsu curry, large. Fuel for the whole afternoon." },
             new ActivityDef { Id = "kitchen_job", Name = "Kitchen helper shift", Place = "cafeteria", Periods = PeriodMask.Lunch | PeriodMask.After, Energy = 2, OncePerDay = true, IsJob = true, Gain = "PAY 700+8/SEN, SEN 2", Desc = "Part-time job. Tips scale with SEN (charm)." },
             // club room
             new ActivityDef { Id = "club_meeting", Name = "Plan club activities", Place = "clubroom", Energy = 1, Gain = "CLUB 3, INT 2", Desc = "Club points raise the game's club level (more with INT)." },
@@ -67,14 +68,14 @@ namespace Joojkk.CampusLife
             new ActivityDef { Id = "research_material", Name = "Study 'research material'", Place = "clubroom", Energy = 1, Gain = "SEN 3-5", Desc = "It's for the club. Really." },
             new ActivityDef { Id = "fundraise", Name = "Club fundraising", Place = "clubroom", Periods = PeriodMask.After, Energy = 2, OncePerDay = true, IsJob = true, MinSens = 20, Gain = "PAY 500+10/SEN, REP 1", Desc = "Sell club goods. Pay scales with SEN and Reputation." },
             // rooftop
-            new ActivityDef { Id = "nap", Name = "Nap in the sun", Place = "rooftop", Energy = 0, OncePerDay = true, Gain = "EN 2", Desc = "Let the wind do the rest." },
+            new ActivityDef { Id = "nap", Name = "Nap in the sun", Place = "rooftop", Energy = 0, OncePerDay = true, Gain = "EN 2", Desc = "Lie down on the rooftop bench (the game's sleep icon). Let the wind do the rest.", GameSleep = true },
             new ActivityDef { Id = "practice_lines", Name = "Practice smooth lines", Place = "rooftop", Energy = 1, Gain = "SEN 3", Desc = "Compliments, rehearsed to the sky." },
             new ActivityDef { Id = "stargaze", Name = "Watch the sunset", Place = "rooftop", Periods = PeriodMask.After, Energy = 1, Gain = "SEN 2, INT 2", Desc = "Romantic spot." },
             // infirmary
-            new ActivityDef { Id = "rest", Name = "Rest in bed", Place = "infirmary", Energy = 0, OncePerDay = true, Gain = "EN 2", Desc = "Clean sheets and silence." },
+            new ActivityDef { Id = "rest", Name = "Rest in bed", Place = "infirmary", Energy = 0, OncePerDay = true, Gain = "EN 2", Desc = "Lie down on an infirmary bed (the game's sleep icon). Clean sheets and silence.", GameSleep = true },
             new ActivityDef { Id = "nurse_job", Name = "Help the school nurse", Place = "infirmary", Periods = PeriodMask.After | PeriodMask.Club, Energy = 2, OncePerDay = true, IsJob = true, MinInt = 20, Gain = "PAY 600+8/INT, INT 2", Desc = "Part-time job (INT 20+)." },
             // staff room
-            new ActivityDef { Id = "tutoring", Name = "Ask for extra tutoring", Place = "staffroom", Energy = 1, MoneyCost = 1500, OncePerDay = true, Gain = "INT 7-10", Desc = "One-on-one with a teacher." },
+            new ActivityDef { Id = "tutoring", Name = "Ask for extra tutoring", Place = "staffroom", Energy = 1, MoneyCost = 1500, OncePerDay = true, Gain = "INT 16-20, REP 1", Desc = "One-on-one with a teacher. Worth four study sessions." },
             new ActivityDef { Id = "teacher_errands", Name = "Run errands for teachers", Place = "staffroom", Energy = 1, OncePerDay = true, Gain = "REP 2, PAY 400", Desc = "The school likes a helping hand." },
         };
 
@@ -98,8 +99,9 @@ namespace Joojkk.CampusLife
         {
             if (!G.InRoamingPeriod) return "Only during lunch, club time or after school.";
             if (ActivitySpots.BlocksOthers) return "You're in the middle of something.";
+            // The period first: it shows even from far away.
+            if ((a.Periods & G.CurrentMask) == 0) return "Not available in this period (" + PeriodText(a) + ").";
             if (!string.IsNullOrEmpty(a.Place) && Places.CurrentId != a.Place) return "Go to the " + Places.Name(a.Place) + ".";
-            if ((a.Periods & G.CurrentMask) == 0) return "Not available in this period.";
             if (Cfg.EnergyEnabled.Value && s.Energy < a.Energy) return "Not enough energy.";
             if (a.MoneyCost > 0 && s.Money < a.MoneyCost) return "Not enough money.";
             if (a.OncePerDay && DoneToday(s, a.Id)) return "Already done today.";
@@ -109,6 +111,23 @@ namespace Joojkk.CampusLife
             if (a.Id == "feed_cats" && s.Count("cat_food") <= 0) return "You need cat food (school store).";
             if (G.PeriodSecondsLeft < 15f) return "The period is almost over.";
             return null;
+        }
+
+        /// <summary>When it can be done: "any free period" or "lunch, after school".</summary>
+        public static string PeriodText(ActivityDef a)
+        {
+            if ((a.Periods & PeriodMask.Any) == PeriodMask.Any) return "any free period";
+            var l = new List<string>();
+            if ((a.Periods & PeriodMask.Lunch) != 0) l.Add("lunch");
+            if ((a.Periods & PeriodMask.Club) != 0) l.Add("club time");
+            if ((a.Periods & PeriodMask.After) != 0) l.Add("after school");
+            return string.Join(", ", l.ToArray());
+        }
+
+        /// <summary>Your energy now, as the hints show it next to the cost.</summary>
+        public static string EnergyNow(CampusState s)
+        {
+            return "Energy " + s.Energy + "/" + MaxEnergy;
         }
 
         private static int Pay(int baseYen, float perStat, int stat)

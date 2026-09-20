@@ -45,7 +45,7 @@ namespace Joojkk.CampusLife
         /// <summary>A girl for the scene: one on your map first, then anyone (weighted by attention).</summary>
         private static SaveData.Heroine Girl(System.Func<SaveData.Heroine, bool> filter = null)
         {
-            var list = Board.Students.Where(h => filter == null || filter(h)).ToList();
+            var list = Board.Students.Where(h => Truth.AtSchool(h) && (filter == null || filter(h))).ToList(); // never a girl who is not here today
             if (list.Count == 0) return null;
             var here = list.Where(h => GirlInfo.CurrentMap(h) == G.PlayerMapNo && GirlInfo.IsSpawned(h)).ToList();
             var from = here.Count > 0 && Random.value < 0.7f ? here : list;
@@ -107,7 +107,8 @@ namespace Joojkk.CampusLife
 
                 case "love_letter":
                 {
-                    var g = Girl(h => h.favor >= 40 && !h.isGirlfriend) ?? Girl();
+                    // Only a friend writes you a love letter; with nobody like that, no letter (never a stranger's).
+                    var g = Girl(h => h.favor >= 50 && !h.isGirlfriend && Duo.YourFriend(h) && Truth.AtSchool(h));
                     if (g == null) return false;
                     b.Narr("There's a pink envelope in your shoe locker. Inside: \"Please come to the rooftop after school. I have something to tell you.\"");
                     b.Narr("It's signed with a little heart. No name.");
@@ -124,7 +125,8 @@ namespace Joojkk.CampusLife
 
                 case "locker_note":
                 {
-                    var g = Girl(h => h.favor >= 20) ?? Girl();
+                    // Only a friend leaves a note.
+                    var g = Girl(h => h.favor >= 30 && Duo.YourFriend(h) && Truth.AtSchool(h));
                     if (g == null) return false;
                     var initial = GirlInfo.FirstName(g).Substring(0, 1).ToUpper();
                     b.Narr("There's a folded note in your shoe locker: \"Could you come to the rooftop after school? I need help with something and I'd rather not ask in front of everyone.\"");
@@ -235,7 +237,7 @@ namespace Joojkk.CampusLife
 
                 case "rumor":
                 {
-                    var g = Girl(h => h.favor >= 30);
+                    var g = Girl(h => h.favor >= 30 && Social.KnowsYou(h));
                     if (g == null) return false;
                     var name = GirlInfo.FirstName(g);
                     b.Narr("Two classmates whisper as you pass: \"I heard " + name + " has a crush on him...\"");

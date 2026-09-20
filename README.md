@@ -4,7 +4,7 @@ BepInEx plugins for the Koikatsu main game (Koikatu / Koikatsu Party, HF Patch i
 
 | Plugin | GUID | What it does |
 |---|---|---|
-| **Campus Life** (`KK_CampusLife`) | `joojkk.campuslife` | School life on top of the story mode: a club board with requests girls tell you about, moods, gifts and a school store, activities and part-time jobs at real spots of the school (with the game's own animations), a new conversation (talk / romance / invitations pages), a social director (friendships, trust, gossip, jealousy), short stories, calendar events, story heroines walking around as students, optional TTS voices. Menu: **F7**. |
+| **Campus Life** (`KK_CampusLife`) | `joojkk.campuslife` | School life on top of the story mode: a club board with requests girls tell you about, moods, gifts and a school store, activities and part-time jobs at real spots of the school (with the game's own animations), a new conversation (talk / romance / invitations pages), a social director (friendships, trust, gossip, jealousy), short stories, calendar events, story heroines walking around as students, girls voiced with clips from the game. Menu: **F7**. |
 | **H Male Wardrobe** (`KK_HMaleWardrobe`) | `joojkk.hmalewardrobe` | Change the male character's outfit during H with a copy of the girl's outfit menu. **F10**. |
 | **School Optimizer** (`KK_SchoolOptimizer`) | `joojkk.schooloptimizer` | Fewer students loaded per period with priority for the important ones, memory guard, crowd avoidance, off-screen animation pause, hair and clothes physics by distance, background outfit changes, outfit texture size limit, and outside fixes for other mods (idle AmazingNewAccessoryLogic cameras, MaterialEditor texture size, hidden UncensorSelector parts) that cut video memory use, removal of character pieces left lying in the middle of the map, and (experimental, off) unloading students on other maps. |
 
@@ -28,7 +28,6 @@ powershell -ExecutionPolicy Bypass -File build.ps1 -Game "<Koikatsu folder>" [-I
 - Built on [BepInEx](https://github.com/BepInEx/BepInEx), [HarmonyX](https://github.com/BepInEx/HarmonyX) and
   [KKAPI / ExtensibleSaveFormat](https://github.com/IllusionMods/IllusionModdingAPI) (IllusionMods).
 - The School Optimizer patches some other plugins from outside, without changing their files: AmazingNewAccessoryLogic (njaecha), MaterialEditor and UncensorSelector (DeathWeasel1337 and the IllusionMods contributors). Each fix can be turned off in its config.
-- Optional voices: [Piper](https://github.com/rhasspy/piper) with the LibriTTS-R voice (downloaded by `tools\piper_setup.ps1`, not included).
 - Koikatsu is © ILLUSION. No game files are included in this repository.
 
 ## License

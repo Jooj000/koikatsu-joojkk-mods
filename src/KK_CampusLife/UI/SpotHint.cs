@@ -88,14 +88,18 @@ namespace Joojkk.CampusLife
         {
             var gold = "#" + ColorUtility.ToHtmlStringRGB(GameUi.Gold);
             var warn = "#" + ColorUtility.ToHtmlStringRGB(GameUi.Warn);
+            var dim = "#" + ColorUtility.ToHtmlStringRGB(GameUi.Dim);
             var lines = an.Acts.Take(3).Select(a =>
             {
                 var gain = GameUi.StatColors(Activities.GainText(a));
                 var block = Activities.Blocker(Campus.S, a);
                 return "<color=" + gold + ">" + a.Name + "</color>" + (gain.Length > 0 ? "\n" + gain : "")
+                       + "\n<size=18><color=" + dim + ">" + Activities.PeriodText(a) + "</color></size>"
                        + (block != null ? "\n<size=18><color=" + warn + ">" + block + "</color></size>" : "");
             });
-            return string.Join("\n", lines.ToArray());
+            // Your energy next to what it costs.
+            var energy = Cfg.EnergyEnabled.Value ? "\n<size=18>" + Activities.EnergyNow(Campus.S) + "</size>" : "";
+            return string.Join("\n", lines.ToArray()) + energy;
         }
 
         private static void Build()

@@ -278,6 +278,9 @@ namespace Joojkk.CampusLife
             return usable[Math.Abs(h.fixCharaID) % usable.Count].Key;
         }
 
+        public static SaveData.Heroine FreeSeatFor(SaveData save) { return FreeSeat(save); }
+        public static int EverydayPersonalityFor(SaveData.Heroine h) { return EverydayPersonality(h); }
+
         private static SaveData.Heroine FreeSeat(SaveData save)
         {
             var cls = save.player.schoolClass;
@@ -346,6 +349,8 @@ namespace Joojkk.CampusLife
         /// <summary>Story heroines walking as students have no everyday conversations in the game: a click on one is dropped.</summary>
         public static void GuardInteraction(ref Base chara)
         {
+            // Teachers: Campus Life's conversation with choices instead of the game's event (Fix or walking).
+            if (Teachers.Click(chara)) { chara = null; return; }
             var npc = chara as NPC;
             if (npc == null || npc.heroine == null || npc.heroine.fixCharaID >= 0) return;
             chara = null;
@@ -404,6 +409,8 @@ namespace Joojkk.CampusLife
             {
                 try { GraduateFinished(); }
                 catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+                try { Teachers.FreeFinished(); }
+                catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
             }
             while (true)
             {
@@ -420,6 +427,8 @@ namespace Joojkk.CampusLife
             var fixH = act.fixChara != null ? act.fixChara.heroine : null;
             // Only girls whose real class (kept by the game in fixCharaInfoDic, see ClassLoan) has a timetable.
             var add = StoryGirls.Where(h => h != fixH && !h.isTaked && !Graduated(h) && !act.npcList.Any(n => n != null && n.heroine == h) && HasTimetable(act, h)).ToList();
+            // Teachers walk around too (ClassLoan lends them a timetable when the game has none for them).
+            add.AddRange(Teachers.All.Where(h => h != fixH && Teachers.Walks(h) && !act.npcList.Any(n => n != null && n.heroine == h)));
             if (add.Count == 0) yield break;
             var created = new List<NPC>();
             foreach (var h in add)
@@ -440,7 +449,7 @@ namespace Joojkk.CampusLife
             // student (these too, see ClassLoan) her first action of the period.
             var t0 = Time.realtimeSinceStartup;
             while (created.Any(n => n != null && !n.initialized) && Time.realtimeSinceStartup - t0 < 60f) yield return null;
-            CampusLifePlugin.Log.LogInfo("Story heroines at school as students: " + created.Count);
+            CampusLifePlugin.Log.LogInfo("Story heroines and teachers walking around: " + created.Count + " (" + string.Join(", ", created.Where(n => n != null).Select(n => GirlInfo.FirstName(n.heroine)).ToArray()) + ")");
         }
     }
 }

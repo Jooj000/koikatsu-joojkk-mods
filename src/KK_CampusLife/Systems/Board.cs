@@ -129,12 +129,20 @@ namespace Joojkk.CampusLife
             S.Buffs["board_day"] = S.Day;
             // Clean old finished requests (keep a few days for the journal view)
             S.Requests.RemoveAll(r => r.State != RequestState.Active && r.DeadlineDay < S.Day - 3);
+            // A request today waits for a girl who did not come (user, 2026-10-26: "uma missão para a tatsumaki sendo que
+            // ela não está hoje"): no new one for her, and an open one moves to tomorrow without a penalty.
+            if (Truth.Known)
+                foreach (var r in S.Requests.Where(q => (q.State == RequestState.Active || q.State == RequestState.Hidden) && q.DeadlineDay <= S.Day && !string.IsNullOrEmpty(q.Girl) && !Truth.AtSchool(q.Girl)))
+                {
+                    r.DeadlineDay = S.Day + 1;
+                    CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " waits for tomorrow (" + GirlInfo.FirstName(r.Girl) + " is not at school)");
+                }
 
             var already = S.Requests.Count(r => (r.State == RequestState.Active || r.State == RequestState.Hidden) && r.Source == "board" && r.CreatedDay == S.Day);
             var want = TargetCount - already;
             if (want <= 0) return;
 
-            var pool = Students.Where(h => !OpenFor(GirlInfo.Key(h)).Any(r => r.Source == "board")).ToList();
+            var pool = Students.Where(h => Truth.AtSchool(h) && !OpenFor(GirlInfo.Key(h)).Any(r => r.Source == "board")).ToList();
             if (pool.Count == 0) return;
 
             var spot = Spotlight.IsActive ? S.Spotlight : null;
@@ -214,6 +222,8 @@ namespace Joojkk.CampusLife
             // Already got her gift today: no request for another one.
             if (gs.LastGiftDay == S.Day) { options.RemoveAll(k => k == RequestKind.Gift); if (options.Count == 0) options.Add(RequestKind.Talk); }
             if (Random.value < 0.25f) options.Add(RequestKind.Errand);
+            // Asking to meet somewhere is for a girl who knows you.
+            if (!Social.KnowsYou(h)) { options.RemoveAll(k => k == RequestKind.MeetAt || k == RequestKind.WalkHome); if (options.Count == 0) options.Add(RequestKind.Talk); }
             var kind = options[Random.Range(0, options.Count)];
 
             switch (kind)
@@ -321,7 +331,7 @@ namespace Joojkk.CampusLife
                 case RequestKind.WalkHome: return result == ResultEnum.GoHome;
                 case RequestKind.Intimate: return result == ResultEnum.H;
                 // Plain board talks complete on any conversation; arc talks need their scene (talk button).
-                case RequestKind.Talk: return r.Source != "arc";
+                case RequestKind.Talk: return r.Source != "arc" && !(r.Source == "favor" && !string.IsNullOrEmpty(r.Other)); // a message completes with the friend
                 case RequestKind.MeetAt: return r.Source != "arc" && Places.CurrentId == r.Place;
                 case RequestKind.Errand: return r.Source != "arc" && r.Progress > 0;
                 default: return false;
@@ -364,6 +374,19 @@ namespace Joojkk.CampusLife
                 TalkKept.Add(r.Girl);
                 CampusLifePlugin.Log.LogDebug(GirlInfo.FullName(h) + ": one talk back for the request '" + r.Title + "'");
             }
+        }
+
+        /// <summary>She has a request open now (the talk stays open on an empty blue bar, with the free options only).</summary>
+        public static bool HasOpenNow(SaveData.Heroine h)
+        {
+            if (h == null) return false;
+            return ActiveFor(GirlInfo.Key(h)).Any(r => r.Kind != RequestKind.Activity && InWindow(r));
+        }
+
+        /// <summary>Her talk point is the one given back for a request: it is for the request, not for chatting.</summary>
+        public static bool TalkKeptFor(SaveData.Heroine h)
+        {
+            return h != null && TalkKept.Contains(GirlInfo.Key(h)) && h.talkTime <= 1;
         }
 
         /// <summary>She asked for a gift and this one fits: the once-a-day limit does not apply.</summary>
@@ -428,7 +451,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>Plays the request scene inside the conversation, then completes it.</summary>
-        public static void PlayInTalk(Request r, SaveData.Heroine h)
+        public static bool PlayInTalk(Request r, SaveData.Heroine h, Action after = null)
         {
             var b = new SceneBuilder(h, true);
             var tone = GirlInfo.ToneOf(h);
@@ -441,6 +464,13 @@ namespace Joojkk.CampusLife
                 switch (r.Kind)
                 {
                     case RequestKind.MeetAt:
+                        if (r.Source == "happening" && r.Title == "A love letter")
+                        {
+                            b.Me(Lines.Pick("So the letter was from you.", "I found your letter. I came."));
+                            b.Her_(Lines.T(tone, "Y-you came... I wasn't sure you would.", "You came! Okay, okay, deep breath...", "...You actually came.", "Took you long enough. I was starting to think you chickened out."));
+                            b.Her_(Lines.T(tone, "I just... wanted to see you, away from everyone.", "I wanted you all to myself for a bit, hehe.", "I wanted to talk without anyone watching.", "Let's just say I wanted a better look at you."));
+                            break;
+                        }
                         if (r.Source == "note")
                         {
                             b.Me(Lines.Pick("I got your note. What's up?", "So you're the one who left the note."));
@@ -464,11 +494,19 @@ namespace Joojkk.CampusLife
                         break;
                 }
             }
-            Scenes.PlayInTalk(b, choice =>
+            return Scenes.PlayInTalk(b, choice =>
             {
                 if (r.Source == "arc") Arcs.OnTalkSceneDone(r, h, choice);
                 else Complete(r, h);
+                if (after != null) after();
             });
+        }
+
+        /// <summary>She asked to meet you right here, now (a note, a letter, "meet me at..."), not a story step.</summary>
+        public static Request MeetHere(SaveData.Heroine h)
+        {
+            if (h == null) return null;
+            return ActiveFor(GirlInfo.Key(h)).FirstOrDefault(r => r.Kind == RequestKind.MeetAt && r.Source != "arc" && InWindow(r) && Places.CurrentId == r.Place);
         }
 
         public static void Complete(Request r, SaveData.Heroine h)
@@ -487,6 +525,7 @@ namespace Joojkk.CampusLife
                 };
             }
             var applied = Campus.Apply(reward, h);
+            try { Pairs.OnHelped(h); } catch (Exception e) { CampusLifePlugin.Log.LogDebug(e); }
             S.Stat("requests");
             S.Stat("req:" + r.Kind);
             if (h != null)

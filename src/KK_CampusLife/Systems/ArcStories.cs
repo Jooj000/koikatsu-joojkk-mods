@@ -368,6 +368,7 @@ namespace Joojkk.CampusLife
         {
             if (c.St.Step != 0) return;
             if (choice == "cool") G.AddFavor(c.H, 3, 0);
+            if (choice == "keep") G.AddFavor(c.H, 3, 0);
             if (choice == "tease")
             {
                 if (c.H.lewdness >= 40) Reward(c, c.H, new Rewards { Lewd = 8 }, c.Name + " liked your boldness");

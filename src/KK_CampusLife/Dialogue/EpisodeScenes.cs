@@ -168,7 +168,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>What the game does when she accepts a confession (TalkScene, heroine event 0).</summary>
-        private static void BecomeGirlfriend(SaveData.Heroine h)
+        internal static void BecomeGirlfriend(SaveData.Heroine h)
         {
             if (h == null || h.isGirlfriend) return;
             h.isGirlfriend = true;

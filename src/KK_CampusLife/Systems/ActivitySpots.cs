@@ -232,7 +232,7 @@ namespace Joojkk.CampusLife
             PointsByMap.TryGetValue(map, out points);
             points = points ?? new List<GamePoint>();
 
-            foreach (var a in Activities.All.Where(x => x.Place == place))
+            foreach (var a in Activities.All.Where(x => x.Place == place && !x.GameSleep))
             {
                 var want = AnimOf(a);
                 Spots.Spot custom;

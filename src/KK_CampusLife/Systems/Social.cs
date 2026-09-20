@@ -126,6 +126,20 @@ namespace Joojkk.CampusLife
         public static Incident Add(string kind, SaveData.Heroine girl, IEnumerable<SaveData.Heroine> witnesses = null)
         {
             if (S == null) return null;
+            // Seen in the girls' restroom or changing room again within a day: the same story, more witnesses (before,
+            // every visit was a new incident, each one spread and had to be explained again, 2026-10-11).
+            if (Merges(kind))
+            {
+                var key = girl != null ? GirlInfo.Key(girl) : "";
+                var same = S.Incidents.LastOrDefault(i => i.Kind == kind && i.Girl == key && S.Day - i.Day <= 1);
+                if (same != null)
+                {
+                    if (girl != null) Learn(girl, same, false);
+                    if (witnesses != null)
+                        foreach (var w in witnesses.Where(w => w != null && w != girl).Distinct().ToList()) Learn(w, same, true);
+                    return same;
+                }
+            }
             var inc = new Incident { Id = S.NextIncidentId++, Day = S.Day, Kind = kind, Girl = girl != null ? GirlInfo.Key(girl) : "" };
             S.Incidents.Add(inc);
             if (S.Incidents.Count > 120) S.Incidents.RemoveRange(0, S.Incidents.Count - 120);
@@ -136,6 +150,23 @@ namespace Joojkk.CampusLife
             var rep = RepDelta(kind);
             if (rep != 0 && seen > 0) S.Reputation = Mathf.Clamp(S.Reputation + rep, 0, 100);
             return inc;
+        }
+
+        /// <summary>Kinds that are one story however many times it happens in a day (being seen where you shouldn't be).</summary>
+        private static bool Merges(string kind) { return kind == Kinds.SeenGirlsRoom || kind == Kinds.SeenLockers || kind == Kinds.HerBoysRoom; }
+
+        /// <summary>The same story: same kind, about the same girl, within a couple of days.</summary>
+        private static bool SameStory(Incident a, Incident b) { return a != null && b != null && a.Kind == b.Kind && a.Girl == b.Girl && Math.Abs(a.Day - b.Day) <= 2; }
+
+        /// <summary>She was already told the truth about this story (an incident of it is cleared for her).</summary>
+        private static bool AlreadyExplained(GirlState gs, Incident inc)
+        {
+            foreach (var id in gs.Cleared)
+            {
+                var c = S.Incidents.FirstOrDefault(i => i.Id == id);
+                if (SameStory(c, inc)) return true;
+            }
+            return false;
         }
 
         private static int RepDelta(string kind)
@@ -183,7 +214,11 @@ namespace Joojkk.CampusLife
             if (gs.Known.Contains(inc.Id)) return;
             gs.Known.Add(inc.Id);
             if (gs.Known.Count > 60) gs.Known.RemoveRange(0, gs.Known.Count - 60);
+            // She already heard your side of this story: hearing it again changes nothing and she won't bring it up.
+            if (AlreadyExplained(gs, inc)) { if (!gs.Cleared.Contains(inc.Id)) gs.Cleared.Add(inc.Id); return; }
             var e = Effect(h, inc);
+            // Your girlfriend's one-time pass (she owed you one): she lets this one go.
+            if (e <= -3 && h.isGirlfriend && Reactions.UsePass(h, inc)) { if (!gs.Cleared.Contains(inc.Id)) gs.Cleared.Add(inc.Id); return; }
             AddTrust(h, e);
             // Something about herself she only brings up when it matters; news about others always comes up.
             if (mention || Get(inc.Girl) != h || inc.Kind == Kinds.HerBoysRoom || inc.Kind == Kinds.BrokePromise) gs.Unmentioned.Add(inc.Id);
@@ -202,7 +237,8 @@ namespace Joojkk.CampusLife
             foreach (var teller in girls)
             {
                 var known = S.Girl(GirlInfo.Key(teller)).Known;
-                foreach (var inc in fresh.Where(i => known.Contains(i.Id)))
+                var cleared = S.Girl(GirlInfo.Key(teller)).Cleared;
+                foreach (var inc in fresh.Where(i => known.Contains(i.Id) && !cleared.Contains(i.Id)))
                     foreach (var f in girls)
                     {
                         if (f == teller) continue;
@@ -253,19 +289,70 @@ namespace Joojkk.CampusLife
                 .OrderByDescending(i => i.Day).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Something you did to her herself that she has not let go (a grudge over a friend, heard as a rumor, is not hers to
+        /// bring up as "what you said to me": a girl you never talked to opened the night market with a fight, 2026-10-12).
+        /// </summary>
+        public static Incident OwnGrudge(SaveData.Heroine h)
+        {
+            var g = Grudge(h);
+            if (g != null && Get(g.Girl) == h) return g;
+            var gs = S.Girl(GirlInfo.Key(h));
+            return gs.Known.Select(id => S.Incidents.FirstOrDefault(i => i.Id == id))
+                .Where(i => i != null && Get(i.Girl) == h && S.Day - i.Day <= 6 && Effect(h, i) < -1 && !gs.Cleared.Contains(i.Id))
+                .OrderByDescending(i => i.Day).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// She knows you well enough to seek you out (invite you somewhere, call you over): met in the game, and you have
+        /// actually talked a few times or she likes you. Strangers never start an outing with you.
+        /// </summary>
+        public static bool KnowsYou(SaveData.Heroine h)
+        {
+            if (h == null) return false;
+            if (h.isGirlfriend || h.relation >= 1) return true;
+            return h.relation >= 0 && (S.Girl(GirlInfo.Key(h)).Talks >= 2 || h.favor >= 25);
+        }
+
         /// <summary>The air was cleared about this incident (it no longer counts as a grudge).</summary>
         public static void Cleared(SaveData.Heroine h, Incident inc)
         {
+            if (h == null || inc == null) return;
+            ClearStory(h, inc);
+            // Her friends hear your side from her (the truth spreads too, not only the rumor).
+            foreach (var f in FriendsOf(h, 35))
+            {
+                var fs = S.Girl(GirlInfo.Key(f));
+                if (!fs.Known.Any(id => SameStory(S.Incidents.FirstOrDefault(i => i.Id == id), inc))) continue;
+                if (Random.value < (Bond(h, f) >= 50 ? 0.85f : 0.5f))
+                {
+                    ClearStory(f, inc);
+                    CampusLifePlugin.Log.LogInfo("Social: " + GirlInfo.FirstName(h) + " told " + GirlInfo.FirstName(f) + " your side (" + inc.Kind + ")");
+                }
+            }
+        }
+
+        /// <summary>Every incident of the same story she knows is cleared and none of them comes up again.</summary>
+        private static void ClearStory(SaveData.Heroine h, Incident inc)
+        {
             var gs = S.Girl(GirlInfo.Key(h));
-            if (inc == null || gs.Cleared.Contains(inc.Id)) return;
-            gs.Cleared.Add(inc.Id);
-            if (gs.Cleared.Count > 30) gs.Cleared.RemoveAt(0);
+            foreach (var id in gs.Known.ToList())
+            {
+                var k = S.Incidents.FirstOrDefault(i => i.Id == id);
+                if (k == null || !(k.Id == inc.Id || SameStory(k, inc))) continue;
+                if (!gs.Cleared.Contains(k.Id)) gs.Cleared.Add(k.Id);
+                gs.Unmentioned.Remove(k.Id);
+            }
+            if (!gs.Cleared.Contains(inc.Id)) gs.Cleared.Add(inc.Id);
+            gs.Unmentioned.Remove(inc.Id);
+            if (gs.Cleared.Count > 40) gs.Cleared.RemoveRange(0, gs.Cleared.Count - 40);
         }
 
         // ---------------- talks and friendship jealousy ----------------
 
         public static void RecordTalk(SaveData.Heroine h)
         {
+            Director.Changed(h, "talked");
             var gs = S.Girl(GirlInfo.Key(h));
             if (!gs.TalkDays.Contains(S.Day)) gs.TalkDays.Add(S.Day);
             if (gs.TalkDays.Count > 10) gs.TalkDays.RemoveAt(0);
@@ -318,8 +405,8 @@ namespace Joojkk.CampusLife
             else
             {
                 // Your girlfriend keeps it to herself (her lines already treat it as a tease, not a scandal).
-                var gf = here.Where(g => g.isGirlfriend).ToList();
-                here = here.Where(g => !g.isGirlfriend).ToList();
+                var gf = here.Where(g => g.isGirlfriend || Reactions.CalmWhenSeen(g)).ToList();
+                here = here.Where(g => !g.isGirlfriend && !Reactions.CalmWhenSeen(g)).ToList();
                 if (here.Count == 0)
                 {
                     Toasts.Show(GirlInfo.FirstName(gf[0]) + " caught you here... and just shakes her head with a smile.");

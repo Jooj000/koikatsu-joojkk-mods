@@ -60,7 +60,7 @@ namespace Joojkk.CampusLife
 
         private const int Loop = 9;
 
-        private static int LoopWeek { get { return ((S.Week % Loop) + Loop) % Loop; } }
+        internal static int LoopWeek { get { return ((S.Week % Loop) + Loop) % Loop; } }
 
         private static string EventOn(Cycle.Week day)
         {
@@ -97,6 +97,11 @@ namespace Joojkk.CampusLife
             if (Random.value < Cfg.HappeningChance.Value) S.PendingHappening = Happenings.Roll();
         }
 
+        /// <summary>
+        /// events), so a scripted scene is never pushed aside by a random one with other girls.
+        /// </summary>
+        internal static bool Quiet;
+
         /// <summary>Called from Update: starts pending events when the player is free.</summary>
         public static void Tick()
         {
@@ -108,17 +113,36 @@ namespace Joojkk.CampusLife
             Board.CheckErrands();
             Board.KeepTalkTime();
             Rendezvous.Tick();
+            Brain.CheckClashes();
             Social.DailySpread();
             Social.Tick();
+            try { WalkTalk.Tick(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+            if (Quiet) return;
             if (Time.realtimeSinceStartup - _periodStartedAt > 30f) Duo.Tick();
             if (Time.realtimeSinceStartup - _periodStartedAt > 40f) Episodes.Tick();
+            // The school life director: map moments, situations, the season's events.
+            if (Time.realtimeSinceStartup - _periodStartedAt > 10f) try { Forms.Tick(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+            if (Time.realtimeSinceStartup - _periodStartedAt > 25f)
+            {
+                try { ClubProjects.Tick(); Council.Tick(); Anthology.Tick(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+                try { Director.Tick(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+            }
             // Give the player a few seconds after each period starts.
             if (Time.realtimeSinceStartup - _periodStartedAt < 6f) return;
             if (!Scenes.CanPlayOnMap) return;
 
-            if (!string.IsNullOrEmpty(S.PendingEvent) && Cfg.AutoPlaySchoolEvents.Value) { PlayEvent(); return; }
+            if (!string.IsNullOrEmpty(S.PendingEvent) && Cfg.AutoPlaySchoolEvents.Value)
+            {
+                var ev = S.PendingEvent;
+                if (PlayEvent()) Agenda.Took("school event " + ev, BeatKind.Fixed);
+                return;
+            }
             if (!string.IsNullOrEmpty(S.PendingHappening) && Cfg.AutoPlayHappenings.Value
-                && Time.realtimeSinceStartup - _periodStartedAt > 20f) PlayHappening();
+                && Time.realtimeSinceStartup - _periodStartedAt > 20f && Agenda.May("happening " + S.PendingHappening, BeatKind.Ambient))
+            {
+                var hp = S.PendingHappening;
+                if (PlayHappening()) Agenda.Took("happening " + hp, BeatKind.Ambient);
+            }
         }
 
         public static bool PlayEvent()
