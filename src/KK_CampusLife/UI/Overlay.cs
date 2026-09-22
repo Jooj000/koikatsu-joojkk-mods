@@ -97,7 +97,9 @@ namespace Joojkk.CampusLife
             ScrollRect scroll;
             var list = GameUi.ScrollList(rt, "list", out scroll, 6f);
             ((RectTransform)scroll.transform).Place(24f, 72f, 1132f, 660f);
-            var block = GameUi.Block(list, "text");
+            // No card frame: before the status screen is opened the name "rect_01_01" can resolve to another atlas's
+            // filled white rect, and the white text vanished on it. The dark sheet behind is enough.
+            var block = GameUi.Block(list, "text", false);
             foreach (var l in lines.Skip(1))
                 GameUi.Para(block, string.IsNullOrEmpty(l) ? " " : l, 22f, l.StartsWith("  ", StringComparison.Ordinal) ? GameUi.Dim : Color.white);
 

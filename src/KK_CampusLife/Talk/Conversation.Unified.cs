@@ -331,6 +331,7 @@ namespace Joojkk.CampusLife
         /// </summary>
         private static void TickCatBar()
         {
+            KeepTalkTile();
             if (!Unified || CatButtons.Count == 0 || RootOpen || Scenes.Running || Time.realtimeSinceStartup < _catRefreshAt) return;
             _catRefreshAt = Time.realtimeSinceStartup + 1f;
             try
@@ -340,6 +341,22 @@ namespace Joojkk.CampusLife
                 RefreshCatBar(ComputeCats(false, out noTime));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Category buttons: " + e.Message); }
+        }
+
+        /// <summary>
+        /// The game's TalkScene.activeTalkContents setter puts its own speech bubble back on the Talk button every time
+        /// it opens or closes the list (a scene with center choices does), so the first button came out in the old style
+        /// beside our four. Checked every frame: a sprite compare, nothing more.
+        /// </summary>
+        private static void KeepTalkTile()
+        {
+            if (!Unified || CatButtons.Count == 0) return;
+            var b = CatButtons[0];
+            if (b == null || b.image == null) return;
+            var sp = b.image.sprite;
+            if (sp == ConvArt.Tile(0, false) || sp == ConvArt.Tile(0, true)) return;
+            try { ConvArt.Style(b, ConvArt.Tile(0, RootOpen && _cat == CatNames[0]), false); b.image.preserveAspect = true; }
+            catch { }
         }
 
         private static KeyValuePair<string, List<UEntry>> Cat(string name, List<UEntry> entries, bool noTime)
@@ -361,17 +378,24 @@ namespace Joojkk.CampusLife
 
         private static void BuildTalk(Session s, SaveData.Heroine h, GirlState gs, List<UEntry> l)
         {
-            var op = Opener(s);
-            if (op != null) l.Add(op);
+            // The procedural topics (Conversation.Proc): what she knows makes the list; the old fixed questions (her day,
+            // a friend, school, the single "opener") are gone.
             var stranger = h.relation < 0;
             if (stranger) l.Add(E("Introduce yourself", () => Introduce(h)));
             else
             {
-                l.Add(E(DayLabel(h, gs), () => AskDayU(h)));
-                var f = FriendToAsk(h);
-                if (f != null) l.Add(E("Ask about " + GirlInfo.FirstName(f), () => AskFriendU(h, f)));
-                var topic = SchoolTopic(h);
-                if (topic != null) l.Add(E("Ask about " + topic.Label, () => AskSchoolU(h, topic)));
+                // A request she has not told anyone yet only comes out by asking (the board shows the known ones).
+                var hidden = Board.HiddenFor(GirlInfo.Key(h)).OrderBy(r => r.DeadlineDay).FirstOrDefault();
+                if (hidden != null) l.Add(E("Ask what's on her mind", () => RequestTalk(h, hidden, true)));
+                // A step of her story the director has due (a pair, a crush, a friend scene).
+                var arc = SubjectFrom(h, x => x.Id == "torn" || x.Id == "couple" || x.Id == "crush" || x.Id == "reveal" || x.Id == "feelings" || x.Id.StartsWith("tri_", StringComparison.Ordinal)
+                                              || !string.IsNullOrEmpty(gs.Pending) && gs.Pending.EndsWith(":" + x.Id, StringComparison.Ordinal));
+                if (arc != null) l.Add(E("Continue " + ArcLabel(h, arc), () => PlaySubject(h, arc, Lvl.Friend)));
+            }
+            foreach (var t in TalkTopics(h, gs))
+            {
+                var topic = t;
+                l.Add(E(topic.Hot ? "<color=#ff9b6a>" + topic.Label + "</color>" : topic.Label, () => PlayTopic(h, topic)));
             }
             var g = stranger ? Social.OwnGrudge(h) : Social.Grudge(h);
             if (g != null && !s.Did.Contains("cleared:" + g.Id)) l.Add(E("<color=#ff9b6a>Clear the air about " + IncidentLabel(h, g) + "</color>", () => ClearAir(h, g)));
@@ -635,7 +659,9 @@ namespace Joojkk.CampusLife
         {
             var h = s.Her;
             var t = Table(lvl, q);
-            var factor = RepeatFactor(h, repKey);
+            // Her rhythm (reserved, normal, open; the day's momentum; the spotlight) scales what is gained, not what is lost.
+            var factor = RepeatFactor(h, repKey) * Rhythm.Gain(h, (int)lvl);
+            if (q == Q.Good) Rhythm.OnGood(h);
             Func<int, int> up = v => v > 0 ? Mathf.RoundToInt(v * factor) : v;
             int favor = up(t[0]), lewd = up(t[1]), trust = up(t[2]);
             if (Cfg.DevotionEnabled.Value && favor > 0) Devotion.Add(h, Devotion.Overflow(h, favor));
@@ -1432,6 +1458,10 @@ namespace Joojkk.CampusLife
             // She asked you here (a note, a letter, "meet me at..."): that comes first, with its own scene (user,
             var meet = Board.MeetHere(h);
             if (meet != null && Board.PlayInTalk(meet, h, () => { s.Turns++; AfterScene(); })) return true;
+            // Something she saw or heard about you that weighs (the H in the hallway, you in the girls' restroom): she
+            // brings it up herself.
+            var raise = RaiseTopic(h);
+            if (raise != null) { PlayTopic(h, raise); return true; }
             Subject x = null;
             try
             {

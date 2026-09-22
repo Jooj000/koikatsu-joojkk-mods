@@ -1,0 +1,106 @@
+# Small talk (only when nothing else is left). {subject} the id (a like id, pet, place, lunch, exams, weather, weekend,
+# school), {thing} its words, {like}/{likes} for likes (likes=yes when she really likes it), {pet} her pet theme.
+
+@rule me.small
+on me.small
+- [So... {thing}, huh?|What do you think about {thing}?|Been thinking about {thing} lately?]
+
+@rule me.small.weather
+on me.small
+when subject=weather
+- [Nice weather today, huh?|It's [warm|chilly|cloudy] today.|Do you think it'll rain later?]
+
+@rule me.small.like
+on me.small
+when likes=yes|no
+- [Are you into {like}?|Do you like {like}?|What do you think about {like}?]
+
+@rule me.small.place
+on me.small
+when subject=place
+- [I like {thing}.|This place is nice, huh?|You come here often?]
+
+@rule me.small.stranger
+on me.small
+when rel=stranger
+- [Hi. I don't think we've really talked before.|Hey. Nice day, huh?]
+
+@rule small.plain
+on small
+opens share,ask,tease
+- [Hm, {thing}? I guess so.|{Thing}... sure.] [It's alright.|I don't think about it much.]
+
+@rule small.like.yes
+on small
+when likes=yes
+opens share,invite,ask
+feel smile
+- [{Like}? I love {like}!|Oh, {like}! Don't get me started.|You like {like} too?] [I could talk about it all day.|It's kind of my thing.|Finally someone asks!]
+
+@rule small.like.no
+on small
+when likes=no
+opens ask,share,tease
+- [{Like}? Not really my thing.|Eh, {like}...] [But I don't mind it.|Do you like it?|I've never really gotten into it.]
+
+@rule small.pet
+on small
+when subject=pet
+opens share,ask,invite
+feel smile
+- [{Pet}? Oh, you have no idea.|You want to talk about {pet}? Really?] [I'm kind of obsessed.|Everyone says I talk about {pet} too much.|Okay, so...]
+
+@rule small.weather
+on small
+when subject=weather
+opens share,invite,tease
+- [It's nice out, isn't it?|I like this kind of weather.|It's a bit [chilly|warm|gloomy] today.] [Perfect for a walk.|I almost fell asleep by the window.|I hope it stays like this.]
+
+@rule small.lunch
+on small
+when subject=lunch
+opens invite,share,tease
+- [Lunch? I brought a bento.|I'm thinking bread from the store today.] [Want some?|The cafeteria line is too long.|I'm already hungry again.]
+
+@rule small.weekend
+on small
+when subject=weekend
+opens invite,ask,share
+- [The weekend? I'll probably just stay home.|I've got nothing planned yet.|Maybe I'll go shopping.] [Why, did you have something in mind?|What about you?]
+
+@rule small.place
+on small
+when subject=place
+opens share,ask,invite
+- [I like coming to {thing}.|{Thing} is one of my favorite spots.|It's quiet here.] [It's nice to get away from class.|I come here when I need to think.]
+
+@rule small.exams
+on small
+when subject=exams
+opens comfort,invite,share
+- [The exams? Please, let's talk about anything else.|I'm trying not to think about the exams.] [Okay, maybe a little.|How are you doing with studying?]
+
+@rule small.school
+on small
+when subject=school
+opens share,ask,tease
+- [School's school.|Same as always.|Classes are classes.] [The teachers are piling on homework.|I can't wait for summer.]
+
+@rule small.stranger
+on small
+when rel=stranger
+opens ask,share,praise
+- [Oh. Hi.|Um, hello?|Do I know you?] [Yeah, it's... nice, I guess.|Sure.]
+
+@rule small.cool
+on small
+when voice=cool|serious|proper
+opens ask,share
+- [{Thing}. Hm.|If you insist.] [It's fine.|I have no strong opinion.]
+
+@rule small.shy
+on small
+when voice=shy|bookish
+opens ask,share,praise
+feel shy
+- [Ah, {thing}...|U-um, {thing}?] [I... I like it, I think.|Sorry, I'm not good at this.]

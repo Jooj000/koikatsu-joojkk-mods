@@ -1,0 +1,122 @@
+# Gossip: what she knows about other people. {deed} the fact in her words, {who}/{who2} the people, {src} who told
+# her, {how} witness/heard/rumor, {exposure} secret/rumored/known, {whobond} how close she is to {who}.
+
+@rule me.gossip
+on me.gossip
+- [Heard anything interesting lately?|So, what's the latest?|Any news going around?]
+- [Tell me something I don't know.|What's everyone talking about?]
+
+@rule me.gossip.close
+on me.gossip
+when rel=girlfriend|lover|friend
+- [Okay, spill.|Come on, I know you know something.]
+
+# ---------------- the facts ----------------
+@rule gossip.plain
+on gossip
+opens ask,agree,tease
+- [Did you hear? {Deed}.|Guess what. {Deed}.|So apparently {deed}.] [{When}, too.|Can you believe it?|Nobody saw that coming.]
+
+@rule gossip.couple
+on gossip
+when realverb=started_dating|engaged
+opens ask,agree,tease
+feel smile
+- [{Who} and {who2} are going out now!|Did you hear? {Who} and {who2}!] [I knew it!|They're so cute together.|I give it a month.]
+- [So, {who} and {who2}...|You won't believe who's dating.] [It's official.|{Who} told me herself.]
+
+@rule gossip.breakup
+on gossip
+when realverb=broke_up
+opens ask,defend,agree
+feel worried
+- [{Who} and {who2} broke up.|It's over between {who} and {who2}.] [{Who} cried all through lunch.|I feel bad for them.|I saw it coming, honestly.]
+
+@rule gossip.fight
+on gossip
+when realverb=fought|insulted
+opens ask,defend,agree
+feel worried
+- [{Who} and {who2} had a huge fight {when}.|Things are tense between {who} and {who2}.] [Nobody knows why.|Everyone in class went quiet.|I'm staying out of it.]
+
+@rule gossip.madeup
+on gossip
+when realverb=made_up
+opens agree,ask
+feel smile
+- [{Who} and {who2} made up!|Good news: {who} and {who2} are talking again.] [Finally.|It was getting awkward for everyone.]
+
+@rule gossip.crush
+on gossip
+when realverb=crush
+opens ask,tease,hush
+feel smile
+- [Don't tell anyone, but... {deed}.|Promise you won't say anything? {Deed}.] [It's so obvious.|She turns red every time.|I'm sworn to secrecy, so you didn't hear it from me.]
+
+@rule gossip.together
+on gossip
+when realverb=seen_together
+opens ask,laugh,defend
+- [{Who} and {who2} were seen behind the gym.|Someone saw {who} and {who2} sneaking off together.] [What do you think they were doing?|Scandalous, right?]
+
+@rule gossip.drama
+on gossip
+when realverb=left_for|cheated
+opens ask,defend,agree
+feel worried
+- [Have you heard the drama? {Deed}.|It's all anyone talks about: {deed}.] [It's a total mess.|I don't know whose side to take.]
+
+@rule gossip.boysroom
+on gossip
+when realverb=seen_boys_room
+opens laugh,defend,hush
+feel smile
+- [So {who} got caught in the boys' restroom {when}.|Okay, this is embarrassing for her, but... {deed}.] [{laugh}|She says she got lost.|I'd never live it down.]
+
+# ---------------- how she knows ----------------
+@rule gossip.heard
+on gossip
+when how=heard
+opens ask,agree,defend
+- [{Src} told me {deed}.|According to {src}, {deed}.|I heard from {src} that {deed}.] [Don't say I told you.|{Src} never gets these things wrong.]
+
+@rule gossip.rumor
+on gossip
+when how=rumor
+opens ask,defend,laugh
+- [People are saying {deed}.|There's a rumor that {deed}.] [I don't know if it's true.|You know how people talk.|Take it with a grain of salt.]
+
+@rule gossip.saw
+on gossip
+when how=witness
+opens ask,agree,tease
+- [I saw it myself: {deed}.|I was right there when {deed}.] [{When}.|Seriously, with my own eyes.]
+
+# ---------------- about a friend of hers ----------------
+@rule gossip.friend.worried
+on gossip
+when whobond>=50 valence<=-1
+opens comfort,defend,ask
+feel sad
+- [I'm worried about {who}.|{Who}'s my friend, so...] [{Deed}.|She's taking it hard.|I don't know how to help her.]
+
+@rule gossip.friend.happy
+on gossip
+when whobond>=50 valence>=1
+opens agree,praise,ask
+feel smile
+- [I'm so happy for {who}!|{Who} finally did it!] [{Deed}.|She deserves it.]
+
+# ---------------- voices ----------------
+@rule gossip.cool
+on gossip
+when voice=cool|serious|proper
+opens ask,agree
+- [I don't usually spread rumors, but {deed}.|For what it's worth, {deed}.] [Do what you want with that.|I thought you should know.]
+
+@rule gossip.gyaru
+on gossip
+when voice=gyaru|open|vamp
+opens tease,ask,laugh
+feel smile
+- [Okay okay okay, so get this: {deed}.|You did NOT hear this from me, but {deed}.] [Like, wow.|I'm dying.|Isn't that wild?]

@@ -12,24 +12,42 @@ namespace Joojkk.CampusLife
     /// <summary>
     /// caso a personagem no mapa esteja em outro andar ela fica menos destacada e com uma setinha bem pequena para cima ou
     /// baixo"). The game's radar (bl_MiniMap) has a top-down orthographic camera that follows the player but draws nothing
-    /// (no map picture in this game), only the icons on top. A camera of ours rides on it and draws the school itself,
-    /// cut just above the player's head and just below the feet, so only the floor he is on shows; the picture goes under
-    /// the icons, stretched over the radar exactly like the icons' own viewport mapping. Girls more than a floor's height
-    /// away get a dimmed icon and a tiny arrow.
+    /// (no map picture in this game), only the icons on top.
+    /// second looked choppy. Now the whole floor is photographed once from straight above (cut just over the head and
+    /// just under the feet, so only the floor he is on shows) into an image per map and floor, and every frame that image
+    /// is only moved and turned under the icons with the radar camera's own mapping (WorldToViewportPoint, the same one
+    /// the icons use). Girls more than a floor's height away get a dimmed icon and a tiny arrow.
     /// </summary>
     internal static class RadarMap
     {
-        private const float Above = 2.0f, Below = 0.6f, OtherFloor = 2.2f, RenderEvery = 0.1f;
+        private const float Above = 2.0f, Below = 0.6f, OtherFloor = 2.2f, CamHeight = 60f;
+        /// <summary>Floors are cached by the player's height in 1 m steps; at most this many pictures are kept.</summary>
+        private const int MaxCached = 4;
+        private const float TexelsPerMeter = 6f;
+        private const int MaxTexture = 2048;
         /// <summary>The radar shows 10% less ground than the game's (asked 2026-10-26: "dê um zoom de 10% no radar").</summary>
         private const float Zoom = 0.9f;
 
-        private static Camera _src, _cam;
-        private static RenderTexture _rt;
+        private sealed class Floor
+        {
+            public string Key;
+            public RenderTexture Tex;
+            public Rect World;     // x = min X, y = min Z, in meters
+            public float Y;
+            public float Used;
+        }
+
+        private static Camera _cam;
+        private static RectTransform _frame;
         private static RawImage _img;
-        private static float _nextRender;
         private static bool _logged, _failed;
         private static Sprite _arrow;
         private static global::bl_MiniMap _map;
+        private static string _boundsMap;
+        private static Rect _bounds;
+        private static float _boundsAt;
+        private static Floor _shown;
+        private static readonly List<Floor> Cache = new List<Floor>();
         private static readonly AccessTools.FieldRef<NPC, ActionGame.bl_MiniMapItem> NpcIcon = AccessTools.FieldRefAccess<NPC, ActionGame.bl_MiniMapItem>("miniMapIcon");
         private static readonly Dictionary<NPC, Image> Arrows = new Dictionary<NPC, Image>();
 
@@ -43,17 +61,23 @@ namespace Joojkk.CampusLife
                 var on = Cfg.RadarMap.Value && G.Act != null && G.Act.Player != null && src != null && root != null && root.gameObject.activeInHierarchy;
                 if (!on)
                 {
-                    if (_img != null && _img.gameObject.activeSelf) _img.gameObject.SetActive(false);
+                    if (_frame != null && _frame.gameObject.activeSelf) _frame.gameObject.SetActive(false);
                     Floors(null, false);
+                    if (G.Act == null && Cache.Count > 0) Forget();
                     return;
                 }
                 Ensure(src, root);
                 ZoomIn(src);
-                if (!_img.gameObject.activeSelf) _img.gameObject.SetActive(true);
-                if (Time.realtimeSinceStartup >= _nextRender)
+                var floor = FloorFor();
+                if (floor == null)
                 {
-                    _nextRender = Time.realtimeSinceStartup + RenderEvery;
-                    Render(src);
+                    if (_frame.gameObject.activeSelf) _frame.gameObject.SetActive(false);
+                }
+                else
+                {
+                    if (!_frame.gameObject.activeSelf) _frame.gameObject.SetActive(true);
+                    if (_shown != floor) { _shown = floor; _img.texture = floor.Tex; }
+                    Place(src, root, floor);
                 }
                 Floors(root, true);
             }
@@ -67,55 +91,51 @@ namespace Joojkk.CampusLife
 
         private static void Ensure(Camera src, RectTransform root)
         {
-            if (_rt == null)
+            if (_cam == null)
             {
-                _rt = new RenderTexture(256, 256, 16) { name = "cl_radar_floor" };
-                _rt.Create();
-            }
-            if (_cam == null || _src != src)
-            {
-                if (_cam != null) Object.Destroy(_cam.gameObject);
-                _src = src;
                 var go = new GameObject("cl_radar_cam");
-                go.transform.SetParent(src.transform, false);
+                Object.DontDestroyOnLoad(go);
                 _cam = go.AddComponent<Camera>();
-                _cam.enabled = false; // drawn by hand a few times a second
+                _cam.enabled = false; // only used to take the floor pictures
                 _cam.orthographic = true;
                 _cam.clearFlags = CameraClearFlags.SolidColor;
                 _cam.backgroundColor = new Color(0f, 0f, 0f, 0f);
-                _cam.targetTexture = _rt;
-                _cam.cullingMask = WorldMask(src);
                 _cam.useOcclusionCulling = false;
+                _cam.transform.rotation = Quaternion.Euler(90f, 0f, 0f);   // straight down, +Z up in the picture
+                _cam.cullingMask = WorldMask(src);
                 LogSetup(src, root);
             }
             // Inside the radar's round mask (its teal disc is the mask's own image and covered anything placed before it,
             var holder = root.Cast<Transform>().FirstOrDefault(c => c.GetComponent<Mask>() != null) ?? root;
-            if (_img == null || _img.transform.parent != holder)
+            if (_frame == null || _frame.parent != holder)
             {
-                if (_img != null) Object.Destroy(_img.gameObject);
+                if (_frame != null) Object.Destroy(_frame.gameObject);
+                _frame = GameUi.Rect(holder, "cl_radar_frame");
+                _frame.SetAsFirstSibling();
+                _frame.anchorMin = _frame.anchorMax = new Vector2(0.5f, 0.5f);
+                _frame.pivot = new Vector2(0.5f, 0.5f);
                 var go = new GameObject("cl_radar_floor", typeof(RectTransform));
-                go.transform.SetParent(holder, false);
-                go.transform.SetAsFirstSibling();
+                go.transform.SetParent(_frame, false);
                 _img = go.AddComponent<RawImage>();
-                _img.texture = _rt;
                 _img.raycastTarget = false;
                 _img.color = new Color(1f, 1f, 1f, 0.9f);
                 var rt = _img.rectTransform;
                 rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.pivot = new Vector2(0.5f, 0.5f);
+                _shown = null;
             }
-            // Exactly over the icons' rectangle (they are placed by the radar camera's viewport times the root's size).
-            var r = _img.rectTransform;
-            r.sizeDelta = root.rect.size;
-            r.position = root.TransformPoint(root.rect.center);
-            r.rotation = root.rotation;
-            r.localScale = new Vector3(root.lossyScale.x / Mathf.Max(0.0001f, holder.lossyScale.x), root.lossyScale.y / Mathf.Max(0.0001f, holder.lossyScale.y), 1f);
+            // The frame lies exactly over the icons' rectangle (they are placed by the radar camera's viewport times the
+            // root's size); the floor picture moves inside it.
+            _frame.sizeDelta = root.rect.size;
+            _frame.position = root.TransformPoint(root.rect.center);
+            _frame.rotation = root.rotation;
+            _frame.localScale = new Vector3(root.lossyScale.x / Mathf.Max(0.0001f, holder.lossyScale.x), root.lossyScale.y / Mathf.Max(0.0001f, holder.lossyScale.y), 1f);
         }
 
         /// <summary>
         /// The game eases its camera toward DefaultHeight, which it reads from PlayerPrefs (the keypad +/- keys save it).
         /// We keep it at 90% of the saved height while the radar is small, without saving anything; full screen is the game's.
-        /// Our camera copies the size, so the floor plan and the icons stay together.
+        /// The floor picture follows the camera's own mapping, so it zooms with the icons.
         /// </summary>
         private static void ZoomIn(Camera src)
         {
@@ -140,20 +160,124 @@ namespace Joojkk.CampusLife
             return mask;
         }
 
-        private static void Render(Camera src)
+        /// <summary>The picture of the floor the player is on: taken once per map and metre of height, then reused.</summary>
+        private static Floor FloorFor()
         {
-            var player = G.Act.Player.position;
+            // A new map or a new period (the light changes with the time of day): new pictures.
+            var mapNo = G.PlayerMapNo + "/" + G.Period;
+            if (mapNo != _boundsMap)
+            {
+                Forget();
+                _boundsMap = mapNo;
+                _bounds = MapBounds();
+                _boundsAt = Time.realtimeSinceStartup;
+            }
+            // Measured while the map was still loading:
+            // measure again every second until there is ground.
+            if ((_bounds.width < 1f || _bounds.height < 1f) && Time.realtimeSinceStartup - _boundsAt > 1f)
+            {
+                _bounds = MapBounds();
+                _boundsAt = Time.realtimeSinceStartup;
+            }
+            if (_bounds.width < 1f || _bounds.height < 1f) return null;
+            var y = Mathf.Round(G.Act.Player.position.y);
+            var key = mapNo + "@" + y;
+            var f = Cache.FirstOrDefault(c => c.Key == key);
+            if (f == null)
+            {
+                f = Bake(key, y);
+                Cache.Add(f);
+                while (Cache.Count > MaxCached)
+                {
+                    var old = Cache.Where(c => c != f).OrderBy(c => c.Used).First();
+                    Release(old);
+                    Cache.Remove(old);
+                }
+            }
+            f.Used = Time.realtimeSinceStartup;
+            return f;
+        }
+
+        /// <summary>The map's ground rectangle (X by Z) from the school's own renderers; huge ones (sky, far scenery) are left out.</summary>
+        private static Rect MapBounds()
+        {
+            var mask = _cam.cullingMask;
+            var have = false;
+            var b = new Bounds();
+            foreach (var r in Object.FindObjectsOfType<Renderer>())
+            {
+                if (r == null || !r.enabled || (mask & (1 << r.gameObject.layer)) == 0) continue;
+                if (r is ParticleSystemRenderer || r is TrailRenderer || r is LineRenderer) continue;
+                var rb = r.bounds;
+                if (rb.size.x > 500f || rb.size.z > 500f) continue;
+                if (!have) { b = rb; have = true; }
+                else b.Encapsulate(rb);
+            }
+            if (!have) return new Rect();
+            const float pad = 2f;
+            return new Rect(b.min.x - pad, b.min.z - pad, b.size.x + 2 * pad, b.size.z + 2 * pad);
+        }
+
+        private static Floor Bake(string key, float y)
+        {
+            var w = _bounds.width;
+            var h = _bounds.height;
+            var scale = Mathf.Min(TexelsPerMeter, MaxTexture / Mathf.Max(w, h));
+            var tw = Mathf.Clamp(Mathf.CeilToInt(w * scale), 16, MaxTexture);
+            var th = Mathf.Clamp(Mathf.CeilToInt(h * scale), 16, MaxTexture);
+            var tex = new RenderTexture(tw, th, 16) { name = "cl_radar_floor_" + key, wrapMode = TextureWrapMode.Clamp };
+            tex.Create();
             var t = _cam.transform;
-            _cam.orthographicSize = src.orthographicSize;
-            _cam.aspect = src.aspect;
-            var fwd = t.forward;
-            // The slice between just under the feet and just over the head, along the camera's view.
-            var near = Vector3.Dot(player + Vector3.up * Above - t.position, fwd);
-            var far = Vector3.Dot(player - Vector3.up * Below - t.position, fwd);
-            if (far <= 0.1f) return; // the camera is not above the player yet (map loading)
-            _cam.nearClipPlane = Mathf.Max(0.01f, near);
-            _cam.farClipPlane = Mathf.Max(_cam.nearClipPlane + 0.5f, far);
-            _cam.Render();
+            t.position = new Vector3(_bounds.center.x, y + CamHeight, _bounds.center.y);
+            _cam.orthographicSize = h * 0.5f;
+            _cam.aspect = w / h;
+            // The slice between just under the feet and just over the head.
+            _cam.nearClipPlane = CamHeight - Above;
+            _cam.farClipPlane = CamHeight + Below;
+            _cam.targetTexture = tex;
+            try { _cam.Render(); }
+            finally { _cam.targetTexture = null; }
+            CampusLifePlugin.Log.LogDebug("Radar map: floor " + key + " " + tw + "x" + th + " over " + w.ToString("0") + "x" + h.ToString("0") + " m");
+            return new Floor { Key = key, Tex = tex, World = _bounds, Y = y };
+        }
+
+        /// <summary>Lays the floor picture under the icons: its corners go where the radar camera puts those world points.</summary>
+        private static void Place(Camera src, RectTransform root, Floor f)
+        {
+            var size = root.rect.size;
+            var o = Ui(src, new Vector3(f.World.xMin, f.Y, f.World.yMin), size);
+            var ex = Ui(src, new Vector3(f.World.xMax, f.Y, f.World.yMin), size) - o;   // the picture's bottom edge
+            var ez = Ui(src, new Vector3(f.World.xMin, f.Y, f.World.yMax), size) - o;   // its left edge
+            var r = _img.rectTransform;
+            r.sizeDelta = new Vector2(ex.magnitude, ez.magnitude);
+            r.anchoredPosition = o + (ex + ez) * 0.5f;
+            r.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(ex.y, ex.x) * Mathf.Rad2Deg);
+        }
+
+        private static Vector2 Ui(Camera src, Vector3 world, Vector2 size)
+        {
+            var vp = src.WorldToViewportPoint(world);
+            return new Vector2((vp.x - 0.5f) * size.x, (vp.y - 0.5f) * size.y);
+        }
+
+        private static void Release(Floor f)
+        {
+            if (f == null || f.Tex == null) return;
+            if (_shown == f)
+            {
+                _shown = null;
+                if (_img != null) _img.texture = null;
+            }
+            f.Tex.Release();
+            Object.Destroy(f.Tex);
+        }
+
+        /// <summary>A new map, or the scene left: the old pictures go.</summary>
+        private static void Forget()
+        {
+            foreach (var f in Cache) Release(f);
+            Cache.Clear();
+            _boundsMap = null;
         }
 
         /// <summary>Girls on another floor: a dimmed icon and a tiny arrow, up or down.</summary>
@@ -245,9 +369,10 @@ namespace Joojkk.CampusLife
             if (src == null || root == null) return "no radar";
             var layers = string.Join(",", Enumerable.Range(0, 32).Where(i => !string.IsNullOrEmpty(LayerMask.LayerToName(i))).Select(i => i + ":" + LayerMask.LayerToName(i)).ToArray());
             var kids = string.Join(", ", root.Cast<Transform>().Select(c => c.name + "[" + string.Join("/", c.GetComponents<Component>().Select(x => x.GetType().Name).ToArray()) + "]").Take(12).ToArray());
+            var floors = string.Join(",", Cache.Select(c => c.Key + ":" + c.Tex.width + "x" + c.Tex.height).ToArray());
             return "camera at " + src.transform.position + " rot " + src.transform.eulerAngles + " ortho " + src.orthographic + " size " + src.orthographicSize.ToString("0.0") +
                    " aspect " + src.aspect.ToString("0.00") + " mask " + src.cullingMask + " target " + (src.targetTexture != null ? src.targetTexture.width + "x" + src.targetTexture.height : "screen " + src.rect) +
-                   " | ours mask " + (_cam != null ? _cam.cullingMask.ToString() : "-") + " | root " + root.rect.size + " | children " + kids + " | layers " + layers;
+                   " | ours mask " + (_cam != null ? _cam.cullingMask.ToString() : "-") + " | map " + _bounds + " floors " + floors + " | root " + root.rect.size + " | children " + kids + " | layers " + layers;
         }
     }
 }

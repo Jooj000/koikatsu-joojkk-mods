@@ -149,6 +149,11 @@ namespace Joojkk.CampusLife
                 Scenes.PlayInTalk(b, _ => Conversation.AfterGift(), false);
                 return;
             }
+            {
+                var art = item.Name ?? "";
+                art = art.Length > 0 && "aeiouAEIOU".IndexOf(art[0]) >= 0 ? "an " + art.ToLowerInvariant() : "a " + art.ToLowerInvariant();
+                Lore.Record("gave_gift", Lore.Player, GirlInfo.Key(h), note: art);
+            }
 
             b.Me(Lines.PlayerGivesGift(item.Name));
             var liked = item.Likes.Any(l => GirlInfo.Likes(h, l));

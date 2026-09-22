@@ -88,6 +88,7 @@ namespace Joojkk.CampusLife
                     G.StretchPeriod();
                     Chat.Track();
                     Conversation.Watch();
+                    TalkBadges.Update();
                     PositionTool.Update();
                     Markers.UpdateMinimap();
                     RadarMap.Update();

@@ -1,0 +1,16 @@
+# A like she lets slip while telling you about her day ({newlike} its words).
+
+@rule likehint
+on likehint
+- [Oh, and|By the way,] [I've been really into {newlike} lately.|{newlike} always cheers me up.|I'd do anything for some {newlike} right now.]
+- [You know what would make today better? {Newlike}.|If you ever want to make me happy... {newlike}. Just saying.]
+
+@rule likehint.shy
+on likehint
+when voice=shy|bookish|proper
+- [U-um... I like {newlike}. In case you wanted to know.|{Newlike}... is kind of my secret weakness.]
+
+@rule likehint.gyaru
+on likehint
+when voice=gyaru|open|vamp|teasing
+- [Also, {newlike}? Total obsession. Remember that.|Write this down: {newlike}. You're welcome.]

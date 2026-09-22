@@ -77,7 +77,7 @@ namespace Joojkk.CampusLife
         /// <summary>
         /// The game's button text has a dark face, so a
         /// vertex color can only darken it. A copy of its material with a white face lets the color show; the outline stays.
-        /// One copy per game material, shared by every option.
+        /// One copy per game material, shared by every option; its outline is black.
         /// </summary>
         public static void ColorFace(TMPro.TextMeshProUGUI txt, Color color)
         {
@@ -98,6 +98,8 @@ namespace Joojkk.CampusLife
                     {
                         white = new Material(src) { name = src.name + " (Campus Life face)" };
                         white.SetColor("_FaceColor", Color.white);
+                        // Black outline: the game's light grey one blurred the colored letters.
+                        if (white.HasProperty("_OutlineColor")) white.SetColor("_OutlineColor", Color.black);
                         white.hideFlags = HideFlags.DontUnloadUnusedAsset;
                     }
                     WhiteFace[src] = white;
@@ -106,6 +108,19 @@ namespace Joojkk.CampusLife
             }
             txt.enableVertexGradient = false;
             txt.color = color;
+        }
+
+        private static readonly Dictionary<int, Sprite> Badges = new Dictionary<int, Sprite>();
+
+        /// <summary>A round badge of <see cref="IconArt.Badge"/> (mood 1-8, the likes star, a like).</summary>
+        public static Sprite Badge(int symbol)
+        {
+            Sprite s;
+            if (Badges.TryGetValue(symbol, out s) && s != null) return s;
+            const int size = 64;
+            s = ToSprite(IconArt.Badge(symbol, size), size, 0, "cl_badge_" + symbol);
+            Badges[symbol] = s;
+            return s;
         }
 
         private static Sprite ToSprite(float[] px, int size, int border, string name)

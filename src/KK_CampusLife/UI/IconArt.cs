@@ -8,7 +8,7 @@ namespace Joojkk.CampusLife
     /// bubble, gift, two people, heart, flame), and the option cards. Drawn from shape formulas (signed distances) into
     /// plain RGBA arrays, with no Unity types, so tools/iconpreview can draw the same pictures outside the game.
     /// </summary>
-    internal static class IconArt
+    internal static partial class IconArt
     {
         public const int Talk = 0, Actions = 1, Together = 2, Romance = 3, Spicy = 4;
 

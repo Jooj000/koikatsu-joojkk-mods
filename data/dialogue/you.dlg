@@ -1,0 +1,153 @@
+# What she saw or heard about you (not with her). {who} the other girl in it, {src} who told her, {how}
+# witness/heard/rumor, {raised} yes when she brings it up herself as the talk opens, {distorted} yes when the story
+# reached her twisted (then "correct" can set it straight).
+
+# ---------------- you ask ----------------
+@rule me.you.plain
+on me.you
+- [You look like you want to say something.|Is something on your mind?|What's with that look?]
+- [Did you hear something about me?|People are talking about me, aren't they?]
+
+@rule me.you.saw
+on me.you
+when how=witness
+- [About {when}... you saw, didn't you?|You were there {when}, weren't you?]
+
+@rule me.you.heard
+on me.you
+when how=heard|rumor
+- [What are people saying about me?|What did you hear?|Who's been talking about me?]
+
+# ---------------- H with another girl: she saw it ----------------
+@rule you.h.saw.raised
+on you
+when realverb=had_h how=witness raised=yes
+opens admit,hush,tease,deny
+feel worried
+- [Um... about {when}.|Hey. {When}, in the {fplace}...|I need to say something.] [I saw you. With {who}.|I saw what you and {who} were doing.|I... walked right into you and {who}.] [I ran. Sorry.|I didn't know where to look.|I can't get it out of my head.]
+- [...You know I saw, right?|Don't pretend you didn't see me run.] [You and {who}. In the {fplace}.|In the middle of the {fplace}, with {who}!] [What were you thinking?|Anyone could have walked by.|I didn't sleep last night.]
+
+@rule you.h.saw
+on you
+when realverb=had_h how=witness
+opens admit,hush,tease,deny
+feel worried
+- [I saw you and {who} {when}.|About {when} in the {fplace}...] [I wasn't trying to look!|I didn't mean to see it.|I just turned the corner and...]
+
+@rule you.h.saw.close
+on you
+when realverb=had_h how=witness rel=girlfriend|lover
+opens admit,comfort,ask,deny
+feel sad
+- [I saw you {when}. With {who}.|In the {fplace}. With {who}.] [I thought we were... something.|Am I not enough?|Why her?]
+- [You and {who}... I saw everything.|Don't lie to me. I was there.] [It hurts, you know.|I don't even know what to say to you.]
+
+@rule you.h.saw.open
+on you
+when realverb=had_h how=witness profile=open
+opens tease,admit,invite
+feel smile
+- [So... you and {who}, huh?|I saw you two {when}.] [Pretty bold, doing it in the {fplace}.|I didn't know you had it in you.|Next time, check the hallway first.] [{laugh}|Not that I'm judging.]
+
+@rule you.h.saw.shy
+on you
+when realverb=had_h how=witness voice=shy|bookish|proper|serious
+opens admit,hush,comfort
+feel shy
+- [I-I... {when}... I saw...|Um, um... {when}...] [I'm so sorry, I didn't mean to!|I won't tell anyone, I promise!|I ran away as fast as I could.]
+
+@rule you.h.saw.tsundere
+on you
+when realverb=had_h how=witness voice=tsundere
+opens deny,tease,admit
+feel pout
+- [D-don't think I didn't see you and {who}!|You pervert! In the {fplace}!] [Not that I care what you do!|Have some shame!|Ugh, I can't even look at you.]
+
+@rule you.h.heard
+on you
+when realverb=had_h how=heard|rumor
+opens deny,correct,admit,laugh
+feel worried
+- [{Src} told me something about you and {who}.|People are saying you and {who}... you know.|There's a rumor about you and {who}.] [In the {fplace}. Is it true?|I didn't believe it at first.|Please tell me it's not true.]
+
+@rule you.h.heard.nosrc
+on you
+when realverb=had_h how=rumor
+opens deny,correct,laugh
+- [Everyone's whispering about you and {who}.|There's a weird story going around about you.] [Something about the {fplace}?|I'm just telling you what I heard.]
+
+# ---------------- seen where you shouldn't be ----------------
+@rule you.peep.saw
+on you
+when realverb=seen_girls_room|seen_lockers how=witness
+opens admit,deny,hush,laugh
+feel pout
+- [I saw you {when}.|Don't think I didn't notice you {when}.] [What were you doing in there?|That's the girls' side, you know.|You'd better have a good excuse.]
+
+@rule you.peep.heard
+on you
+when realverb=seen_girls_room|seen_lockers how=heard|rumor
+opens deny,correct,laugh,admit
+- [{Src} says you were in the girls' [restroom|changing room].|There's a story going around about you and the girls' [restroom|changing room].] [Please say it's a misunderstanding.|Were you lost or something?]
+
+@rule you.peep.teasing
+on you
+when realverb=seen_girls_room|seen_lockers voice=gyaru|vamp|teasing|open
+opens laugh,tease,deny
+feel smile
+- [So I hear you like the girls' side of the building.|Lost again, pervert?] [{laugh}|If you wanted to see something, you could have asked.]
+
+# ---------------- you and another girl ----------------
+@rule you.romance.other
+on you
+when realverb=started_dating|dated|kissed|flirted|held_hands
+opens ask,admit,deny,tease
+- [So you and {who}...|I heard about you and {who}.|You and {who}, huh?] [Is it serious?|I didn't know you two were close.|Good for you, I guess.]
+
+@rule you.romance.other.jealous
+on you
+when realverb=started_dating|dated|kissed|flirted|held_hands favor>=50
+opens admit,comfort,deny,ask
+feel pout
+- [You and {who}...|So it's {who} now?] [I see how it is.|You could have told me yourself.|I thought... never mind.]
+
+@rule you.romance.other.gf
+on you
+when realverb=started_dating|dated|kissed|flirted|held_hands rel=girlfriend
+opens admit,deny,comfort
+feel sad
+- [What's this about you and {who}?|Why is everyone telling me about you and {who}?] [Explain. Now.|I'm your girlfriend, remember?|Tell me it isn't true.]
+
+# ---------------- what you did for (or to) someone else ----------------
+@rule you.kind.other
+on you
+when realverb=helped|stood_up_for|kept_promise
+opens share,laugh,tease
+feel smile
+- [I heard what you did for {who}.|{Who} told me how you helped her.|I saw you with {who} {when}.] [That was really nice of you.|You're kinder than you look.|Not many people would do that.]
+
+@rule you.rude.other
+on you
+when realverb=insulted|ignored|broke_promise
+opens admit,correct,deny
+feel pout
+- [What happened with {who}?|{Who} was really upset {when}.] [She says you were awful to her.|Was that really necessary?|That's not like you. Is it?]
+
+@rule you.drama
+on you
+when realverb=left_for|cheated
+opens correct,deny,admit,ask
+feel worried
+- [Everyone's talking about {who} and {who2}... and you're in the middle of it.|People say it's your fault {who} and {who2} split.] [Is it true?|What did you do?]
+
+# ---------------- twisted on the way ----------------
+@rule you.distorted
+on you
+when distorted=yes
+opens correct,laugh,deny
+- [I heard {deed}.|The way {src} tells it, {deed}.|People say {deed}.] [Is that what happened?|That's what I heard, anyway.|Sounds a bit much, honestly.]
+
+@rule you.generic
+on you
+opens ask,correct,laugh
+- [I heard {deed}.|So... {deed}?|People say {deed} {when}.] [Is that true?|What's the story?]

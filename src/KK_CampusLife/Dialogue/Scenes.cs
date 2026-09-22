@@ -103,6 +103,8 @@ namespace Joojkk.CampusLife
         public SceneBuilder Her_(string text)
         {
             if (string.IsNullOrEmpty(text)) return this;
+            // In her own voice (fillers, exclaims, a stutter, her ~): every line of a talk, old or procedural.
+            if (_inTalk && Her != null) text = Voice.Say(Her, text);
             if (_inTalk) { Line(text); List.Add(Program.Transfer.Text(HerSpeaker, text)); }
             else return Say(Her, text);
             Voices[text] = new VoiceTag { GirlKey = GirlInfo.Key(Her) };

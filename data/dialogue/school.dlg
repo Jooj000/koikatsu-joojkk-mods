@@ -1,0 +1,66 @@
+# School topics: {event} the label ("the sports festival"), {eventline} with the day, {school} event/council/project.
+
+@rule me.school
+on me.school
+- [What do you think about {event}?|Are you ready for {event}?|So, {event}...]
+
+@rule me.school.event
+on me.school
+when school=event
+- [Are you going to {event}?|{Event} is coming up, huh?|Got plans for {event}?]
+
+@rule school.plain
+on school
+opens ask,invite,share
+- [{Event}? I haven't thought about it much.|Oh, {event}.] [Should be interesting.|Everyone's talking about it.]
+
+@rule school.event.cheer
+on school
+when school=event mood=cheerful|flirty|none
+opens invite,ask,tease
+feel smile
+- [I can't wait for {event}!|{Event}? I've been looking forward to it.] [It's {eventline}, right?|We should go together.|I'm already planning what to wear.]
+
+@rule school.event.low
+on school
+when school=event low=yes
+opens comfort,invite,ask
+- [{Event}...|Ugh, is that soon?] [I'm not really in the mood.|I don't know if I'll go.|Maybe if someone came with me...]
+
+@rule school.event.club
+on school
+when school=event hasclub=yes
+opens ask,praise,invite
+- [The {club} is doing something for {event}.|We've been preparing for {event} at the {club}.] [Come see us?|It's a lot of work.|I'm kind of nervous.]
+
+@rule school.council
+on school
+when school=council
+opens ask,agree,tease
+- [The council race? {Eventline}.|Everyone's picking sides for the council.] [Who are you voting for?|It's getting intense.|I just want it to be over.]
+
+@rule school.project
+on school
+when school=project
+opens ask,praise,invite
+- [The club project? {Eventline}.|We're still working on the project.] [It's coming along.|We could use a hand, honestly.|I think it'll turn out well.]
+
+@rule school.exam
+on school
+when exam=yes
+opens comfort,invite,ask
+feel worried
+- [Don't remind me about the exams.|Exams, exams, exams.] [Want to study together?|I'm so behind.|If I fail one more test...]
+
+@rule school.cool
+on school
+when voice=cool|serious|proper
+opens ask,agree
+- [{Event}. It's well organized this year.|I've read the schedule for {event}.] [It should go smoothly.|Do you need the details?]
+
+@rule school.genki
+on school
+when voice=genki|energetic|boyish|tough
+opens invite,tease,ask
+feel laugh
+- [{Event}! I'm totally going to win!|{Event} is gonna be awesome!] [You'd better cheer for me!|Bet I beat you!]

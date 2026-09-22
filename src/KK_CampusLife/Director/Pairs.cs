@@ -168,6 +168,7 @@ namespace Joojkk.CampusLife
             var text = GirlInfo.FirstName(ha) + " and " + GirlInfo.FirstName(hb) + " are a couple now" + (string.IsNullOrEmpty(how) ? "." : " (" + how + ").");
             News(text);
             Milestone(p, "couple", 4);
+            Lore.Record("started_dating", p.A, p.B);
             Toasts.Show(text);
         }
 
@@ -189,6 +190,7 @@ namespace Joojkk.CampusLife
             var text = GirlInfo.FirstName(p.A) + " and " + GirlInfo.FirstName(p.B) + " broke up (" + why + ").";
             News(text);
             Milestone(p, "breakup", 3);
+            Lore.Record("broke_up", p.A, p.B, note: why ?? "");
             Toasts.Show(text);
         }
 

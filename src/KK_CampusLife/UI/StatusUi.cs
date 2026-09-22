@@ -16,7 +16,7 @@ namespace Joojkk.CampusLife
 
     /// <summary>
     /// Campus Life inside the game's own clipboard (Character Status screen, middle mouse button):
-    /// - a "Campus" info page on every girl's card (request, when, mood, devotion, likes) that "Switch Info" cycles to;
+    /// - every girl's card shows three pages by subject (Now / With you / Love) that "Switch Info" cycles through;
     /// - a note with the request's marker on the card of every girl who needs you;
     /// - a Campus Life card in the first row and a card for every place you can go to, with a warp button;
     /// - the Campus Life menu (Today / Calendar / Activities) opened from those cards, the header button or the menu hotkey (F7).
@@ -38,8 +38,6 @@ namespace Joojkk.CampusLife
 
         private static readonly List<GameObject> PlaceCards = new List<GameObject>();
         private static readonly List<KeyValuePair<ChaStatusComponent, SaveData.Heroine>> Cards = new List<KeyValuePair<ChaStatusComponent, SaveData.Heroine>>();
-        private static int _campusPageIndex = -1;
-        private static int _socialPageIndex = -1;
 
         public static bool IsOpen { get { return Scene != null; } }
 
@@ -92,8 +90,6 @@ namespace Joojkk.CampusLife
             Scene = scene;
             Cards.Clear();
             PlaceCards.Clear();
-            _campusPageIndex = -1;
-            _socialPageIndex = -1;
             GameUi.Capture(scene.gameObject);
             var canvas = scene.GetComponentsInChildren<Canvas>(true).FirstOrDefault(c => c.isRootCanvas);
             CanvasRoot = canvas != null ? canvas.transform : scene.transform;
@@ -144,102 +140,131 @@ namespace Joojkk.CampusLife
                 if (h == null && comp == fix && act != null && act.fixChara != null) h = act.fixChara.heroine;
                 if (h == null || h.isTeacher) continue;
                 Cards.Add(new KeyValuePair<ChaStatusComponent, SaveData.Heroine>(comp, h));
-                AddCampusPage(comp, h);
-                if (Cfg.DirectorEnabled.Value) Safe("social page", () => AddInfoPage(comp, h, "info_social", SocialLabels, FillSocial, false));
+                Safe("pages", () => RebuildPages(comp, h));
                 AddNote(comp, h);
             }
         }
 
-        private static readonly string[] PageLabels = { "Request", "When", "Mood", "Devotion", "Likes" };
+        // e o que está fazendo devem ficar seguidos na mesma aba, informações sobre a relação todas juntas"): the game's
+        // pages and our two became three, by subject. Gone: "She remembers" (not something to show), Request and When
+        // (on the board), Mood and Likes (small icons in the talk, once found out).
+        private static readonly string[] NowLabels = { "Location", "Doing now", "Personality", "Club", "Best friend" };
+        private static readonly string[] BondLabels = { "Relation", "Toward you", "Favor", "Devotion", "Trust in you" };
+        private static readonly string[] LoveLabels = { "Her heart", "Lewdness", "Experience", "Times together", "Intimacy" };
 
-        private static readonly string[] SocialLabels = { "Right now", "Her heart", "Best friend", "Trust in you", "She remembers" };
-
-        /// <summary>Clones the first info page into a "Campus" page and appends it to the card's pages.</summary>
-        private static void AddCampusPage(ChaStatusComponent comp, SaveData.Heroine h)
-        {
-            AddInfoPage(comp, h, "info_campus", PageLabels, Fill, true);
-        }
-
-        /// <summary>The school life page: what she wants now, her love life, her best friend, trust, a shared memory.</summary>
-        private static void FillSocial(List<TextMeshProUGUI> v, SaveData.Heroine h)
-        {
-            var gs = Campus.S.Girl(GirlInfo.Key(h));
-            Action<int, string> set = (i, text) => { if (i < v.Count) v[i].text = text; };
-            // What she is really doing, not the plan the director made earlier.
-            var doing = Truth.Doing(h);
-            set(0, Pairs.IsScorned(h) ? "hurt, avoiding you" : !string.IsNullOrEmpty(doing) ? doing : Intents.Label(gs.Intent));
-            var partner = Pairs.PartnerOf(h);
-            var pair = Pairs.PairOf(h);
-            string heart;
-            if (partner != null) heart = "with " + GirlInfo.FirstName(partner) + (pair != null && pair.Stage == PairStage.Strained ? " (rough patch)" : "") + (Pairs.IsConflicted(h) ? ", torn" : "");
-            else if (h.isGirlfriend) heart = "your girlfriend" + (Campus.S.Harem.Contains(GirlInfo.Key(h)) ? " (shares you)" : "") + (string.IsNullOrEmpty(Seasons.ChapterLabel(h)) ? "" : ", ch. " + Mathf.Min(3, gs.Chapter + 1));
-            else
-            {
-                var k = GirlInfo.Key(h);
-                var crush = Campus.S.Pairs.Values.Where(p => (p.A == k || p.B == k) && (p.Stage == PairStage.Crush || p.Stage == PairStage.Talking) && p.RomanceOf(k) >= 35).OrderByDescending(p => p.RomanceOf(k)).FirstOrDefault();
-                heart = crush != null && Social.TalkDaysRecent(h, 30) >= 3 ? "a crush (" + GirlInfo.FirstName(crush.Other(k)) + "?)" : "free";
-            }
-            set(1, heart);
-            var bf = Social.BestFriend(h);
-            set(2, bf == null ? "-" : GirlInfo.FirstName(bf));
-            set(3, Social.TrustLabel(Social.Trust(h)));
-            var m = Memories.Last(h, 14);
-            set(4, m == null ? "-" : m.Text);
-        }
-
-        /// <summary>Clones the first info page into one of our pages and appends it to the card's pages.</summary>
-        private static void AddInfoPage(ChaStatusComponent comp, SaveData.Heroine h, string name, string[] labels, Action<List<TextMeshProUGUI>, SaveData.Heroine> fill, bool campus)
+        /// <summary>
+        /// The card's pages become Now / With you / Love: three clones of the game's first page, filled from the game's own
+        /// values and ours. The game's pages stay in the array, switched off and at the end (Switch Info only cycles through
+        /// the enabled ones, by index from the start).
+        /// </summary>
+        private static void RebuildPages(ChaStatusComponent comp, SaveData.Heroine h)
         {
             var infos = InfoRef(comp);
             if (infos == null || infos.Length == 0 || infos[0] == null || InfoObjRef(infos[0]) == null) return;
-            var src = InfoObjRef(infos[0]);
+            Func<int, int, string> game = (page, row) =>
+            {
+                var t = page < infos.Length && infos[page] != null ? InfoTextsRef(infos[page]) : null;
+                return t != null && row < t.Length && t[row] != null ? t[row].text : "";
+            };
+            var gs = Campus.S.Girl(GirlInfo.Key(h));
+
+            var doing = Truth.Doing(h);
+            var bf = Social.BestFriend(h);
+            var now = new[]
+            {
+                game(0, 0),
+                Pairs.IsScorned(h) ? "hurt, avoiding you" : !string.IsNullOrEmpty(doing) ? doing : Intents.Label(gs.Intent),
+                game(0, 1),
+                h.isStaff ? "member" : "-",
+                bf == null ? "-" : GirlInfo.FirstName(bf),
+            };
+
+            var relation = h.isGirlfriend ? "girlfriend" : h.relation >= 1 ? "friend" : h.relation == 0 ? "acquaintance" : "just met";
+            if (h.isDate) relation += ", date set";
+            var bond = new[]
+            {
+                relation,
+                Pairs.IsScorned(h) ? "hurt" : h.isAnger ? "angry" : "fine",
+                h.favor + " %",
+                Devotion.Label(gs),
+                Social.TrustLabel(Social.Trust(h)),
+            };
+
+            var love = new[]
+            {
+                Heart(h, gs),
+                h.lewdness + " %",
+                game(1, 3),
+                h.hCount.ToString(),
+                h.isGirlfriend ? h.intimacy + " %" : "-",
+            };
+
+            var list = new List<ChaStatusComponent.InfoObject>
+            {
+                Page(infos[0], "info_now", NowLabels, now),
+                Page(infos[0], "info_bond", BondLabels, bond),
+                Page(infos[0], "info_love", LoveLabels, love),
+            };
+            // Other mods' pages (if any) after ours; the game's three switched off at the end.
+            list.AddRange(infos.Skip(3).Where(o => o != null && o.enabled));
+            for (var i = 0; i < infos.Length; i++)
+            {
+                var o = infos[i];
+                if (o == null || list.Contains(o)) continue;
+                if (i < 3)
+                {
+                    o.enabled = false;
+                    var go = InfoObjRef(o);
+                    if (go != null) go.SetActive(false);
+                }
+                list.Add(o);
+            }
+            InfoRef(comp) = list.ToArray();
+            comp.SetActiveInfoAll(0);
+        }
+
+        /// <summary>Her love life, in a few words.</summary>
+        private static string Heart(SaveData.Heroine h, GirlState gs)
+        {
+            var partner = Pairs.PartnerOf(h);
+            var pair = Pairs.PairOf(h);
+            if (partner != null) return "with " + GirlInfo.FirstName(partner) + (pair != null && pair.Stage == PairStage.Strained ? " (rough patch)" : "") + (Pairs.IsConflicted(h) ? ", torn" : "");
+            if (h.isGirlfriend) return "yours" + (Campus.S.Harem.Contains(GirlInfo.Key(h)) ? " (shares you)" : "") + (string.IsNullOrEmpty(Seasons.ChapterLabel(h)) ? "" : ", ch. " + Mathf.Min(3, gs.Chapter + 1));
+            var k = GirlInfo.Key(h);
+            var crush = Campus.S.Pairs.Values.Where(p => (p.A == k || p.B == k) && (p.Stage == PairStage.Crush || p.Stage == PairStage.Talking) && p.RomanceOf(k) >= 35).OrderByDescending(p => p.RomanceOf(k)).FirstOrDefault();
+            return crush != null && Social.TalkDaysRecent(h, 30) >= 3 ? "a crush (" + GirlInfo.FirstName(crush.Other(k)) + "?)" : "free";
+        }
+
+        /// <summary>A clone of the game's first page with our labels and values (rows alternate: label bar, value).</summary>
+        private static ChaStatusComponent.InfoObject Page(ChaStatusComponent.InfoObject first, string name, string[] labels, string[] values)
+        {
+            var src = InfoObjRef(first);
             var page = Object.Instantiate(src, src.transform.parent, false);
             page.name = name;
             page.SetActive(false);
-
-            // Rows alternate: label bar, value. Label bars hold a "text" child; values hold a "text" child.
-            var values = new List<TextMeshProUGUI>();
+            var texts = new List<TextMeshProUGUI>();
             var row = 0;
-            for (var i = 0; i + 1 < page.transform.childCount && row < labels.Length; i += 2, row++)
+            var i = 0;
+            for (; i + 1 < page.transform.childCount && row < labels.Length; i += 2, row++)
             {
                 var bar = page.transform.GetChild(i).GetComponentInChildren<TextMeshProUGUI>(true);
                 var val = page.transform.GetChild(i + 1).GetComponentInChildren<TextMeshProUGUI>(true);
                 if (bar != null) bar.text = labels[row];
-                if (val != null)
-                {
-                    val.enableAutoSizing = true;
-                    val.fontSizeMin = 11f;
-                    val.fontSizeMax = val.fontSize;
-                    val.enableWordWrapping = false;
-                    val.overflowMode = TextOverflowModes.Ellipsis;
-                    values.Add(val);
-                }
+                if (val == null) continue;
+                val.enableAutoSizing = true;
+                val.fontSizeMin = 11f;
+                val.fontSizeMax = val.fontSize;
+                val.enableWordWrapping = false;
+                val.overflowMode = TextOverflowModes.Ellipsis;
+                val.text = string.IsNullOrEmpty(values[row]) ? "-" : values[row];
+                texts.Add(val);
             }
-            fill(values, h);
-
-            var ours = new ChaStatusComponent.InfoObject();
-            InfoObjRef(ours) = page;
-            InfoTextsRef(ours) = values.ToArray();
-            // SetActiveInfoAll only cycles through enabled pages by index, so keep enabled pages first.
-            var list = infos.Where(o => o != null && o.enabled).ToList();
-            list.Add(ours);
-            if (campus) _campusPageIndex = list.Count - 1;
-            else _socialPageIndex = list.Count - 1;
-            list.AddRange(infos.Where(o => o != null && !o.enabled));
-            InfoRef(comp) = list.ToArray();
-        }
-
-        private static void Fill(List<TextMeshProUGUI> v, SaveData.Heroine h)
-        {
-            var gs = Campus.S.Girl(GirlInfo.Key(h));
-            var r = Markers.ShownFor(h);
-            Action<int, string> set = (i, text) => { if (i < v.Count) v[i].text = text; };
-            set(0, r == null ? "-" : r.Title);
-            set(1, r == null ? "-" : DueLabel(r));
-            set(2, Moods.Known(gs) ? Lines.MoodName(gs.Mood) : "?");
-            set(3, Devotion.Label(gs));
-            var known = GirlInfo.LikeIds.Where((l, i) => (gs.KnownLikes & (1 << i)) != 0 && GirlInfo.Likes(h, l)).Select(GirlInfo.LikeLabel).ToArray();
-            set(4, known.Length == 0 ? "?" : string.Join(", ", known));
+            // Whatever else the game's page holds (its club and heart marks) belongs to its own rows.
+            for (; i < page.transform.childCount; i++) page.transform.GetChild(i).gameObject.SetActive(false);
+            var o = new ChaStatusComponent.InfoObject();
+            InfoObjRef(o) = page;
+            InfoTextsRef(o) = texts.ToArray();
+            return o;
         }
 
         public static string DueLabel(Request r)
@@ -275,27 +300,10 @@ namespace Joojkk.CampusLife
             if (sortName == null) return;
             var parent = sortName.transform.parent;
 
-            var campus = Object.Instantiate(sortName.gameObject, parent, false);
-            campus.name = "btnCampusInfo";
-            var rt = (RectTransform)campus.transform;
-            rt.anchoredPosition = new Vector2(rt.anchoredPosition.x - 136f, rt.anchoredPosition.y);
-            var b = campus.GetComponent<Button>();
-            b.onClick = new Button.ButtonClickedEvent();
-            b.SetLabel("Requests");
-            b.onClick.AddListener(() =>
-            {
-                try
-                {
-                    Sfx.Select();
-                    ShowCampusPages();
-                }
-                catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
-            });
-
             var menu = Object.Instantiate(sortName.gameObject, parent, false);
             menu.name = "btnCampusMenu";
             var rt2 = (RectTransform)menu.transform;
-            rt2.anchoredPosition = new Vector2(rt.anchoredPosition.x - 136f, rt.anchoredPosition.y);
+            rt2.anchoredPosition = new Vector2(rt2.anchoredPosition.x - 136f, rt2.anchoredPosition.y);
             var b2 = menu.GetComponent<Button>();
             b2.onClick = new Button.ButtonClickedEvent();
             b2.SetLabel("Campus Life");
@@ -310,27 +318,10 @@ namespace Joojkk.CampusLife
                 if (sort != null) sort.onClick.AddListener(() => { foreach (var c in PlaceCards) if (c != null) c.transform.SetAsLastSibling(); });
         }
 
-        /// <summary>Requests first, then everyone else; all cards switch to the Campus page.</summary>
-        /// <summary>Every card on the School life page.</summary>
-        public static void ShowSocialPages()
+        /// <summary>Every card on page <paramref name="page"/>.</summary>
+        public static void ShowPages(int page)
         {
-            if (_socialPageIndex < 0) return;
-            foreach (var kv in Cards.Where(k => k.Key != null)) kv.Key.SetActiveInfoAll(_socialPageIndex);
-        }
-
-        public static void ShowCampusPages()
-        {
-            if (_campusPageIndex < 0) return;
-            foreach (var kv in Cards.Where(k => k.Key != null))
-                kv.Key.SetActiveInfoAll(_campusPageIndex);
-            var withRequests = Cards.Where(k => k.Key != null && k.Key.heroine != null && Markers.ShownFor(k.Value) != null).ToList();
-            foreach (var kv in withRequests.AsEnumerable().Reverse())
-            {
-                // Right after the first row (player, story girl, Campus Life card).
-                var parent = kv.Key.transform.parent;
-                var firstGirl = Cards.Where(k => k.Key != null && k.Key.heroine != null).Select(k => k.Key.transform.GetSiblingIndex()).DefaultIfEmpty(3).Min();
-                kv.Key.transform.SetSiblingIndex(Math.Min(firstGirl, parent.childCount - 1));
-            }
+            foreach (var kv in Cards.Where(k => k.Key != null)) kv.Key.SetActiveInfoAll(page);
         }
 
         // ---- Campus Life card (first row) ----

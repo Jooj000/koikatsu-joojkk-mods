@@ -126,6 +126,7 @@ namespace Joojkk.CampusLife
         public static Incident Add(string kind, SaveData.Heroine girl, IEnumerable<SaveData.Heroine> witnesses = null)
         {
             if (S == null) return null;
+            try { Lore.FromIncident(kind, girl, witnesses); } catch (Exception e) { CampusLifePlugin.Log.LogDebug("Lore incident: " + e.Message); }
             // Seen in the girls' restroom or changing room again within a day: the same story, more witnesses (before,
             // every visit was a new incident, each one spread and had to be explained again, 2026-10-11).
             if (Merges(kind))

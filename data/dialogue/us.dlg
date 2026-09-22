@@ -1,0 +1,206 @@
+# Things between the two of you (she was there). {deed} is the fact from her mouth ("you helped me out"), {when},
+# {thing} a short noun ("the teddy bear", "the walk home"), {note} the free text of a memory, {speed} same_day/fast/normal.
+
+# ---------------- you bring it up ----------------
+@rule me.us.plain
+on me.us
+- [Hey, about {thing}...|So, {thing}...|I was thinking about {thing}.]
+- Remember {thing} {when}?
+
+@rule me.us.gift
+on me.us
+when realverb=gave_gift
+- [So... did you like {thing}?|Was {thing} okay?|I hope {thing} wasn't weird.]
+- [Did you end up keeping|What did you think of] {thing}?
+
+@rule me.us.help
+on me.us
+when realverb=helped|stood_up_for
+- [About {when}... are you okay now?|Everything alright after {when}?]
+- I hope I wasn't [butting in|out of line] {when}.
+
+@rule me.us.lunch
+on me.us
+when realverb=ate_with
+- Lunch {when} was nice. [We should do that again.|I liked it.]
+
+@rule me.us.walk
+on me.us
+when realverb=walked_home
+- [Did you get home okay|Thanks for letting me walk you home] {when}.
+
+@rule me.us.date
+on me.us
+when realverb=dated
+- [I had fun on our date.|About our date {when}...] [Did you?|Was it okay?]
+
+@rule me.us.romance
+on me.us
+when realverb=kissed|confessed|started_dating
+- [About {thing}...|Can we talk about {when}?] [I've been thinking about it a lot.|I can't stop thinking about it.]
+
+@rule me.us.h
+on me.us
+when realverb=had_h
+- [About {when}...|So, {when}...] [Are you okay with... everything?|I keep thinking about it.]
+
+@rule me.us.h.fast
+on me.us
+when realverb=had_h speed=same_day|fast
+- [Things went really fast {when}, huh.|We kind of rushed things {when}, didn't we?]
+- [I didn't expect|Neither of us expected] things to go that far that fast.
+
+@rule me.us.dating.fast
+on me.us
+when realverb=started_dating speed=same_day|fast
+- We started going out [really fast|pretty much right away], huh?
+
+# ---------------- her side ----------------
+@rule us.plain
+on us
+opens share,tease,ask
+- [Oh, {thing}?|{Thing}...] [Yeah, I remember.|I was just thinking about it.|That was nice.]
+- [Ha, you remember that?|You still think about {thing}?] [Me too, a little.|That's kind of sweet.]
+
+@rule us.gift.liked
+on us
+when realverb=gave_gift opinion>=1
+opens share,tease,invite
+feel smile
+- [I love it!|It's really cute.|I keep it on my desk.] [Thank you, really.|Nobody's given me something like that in a long time.|I look at it every night.]
+- [{Thing}? Of course I liked it!|I'm using it right now, actually.] [You've got good taste.|How did you know?]
+
+@rule us.gift.meh
+on us
+when realverb=gave_gift opinion<=0
+opens ask,share,thank
+- [Ah, {thing}...|Yeah, {thing}.] [It was... nice of you.|It's the thought that counts, right?|I put it somewhere safe.]
+
+@rule us.helped
+on us
+when realverb=helped
+opens share,tease,praise
+feel smile
+- [I never really thanked you for {when}.|You really saved me {when}.] [I owe you one.|So... thanks.|I won't forget it.]
+- [Ah, that?|You helping me out?] [It meant more than you think.|I was kind of lost before you showed up.]
+
+@rule us.defended
+on us
+when realverb=stood_up_for
+opens share,praise,tease
+feel shy
+- [You didn't have to stand up for me like that.|Nobody's ever done that for me.] [But... I'm glad you did.|I was really happy.|My heart was pounding.]
+
+@rule us.promise
+on us
+when realverb=kept_promise
+opens praise,share,thank
+feel smile
+- [You kept your word.|You actually did it.] [Most people don't.|I'll remember that.|I knew I could count on you.]
+
+@rule us.lunch
+on us
+when realverb=ate_with
+opens invite,tease,share
+feel smile
+- [Lunch was nice.|That was fun, eating together.] [We should make it a habit.|Next time I'm making the bento.|You eat really fast, by the way.]
+
+@rule us.walk
+on us
+when realverb=walked_home
+opens invite,tease,share
+feel shy
+- [The walk home?|Yeah, I got home fine.] [It went by too fast.|We should take the long way next time.|My mom saw us from the window, you know.]
+
+@rule us.date
+on us
+when realverb=dated
+opens invite,share,tease
+feel smile
+- [I had a really good time.|Our date? It was great.] [Let's go again soon.|I keep replaying it in my head.|Next time I'll pick the place.]
+
+@rule us.kiss
+on us
+when realverb=kissed
+opens tease,share,invite
+feel shy
+- [D-don't just bring that up out of nowhere!|The kiss...] [My face is getting hot.|I still can't believe it happened.|...I don't regret it.]
+
+@rule us.confessed
+on us
+when realverb=confessed
+opens share,tease,ask
+feel shy
+- [The confession...|Ah, that day.] [My heart was going crazy.|I thought I was going to faint.|I'm glad I said it. Or that you did.]
+
+@rule us.dating
+on us
+when realverb=started_dating
+opens share,tease,invite
+feel smile
+- [We're really going out, huh?|It still feels like a dream.] [I like how that sounds.|My friends keep teasing me about it.|Don't make me say it out loud again.]
+
+@rule us.dating.fast
+on us
+when realverb=started_dating speed=same_day|fast
+opens share,tease,ask
+feel shy
+- [It was fast, wasn't it?|We barely knew each other.] [But it felt right.|My friends think I'm crazy.|Do you think we rushed it?]
+
+@rule us.flirt
+on us
+when realverb=flirted|held_hands
+opens tease,share,invite
+feel shy
+- [Ah... that?|You're bringing that up now?] [You were pretty bold.|I didn't mind. At all.|I wasn't expecting it.]
+
+@rule us.shared
+on us
+when realverb=shared
+opens share,tease,ask
+feel smile
+- [That time? {Note}|Oh, I remember. {Note}] [I think about it sometimes.|It was a good day.]
+
+# ---------------- H, by how fast it went and who she is ----------------
+@rule us.h
+on us
+when realverb=had_h
+opens share,tease,invite
+feel shy
+- [W-what about it?|...Yeah.|Mm.] [It was... good.|I'm still a little embarrassed.|Don't look at me like that.]
+
+@rule us.h.fast.reserved
+on us
+when realverb=had_h speed=same_day|fast profile=reserved
+opens comfort,share,ask
+feel worried
+- [I... I don't usually do things like that.|I still can't believe I did that.|We'd only just met...] [What must you think of me?|I keep thinking about it.|I don't regret it, but... it was so fast.]
+- [It went so fast.|I'm not that kind of girl, you know.] [I want you to know that.|I just... with you, I didn't want to stop.]
+
+@rule us.h.fast.normal
+on us
+when realverb=had_h speed=same_day|fast profile=normal
+opens share,tease,comfort
+feel shy
+- [Yeah... things went fast.|We kind of skipped a few steps, huh?] [I'm not complaining.|I guess we really clicked.|Let's not rush everything else, okay?]
+
+@rule us.h.fast.open
+on us
+when realverb=had_h speed=same_day|fast profile=open
+opens tease,invite,share
+feel smile
+- [Fast? Was it?|Ha, you're still thinking about that?] [I just knew what I wanted.|Why wait?|You weren't complaining at the time.]
+
+@rule us.h.normal.close
+on us
+when realverb=had_h speed=normal rel=girlfriend|lover
+opens tease,invite,share
+feel love
+- [It felt natural with you.|I'm glad it was you.] [We were ready.|I feel closer to you now.]
+
+@rule us.h.public
+on us
+when realverb=had_h public=yes
+opens hush,tease,ask
+feel worried
+- [In the {fplace}, though...|We were in the {fplace}!] [What if someone saw us?|I can't walk past that spot anymore without blushing.|Please tell me nobody saw.]

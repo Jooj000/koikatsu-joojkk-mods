@@ -238,6 +238,7 @@ namespace Joojkk.CampusLife
         {
             try
             {
+                if (_heroine != null && On) Lore.OnEscape(_heroine);
                 if (_heroine == null || !_mustDress.Remove(_heroine) || !On) return;
                 var d = __instance.SetAction(_heroine, 0, -1); // the game's "change clothes", in the changing room
                 if (d == null) return;

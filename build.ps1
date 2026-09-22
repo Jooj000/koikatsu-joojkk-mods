@@ -44,6 +44,12 @@ function Build($name) {
             '-langversion:7.3', '-warn:4', '-nowarn:1591,0649,0169,0414,0618',
             "-out:$dll") + $refs + $src
   if ($Dev) { $cscArgs += '-define:DEBUG_TOOLS' }
+  # The procedural dialogue bank (data\dialogue\*.dlg) is built into the DLL; a file of the same name in
+  # plugins\Joojkk\dialogue replaces it (for trying lines without building).
+  $dlgDir = Join-Path $root "data\dialogue"
+  if ($name -eq 'KK_CampusLife' -and (Test-Path $dlgDir)) {
+    Get-ChildItem $dlgDir -Filter *.dlg | ForEach-Object { $cscArgs += "-resource:$($_.FullName),CampusLife.dialogue.$($_.Name)" }
+  }
   & $csc @cscArgs
   if ($LASTEXITCODE -ne 0) { throw "Build failed: $name" }
   Write-Host "Built $dll"

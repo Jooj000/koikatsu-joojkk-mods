@@ -1490,7 +1490,7 @@ namespace Joojkk.CampusLife
                 txt.enableAutoSizing = true;
                 txt.fontSizeMin = 12f;   // 14 cut "Whisper something sugges..." on the card
                 txt.fontSizeMax = txt.fontSize;
-                // the letters' face in the button's color, the game's dark outline kept (user, 2026-10-26)
+                // the letters' face in the button's color, with a black outline (user, 2026-10-26)
                 ConvArt.ColorFace(txt, onClick == null ? GameUi.Dim : OptionColor());
                 txt.text = label;
             }

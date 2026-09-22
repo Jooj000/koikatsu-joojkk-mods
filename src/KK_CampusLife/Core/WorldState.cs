@@ -373,6 +373,7 @@ namespace Joojkk.CampusLife
             root["clubI"] = ClubIdentity;
             root["council"] = Council == null ? null : Council.ToDict();
             root["cWin"] = CouncilWinner; root["cEff"] = CouncilEffect; root["cEffW"] = CouncilEffectUntilWeek;
+            WriteLore(root);
         }
 
         private void ReadWorld(Dictionary<string, object> d)
@@ -403,6 +404,7 @@ namespace Joojkk.CampusLife
             ClubIdentity = d.GetString("clubI");
             Council = CouncilRace.FromDict(d.GetObj("council"));
             CouncilWinner = d.GetString("cWin"); CouncilEffect = d.GetString("cEff"); CouncilEffectUntilWeek = d.GetInt("cEffW", -1);
+            ReadLore(d);
         }
     }
 }

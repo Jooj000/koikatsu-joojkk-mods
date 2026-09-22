@@ -69,6 +69,7 @@ namespace Joojkk.CampusLife
             S.Reputation = 20;
             S.Log("Campus Life begins. The Koikatsu Club has a board now, and the school feels a little bigger.");
             Moods.RollAll();
+            try { Lore.Prune(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
             Spotlight.Rotate();
             if (G.IsSchoolDay) Board.GenerateDaily();
         }
@@ -137,6 +138,7 @@ namespace Joojkk.CampusLife
             if (G.ToMask(period) != PeriodMask.None && G.IsSchoolDay)
             {
                 Director.OnPeriod();
+                try { Lore.OnPeriod(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
                 Calendar.OnPeriodStart(period);
                 if (period == Cycle.Type.LunchTime && S.Requests.Any(r => r.State == RequestState.Active))
                     Toasts.Show("Club board: " + S.Requests.Count(r => r.State == RequestState.Active) + " open request(s). Press " + Cfg.PlannerKey.Value + ".");
@@ -162,6 +164,7 @@ namespace Joojkk.CampusLife
             gs.Attention = Mathf.Clamp(gs.Attention + (firstToday ? 15 : 3), 0, 100);
             S.Stat("talks");
             Chat.OnTalkEnd(h, gs, result == ResultEnum.None);
+            try { Lore.Met(h); } catch (Exception e) { CampusLifePlugin.Log.LogDebug("Lore met: " + e.Message); }
 
             // Time cost: only for plain conversations; invites already move the clock themselves.
             if (result == ResultEnum.None && G.InRoamingPeriod && Cfg.TalkTimeCost.Value > 0)
@@ -189,6 +192,7 @@ namespace Joojkk.CampusLife
                 Director.Changed(h, "H");
                 Board.OnIntimate(h);
                 try { Pairs.OnHWithPlayer(h); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+                try { Lore.FromH(h); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
                 if (gs.Mood == Mood.Flirty) { G.AddFavor(h, Mathf.RoundToInt(5 * Cfg.MoodBonusMultiplier.Value), 0); gs.Mood = Mood.Cheerful; }
             }
         }

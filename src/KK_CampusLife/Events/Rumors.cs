@@ -33,6 +33,7 @@ namespace Joojkk.CampusLife
             if (!string.IsNullOrEmpty(sc.Teller)) sc.Versions[sc.Teller] = sc.Teller == sc.Subject && (kind == "stole" || kind == "cheated") ? 2 : 0;
             if (!string.IsNullOrEmpty(sc.Other) && !sc.Versions.ContainsKey(sc.Other)) sc.Versions[sc.Other] = 0;
             S.Scandals.Add(sc);
+            try { Lore.FromRumor(kind, sc.Subject, sc.Other, sc.Teller); } catch (Exception e) { CampusLifePlugin.Log.LogDebug("Lore rumor: " + e.Message); }
             if (Main == null && sc.Heat >= 30) sc.Main = true;
             if (S.Scandals.Count > 20) S.Scandals.RemoveAll(x => x.Closed && S.Day - x.Day > 14);
             CampusLifePlugin.Log.LogInfo("Rumor #" + sc.Id + " started: " + What(sc, 0) + " (heat " + sc.Heat + (sc.Main ? ", main" : "") + ")");

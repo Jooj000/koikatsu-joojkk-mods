@@ -26,6 +26,7 @@ namespace Joojkk.CampusLife
             gs.Moments.Add(m);
             if (gs.Moments.Count > 24) gs.Moments.RemoveAt(0);
             CampusLifePlugin.Log.LogInfo("Memory with " + GirlInfo.FirstName(h) + ": " + kind + " - " + text);
+            try { Lore.FromMemory(h, kind, text, tone, with); } catch (System.Exception e) { CampusLifePlugin.Log.LogDebug("Lore memory: " + e.Message); }
             return m;
         }
 
