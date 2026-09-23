@@ -24,6 +24,7 @@ namespace Joojkk.CampusLife
             public float Score;
             public bool Hot, Opening;
             public string Subject = "";        // small talk: what about
+            public string ToldFit = "";        // "tell": how your news landed (good, neutral, bad)
             public SchoolTopicInfo School;
         }
 
@@ -76,9 +77,11 @@ namespace Joojkk.CampusLife
                 if (st != null && st.Id != "rumors" && !TopicDone(key, "school:" + st.Id)) ctx.Add(new PTopic { Id = "school:" + st.Id, Kind = "school", School = st, Label = "Talk about " + st.Label, Score = 1.4f });
             }
 
-            var list = ctx.OrderByDescending(t => t.Score).Take(3).ToList();
             var gossip = stranger ? null : GossipPick(key);
+            var tell = stranger ? null : TellPick(key);
+            var list = ctx.OrderByDescending(t => t.Score).Take(gossip != null && tell != null ? 2 : 3).ToList();
             if (gossip != null) list.Add(gossip);
+            if (tell != null) list.Add(tell);
             if (list.Count == 0)
             {
                 var sm = SmallTalkTopic(h, gs);
@@ -159,6 +162,65 @@ namespace Joojkk.CampusLife
                 .OrderByDescending(x => Lore.Salience(x.Key, x.Value)).FirstOrDefault();
             if (best.Value == null) return null;
             return new PTopic { Id = "f:" + best.Value.Id, Kind = "gossip", Fact = best.Value, Know = best.Key, Label = "Gossip", Score = Lore.Salience(best.Key, best.Value) };
+        }
+
+        /// <summary>
+        /// News you could tell her (2026-10-27): a fact you know (you were told it) that she does not, about other girls
+        /// (not her, not you), fresh and of some weight. The biggest and newest first.
+        /// </summary>
+        private static PTopic TellPick(string key)
+        {
+            if (S.Lore == null) return null;
+            var f = S.Lore.Where(x => !x.Involves(key) && !x.Involves(Lore.Player) && x.Weight >= 1 && S.Day - x.Day <= 10 && x.Verb != "met" && x.Verb != "shared"
+                                      && !TopicDone(key, "tell:" + x.Id) && Lore.KnowOf(key, x) == null && Lore.PlayerKnows(x))
+                .OrderByDescending(x => x.Weight * 3 - (S.Day - x.Day)).FirstOrDefault();
+            if (f == null) return null;
+            var who = new[] { f.Subject, f.Obj }.FirstOrDefault(x => !string.IsNullOrEmpty(x) && x != Lore.Player);
+            return new PTopic { Id = "tell:" + f.Id, Kind = "tell", Fact = f, Label = "Tell her the news about " + (who != null ? GirlInfo.FirstName(who) : "someone"), Score = 1f };
+        }
+
+        /// <summary>
+        /// You tell her: she learns it from you, and how it lands moves your reputation. Good news or juicy news for a
+        /// talker raises it (she spreads that you know things); gossip that hurts her friend, or a mean secret, lowers it,
+        /// costs her trust and keeps her from passing it on.
+        /// </summary>
+        private static void TellHer(SaveData.Heroine h, PTopic t)
+        {
+            var key = GirlInfo.Key(h);
+            var f = t.Fact;
+            t.Know = Lore.Learn(key, f, How.Heard, Lore.Player);
+            if (t.Know != null) t.Know.ToPlayer = 2;
+            var others = new[] { f.Subject, f.Obj, f.About }.Where(x => !string.IsNullOrEmpty(x) && x != Lore.Player && x != key).Select(x => GirlInfo.Find(x)).Where(x => x != null).ToList();
+            var friendHurt = f.Valence < 0 && others.Any(o => Social.Bond(h, o) >= 40);
+            var rivalHurt = f.Valence < 0 && others.Any(o => Social.Bond(h, o) <= -30);
+            var v = Voice.Of(h);
+            var talker = v.Energy + v.Tease >= 1.1f || GirlInfo.Quirks(h).friendly;
+            var juicy = f.Weight >= 2 || f.Tags.Contains("romance") || f.Tags.Contains("h");
+            var score = (f.Valence > 0 ? 0.6f : 0f) + (juicy ? 0.4f : 0f) + (talker ? 0.4f : -0.2f) - (friendHurt ? 1.4f : 0f) + (rivalHurt ? 0.3f : 0f)
+                        - (f.Exposure == LoreFact.Secret && f.Valence < 0 ? 0.8f : 0f) - (v.Formal > 0.7f && f.Valence < 0 ? 0.4f : 0f);
+            t.ToldFit = score >= 0.8f ? "good" : score >= 0f ? "neutral" : "bad";
+            var name = GirlInfo.FirstName(h);
+            switch (t.ToldFit)
+            {
+                case "good":
+                    S.Reputation = Mathf.Clamp(S.Reputation + 2, 0, 100);
+                    G.AddFavor(h, 3, 0);
+                    Social.AddTrust(h, 1);
+                    Toasts.Show(name + " loved the news. Reputation +2");
+                    break;
+                case "neutral":
+                    G.AddFavor(h, 1, 0);
+                    break;
+                default:
+                    S.Reputation = Mathf.Clamp(S.Reputation - 3, 0, 100);
+                    Social.AddTrust(h, -4);
+                    if (t.Know != null) t.Know.Told = 9;   // she will not pass it on
+                    // The girl it is about hears who talked, sooner or later.
+                    foreach (var o in others) Social.AddTrust(o, -2);
+                    Toasts.Show(name + " didn't like that gossip. Reputation -3");
+                    break;
+            }
+            CampusLifePlugin.Log.LogInfo("Talk tell: " + name + " <- lore #" + f.Id + " '" + Lore.Render(f, key, 0) + "' -> " + t.ToldFit + " (score " + score.ToString("0.00") + ", rep " + S.Reputation + ")");
         }
 
         /// <summary>Light talk when nothing else is left: one of her likes, her pet theme, the place, lunch, the exams, the weather.</summary>
@@ -288,7 +350,8 @@ namespace Joojkk.CampusLife
                 if (other != null) { c["who"] = GirlInfo.FirstName(other); c["whobond"] = Social.Bond(h, GirlInfo.Find(other)).ToString(); }
                 var second = new[] { f.Subject, f.Obj }.Where(x => !string.IsNullOrEmpty(x) && x != key && x != Lore.Player && x != other).Select(GirlInfo.FirstName).FirstOrDefault();
                 if (second != null) c["who2"] = second;
-                if (k != null && !string.IsNullOrEmpty(k.From)) c["src"] = GirlInfo.FirstName(k.From);
+                if (k != null && !string.IsNullOrEmpty(k.From)) c["src"] = k.From == Lore.Player ? "you" : GirlInfo.FirstName(k.From);
+                if (!string.IsNullOrEmpty(t.ToldFit)) c["told"] = t.ToldFit;
                 if (!string.IsNullOrEmpty(f.Note)) c["note"] = f.Note;
                 if (f.Since >= 0) { c["since"] = f.Since.ToString(); c["speed"] = f.Since == 0 ? "same_day" : f.Since <= 2 ? "fast" : "normal"; }
                 c["thing"] = Thing(f, key);
@@ -344,7 +407,8 @@ namespace Joojkk.CampusLife
             var key = GirlInfo.Key(h);
             var gs = S.Girl(key);
             MarkTopic(key, t.Id);
-            if (t.Fact != null) Lore.Told(key, t.Fact, 1);
+            if (t.Kind == "tell") TellHer(h, t);
+            else if (t.Fact != null) Lore.Told(key, t.Fact, 1);
             var ctx = Ctx(h, gs, t);
 
             // Her day: the mood she shows and, now and then, one of her likes (the badges under the H bar read these).
@@ -389,7 +453,10 @@ namespace Joojkk.CampusLife
             {
                 case "day": return Lines.MoodLine(GirlInfo.ToneOf(h), MoodOf(h), Lines.Closeness(h));
                 case "gossip": case "you": case "us": return t.Fact != null ? "You know... " + Lore.Render(t.Fact, GirlInfo.Key(h), t.Know != null ? t.Know.Distort : 0) + ". " + char.ToUpperInvariant(Lore.When(t.Fact)[0]) + Lore.When(t.Fact).Substring(1) + "." : "Hm.";
-                default: return T(h, "Mm... it's nice, just talking like this.", "Hey, this is fun! We should talk more!", "...This is fine.", "Just chatting? Sure, I've got time for you.");
+                default: return T(h, Lines.Pick("Mm... it's nice, just talking like this.", "I like these quiet chats.", "Sorry, I'm not very interesting today...", "Talking with you is relaxing."),
+                                  Lines.Pick("Hey, this is fun! We should talk more!", "Ha, you always find something to say!", "I like hanging out like this!", "Okay, your turn to pick a topic!"),
+                                  Lines.Pick("...This is fine.", "Quiet talk. I don't mind it.", "You're not bad company.", "...Go on, then."),
+                                  Lines.Pick("Just chatting? Sure, I've got time for you.", "Running out of topics already?", "You just like hearing my voice, huh?", "Fine, entertain me."));
             }
         }
 
@@ -499,6 +566,7 @@ namespace Joojkk.CampusLife
                 case "you": return ctx.ContainsKey("realverb") && (ctx["realverb"] == "had_h" || ctx["realverb"].StartsWith("seen_", StringComparison.Ordinal)) ? new[] { "admit", "hush", "tease", "deny", "correct" } : new[] { "correct", "admit", "ask", "laugh" };
                 case "gossip": return low ? new[] { "ask", "defend", "agree", "laugh" } : new[] { "ask", "agree", "tease", "defend" };
                 case "school": return new[] { "ask", "invite", "share", "tease" };
+                case "tell": return ctx.ContainsKey("told") && ctx["told"] == "bad" ? new[] { "hush", "defend", "laugh" } : new[] { "ask", "laugh", "agree", "tease" };
                 default: return new[] { "share", "ask", "tease", "praise" };
             }
         }
@@ -578,13 +646,14 @@ namespace Joojkk.CampusLife
         /// <summary>The girl in the open talk, or null.</summary>
         internal static SaveData.Heroine TalkingTo { get { var s = Sess; return s != null ? s.Her : null; } }
 
-        internal static string VarietyNow(SaveData.Heroine h, string on, int tries)
+        internal static string VarietyNow(SaveData.Heroine h, string on, int tries, string move = "ask", string fit = "good")
         {
             if (h == null) return "no girl";
             var kind = on.StartsWith("me.", StringComparison.Ordinal) ? on.Substring(3) : on;
             var t = TalkTopics(h, S.Girl(GirlInfo.Key(h))).FirstOrDefault(x => x.Kind == kind) ?? new PTopic { Kind = kind, Label = kind };
             var ctx = Ctx(h, S.Girl(GirlInfo.Key(h)), t);
-            if (on == "react") { ctx["move"] = "ask"; ctx["fit"] = "good"; ctx["step"] = "1"; }
+            if (on == "react") { ctx["move"] = move; ctx["fit"] = fit; ctx["step"] = "1"; }
+            if (on == "tell") ctx["told"] = fit;
             return GirlInfo.FirstName(h) + " " + Bank.Variety(on, ctx, tries);
         }
 

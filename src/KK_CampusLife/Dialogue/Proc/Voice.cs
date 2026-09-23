@@ -18,6 +18,9 @@ namespace Joojkk.CampusLife
         public string Exclaim = "Oh!", Filler = "Well,", Laugh = "Hehe.", CallYou = "you", Pet = "", Kind = "";
         public bool Tilde;
         public float FillerRate, StutterRate;
+        /// <summary>All the fillers that fit her; Say() uses her signature one half of the time, another one otherwise.</summary>
+        public List<string> FillerPool = new List<string>();
+        private string _lastFiller;
         public int Seed;
 
         private static readonly Dictionary<string, Voice> Cache = new Dictionary<string, Voice>();
@@ -116,10 +119,11 @@ namespace Joojkk.CampusLife
             v.Seed = Hash(key);
             var rng = new System.Random(v.Seed);
             v.Exclaim = Pick(rng, Exclaims(v));
-            v.Filler = Pick(rng, Fillers(v));
+            v.FillerPool = Fillers(v);
+            v.Filler = Pick(rng, v.FillerPool);
             v.Laugh = Pick(rng, Laughs(v));
             v.Tilde = rng.NextDouble() < 0.15 + 0.4 * v.Tease * (1 - v.Formal) + (v.Kind == "gyaru" ? 0.2 : 0);
-            v.FillerRate = 0.12f + 0.25f * (float)rng.NextDouble() * (0.5f + v.Shy);
+            v.FillerRate = 0.08f + 0.17f * (float)rng.NextDouble() * (0.5f + v.Shy);
             v.StutterRate = v.Shy >= 0.65f ? 0.2f + 0.25f * v.Shy : 0f;
             v.CallYou = CallFor(h, v, rng);
             v.Pet = PetTheme(h, a, rng);
@@ -252,7 +256,7 @@ namespace Joojkk.CampusLife
                 if (v.Energy >= 0.72f && end == '.' && !t.EndsWith("...", StringComparison.Ordinal) && Random.value < 0.45f) t = t.Substring(0, t.Length - 1) + "!";
                 else if (v.Energy < 0.3f && v.Warm < 0.45f && end == '!' && !t.EndsWith("?!", StringComparison.Ordinal) && Random.value < 0.7f) t = t.Substring(0, t.Length - 1) + ".";
                 if (v.FillerRate > 0f && Random.value < v.FillerRate && char.IsLetter(t[0]) && !StartsWithFiller(t))
-                    t = v.Filler + " " + LowerFirst(t);
+                    t = v.NextFiller() + " " + LowerFirst(t);
                 else if (v.StutterRate > 0f && Random.value < v.StutterRate && char.IsLetter(t[0]))
                 {
                     var w = t.Split(' ')[0];
@@ -263,6 +267,21 @@ namespace Joojkk.CampusLife
                 return t;
             }
             catch { return text; }
+        }
+
+        /// <summary>Her signature filler half of the time, another of hers otherwise; never the same one twice in a row.</summary>
+        private string NextFiller()
+        {
+            string f;
+            if (FillerPool.Count <= 1) f = Filler;
+            else
+            {
+                f = Filler;
+                for (var i = 0; i < 4 && (f == _lastFiller || i == 0 && Random.value >= 0.5f); i++)
+                    f = FillerPool[Random.Range(0, FillerPool.Count)];
+            }
+            _lastFiller = f;
+            return f;
         }
 
         private static bool StartsWithFiller(string t)

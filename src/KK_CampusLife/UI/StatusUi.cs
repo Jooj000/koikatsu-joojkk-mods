@@ -148,7 +148,7 @@ namespace Joojkk.CampusLife
         // e o que está fazendo devem ficar seguidos na mesma aba, informações sobre a relação todas juntas"): the game's
         // pages and our two became three, by subject. Gone: "She remembers" (not something to show), Request and When
         // (on the board), Mood and Likes (small icons in the talk, once found out).
-        private static readonly string[] NowLabels = { "Location", "Doing now", "Personality", "Club", "Best friend" };
+        private static readonly string[] NowLabels = { "Location", "Doing now", "Personality", "At school", "Best friend" };
         private static readonly string[] BondLabels = { "Relation", "Toward you", "Favor", "Devotion", "Trust in you" };
         private static readonly string[] LoveLabels = { "Her heart", "Lewdness", "Experience", "Times together", "Intimacy" };
 
@@ -175,7 +175,7 @@ namespace Joojkk.CampusLife
                 game(0, 0),
                 Pairs.IsScorned(h) ? "hurt, avoiding you" : !string.IsNullOrEmpty(doing) ? doing : Intents.Label(gs.Intent),
                 game(0, 1),
-                h.isStaff ? "member" : "-",
+                Standing.Label(gs.Rep) + (h.isStaff ? ", club member" : ""),
                 bf == null ? "-" : GirlInfo.FirstName(bf),
             };
 

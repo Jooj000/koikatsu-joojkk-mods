@@ -1,0 +1,68 @@
+# You tell her something she did not know (2026-10-27: "se ela não souber uma fofoca que você sabe, você pode contar").
+# {deed} the fact as she now knows it, {who} the girl it is about, {when}. {told} how it landed: good (she loves the
+# news; your reputation goes up), neutral, bad (gossip about her friend or a mean secret; reputation and her trust drop).
+
+@rule me.tell
+on me.tell
+- [Hey, did you hear?|Guess what I found out.|You won't believe this.|Okay, so, news.] [{Deed}.|{Deed}, {when}.]
+- [Have you heard about {who}?|Don't tell anyone I said this, but...|So, about {who}...] [{Deed}.|Apparently {deed}.]
+- [I heard something {when}.|Funny thing happened {when}.] [{Deed}.|Turns out {deed}.]
+- [You know {who}, right?|Can I tell you something about {who}?] [{Deed}.|Well... {deed}.]
+
+@rule tell.good
+on tell
+when told=good
+opens ask,laugh,agree
+feel surprised
+- [No way! Really?!|Seriously? {Who}?!|Wait, wait. {Who}?] [I had no idea!|I need to know everything.|You always know the good stuff.]
+- [Oh my gosh.|Huh! Who would've thought.] [Thanks for telling me!|That's huge.|I'm so glad I heard it from you.]
+- [Ooh, juicy!|Wow, okay!] [Tell me more later.|I won't say who told me.|You're my favorite source now.]
+- [That's actually great news.|Ha! I knew it.] [Good for {who}.|I'll have to ask {who} about it.]
+
+@rule tell.good.couple
+on tell
+when told=good realverb=started_dating|crush|seen_together|kissed|dated|confessed
+opens ask,tease,agree
+feel laugh
+- [Kyaa! {Who}?! Finally!|No way, {who} and...?!] [I knew something was going on!|They'd be so cute together!]
+- [Oh, that's so sweet.|Ehh?! Since when?] [I'm a little jealous, honestly.|I have to see it with my own eyes.]
+- [Stop, really?|Oh my gosh, {who}!] [I'm screaming inside.|That explains so much.]
+- [Hehe, so that's why {who} was smiling.|Ha! I called it.] [Thanks for the scoop.|You're the best informant.]
+
+@rule tell.neutral
+on tell
+when told=neutral
+opens ask,laugh,share
+- [Huh. Okay.|Oh, really?|Interesting.] [I didn't know.|Good to know, I guess.]
+- [Hm. Is that so.|Huh.] [Not my business, but okay.|I'll keep it in mind.]
+- [Oh. Okay then.|Mm.] [People sure talk a lot.|Weird.]
+- [I see.|Okay.] [Thanks, I guess.|Well, now I know.]
+
+@rule tell.neutral.cool
+on tell
+when told=neutral voice=cool|serious|proper
+opens ask,share
+- [I see.|Hm.] [I don't usually follow gossip.|That's their business.]
+- [Is that so.|Noted.] [I'll not repeat it.|Why tell me, though?]
+- [Hm. Interesting.|Huh.] [People's lives are complicated.|I suppose it was bound to happen.]
+- [That's... a lot of detail.|You hear everything, huh.] [I'll pretend I didn't.|Okay.]
+
+@rule tell.bad
+on tell
+when told=bad
+opens hush,defend,laugh
+feel pout
+- [Why are you telling me this?|That's not something you spread around.|That's mean, you know.] [{Who} wouldn't want people knowing.|I didn't need to hear that.]
+- [Wow. Talking behind {who}'s back?|Is that how you talk about people?] [What do you say about me, then?|I don't like this.]
+- [{Who}'s my friend.|Hey, careful.] [I'm not passing that on.|Don't tell anyone else.]
+- [That's gossip. Mean gossip.|Ugh.] [I thought better of you.|Let's not.]
+
+@rule tell.bad.friend
+on tell
+when told=bad whobond>=40
+opens hush,defend
+feel sad
+- [{Who}...? Oh no.|Poor {who}.] [I should go check on her.|Why didn't she tell me?]
+- [You're telling me this about {who}? My friend?|That's my friend you're talking about.] [Not cool.|I'll hear it from her, thanks.]
+- [I don't believe it.|That can't be right.] [{Who} would never.|You'd better not spread that.]
+- [That's awful.|Ugh, I hate this.] [Please don't tell anyone else.|Let me talk to {who} first.]

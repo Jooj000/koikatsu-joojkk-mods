@@ -103,8 +103,13 @@ namespace Joojkk.CampusLife
 
             // A friend she wants to see.
             var lonely = Mathf.Min(2f, (100 - gs.NeedSocial) / 30f);
-            var best = Social.FriendsOf(h, 35).Where(f => f != h && Truth.AtSchool(f)).OrderByDescending(f => Social.Bond(h, f) + Random.Range(0, 20)).FirstOrDefault();
+            // Popular friends are sought out more, outcasts less (Standing, 2026-10-27).
+            var best = Social.FriendsOf(h, 35).Where(f => f != h && Truth.AtSchool(f)).OrderByDescending(f => Social.Bond(h, f) + (Standing.Of(f) - 50) / 4 + Random.Range(0, 20)).FirstOrDefault();
             if (best != null) add(Friend + ":" + GirlInfo.Key(best), 0.6f + lonely + Social.Bond(h, best) / 50f);
+            // A popular girl she merely gets along with draws her in too.
+            var star = Social.Students.Where(f => f != h && f != best && Truth.AtSchool(f) && Standing.Of(f) >= 70 && Social.Bond(h, f) >= 10)
+                .OrderByDescending(f => Standing.Of(f) + Random.Range(0, 15)).FirstOrDefault();
+            if (star != null) add(Friend + ":" + GirlInfo.Key(star), 0.3f + lonely * 0.6f + (Standing.Of(star) - 70) / 30f);
 
             // Her girlfriend, and some privacy with her.
             var p = Pairs.PairOf(h);
@@ -459,7 +464,7 @@ namespace Joojkk.CampusLife
                             // Nobody else: it happens, and her girlfriend may hear of it.
                             var p = Pairs.PairOf(tgt.heroine);
                             if (p != null) { p.Trust = PairState.Clamp(p.Trust - 8); p.Jealousy = PairState.Clamp(p.Jealousy + 12); }
-                            if (Random.value < 0.4f) Rumors.Start("caught", GirlInfo.Key(tgt.heroine), GirlInfo.Key(me.heroine), GirlInfo.Key(theirs), 45);
+                            if (Random.value < 0.4f) { Rumors.Start("caught", GirlInfo.Key(tgt.heroine), GirlInfo.Key(me.heroine), GirlInfo.Key(theirs), 45); Standing.Add(tgt.heroine, -4, "caught cheating"); }
                         }
                     }
                 }
@@ -470,6 +475,10 @@ namespace Joojkk.CampusLife
                     pr.Exposure = PairState.Clamp(pr.Exposure + 2);
                     if (pr.Stage == PairStage.None || pr.Stage == PairStage.Crush) { pr.AddRomance(pr.A, 4); pr.AddRomance(pr.B, 4); Pairs.Advance(pr); }
                 }
+                // Between them, like with you: closer afterwards, and the urge is spent for a while.
+                Arcs.AddBond(GirlInfo.Key(me.heroine), GirlInfo.Key(target.heroine), 4);
+                G.AddFavor(me.heroine, 0, -15);
+                G.AddFavor(target.heroine, 0, -15);
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Lesbian prefix: " + e.Message); }
         }

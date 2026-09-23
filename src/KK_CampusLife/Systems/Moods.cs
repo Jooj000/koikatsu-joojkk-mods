@@ -39,6 +39,8 @@ namespace Joojkk.CampusLife
             if (h.lewdness >= 70) w[Mood.Flirty] += 2f;
             if (h.isGirlfriend) w[Mood.Flirty] += 1f;
             if (gs.Attention < 25) w[Mood.Lonely] += 3f;
+            if (gs.Rep < 25) { w[Mood.Lonely] += 3f; w[Mood.Upset] += 0.5f; }   // left out at school (Standing)
+            else if (gs.Rep >= 70) w[Mood.Cheerful] += 1.5f;
             if (h.isGirlfriend && gs.Attention < 20) w[Mood.Upset] += 2f;
             if (h.isAnger) w[Mood.Upset] += 4f;
             if (Calendar.IsExamWeek) w[Mood.Stressed] += 2f;

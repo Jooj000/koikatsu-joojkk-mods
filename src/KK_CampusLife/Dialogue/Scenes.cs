@@ -104,7 +104,7 @@ namespace Joojkk.CampusLife
         {
             if (string.IsNullOrEmpty(text)) return this;
             // In her own voice (fillers, exclaims, a stutter, her ~): every line of a talk, old or procedural.
-            if (_inTalk && Her != null) text = Voice.Say(Her, text);
+            if (_inTalk && Her != null) text = Voice.Say(Her, Variants.Swap(Her, text));
             if (_inTalk) { Line(text); List.Add(Program.Transfer.Text(HerSpeaker, text)); }
             else return Say(Her, text);
             Voices[text] = new VoiceTag { GirlKey = GirlInfo.Key(Her) };
@@ -117,6 +117,7 @@ namespace Joojkk.CampusLife
             if (string.IsNullOrEmpty(text)) return this;
             if (girl == null) return Narr(text);
             if (_inTalk && girl == Her) return Her_(text);
+            text = Variants.Swap(girl, text);
             var name = GirlInfo.FirstName(girl);
             if (_registeredNames.Add(name))
                 List.Add(Program.Transfer.Create(true, Command.FontColor, "Color2", name));

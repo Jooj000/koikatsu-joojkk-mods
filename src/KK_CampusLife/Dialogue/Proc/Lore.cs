@@ -186,6 +186,9 @@ namespace Joojkk.CampusLife
 
         public static LoreKnow KnowOf(string girl, LoreFact f) { return S == null || f == null ? null : S.Known.FirstOrDefault(k => k.Girl == girl && k.Fact == f.Id); }
 
+        /// <summary>The player knows it: was in it, or some girl told it to him (the "tell" topic passes it on).</summary>
+        public static bool PlayerKnows(LoreFact f) { return S != null && f != null && (f.Involves(Player) || S.Known.Any(k => k.Fact == f.Id && k.ToPlayer >= 1)); }
+
         /// <summary>How much she wants to talk about it: weight, how fresh, how close to her, how strong her feeling.</summary>
         public static float Salience(LoreKnow k, LoreFact f)
         {
@@ -454,7 +457,7 @@ namespace Joojkk.CampusLife
             {
                 var k = kv.Key; var f = kv.Value;
                 sb.Append("\n  #").Append(f.Id).Append(' ').Append(Render(f, key, k.Distort)).Append(" (").Append(When(f)).Append(", ").Append(f.Place).Append(") ")
-                  .Append(k.How).Append(k.How == How.Heard || k.How == How.Rumor ? " from " + GirlInfo.FirstName(k.From) : "")
+                  .Append(k.How).Append(k.How == How.Heard || k.How == How.Rumor ? " from " + (k.From == Player ? "you" : GirlInfo.FirstName(k.From)) : "")
                   .Append(", op ").Append(k.Opinion).Append(", told you ").Append(k.ToPlayer).Append(", sal ").Append(Salience(k, f).ToString("0.0"));
             }
             return sb.ToString();

@@ -1,218 +1,219 @@
 # Labels of your answers (the choices). Short; the most specific rule wins. Same context as her line, plus {move}.
+# 2026-10-27: 4+ labels per rule ("as opções minhas também são muito iguais").
 
 # ---------------- ask ----------------
 @rule move.ask
 on move.ask
-- [Ask more about {thing}|Ask her to tell you more]
+- [Ask more about {thing}|Ask her to tell you more|Ask her to go on|Ask what she means|Ask how that went]
 
 @rule move.ask.low
 on move.ask
 when kind=day low=yes
-- [Ask what's wrong|Ask what's bothering her]
+- [Ask what's wrong|Ask what's bothering her|Ask if she's okay|Ask what happened|Ask gently what's up]
 
 @rule move.ask.good
 on move.ask
 when kind=day mood=cheerful
-- [Ask what's got her so happy|Ask what made her day]
+- [Ask what's got her so happy|Ask what made her day|Ask why she's smiling|Ask what the good news is]
 
 @rule move.ask.gossip
 on move.ask
 when kind=gossip
-- [Ask how it happened|Ask for the details|Ask how she found out]
+- [Ask how it happened|Ask for the details|Ask how she found out|Ask if it's really true|Ask who else knows]
 
 @rule move.ask.heard
 on move.ask
 when kind=you how=heard|rumor
-- [Ask who's saying that|Ask who told her]
+- [Ask who's saying that|Ask who told her|Ask where she heard it|Ask what exactly they're saying]
 
 @rule move.ask.saw
 on move.ask
 when kind=you how=witness
-- [Ask what she saw|Ask how she feels about it]
+- [Ask what she saw|Ask how she feels about it|Ask what she thinks of you now|Ask how much she saw]
 
 @rule move.ask.us
 on move.ask
 when kind=us
-- [Ask how she felt about it|Ask what she thought]
+- [Ask how she felt about it|Ask what she thought|Ask what she liked most|Ask if she'd do it again]
 
 @rule move.ask.like
 on move.ask
 when kind=small likes=yes
-- [Ask what she loves about {like}|Ask how she got into {like}]
+- [Ask what she loves about {like}|Ask how she got into {like}|Ask for her favorite kind of {like}|Ask her to teach you about {like}]
 
 @rule move.ask.school
 on move.ask
 when kind=school
-- [Ask about her plans|Ask what she's expecting]
+- [Ask about her plans|Ask what she's expecting|Ask if she's ready|Ask what she'll do]
 
 # ---------------- comfort ----------------
 @rule move.comfort
 on move.comfort
-- [Tell her it'll be okay|Reassure her]
+- [Tell her it'll be okay|Reassure her|Say you're on her side|Tell her not to worry|Say things will get better]
 
 @rule move.comfort.stress
 on move.comfort
 when mood=stressed
-- [Say she's doing her best|Tell her not to push herself]
+- [Say she's doing her best|Tell her not to push herself|Offer to help her through it|Tell her to take a breather]
 
 @rule move.comfort.lonely
 on move.comfort
 when mood=lonely
-- [Say you're here now|Tell her she's not alone]
+- [Say you're here now|Tell her she's not alone|Say you'll keep her company|Say you were hoping to see her]
 
 @rule move.comfort.upset
 on move.comfort
 when mood=upset
-- [Just stay with her|Say she doesn't have to talk]
+- [Just stay with her|Say she doesn't have to talk|Sit quietly beside her|Tell her you're listening]
 
 @rule move.comfort.fight
 on move.comfort
 when realverb=fought|insulted|broke_up
-- [Say it'll blow over|Tell her it's not her fault]
+- [Say it'll blow over|Tell her it's not her fault|Say they'll make up|Tell her she did nothing wrong]
 
 @rule move.comfort.hurt
 on move.comfort
 when kind=you rel=girlfriend|lover
-- [Tell her she matters to you|Take her hand]
+- [Tell her she matters to you|Take her hand|Say she comes first|Promise it won't hurt her again]
 
 # ---------------- share ----------------
 @rule move.share
 on move.share
-- [Share your own take|Tell her what you think]
+- [Share your own take|Tell her what you think|Give your opinion|Tell her how you see it|Share a story of yours]
 
 @rule move.share.day
 on move.share
 when kind=day
-- [Tell her about your day|Share how your day went]
+- [Tell her about your day|Share how your day went|Tell her something funny from class|Complain about your classes]
 
 @rule move.share.us
 on move.share
 when kind=us
-- [Say you liked it too|Tell her how you felt]
+- [Say you liked it too|Tell her how you felt|Say it was special to you|Say you keep thinking about it]
 
 @rule move.share.like
 on move.share
 when kind=small likes=yes|no
-- [Say what you think of {like}|Share your own taste]
+- [Say what you think of {like}|Share your own taste|Say you're into {like} too|Admit you know little about {like}]
 
 # ---------------- tease ----------------
 @rule move.tease
 on move.tease
-- [Tease her a little|Poke fun at her]
+- [Tease her a little|Poke fun at her|Make a cheeky remark|Give her a hard time|Grin and needle her]
 
 @rule move.tease.sleepy
 on move.tease
 when mood=sleepy
-- [Tease her about dozing off|Call her a sleepyhead]
+- [Tease her about dozing off|Call her a sleepyhead|Ask if she slept in class|Offer her a pillow, grinning]
 
 @rule move.tease.hungry
 on move.tease
 when mood=hungry
-- [Tease her about her appetite|Joke about her stomach]
+- [Tease her about her appetite|Joke about her stomach|Ask if she heard that growl|Wave a snack in front of her]
 
 @rule move.tease.couple
 on move.tease
 when realverb=started_dating|crush|seen_together
-- [Tease her about the couple|Ask if she's jealous]
+- [Tease her about the couple|Ask if she's jealous|Ask if she's next|Joke that she wants one too]
 
 @rule move.tease.us
 on move.tease
 when kind=us romance=yes
-- [Tease her about blushing|Say she's cute when flustered]
+- [Tease her about blushing|Say she's cute when flustered|Point out her red face|Ask why she won't look at you]
 
 @rule move.tease.you
 on move.tease
 when kind=you
-- [Ask if she liked what she saw|Joke about it]
+- [Ask if she liked what she saw|Joke about it|Ask if she's jealous|Wink and say nothing]
 
 # ---------------- praise ----------------
 @rule move.praise
 on move.praise
-- [Compliment her|Say something nice]
+- [Compliment her|Say something nice|Tell her she's great|Praise her honestly|Say you admire her]
 
 @rule move.praise.day
 on move.praise
 when kind=day mood=cheerful
-- [Say her smile suits her|Say it's nice seeing her happy]
+- [Say her smile suits her|Say it's nice seeing her happy|Say her mood is contagious|Say she's glowing today]
 
 @rule move.praise.club
 on move.praise
 when hasclub=yes kind=school
-- [Praise her work at the {club}|Say the {club} is lucky to have her]
+- [Praise her work at the {club}|Say the {club} is lucky to have her|Say she's the heart of the {club}|Say the {club} needs her]
 
 # ---------------- invite ----------------
 @rule move.invite
 on move.invite
-- [Suggest doing something together|Ask if she wants to hang out]
+- [Suggest doing something together|Ask if she wants to hang out|Ask her out after class|Ask if she's free later|Suggest you meet up]
 
 @rule move.invite.food
 on move.invite
 when mood=hungry
-- [Offer to get food together|Offer to share your lunch]
+- [Offer to get food together|Offer to share your lunch|Suggest the cafeteria|Offer to buy her a snack]
 
 @rule move.invite.bored
 on move.invite
 when mood=bored
-- [Suggest something fun|Offer to break the boredom]
+- [Suggest something fun|Offer to break the boredom|Suggest skipping to the roof|Propose a little adventure]
 
 @rule move.invite.study
 on move.invite
 when exam=yes
-- [Offer to study together|Suggest a study session]
+- [Offer to study together|Suggest a study session|Offer to quiz each other|Suggest the library after class]
 
 @rule move.invite.event
 on move.invite
 when kind=school school=event
-- [Ask her to go with you|Suggest going together]
+- [Ask her to go with you|Suggest going together|Ask if she has company for it|Offer to be her partner for it]
 
 @rule move.invite.again
 on move.invite
 when kind=us
-- [Suggest doing it again|Ask for a next time]
+- [Suggest doing it again|Ask for a next time|Ask when you can repeat it|Suggest the same place next week]
 
 @rule move.invite.like
 on move.invite
 when likes=yes
-- [Invite her to do {like} together|Suggest {like} after school]
+- [Invite her to do {like} together|Suggest {like} after school|Ask her to show you {like}|Offer to try {like} with her]
 
 # ---------------- the rest ----------------
 @rule move.correct
 on move.correct
-- [Tell her what really happened|Set the story straight|Say that's not how it went]
+- [Tell her what really happened|Set the story straight|Say that's not how it went|Explain your side]
 
 @rule move.agree
 on move.agree
-- [Agree with her|Nod along]
+- [Agree with her|Nod along|Say she has a point|Say you thought the same]
 
 @rule move.defend
 on move.defend
-- [Stick up for {who}|Say {who} isn't like that|Defend {who}]
+- [Stick up for {who}|Say {who} isn't like that|Defend {who}|Ask her to go easy on {who}]
 
 @rule move.laugh
 on move.laugh
-- [Laugh it off|Make a joke of it]
+- [Laugh it off|Make a joke of it|Chuckle and shrug|Say it's kind of funny]
 
 @rule move.admit
 on move.admit
-- [Admit it|Own up to it]
+- [Admit it|Own up to it|Say it's true|Don't hide it]
 
 @rule move.admit.close
 on move.admit
 when rel=girlfriend|lover kind=you
-- [Tell her the truth|Apologize and come clean]
+- [Tell her the truth|Apologize and come clean|Say you're sorry and explain|Admit it and hold her hand]
 
 @rule move.hush
 on move.hush
-- [Ask her to keep it quiet|Ask her not to tell anyone]
+- [Ask her to keep it quiet|Ask her not to tell anyone|Ask her to keep it between you|Ask her to forget it]
 
 @rule move.deny
 on move.deny
-- [Deny it|Say she's mistaken|Play dumb]
+- [Deny it|Say she's mistaken|Play dumb|Say it wasn't you]
 
 @rule move.thank
 on move.thank
-- [Thank her|Say thanks]
+- [Thank her|Say thanks|Tell her you're grateful|Thank her with a smile]
 
 @rule move.change
 on move.change
-- [Change the subject|Talk about something else]
+- [Change the subject|Talk about something else|Move on to something else|Bring up something else]

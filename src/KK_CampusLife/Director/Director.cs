@@ -105,6 +105,7 @@ namespace Joojkk.CampusLife
                     Pairs.Weekly();
                 }
                 Intents.OnDay();
+                Standing.Daily();
                 Pairs.Daily();
                 Rumors.Daily();
                 if (S.Signatures.Count > 16) S.Signatures.RemoveRange(0, S.Signatures.Count - 16);

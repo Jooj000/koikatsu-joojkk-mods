@@ -106,6 +106,18 @@ namespace Joojkk.CampusLife
                 p.AddRomance(GirlInfo.Key(other), Random.Range(0, 3));
             }
             if (p.Stage == PairStage.Couple || p.Stage == PairStage.Strained) { p.Intimacy = PairState.Clamp(p.Intimacy + 1); p.Jealousy = Mathf.Max(0, p.Jealousy - 2); }
+
+            // Time together grows on its own, not only through you: a little closer each time, more
+            // with a popular girl; two girls into each other warm up (lewdness), a couple more so.
+            var bond = Social.Bond(h, other);
+            if (bond > -20) Arcs.AddBond(GirlInfo.Key(h), GirlInfo.Key(other), 1 + (Standing.Of(other) >= 65 || Standing.Of(h) >= 65 ? 1 : 0));
+            if (Cfg.StudentH.Value && GirlsOk(h) && GirlsOk(other))
+            {
+                var couple = p.Stage == PairStage.Couple;
+                if (couple || p.Stage == PairStage.Crush || bond >= 60)
+                    foreach (var g in new[] { h, other })
+                        if (g.lewdness < 100 && (couple || Random.value < 0.5f)) G.AddFavor(g, 0, couple ? 2 : 1);
+            }
         }
 
         // ================= stages =================

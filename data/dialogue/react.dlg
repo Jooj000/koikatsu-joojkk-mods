@@ -1,5 +1,7 @@
 # Her reaction to your answer. {move} what you did, {fit} good/neutral/bad (how well it landed), {step} 1-3.
 # A rule with "opens" carries the talk to a next step (up to 3) with those answers; without it, the topic ends here.
+# 2026-10-27: every rule has 4+ lines (each "- " line counts apart in the "said lately" memory, so one line with
+# alternatives repeats much sooner than four lines), and every move has its own neutral answer.
 
 # ================= generic by fit =================
 @rule react.good
@@ -7,20 +9,26 @@ on react
 when fit=good
 feel smile
 - [Ehehe... yeah.|You always know what to say.|I'm glad I talked to you.|Thanks. Really.]
-- [That's sweet of you.|Mm. I like talking with you.]
+- [That's sweet of you.|Mm. I like talking with you.|You get me, huh?]
+- [See, this is why I like talking to you.|Okay, you just made my day a little better.|Heh. Yeah. Exactly that.]
+- [I didn't expect that from you. In a good way.|You're easy to talk to, you know?|Hehe. Good answer.]
 
 @rule react.neutral
 on react
 when fit=neutral
-- [Hm. Maybe.|I guess so.|Yeah... I suppose.|Okay.]
-- [If you say so.|Hm, could be.]
+- [Hm. Maybe.|I guess so.|Mm, could be.|Okay.]
+- [If you say so.|Hm, fair enough.|Huh. I hadn't thought of it like that.]
+- [I don't know. Maybe you're right.|That's one way to see it.|Mm... I'll take your word for it.]
+- [Heh. Okay, sure.|Hm, I'll think about that.|Yeah, maybe.] [Anyway.|Where was I?|]
 
 @rule react.bad
 on react
 when fit=bad
 feel pout
 - [...Right.|That's not really what I wanted to hear.|Wow. Okay.|Hmph.]
-- [Seriously?|Was that supposed to help?]
+- [Seriously?|Was that supposed to help?|Um. No.]
+- [You really don't get it, huh.|...Never mind.|Forget I said anything.]
+- [That's not funny.|Not the time.|Ugh, you sound like my brother.] [Let's just drop it.|Whatever.|]
 
 # ================= ask =================
 @rule react.ask.good.go
@@ -28,23 +36,35 @@ on react
 when move=ask fit=good step<=2
 opens comfort,share,invite
 - [Well... since you asked.|Okay, so here's the thing.|You really want to know?] [It's been building up for a while.|I haven't told anyone this.|It's kind of a long story.]
+- [Honestly?|Promise you won't laugh?|Okay, but this stays between us.] [It's been on my mind all day.|I keep going back and forth about it.]
+- [You're actually curious? Huh.|Nobody ever asks me that.] [So... it's like this.|Okay, here goes.]
+- [Ah, where do I start...|Hmm. Let me think how to put it.] [It's more complicated than it looks.|It's silly, but it matters to me.]
 
 @rule react.ask.good
 on react
 when move=ask fit=good
 feel smile
 - [Thanks for asking. Most people don't.|It feels good to say it out loud.|You're a good listener, you know that?]
+- [I didn't think anyone noticed.|You're sweet for asking.|Talking about it helps, actually.]
+- [Okay, that's the whole story.|And that's it! Thanks for listening.|Phew. Glad I got that out.]
+- [You really pay attention, huh?|Not many people care enough to ask.|Mm. I'm glad it was you who asked.]
 
 @rule react.ask.neutral
 on react
 when move=ask fit=neutral
 - [There's not much more to it.|That's about it, really.|I don't know what else to say.]
+- [It's not that interesting.|Eh, it's nothing special.|You're not missing much.]
+- [I'd rather not get into it.|Maybe another time.|It's a long story. Some other day.]
+- [Hm. Hard to explain.|You had to be there.|It is what it is.]
 
 @rule react.ask.bad
 on react
 when move=ask fit=bad
 feel pout
 - [Why do you want to know so badly?|That's kind of personal.|Let's not.]
+- [You're nosy today.|Do I ask about your business?|That's none of your concern.]
+- [I don't really want to talk about it.|Can we not?|Drop it, please.]
+- [Who are you, the school paper?|Are you writing a report on me?|Interrogation over.]
 
 @rule react.ask.day.low
 on react
@@ -52,6 +72,9 @@ when move=ask kind=day low=yes fit=good step<=1
 opens comfort,invite,share
 feel sad
 - [It's just... {mything}.|I don't know. Everything at once.] [I keep messing up.|I feel like nobody notices.|I'm tired of pretending I'm fine.]
+- [It's stupid, really.|You'll think it's silly.] [{Mything} is getting to me.|I just feel off today.]
+- [I didn't sleep well, and then {mything}...|It's been one of those days.] [I just want it to be over.|Nothing's going right.]
+- [Can I be honest?|Promise not to laugh.] [I feel kind of alone lately.|I'm worried about {mything}.|I'm just tired.]
 
 @rule react.ask.day.good
 on react
@@ -59,12 +82,18 @@ when move=ask kind=day mood=cheerful fit=good|neutral step<=1
 opens tease,praise,invite
 feel laugh
 - [Nothing big! I just woke up happy.|Okay, okay. I got a letter from an old friend.|The teacher praised my homework in front of everyone!]
+- [I found money in my old coat!|My favorite song came on right when I woke up.|The bakery had my favorite bread!]
+- [Secret~ ...Okay, fine, I slept really well.|I finally finished something I've been working on!]
+- [It's just a good day, you know?|Everything's going my way today.|I got a message that made me smile.]
 
 @rule react.ask.gossip
 on react
 when move=ask kind=gossip fit=good|neutral step<=1
 opens agree,defend,tease
 - [From what I heard, it started {when}.|Apparently it's been going on for a while.|{Who} told someone, who told someone...] [Now everyone knows.|It just spiraled from there.]
+- [Well, I didn't see it myself.|I heard it in the hallway.] [But people are sure about it.|Half the class is talking.]
+- [Okay, so, {deed}.|Get this: {deed}.] [Can you believe it?|I almost didn't.]
+- [I'm not saying it's true...|Don't quote me on this.] [But it sounded pretty real.|It's all anyone talks about.]
 
 @rule react.ask.you.saw
 on react
@@ -72,12 +101,18 @@ when move=ask kind=you how=witness step<=1
 opens admit,hush,comfort
 feel worried
 - [I just... I didn't expect it from you.|I don't know how I feel about it.|I saw enough.] [What do you want me to say?|I keep thinking about it.]
+- [I was right there, you know.|It's not like I was looking for it.] [It was hard to unsee.|I didn't know what to do.]
+- [I won't pretend I didn't see it.|It surprised me, that's all.] [Is that who you are?|I'm still processing.]
+- [Honestly? It was a lot.|I wasn't expecting that.] [I just want to understand.|Why there, of all places?]
 
 @rule react.ask.you.heard
 on react
 when move=ask kind=you how=heard|rumor
 opens correct,deny,admit
 - [{Src} told me.|I heard it from {src}.|Everyone, honestly.] [Half the class knows by now.|I didn't go looking for it.]
+- [It's going around.|You can't keep things quiet here.] [I heard it twice today.|Even the first years know.]
+- [Someone in my class was talking about it.|I overheard it.] [I didn't want to believe it.|Is it true?]
+- [Does it matter who?|Let's just say a few people.] [What matters is if it's true.|So, is it?]
 
 @rule react.ask.us
 on react
@@ -85,6 +120,9 @@ when move=ask kind=us fit=good step<=1
 opens share,tease,invite
 feel shy
 - [How I felt? ...Happy. Really happy.|Honestly? My heart was racing the whole time.|I didn't want it to end.]
+- [I keep thinking about it.|I smile every time I remember.] [Is that weird?|Don't laugh.]
+- [It was nice. Really nice.|It felt... right, you know?] [I hope you felt it too.|We should do it again.]
+- [D-don't make me say it.|You know how I felt.] [...Good. Very good.|It was the best part of my week.]
 
 @rule react.ask.like
 on react
@@ -92,6 +130,9 @@ when move=ask likes=yes fit=good step<=1
 opens share,invite,praise
 feel laugh
 - [Oh, where do I even start?|Okay, you asked for it.] [It started when I was little.|It just makes me happy.|I could show you sometime.]
+- [You really want to hear about {like}?|Careful, I could go on for hours.] [It's the best thing ever.|It's how I relax.]
+- [Okay, so, {like}...|Ah, {like}! My favorite.] [It never gets old.|Nobody gets it like I do.]
+- [I don't know, I just love it.|It's hard to explain.] [You'd have to try it with me.|It makes everything better.]
 
 # ================= comfort =================
 @rule react.comfort.good
@@ -99,6 +140,9 @@ on react
 when move=comfort fit=good
 feel smile
 - [...Thanks. I needed that.|You're really kind, you know.|I feel a little better already.|Hearing that from you helps.]
+- [Okay. Yeah. You're right.|I'll be fine. Thanks to you.|Mm. I think I can breathe again.]
+- [You always know what to say.|I didn't think talking would help, but it did.|Sorry for being gloomy.]
+- [Can you stay a bit longer?|You're a good friend.|I'll remember this.]
 
 @rule react.comfort.good.go
 on react
@@ -106,16 +150,33 @@ when move=comfort fit=good step<=1 low=yes
 opens invite,share,tease
 feel smile
 - [Okay. Okay, I'll be fine.|You're right. I'm overthinking it.] [Can you stay a little longer?|Distract me with something?]
+- [Thanks. Really.|I feel lighter already.] [Tell me something fun?|Talk about something else with me?]
+- [Mm... I needed to hear that.|You're good at this.] [What about you? How's your day?|Stay with me a bit?]
+- [I think I'll survive.|It's not the end of the world, right?] [Got any plans later?|Cheer me up some more?]
+
+@rule react.comfort.neutral
+on react
+when move=comfort fit=neutral
+- [Mm. Thanks, I guess.|I know. I just need time.|It's fine, really.]
+- [I'll be okay.|It'll pass.|Don't worry about me.]
+- [You don't have to say that.|I know you mean well.|That's nice of you.]
+- [Hm. Maybe you're right.|We'll see how it goes.|I'll try not to think about it.]
 
 @rule react.comfort.bad
 on react
 when move=comfort fit=bad
 - [I'm fine. I don't need comforting.|Don't treat me like a kid.|I didn't say I was sad.]
+- [Why are you looking at me like that?|I'm not fragile.|Save the pep talk.]
+- [Okay, that's a bit much.|You're making it weird.|Just... don't.]
+- [I didn't ask for help.|I can handle it myself.|Leave it.]
 
 @rule react.comfort.cool
 on react
 when move=comfort voice=cool|tsundere|tough
 - [I-I don't need your pity.|...Hmph. I'll accept it. This once.|Whatever. ...Thanks.]
+- [Don't get the wrong idea. I'm fine.|...You're annoying. Thanks.]
+- [Tch. Fine. It helped. A little.|...Don't tell anyone I let you say that.]
+- [I wasn't sad. I was thinking.|...Okay. Maybe I needed that.]
 
 # ================= share =================
 @rule react.share.good
@@ -123,6 +184,9 @@ on react
 when move=share fit=good
 feel smile
 - [Really? Same here!|I didn't know that about you.|Ha, we're more alike than I thought.]
+- [That's actually really cool.|Huh, I like that.|You should talk about yourself more.]
+- [I didn't expect that from you!|We'd get along great, huh?|I knew there was something about you.]
+- [I'm glad you told me.|That makes me like you more.|Okay, that's interesting.]
 
 @rule react.share.good.go
 on react
@@ -130,17 +194,26 @@ when move=share fit=good step<=1
 opens ask,tease,invite
 feel smile
 - [Wait, really? Tell me more.|Huh, I never would have guessed.] [So what happened next?|You're full of surprises.]
+- [No way. You too?|Seriously?] [We have to talk about this more.|Okay, now I'm curious.]
+- [Ha! I like that.|Oh, that's so you.] [What else don't I know?|Go on, go on.]
+- [Huh, that changes things.|I didn't think you'd say that.] [Is that why you're like this?|Explain!]
 
 @rule react.share.neutral
 on react
 when move=share fit=neutral
 - [Huh. Okay.|Interesting, I guess.|Hm, I see.]
+- [Is that so.|Huh, didn't know that.|Okay, good to know.]
+- [Mm. I see where you're coming from.|Fair enough.|I'll take your word for it.]
+- [Hm. Not really my thing, but okay.|That's... a take.|Well, everyone's different.]
 
 @rule react.share.us
 on react
 when move=share kind=us fit=good|neutral
 feel shy
 - [You... really think so?|I'm glad it wasn't just me.|Stop, you're making me blush.]
+- [I-I felt the same.|You mean that?|Don't say it so casually.]
+- [Hehe... that makes me happy.|I'm glad you liked it too.|Then let's make more memories.]
+- [Me too. A lot.|I think about it too.|...Yeah. It was special.]
 
 # ================= tease =================
 @rule react.tease.good
@@ -148,7 +221,9 @@ on react
 when move=tease fit=good
 feel laugh
 - [Hey! {laugh}|You're terrible! {laugh}|Oh, shut up. {laugh}]
-- [Watch it, or I'll get you back.|Ha! You're asking for it.]
+- [Watch it, or I'll get you back.|Ha! You're asking for it.|Rude! ...Funny, but rude.]
+- [{laugh} Okay, you got me.|Fine, fine, I deserve that.|Hmph! I'll remember this.]
+- [You're lucky you're cute.|I'll let it slide. Once.|Oh, you think you're so funny.]
 
 @rule react.tease.good.go
 on react
@@ -156,24 +231,44 @@ when move=tease fit=good step<=2
 opens tease,praise,invite
 feel laugh
 - [Oh, you think you're funny?|Two can play that game.] [What about you, then?|I know things about you too.]
+- [Ha! Bold of you.|Careful now.] [My turn next.|I'll get you back, you know.]
+- [{laugh} Okay, okay.|You're in a mood today.] [What's gotten into you?|Keep going, I dare you.]
+- [Wow, picking on me now?|Is that how it is?] [Then I won't go easy either.|You're on.]
+
+@rule react.tease.neutral
+on react
+when move=tease fit=neutral
+- [Ha ha. Very funny.|Heh. Sure.|Okay, comedian.]
+- [Was that a joke?|I'll pretend I didn't hear that.|Mm-hm.]
+- [Hmph. Whatever.|You're weird.|Real mature.]
+- [I'll laugh later.|Close, but no.|Nice try.]
 
 @rule react.tease.bad
 on react
 when move=tease fit=bad
 feel pout
 - [That's not funny.|Read the room.|Seriously, not now.]
+- [I'm not laughing.|Really? Now?|Not cool.]
+- [Was that supposed to be a joke?|That kind of hurt, you know.|Wow. Thanks.]
+- [Keep that up and I'm leaving.|You're on thin ice.|Stop it.]
 
 @rule react.tease.bad.low
 on react
 when move=tease fit=bad low=yes
 feel sad
 - [...I'm not in the mood for jokes.|Is everything a joke to you?]
+- [Not today, okay?|Please don't.]
+- [I thought you'd be nicer about it.|That's not helping.]
+- [...Forget it.|I shouldn't have said anything.]
 
 @rule react.tease.shy
 on react
 when move=tease voice=shy|bookish|proper
 feel shy
 - [D-don't say things like that!|M-mou...|I don't know how to answer that!]
+- [W-why would you say that?!|That's embarrassing!|S-stop looking at me like that!]
+- [I-I'm not blushing!|You're so mean...|Ugh, my face is hot.]
+- [P-please, not here...|Someone might hear!|I'm going to hide now.]
 
 # ================= praise =================
 @rule react.praise.good
@@ -181,11 +276,25 @@ on react
 when move=praise fit=good
 feel shy
 - [Y-you think so?|Stop it, you're embarrassing me.|...Thank you.|Hehe. Say it again.]
+- [You really mean that?|Nobody's said that to me before.|That's... nice to hear.]
+- [Hehe, flattery works on me, you know.|Okay, now I'm smiling like an idiot.|You're making me blush.]
+- [I'll remember you said that.|That made my day.|...You're sweet.]
+
+@rule react.praise.neutral
+on react
+when move=praise fit=neutral
+- [Oh. Thanks, I guess.|Um, okay.|That's nice of you.]
+- [Where's that coming from?|You're in a good mood.|Huh. Thanks.]
+- [I'll take it.|Sure, sure.|If you say so.]
+- [Mm. Appreciated.|Okay...?|Heh. Thanks.]
 
 @rule react.praise.bad
 on react
 when move=praise fit=bad
 - [Flattery won't get you anywhere.|Where did that come from?|Okay...?]
+- [What do you want?|That sounded rehearsed.|Smooth. Too smooth.]
+- [I don't buy it.|You say that to everyone.|Nice try.]
+- [Weird thing to say right now.|Um. Thanks? I guess?|Are you okay?]
 
 # ================= invite =================
 @rule react.invite.good
@@ -193,6 +302,9 @@ on react
 when move=invite fit=good
 feel smile
 - [I'd like that!|It's a date. ...I mean, not a date. Unless...|Sure, let's do it.|You'd better not forget.]
+- [Yes! When?|Okay! I'm in.|I was hoping you'd ask.]
+- [Sounds fun. Count me in.|Sure. Just the two of us?|I'll clear my schedule.]
+- [Really? With me?|Hehe, okay. It's a promise.|Let's do it. No backing out.]
 
 @rule react.invite.good.go
 on react
@@ -200,16 +312,60 @@ when move=invite fit=good step<=2
 opens tease,praise,share
 feel smile
 - [Really? Then I'll hold you to it.|Okay! When?] [I'll be waiting.|Don't stand me up.]
+- [Yay! Okay!|I'd love to.] [I'll look forward to it.|What should I wear?]
+- [Sure. Pick me up after class?|Deal.] [You're paying, though.|Don't be late.]
+- [Is that an invitation? ...Okay.|Fine, you convinced me.] [It better be fun.|I'll make time.]
 
 @rule react.invite.neutral
 on react
 when move=invite fit=neutral
 - [Maybe. I'll think about it.|We'll see.|If I have time.]
+- [I'm not sure I'm free.|Can I let you know later?|Let me check first.]
+- [Hmm... depends on the day.|Maybe another time?|I'd have to see.]
+- [Not this week, maybe next?|Ask me again tomorrow.|Could be fun. No promises.]
+- [I'll keep it in mind.|Hm, tempting.|Let me sleep on it.]
+
+@rule react.invite.neutral.busy
+on react
+when move=invite fit=neutral hasclub=yes
+- [I have {club} stuff, but maybe after?|The {club} keeps me busy. Maybe on a free day?]
+- [If the {club} lets out early, sure.|Let me see what the {club} has planned.]
+- [I'd have to skip the {club}... Hmm.|Maybe once the {club} calms down.]
+- [Club first, fun later. Ask me again?|Maybe. The {club} has me running around.]
+
+@rule react.invite.neutral.mood
+on react
+when move=invite fit=neutral mood=sleepy|stressed|upset
+- [Not today. Maybe when I feel better.|I'm a bit out of it today. Another day?]
+- [I'm too tired right now. Ask again?|Maybe later... I'm not myself today.]
+- [Can I take a rain check?|Today's not great. Soon, okay?]
+- [I'd be bad company right now.|Give me a day or two.]
+
+@rule react.invite.good.mood
+on react
+when move=invite fit=good mood=hungry|bored|lonely
+feel smile
+- [Finally! Yes! Let's go!|You read my mind!]
+- [Oh thank goodness. Yes.|I was hoping someone would ask!]
+- [Yes, please. Anything's better than this.|You're a lifesaver.]
+- [I'm in. Right now?|Let's go before I change my mind.]
 
 @rule react.invite.bad
 on react
 when move=invite fit=bad
 - [Um... I don't think so.|That's a bit sudden.|Sorry, I'm busy.]
+- [We barely know each other.|Why would I do that?|I'll pass.]
+- [Not with you, sorry.|No thanks.|I already have plans.]
+- [That's... no.|Let's not.|Maybe ask someone else?]
+
+@rule react.invite.bad.mood
+on react
+when move=invite fit=bad mood=upset
+feel pout
+- [Really? Now?|Read the room.]
+- [I'm not in the mood.|Not today. Seriously.]
+- [Do I look like I want to go anywhere?|No.]
+- [Leave me alone for a bit.|Ask me some other day.]
 
 # ================= correct / deny / admit / hush =================
 @rule react.correct.good
@@ -217,94 +373,193 @@ on react
 when move=correct fit=good
 feel surprised
 - [Oh! That's not what I heard at all.|Wait, really? Then {src} got it wrong.|Huh. I'm glad you told me.] [I'll set people straight.|Sorry I believed it.]
+- [Seriously? Wow, people exaggerate.|That makes way more sense.] [I'll tell the others.|Good to know.]
+- [I knew something was off.|Huh, so that's what happened.] [Thanks for clearing it up.|I feel dumb now.]
+- [Then the rumor is wrong?|Oh, that's a relief.] [I won't repeat it.|I'll correct anyone who says it.]
+
+@rule react.correct.neutral
+on react
+when move=correct fit=neutral
+- [Maybe. Hard to say.|Well, you would say that.|Hm. I'll think about it.]
+- [It's your word against theirs.|I don't know who to believe.|Okay... maybe.]
+- [People say a lot of things.|I'll keep an open mind.|Could be.]
+- [If you say so.|Hm. We'll see.|I'm not sure.]
 
 @rule react.correct.bad
 on react
 when move=correct fit=bad
 - [That's not what everyone says.|I know what I saw.|Sure. Of course.]
+- [Nice try.|You'd say that either way.|Right, and I'm the principal.]
+- [Everyone's wrong except you, huh?|That's convenient.|Uh-huh.]
+- [I'm not stupid.|Save it.|I don't believe you.]
 
 @rule react.deny.good
 on react
 when move=deny fit=good
 - [Okay... I believe you.|Then people are making things up.|I knew it sounded weird.]
+- [Yeah, that didn't sound like you.|Phew. Okay.|Good. I didn't want it to be true.]
+- [Then I'll stop listening to rumors.|I trust you.|People are so dumb sometimes.]
+- [Alright. I'll take your word for it.|That's a relief.|Okay, forget I asked.]
+
+@rule react.deny.neutral
+on react
+when move=deny fit=neutral
+- [Hm. If you say so.|Okay... I guess.|Maybe.]
+- [I'll pretend I believe you.|Sure.|Alright.]
+- [I'm not convinced, but okay.|Whatever you say.|Hm.]
+- [We'll see.|That's what they all say.|Okay, okay.]
 
 @rule react.deny.bad
 on react
 when move=deny fit=bad
 feel pout
 - [Don't lie to me. I was there.|Really? You're going with that?|I saw you with my own eyes.]
+- [You're a terrible liar.|Wow. Okay. Lie to my face.|Do you think I'm blind?]
+- [That's worse than just admitting it.|Unbelievable.|Don't insult me.]
+- [I know what I saw.|Stop it.|You're digging yourself deeper.]
 
 @rule react.admit.good
 on react
 when move=admit fit=good
 - [At least you're honest.|Thank you for not lying to me.|...Okay. I appreciate you telling me.]
+- [I respect that.|Honesty's rare. Thanks.|Okay. That's fair.]
+- [Well, I can't be mad at honesty.|Better than lying, I guess.|Okay. I won't judge.]
+- [Thanks for being straight with me.|Hm. Okay. At least I know.|That took guts.]
+
+@rule react.admit.neutral
+on react
+when move=admit fit=neutral
+- [Okay. I see.|Hm. Alright.|So it's true.]
+- [I don't know what to say.|Well. Okay then.|Huh.]
+- [I'll need a moment.|That's a lot.|Mm.]
+- [Alright. Noted.|Okay... I guess I knew.|I see.]
 
 @rule react.admit.good.go
 on react
 when move=admit fit=good step<=1 kind=you
 opens comfort,hush,ask
 - [I just... need a moment.|I don't know what I expected.] [Does she mean something to you?|Is it going to happen again?]
+- [Okay. Honest is good.|Thanks for not hiding it.] [But I have questions.|Can I ask you something?]
+- [I'm not angry. Just surprised.|Huh. So it was you.] [What were you thinking?|Was it serious?]
+- [Okay. I needed to hear it from you.|Alright.] [Where does that leave us?|What now?]
 
 @rule react.admit.close
 on react
 when move=admit kind=you rel=girlfriend|lover
 feel sad
 - [...I see.|Thank you for telling me the truth, at least.] [I need some time.|Don't expect me to smile about it.]
+- [I thought we were... never mind.|That hurts, you know.] [Give me some space.|I'm not okay right now.]
+- [I'm glad you didn't lie.|At least you said it.] [But it still hurts.|I need to think.]
+- [...Okay.|I see.] [Just don't do it again.|I'll forgive you. Eventually.]
 
 @rule react.admit.open
 on react
 when move=admit profile=open
 feel smile
 - [Ha! I like that you don't hide it.|Honest. I respect that.]
+- [Heh, at least you own it.|No shame, huh? Nice.]
+- [Bold. I like bold.|Ha, I knew it.]
+- [You're shameless. I kind of like it.|Okay, that's honest at least.]
 
 @rule react.hush.good
 on react
 when move=hush fit=good
 - [Don't worry. My lips are sealed.|I won't say a word. Promise.|It'll be our secret.]
+- [Who would I even tell?|Of course. I'm not like that.|Okay. Nobody hears it from me.]
+- [I can keep a secret.|Fine, it never happened.|Secret's safe.]
+- [You owe me one, though.|Okay, but only for you.|Zip. Done.]
+
+@rule react.hush.neutral
+on react
+when move=hush fit=neutral
+- [I'll try.|No promises, but okay.|I won't go around saying it.]
+- [I mean, people already know.|Sure, I guess.|Okay. Mostly.]
+- [I won't bring it up.|If nobody asks.|Hm. Fine.]
+- [I'll keep it quiet. For now.|Okay, okay.|Alright.]
 
 @rule react.hush.bad
 on react
 when move=hush fit=bad
 feel pout
 - [I can't promise that.|Maybe you should have thought of that before.|Everyone's going to find out anyway.]
+- [Why should I protect you?|Not my problem.|Too late for that.]
+- [You can't just ask me that.|That's not fair to me.|No.]
+- [I don't keep secrets like that.|Ask someone else.|Should've been more careful.]
 
 # ================= gossip =================
 @rule react.agree
 on react
 when move=agree fit=good|neutral
 - [Right? I knew you'd get it.|Exactly what I was thinking.|See, you understand.]
+- [Thank you! Finally someone agrees.|I know, right?|Yes! That's what I said!]
+- [Glad I'm not the only one.|Right?! So weird.|You see it too.]
+- [Mm-hm. Exactly.|That's what everyone says.|Yeah, it's a whole thing.]
 
 @rule react.agree.bad
 on react
 when move=agree fit=bad
 feel worried
 - [Hey, {who}'s my friend, you know.|You don't have to be that harsh.]
+- [Whoa, that's a bit mean.|I didn't say it like that.]
+- [I mean... {who} isn't that bad.|Let's not pile on.]
+- [Careful. {who} might hear.|That's not what I meant.]
 
 @rule react.defend.good
 on react
 when move=defend fit=good
 feel smile
 - [You're right. I shouldn't talk like that about {who}.|That's kind of you.|Yeah... {who} doesn't deserve that.]
+- [That's nice of you to say.|You're a good person, you know.|Okay, I'll stop.]
+- [Mm. {who} is nice, actually.|I guess I got carried away.|Fair point.]
+- [I like that you stood up for {who}.|You're right. It's just gossip.|Yeah. Let's leave {who} alone.]
+
+@rule react.defend.neutral
+on react
+when move=defend fit=neutral
+- [Maybe. I don't know {who} that well.|I guess.|Okay, fair.]
+- [I'm just telling you what I heard.|I didn't say I believed it.|Hm.]
+- [Could be. People talk.|Sure. Maybe.|Okay, okay.]
+- [Whatever you say.|I'm not taking sides.|Hm, maybe.]
 
 @rule react.defend.bad
 on react
 when move=defend fit=bad
 - [Why are you taking {who}'s side?|You don't know the whole story.]
+- [Oh, so you like {who} now?|Whose friend are you, anyway?]
+- [You weren't there.|Don't defend {who} to me.]
+- [Wow. Okay.|Fine, believe what you want.]
 
 @rule react.laugh.good
 on react
 when move=laugh fit=good
 feel laugh
 - [{laugh} Okay, it is kind of funny.|Pfft. You're right.|Ha! I can't stay serious with you.]
+- [Ahaha, stop!|You're ridiculous.|Okay, that got me.]
+- [I needed that laugh.|You always lighten the mood.|{laugh} You're the worst.]
+- [Ha! Fine, fine.|Okay, I'm laughing.|Pfft. Unbelievable.]
+
+@rule react.laugh.neutral
+on react
+when move=laugh fit=neutral
+- [Heh. I guess.|Sure, laugh it up.|Hm. Kind of funny.]
+- [It's not THAT funny.|Ha. Ha.|Okay, a little.]
+- [You think so?|Eh. Maybe.|Heh.]
+- [Glad one of us is laughing.|Mm.|Okay then.]
 
 @rule react.laugh.bad
 on react
 when move=laugh fit=bad
 feel pout
 - [It's not funny.|Are you laughing at me?|Glad you think it's a joke.]
+- [Stop laughing.|This isn't a joke to me.|Seriously?]
+- [I'm being serious here.|Wow. Nice.|Forget it.]
+- [Laugh all you want.|You're mean.|Not cool.]
 
 @rule react.thank
 on react
 when move=thank
 feel smile
 - [Hehe, you're welcome.|Anytime.|No need to thank me.]
+- [Don't mention it.|It was nothing, really.|I'm glad I could help.]
+- [You'd do the same for me.|That's what friends are for.|Sure thing.]
+- [Aw, you're making me blush.|Hehe. I'll take that.|Mm. Anytime you need.]

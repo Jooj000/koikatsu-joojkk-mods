@@ -1,34 +1,47 @@
 # Small talk (only when nothing else is left). {subject} the id (a like id, pet, place, lunch, exams, weather, weekend,
 # school), {thing} its words, {like}/{likes} for likes (likes=yes when she really likes it), {pet} her pet theme.
+# 2026-10-27: more lines; small.plain was the "nothing to say" answer and repeated too much.
 
 @rule me.small
 on me.small
 - [So... {thing}, huh?|What do you think about {thing}?|Been thinking about {thing} lately?]
+- [Hey, random question: {thing}?|Can I ask you about {thing}?|I was wondering about {thing}.]
+- [Got any thoughts on {thing}?|What's your take on {thing}?]
+- [Funny, I was just thinking about {thing}.|Do you ever think about {thing}?]
 
 @rule me.small.weather
 on me.small
 when subject=weather
 - [Nice weather today, huh?|It's [warm|chilly|cloudy] today.|Do you think it'll rain later?]
+- [Did you see the sky this morning?|Perfect day to skip class, right?|The wind's crazy today.]
 
 @rule me.small.like
 on me.small
 when likes=yes|no
 - [Are you into {like}?|Do you like {like}?|What do you think about {like}?]
+- [Ever tried {like}?|I heard you might like {like}.|How do you feel about {like}?]
 
 @rule me.small.place
 on me.small
 when subject=place
 - [I like {thing}.|This place is nice, huh?|You come here often?]
+- [It's calm here.|Do you hang out here a lot?|Good spot, right?]
 
 @rule me.small.stranger
 on me.small
 when rel=stranger
 - [Hi. I don't think we've really talked before.|Hey. Nice day, huh?]
+- [Hey, you're in my year, right?|Hi! Mind if I say hello?|Hey there. How's it going?]
 
 @rule small.plain
 on small
 opens share,ask,tease
 - [Hm, {thing}? I guess so.|{Thing}... sure.] [It's alright.|I don't think about it much.]
+- [{Thing}? Funny you ask.|Oh, {thing}.] [I have mixed feelings.|It depends on the day.|Why, do you like it?]
+- [Honestly? No idea.|Hmm, {thing}...] [Never really thought about it.|Ask me something harder.|I'd have to think about that.]
+- [Oh, that's random.|Where'd that come from?] [But sure, {thing}.|I don't mind talking about it.]
+- [{Thing} is fine, I suppose.|Not much to say about {thing}.] [What about you?|You seem more into it than me.]
+- [Ahh, {thing}...|Mm, {thing}.] [It reminds me of something.|I had a dream about that, weirdly.|It's okay.]
 
 @rule small.like.yes
 on small
@@ -36,12 +49,18 @@ when likes=yes
 opens share,invite,ask
 feel smile
 - [{Like}? I love {like}!|Oh, {like}! Don't get me started.|You like {like} too?] [I could talk about it all day.|It's kind of my thing.|Finally someone asks!]
+- [Wait, are you into {like}?|Oh my gosh, {like}!] [We have to talk about this.|You just made my day.]
+- [{Like} is the best, honestly.|Ah, you found my weak spot.] [I spend way too much time on it.|Don't tell anyone how obsessed I am.]
+- [Ooh, now you're talking.|You know the way to my heart.] [{Like}, every day if I could.|Let me tell you about my favorite part.]
 
 @rule small.like.no
 on small
 when likes=no
 opens ask,share,tease
 - [{Like}? Not really my thing.|Eh, {like}...] [But I don't mind it.|Do you like it?|I've never really gotten into it.]
+- [I don't get the appeal of {like}.|{Like}? Hmm.] [Convince me.|Maybe I just haven't tried it right.]
+- [Not a big {like} person, sorry.|I'm kind of neutral on {like}.] [What do you like about it?|It's fine, I guess.]
+- [Ha, {like}? Me? No.|I tried {like} once.] [It didn't stick.|Wasn't for me.]
 
 @rule small.pet
 on small
@@ -49,54 +68,81 @@ when subject=pet
 opens share,ask,invite
 feel smile
 - [{Pet}? Oh, you have no idea.|You want to talk about {pet}? Really?] [I'm kind of obsessed.|Everyone says I talk about {pet} too much.|Okay, so...]
+- [Ahh, {pet}!|Don't get me started on {pet}.] [I could go all day.|It's my favorite thing.]
+- [How did you know I like {pet}?|You've been paying attention, huh?] [I'm flattered.|Okay, I'll tell you everything.]
+- [{Pet} is my happy place.|Okay, {pet}. Yes.] [You'd love it too.|Sit down, this'll take a while.]
 
 @rule small.weather
 on small
 when subject=weather
 opens share,invite,tease
 - [It's nice out, isn't it?|I like this kind of weather.|It's a bit [chilly|warm|gloomy] today.] [Perfect for a walk.|I almost fell asleep by the window.|I hope it stays like this.]
+- [The sky's so pretty today.|Ugh, my hair hates this humidity.] [Makes me want to go outside.|I'd rather be at home.]
+- [I heard it'll rain later.|They said it'd be sunny all week.] [I forgot my umbrella, of course.|Let's hope they're right.]
+- [Weather talk? Really?|Ha, the classic.] [Fine. It's nice.|It's okay, I guess.|You're bad at small talk, huh?]
 
 @rule small.lunch
 on small
 when subject=lunch
 opens invite,share,tease
 - [Lunch? I brought a bento.|I'm thinking bread from the store today.] [Want some?|The cafeteria line is too long.|I'm already hungry again.]
+- [I skipped breakfast, so lunch is everything.|The cafeteria has curry today!] [I can't wait.|Want to go together?]
+- [I made my own lunch today.|My mom packed way too much.] [It's not great, but it's mine.|Help me eat it?]
+- [I'm on a diet. Kind of.|Lunch is the best part of school.] [Don't tempt me.|Obviously.]
 
 @rule small.weekend
 on small
 when subject=weekend
 opens invite,ask,share
 - [The weekend? I'll probably just stay home.|I've got nothing planned yet.|Maybe I'll go shopping.] [Why, did you have something in mind?|What about you?]
+- [I want to sleep all weekend.|I have a ton of homework, sadly.] [Unless something fun comes up.|Got any better ideas?]
+- [I might go to the station mall.|My friends wanted to go to karaoke.] [Maybe.|I haven't decided.]
+- [Weekends go by way too fast.|I'm already counting the days.] [Plans? Not yet.|Want to fix that?]
 
 @rule small.place
 on small
 when subject=place
 opens share,ask,invite
 - [I like coming to {thing}.|{Thing} is one of my favorite spots.|It's quiet here.] [It's nice to get away from class.|I come here when I need to think.]
+- [I found this spot in my first year.|Not many people come here.] [Don't tell anyone.|It's kind of my secret place.]
+- [{Thing}? It's alright.|It's a bit crowded today.] [I usually prefer the roof.|It's better in the morning.]
+- [This place has a nice feeling.|I always end up here.] [Weird, right?|I don't know why.]
 
 @rule small.exams
 on small
 when subject=exams
 opens comfort,invite,share
 - [The exams? Please, let's talk about anything else.|I'm trying not to think about the exams.] [Okay, maybe a little.|How are you doing with studying?]
+- [I've been studying until midnight.|I haven't even started.] [I'm going to fail math.|Don't judge me.]
+- [Exams are a scam.|At least they end eventually.] [Right?|Then it's vacation.]
+- [I think I'll be okay.|I'm scared of the history one.] [Probably.|Wanna quiz me?]
 
 @rule small.school
 on small
 when subject=school
 opens share,ask,tease
 - [School's school.|Same as always.|Classes are classes.] [The teachers are piling on homework.|I can't wait for summer.]
+- [Did you see what happened in class today?|Our teacher was in a mood today.] [It was so awkward.|I almost laughed.]
+- [I kind of like school, honestly.|School's fine when friends are around.] [Don't tell anyone.|Better than being home alone.]
+- [I fell asleep in class again.|I forgot my homework. Again.] [Don't laugh.|It's a talent.]
 
 @rule small.stranger
 on small
 when rel=stranger
 opens ask,share,praise
 - [Oh. Hi.|Um, hello?|Do I know you?] [Yeah, it's... nice, I guess.|Sure.]
+- [Hey. You're one of the new boys, right?|Oh, hi there.] [I've seen you around.|Can I help you?]
+- [Um... hi?|Oh! Hello.] [Did you need something?|Do we have a class together?]
+- [Hello.|Hi.] [Nice to meet you, I guess.|I don't really know you yet.]
 
 @rule small.cool
 on small
 when voice=cool|serious|proper
 opens ask,share
 - [{Thing}. Hm.|If you insist.] [It's fine.|I have no strong opinion.]
+- [I suppose we can talk about {thing}.|{Thing}? Unusual choice.] [Go on.|What about it?]
+- [Hm. {Thing}.|That's a topic.] [I don't think about it much.|It has its merits.]
+- [You want my opinion on {thing}?|Fine.] [It's adequate.|I could take it or leave it.]
 
 @rule small.shy
 on small
@@ -104,3 +150,6 @@ when voice=shy|bookish
 opens ask,share,praise
 feel shy
 - [Ah, {thing}...|U-um, {thing}?] [I... I like it, I think.|Sorry, I'm not good at this.]
+- [O-oh, you want to talk to me?|Um... {thing}...] [I don't know what to say.|I-I'll try.]
+- [Sorry, I get nervous.|Um, {thing} is... nice?] [Is that a weird answer?|Please don't laugh.]
+- [Ah... yes, {thing}.|I-I think about it sometimes.] [Do you?|That's all, sorry.]

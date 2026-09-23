@@ -221,7 +221,7 @@ namespace Joojkk.CampusLife
                 var cands = new List<KeyValuePair<DlgRule, int>>();
                 foreach (var r in pool)
                     for (var i = 0; i < r.Say.Count; i++)
-                        if (pass == 1 || !Said(r.Id + "#" + i, girl)) cands.Add(new KeyValuePair<DlgRule, int>(r, i));
+                        cands.Add(new KeyValuePair<DlgRule, int>(r, i));
                 while (cands.Count > 0)
                 {
                     var total = cands.Sum(c => Weight(c.Key, top));
@@ -229,15 +229,35 @@ namespace Joojkk.CampusLife
                     var pick = cands[cands.Count - 1];
                     foreach (var c in cands) { roll -= Weight(c.Key, top); if (roll <= 0f) { pick = c; break; } }
                     cands.Remove(pick);
+                    // "Said lately" is the text, not the line: a line with [a|b] alternatives gives each of its
+                    // versions before it repeats (2026-10-27; before, one use of a line blocked all its versions).
                     var text = Expand(pick.Key.Say[pick.Value], ctx, 0);
                     if (text == null) continue;
-                    MarkSaid(pick.Key.Id + "#" + pick.Value, girl);
+                    if (pass == 0)
+                    {
+                        for (var k = 0; k < 8 && Said(SaidId(pick.Key, text), girl); k++) text = Expand(pick.Key.Say[pick.Value], ctx, 0) ?? text;
+                        if (Said(SaidId(pick.Key, text), girl)) continue;
+                    }
+                    // Never the very line she said last in this situation, even when the bank has to repeat (2026-10-27).
+                    string last;
+                    var lastKey = girl + "|" + on;
+                    if (LastText.TryGetValue(lastKey, out last) && last == text)
+                    {
+                        for (var k = 0; k < 4 && text == last; k++) text = Expand(pick.Key.Say[pick.Value], ctx, 0) ?? last;
+                        if (text == last && cands.Count > 0) continue;
+                    }
+                    LastText[lastKey] = text;
+                    MarkSaid(SaidId(pick.Key, text), girl);
                     used = pick.Key;
                     return text;
                 }
             }
             return null;
         }
+
+        private static readonly Dictionary<string, string> LastText = new Dictionary<string, string>();
+
+        private static string SaidId(DlgRule r, string text) { return r.Id + "#" + Voice.Hash(text).ToString("x", CultureInfo.InvariantCulture); }
 
         private static float Weight(DlgRule r, int top) { return r.Score >= top ? 3f : 1f; }
 

@@ -180,6 +180,7 @@ namespace Joojkk.CampusLife
         public ArcState Arc;
         public List<string> FinishedArcs = new List<string>();
         public Dictionary<string, int> Bonds = new Dictionary<string, int>(); // affinity to other girls (-100..100)
+        public int Rep = 50;            // her own reputation at school (Standing), 0-100
 
         public Dictionary<string, object> ToDict()
         {
@@ -194,7 +195,7 @@ namespace Joojkk.CampusLife
                 {"tr", Trust}, {"kn", Known.Cast<object>().ToList()}, {"um", Unmentioned.Cast<object>().ToList()},
                 {"tds", TalkDays.Cast<object>().ToList()}, {"clr", Cleared.Cast<object>().ToList()}, {"jd", JealousDay}, {"vd", VentDay}, {"cpd", ComplimentDay},
                 {"fa", FinishedArcs.Cast<object>().ToList()}, {"b", bonds}, {"dud", DuoDay}, {"duh", DuoHandled.Cast<object>().ToList()},
-                {"eps", Episodes.Cast<object>().ToList()}, {"epd", EpisodeDay}
+                {"eps", Episodes.Cast<object>().ToList()}, {"epd", EpisodeDay}, {"rp", Rep}
             };
             WriteWorld(d);
             return d;
@@ -217,7 +218,7 @@ namespace Joojkk.CampusLife
                 Arc = ArcState.FromDict(d.GetObj("arc")),
                 Trust = d.GetInt("tr", -1), JealousDay = d.GetInt("jd", -1), VentDay = d.GetInt("vd", -1), ComplimentDay = d.GetInt("cpd", -1),
                 Known = Ints(d.GetList("kn")), Unmentioned = Ints(d.GetList("um")), TalkDays = Ints(d.GetList("tds")), Cleared = Ints(d.GetList("clr")),
-                DuoDay = d.GetInt("dud", -1), DuoHandled = Ints(d.GetList("duh")), EpisodeDay = d.GetInt("epd", -1)
+                DuoDay = d.GetInt("dud", -1), DuoHandled = Ints(d.GetList("duh")), EpisodeDay = d.GetInt("epd", -1), Rep = d.GetInt("rp", 50)
             };
             var eps = d.GetList("eps");
             if (eps != null) g.Episodes = eps.Where(o => o != null).Select(o => o.ToString()).ToList();
