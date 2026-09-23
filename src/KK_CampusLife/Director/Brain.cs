@@ -41,6 +41,9 @@ namespace Joojkk.CampusLife
         }
 
         private static bool _inside;
+        /// <summary>Actions the game could not build for a girl (its tables lack her class or club), skipped by <see cref="Decide"/>.</summary>
+        public static int PickFailures;
+        private static readonly HashSet<string> _firstFailed = new HashSet<string>();
 
         private static void FirstPostfix(ActionControl __instance, SaveData.Heroine _heroine, ref ActionControl.ResultInfo __result)
         {
@@ -52,7 +55,16 @@ namespace Joojkk.CampusLife
                 if (Stage.Steer(__instance, _heroine, ref __result)) return;
                 Decide(__instance, _heroine, null, ref __result, true);
             }
-            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Brain first: " + e.Message); }
+            catch (Exception e)
+            {
+                // Probably the game's own tables (dicPersonalityInfo[personality] for a card whose personality it does not
+                // list): her first action stays the game's. Once a girl, with the place it came from (the stack's top lines).
+                if (_firstFailed.Add(GirlInfo.Key(_heroine)))
+                {
+                    var st = (e.StackTrace ?? "").Split('\n');
+                    CampusLifePlugin.Log.LogDebug("Brain first: " + e.Message + " | " + GirlInfo.FirstName(_heroine) + " personality " + _heroine.personality + " | " + string.Join(" <- ", st.Take(3).Select(x => x.Trim()).ToArray()));
+                }
+            }
             finally { _inside = false; }
         }
 
@@ -74,7 +86,16 @@ namespace Joojkk.CampusLife
                 // The first action of a period places her at its spot while the map loads (SetAllCharaActive): it must have
                 // one, and no target.
                 if (first && !TargetsPoint(pick)) continue;
-                var res = ac.SetAction(h, pick, -1);
+                // The game's tables lack the class or club of some story girls for some actions (KeyNotFound inside SetAction):
+                // that action is not possible for her, the next one is tried (the director stays in charge of her first
+                ActionControl.ResultInfo res = null;
+                try { res = ac.SetAction(h, pick, -1); }
+                catch (Exception e)
+                {
+                    PickFailures++;
+                    if (_firstFailed.Add(GirlInfo.Key(h) + "#" + pick)) CampusLifePlugin.Log.LogDebug("Brain: action " + pick + " not possible for " + GirlInfo.FirstName(h) + " (" + e.GetType().Name + "); trying the next");
+                    continue;
+                }
                 if (res == null || res.point == null && (first || TargetsPoint(pick))) continue;
                 var taken = SpotTaken(res.point, h);
                 if (taken != null)

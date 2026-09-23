@@ -31,7 +31,7 @@ namespace Joojkk.CampusLife
         private sealed class Floor
         {
             public string Key;
-            public RenderTexture Tex;
+            public Texture Tex;
             public Rect World;     // x = min X, y = min Z, in meters
             public float Y;
             public float Used;
@@ -225,8 +225,8 @@ namespace Joojkk.CampusLife
             var scale = Mathf.Min(TexelsPerMeter, MaxTexture / Mathf.Max(w, h));
             var tw = Mathf.Clamp(Mathf.CeilToInt(w * scale), 16, MaxTexture);
             var th = Mathf.Clamp(Mathf.CeilToInt(h * scale), 16, MaxTexture);
-            var tex = new RenderTexture(tw, th, 16) { name = "cl_radar_floor_" + key, wrapMode = TextureWrapMode.Clamp };
-            tex.Create();
+            var rt = new RenderTexture(tw, th, 16) { name = "cl_radar_floor_" + key, wrapMode = TextureWrapMode.Clamp };
+            rt.Create();
             var t = _cam.transform;
             t.position = new Vector3(_bounds.center.x, y + CamHeight, _bounds.center.y);
             _cam.orthographicSize = h * 0.5f;
@@ -234,11 +234,56 @@ namespace Joojkk.CampusLife
             // The slice between just under the feet and just over the head.
             _cam.nearClipPlane = CamHeight - Above;
             _cam.farClipPlane = CamHeight + Below;
-            _cam.targetTexture = tex;
-            try { _cam.Render(); }
+            _cam.targetTexture = rt;
+            Texture tex = rt;
+            try
+            {
+                _cam.Render();
+                var outlined = Outlined(rt);
+                if (outlined != null) tex = outlined;
+            }
             finally { _cam.targetTexture = null; }
-            CampusLifePlugin.Log.LogDebug("Radar map: floor " + key + " " + tw + "x" + th + " over " + w.ToString("0") + "x" + h.ToString("0") + " m");
+            if (tex != rt) { rt.Release(); Object.Destroy(rt); }
+            CampusLifePlugin.Log.LogDebug("Radar map: floor " + key + " " + tw + "x" + th + " over " + w.ToString("0") + "x" + h.ToString("0") + " m" + (tex != rt ? " (walls outlined)" : ""));
             return new Floor { Key = key, Tex = tex, World = _bounds, Y = y };
+        }
+
+        /// <summary>
+        /// quase não aparecem"): where the picture changes sharply (brightness or void against floor) a dark two-pixel
+        /// line is drawn, which turns rooms and walls into a plan. Null when the picture cannot be read back.
+        /// </summary>
+        private static Texture2D Outlined(RenderTexture rt)
+        {
+            var prev = RenderTexture.active;
+            try
+            {
+                var w = rt.width; var h = rt.height;
+                var tex = new Texture2D(w, h, TextureFormat.ARGB32, false) { name = rt.name, wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+                RenderTexture.active = rt;
+                tex.ReadPixels(new Rect(0, 0, w, h), 0, 0, false);
+                var px = tex.GetPixels32();
+                var edge = new bool[px.Length];
+                Func<Color32, float> v = c => (c.r * 0.3f + c.g * 0.59f + c.b * 0.11f) / 255f * (c.a / 255f) + (c.a / 255f) * 0.6f;
+                for (var y = 0; y < h - 1; y++)
+                    for (var x = 0; x < w - 1; x++)
+                    {
+                        var i = y * w + x;
+                        var d = Mathf.Abs(v(px[i]) - v(px[i + 1])) + Mathf.Abs(v(px[i]) - v(px[i + w]));
+                        if (d > 0.22f) edge[i] = true;
+                    }
+                var dark = new Color32(14, 22, 30, 255);
+                for (var y = 0; y < h; y++)
+                    for (var x = 0; x < w; x++)
+                    {
+                        var i = y * w + x;
+                        if (edge[i] || x > 0 && edge[i - 1] || y > 0 && edge[i - w]) px[i] = dark;
+                    }
+                tex.SetPixels32(px);
+                tex.Apply(false, false);
+                return tex;
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Radar outline: " + e.Message); return null; }
+            finally { RenderTexture.active = prev; }
         }
 
         /// <summary>Lays the floor picture under the icons: its corners go where the radar camera puts those world points.</summary>
@@ -268,7 +313,8 @@ namespace Joojkk.CampusLife
                 _shown = null;
                 if (_img != null) _img.texture = null;
             }
-            f.Tex.Release();
+            var rt = f.Tex as RenderTexture;
+            if (rt != null) rt.Release();
             Object.Destroy(f.Tex);
         }
 

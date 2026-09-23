@@ -473,10 +473,7 @@ namespace Joojkk.CampusLife
                         }
                         if (r.Source == "note")
                         {
-                            b.Me(Lines.Pick("I got your note. What's up?", "So you're the one who left the note."));
-                            b.Her_(Lines.NoteHelp(tone));
-                            b.Me(Lines.Pick("Sure. Let's take a look.", "Of course. Show me."));
-                            b.Her_(Lines.NoteThanks(tone));
+                            NoteScene(b, h, tone, r);
                             break;
                         }
                         b.Me(Lines.Pick("Hey. I'm here, like you asked.", "Sorry, did I keep you waiting?"));
@@ -498,8 +495,55 @@ namespace Joojkk.CampusLife
             {
                 if (r.Source == "arc") Arcs.OnTalkSceneDone(r, h, choice);
                 else Complete(r, h);
+                if (r.Source == "note") NoteAfter(h, choice);
                 if (after != null) after();
             });
+        }
+
+        /// <summary>
+        /// The rooftop talk from the note in your locker: the
+        /// place, what she needs (her voice) and three ways to answer, each with its own reaction.
+        /// </summary>
+        private static void NoteScene(SceneBuilder b, SaveData.Heroine h, Tone tone, Request r)
+        {
+            var name = GirlInfo.FirstName(h);
+            b.Narr(Lines.Pick("The rooftop is empty at this hour. Wind, a far-off club practice, and " + name + " waiting by the fence.",
+                              name + " is waiting by the fence, up on the rooftop. The sky is going orange behind her.",
+                              "Nobody else is up here. " + name + " turns around the moment the door creaks."));
+            b.Me(Lines.Pick("I got your note. What's up?", "So you're the one who left the note."));
+            b.Her_(Lines.NoteHelp(tone));
+            b.Choice("Offer to go through it with her.", "help", "Tell her she'll do fine without any practice.", "cheer", "Tease her about the mystery signature.", "tease");
+            b.Branch("help");
+            b.Me(Lines.Pick("Sure. Let's take a look.", "Of course. Show me."));
+            b.Her_(Lines.NoteThanks(tone));
+            b.Narr("You stay until the sun is nearly gone. It's a better afternoon than most.");
+            b.End();
+            b.Branch("cheer");
+            b.Me(Lines.Pick("You don't need practice. You'll be fine.", "Honestly? You've got this. Don't overthink it."));
+            b.Her_(Lines.T(tone, "...You really think so? ...Okay. I'll try to believe it.", "Hehe, you're too nice! But... thank you, I feel lighter.", "...Flattery. Fine. It worked a little.", "Oh? Faith in me already? Careful, I'll hold you to it~"));
+            b.End();
+            b.Branch("tease");
+            b.Me(Lines.Pick("Just \"" + name.Substring(0, 1).ToUpper() + ".\"? Very mysterious.", "A single letter. Were you going for spy novel?"));
+            b.Her_(Lines.T(tone, "T-that was... I was embarrassed! Please don't make it worse...", "Ahaha, busted! I panicked, okay?!", "...I didn't want my name on it. Drop it.", "Mysterious is my brand. Now, help me, spy."));
+            b.End();
+        }
+
+        private static void NoteAfter(SaveData.Heroine h, string choice)
+        {
+            try
+            {
+                if (h == null) return;
+                var tone = GirlInfo.ToneOf(h);
+                if (choice == "help") { G.AddFavor(h, 3, 0); Social.AddTrust(h, 4); Social.Add(Social.Kinds.Helped, h); }
+                else if (choice == "cheer") { Social.AddTrust(h, 2); G.AddFavor(h, 1, 0); }
+                else if (choice == "tease")
+                {
+                    var fine = tone == Tone.Teasing || tone == Tone.Energetic;
+                    Social.AddTrust(h, fine ? 1 : -3);
+                    if (fine) G.AddFavor(h, 1, 0);
+                }
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Note after: " + e.Message); }
         }
 
         /// <summary>She asked to meet you right here, now (a note, a letter, "meet me at..."), not a story step.</summary>

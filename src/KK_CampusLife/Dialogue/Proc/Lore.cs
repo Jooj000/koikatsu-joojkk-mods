@@ -267,8 +267,8 @@ namespace Joojkk.CampusLife
                 if (S.LoreSpreadStamp == stamp) return;
                 S.LoreSpreadStamp = stamp;
                 WatchDating();
+                // (a dictionary by key broke on the save's duplicate cards, two Elma and two Rose: the retelling never ran)
                 var girls = Social.Students.ToList();
-                var byKey = girls.ToDictionary(GirlInfo.Key, g => g);
                 var added = 0;
                 foreach (var g in girls.OrderBy(_ => Random.value))
                 {

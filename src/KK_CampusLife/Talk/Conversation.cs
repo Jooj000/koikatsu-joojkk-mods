@@ -87,7 +87,24 @@ namespace Joojkk.CampusLife
                 if (Time.realtimeSinceStartup >= _reopenAt) { _reopenAt = 0f; Reopen(); }
             }
             else if (_reopenAt > 0f && Time.realtimeSinceStartup - _reopenAt > 60f) _reopenAt = 0f;
+            OpenOnEntry(ts);
             TickCatBar();
+        }
+
+        /// <summary>
+        /// What she brings up by herself (a note, something she saw) plays as soon as the game's greeting is over, not
+        /// was built, and with the list closed it never was).
+        /// </summary>
+        private static void OpenOnEntry(TalkScene ts)
+        {
+            try
+            {
+                if (!Unified || _root == null || Scenes.Running || _goodbye || GiftMenu.IsOpen || ADV.Program.isADVProcessing || !CanvasOn(ts)) return;
+                var s = Sess;
+                if (s == null || s.Did.Contains("opening")) return;
+                if (OpeningUnified(s)) Hide();
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Conversation entry opening: " + e.Message); }
         }
 
         private static float _reopenAt;

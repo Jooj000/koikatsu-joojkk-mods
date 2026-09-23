@@ -101,6 +101,36 @@ namespace Joojkk.CampusLife
             }
         }
 
+        /// <summary>Why <see cref="IsFreeRoaming"/> is false right now.</summary>
+        public static string RoamWhy()
+        {
+            var why = new List<string>();
+            try
+            {
+                var act = Act;
+                if (act == null || !act.isActiveAndEnabled) return "no action scene";
+                if (!InRoamingPeriod) why.Add("not a roaming period (mask " + CurrentMask + ", school day " + IsSchoolDay + ")");
+                if (GameAPI.InsideHScene) why.Add("inside an H scene");
+                if (act.isEventNow) why.Add("isEventNow");
+                var cy = Cycle;
+                if (cy != null && cy.isActionEnd) why.Add("Cycle.isActionEnd");
+                if (act.Map == null) why.Add("no map"); else if (act.Map.isMapLoading) why.Add("map loading");
+                if (Singleton<Scene>.IsInstance())
+                {
+                    var sc = Singleton<Scene>.Instance;
+                    if (sc.IsNowLoading) why.Add("scene loading");
+                    if (sc.IsNowLoadingFade) why.Add("loading fade");
+                    if (sc.IsFadeNow) why.Add("fading");
+                    if (!string.IsNullOrEmpty(sc.AddSceneName)) why.Add("add scene " + sc.AddSceneName);
+                }
+                if (TalkSceneOpen) why.Add("talk scene open");
+                var adv = act.AdvScene;
+                if (adv != null && adv.isActiveAndEnabled) why.Add("ADV scene active");
+            }
+            catch (Exception e) { why.Add("error " + e.Message); }
+            return why.Count == 0 ? "free" : string.Join("; ", why.ToArray());
+        }
+
         private static float _talkCheckTime;
         private static TalkScene _talk;
         private static int _talkHooked; // 0 = not checked yet, 1 = Hooks.TalkSceneAwake is installed, -1 = it is not
