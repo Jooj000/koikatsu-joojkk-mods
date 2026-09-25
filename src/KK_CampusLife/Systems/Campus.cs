@@ -216,8 +216,11 @@ namespace Joojkk.CampusLife
             };
             if (h != null && Cfg.DevotionEnabled.Value)
             {
-                applied.Devotion += Devotion.Overflow(h, applied.Favor);
+                // Rewards' own devotion counts in full; favor past 100 is talk devotion, capped per day.
+                var over = Devotion.Overflow(h, applied.Favor);
                 Devotion.Add(h, applied.Devotion);
+                Devotion.AddTalk(h, over);
+                applied.Devotion += over;
             }
             else applied.Devotion = 0;
             if (h != null) G.AddFavor(h, applied.Favor, applied.Lewd);

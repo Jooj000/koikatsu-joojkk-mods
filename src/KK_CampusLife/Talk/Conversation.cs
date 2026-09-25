@@ -69,6 +69,7 @@ namespace Joojkk.CampusLife
         {
             TalkScene ts;
             try { ts = G.TalkScene; } catch { ts = null; }
+            SleepTease.Watch(ts);
             if (ts == null) { if (_scene != null) Close(); return; }
             if (ts != _scene || (!_decided && ts.targetHeroine != null)) Attach(ts);
             if (_root == null) return;
@@ -89,6 +90,7 @@ namespace Joojkk.CampusLife
             else if (_reopenAt > 0f && Time.realtimeSinceStartup - _reopenAt > 60f) _reopenAt = 0f;
             OpenOnEntry(ts);
             TickCatBar();
+            TickReact(ts);
         }
 
         /// <summary>
@@ -341,6 +343,7 @@ namespace Joojkk.CampusLife
             //.
             var meet = Board.MeetHere(h);
             if (meet != null && Board.PlayInTalk(meet, h, () => { s.Turns++; AfterScene(); })) return true;
+            if (ShareOpening(s, h)) return true;
             // Conversation by scene: the director may open with a scene (Scene Talk, Quiet, Triangle, Callback, an aside).
             if (SceneTalk.Open(h, d => s.Interest = Mathf.Clamp(s.Interest + d, 0, MaxInterest), () => { s.Turns++; AfterScene(); })) return true;
             var gs = S.Girl(GirlInfo.Key(h));
@@ -382,7 +385,7 @@ namespace Joojkk.CampusLife
             else if (jealous != null)
             {
                 gs.JealousDay = S.Day;
-                b.Her_(ConvoLines.Jealous(tone, GirlInfo.FirstName(jealous)));
+                b.Her_(Interested(h) ? ConvoLines.JealousLove(tone, GirlInfo.FirstName(jealous)) : ConvoLines.Jealous(tone, GirlInfo.FirstName(jealous)));
                 s.Interest = Math.Max(0, s.Interest - 1);
                 s.Did.Add("jealous");
             }
@@ -1058,7 +1061,7 @@ namespace Joojkk.CampusLife
             Play(b, ok ? 2 : -1, ok ? "♥ " + GirlInfo.FirstName(h) + " is blushing." : null, ok ? (Action)(() =>
             {
                 Social.AddTrust(h, 2);
-                if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.Add(h, 2);
+                if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 2);
                 Social.Add(Social.Kinds.Flirted, h, witnesses);
             }) : null, ok ? 4 : 0);
         }
@@ -1147,7 +1150,7 @@ namespace Joojkk.CampusLife
             Play(b, ok ? 1 : -2, ok ? "♥ " + GirlInfo.FirstName(h) + " is breathing faster." : "She didn't like that. (-trust)", () =>
             {
                 if (!ok) { Social.AddTrust(h, -2); return; }
-                if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.Add(h, 1);
+                if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
             }, ok ? 10 : 0);
         }
 
@@ -1161,7 +1164,7 @@ namespace Joojkk.CampusLife
             b.Her_(RomanceLines.Memories(GirlInfo.ToneOf(h), h.hCount));
             Play(b, 1, "♥ " + GirlInfo.FirstName(h) + " remembers it too.", () =>
             {
-                if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.Add(h, 1);
+                if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
             }, 8);
         }
 
@@ -1460,7 +1463,7 @@ namespace Joojkk.CampusLife
             gs.Attention = Mathf.Clamp(gs.Attention + 4 + s.Interest, 0, 100);
             if (s.Interest >= 5)
             {
-                if (Cfg.DevotionEnabled.Value) Devotion.Add(h, 3);
+                if (Cfg.DevotionEnabled.Value) Devotion.AddTalk(h, 3);
                 Social.Add(Social.Kinds.GoodTalk, h);
             }
             S.Stat("chats");

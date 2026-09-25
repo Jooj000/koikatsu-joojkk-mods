@@ -232,11 +232,33 @@ namespace Joojkk.CampusLife
                 if (intent == Intents.Player) w[8] = 10f + h.favor / 10f;
                 if (h.lewdness >= 80 && (h.isGirlfriend || h.relation >= 2) && (mood == Mood.Flirty || h.lewdness >= 95)) w[5] = 2f;
             }
-            // H on her own: the director allows it rarely, for a girl with a high lewdness.
-            if (!max && Cfg.StudentH.Value && h.lewdness >= 60 && mask != PeriodMask.Lunch) w[4] = 0.5f + (h.lewdness - 60) / 20f + (mood == Mood.Flirty ? 1.5f : 0f);
+            // and rising chance, some girls already in the first week).
+            var app = Appetite(h, mood);
+            if (!max && Cfg.StudentH.Value && app >= 30f && mask != PeriodMask.Lunch) w[4] = Mathf.Min(4f, 0.12f + (app - 30f) / 30f);
 
             if (not != null) foreach (var n in not) w.Remove(n);
             return w.Where(kv => kv.Value > 0f).ToList();
+        }
+
+        /// <summary>
+        /// How much she wants it (0..~150): her lewdness, a lewd nature (bitch, choroi), a flirty mood, and the days of
+        /// school behind her, so the girls who are that way find the moment in the first week and the others later.
+        /// </summary>
+        public static float Appetite(SaveData.Heroine h, Mood mood)
+        {
+            var q = GirlInfo.Quirks(h);
+            var a = (float)h.lewdness;
+            if (q.bitch) a += 35f;
+            if (q.choroi) a += 20f;
+            if (mood == Mood.Flirty) a += 20f;
+            if (mood == Mood.Upset || mood == Mood.Sleepy) a -= 15f;
+            return a + Mathf.Min(30f, S.Day * 1.5f);
+        }
+
+        public static float Appetite(SaveData.Heroine h)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
+            return Appetite(h, gs.MoodDay == S.Day ? gs.Mood : Mood.None);
         }
     }
 }

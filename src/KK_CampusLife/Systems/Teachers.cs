@@ -310,7 +310,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>Into the game's H with her, where she stands (the game's own H start with a character).</summary>
-        private static void StartH(SaveData.Heroine h)
+        internal static void StartH(SaveData.Heroine h)
         {
             CampusLifePlugin.Instance.StartCoroutine(StartHCo(h).PreventFromCrashing());
         }

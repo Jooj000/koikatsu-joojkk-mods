@@ -120,11 +120,11 @@ namespace Joojkk.CampusLife
                 if (Cfg.StudentH.Value && p.Stage == PairStage.Couple && p.Intimacy >= 35 && (mask == PeriodMask.After || mask == PeriodMask.Club))
                     add(Privacy + ":" + k, 0.4f + p.Intimacy / 45f);
             }
-            else if (Cfg.StudentH.Value && h.lewdness >= 70 && Pairs.GirlsOk(h) && (mask == PeriodMask.After || mask == PeriodMask.Club || mask == PeriodMask.Lunch))
+            else if (Cfg.StudentH.Value && Brain.Appetite(h) >= 45f && Pairs.GirlsOk(h) && (mask == PeriodMask.After || mask == PeriodMask.Club || mask == PeriodMask.Lunch))
             {
                 // Lewd enough, no girlfriend: a willing girl she gets along with will do.
                 var fling = LewdMatch(h);
-                if (fling != null) add(Privacy + ":" + GirlInfo.Key(fling), 0.3f + (h.lewdness - 70) / 40f);
+                if (fling != null) add(Privacy + ":" + GirlInfo.Key(fling), Mathf.Min(1.5f, 0.08f + (Brain.Appetite(h) - 45f) / 60f));
             }
 
             // Someone she avoids (a recent breakup, a rival in a scandal).
@@ -236,7 +236,46 @@ namespace Joojkk.CampusLife
                 if (changed) Note(_heroine, Label(gs.Intent) + (observe ? " (observed)" : "") + " -> action " + __result.actionNo + (__result.point != null ? " map " + __result.point.MapNo : __result.heroine != null ? " with " + GirlInfo.FirstName(__result.heroine) : ""));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Intents: " + e.Message); }
-            finally { _inside = false; }
+            finally
+            {
+                _inside = false;
+                // the same place, walking into each other): a girl already in a chat or right next to one gets another
+                // action instead.
+                try
+                {
+                    if (Campus.On && __result != null && __result.actionNo == 7 && __result.heroine != null && !ChatFree(_heroine, __result.heroine))
+                    {
+                        _inside = true;
+                        var alt = __instance.NextAction(_heroine, 7, 8);
+                        if (alt != null) { Note(_heroine, "chat with " + GirlInfo.FirstName(__result.heroine) + " taken -> action " + alt.actionNo); __result = alt; }
+                    }
+                }
+                catch (Exception e) { CampusLifePlugin.Log.LogDebug("Intents chat guard: " + e.Message); }
+                finally { _inside = false; }
+            }
+        }
+
+        /// <summary>She can start a chat with the other girl: nobody else is talking to either of them, and no other chat
+        /// is going on where the other girl stands.</summary>
+        internal static bool ChatFree(SaveData.Heroine h, SaveData.Heroine other)
+        {
+            var act = G.Act;
+            if (act == null || act.npcList == null) return true;
+            NPC on = null;
+            foreach (var n in act.npcList)
+            {
+                if (n == null || n.heroine == null || n.heroine == h) continue;
+                if (n.heroine == other) { on = n; continue; }
+                var r = n.AI != null ? n.AI.result : null;
+                if (r != null && r.actionNo == 7 && (r.heroine == other || r.heroine == h)) return false;
+            }
+            if (on == null) return true;
+            var or = on.AI != null ? on.AI.result : null;
+            if (or != null && or.actionNo == 7 && or.heroine != null && or.heroine != h) return false;
+            var pos = on.transform.position;
+            foreach (var n in act.npcList)
+                if (n != null && n != on && n.heroine != null && n.heroine != h && n.mapNo == on.mapNo && n.isTalking && (n.transform.position - pos).sqrMagnitude < 4f) return false;
+            return true;
         }
 
         /// <summary>True when the result was (or, observing, would be) changed.</summary>
@@ -406,7 +445,7 @@ namespace Joojkk.CampusLife
         /// without dating (user, 2026-10-26: "podem fazer H entre si com lascívia alta mesmo sem namorarem").</summary>
         public static SaveData.Heroine LewdMatch(SaveData.Heroine h)
         {
-            return Social.Students.Where(o => o != h && GirlInfo.IsSpawned(o) && Pairs.PartnerOf(o) == null && o.lewdness >= 60 && Pairs.GirlsOk(o) && Social.Bond(h, o) >= 10)
+            return Social.Students.Where(o => o != h && GirlInfo.IsSpawned(o) && Pairs.PartnerOf(o) == null && Brain.Appetite(o) >= 35f && Pairs.GirlsOk(o) && Social.Bond(h, o) >= 10)
                 .OrderByDescending(o => o.lewdness + Social.Bond(h, o) + Random.Range(0, 30)).FirstOrDefault();
         }
 

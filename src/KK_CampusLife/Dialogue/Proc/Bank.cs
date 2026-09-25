@@ -23,7 +23,7 @@ namespace Joojkk.CampusLife
             var has = ctx.TryGetValue(Key, out v) && !string.IsNullOrEmpty(v);
             switch (Op)
             {
-                case "=": return has && Values.Any(x => string.Equals(x, v, StringComparison.OrdinalIgnoreCase));
+                case "=": return has && Values.Any(x => x == "*" || string.Equals(x, v, StringComparison.OrdinalIgnoreCase));   // key=* : known at all
                 case "!=": return !has || !Values.Any(x => string.Equals(x, v, StringComparison.OrdinalIgnoreCase));
                 default:
                     float n;
@@ -54,7 +54,7 @@ namespace Joojkk.CampusLife
     /// fills the slots and picks among alternatives.
     ///
     /// Format: "@rule id" then "on situation", "when k=v k!=v k>=n", "opens move,move", "fit move=good|neutral|bad",
-    /// "feel smile", and lines starting "- ". "@list name" then "- item" lines. Inside lines: [a|b|c] picks one,
+    /// "feel smile", and lines starting "- " ("key=*" holds when the key is known at all). "@list name" then "- item" lines. Inside lines: [a|b|c] picks one,
     /// {slot} fills from the context ({Slot} capitalized), {#list} picks from a list; a line whose slot is missing is
     /// skipped (a line never cites what she does not know).
     /// </summary>
@@ -304,7 +304,13 @@ namespace Joojkk.CampusLife
                     if (close < 0) { sb.Append(c); i++; continue; }
                     var slot = t.Substring(i + 1, close - i - 1);
                     string val;
-                    if (slot.StartsWith("#", StringComparison.Ordinal))
+                    if (slot.StartsWith("@", StringComparison.Ordinal))
+                    {
+                        // A piece: a fragment chosen by the context, from the rules "on @name"
+                        // (pieces.dlg), so one line varies by relation, role, mood, place, period, club, sign, body...
+                        val = Piece(slot.Substring(1), ctx, depth + 1);
+                    }
+                    else if (slot.StartsWith("#", StringComparison.Ordinal))
                     {
                         List<string> l;
                         if (!_lists.TryGetValue(slot.Substring(1), out l) || l.Count == 0) return null;
@@ -326,6 +332,29 @@ namespace Joojkk.CampusLife
                 i++;
             }
             return depth == 0 ? Tidy(sb.ToString()) : sb.ToString();
+        }
+
+        /// <summary>
+        /// A fragment for "{@name}": among the rules "on @name" that fit, the most specific (one step of slack), weighted
+        /// toward the top; any of its lines. Empty when none fits or every line misses a slot, so a piece never drops
+        /// the whole line.
+        /// </summary>
+        public static string Piece(string name, Dictionary<string, string> ctx, int depth)
+        {
+            var all = Matching("@" + name, ctx).Where(r => r.Say.Count > 0).ToList();
+            if (all.Count == 0) return "";
+            var top = all.Max(r => r.Score);
+            var pool = all.Where(r => r.Score >= top - 1).ToList();
+            for (var tries = 0; tries < 6 && pool.Count > 0; tries++)
+            {
+                var total = pool.Sum(r => Weight(r, top) * r.Say.Count);
+                var roll = Random.value * total;
+                var pick = pool[pool.Count - 1];
+                foreach (var r in pool) { roll -= Weight(r, top) * r.Say.Count; if (roll <= 0f) { pick = r; break; } }
+                var text = Expand(pick.Say[Random.Range(0, pick.Say.Count)], ctx, depth);
+                if (text != null) return text;
+            }
+            return "";
         }
 
         private static int Match(string t, int open, char a, char b)

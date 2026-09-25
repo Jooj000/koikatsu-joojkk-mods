@@ -137,7 +137,7 @@ namespace Joojkk.CampusLife
                 {
                     if (girl != null) Learn(girl, same, false);
                     if (witnesses != null)
-                        foreach (var w in witnesses.Where(w => w != null && w != girl).Distinct().ToList()) Learn(w, same, true);
+                        foreach (var w in witnesses.Where(w => w != null && w != girl).Distinct().ToList()) Learn(w, same, true, true);
                     return same;
                 }
             }
@@ -147,7 +147,7 @@ namespace Joojkk.CampusLife
             var seen = 0;
             if (girl != null) { Learn(girl, inc, false); seen++; }
             if (witnesses != null)
-                foreach (var w in witnesses.Where(w => w != null && w != girl).Distinct().ToList()) { Learn(w, inc, true); seen++; }
+                foreach (var w in witnesses.Where(w => w != null && w != girl).Distinct().ToList()) { Learn(w, inc, true, true); seen++; }
             var rep = RepDelta(kind);
             if (rep != 0 && seen > 0) S.Reputation = Mathf.Clamp(S.Reputation + rep, 0, 100);
             return inc;
@@ -203,18 +203,28 @@ namespace Joojkk.CampusLife
                 case Kinds.SeenGirlsRoom: case Kinds.SeenLockers: return -4;
                 case Kinds.Flirted:
                     if (self) return 1;
-                    if (listener.isGirlfriend) return ConvoLines.MindsCheating(listener) ? -6 : 0;
+                    // What she decided about you and that girl (Share): no hurt once she accepted it.
+                    if (listener.isGirlfriend) return about == null || Share.Accepts(listener, about) ? 0 : Share.Stance(listener, about) == Share.Refuses ? -6 : ConvoLines.MindsCheating(listener) ? -6 : 0;
                     return listener.favor >= 70 ? -1 : 0;
                 default: return 0;
             }
         }
 
-        private static void Learn(SaveData.Heroine h, Incident inc, bool mention)
+        private static void Learn(SaveData.Heroine h, Incident inc, bool mention, bool saw = false)
         {
             var gs = S.Girl(GirlInfo.Key(h));
             if (gs.Known.Contains(inc.Id)) return;
             gs.Known.Add(inc.Id);
             if (gs.Known.Count > 60) gs.Known.RemoveRange(0, gs.Known.Count - 60);
+            // Your girlfriend and another girl: she decides once (Share) and brings it up through that, never as gossip
+            // again.
+            var flirtOther = inc.Kind == Kinds.Flirted && h.isGirlfriend ? Get(inc.Girl) : null;
+            if (flirtOther != null && flirtOther != h)
+            {
+                Share.Learned(h, flirtOther, saw);
+                AddTrust(h, Effect(h, inc));
+                return;
+            }
             // She already heard your side of this story: hearing it again changes nothing and she won't bring it up.
             if (AlreadyExplained(gs, inc)) { if (!gs.Cleared.Contains(inc.Id)) gs.Cleared.Add(inc.Id); return; }
             var e = Effect(h, inc);
@@ -371,6 +381,8 @@ namespace Joojkk.CampusLife
         /// </summary>
         public static SaveData.Heroine JealousOf(SaveData.Heroine h)
         {
+            // An acquaintance is never jealous of you; a friend is jealous of the friendship.
+            if (h == null || h.relation < 1 && !h.isGirlfriend) return null;
             var gs = S.Girl(GirlInfo.Key(h));
             if (S.Day - gs.JealousDay < 5) return null;
             if (TalkDaysRecent(h, 4) > 0 || gs.TalkDays.Count == 0) return null; // only girls you used to talk to

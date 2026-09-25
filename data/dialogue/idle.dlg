@@ -1,0 +1,256 @@
+# Silences in the conversation: after the game's own 30 s clip she says one of these.
+# {idle} 1, 2 or 3 (the third is the last; a girl who barely knows you leaves after it). The same watchers keys as
+# touch.dlg ({watchers}, {watcher}, {wrel}, {group}), plus everything a topic knows (rel, tone, mood, place, period...).
+
+# ================= base: first silence x tone =================
+@rule idle.1.gentle
+on idle
+when idle=1 tone=gentle
+feel shy
+- [Um...|So...|Ah, um...] [Did you want to say something?|It's okay, we don't have to talk.|I like quiet too.]
+- [Hehe... this is a little awkward.|You're quiet today.] [Are you thinking about something?|I don't mind, really.]
+
+@rule idle.1.energetic
+on idle
+when idle=1 tone=energetic
+- [Helloooo? Earth to {you}!|Hey, you zoning out?|Uh, hello?] [Say something!|I'm getting bored here!]
+- [Did you fall asleep standing up?|Wow, riveting conversation.] [Come on, talk to me!|Okay, I'll just stare back then.]
+
+@rule idle.1.cool
+on idle
+when idle=1 tone=cool
+- [...|...Well?|Hm.] [Take your time.|If you have nothing to say, that's fine.]
+- [Are you going to say something?|...] [I'm not in a hurry.|Silence suits me.]
+
+@rule idle.1.teasing
+on idle
+when idle=1 tone=teasing
+feel smile
+- [Cat got your tongue?|Lost in my eyes?|Hmm? Nervous?] [Cute.|Take a picture, it lasts longer~]
+- [Are you just going to stare?|Ohh, the silent type.] [I don't mind being admired~|Say something, dummy.]
+
+# ================= second silence =================
+@rule idle.2
+on idle
+when idle=2
+feel worried
+- [Is something wrong?|Are you okay?|You keep spacing out.] [You can tell me.|Did I say something weird?]
+- [Hey... you're really quiet.|Hmm...] [Should I go?|Am I boring you?]
+
+@rule idle.2.energetic
+on idle
+when idle=2 tone=energetic
+feel pout
+- [Okay, this is getting weird.|Hellooo, still alive?|Ugh, you're impossible.] [Talk or I'm poking you.|I'm counting to three!]
+- [Did I do something?|Wow, okay.] [Fine, I'll talk then. ...I have nothing.|At least blink!]
+
+@rule idle.2.cool
+on idle
+when idle=2 tone=cool
+- [...You're wasting both our time.|Hm. Still nothing?|...] [I'll give you one more minute.|Say what you came to say.]
+- [I'm going to read my book if you don't mind.|...Right.] [Let me know when you're back.|Interesting conversation.]
+
+@rule idle.2.teasing
+on idle
+when idle=2 tone=teasing
+feel pout
+- [Hello~? Should I be offended?|Okay, now you're just being rude.|Wow, ignored.] [I'm too cute to be ignored.|Bad boy.]
+- [Thinking about me, aren't you?|You're blushing. Don't deny it.] [I knew it.|So predictable.]
+
+# ================= third silence =================
+@rule idle.3
+on idle
+when idle=3
+feel serious
+- [Well... if you don't have anything to say...|Okay.|Alright then.] [I'll be around.|Talk to me when you're ready.]
+- [I guess I'll just wait.|Hmm.] [You're a mystery, you know that?|Whenever you're ready.]
+
+@rule idle.3.leave
+on idle
+when idle=3 rel=stranger|acquaintance dating=no
+feel pout
+- [Um... I'm going to go now.|Okay, this is weird. Bye.|I have things to do.] [See you around, I guess.|Bye.]
+- [Sorry, I have to go.|Right... well, bye.] [Maybe talk next time?|That was... something.]
+
+@rule idle.3.gf
+on idle
+when idle=3 rel=girlfriend|lover
+feel love
+- [Mm... it's nice just being near you.|We don't have to talk.|Hehe.] [I'm happy like this.|Just stay.]
+- [You're cute when you're spacing out.|...] [Let me lean on you a bit.|This is enough.]
+
+# ================= relation =================
+@rule idle.1.gf
+on idle
+when idle=1 rel=girlfriend
+feel love
+- [Hey... what are you thinking about?|Mm? You okay, love?|Hehe, staring at me again?] [Tell me.|I like that you just want to be with me.]
+- [You don't have to say anything.|Mm...] [Just being here is enough.|Come closer, then.]
+
+@rule idle.1.stranger
+on idle
+when idle=1 rel=stranger
+feel worried
+- [Um... can I help you?|...Hello?|Did you need something?] [We don't really know each other...|This is a little strange.]
+- [Uh... are you lost?|Sorry, do I know you?] [You're kind of staring.|I'm going to go if you don't need anything.]
+
+@rule idle.1.friend
+on idle
+when idle=1 rel=friend
+- [So... what's up?|You seem distracted.|Hey, you in there?] [Did something happen?|You can talk to me, you know.]
+- [This is comfortable, honestly.|Hehe.] [Not every friend can just sit in silence.|Want to just hang out?]
+
+@rule idle.2.gf
+on idle
+when idle=2 rel=girlfriend
+feel pout
+- [Hey, I'm right here, you know.|You're ignoring your girlfriend?|Hmph.] [Pay attention to me.|I'm going to get jealous of whatever you're thinking about.]
+- [Don't make me pout.|Mm... you're so quiet.] [Kiss me or say something.|Should I be worried?]
+
+# ================= mood =================
+@rule idle.mood.sleepy
+on idle
+when mood=sleepy
+feel shy
+- [Yawn... sorry, I'm so sleepy.|Mmh... if you don't talk I'll fall asleep.|Zzz... huh? Sorry.] [Say something exciting.|The silence is making me drowsy.]
+- [I could nap right here.|*yawn*] [Wake me when you've thought of something.|Ahh, so sleepy.]
+
+@rule idle.mood.hungry
+on idle
+when mood=hungry
+- [*stomach growls* ...You heard nothing.|I'm so hungry...|Ugh, my stomach.] [Wanna grab food?|If you're not talking, let's eat.]
+- [Is it lunch yet?|...Sorry, that was my stomach.] [I can't think when I'm hungry.|Snacks. I need snacks.]
+
+@rule idle.mood.bored
+on idle
+when mood=bored
+feel pout
+- [Ugh, I'm so bored.|This day is endless.|Hmm...] [Do something interesting.|Entertain me.]
+- [Today's so slow.|...] [Let's do something.|Say something fun!]
+
+@rule idle.mood.lonely
+on idle
+when mood=lonely
+feel shy
+- [...Thanks for staying.|It's nice, just having someone here.|Mm.] [Even if we don't talk.|I didn't want to be alone today.]
+- [You don't have to go yet, right?|...] [Stay a little.|I feel better when you're around.]
+
+@rule idle.mood.upset
+on idle
+when mood=upset
+feel sad
+- [...Sorry, I'm not good company today.|...|Hm.] [It's not you.|Thanks for not pushing.]
+- [I don't really feel like talking.|...] [But you can stay.|Just... be here.]
+
+@rule idle.mood.flirty
+on idle
+when mood=flirty
+feel love
+- [Are you going to keep staring, or do something about it?|Hmm~|You're so quiet...] [I can think of better things to do than talk.|Come here.]
+- [The silence is kind of... charged.|Mm...] [Your move.|I'm waiting~]
+
+@rule idle.mood.stressed
+on idle
+when mood=stressed
+feel worried
+- [Sorry, my head's full of homework.|I keep thinking about tests...|Ugh...] [Distract me, please.|Tell me something nice.]
+- [I should be studying...|...] [But this is nicer.|Five minutes, then I go.]
+
+# ================= place and period =================
+@rule idle.place.rooftop
+on idle
+when placeid=rooftop
+- [The wind's nice up here.|You can see the whole town.|...] [I come here to think.|It's peaceful, isn't it?]
+- [I love the sky from here.|Mm.] [We could just watch the clouds.|No need to talk up here.]
+
+@rule idle.place.library
+on idle
+when placeid=library
+- [...It's okay. Library rules.|Shh... hehe.|...] [Silence is kind of the point here.|I like quiet places.]
+- [Should we read something?|*flips a page*] [Pick a book, I'll pick one.|We can whisper.]
+
+@rule idle.place.pool
+on idle
+when placeid=pool
+- [The water looks nice...|It smells like chlorine here.|...] [Want to jump in?|I'm not swimming in my uniform.]
+- [Splash!|Hehe...] [Gotcha. Wake up!|Too quiet. Had to.]
+
+@rule idle.place.infirmary
+on idle
+when placeid=infirmary
+feel shy
+- [It's so quiet in here...|The nurse isn't here.|...] [Just us and the beds.|Kind of makes you sleepy.]
+- [Are you sick, or just hiding?|Mm.] [I won't tell.|Me too, honestly.]
+
+@rule idle.period.lunch
+on idle
+when period=lunch
+- [Lunch is almost over...|Did you eat yet?|...] [We should eat something.|The cafeteria's going to run out.]
+- [I'm getting hungry just standing here.|Hm.] [Lunch together?|Your loss if the bread's gone.]
+
+@rule idle.period.after
+on idle
+when period=after
+- [It's getting late...|Everyone's going home.|The sun's going down.] [Walk me home?|We should head out soon.]
+- [School's so quiet after hours.|...] [I like it like this.|Kind of romantic, huh?]
+
+@rule idle.club
+on idle
+when hasclub=yes period=club
+- [I should be at {club}...|Club's starting.|...] [Want to come watch?|They'll wonder where I am.]
+- [I'm skipping {club} for this, you know.|Hm.] [So make it worth it.|Don't tell the captain.]
+
+# ================= who is watching =================
+@rule idle.watch.friends
+on idle
+when wrel=bff|friend
+- [{Watcher} keeps looking over here.|Oh, {watcher} is waving.|Hehe, {watcher} is making faces at us.] [She's so nosy.|Ignore her.]
+- [{Watcher} is totally eavesdropping.|...] [Want to go somewhere else?|She'll grill me later.]
+
+@rule idle.watch.friends.group
+on idle
+when group=friends
+feel shy
+- [My friends are all watching us...|They're whispering about us.|Ugh, the girls are staring.] [Say something so it doesn't look weird!|They think we're on a date.]
+- [Hehe... they're pointing.|...] [We're the talk of the hallway.|I'm going to get so many questions.]
+
+@rule idle.watch.rival
+on idle
+when wrel=rival
+feel pout
+- [{Watcher} is glaring at us.|Ugh, {watcher}.|Don't look now, but {watcher}...] [Pretend we're laughing about something.|She's so annoying.]
+- [Of course {watcher} is here.|...] [Say something funny. I want her to see me laughing.|Let's go somewhere she isn't.]
+
+@rule idle.watch.rivals.group
+on idle
+when group=rivals
+feel serious
+- [Those girls are whispering about me again.|They're staring.|...] [Let them.|I'm used to it.]
+- [Can we go somewhere else?|Ugh, them.] [I don't want to be around them.|They're the worst.]
+
+@rule idle.watch.crowd
+on idle
+when watchers=crowd
+- [It's so crowded here.|Everyone's here today.|Too many people...] [Hard to talk, huh?|Want to go somewhere quieter?]
+- [People keep staring.|...] [It's hard to relax.|Let's find a quieter spot.]
+
+@rule idle.watch.yourgf
+on idle
+when wrel=yourgf
+feel worried
+- [Um... {watcher} is looking at us.|Isn't that {watcher}?|...] [Should you go talk to her?|I don't want to cause trouble.]
+- [{Watcher} looks like she wants to come over.|Hm.] [Is it okay that you're here with me?|She's watching you.]
+
+@rule idle.watch.alone
+on idle
+when watchers=none rel=girlfriend|lover
+feel love
+- [Nobody's around...|It's just us.|So quiet...] [Hehe, what should we do?|Come closer.]
+- [We're alone, you know.|...] [Isn't that nice?|Don't waste it.]
+
+# ================= roles =================
+@rule idle.teacher
+on idle
+when role=teacher
+- [If you have a question, ask.|I have papers to grade.|Hm?] [Don't just stand there.|I'm a busy woman.]
+- [Is something troubling you?|Hm.] [My door's always open.|Speak up.]

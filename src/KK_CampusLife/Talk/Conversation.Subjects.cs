@@ -700,7 +700,7 @@ namespace Joojkk.CampusLife
                     {
                         var witnesses = Social.GirlsOnMyMap().Where(o => o != h).ToList();
                         if (witnesses.Count > 0) Social.Add(Social.Kinds.Flirted, h, witnesses);
-                        if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.Add(h, 1);
+                        if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
                     }
                 };
                 CampusLifePlugin.Log.LogInfo("Talk: " + GirlInfo.FirstName(h) + " / " + x.Id + " -> " + (reaction >= 2 ? "loves it" : reaction >= 0 ? "fine" : "dislikes it") + (r != null ? ", you: " + r.Tag : "") + " (delta " + delta + ", H +" + turn.Lewd + ")");

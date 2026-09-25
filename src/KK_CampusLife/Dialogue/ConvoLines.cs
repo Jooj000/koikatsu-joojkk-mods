@@ -39,6 +39,22 @@ namespace Joojkk.CampusLife
             }
         }
 
+        /// <summary>Jealous because she is into you (the friendship kind is Jealous).</summary>
+        public static string JealousLove(Tone t, string friend)
+        {
+            switch (R(2))
+            {
+                case 0: return T(t, "You and " + friend + " looked really happy together... I'm happy for you. I think.",
+                    "Hey! Why is it always " + friend + "?! What does she have that I don't?!",
+                    "You've been with " + friend + " a lot. I noticed. That's all I'll say.",
+                    "So " + friend + " gets your attention now? I can be much more fun, you know~");
+                default: return T(t, "I keep thinking about you and " + friend + "... Sorry, that's weird of me.",
+                    "I saw you with " + friend + " again! I'm not jealous! ...Okay, a little!",
+                    "If you like " + friend + ", just say it. Don't keep me guessing.",
+                    "Careful. If you keep spending time with " + friend + ", I might have to steal you back~");
+            }
+        }
+
         public static string Jealous(Tone t, string friend)
         {
             switch (R(3))

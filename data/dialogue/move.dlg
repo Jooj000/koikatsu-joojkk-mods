@@ -41,6 +41,31 @@ on move.ask
 when kind=small likes=yes
 - [Ask what she loves about {like}|Ask how she got into {like}|Ask for her favorite kind of {like}|Ask her to teach you about {like}]
 
+@rule move.ask.like.no
+on move.ask
+when kind=small likes=no
+- [Ask what she likes instead|Ask why {like} isn't her thing|Ask what she'd rather talk about|Ask if she's ever given {like} a chance]
+
+@rule move.ask.friend
+on move.ask
+when kind=small subject=friend
+- [Ask how she met {bff}|Ask what {bff} is like|Ask what they do together|Ask if {bff} has a boyfriend]
+
+@rule move.ask.birthday
+on move.ask
+when kind=small subject=birthday
+- [Ask what she wants for her birthday|Ask how she usually celebrates|Ask if she has plans for it|Ask how old she's turning]
+
+@rule move.ask.horoscope
+on move.ask
+when kind=small subject=horoscope
+- [Ask what her sign says about her|Ask if your signs match|Ask what today's horoscope said|Ask if she believes in fate]
+
+@rule move.ask.club
+on move.ask
+when kind=small subject=club
+- [Ask what the {club} is working on|Ask who's in the {club}|Ask if the {club} takes new members|Ask what she does at the {club}]
+
 @rule move.ask.school
 on move.ask
 when kind=school
@@ -95,6 +120,21 @@ when kind=us
 on move.share
 when kind=small likes=yes|no
 - [Say what you think of {like}|Share your own taste|Say you're into {like} too|Admit you know little about {like}]
+
+@rule move.share.friend
+on move.share
+when kind=small subject=friend
+- [Talk about your own friends|Say you'd like to meet {bff}|Say they make a good pair|Say you're glad she has someone]
+
+@rule move.share.horoscope
+on move.share
+when kind=small subject=horoscope
+- [Tell her your own sign|Say you don't believe in it|Say yours said you'd meet someone|Joke about your bad luck today]
+
+@rule move.praise.birthday
+on move.praise
+when kind=small subject=birthday birthday=today
+- [Wish her a happy birthday|Tell her she's the best birthday girl|Say you're glad she was born|Sing her a little birthday song]
 
 # ---------------- tease ----------------
 @rule move.tease
@@ -174,7 +214,17 @@ when kind=us
 @rule move.invite.like
 on move.invite
 when likes=yes
-- [Invite her to do {like} together|Suggest {like} after school|Ask her to show you {like}|Offer to try {like} with her]
+- [Invite her to {likedo}|Suggest you {likedo} after school|Ask if she wants to {likedo} with you|Offer to {likedo} together]
+
+@rule move.invite.subject
+on move.invite
+when kind=small subject=club|friend|birthday|horoscope|future|teaching
+- [Ask if she wants to {favdo} sometime|Suggest you hang out after school|Ask if she's free this weekend|Offer to walk her home later]
+
+@rule move.invite.birthday
+on move.invite
+when kind=small subject=birthday birthday=today|week|soon
+- [Offer to celebrate her birthday together|Ask if you can take her out for her birthday|Promise her a birthday cake|Ask what she wants to do on her birthday]
 
 # ---------------- the rest ----------------
 @rule move.correct

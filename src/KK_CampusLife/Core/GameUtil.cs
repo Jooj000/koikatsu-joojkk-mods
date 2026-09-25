@@ -233,6 +233,10 @@ namespace Joojkk.CampusLife
             var before = h.favor;
             h.favor = Mathf.Clamp(h.favor + favor, 0, 100);
             Chat.NoteFavor(h, h.favor - before);
+            // The club report counts "contact" from favor won in the game's own talk (Communication.ChangeParam: favor x2,
+            // x4 for a club member); ours changed favor directly and the report stayed at 0.
+            if (h.favor > before && HasGame)
+                try { Singleton<Game>.Instance.saveData.clubReport.comAdd = (h.favor - before) * (h.isStaff ? 4 : 2); } catch { }
             h.lewdness = Mathf.Clamp(h.lewdness + lewd, 0, 100);
         }
 

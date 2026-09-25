@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -56,6 +57,28 @@ namespace Joojkk.CampusLife
                 S.Log(msg);
                 Toasts.Show(msg);
             }
+        }
+
+        private static readonly Dictionary<string, int> TalkToday = new Dictionary<string, int>();
+        private static int _talkDay = -1;
+        public const int TalkCapPerDay = 6;
+
+        /// <summary>
+        /// Devotion from talking (favor past 100, sweet words): each gain smaller than the last, at most TalkCapPerDay a
+        /// day, so a level (40) takes about a week of talks.
+        /// </summary>
+        public static void AddTalk(SaveData.Heroine h, int amount)
+        {
+            if (h == null || amount <= 0 || !Cfg.DevotionEnabled.Value || S == null) return;
+            if (_talkDay != S.Day) { TalkToday.Clear(); _talkDay = S.Day; }
+            var key = GirlInfo.Key(h);
+            int got;
+            TalkToday.TryGetValue(key, out got);
+            var room = TalkCapPerDay - got;
+            if (room <= 0) return;
+            var n = Math.Min(room, Math.Max(1, (int)Math.Round(amount / (1f + got / 2f))));
+            TalkToday[key] = got + n;
+            Add(h, n);
         }
 
         /// <summary>Favor beyond 100 is not lost: it becomes devotion.</summary>

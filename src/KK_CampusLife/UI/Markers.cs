@@ -143,8 +143,11 @@ namespace Joojkk.CampusLife
             return Board.ActiveFor(key).OrderBy(r => r.DeadlineDay).ThenBy(r => r.Id).FirstOrDefault();
         }
 
+        private static readonly List<KeyValuePair<RectTransform, RectTransform>> Badges = new List<KeyValuePair<RectTransform, RectTransform>>();
+
         public static void UpdateMinimap()
         {
+            Upright();
             if (Time.realtimeSinceStartup < _next) return;
             _next = Time.realtimeSinceStartup + 0.75f;
             var act = G.Act;
@@ -156,11 +159,29 @@ namespace Joojkk.CampusLife
                 try { item = NpcIcon(npc); } catch { continue; }
                 if (item == null || item.iconItem == null) continue;
                 var r = Cfg.Enabled.Value ? ShownFor(npc.heroine) : null;
-                Apply(item.iconItem.transform, r);
+                Apply(item.iconItem.transform, r, item.iconItem.graphic != null ? item.iconItem.graphic.rectTransform : null);
             }
         }
 
-        private static void Apply(Transform icon, Request r)
+        /// <summary>
+        /// Every frame: the badge sits at the icon's top-right corner on the screen and stands upright. As a child of the
+        /// icon it turned with it (the icon points where the girl looks) and circled around it.
+        /// </summary>
+        private static void Upright()
+        {
+            for (var i = Badges.Count - 1; i >= 0; i--)
+            {
+                var icon = Badges[i].Key;
+                var badge = Badges[i].Value;
+                if (icon == null || badge == null) { Badges.RemoveAt(i); continue; }
+                if (!badge.gameObject.activeInHierarchy) continue;
+                var half = icon.rect.size * 0.5f;
+                badge.rotation = Quaternion.identity;
+                badge.position = icon.TransformPoint(icon.rect.center) + new Vector3(half.x, half.y, 0f) * icon.lossyScale.x;
+            }
+        }
+
+        private static void Apply(Transform icon, Request r, RectTransform graphic)
         {
             var t = icon.Find(ChildName);
             if (r == null)
@@ -180,6 +201,8 @@ namespace Joojkk.CampusLife
                 var parentRt = icon as RectTransform;
                 var s = parentRt != null ? Mathf.Clamp(parentRt.rect.width * 0.4f, 8f, 12f) : 10f;
                 rt.sizeDelta = new Vector2(s, s);
+                var anchor = graphic ?? parentRt;
+                if (anchor != null) Badges.Add(new KeyValuePair<RectTransform, RectTransform>(anchor, rt));
             }
             else img = t.GetComponent<Image>();
             if (img == null) return;

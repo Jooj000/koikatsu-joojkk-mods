@@ -52,6 +52,15 @@ namespace Joojkk.CampusLife
             return from[Random.Range(0, from.Count)];
         }
 
+        /// <summary>
+        /// notebooks played for a girl on another map): your map, spawned, within ~15 m; none, no scene.
+        /// </summary>
+        private static SaveData.Heroine Near()
+        {
+            var near = Conversation.Onlookers(null, 15f).Where(h => Board.Students.Contains(h) && Truth.AtSchool(h)).ToList();
+            return near.Count == 0 ? null : near[Random.Range(0, System.Math.Min(3, near.Count))];
+        }
+
         private static void Pay(Rewards r, SaveData.Heroine h, string why)
         {
             var a = Campus.Apply(r, h, false);
@@ -145,7 +154,7 @@ namespace Joojkk.CampusLife
 
                 case "dropped_notebooks":
                 {
-                    var g = Girl();
+                    var g = Near();
                     if (g == null) return false;
                     var name = GirlInfo.FirstName(g);
                     b.Narr("Someone bumps into " + name + " and her notebooks scatter across the floor.");
@@ -203,7 +212,7 @@ namespace Joojkk.CampusLife
 
                 case "wind":
                 {
-                    var g = Girl();
+                    var g = Near();
                     if (g == null) return false;
                     var name = GirlInfo.FirstName(g);
                     var tone = GirlInfo.ToneOf(g);

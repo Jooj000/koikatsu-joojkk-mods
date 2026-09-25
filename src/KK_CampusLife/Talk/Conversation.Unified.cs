@@ -664,7 +664,7 @@ namespace Joojkk.CampusLife
             if (q == Q.Good) Rhythm.OnGood(h);
             Func<int, int> up = v => v > 0 ? Mathf.RoundToInt(v * factor) : v;
             int favor = up(t[0]), lewd = up(t[1]), trust = up(t[2]);
-            if (Cfg.DevotionEnabled.Value && favor > 0) Devotion.Add(h, Devotion.Overflow(h, favor));
+            if (Cfg.DevotionEnabled.Value && favor > 0) Devotion.AddTalk(h, Devotion.Overflow(h, favor));
             var before = h.favor;
             var beforeH = h.lewdness;
             G.AddFavor(h, favor, lewd);
@@ -912,7 +912,7 @@ namespace Joojkk.CampusLife
         private static SchoolTopicInfo SchoolTopic(SaveData.Heroine h)
         {
             var ev = Calendar.UpcomingEvents().FirstOrDefault(u => u.Days <= 7);
-            if (ev != null) return new SchoolTopicInfo { Id = "ev:" + ev.Id, Label = "the " + ev.Name, Line = "the " + ev.Name + " (" + ev.When.ToLowerInvariant() + ")" };
+            if (ev != null) return new SchoolTopicInfo { Id = "ev:" + ev.Id, Label = "the " + ev.Name, Line = "the " + ev.Name + " " + ev.Spoken };
             var c = S.Council;
             if (c != null && c.Week == S.Week && c.Stage < 4) return new SchoolTopicInfo { Id = "council", Label = "the council race", Line = "the council race between " + GirlInfo.FirstName(c.A) + " and " + GirlInfo.FirstName(c.B) };
             var p = S.Project;
@@ -1206,7 +1206,7 @@ namespace Joojkk.CampusLife
             b.Face(h, ok ? Feel.Love : Feel.Normal).Her_(ok ? ConvoLines.FlirtGood(tone, Lines.Closeness(h)) : ConvoLines.FlirtTooSoon(tone));
             Plain(h, Lvl.Romance, ok ? Q.Good : Q.Bad, "sweet", b, ok ? "♥ " + GirlInfo.FirstName(h) + " is blushing." : null, () =>
             {
-                if (ok && Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.Add(h, 1);
+                if (ok && Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
             });
         }
 
@@ -1266,7 +1266,7 @@ namespace Joojkk.CampusLife
             s.Did.Add("jealous");
             Beat(h, Lvl.Romance, "jealous", b =>
             {
-                b.Her_(ConvoLines.Jealous(GirlInfo.ToneOf(h), rn));
+                b.Her_(Interested(h) ? ConvoLines.JealousLove(GirlInfo.ToneOf(h), rn) : ConvoLines.Jealous(GirlInfo.ToneOf(h), rn));
             }, new List<Resp>
             {
                 Rp("Listen to how she feels about " + rn, "jl_listen", Q.Good, Tn("...I just miss you, that's all.", "I just... want you around too, okay?!", "...I'm not jealous. I just noticed.", "...Fine. I'm a little jealous. Happy?")),
@@ -1339,7 +1339,7 @@ namespace Joojkk.CampusLife
             b.Face(h, ok ? Feel.Love : Feel.Pout).Her_(ok ? RomanceLines.WhisperGood(tone, h.isGirlfriend) : RomanceLines.WhisperBad(tone));
             Plain(h, Lvl.Spicy, ok ? Q.Good : Q.Bad, "whisper", b, ok ? "♥ " + GirlInfo.FirstName(h) + " is breathing faster." : null, () =>
             {
-                if (ok && Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.Add(h, 1);
+                if (ok && Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
             });
         }
 
@@ -1449,6 +1449,29 @@ namespace Joojkk.CampusLife
         /// What plays by itself when the talk opens: a relationship chapter that is due, the reply to an aside she just
         /// said on the map, or her refusing to talk while she is hurt. Everything else waits on the list (the opener).
         /// </summary>
+        /// <summary>
+        /// Your girlfriend and another girl (Share): she says it once, the way she decided (fine, a trio, or a fight), and
+        /// everything else she knows about it is settled with it.
+        /// </summary>
+        private static bool ShareOpening(Session s, SaveData.Heroine h)
+        {
+            try
+            {
+                Share.FromLore(h);
+                bool confront, saw;
+                var other = Share.PendingOther(h, out confront, out saw);
+                if (other == null) return false;
+                var b = new SceneBuilder(h, true);
+                var act = Share.Write(h, other, saw, b);
+                Share.Hush(h, other);
+                if (act == null) return false;
+                Hide();
+                Scenes.PlayInTalk(b, c => { try { act(c); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); } s.Turns++; AfterScene(); }, false);
+                return true;
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogError(e); return false; }
+        }
+
         private static bool OpeningUnified(Session s)
         {
             if (s.Did.Contains("opening")) return false;
@@ -1458,6 +1481,7 @@ namespace Joojkk.CampusLife
             // She asked you here (a note, a letter, "meet me at..."): that comes first, with its own scene (user,
             var meet = Board.MeetHere(h);
             if (meet != null && Board.PlayInTalk(meet, h, () => { s.Turns++; AfterScene(); })) return true;
+            if (ShareOpening(s, h)) return true;
             // Something she saw or heard about you that weighs (the H in the hallway, you in the girls' restroom): she
             // brings it up herself.
             var raise = RaiseTopic(h);

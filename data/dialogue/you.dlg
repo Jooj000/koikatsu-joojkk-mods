@@ -106,7 +106,7 @@ opens ask,admit,deny,tease
 
 @rule you.romance.other.jealous
 on you
-when realverb=started_dating|dated|kissed|flirted|held_hands favor>=50
+when realverb=started_dating|dated|kissed|flirted|held_hands interest=yes rel!=girlfriend
 opens admit,comfort,deny,ask
 feel pout
 - [You and {who}...|So it's {who} now?] [I see how it is.|You could have told me yourself.|I thought... never mind.]
@@ -117,6 +117,38 @@ when realverb=started_dating|dated|kissed|flirted|held_hands rel=girlfriend
 opens admit,deny,comfort
 feel sad
 - [What's this about you and {who}?|Why is everyone telling me about you and {who}?] [Explain. Now.|I'm your girlfriend, remember?|Tell me it isn't true.]
+
+# Who is jealous of what: an acquaintance is never jealous of you, only of her friend or her crush;
+# a friend is jealous of the friendship (you'll forget her), unless she is already into you (the rule above).
+@rule you.romance.other.acq
+on you
+when realverb=started_dating|dated|kissed|flirted|held_hands rel=acquaintance|stranger
+opens ask,laugh,share
+- [Oh, you and {who}? I heard.|So the rumor about you and {who} is true?] [Huh. Good luck, I guess.|Not my business, but it's the talk of the class.]
+- [{Who}, huh? Interesting choice.|People are talking about you and {who}.] [She's nice.|I didn't think you were her type.]
+
+@rule you.romance.other.friendship
+on you
+when realverb=started_dating|dated|kissed|flirted|held_hands rel=friend interest=no
+opens ask,comfort,invite
+feel pout
+- [So that's why you've been so busy. {Who}.|You and {who}, huh? I'm happy for you. Really.] [Just don't forget your friends, okay?|But who's going to eat lunch with me now?]
+- [I heard about you and {who}. You didn't tell me!|{Who}? Since when?] [I'm your friend, I should hear these things first.|I feel a little left out, honestly.]
+
+@rule you.romance.other.herfriend
+on you
+when realverb=started_dating|dated|kissed|flirted|held_hands whorel=friend interest=no
+opens ask,comfort,defend
+- [{Who}'s my friend, you know.|So you and {who}...] [If you hurt her, you'll answer to me.|She's barely had time for me since.]
+- [{Who} hasn't stopped talking about you.|You stole my lunch buddy, you know that?] [Treat her well.|I'm a little jealous of you, honestly.]
+
+@rule you.romance.other.hercrush
+on you
+when realverb=started_dating|dated|kissed|flirted|held_hands whorel=crush
+opens ask,comfort,admit
+feel sad
+- [You and {who}...? Oh.|{Who}. Of course it's {who}.] [I didn't know she liked boys.|Never mind. It's nothing.]
+- [So {who} picked you.|I heard about you and {who}.] [Lucky you.|I'm fine. I'm totally fine.]
 
 # ---------------- what you did for (or to) someone else ----------------
 @rule you.kind.other

@@ -117,10 +117,32 @@ namespace Joojkk.CampusLife
         public static void EnsureToday()
         {
             int day;
+            PostponeAbsent();
             if (S.Buffs.TryGetValue("board_day", out day) && day == S.Day) return;
             if (!G.IsSchoolDay || !G.InRoamingPeriod) return;
             Moods.RollAll();
             GenerateDaily();
+        }
+
+        /// <summary>
+        /// A request today waits for a girl who did not come (user, 2026-10-26: "uma missão para a tatsumaki sendo que ela
+        /// hoje e a personagem faltou"): the board is made when the day starts, before the scene knows who came, so this
+        /// runs again once it knows (once per period), and the second girl of a request counts too.
+        /// </summary>
+        public static void PostponeAbsent()
+        {
+            if (!Truth.Known) return;
+            var stamp = S.Day * 16 + (int)G.CurrentMask;
+            int done;
+            if (S.Buffs.TryGetValue("board_absent", out done) && done == stamp) return;
+            S.Buffs["board_absent"] = stamp;
+            foreach (var r in S.Requests.Where(q => (q.State == RequestState.Active || q.State == RequestState.Hidden) && q.DeadlineDay <= S.Day
+                                                    && (!string.IsNullOrEmpty(q.Girl) && !Truth.AtSchool(q.Girl) || !string.IsNullOrEmpty(q.Other) && !Truth.AtSchool(q.Other))))
+            {
+                r.DeadlineDay = S.Day + 1;
+                var who = !string.IsNullOrEmpty(r.Girl) && !Truth.AtSchool(r.Girl) ? r.Girl : r.Other;
+                CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " waits for tomorrow (" + GirlInfo.FirstName(who) + " is not at school)");
+            }
         }
 
         public static void GenerateDaily()
@@ -129,14 +151,7 @@ namespace Joojkk.CampusLife
             S.Buffs["board_day"] = S.Day;
             // Clean old finished requests (keep a few days for the journal view)
             S.Requests.RemoveAll(r => r.State != RequestState.Active && r.DeadlineDay < S.Day - 3);
-            // A request today waits for a girl who did not come (user, 2026-10-26: "uma missão para a tatsumaki sendo que
-            // ela não está hoje"): no new one for her, and an open one moves to tomorrow without a penalty.
-            if (Truth.Known)
-                foreach (var r in S.Requests.Where(q => (q.State == RequestState.Active || q.State == RequestState.Hidden) && q.DeadlineDay <= S.Day && !string.IsNullOrEmpty(q.Girl) && !Truth.AtSchool(q.Girl)))
-                {
-                    r.DeadlineDay = S.Day + 1;
-                    CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " waits for tomorrow (" + GirlInfo.FirstName(r.Girl) + " is not at school)");
-                }
+            PostponeAbsent();
 
             var already = S.Requests.Count(r => (r.State == RequestState.Active || r.State == RequestState.Hidden) && r.Source == "board" && r.CreatedDay == S.Day);
             var want = TargetCount - already;

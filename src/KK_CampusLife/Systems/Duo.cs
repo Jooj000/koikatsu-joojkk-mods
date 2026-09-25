@@ -64,7 +64,8 @@ namespace Joojkk.CampusLife
             Introduce,  // a girl you know brings her best friend to meet you
             LeftOut,    // a girl feels her best friend took her place with you
             Gossip,     // two friends have news about another girl
-            Hangout     // close friends who both like you just want your opinion
+            Hangout,    // close friends who both like you just want your opinion
+            Caught      // your girlfriend saw you with her and confronts you both on the spot (Share)
         }
 
         internal sealed class Plan
@@ -121,6 +122,14 @@ namespace Joojkk.CampusLife
             var a = na.heroine;
             var b = nb.heroine;
             var bond = Social.Bond(a, b);
+
+            // Your girlfriend saw you with her and won't wait.
+            foreach (var pair in new[] { new[] { na, nb }, new[] { nb, na } })
+            {
+                bool confront, saw;
+                if (pair[0].heroine.isGirlfriend && Share.PendingOther(pair[0].heroine, out confront, out saw) == pair[1].heroine && confront)
+                    return MakePlan(pair[0], pair[1], Motive.Caught, 12f, null);
+            }
 
             // Your girlfriend and a girl who clearly likes you.
             if (a.isGirlfriend != b.isGirlfriend && (a.isGirlfriend ? b : a).favor >= 70)
@@ -256,6 +265,15 @@ namespace Joojkk.CampusLife
                     if (c == "modest") { Social.AddTrust(bb, 4); Social.AddTrust(a, 2); G.AddFavor(bb, 2, 0); }
                     else { G.AddFavor(bb, 4, 0); Social.AddTrust(bb, 2); Social.AddTrust(a, 3); }
                 };
+            }
+            else if (plan.Why == Motive.Caught)
+            {
+                intro.Narr(an + " storms over, pulling " + bn + " along by the wrist.");
+                sb.Say(bb, Lines.T(tb, "I-I'm sorry, I didn't...", "Whoa, whoa, okay, I can explain!", "...This is awkward.", "Oh, this is going to be fun."));
+                var act = Share.Write(a, bb, true, sb);
+                Share.Hush(a, bb);
+                if (act == null) sb.Say(a, Lines.T(ta, "...Never mind. Sorry.", "...Forget it! Sorry!", "...Never mind.", "...Eh, forget it."));
+                result = c => { if (act != null) act(c); };
             }
             else if (plan.Why == Motive.Rivals)
             {

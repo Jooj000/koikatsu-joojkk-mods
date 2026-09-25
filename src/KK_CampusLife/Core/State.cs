@@ -181,6 +181,9 @@ namespace Joojkk.CampusLife
         public List<string> FinishedArcs = new List<string>();
         public Dictionary<string, int> Bonds = new Dictionary<string, int>(); // affinity to other girls (-100..100)
         public int Rep = 50;            // her own reputation at school (Standing), 0-100
+        public Dictionary<string, int> Share = new Dictionary<string, int>();     // what she decided about you and another girl (Share.Stance)
+        public Dictionary<string, int> ShareCalm = new Dictionary<string, int>(); // how close a refusal is to acceptance (0-100)
+        public List<string> ShareSaid = new List<string>();                       // girls she already told you her stance about
 
         public Dictionary<string, object> ToDict()
         {
@@ -197,6 +200,11 @@ namespace Joojkk.CampusLife
                 {"fa", FinishedArcs.Cast<object>().ToList()}, {"b", bonds}, {"dud", DuoDay}, {"duh", DuoHandled.Cast<object>().ToList()},
                 {"eps", Episodes.Cast<object>().ToList()}, {"epd", EpisodeDay}, {"rp", Rep}
             };
+            var sh = new Dictionary<string, object>();
+            foreach (var kv in Share) sh[kv.Key] = kv.Value;
+            var shc = new Dictionary<string, object>();
+            foreach (var kv in ShareCalm) shc[kv.Key] = kv.Value;
+            d["sh"] = sh; d["shc"] = shc; d["shs"] = ShareSaid.Cast<object>().ToList();
             WriteWorld(d);
             return d;
         }
@@ -226,6 +234,12 @@ namespace Joojkk.CampusLife
             if (fa != null) g.FinishedArcs = fa.Where(o => o != null).Select(o => o.ToString()).ToList();
             var b = d.GetObj("b");
             if (b != null) foreach (var kv in b) g.Bonds[kv.Key] = b.GetInt(kv.Key);
+            var sh = d.GetObj("sh");
+            if (sh != null) foreach (var kv in sh) g.Share[kv.Key] = sh.GetInt(kv.Key);
+            var shc = d.GetObj("shc");
+            if (shc != null) foreach (var kv in shc) g.ShareCalm[kv.Key] = shc.GetInt(kv.Key);
+            var shs = d.GetList("shs");
+            if (shs != null) g.ShareSaid = shs.Where(o => o != null).Select(o => o.ToString()).ToList();
             g.ReadWorld(d);
             return g;
         }

@@ -1,0 +1,496 @@
+# Pieces: fragments a line takes now and then, chosen by who she is and where you are.
+# {@open} goes before her line, {@tail} after it, {@meopen} before yours (Conversation.Compose). Each value of each
+# factor has at least two lines; the most specific rule wins (one step of slack), so a girlfriend who is cool gets the
+# cool girlfriend openers, and a tail is one of the factors that hold right now (mood, place, period, club, sign,
+# birthday, body, role...). Openers always end in a stop, so her line keeps its capital letter.
+
+# ================= openers: relation x tone =================
+@rule open.gf.gentle
+on @open
+when rel=girlfriend tone=gentle
+- [Mm, you know what?|Hey, love...|Ehehe...]
+- [Ah, I'm happy you came.|Hi, you.|Mm, I missed you today.]
+
+@rule open.gf.energetic
+on @open
+when rel=girlfriend tone=energetic
+- [Babe!|There you are!|Finally, my favorite person!]
+- [Hehe, hi hi!|You came to see me!|Okay, okay, listen!]
+
+@rule open.gf.cool
+on @open
+when rel=girlfriend tone=cool
+- [...Oh. It's you.|You're late. Kidding.|Hm. I was hoping you'd come.]
+- [...Hey.|Don't make that face. I'm glad you're here.|Mm. Sit.]
+
+@rule open.gf.teasing
+on @open
+when rel=girlfriend tone=teasing
+- [Missed me already?|Look who can't stay away~|Hey, handsome~]
+- [Oh? My boyfriend, all by himself?|There's my favorite distraction~|Couldn't wait until later, huh?]
+
+@rule open.lover.gentle
+on @open
+when rel=lover tone=gentle
+- [Oh... hi.|Ah, it's you...|Mm, hello.]
+- [I was just thinking about you.|You always find me, don't you?]
+
+@rule open.lover.energetic
+on @open
+when rel=lover tone=energetic
+- [Hey hey!|Oh! It's you!|Perfect timing!]
+- [I was hoping I'd run into you!|You again? Yay!]
+
+@rule open.lover.cool
+on @open
+when rel=lover tone=cool
+- [...You.|Hm. Hello.|Oh. Hey.]
+- [I wasn't waiting for you. Just so you know.|...You came over.]
+
+@rule open.lover.teasing
+on @open
+when rel=lover tone=teasing
+- [You're following me now?|Oh my, look who it is~]
+- [Can't keep away, can you?|Hello, trouble~]
+
+@rule open.friend.gentle
+on @open
+when rel=friend tone=gentle
+- [Oh, hi!|Ah, it's you.|Hello again.]
+- [It's nice to see a friendly face.|Mm, hello.]
+
+@rule open.friend.energetic
+on @open
+when rel=friend tone=energetic
+- [Yo!|Hey, buddy!|What's up?!]
+- [Ooh, perfect, I needed someone to talk to!|Hiya!]
+
+@rule open.friend.cool
+on @open
+when rel=friend tone=cool
+- [Hey.|Oh. You.|Hm.]
+- [What's up.|You again. Fine.]
+
+@rule open.friend.teasing
+on @open
+when rel=friend tone=teasing
+- [Well, well.|Oh, it's you~|Bored without me?]
+- [Came to see me again?|Look who's here~]
+
+@rule open.crush.friend
+on @open
+when rel=friend interest=yes
+- [O-oh! Hi!|Ah... hi. Um.|Hi! I mean, hey.]
+- [You startled me.|Oh! I was just... hi.]
+
+@rule open.acq.gentle
+on @open
+when rel=acquaintance tone=gentle
+- [Oh, um, hello.|Ah, hi.|Oh, it's you.]
+- [Hello there.|Um... hi.]
+
+@rule open.acq.energetic
+on @open
+when rel=acquaintance tone=energetic
+- [Oh, hey!|Hi hi!|Hey there!]
+- [Oh, you!|Heya!]
+
+@rule open.acq.cool
+on @open
+when rel=acquaintance tone=cool
+- [...Yes?|Hm?|What is it?]
+- [Oh. Hello.|Can I help you?]
+
+@rule open.acq.teasing
+on @open
+when rel=acquaintance tone=teasing
+- [Oh? Hello.|Well, hi there.|Hm, you again?]
+- [Are you lost?|Need something, mister?]
+
+@rule open.stranger
+on @open
+when rel=stranger
+- [Um... hello?|Oh. Hi.]
+- [Huh? Me?|Sorry, do I know you?]
+
+# ================= openers: role =================
+@rule open.teacher
+on @open
+when role=teacher
+- [Ahem.|Oh, it's you.|Well, well, a student.]
+- [Shouldn't you be studying?|Mm-hm.]
+
+@rule open.exteacher
+on @open
+when role=exteacher
+- [Ah, old habits... I almost said "class".|Hey. Not your teacher anymore, remember?]
+- [Funny, sitting on this side of the desk now.|You can drop the "sensei" now.]
+
+@rule open.story
+on @open
+when role=story
+- [Oh! You came to find me again.|Ah, it's you.]
+- [You always show up at the right moment.|Hi, again.]
+
+@rule open.exstory
+on @open
+when role=exstory
+- [Ah, it's you. Being a regular student is strange.|Oh, hi. Life's calmer these days.]
+- [Hey. Without all that drama, I almost miss it.|Hi. It's nice to just be a normal girl here.]
+
+# ================= tails: mood =================
+@rule tail.mood.cheerful
+on @tail
+when mood=cheerful
+- [I'm in a really good mood today, by the way.|Today's a good day, I can feel it.|Hehe, sorry, I can't stop smiling today.]
+- [Everything's going right today.|I don't know why, but I feel great.]
+
+@rule tail.mood.hungry
+on @tail
+when mood=hungry
+- [Sorry, my stomach just growled.|Ugh, I'm starving, though.|Can we talk near food?]
+- [I skipped breakfast. Big mistake.|All I can think about is lunch.]
+
+@rule tail.mood.bored
+on @tail
+when mood=bored
+- [At least this beats being bored.|Today's so slow, you're saving me.|Nothing's happening today.]
+- [Please say something interesting happened somewhere.|I've been bored out of my mind.]
+
+@rule tail.mood.stressed
+on @tail
+when mood=stressed
+- [Sorry, I've got a lot on my mind.|My head's kind of full today.|Ugh, I have too much to do.]
+- [I just need one quiet day.|I'm a little stressed, if you can't tell.]
+
+@rule tail.mood.lonely
+on @tail
+when mood=lonely
+- [I'm glad someone came to talk to me.|It's been a lonely day.|Thanks for stopping by, really.]
+- [Everyone's busy lately.|I was hoping someone would show up.]
+
+@rule tail.mood.flirty
+on @tail
+when mood=flirty
+- [You look nice today, by the way.|Is it hot in here, or is it you?|I'm in a strange mood today~]
+- [Don't look at me like that, I'll get ideas.|Stay close, okay?]
+
+@rule tail.mood.sleepy
+on @tail
+when mood=sleepy
+- [Sorry, I'm half asleep.|*yawn* ...Sorry.|I stayed up way too late.]
+- [If I doze off, wake me up.|My eyes keep closing on their own.]
+
+@rule tail.mood.upset
+on @tail
+when mood=upset
+- [Sorry, I'm a bit off today.|Don't mind me, I'm just in a mood.]
+- [Let's keep it light, okay?|I'm trying to get my mind off things.]
+
+# ================= tails: place =================
+@rule tail.place.library
+on @tail
+when placeid=library
+- [We should keep it down, though.|The librarian's glaring at us.]
+- [I love the smell of old books here.|It's so quiet in here I can hear myself think.]
+
+@rule tail.place.gym
+on @tail
+when placeid=gym
+- [It smells like sweat in here, ugh.|Someone's always bouncing a ball in here.]
+- [The gym's echoey. Careful what you say.|Watch out for stray balls.]
+
+@rule tail.place.pool
+on @tail
+when placeid=pool
+- [The chlorine always gets in my hair.|The water looks nice today.]
+- [Don't push me in, okay?|Hm, I kind of want to jump in.]
+
+@rule tail.place.rooftop
+on @tail
+when placeid=rooftop
+- [The view up here is the best.|The wind up here is crazy.]
+- [I come up here to breathe.|You can see the whole town from here.]
+
+@rule tail.place.infirmary
+on @tail
+when placeid=infirmary
+- [Shh, someone might be sleeping.|It smells like disinfectant in here.]
+- [The beds here are surprisingly comfy.|Don't tell the nurse I was lazing around.]
+
+@rule tail.place.cafeteria
+on @tail
+when placeid=cafeteria
+- [Everything here smells so good.|The line's insane today.]
+- [I always end up buying too much here.|Have you tried the curry bread?]
+
+@rule tail.place.clubroom
+on @tail
+when placeid=clubroom
+- [Don't touch anything in here, it's all in a delicate order.|This room's a mess, sorry.]
+- [The club room's kind of our base.|We should clean in here someday.]
+
+@rule tail.place.staffroom
+on @tail
+when placeid=staffroom
+- [We're in the staff room, so... behave.|The teachers are listening, you know.]
+- [It's so stiff in here.|I always feel like I'm in trouble here.]
+
+@rule tail.place.classroom
+on @tail
+when placeid=classroom
+- [Class feels so far away now.|My desk's right there, by the window.]
+- [Someone left their bag again.|The board's still full of formulas.]
+
+@rule tail.place.courtyard
+on @tail
+when placeid=courtyard
+- [The flowers here are pretty, aren't they?|I like the courtyard at this hour.]
+- [The bench here is my favorite.|It's nice to be outside for a bit.]
+
+@rule tail.place.field
+on @tail
+when placeid=field
+- [The track team's running laps again.|There's dust everywhere out here.]
+- [It's so open out here.|The sun's strong today.]
+
+@rule tail.place.park
+on @tail
+when placeid=park
+- [The park's nice at this time.|I saw a cat around here earlier.]
+- [It's good to be off campus.|Look at the trees, they're so green.]
+
+# ================= tails: period =================
+@rule tail.period.lunch
+on @tail
+when period=lunch
+- [Did you eat yet?|Lunch break always goes by too fast.]
+- [Don't let me forget to eat.|I hope the bread isn't sold out.]
+
+@rule tail.period.club
+on @tail
+when period=club hasclub=yes
+- [I should be at the {club}, though.|They'll be waiting for me at the {club}.]
+- [I'm sneaking a break from the {club}.|Don't tell the {club} I'm slacking.]
+
+@rule tail.period.after
+on @tail
+when period=after
+- [It's getting late, huh.|The sky's turning orange.]
+- [I should head home soon.|After school is the best time of day.]
+
+# ================= tails: club =================
+@rule tail.club.sports
+on @tail
+when clubkind=sports
+- [My legs are sore from practice.|Practice was brutal yesterday.]
+- [We have a match coming up.|The {club} captain's a slave driver.]
+
+@rule tail.club.culture
+on @tail
+when clubkind=culture
+- [We're working on something at the {club}.|The {club} has a project going.]
+- [The {club} is kind of my second home.|You should visit the {club} sometime.]
+
+# ================= tails: sign =================
+@rule tail.sign.aries
+on @tail
+when sign=aries
+- [My horoscope said to be bold today, so...|Aries never back down, you know.]
+- [I'm an Aries, I can't sit still.|My horoscope promised me an adventure today.]
+
+@rule tail.sign.taurus
+on @tail
+when sign=taurus
+- [Taurus people just like comfy things, okay?|My horoscope said to treat myself today.]
+- [I'm a Taurus. I'm stubborn, I know.|Today's horoscope said good food is coming.]
+
+@rule tail.sign.gemini
+on @tail
+when sign=gemini
+- [I'm a Gemini, so I might change my mind later.|My horoscope said I'd meet someone chatty.]
+- [Gemini, you know. Two of me.|My horoscope said today's for talking.]
+
+@rule tail.sign.cancer
+on @tail
+when sign=cancer
+- [My horoscope said to stay close to people I trust.|I'm a Cancer. I get attached, sorry.]
+- [Cancers are homebodies, you know.|Today's horoscope said someone would cheer me up.]
+
+@rule tail.sign.leo
+on @tail
+when sign=leo
+- [My horoscope said I'd shine today.|Leos deserve attention, it's science.]
+- [I'm a Leo. Of course I'm the star.|Today's horoscope said I'm unstoppable.]
+
+@rule tail.sign.virgo
+on @tail
+when sign=virgo
+- [My horoscope said to tidy my life up.|I'm a Virgo, I notice details.]
+- [Virgos plan everything. I'm planning this.|Today's horoscope said to trust my list.]
+
+@rule tail.sign.libra
+on @tail
+when sign=libra
+- [My horoscope said to find balance today.|I'm a Libra, I hate choosing.]
+- [Libras like pretty things. And people.|Today's horoscope said harmony's coming.]
+
+@rule tail.sign.scorpio
+on @tail
+when sign=scorpio
+- [My horoscope said secrets would come out today.|I'm a Scorpio. I see through people.]
+- [Scorpios hold grudges. Just saying.|Today's horoscope said to trust my gut.]
+
+@rule tail.sign.sagittarius
+on @tail
+when sign=sagittarius
+- [My horoscope said to go somewhere new.|I'm a Sagittarius, I want to travel everywhere.]
+- [Sagittarius can't stay in one place.|Today's horoscope said luck is on my side.]
+
+@rule tail.sign.capricorn
+on @tail
+when sign=capricorn
+- [My horoscope said hard work pays off today.|I'm a Capricorn, I take things seriously.]
+- [Capricorns climb, slowly but surely.|Today's horoscope said to be patient.]
+
+@rule tail.sign.aquarius
+on @tail
+when sign=aquarius
+- [My horoscope said to try something weird today.|I'm an Aquarius, I'm a little odd.]
+- [Aquarius people do their own thing.|Today's horoscope said a strange idea is coming.]
+
+@rule tail.sign.pisces
+on @tail
+when sign=pisces
+- [My horoscope said to follow my dreams today.|I'm a Pisces, I daydream a lot.]
+- [Pisces feel everything too much.|Today's horoscope said to listen to my heart.]
+
+# ================= tails: birthday =================
+@rule tail.bday.today
+on @tail
+when birthday=today
+- [Also, um... today's my birthday.|By the way, it's my birthday today. Just saying!]
+- [Guess what day it is? My birthday!|I'm a year older today. Weird, right?]
+
+@rule tail.bday.week
+on @tail
+when birthday=week
+- [My birthday's this week, you know.|It's my birthday week, so be nice to me.]
+- [My birthday's coming up any day now.|I've been dropping hints about my birthday all week.]
+
+@rule tail.bday.soon
+on @tail
+when birthday=soon
+- [My birthday's not far off, by the way.|I'm already thinking about my birthday next week.]
+- [Next week's my birthday. Not that I care.|Mark your calendar, my birthday's soon.]
+
+# ================= tails: body =================
+@rule tail.height.tall
+on @tail
+when height=tall
+- [Being this tall, I see everything from up here.|I always hit my head on the door frames here.]
+- [Tall girls get stared at, you know.|At least I can reach the top shelf.]
+
+@rule tail.height.short
+on @tail
+when height=short
+- [Don't look down at me like that.|Being short is hard, I can't reach anything.]
+- [I'm small, but I'm tough.|Everyone pats my head. It's annoying. Kind of.]
+
+@rule tail.bust.big
+on @tail
+when bust=big lewd>=30
+- [My shoulders are killing me today, by the way.|This uniform's too tight on me.]
+- [Eyes up here, mister.|Ugh, the buttons on this blouse are struggling.]
+
+@rule tail.bust.small
+on @tail
+when bust=small lewd>=30
+- [At least running is easy for me.|What are you looking at? Hmph.]
+- [Small is cute, okay? Okay.|Don't compare me to the others.]
+
+# ================= tails: role and relation =================
+@rule tail.role.teacher
+on @tail
+when role=teacher
+- [Anyway, don't forget your homework.|And don't be late to class tomorrow.]
+- [I have a stack of papers to grade, sadly.|Teachers have lives too, you know.]
+
+@rule tail.role.exteacher
+on @tail
+when role=exteacher
+- [I still catch myself grading things in my head.|Being on this side is freeing.]
+- [No more red pens for me.|Don't tell anyone I miss teaching a little.]
+
+@rule tail.role.exstory
+on @tail
+when role=exstory
+- [A normal school life suits me now.|I'm still getting used to being a regular student.]
+- [Things are quieter since everything settled.|I like being just another girl in class.]
+
+@rule tail.rel.gf
+on @tail
+when rel=girlfriend
+- [I'm glad you're mine, you know.|Walk me home later?]
+- [I like these little moments with you.|You're the best part of my day.]
+
+@rule tail.days.many
+on @tail
+when days=many rel=friend|lover|girlfriend
+- [We talk every day now, huh.|You're starting to know me too well.]
+- [It's become our thing, these chats.|I'd miss these talks if they stopped.]
+
+@rule tail.partner
+on @tail
+when partner=*
+- [{Partner} would like this too.|I should tell {partner} about this.]
+- [{Partner}'s waiting for me later.|Don't tell {partner} I said that.]
+
+@rule tail.bff
+on @tail
+when bff=*
+- [{Bff} would laugh at this.|Remind me to tell {bff} later.]
+- [{Bff} and I talked about this yesterday.|Don't tell {bff} I said that.]
+
+@rule tail.fav
+on @tail
+when fav=* likes!=yes|no
+- [Honestly, I'd rather {favdo} right now.|After this I want to {favdo}.]
+- [Have I told you I love {fav}?|{Fav} would fix my whole day.]
+
+# ================= your openers =================
+@rule meopen.gf
+on @meopen
+when rel=girlfriend
+- [Hey, babe.|So, love...|Hey, you.]
+- [Mm, {name}...|Hey, beautiful.]
+
+@rule meopen.lover
+on @meopen
+when rel=lover
+- [Hey, {name}.|So...]
+- [Hey, you.|{Name}...]
+
+@rule meopen.friend
+on @meopen
+when rel=friend
+- [Hey, {name}!|Yo.|So, {name}.]
+- [Hey.|Okay, so...]
+
+@rule meopen.acq
+on @meopen
+when rel=acquaintance
+- [Um, hi.|Hey, {name}, right?]
+- [Hi there.|Hey.]
+
+@rule meopen.teacher
+on @meopen
+when role=teacher
+- [Sensei.|Excuse me, sensei.]
+- [Um, sensei?|Sensei, got a minute?]
+
+@rule meopen.exteacher
+on @meopen
+when role=exteacher
+- [Hey, {name}. Not sensei anymore, right?|So, {name}.]
+- [Hey, ex-sensei.|{Name}.]

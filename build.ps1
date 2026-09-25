@@ -23,7 +23,7 @@ $refs = @(
   "$managed\Assembly-CSharp.dll", "$managed\Assembly-CSharp-firstpass.dll",
   "$managed\TextMeshPro-1.0.55.56.0b12.dll",
   "$core\BepInEx.dll", "$core\0Harmony.dll",
-  "$plugins\KKAPI.dll", "$plugins\KK_BepisPlugins\ExtensibleSaveFormat.dll"
+  "$plugins\KKAPI.dll", "$plugins\KK_BepisPlugins\ExtensibleSaveFormat.dll", "$plugins\KK_BepisPlugins\Sideloader.dll"
 ) | ForEach-Object { "-r:$_" }
 
 # BepInEx rejects config sections/keys containing = \n \t \ " ' [ ] and the plugin then

@@ -397,6 +397,7 @@ namespace Joojkk.CampusLife
         // ---------------- touch ----------------
 
         private static TalkScene _touchScene;
+        private static bool _touchSeen;
         private static readonly Dictionary<int, int> TouchCount = new Dictionary<int, int>();
 
         /// <summary>
@@ -411,7 +412,14 @@ namespace Joojkk.CampusLife
                 var h = HerOf(__instance);
                 if (h == null || h.isAnger) return;
                 var ts = G.TalkScene;
-                if (ts != _touchScene) { _touchScene = ts; TouchCount.Clear(); }
+                if (ts != _touchScene) { _touchScene = ts; TouchCount.Clear(); _touchSeen = false; }
+                // A girlfriend on the same map sees you touching another girl (once per conversation): she knows it
+                // first-hand, so she says "I saw" and not "they told me you flirted".
+                if (_touch && !_touchSeen && !h.isGirlfriend)
+                {
+                    var gfs = Social.GirlsOnMyMap().Where(g => g != h && g.isGirlfriend).ToList();
+                    if (gfs.Count > 0) { _touchSeen = true; Social.Add(Social.Kinds.Flirted, h, gfs); Note(GirlInfo.FirstName(h) + ": touched in sight of " + string.Join(", ", gfs.Select(g => GirlInfo.FirstName(g)).ToArray())); }
+                }
                 var key = _parts + (_touch ? 0 : 10);
                 int n;
                 TouchCount.TryGetValue(key, out n);
@@ -441,6 +449,10 @@ namespace Joojkk.CampusLife
             if (mood == Mood.Flirty) tol += 1;
             if (mood == Mood.Upset) tol -= 1;
             if (Social.Trust(h) >= 75) tol += 1;
+            // Who is watching: a crowd makes her shy unless she enjoys the show; alone she lets you closer.
+            var watching = Conversation.Onlookers(h).Count;
+            if (watching >= 3 && lewd < 60 && !GirlInfo.Quirks(h).bitch) tol -= 1;
+            else if (watching == 0 && h.relation >= 1) tol += 1;
             return Math.Max(0, tol);
         }
 

@@ -205,6 +205,11 @@ namespace Joojkk.SchoolOptimizer
                 "(it is created loose and attached to her only at the end). Pieces that belong to nobody are removed, and " +
                 "KK_AccessoryClothes pieces left unbound (drawn at the middle of the map) are bound to her body.",
                 null, new ConfigurationManagerAttributes { Order = 1 }));
+            Config.Bind("6. Missing zipmods", "Missing zipmods", "", new ConfigDescription(
+                "Lists every zipmod that the girls of the loaded save and the cards in UserData/chara use but that is not " +
+                "installed (or is installed in an older version without some items), with the characters and items that need " +
+                "it. Search and sort in the window; the list is also saved to UserData/missing_zipmods.txt.",
+                null, new ConfigurationManagerAttributes { CustomDrawer = MissingMods.DrawButton, HideDefaultButton = true, HideSettingName = true }));
             Log.LogDebug("Background loading priority at start: " + Application.backgroundLoadingPriority);
 
             var harmony = Harmony.CreateAndPatchAll(typeof(Hooks), GUID);
@@ -227,6 +232,12 @@ namespace Joojkk.SchoolOptimizer
         private float _nextBoneLod, _nextOrphans;
 
         private float _nextCrowdFix;
+
+        private void OnGUI()
+        {
+            try { MissingMods.OnGUI(); }
+            catch (Exception e) { Log.LogDebug("Missing zipmods window: " + e.Message); }
+        }
 
         private void Update()
         {

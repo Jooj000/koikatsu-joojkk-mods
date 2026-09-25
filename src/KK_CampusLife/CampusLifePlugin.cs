@@ -41,6 +41,7 @@ namespace Joojkk.CampusLife
                 ActivitySpots.Install(harmony);
                 try { Consent.Install(harmony); }
                 catch (Exception e) { Log.LogWarning("Director answers not installed, the game answers: " + e.Message); }
+                Conversation.InstallReact(harmony);
                 try { Reactions.Install(harmony); }
                 catch (Exception e) { Log.LogWarning("Girls react as in the game: " + e.Message); }
                 try { Brain.Install(harmony); }

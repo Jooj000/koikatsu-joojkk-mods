@@ -573,6 +573,7 @@ namespace Joojkk.CampusLife
             Para(e, "Energy", "for activities; refills every morning. Naps, rest, hearty lunches, energy drinks and devotion level 2 restore it.");
             Para(e, "Time", "a free period lasts " + Mathf.RoundToInt(500f * Cfg.PeriodLength.Value) + " s of walking around. Activities cost energy and only the time their animation plays; menus, talks and menu teleports cost none.");
             Para(e, "Reputation", "+" + s.Reputation + "% on request pay now, a daily request at 60, better fundraising. Helping raises it; odd places lower it.");
+            Para(e, "Club", ClubStory.Label() + ". Favor you win in talks, new members and H fill the gauge; each rank is a chapter.");
 
             if (Cfg.DevotionEnabled.Value)
             {

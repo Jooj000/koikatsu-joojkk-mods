@@ -115,6 +115,7 @@ namespace Joojkk.CampusLife
             Rendezvous.Tick();
             Brain.CheckClashes();
             Social.DailySpread();
+            ClubStory.Tick();
             Social.Tick();
             try { WalkTalk.Tick(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
             if (Quiet) return;
@@ -249,6 +250,7 @@ namespace Joojkk.CampusLife
             public string Id;
             public string Name;
             public string When;
+            public string Spoken = "";   // how a girl says it: "today", "tomorrow", "on Thursday", "next Monday"
         }
 
         private static readonly string[] DayNames = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
@@ -259,6 +261,16 @@ namespace Joojkk.CampusLife
             if (days == 1) return "Tomorrow";
             if (days < 7) return DayNames[weekday] + " (in " + days + " days)";
             return DayNames[weekday] + ", in " + days + " days";
+        }
+
+        /// <summary>The day in a sentence, no brackets.</summary>
+        private static string SpokenWhen(int days, int weekday)
+        {
+            if (days <= 0) return "today";
+            if (days == 1) return "tomorrow";
+            if (days < 7) return "on " + DayNames[weekday];
+            if (days < 14) return "next " + DayNames[weekday];
+            return "in " + (days / 7) + " weeks";
         }
 
         /// <summary>Next school events, nearest first.</summary>
@@ -272,7 +284,7 @@ namespace Joojkk.CampusLife
                 var days = weeks * 7 + weekday - today;
                 if (days < 0) days += 7;
                 if (list.Any(u => u.Id == id)) return;
-                list.Add(new Upcoming { Days = days, Id = id, Name = EventName(id), When = WhenLabel(days, weekday) });
+                list.Add(new Upcoming { Days = days, Id = id, Name = EventName(id), When = WhenLabel(days, weekday), Spoken = SpokenWhen(days, weekday) });
             };
             if (!string.IsNullOrEmpty(S.PendingEvent)) add(S.PendingEvent, 0, today);
             // The next two loops, so each event shows its next date (the exams come twice a loop).

@@ -160,42 +160,143 @@ namespace Joojkk.CampusLife
             return mask;
         }
 
-        /// <summary>The picture of the floor the player is on: taken once per map and metre of height, then reused.</summary>
+        /// <summary>
+        /// The picture of the floor the player is on. 2026-10-28 ("eu já falei para o radar ser só imagem. só guardar as
+        /// imagens resultantes e utilizar ao invés de renderizar do 0"): every picture ever taken is saved as a PNG in
+        /// BepInEx/cache/joojkk_radar (one per map and floor, the same at any time of day), and from then on it is only
+        /// loaded. A new picture is taken only where there is none within 1.5 m of height, and only once the player has
+        /// stood on that height for a second.
+        /// </summary>
         private static Floor FloorFor()
         {
-            // A new map or a new period (the light changes with the time of day): new pictures.
-            var mapNo = G.PlayerMapNo + "/" + G.Period;
+            if (G.PlayerMapNo < 0) return null;   // between maps (loading): nothing to photograph
+            var mapNo = G.PlayerMapNo.ToString();
             if (mapNo != _boundsMap)
             {
                 Forget();
                 _boundsMap = mapNo;
-                _bounds = MapBounds();
-                _boundsAt = Time.realtimeSinceStartup;
+                _bounds = new Rect();
+                _boundsAt = -10f;
             }
-            // Measured while the map was still loading:
-            // measure again every second until there is ground.
-            if ((_bounds.width < 1f || _bounds.height < 1f) && Time.realtimeSinceStartup - _boundsAt > 1f)
+            var now = Time.realtimeSinceStartup;
+            var pp = G.Act.Player.position;
+            var py = pp.y;
+            if (Mathf.Abs(py - _stableY) > 0.25f) { _stableY = py; _stableSince = now; }
+            var prefix = mapNo + "@";
+            if (_shown != null && Mathf.Abs(py - _shown.Y) < 2.5f && Covers(_shown.World, pp) && Cache.Contains(_shown))
             {
-                _bounds = MapBounds();
-                _boundsAt = Time.realtimeSinceStartup;
+                _shown.Used = now;
+                return _shown;
             }
-            if (_bounds.width < 1f || _bounds.height < 1f) return null;
-            var y = Mathf.Round(G.Act.Player.position.y);
-            var key = mapNo + "@" + y;
-            var f = Cache.FirstOrDefault(c => c.Key == key);
+            var f = Cache.Where(c => Mathf.Abs(c.Y - py) < 1.5f && Covers(c.World, pp)).OrderBy(c => Mathf.Abs(c.Y - py)).FirstOrDefault();
             if (f == null)
             {
-                f = Bake(key, y);
-                Cache.Add(f);
-                while (Cache.Count > MaxCached)
+                // A picture that does not reach the player was taken before the map had loaded: taken again.
+                var saved = Disk().Where(d => d.Map == mapNo && Mathf.Abs(d.Y - py) < 1.5f && Covers(d.World, pp)).OrderBy(d => Mathf.Abs(d.Y - py)).FirstOrDefault();
+                if (saved != null) f = Load(saved);
+            }
+            if (f == null)
+            {
+                // Nothing saved here yet: one picture, taken standing still, then never again.
+                if (now - _stableSince < 1f || now - _lastBake < 1.5f) return _shown != null && Cache.Contains(_shown) ? _shown : null;
+                if (_bounds.width < 1f || _bounds.height < 1f)
                 {
-                    var old = Cache.Where(c => c != f).OrderBy(c => c.Used).First();
-                    Release(old);
-                    Cache.Remove(old);
+                    // Measured while the map was still loading: measure again every second until there is ground.
+                    if (now - _boundsAt < 1f) return null;
+                    _boundsAt = now;
+                    var map = G.Act.Map;
+                    if (map == null || map.isMapLoading) return null;
+                    _bounds = Disk().Where(d => d.Map == mapNo && Covers(d.World, pp)).Select(d => d.World).FirstOrDefault();
+                    if (_bounds.width < 1f || _bounds.height < 1f) _bounds = MapBounds();
+                    if (_bounds.width < 1f || _bounds.height < 1f || !Covers(_bounds, pp)) { _bounds = new Rect(); return null; }
+                }
+                _lastBake = now;
+                var y = Mathf.Round(py);
+                f = Bake(prefix + y, y);
+                Save(mapNo, f);
+            }
+            Cache.Add(f);
+            while (Cache.Count > MaxCached)
+            {
+                var old = Cache.Where(c => c != f).OrderBy(c => c.Used).First();
+                Release(old);
+                Cache.Remove(old);
+            }
+            f.Used = now;
+            return f;
+        }
+
+        private static float _stableY = -999f, _stableSince;
+
+        private static bool Covers(Rect world, Vector3 p) { return world.Contains(new Vector2(p.x, p.z)); }
+
+        private sealed class Saved
+        {
+            public string Map, File;
+            public float Y;
+            public Rect World;
+        }
+
+        private static List<Saved> _disk;
+        private static string Dir { get { return System.IO.Path.Combine(System.IO.Path.Combine(BepInEx.Paths.CachePath, "joojkk_radar"), "v1"); } }
+
+        /// <summary>index.txt: map|y|xMin|zMin|width|depth|file, one line per saved floor.</summary>
+        private static List<Saved> Disk()
+        {
+            if (_disk != null) return _disk;
+            _disk = new List<Saved>();
+            try
+            {
+                var idx = System.IO.Path.Combine(Dir, "index.txt");
+                if (!System.IO.File.Exists(idx)) return _disk;
+                var inv = System.Globalization.CultureInfo.InvariantCulture;
+                foreach (var line in System.IO.File.ReadAllLines(idx))
+                {
+                    var p = line.Split('|');
+                    if (p.Length < 7 || !System.IO.File.Exists(System.IO.Path.Combine(Dir, p[6]))) continue;
+                    _disk.Add(new Saved
+                    {
+                        Map = p[0], Y = float.Parse(p[1], inv), File = p[6],
+                        World = new Rect(float.Parse(p[2], inv), float.Parse(p[3], inv), float.Parse(p[4], inv), float.Parse(p[5], inv)),
+                    });
                 }
             }
-            f.Used = Time.realtimeSinceStartup;
-            return f;
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Radar index: " + e.Message); }
+            return _disk;
+        }
+
+        private static Floor Load(Saved d)
+        {
+            try
+            {
+                var tex = new Texture2D(2, 2, TextureFormat.ARGB32, false) { name = "cl_radar_floor_" + d.Map + "@" + d.Y, wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+                if (!tex.LoadImage(System.IO.File.ReadAllBytes(System.IO.Path.Combine(Dir, d.File)), true)) { Object.Destroy(tex); return null; }
+                return new Floor { Key = d.Map + "@" + d.Y, Tex = tex, World = d.World, Y = d.Y };
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Radar load " + d.File + ": " + e.Message); return null; }
+        }
+
+        private static void Save(string map, Floor f)
+        {
+            try
+            {
+                var tex = f.Tex as Texture2D;
+                if (tex == null) return;   // the outline could not be read back: nothing to keep
+                System.IO.Directory.CreateDirectory(Dir);
+                var inv = System.Globalization.CultureInfo.InvariantCulture;
+                var file = "map" + map + "_y" + f.Y.ToString("0", inv) + ".png";
+                System.IO.File.WriteAllBytes(System.IO.Path.Combine(Dir, file), tex.EncodeToPNG());
+                // The same file again (an old picture that did not reach the player): its line is replaced.
+                Disk().RemoveAll(d => d.File == file);
+                Disk().Add(new Saved { Map = map, Y = f.Y, World = f.World, File = file });
+                System.IO.File.WriteAllLines(System.IO.Path.Combine(Dir, "index.txt"), Disk().Select(d => string.Join("|", new[]
+                {
+                    d.Map, d.Y.ToString("0.##", inv), d.World.xMin.ToString("0.###", inv), d.World.yMin.ToString("0.###", inv),
+                    d.World.width.ToString("0.###", inv), d.World.height.ToString("0.###", inv), d.File,
+                })).ToArray());
+                CampusLifePlugin.Log.LogInfo("Radar map: saved " + file);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Radar save: " + e.Message); }
         }
 
         /// <summary>The map's ground rectangle (X by Z) from the school's own renderers; huge ones (sky, far scenery) are left out.</summary>
@@ -324,9 +425,12 @@ namespace Joojkk.CampusLife
             foreach (var f in Cache) Release(f);
             Cache.Clear();
             _boundsMap = null;
+            _shown = null;
         }
 
         /// <summary>Girls on another floor: a dimmed icon and a tiny arrow, up or down.</summary>
+        private static float _lastBake = -10f;
+
         private static void Floors(RectTransform root, bool on)
         {
             var act = G.Act;
@@ -343,6 +447,8 @@ namespace Joojkk.CampusLife
                 try { item = NpcIcon(npc); } catch { continue; }
                 if (item == null || item.iconItem == null || item.iconItem.graphic == null) continue;
                 var g = item.iconItem.graphic;
+                // game missed leaves a girl who is right here invisible on the radar.
+                if (npc.isActive && act.Map != null && npc.mapNo == act.Map.no && !item.iconItem.visible) item.SetVisible(true);
                 var dy = npc.position.y - py;
                 var other = npc.isActiveAndEnabled && Mathf.Abs(dy) > OtherFloor;
                 var a = other ? 0.35f : item.IconColor.a;
@@ -368,8 +474,8 @@ namespace Joojkk.CampusLife
                     Arrows[npc] = arrow;
                 }
                 if (!arrow.gameObject.activeSelf) arrow.gameObject.SetActive(true);
-                arrow.rectTransform.anchoredPosition = g.rectTransform.anchoredPosition + new Vector2(9f, 9f);
-                // Up or down on the screen, whichever way the radar turns.
+                // Beside the icon on the screen, up or down on the screen, whichever way the radar turns (the offset in the
+                arrow.transform.position = g.rectTransform.position + new Vector3(9f, 9f, 0f) * g.rectTransform.lossyScale.x;
                 arrow.transform.rotation = Quaternion.Euler(0f, 0f, dy > 0f ? 0f : 180f);
                 arrow.transform.SetAsLastSibling();
             }

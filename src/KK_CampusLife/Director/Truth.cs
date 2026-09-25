@@ -40,7 +40,10 @@ namespace Joojkk.CampusLife
 
         public static bool AtSchool(string key) { var h = Social.Get(key); return h == null || AtSchool(h); }
 
-        /// <summary>What she is doing this moment, from the game's own action and where she is ("" when unknown).</summary>
+        /// <summary>
+        /// do (on the way it is "going to the cafeteria to eat"), talking is who she talks to, and no "(place)" since the
+        /// card shows the place above.
+        /// </summary>
         public static string Doing(SaveData.Heroine h)
         {
             try
@@ -48,13 +51,68 @@ namespace Joojkk.CampusLife
                 if (h == null || !Known) return "";
                 var n = NpcOf(h);
                 if (n == null || n.mapNo < 0) return "not at school today";
+                var ts = G.TalkScene;
+                if (ts != null && ts.targetHeroine == h) return "talking with you";
+                if (n.isLesH) return "slipped away with someone";
+                if (n.isOnanism) return "somewhere private";
                 var r = n.AI != null ? n.AI.result : null;
-                var what = r == null ? "" : Action(r.actionNo, r.heroine != null && r.heroine != h && AtSchool(r.heroine) ? GirlInfo.FirstName(r.heroine) : "");
+                var with = r != null && r.heroine != null && r.heroine != h && AtSchool(r.heroine) ? GirlInfo.FirstName(r.heroine) : "";
+                var no = r != null ? r.actionNo : -1;
+                if (n.isTalking)
+                {
+                    var p = TalkingWith(n);
+                    return p != null ? "talking with " + GirlInfo.FirstName(p) : "chatting";
+                }
+                var moving = !n.isArrival && n.agent != null && n.agent.enabled && n.agent.velocity.sqrMagnitude > 0.04f;
+                if (moving)
+                {
+                    var dest = r != null && r.point != null ? r.point.MapNo : n.mapNo;
+                    var to = ActionTo(no, with);
+                    var place = Places.MapLabel(dest);
+                    if (dest != n.mapNo && place != "unknown") return "going to the " + place + (to != "" ? " " + to : "");
+                    return to != "" ? "on her way " + to : "walking around";
+                }
+                var what = Action(no, with);
+                if (no == 7 && with == "") return "waiting to chat";   // the game's chat with nobody next to her yet
+                if (!string.IsNullOrEmpty(what)) return what;
                 var where = Places.MapLabel(n.mapNo);
-                if (string.IsNullOrEmpty(what)) return where == "unknown" ? "" : "at the " + where;
-                return where == "unknown" ? what : what + " (" + where + ")";
+                return where == "unknown" ? "" : "hanging around";
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Truth.Doing: " + e.Message); return ""; }
+        }
+
+        /// <summary>The girl next to her in the talking motion (a chat pair, a group, a duo scene).</summary>
+        private static SaveData.Heroine TalkingWith(NPC n)
+        {
+            var pos = n.transform.position;
+            var other = G.Act.npcList.Where(x => x != null && x != n && x.heroine != null && x.mapNo == n.mapNo && x.isTalking && (x.transform.position - pos).sqrMagnitude < 6.25f)
+                .OrderBy(x => (x.transform.position - pos).sqrMagnitude).FirstOrDefault();
+            return other != null ? other.heroine : null;
+        }
+
+        /// <summary>What she is on her way to do ("to eat"), "" when the action says nothing about a trip.</summary>
+        public static string ActionTo(int no, string with)
+        {
+            switch (no)
+            {
+                case 0: return "to change";
+                case 1: return "to use the restroom";
+                case 2: return "to shower";
+                case 3: return "to eat";
+                case 6: return "for club";
+                case 7: return string.IsNullOrEmpty(with) ? "to chat" : "to chat with " + with;
+                case 8: return "to talk to you";
+                case 9: return "to read";
+                case 13: return "to listen to music";
+                case 16: return "for a drink";
+                case 18: return "to exercise";
+                case 21: return "to study";
+                case 22: return "to nap";
+                case 23: case 24: return "to find you";
+                case 26: case 27: return string.IsNullOrEmpty(with) ? "to slip away" : "to slip away with " + with;
+                case 28: case 29: return "to wait";
+                default: return "";
+            }
         }
 
         /// <summary>The game's action numbers (koikatsu-referencia-ia-das-alunas) as a short phrase.</summary>
