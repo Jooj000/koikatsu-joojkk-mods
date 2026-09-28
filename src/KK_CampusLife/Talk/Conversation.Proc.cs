@@ -26,6 +26,9 @@ namespace Joojkk.CampusLife
             public string Subject = "";        // small talk: what about
             public string ToldFit = "";        // "tell": how your news landed (good, neutral, bad)
             public SchoolTopicInfo School;
+            public List<LoreFact> Facts;       // "confide": your romances with other girls, told in one go
+            public int Times;                  // "confide": how many untold steps with them in all (the impact)
+            public List<string> Merged;        // topics with the same label folded into this one, settled with it
         }
 
         private sealed class PMove
@@ -67,7 +70,7 @@ namespace Joojkk.CampusLife
                     if (f.Day == S.Day && f.Weight < 2) continue;   // what just happened is not a topic yet
                     ctx.Add(new PTopic { Id = "f:" + f.Id, Kind = "us", Fact = f, Know = k, Label = UsLabel(f), Score = Lore.Salience(k, f) });
                 }
-                else if (you && f.Weight >= 1 && S.Day - k.Day <= 7)
+                else if (you && f.Weight >= 1 && S.Day - k.Day <= 7 && !Confided(f, key))
                     ctx.Add(new PTopic { Id = "f:" + f.Id, Kind = "you", Fact = f, Know = k, Label = YouLabel(f, k), Score = Lore.Salience(k, f) * 1.2f, Hot = f.Weight >= 2 && f.Valence <= 0 || f.Verb == "had_h" });
             }
 
@@ -77,6 +80,16 @@ namespace Joojkk.CampusLife
                 if (st != null && st.Id != "rumors" && !TopicDone(key, "school:" + st.Id)) ctx.Add(new PTopic { Id = "school:" + st.Id, Kind = "school", School = st, Label = "Talk about " + st.Label, Score = 1.4f });
             }
 
+            // One topic per label (2026-10-29: Frieren had "Talk about what she saw" twice, the restroom and the
+            // changing room): the strongest stays, the rest are settled together with it.
+            ctx = ctx.GroupBy(t => t.Label).Select(g =>
+            {
+                var top = g.OrderByDescending(t => t.Score).First();
+                if (g.Count() > 1) { top.Merged = g.Where(t => t != top).Select(t => t.Id).ToList(); top.Score += 0.3f * top.Merged.Count; }
+                return top;
+            }).ToList();
+            var confide = stranger ? null : ConfidePick(h);
+            if (confide != null) ctx.Add(confide);
             var gossip = stranger ? null : GossipPick(key);
             var tell = stranger ? null : TellPick(key);
             var list = ctx.OrderByDescending(t => t.Score).Take(gossip != null && tell != null ? 2 : 3).ToList();
@@ -187,6 +200,128 @@ namespace Joojkk.CampusLife
             return new PTopic { Id = "tell:" + f.Id, Kind = "tell", Fact = f, Label = "Tell her the news about " + (who != null ? GirlInfo.FirstName(who) : "someone"), Score = 1f };
         }
 
+        private static readonly string[] ConfideVerbs = { "flirted", "held_hands", "touched", "kissed", "dated", "confessed", "started_dating", "had_h" };
+
+        private static int ConfideDepth(string verb)
+        {
+            switch (verb)
+            {
+                case "flirted": case "held_hands": case "touched": return 1;
+                case "kissed": case "dated": return 2;
+                case "confessed": case "started_dating": return 3;
+                case "had_h": return 4;
+                default: return 0;
+            }
+        }
+
+        /// <summary>A romance of yours with another girl (not her): the confide topic tells it, not a topic of its own.</summary>
+        private static bool Confided(LoreFact f, string her)
+        {
+            if (!f.Involves(Lore.Player) || f.Involves(her) || Array.IndexOf(ConfideVerbs, f.Verb) < 0) return false;
+            var other = f.Subject == Lore.Player ? f.Obj : f.Subject;
+            return !string.IsNullOrEmpty(other) && other != her;
+        }
+
+        /// <summary>
+        /// como se você estivesse contando. e quando tem mais de um desses, junte em um só"): your romances with other
+        /// girls in the last two weeks (and girlfriends you still have), one topic for all of them, the deepest step with
+        /// each girl. A girl told about already is left out until something new happens with her.
+        /// </summary>
+        private static PTopic ConfidePick(SaveData.Heroine h)
+        {
+            if (S.Lore == null) return null;
+            var key = GirlInfo.Key(h);
+            var best = new Dictionary<string, LoreFact>();
+            var times = 0;
+            foreach (var f in S.Lore)
+            {
+                if (!Confided(f, key) || f.Subject != Lore.Player && f.Obj != Lore.Player) continue;
+                var other = f.Subject == Lore.Player ? f.Obj : f.Subject;
+                var oh = GirlInfo.Find(other);
+                if (oh == null || S.Day - f.Day > 14 && !(oh.isGirlfriend && f.Verb == "started_dating")) continue;
+                if (TopicDone(key, "confide:" + other + ":" + f.Id)) continue;
+                times++;
+                LoreFact had;
+                if (!best.TryGetValue(other, out had) || ConfideDepth(f.Verb) > ConfideDepth(had.Verb) || ConfideDepth(f.Verb) == ConfideDepth(had.Verb) && f.Day > had.Day) best[other] = f;
+            }
+            if (best.Count == 0) return null;
+            var facts = best.Values.OrderByDescending(f => ConfideDepth(f.Verb)).ThenByDescending(f => f.Day).Take(4).ToList();
+            // No names on the button:
+            // they come out in your words when you tell her.
+            var deepest = facts.Max(f => ConfideDepth(f.Verb));
+            return new PTopic { Id = "confide", Kind = "confide", Facts = facts, Fact = facts[0], Label = "Admit about the others", Score = 1.6f + deepest * 0.3f, Hot = deepest >= 3, Times = times };
+        }
+
+        /// <summary>
+        /// Telling her: who is in it decides how she takes it (her best friend, a friend, a girl she cannot stand, a girl
+        /// she likes herself), whether she already knew (saw it, or heard it), whether she wants you herself, and, for your
+        /// girlfriend, her stance on sharing you (decided now if she had none). She learns it from you.
+        /// </summary>
+        private static void ConfideHer(SaveData.Heroine h, PTopic t, Dictionary<string, string> c)
+        {
+            var key = GirlInfo.Key(h);
+            var others = t.Facts.Select(f => GirlInfo.Find(f.Subject == Lore.Player ? f.Obj : f.Subject)).ToList();
+            var names = others.Select(GirlInfo.FirstName).ToList();
+            c["who"] = names.Count == 1 ? names[0] : names.Count == 2 ? names[0] + " and " + names[1] : string.Join(", ", names.Take(names.Count - 1).ToArray()) + " and " + names[names.Count - 1];
+            c["who1"] = names[0];
+            c["count"] = names.Count == 1 ? "one" : names.Count == 2 ? "two" : "many";
+            var deep = t.Facts.Max(f => ConfideDepth(f.Verb));
+            c["depth"] = deep >= 4 ? "h" : deep == 3 ? "dating" : deep == 2 ? (t.Facts.Any(f => f.Verb == "kissed") ? "kiss" : "date") : "flirt";
+            c["thing"] = names.Count == 1 ? "you and " + names[0] : "you and the others";
+            // What she knew before you said a word.
+            var knew = t.Facts.Select(f => Lore.KnowOf(key, f)).ToList();
+            var known = knew.Count(k => k != null);
+            c["knew"] = known == 0 ? "none" : known == knew.Count ? "all" : "some";
+            var seen = knew.FirstOrDefault(k => k != null && k.How == How.Witness);
+            var heard = knew.FirstOrDefault(k => k != null && k.How != How.Witness);
+            if (known > 0) c["knewhow"] = seen != null ? "witness" : "heard";
+            if (heard != null && !string.IsNullOrEmpty(heard.From) && heard.From != Lore.Player) c["src"] = GirlInfo.FirstName(heard.From);
+            // Who is in the circle, from her side.
+            string circle = "none", circleWho = null;
+            var bff = Social.BestFriend(h);
+            foreach (var o in others)
+            {
+                var bond = Social.Bond(h, o);
+                var role = o == bff || bond >= 70 ? "bff" : RomanceFor(h, o) >= 40 ? "crush" : bond >= 40 ? "friend" : bond <= -30 ? "rival" : "none";
+                if (role == "none") continue;
+                if (circle == "none") { circle = role; circleWho = GirlInfo.FirstName(o); }
+                else if (circle != role && (role == "rival" || circle == "rival")) { circle = "mixed"; if (role == "rival") c["rivalwho"] = GirlInfo.FirstName(o); else c["rivalwho"] = circleWho; }
+            }
+            c["circle"] = circle;
+            if (circleWho != null) c["circlewho"] = circleWho;
+            if (circle == "rival" && circleWho != null) c["rivalwho"] = circleWho;
+            var wants = Interested(h);
+            c["interested"] = wants ? "yes" : "no";
+            if (h.isGirlfriend)
+            {
+                // Her stance on each of them (she decides now when she had none); the worst one shows.
+                var worst = Share.Trio;
+                foreach (var o in others) { Share.Learned(h, o, false); worst = Math.Min(worst, Share.Stance(h, o)); }
+                c["stance"] = worst == Share.Refuses ? "refuses" : worst == Share.Separate ? "separate" : worst == Share.Friends ? "friends" : worst == Share.Trio ? "trio" : "unknown";
+            }
+            var hurt = h.isGirlfriend ? c["stance"] == "refuses" : wants && deep >= 2;
+            c["hurt"] = hurt ? "yes" : "no";
+            // She hears it from you now (no "you and X" topic about these again), and an honest word counts.
+            foreach (var f in t.Facts)
+            {
+                var k = Lore.KnowOf(key, f) ?? Lore.Learn(key, f, How.Heard, Lore.Player);
+                if (k != null) k.ToPlayer = 2;
+                MarkTopic(key, "confide:" + (f.Subject == Lore.Player ? f.Obj : f.Subject) + ":" + f.Id);
+            }
+            // The more times (every step with every girl, not only the deepest), the bigger it lands (mid-cycle list, item
+            // 1: "quanto mais de uma vez, maior o impacto"): it hurts more, and the honesty of saying it all counts more.
+            var times = Math.Max(t.Times, t.Facts.Count);
+            c["times"] = times <= 1 ? "once" : times <= 3 ? "few" : "many";
+            if (known < knew.Count) Social.AddTrust(h, hurt ? 1 : Math.Min(1 + times / 2, 4));
+            if (hurt)
+            {
+                Social.AddTrust(h, -Math.Min(times, 6));
+                if (!h.isGirlfriend) G.AddFavor(h, -Math.Min(2 * times, 10), 0);
+            }
+            CampusLifePlugin.Log.LogInfo("Talk confide: " + GirlInfo.FirstName(h) + " <- " + c["who"] + " (depth " + c["depth"] + ", knew " + c["knew"] + ", circle " + circle +
+                                         (circleWho != null ? " " + circleWho : "") + ", interested " + c["interested"] + ", times " + times + (h.isGirlfriend ? ", stance " + c["stance"] : "") + ")");
+        }
+
         /// <summary>
         /// You tell her: she learns it from you, and how it lands moves your reputation. Good news or juicy news for a
         /// talker raises it (she spreads that you know things); gossip that hurts her friend, or a mean secret, lowers it,
@@ -249,10 +384,13 @@ namespace Joojkk.CampusLife
             }
             var v = Voice.Of(h);
             if (v.Pet != "") subjects["pet:" + v.Pet] = 1.3f;
-            subjects["place:" + (Places.CurrentId ?? "")] = 0.6f;
+            // The place weighs more where it has a lot to say.
+            var pid = Places.CurrentId ?? "";
+            subjects["place:" + pid] = pid == "library" || pid == "rooftop" || pid == "infirmary" || Weather.Raining && Weather.Outdoor(G.PlayerMapNo) ? 1.1f : 0.6f;
             if (G.CurrentMask == PeriodMask.Lunch) subjects["lunch"] = 1f;
             if (Calendar.IsExamWeek) subjects["exams"] = 1.2f;
-            subjects["weather"] = 0.35f;
+            // Rain: the weather is worth talking about when it rains or is about to.
+            subjects["weather"] = Weather.Raining ? 1.4f : Weather.Later ? 0.8f : 0.35f;
             subjects["school"] = 0.5f;
             subjects["weekend"] = 0.5f;
             if (!stranger)
@@ -273,7 +411,7 @@ namespace Joojkk.CampusLife
         private static string StrangerLabel(string subject)
         {
             if (subject.StartsWith("place:", StringComparison.Ordinal)) return "Say something about " + PlaceThing();
-            if (subject == "weather") return "Make small talk about the weather";
+            if (subject == "weather") return Weather.Raining ? "Say something about the rain" : "Make small talk about the weather";
             if (subject == "lunch") return "Ask if she's had lunch";
             return "Make small talk";
         }
@@ -287,7 +425,7 @@ namespace Joojkk.CampusLife
             {
                 case "lunch": return "Chat about lunch";
                 case "exams": return "Chat about the exams";
-                case "weather": return "Chat about the weather";
+                case "weather": return Weather.Raining ? "Chat about the rain" : "Chat about the weather";
                 case "weekend": return "Chat about the weekend";
                 case "club": return "Ask how her club is going";
                 case "friend": return "Chat about her friends";
@@ -417,7 +555,7 @@ namespace Joojkk.CampusLife
                 case "lunch": return "lunch";
                 case "exams": return "the exams";
                 case "weekend": return "the weekend";
-                case "weather": return "the weather";
+                case "weather": return Weather.Raining ? "the rain" : "the weather";
                 case "club": return "the " + GirlInfo.ClubName(h);
                 case "friend": return "her friends";
                 case "birthday": return "her birthday";
@@ -469,9 +607,11 @@ namespace Joojkk.CampusLife
             var key = GirlInfo.Key(h);
             var gs = S.Girl(key);
             MarkTopic(key, t.Id);
+            if (t.Merged != null) foreach (var id in t.Merged) MarkTopic(key, id);
             if (t.Kind == "tell") TellHer(h, t);
             else if (t.Fact != null) Lore.Told(key, t.Fact, 1);
             var ctx = Ctx(h, gs, t);
+            if (t.Kind == "confide") ConfideHer(h, t, ctx);
 
             // Her day: the mood she shows and, now and then, one of her likes (the badges under the H bar read these).
             string newLike = null;
@@ -630,6 +770,7 @@ namespace Joojkk.CampusLife
                 case "gossip": return low ? new[] { "ask", "defend", "agree", "laugh" } : new[] { "ask", "agree", "tease", "defend" };
                 case "school": return new[] { "ask", "invite", "share", "tease" };
                 case "tell": return ctx.ContainsKey("told") && ctx["told"] == "bad" ? new[] { "hush", "defend", "laugh" } : new[] { "ask", "laugh", "agree", "tease" };
+                case "confide": return ctx.ContainsKey("hurt") && ctx["hurt"] == "yes" ? new[] { "comfort", "admit", "share", "ask" } : new[] { "ask", "share", "tease", "thank" };
                 default: return new[] { "share", "ask", "tease", "praise" };
             }
         }
@@ -725,8 +866,10 @@ namespace Joojkk.CampusLife
             var s = Sess;
             if (s == null || Scenes.Running) return false;
             var l = TalkTopics(s.Her, S.Girl(GirlInfo.Key(s.Her)));
-            var t = l.FirstOrDefault(x => string.IsNullOrEmpty(kind) || x.Kind == kind);
+            var t = l.FirstOrDefault(x => string.IsNullOrEmpty(kind) || x.Kind == kind || x.Id == kind);
             if (t == null && kind == "raise") t = RaiseTopic(s.Her);
+            // "st:<subject>" (st:weather, st:place:library): that small-talk subject even when it is not on the list now.
+            if (t == null && kind.StartsWith("st:", StringComparison.Ordinal)) t = new PTopic { Id = kind, Kind = "small", Subject = kind.Substring(3), Label = SmallLabel(kind.Substring(3)), Score = 0.5f };
             if (t == null) return false;
             PlayTopic(s.Her, t);
             return true;

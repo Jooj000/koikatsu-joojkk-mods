@@ -68,6 +68,7 @@ namespace Joojkk.CampusLife
         {
             Safe(GiftMenu.Close);
             Safe(PeepReturn.OnStartH);
+            Weather.InH = true;
         }
 
         protected override void OnEndH(MonoBehaviour proc, HFlag hFlag, bool vr)
@@ -78,6 +79,7 @@ namespace Joojkk.CampusLife
                 Campus.OnHEnd(hFlag.lstHeroine, hFlag.isFreeH);
             });
             Safe(PeepReturn.OnEndH);
+            Weather.InH = false;
         }
 
         private static void Safe(Action a)

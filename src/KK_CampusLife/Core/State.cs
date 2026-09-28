@@ -168,6 +168,7 @@ namespace Joojkk.CampusLife
         public int Trust = -1;          // 0-100, -1 = not set yet (starts from her favor)
         public List<int> Known = new List<int>();       // incidents she heard about
         public List<int> Unmentioned = new List<int>(); // ...and has not brought up with you yet
+        public List<int> Saw = new List<int>();         // ...the ones she saw with her own eyes (not heard)
         public List<int> TalkDays = new List<int>();    // days you talked (last 10)
         public int JealousDay = -1;     // last day she told you she feels left out
         public int VentDay = -1;        // last day she vented to you
@@ -195,7 +196,7 @@ namespace Joojkk.CampusLife
                 {"lg", LastGiftDay}, {"t", Talks}, {"g", Gifts}, {"kl", KnownLikes}, {"ls", LastSpotlightWeek},
                 {"at", Attention}, {"dv", Devotion}, {"pd", LastPerkDay}, {"arc", Arc == null ? null : Arc.ToDict()},
                 {"td", TalkDay}, {"tt", TalksToday}, {"cd", ChatDay}, {"lto", LastTopics},
-                {"tr", Trust}, {"kn", Known.Cast<object>().ToList()}, {"um", Unmentioned.Cast<object>().ToList()},
+                {"tr", Trust}, {"kn", Known.Cast<object>().ToList()}, {"um", Unmentioned.Cast<object>().ToList()}, {"sw", Saw.Cast<object>().ToList()},
                 {"tds", TalkDays.Cast<object>().ToList()}, {"clr", Cleared.Cast<object>().ToList()}, {"jd", JealousDay}, {"vd", VentDay}, {"cpd", ComplimentDay},
                 {"fa", FinishedArcs.Cast<object>().ToList()}, {"b", bonds}, {"dud", DuoDay}, {"duh", DuoHandled.Cast<object>().ToList()},
                 {"eps", Episodes.Cast<object>().ToList()}, {"epd", EpisodeDay}, {"rp", Rep}
@@ -225,7 +226,7 @@ namespace Joojkk.CampusLife
                 TalkDay = d.GetInt("td", -1), TalksToday = d.GetInt("tt"), ChatDay = d.GetInt("cd", -1), LastTopics = d.GetString("lto"),
                 Arc = ArcState.FromDict(d.GetObj("arc")),
                 Trust = d.GetInt("tr", -1), JealousDay = d.GetInt("jd", -1), VentDay = d.GetInt("vd", -1), ComplimentDay = d.GetInt("cpd", -1),
-                Known = Ints(d.GetList("kn")), Unmentioned = Ints(d.GetList("um")), TalkDays = Ints(d.GetList("tds")), Cleared = Ints(d.GetList("clr")),
+                Known = Ints(d.GetList("kn")), Unmentioned = Ints(d.GetList("um")), Saw = Ints(d.GetList("sw")), TalkDays = Ints(d.GetList("tds")), Cleared = Ints(d.GetList("clr")),
                 DuoDay = d.GetInt("dud", -1), DuoHandled = Ints(d.GetList("duh")), EpisodeDay = d.GetInt("epd", -1), Rep = d.GetInt("rp", 50)
             };
             var eps = d.GetList("eps");
@@ -252,12 +253,13 @@ namespace Joojkk.CampusLife
         public int Day;
         public string Kind = "";   // see Social.Kinds
         public string Girl = "";   // girl it happened to ("" = nobody in particular)
+        public string What = "";   // for "flirted": what it was (Witness.Flirt, Hand, Touch, Kiss); "" = older saves
 
-        public Dictionary<string, object> ToDict() { return new Dictionary<string, object> { {"id", Id}, {"d", Day}, {"k", Kind}, {"g", Girl} }; }
+        public Dictionary<string, object> ToDict() { return new Dictionary<string, object> { {"id", Id}, {"d", Day}, {"k", Kind}, {"g", Girl}, {"w", What} }; }
 
         public static Incident FromDict(Dictionary<string, object> d)
         {
-            return new Incident { Id = d.GetInt("id"), Day = d.GetInt("d"), Kind = d.GetString("k"), Girl = d.GetString("g") };
+            return new Incident { Id = d.GetInt("id"), Day = d.GetInt("d"), Kind = d.GetString("k"), Girl = d.GetString("g"), What = d.GetString("w") };
         }
     }
 

@@ -3,16 +3,22 @@
 @rule me.school
 on me.school
 - [What do you think about {event}?|Are you ready for {event}?|So, {event}...]
+- [How do you feel about {event}?|{Event} is coming, huh?] [Any thoughts?|Got plans?]
+- [Heard anything about {event}?|You doing anything for {event}?]
 
 @rule me.school.event
 on me.school
 when school=event
 - [Are you going to {event}?|{Event} is coming up, huh?|Got plans for {event}?]
+- [Will you be at {event}?|What are you doing for {event}?|Excited about {event}?]
+- [Who are you going to {event} with?|Is {event} worth going to?]
 
 @rule school.plain
 on school
 opens ask,invite,share
 - [{Event}? I haven't thought about it much.|Oh, {event}.] [Should be interesting.|Everyone's talking about it.]
+- [{Event}, huh?|Ah, right, {event}.] [I'll go if my friends do.|Could be fun.|It sneaks up every year.]
+- [Hmm, {event}.|{Event}? Already?] [I should probably prepare something.|Time flies.]
 
 @rule school.event.cheer
 on school
@@ -20,30 +26,40 @@ when school=event mood=cheerful|flirty|none
 opens invite,ask,tease
 feel smile
 - [I can't wait for {event}!|{Event}? I've been looking forward to it.] [It's {eventline}, right?|We should go together.|I'm already planning what to wear.]
+- [{Event} is the best part of the term!|Yes! {Event}!] [Promise you'll come?|I've got a whole plan.]
+- [Only a little longer till {event}.|I've been counting the days to {event}.] [I'm so excited.|Let's make it memorable.]
 
 @rule school.event.low
 on school
 when school=event low=yes
 opens comfort,invite,ask
 - [{Event}...|Ugh, is that soon?] [I'm not really in the mood.|I don't know if I'll go.|Maybe if someone came with me...]
+- [{Event} again...|I forgot about {event}.] [I don't really feel like it.|Maybe I'll stay home.]
+- [Everyone's so excited about {event}.|{Event}, huh.] [I just can't get into it.|Wake me up when it's over.]
 
 @rule school.event.club
 on school
 when school=event hasclub=yes
 opens ask,praise,invite
 - [The {club} is doing something for {event}.|We've been preparing for {event} at the {club}.] [Come see us?|It's a lot of work.|I'm kind of nervous.]
+- [The {club} has a booth at {event}.|We're putting on a show at {event}.] [Stop by!|Wish us luck.]
+- [{Event} means double practice at the {club}.|I'm in charge of something for the {club} at {event}.] [I'm exhausted.|Don't laugh if I mess up.]
 
 @rule school.council
 on school
 when school=council
 opens ask,agree,tease
 - [The council race? {Eventline}.|Everyone's picking sides for the council.] [Who are you voting for?|It's getting intense.|I just want it to be over.]
+- [Posters everywhere for the council race.|The council debate was something.] [Who are you backing?|Pretty heated.]
+- [Council elections are a popularity contest.|I heard the council candidates are fighting.] [Change my mind.|Politics, even here.]
 
 @rule school.project
 on school
 when school=project
 opens ask,praise,invite
 - [The club project? {Eventline}.|We're still working on the project.] [It's coming along.|We could use a hand, honestly.|I think it'll turn out well.]
+- [The project is almost done.|The project's eating all our free time.] [Fingers crossed.|But it's worth it.]
+- [We had a breakthrough on the project.|The project needs one more push.] [Finally.|Want to help?]
 
 @rule school.exam
 on school
@@ -51,12 +67,16 @@ when exam=yes
 opens comfort,invite,ask
 feel worried
 - [Don't remind me about the exams.|Exams, exams, exams.] [Want to study together?|I'm so behind.|If I fail one more test...]
+- [Exams are coming and my brain is empty.|I keep dreaming about the exams.] [Save me.|Bad dreams.]
+- [Did you start studying for the exams?|Only a few days till the exams.] [Please say no.|I'm panicking.]
 
 @rule school.cool
 on school
 when voice=cool|serious|proper
 opens ask,agree
 - [{Event}. It's well organized this year.|I've read the schedule for {event}.] [It should go smoothly.|Do you need the details?]
+- [{Event}. I've planned accordingly.|I'm helping organize {event}.] [It won't be a problem.|Some of it, anyway.]
+- [{Event} comes every year.|I'll attend {event}, of course.] [Nothing to get excited about.|It's expected.]
 
 @rule school.genki
 on school
@@ -64,3 +84,5 @@ when voice=genki|energetic|boyish|tough
 opens invite,tease,ask
 feel laugh
 - [{Event}! I'm totally going to win!|{Event} is gonna be awesome!] [You'd better cheer for me!|Bet I beat you!]
+- [{Event}! I can't sit still!|Let's go all out at {event}!] [It's gonna be epic!|You and me, team!]
+- [I've been training for {event} all week!|{Event}! Finally!] [Watch me!|Let's goooo!]

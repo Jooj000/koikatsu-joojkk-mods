@@ -494,3 +494,48 @@ on @meopen
 when role=exteacher
 - [Hey, {name}. Not sensei anymore, right?|So, {name}.]
 - [Hey, ex-sensei.|{Name}.]
+
+
+# Tails and openers with the weather.
+
+@rule tail.rain
+on @tail
+when wet=yes
+- [The rain's getting heavier.|Listen to that rain.|I hope it stops before we go home.]
+- [My shoes are still wet.|Everything smells like rain today.|At least it's cozy inside.]
+
+@rule tail.rain.outside
+on @tail
+when wet=yes outside=yes
+- [Ah, we're getting soaked!|Let's get under the roof.|My hair's ruined.]
+- [This rain, seriously!|We should go in.|I can't feel my socks.]
+
+@rule tail.storm
+on @tail
+when weather=storm
+- [Ah! Thunder!|The wind's crazy.|I hope the trains still run.]
+- [Was that lightning?|The windows are shaking.|Don't let go of me if it thunders again.]
+
+@rule tail.rainlater
+on @tail
+when rainlater=yes
+- [It's going to rain later, you know.|Did you bring an umbrella?|The sky's getting dark.]
+- [Better get home before the rain.|Smells like rain.|Those clouds look heavy.]
+
+@rule tail.rainlover
+on @tail
+when wet=yes rainlover=yes
+- [I love this rain.|Hehe, I might go out in it later.|Rain makes me happy.]
+- [Want to walk in it with me after?|Isn't the rain wonderful?|Best weather.]
+
+@rule open.rain
+on @open
+when wet=yes
+- [Brr, the rain...|Ah, you're wet too?|Some rain, huh.]
+- [Hi. Listen to that rain.|Oh, did you get caught in it?|Come in out of the rain.]
+
+@rule open.fight
+on @open
+when fight=yes
+- [...Oh, hey.|Sorry, I'm a little off today.|Hi. ...Sorry.]
+- [Hey. Don't mind my face.|Oh. It's you. Good.|Hi... it's been a day.]

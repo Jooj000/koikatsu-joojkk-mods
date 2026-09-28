@@ -1,8 +1,9 @@
 # Touches in the conversation. After the game's own clip she says one of these.
-# {part} hand | head | cheek | chest | face (looking), {look} yes when you only stare, {level} welcome | uneasy | stop |
+# {part} hand | head | cheek | chest | face (looking) | butt (touched or stared at) | mouth, {look} yes when you only stare, {level} welcome | uneasy | stop |
 # angry, {again} yes after the first touch of that place in this conversation. Who is watching: {watchers} none | one |
 # few | crowd, {watcher} the one that matters, {wrel} yourgf | rival | bff | friend | other, {group} friends | rivals |
-# mixed. The most specific rule wins; every rule has at least two lines.
+# mixed. {kiss} yes | no for the mouth. Weights per key in weights.dlg (@weights touch); the best-scoring rules
+# share the draw. Every rule has at least three lines.
 
 # ================= base: level x tone =================
 @rule touch.welcome.gentle
@@ -11,6 +12,7 @@ when level=welcome tone=gentle
 feel shy
 - [Oh... that's nice.|Mm... your hand is warm.|Ah... okay.] [I don't mind.|You can, if you want.|It's kind of calming.]
 - [E-eh? Oh...|Hehe... that tickles a little.] [It's fine. Really.|I'm just not used to it.]
+- [Oh...|Ah, um...] [I wasn't expecting that.|That was gentle.] [It's... nice, actually.|Maybe a little longer?]
 
 @rule touch.welcome.energetic
 on touch
@@ -18,12 +20,14 @@ when level=welcome tone=energetic
 feel laugh
 - [Hey, hey! What's that for?|Ahaha, sneak attack!|Whoa, you're bold today!] [I'll allow it!|Not bad, not bad.|Do it again, I dare you!]
 - [Hehe, okay, you win.|Pfft, what are you doing?] [You're so weird. I like it.|That was kinda nice, actually!]
+- [Ha! Gotcha back!|Two can play that game!] [Okay, we're even.|You're lucky I like you.]
 
 @rule touch.welcome.cool
 on touch
 when level=welcome tone=cool
 - [...Hm.|...What are you doing.|...] [I didn't say stop.|Fine. Just this once.|You're very forward.]
 - [Your hand is cold.|...Okay.] [Don't look so proud of yourself.|I'm tolerating it. That's all.]
+- [...Fine.|...] [Your hands are steadier than I thought.|I suppose I can allow that.]
 
 @rule touch.welcome.teasing
 on touch
@@ -31,6 +35,7 @@ when level=welcome tone=teasing
 feel smile
 - [Ohh? Getting brave, are we?|Couldn't resist, huh?|My, my~] [I'll pretend I didn't notice.|You owe me for that one~|That's going on your tab.]
 - [Hehe, you're cute when you're nervous.|Mm, keep going and see what happens.] [Just kidding~ maybe.|I won't bite. Probably.]
+- [Mm~ is that all?|Oh, how sweet.] [I was expecting something bolder.|Try harder next time~]
 
 @rule touch.uneasy.gentle
 on touch
@@ -38,6 +43,7 @@ when level=uneasy tone=gentle
 feel worried
 - [Um... that's a little much.|A-ah, wait...|I... um...] [Can we just talk?|I'm getting embarrassed.|Not so suddenly, please.]
 - [Um, people might see...|Eh... hehe... okay, that's enough, maybe?] [Sorry, I'm just nervous.|My heart's going so fast.]
+- [Wait, wait...|Ah...] [I-I need a second.|Let me catch my breath.]
 
 @rule touch.uneasy.energetic
 on touch
@@ -45,6 +51,7 @@ when level=uneasy tone=energetic
 feel pout
 - [Okay okay, enough!|Hey! Easy there!|Whoa, slow down!] [You're making it weird.|I'm not a stress ball, you know!]
 - [Hey, I'm talking here!|Ugh, you're such a kid.] [Hands where I can see them!|One more and I'm tickling back!]
+- [Hey hey hey!|Timeout!] [Personal bubble, remember?|Back up a step, mister!]
 
 @rule touch.uneasy.cool
 on touch
@@ -52,6 +59,7 @@ when level=uneasy tone=cool
 feel serious
 - [...That's enough.|...Do you mind?|...Hm.] [I'd like my personal space back.|I didn't invite that.]
 - [You're pushing it.|...Really?] [Let's keep this a conversation.|I'm starting to wonder what you want.]
+- [...I'd rather you didn't.|...] [Words work better on me.|Try talking instead.]
 
 @rule touch.uneasy.teasing
 on touch
@@ -59,6 +67,7 @@ when level=uneasy tone=teasing
 feel pout
 - [Ah-ah-ah. Greedy.|Hey now, buy me lunch first.|Too fast~] [You have to earn that.|I'm not that easy, you know.]
 - [Whoa there, tiger.|Down, boy.] [Patience is a virtue~|I'll tell you when.]
+- [Slow down, I'm not going anywhere.|So impatient~] [Good things come to those who wait.|I like being chased, not grabbed.]
 
 @rule touch.stop.gentle
 on touch
@@ -66,6 +75,7 @@ when level=stop tone=gentle
 feel sad
 - [Please stop...|I said... that's enough.|Um... please don't.] [It's really embarrassing.|I don't like this.]
 - [Why do you keep doing that?|Can you... not?] [I thought we were just talking.|That makes me sad.]
+- [P-please...|I'm asking nicely...] [I really don't want to get mad.|Can we stop now?]
 
 @rule touch.stop.energetic
 on touch
@@ -73,6 +83,7 @@ when level=stop tone=energetic
 feel pout
 - [Okay, seriously, stop!|Hey! I mean it!|Enough already!] [You're being annoying!|That's not funny anymore!]
 - [Stop it! Jeez!|Do that again and I'm leaving!] [What's wrong with you?|Read the room!]
+- [That's it!|Seriously?!] [One more and you're getting kicked!|I'm about to walk away!]
 
 @rule touch.stop.cool
 on touch
@@ -80,6 +91,7 @@ when level=stop tone=cool
 feel serious
 - [Stop.|Hands off.|I'm asking once.] [That was your last one.|We're done with that.]
 - [...You don't listen, do you.|That's enough.] [I won't say it again.|Try that again and this conversation's over.]
+- [Remove your hand.|...] [Now.|Don't make me repeat myself.]
 
 @rule touch.stop.teasing
 on touch
@@ -87,6 +99,7 @@ when level=stop tone=teasing
 feel pout
 - [Okay, not cute anymore.|Hey. Stop.|Heh... no.] [Fun's over.|You just lost points. A lot of them.]
 - [Wow. Desperate much?|Ugh, really?] [I was having fun until you did that.|Strike three, buddy.]
+- [Aaand you ruined it.|Nope.] [Too far, sweetie.|Mood's dead. Congrats.]
 
 @rule touch.angry
 on touch
@@ -94,6 +107,7 @@ when level=angry
 feel pout
 - [Don't touch me right now.|Don't.|Seriously? Now?] [I'm still mad at you.|You think that fixes anything?]
 - [Hands off. I'm angry.|Not now.] [Say sorry first.|You're not getting out of this that easily.]
+- [Don't even.|Ugh.] [Not until you apologize properly.|Touching me won't make me less mad.]
 
 # ================= looking (no touch) =================
 @rule touch.look.face
@@ -102,6 +116,7 @@ when look=yes part=face level=welcome
 feel shy
 - [W-what? Is there something on my face?|Why are you staring?|Hm? What is it?] [You're making me nervous.|Say something!]
 - [Ehehe... do I look weird today?|Like what you see?] [I-I'm just asking.|You're staring again.]
+- [Hm? Did I miss a spot doing my makeup?|...Am I that interesting?] [Stop it, I'm getting shy.|Your turn to be stared at.]
 
 @rule touch.look.face.uneasy
 on touch
@@ -109,6 +124,7 @@ when look=yes part=face level=uneasy|stop
 feel pout
 - [Stop staring!|Okay, that's creepy now.|Eyes up here. Well... they are. Stop it.] [It's weird.|Look somewhere else.]
 - [You're making me self-conscious.|What, do I have something on my face?] [Just say it.|Quit it.]
+- [Can you not?|Seriously...] [Your eyes are burning holes in me.|Find something else to look at.]
 
 @rule touch.look.chest
 on touch
@@ -116,6 +132,7 @@ when look=yes part=chest level=welcome
 feel shy
 - [H-hey, my eyes are up here.|...I saw that.|Um... I can tell where you're looking.] [Pervert.|It's... it's fine. I guess.]
 - [Eh? Oh! Um...|...Really?] [Your face is so red.|At least be subtle about it.]
+- [...Ah.|H-huh?] [You think I don't notice?|At least pretend you're not looking.]
 
 @rule touch.look.chest.uneasy
 on touch
@@ -123,6 +140,7 @@ when look=yes part=chest level=uneasy|stop
 feel pout
 - [Eyes. Up.|Stop staring at my chest!|Really? Again?] [Gross.|I'm right here, you know!]
 - [I'm going to start charging for that.|Okay, I noticed.] [That's enough.|You're the worst.]
+- [Unbelievable.|Hey!] [My face is up here. Stay there.|Keep that up and I'm leaving.]
 
 @rule touch.look.chest.lewd
 on touch
@@ -130,6 +148,7 @@ when look=yes part=chest level=welcome lewd>=60
 feel love
 - [Mm? You want a closer look?|Hehe... you're so obvious.|See something you like?] [Not here, silly.|Later, maybe~]
 - [Your eyes keep going there.|...You can look.] [Just you, though.|Don't tell anyone I said that.]
+- [Enjoying the view?|Hmm~] [I wore this on purpose, you know.|Look all you want. Touching costs extra.]
 
 # ================= by place touched (welcome) =================
 @rule touch.head
@@ -138,6 +157,7 @@ when part=head level=welcome
 feel shy
 - [Are you... patting my head?|Hehe, what am I, a puppy?|Mm...] [It's kind of nice.|My hair's going to be a mess.]
 - [Pat pat?|O-oh.] [Nobody's done that since I was little.|Okay, one more. Just one.]
+- [Hm? A pat?|Ah...] [I feel like a little kid.|That's... strangely comforting.]
 
 @rule touch.head.gf
 on touch
@@ -145,6 +165,7 @@ when part=head level=welcome rel=girlfriend|lover
 feel love
 - [Mmm... I love when you do that.|Hehe... more.|Ah... that's the spot.] [I could fall asleep like this.|You spoil me.]
 - [Head pats from my favorite person.|Mm, don't stop.] [I feel so safe right now.|I'm melting.]
+- [Ehehe... pat me more.|Mmm.] [That's my favorite thing.|You always know when I need it.]
 
 @rule touch.cheek
 on touch
@@ -152,6 +173,7 @@ when part=cheek level=welcome
 feel shy
 - [My cheek? W-why?|Ah... your fingers are cold.|Eh? Is something on it?] [You surprised me.|Hehe, you're weird.]
 - [Poke.|Hmph.] [Did you just poke me?|My face isn't a button.]
+- [Squish?|Eh?] [My cheeks aren't mochi!|You're poking me like a cat.]
 
 @rule touch.cheek.gf
 on touch
@@ -159,6 +181,7 @@ when part=cheek level=welcome rel=girlfriend|lover
 feel love
 - [Mm... your hand is so gentle.|Ehehe...|Ah...] [I like it when you touch my face.|Leave it there a bit.]
 - [You're looking at me like that again.|Hmm?] [Are you going to kiss me or what?|...Not here. Maybe.]
+- [Your thumb is so warm...|Mm.] [Stay like this a bit.|You're making my face hot.]
 
 @rule touch.hand
 on touch
@@ -166,6 +189,7 @@ when part=hand level=welcome
 feel shy
 - [Our hands... um...|Oh. Holding hands?|H-hey...] [It's warm.|I don't hate it.]
 - [Your hand is bigger than mine.|Ehehe... what's this?] [Okay. Just for a little.|My palm's all sweaty, sorry.]
+- [Um... our fingers...|Oh.] [We're holding hands now?|It's not bad. Not bad at all.]
 
 @rule touch.hand.gf
 on touch
@@ -173,6 +197,7 @@ when part=hand level=welcome rel=girlfriend|lover
 feel love
 - [Mm. Don't let go.|Hehe, my hand fits right in yours.|There you are.] [I missed this.|I'll hold on tight.]
 - [Lacing fingers now?|Mm...] [You're so sweet today.|Let's stay like this.]
+- [Hand. Mine. Got it.|Mm~] [Don't you dare let go first.|Your hand is my favorite place.]
 
 @rule touch.chest.gf
 on touch
@@ -180,6 +205,7 @@ when part=chest level=welcome rel=girlfriend|lover
 feel love
 - [H-hey... here?|Ah... you're so bold.|Mm... naughty.] [Someone might see...|Just a little.]
 - [Ahh... you really like those, huh?|Hehe... what are you doing?] [Save it for later.|You're making me want things.]
+- [Ah... d-don't tease me here.|Hey...] [Keep that for when we're alone.|You make me weak, you know that?]
 
 @rule touch.chest.lewd
 on touch
@@ -187,6 +213,7 @@ when part=chest level=welcome lewd>=60
 feel love
 - [Mm... you know just what to do.|Ah... not so hard.|Hehe... finally.] [I was hoping you would.|Don't stop.]
 - [Oh~ is that what you came for?|Ahh...] [You're making me hot.|Let's find somewhere quieter...]
+- [Ahh... bold.|Mm~] [Do that later where no one can see.|You're going to get me in trouble.]
 
 @rule touch.chest.uneasy
 on touch
@@ -194,6 +221,7 @@ when part=chest level=uneasy|stop rel=stranger|acquaintance|friend
 feel pout
 - [W-what?! Hands off!|Hey! Not there!|Excuse me?!] [We're not like that!|Who do you think you are?]
 - [Are you crazy?!|What was that?!] [We barely know each other!|I'm not that kind of girl!]
+- [Don't touch me there!|Hey!] [I'll scream, I swear.|We are NOT that close!]
 
 @rule touch.chest.friend
 on touch
@@ -201,6 +229,7 @@ when part=chest level=welcome rel=friend
 feel shy
 - [Wh-whoa... that's... um.|H-hey...|Eep!] [We're friends... right?|I... didn't hate that. Don't tell anyone.]
 - [Okay, that crosses a line.|Um...] [...A small line.|Friends don't... usually... do that.]
+- [Eh?! Um...|W-wait...] [Is that what friends do now?|I'm going to pretend that was an accident.]
 
 # ================= by mood =================
 @rule touch.mood.flirty
@@ -209,6 +238,7 @@ when mood=flirty level=welcome
 feel love
 - [Mm, I was hoping you'd do that.|Hehe... someone's in the mood.|Ah... you read my mind.] [Keep going~|I'm not stopping you.]
 - [Funny, I was thinking the same thing.|Oh~] [Today's your lucky day.|Don't make me wait.]
+- [Mmm... finally.|Ah~] [I've been waiting all day for that.|Don't stop on my account.]
 
 @rule touch.mood.upset
 on touch
@@ -216,6 +246,7 @@ when mood=upset level=welcome|uneasy
 feel sad
 - [...Thanks. I needed that, I think.|Mm.|...] [Sorry, I'm not much fun today.|It's been a bad day.]
 - [You're trying to cheer me up, huh?|...Okay.] [It's working. A little.|Just... stay a bit.]
+- [...Mm.|Ah...] [You're kinder than I deserve today.|That's a little better.]
 
 @rule touch.mood.sleepy
 on touch
@@ -223,12 +254,14 @@ when mood=sleepy level=welcome
 feel shy
 - [Mmh... don't do that, I'll fall asleep.|Ahh... so comfy.|Mm...] [Five more minutes...|You're like a warm blanket.]
 - [Yawn... sorry. That felt nice.|Zzz... huh? Oh.] [I almost dozed off.|Do that during class and I'm out.]
+- [Mmh... warm...|Ahh...] [If I fall asleep, it's your fault.|Do that again and I'm napping on you.]
 
 @rule touch.mood.stressed
 on touch
 when mood=stressed level=welcome
 - [Ah... that helps.|Mm... thanks.|Huh, okay.] [My shoulders are so tense.|I have so much to do...]
 - [Is it that obvious I'm stressed?|Oh...] [I needed that.|Do that before every exam, okay?]
+- [Ahh... thank you.|Mm.] [That took ten tests off my shoulders.|Can you do that every day?]
 
 # ================= who is watching =================
 @rule touch.watch.crowd
@@ -237,6 +270,7 @@ when watchers=crowd level=welcome|uneasy
 feel shy
 - [E-everyone's looking!|Not here! People are watching!|Ahh, they're staring at us!] [Are you trying to start rumors?|I'm going to die of embarrassment.]
 - [Can't you see the crowd?!|Shh! Stop!] [The whole school's going to know by lunch.|Wait until we're alone, okay?]
+- [Not in front of everyone!|Eek!] [They're all going to talk!|Can you at least wait for a corner?]
 
 @rule touch.watch.crowd.lewd
 on touch
@@ -244,6 +278,7 @@ when watchers=crowd level=welcome lewd>=70
 feel love
 - [Hehe... in front of everyone?|Let them look~|You like an audience?] [So do I, maybe.|Bold. I like that.]
 - [Everyone's staring~|Mm...] [Let's give them something to talk about.|You're so shameless. Me too.]
+- [Mm, they're watching~|Hehe...] [Let's make them jealous.|You know I like that.]
 
 @rule touch.watch.alone
 on touch
@@ -251,6 +286,7 @@ when watchers=none level=welcome rel=girlfriend|lover|friend
 feel love
 - [Nobody's around...|It's just us, huh?|Mm, quiet here.] [I guess it's fine, then.|You planned this, didn't you?]
 - [Good thing we're alone.|Hehe... sneaky.] [You can be a little bolder.|I won't tell.]
+- [Since nobody's here...|Mm...] [I suppose it's okay.|Just between us, then.]
 
 @rule touch.watch.friends
 on touch
@@ -258,6 +294,7 @@ when wrel=bff|friend level=welcome
 feel shy
 - [{Watcher} is totally watching us...|Ugh, {watcher} saw that.|Oh no, {watcher} is grinning.] [She's never going to let me live this down.|I'm going to get teased all week.]
 - [Don't look, {watcher}!|{Watcher}, it's not what it looks like!] [...Okay, it's exactly what it looks like.|Ahh, so embarrassing.]
+- [{Watcher}, stop smiling like that!|Ugh, {watcher}...] [She's taking notes, I swear.|I'll explain later. Maybe.]
 
 @rule touch.watch.friends.group
 on touch
@@ -265,6 +302,7 @@ when group=friends level=welcome|uneasy
 feel shy
 - [My friends are right there!|Everyone I know is watching!|Ahh, the girls saw!] [They'll want details later.|I'm never hearing the end of this.]
 - [They're whispering already.|Hehe... look at their faces.] [Group chat's going to explode.|Great. Just great.]
+- [The girls are all giggling...|Oh no, they're waving.] [I'll never hear the end of it.|Tomorrow's going to be so embarrassing.]
 
 @rule touch.watch.rival
 on touch
@@ -272,6 +310,7 @@ when wrel=rival level=welcome
 feel smile
 - [Hehe. {watcher} looks so jealous.|Oh, {watcher} is glaring.|Ooh, {watcher} saw.] [Good. Let her look.|Serves her right.]
 - [Do it again. {Watcher} is watching.|Look at {watcher}'s face.] [I could get used to this.|Best day ever.]
+- [Hehe, {watcher} just looked away.|Ooh, she's fuming.] [Again. Let her see.|That's the best thing that happened all week.]
 
 @rule touch.watch.rival.uneasy
 on touch
@@ -279,6 +318,7 @@ when wrel=rival level=uneasy|stop
 feel pout
 - [Not in front of {watcher}!|{Watcher} is right there, idiot!|Ugh, and of course {watcher} saw.] [She'll spread it everywhere.|I'll never live this down.]
 - [Great, now {watcher} has something on me.|Why here?!] [She's smirking. I hate it.|You did that on purpose.]
+- [Not with {watcher} watching!|Stop, {watcher} is right there!] [She's going to tell everyone.|You just handed her ammunition.]
 
 @rule touch.watch.yourgf
 on touch
@@ -286,6 +326,7 @@ when wrel=yourgf level=welcome|uneasy
 feel worried
 - [Um... {watcher} is right there...|Isn't {watcher} your girlfriend?|Ah... {watcher} saw that.] [Are you sure this is okay?|I don't want trouble.]
 - [{Watcher} is staring at us.|Uh-oh.] [You're going to get it later.|I'm not getting in the middle of this.]
+- [Ah... {watcher} saw that.|Um...] [Better go explain to her.|I'm staying out of this.]
 
 @rule touch.watch.yourgf.gf
 on touch
@@ -293,6 +334,7 @@ when wrel=yourgf level=welcome rel=girlfriend
 feel love
 - [Hehe, let {watcher} see.|Oh, {watcher}'s watching.|{Watcher} looks curious.] [We share, remember?|She can join, you know.]
 - [Should we invite {watcher} over?|Mm...] [She's blushing.|There's enough of you for both of us.]
+- [{Watcher} is smiling at us.|Hehe, {watcher}...] [She doesn't mind, does she?|Come here, {watcher}, he's being greedy.]
 
 # ================= places =================
 @rule touch.place.infirmary
@@ -301,6 +343,7 @@ when placeid=infirmary level=welcome rel=girlfriend|lover|friend
 feel shy
 - [In the infirmary...?|The nurse could come back any second...|There's a bed right there...] [What are you thinking?|I know what you're thinking.]
 - [Hehe... this place is so quiet.|Ah... here?] [Lock the door first.|Just be quick.]
+- [The curtains are closed...|Shh...] [Don't make me noisy in here.|Somebody's sleeping in the next bed.]
 
 @rule touch.place.library
 on touch
@@ -308,6 +351,7 @@ when placeid=library level=welcome
 feel shy
 - [Shh! This is the library!|Not so loud...|We'll get kicked out.] [Hehe... okay, quietly.|You're going to get us in trouble.]
 - [The librarian's watching...|Mm... behind the shelves.] [It's kind of exciting.|Quietly, okay?]
+- [Mm... quietly...|Shh...] [If the librarian sees us we're done.|Between the shelves, then.]
 
 @rule touch.place.classroom
 on touch
@@ -315,6 +359,7 @@ when placeid=classroom period=day level=welcome|uneasy
 feel shy
 - [Here? In class?|Sensei could walk in any second!|Everyone's going to see!] [Wait until after school.|You're impossible.]
 - [My desk is right there...|Ah, not in the classroom.] [Later. Promise.|Behave!]
+- [Not in the classroom!|Wait...] [Everyone sits here tomorrow.|What if someone comes back for their bag?]
 
 # ================= roles =================
 @rule touch.teacher
@@ -323,6 +368,7 @@ when role=teacher level=welcome|uneasy
 feel serious
 - [Ahem. I'm your teacher.|That's inappropriate.|Hands to yourself, please.] [Do you want detention?|We'll pretend that didn't happen.]
 - [Not at school.|...I'll let that slide.] [Once.|Don't make it a habit.]
+- [Young man.|...] [I'll forget that, this once.|Let's keep a respectful distance.]
 
 @rule touch.teacher.lewd
 on touch
@@ -330,3 +376,209 @@ when role=teacher level=welcome lewd>=60
 feel love
 - [...You know I could get fired for this.|Mm... not here.|Oh, you bad student.] [Come see me after class.|Extra lessons, then?]
 - [Behave... where people can see.|Ah...] [My office. Later.|I'm grading you for this.]
+- [Oh dear...|Mm.] [That's not on the curriculum.|Stay after school and we'll discuss it.]
+
+# ================= the butt and the lips =================
+# {part} butt (touched or, with look=yes, stared at) | mouth (touch only: a kiss). {kiss} yes | no.
+
+@rule touch.butt.welcome
+on touch
+when part=butt look=no level=welcome
+feel shy
+- [H-hey!|Eep!|Ah!] [Where's that hand going?|That was sneaky.|You're so bold today.]
+- [Mm... you like that?|Hehe...] [Just a little, okay?|I'll let it slide.|Naughty.]
+- [Oh~|Ah...] [Cheeky in more ways than one.|Someone's getting comfortable.]
+
+@rule touch.butt.welcome.gf
+on touch
+when part=butt look=no level=welcome rel=girlfriend|lover
+feel love
+- [Mm... can't keep your hands off me?|Hehe... hi there.|Ahh~] [I don't mind. It's yours anyway.|Later you can do more.]
+- [You're so obvious.|Mm~] [Keep it there.|Did you miss me that much?]
+- [Hey, behave...|Ehehe.] [...Okay, don't behave. Just a little.|We're still at school, you know.]
+
+@rule touch.butt.welcome.lewd
+on touch
+when part=butt look=no level=welcome lewd>=60
+feel love
+- [Ahh... a good squeeze.|Mm, finally.|Oh~] [I was wondering when you'd try.|More, please.]
+- [You know what that does to me.|Hehe...] [Careful, I might grab back.|Want to find somewhere private?]
+- [Mmh...|Ah~] [Don't start what you can't finish.|I'm going to be thinking about that all class.]
+
+@rule touch.butt.uneasy
+on touch
+when part=butt look=no level=uneasy
+feel surprised
+- [Wh-what are you doing?!|Hey! Not there!|Kya!] [Hands up. Higher.|That's not okay!]
+- [Um... that's my...|Eh?!] [We're not that close!|I can't believe you just did that.]
+- [Excuse me?!|Hey!] [I'm going to pretend that was an accident.|Do that again and see what happens.]
+
+@rule touch.butt.stop
+on touch
+when part=butt look=no level=stop
+feel pout
+- [I said no!|Stop it!|Seriously?!] [Last warning.|Keep your hands to yourself!]
+- [Again?!|Ugh!] [Do you want me to slap you?|What is wrong with you?]
+- [That's enough!|Hands off!] [One more and I'm telling a teacher.|You're really pushing it.]
+
+@rule touch.butt.angry
+on touch
+when part=butt level=angry
+feel serious
+- [That's it. We're done here.|Unbelievable.|Don't ever do that again.] [Pervert.|I'm leaving.]
+- [*slap*|Hah?!] [You've lost your mind!|Get away from me!]
+- [Enough!|No!] [I thought you were better than this.|Don't talk to me.]
+
+@rule touch.butt.look
+on touch
+when part=butt look=yes level=welcome|uneasy
+feel shy
+- [Why are you looking down there?|H-hey... my skirt...|I can feel you staring.] [Eyes up!|You're so obvious.]
+- [Is there something on my skirt?|...] [Oh. Oh, I see what you're looking at.|Stop that.]
+- [Mm?|Hey...] [You think I didn't notice?|Turn around and see how you like it.]
+
+@rule touch.butt.look.lewd
+on touch
+when part=butt look=yes level=welcome lewd>=60
+feel smile
+- [Like the view from there?|Hehe~|Mm?] [These skirts are short for a reason.|Want me to turn around?]
+- [You can look...|Oh~] [Touching is a different question.|Just you, though.]
+- [Staring again?|Hehe.] [I'll give you a better angle later.|Tell me what you're thinking.]
+
+@rule touch.butt.look.stop
+on touch
+when part=butt look=yes level=stop|angry
+feel pout
+- [Quit staring at my butt!|Creep!|Seriously?] [That's gross.|Look at my face or leave.]
+- [Ugh.|Okay, no.] [I'm going to start walking backwards.|You're unbelievable.]
+- [Hey!|...] [Do that one more time.|I'll tell everyone what you were looking at.]
+
+@rule touch.butt.watch.crowd
+on touch
+when part=butt look=no watchers=crowd level=welcome|uneasy
+feel surprised
+- [In front of everyone?!|Everyone saw that!|Ahh!] [I'm going to die!|Are you insane?]
+- [People are staring!|Hey!] [Now the whole school thinks we're...|Not here, idiot!]
+- [Did they see?|Oh no.] [They definitely saw.|Rumors by lunch. Great.]
+
+@rule touch.butt.watch.yourgf
+on touch
+when part=butt look=no wrel=yourgf level=welcome|uneasy
+feel worried
+- [{Watcher} is right there!|Isn't {watcher} watching?!|Ah...] [You're going to get me killed.|She saw that. She definitely saw that.]
+- [Um... {watcher}...|Oh no.] [Go explain that to her.|I'm not part of this.]
+- [Are you crazy? {Watcher}...|Eh?!] [She's coming over.|I'm not taking the blame.]
+
+@rule touch.mouth.yes
+on touch
+when part=mouth kiss=yes
+feel love
+- [Mm...|Ah...|...!] [That was... a kiss.|Hehe... you kissed me.|Your lips are soft.]
+- [...Wow.|Mm...] [Do that again sometime.|I think my heart stopped.]
+- [Oh...|Hah...] [I wasn't ready. Again?|So that's what it feels like.]
+
+@rule touch.mouth.yes.gf
+on touch
+when part=mouth kiss=yes rel=girlfriend|lover
+feel love
+- [Mm... I love you.|Hehe... one more.|Ahh...] [Kiss me again.|I never get tired of that.]
+- [Mmh...|...] [You taste like the bread from lunch.|I was waiting for that all day.]
+- [Hehe...|Mm~] [Right here? You're bold.|Everyone can see... I don't care.]
+
+@rule touch.mouth.yes.lewd
+on touch
+when part=mouth kiss=yes lewd>=60
+feel love
+- [Mm... just a kiss?|Ahh... more.|Hehe...] [I want more than that.|Kiss me like you mean it.]
+- [Mmh...|Ah~] [My legs went weak.|Let's go somewhere we won't be seen.]
+- [...Hah...|Mm.] [Don't stop there.|You're going to start something.]
+
+@rule touch.mouth.yes.crowd
+on touch
+when part=mouth kiss=yes watchers=crowd|few
+feel shy
+- [In front of everyone...|Ahh...|Mm!] [Now they all know.|I can't believe you did that here.]
+- [Everyone's watching...|Hehe...] [...I don't care.|Let them talk.]
+- [Ah...|...] [The whole hallway saw.|My face must be bright red.]
+
+@rule touch.mouth.yes.rival
+on touch
+when part=mouth kiss=yes wrel=rival
+feel smile
+- [Mm... and {watcher} saw everything.|Hehe... look at {watcher}.|Ah...] [Perfect.|I'll remember her face forever.]
+- [Did you see {watcher}'s face?|Mm~] [Kiss me again, she's still looking.|Best. Day. Ever.]
+- [Oh, {watcher} just stormed off.|Hehe.] [Serves her right.|Now she knows.]
+
+@rule touch.mouth.no
+on touch
+when part=mouth kiss=no level=welcome|uneasy
+feel shy
+- [W-wait!|Ah, no...|Eh?!] [It's too soon.|Not yet, okay?|I'm not ready for that.]
+- [Mm-mm.|Hold on.] [Ask me properly first.|Not like this.]
+- [Hey...|Ah...] [My first kiss isn't happening in a hallway.|Maybe someday. Not today.]
+
+@rule touch.mouth.no.friend
+on touch
+when part=mouth kiss=no rel=friend level=welcome|uneasy
+feel worried
+- [Whoa, whoa.|Um...|Wait.] [We're friends, right?|I don't want to ruin that.]
+- [Hey...|Eh?] [I like you, but... not like that. Not yet.|Can we not make this weird?]
+- [Wait, are you serious?|Hm...] [Let me think about it.|You surprised me.]
+
+@rule touch.mouth.no.stranger
+on touch
+when part=mouth kiss=no rel=stranger|acquaintance
+feel surprised
+- [What do you think you're doing?!|Hey!|Eh?!] [We barely know each other!|Who even are you?]
+- [Are you crazy?|Excuse me?!] [Keep your face away from mine.|That's so creepy.]
+- [Absolutely not.|No!] [Do I look that easy?|Don't ever try that again.]
+
+@rule touch.mouth.no.crowd
+on touch
+when part=mouth kiss=no watchers=crowd|few
+feel pout
+- [Not here!|Everyone's watching!|Are you kidding?] [Somewhere nobody's around, maybe.|You want rumors?]
+- [Hey, people!|Stop!] [Not in front of all of them.|Read the room!]
+- [N-no!|Wait!] [I'm not doing that with an audience.|Later. Somewhere quiet.]
+
+@rule touch.mouth.stop
+on touch
+when part=mouth kiss=no level=stop|angry
+feel serious
+- [I said no.|Stop trying!|That's enough.] [Respect that.|No means no.]
+- [Again?!|Seriously.] [I'm leaving if you do that again.|You're making me uncomfortable.]
+- [No!|Back off.] [I really thought you were different.|Don't touch my face.]
+
+# ---- 2026-10-29: o beijo receoso (amiga próxima com H alto, mesmo fechada) ----
+@rule touch.mouth.wary
+on touch
+when part=mouth kiss=wary
+feel shy
+- [...!|Mm...|Ah...] [I-I didn't say you could...|Wait, we're... friends, aren't we?]
+- [Hah...|...] [Why did I let you do that?|My heart's going way too fast.]
+- [Um...|Eh...] [I don't know what that was.|...Don't look at me right now.]
+
+@rule touch.mouth.wary.cool
+on touch
+when part=mouth kiss=wary tone=cool
+feel shy
+- [...|Hm.] [That was... unexpected.|I didn't stop you. Interesting.]
+- [...You.|...] [We'll talk about that later.|I need a minute.]
+- [...Hah.|...] [I should've pushed you away.|...I didn't want to.]
+
+@rule touch.mouth.wary.teasing
+on touch
+when part=mouth kiss=wary tone=teasing
+feel shy
+- [W-well...|Hmph...] [Bold. Very bold.|You're lucky I like you.]
+- [...!|Ah...] [Don't get used to that.|That doesn't mean anything. ...Probably.]
+- [Heh... heh.|...] [You caught me off guard. Once.|Next time, ask. ...Maybe.]
+
+@rule touch.mouth.wary.crowd
+on touch
+when part=mouth kiss=wary watchers=crowd|few
+feel shy
+- [People saw that...|Ah...|Eh...] [What are they going to think?|I can't look at anyone now.]
+- [Here...?|...] [In front of them...|Everyone's going to talk.]
+- [Mm...|Wha...] [Why here, of all places?|My face is burning.]
+

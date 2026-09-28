@@ -1,0 +1,247 @@
+# soubesse, não como se você estivesse contando. e quando tem mais de um desses, junte em um só. a resposta dela
+# variará conforme quem está no meio das amantes, como quem ela é amiga, quem ela não gosta, etc.").
+# One topic for every girl: {who} all the names ("Mitama", "Mitama and Rin", "Mitama, Rin and Asuka"), {who1} the first,
+# {count} one|two|many, {depth} flirt|kiss|date|dating|h (the deepest step with any of them).
+# {knew} none|some|all: what she knew before you spoke; {knewhow} witness|heard; {src} who told her.
+# {circle} bff|friend|crush|rival|mixed|none: who is in it from her side; {circlewho} that girl; {rivalwho} the one she
+# cannot stand. {interested} yes when she wants you herself; {stance} refuses|separate|friends|trio (your girlfriend);
+# {hurt} yes when it hurts her.
+# Weights (what changes the line most, written first): who is in the circle, whether she knew, whether she wants you
+# (or her stance as your girlfriend), how far it went, how many. Then her voice and the relation.
+
+# ---------------- you tell her ----------------
+@rule me.confide
+on me.confide
+- [Can I tell you something?|There's something you should hear from me.|I don't want you hearing this from someone else.] [{Who} and I have been getting close.|It's about me and {who}.|Me and {who}... we're kind of a thing.]
+- [I'll just say it.|Okay. Honesty time.|This is a little awkward, but...] [I've been seeing {who}.|Things with {who} got... serious.|{Who} and I are together. Sort of.]
+- [You're going to hear about it anyway, so...|I wanted to be the one to tell you.] [It's me and {who}.|I'm with {who} now.|{Who} and I, we've been spending a lot of time together.]
+
+@rule me.confide.many
+on me.confide
+when count=two|many
+- [Okay, this is going to sound bad.|Don't freak out, but...|There's no good way to say this.] [It's {who}. All of them.|I've been getting close to {who}.|Me and {who}... it's complicated.]
+- [You'll hear it anyway, so: {who}.|I'd rather you heard it from me.] [I've been seeing them. Each of them.|It's not just one girl.|Yeah. More than one.]
+- [I owe you the truth.|I want to be honest with you.] [{Who}. That's... where things are.|It's {who}. I'm not hiding it.|There's {who}, and I care about each of them.]
+
+@rule me.confide.flirt
+on me.confide
+when depth=flirt count=one
+- [Nothing serious, but...|It's not a big deal, but...|Just so you know...] [{Who} and I have been flirting a bit.|I've been kind of flirting with {who}.|{Who} and I get along. A lot.]
+- [Promise not to laugh?|Okay, this is dumb, but...] [I think {who} likes me.|I've been hanging around {who} a lot.|Me and {who} held hands the other day.]
+- [So, um.|Random thing.] [{Who} and I have been... close lately.|I might have a thing with {who}. Maybe.|{Who} keeps smiling at me, and I keep smiling back.]
+
+@rule me.confide.h
+on me.confide
+when depth=h
+- [I'm not proud of how I'm saying this, but...|You should know the whole truth.|This is going to be hard to hear.] [{Who} and I... we went all the way.|With {who}, it went further than I meant to tell anyone.|It's not just talk, with {who}. It's serious.]
+- [I don't want secrets between us.|Better you hear it from me.] [{Who} and I slept together.|Things with {who} went all the way.|{Who} and I are... more than close.]
+- [Look. I'll be straight with you.|No more hiding.] [It's {who}. It went that far.|With {who}, yeah. Everything.|{Who} and I crossed that line.]
+
+# ---------------- she already knew ----------------
+@rule confide.knew.saw
+on confide
+when knew=all knewhow=witness
+opens share,admit,ask
+feel serious
+- [I know.|You don't have to tell me.|Yeah... I know.] [I saw you two.|I was there. I saw it with my own eyes.|I saw you with {who1}.] [Thanks for saying it, though.|I was wondering if you'd ever bring it up.|At least you're not pretending.]
+- [I saw.|You think I didn't notice?] [It was kind of hard to miss.|I walked right past you two.|You weren't exactly hiding.] [...But it means something that you told me.|So why tell me now?|I didn't know how to bring it up.]
+- [Mm. I already knew.|Oh... that.] [I saw you and {who1}.|I happened to see you.] [I'm glad you said it out loud.|I was waiting to see if you would.|Okay. Now it's real, I guess.]
+
+@rule confide.knew.heard
+on confide
+when knew=all knewhow=heard
+opens share,correct,ask
+- [I heard.|Yeah, I know.|People talk, you know.] [{Src} told me.|Someone already told me.|It's not exactly a secret.] [But I wanted to hear it from you.|Thanks for not making me ask.|So it's true, then.]
+- [I'd heard something like that.|Oh, so it's true.] [{Src} mentioned it.|Word gets around.|I thought it was just a rumor.] [Thanks for being straight with me.|I'm glad you told me yourself.|Hm. Okay.]
+- [Yeah... I knew.|Mm. I'd heard.] [Everyone's talking about it.|{Src} couldn't keep it to herself.] [Hearing it from you is different, though.|I just didn't know if I should believe it.|At least now I know what's true.]
+
+@rule confide.knew.some
+on confide
+when knew=some
+opens ask,share
+feel surprised
+- [Wait, I knew about {who1}, but...|Hold on.|Huh?] [More than one?|There's someone else too?|That part I didn't know.] [Okay. Okay. Give me a second.|You're full of surprises.|How many are there, exactly?]
+- [I'd heard about one of them.|Some of that I knew.] [Not all of it.|Not the rest.] [That's... a lot to take in.|Wow. Okay.|Thanks for the full picture, I guess.]
+- [So the rumors were only half of it.|I knew some of this.] [I didn't know the whole thing.|The rest is news.] [You don't do things halfway, do you?|Huh. Okay.|I'm glad you told me everything.]
+
+# ---------------- who is in it (from her side) ----------------
+@rule confide.bff
+on confide
+when circle=bff knew=none
+opens ask,tease,thank
+feel surprised
+- [{Circlewho}?! My {Circlewho}?|Wait. {Circlewho}?|No way. {Circlewho}?!] [She didn't tell me anything!|She's been hiding this from me?!|I'm going to have words with her.] [...Be good to her. I mean it.|You'd better treat her right.|If you hurt her, you deal with me.]
+- [You and {circlewho}...|Huh. {Circlewho}, of all people.] [That explains why she's been so happy lately.|So that's why she keeps checking her phone.|She's been acting weird all week.] [Okay. I approve. Barely.|I'm happy for her. For both of you. I think.|Don't make me regret saying that.]
+- [{Circlewho} is my best friend, you know.|Of all the people... {circlewho}.] [I can't believe she didn't tell me first.|I'm hearing it from YOU?] [Be careful with her heart.|She's more fragile than she looks.|Okay. Just... take care of her.]
+
+@rule confide.friend
+on confide
+when circle=friend knew=none
+opens ask,share,tease
+- [{Circlewho}? Oh, she's nice.|With {circlewho}? Huh.|{Circlewho}, really?] [I'm friends with her, you know.|She's a good friend of mine.|She's never mentioned you. Interesting.] [Be nice to her.|Don't make things awkward between us.|I'll be watching. Kidding. Mostly.]
+- [Oh, {circlewho}! That's cute.|Huh. You and {circlewho}.] [She's sweet. You could do worse.|I like her a lot.|She deserves someone decent.] [So, are you? Decent?|Make her happy, okay?|Now I have to act surprised when she tells me.]
+- [{Circlewho} and you... okay, I can see it.|Oh. {Circlewho}.] [We hang out sometimes.|She's a friend.] [I won't say anything until she does.|Huh. Small world.|That's nice. Really.]
+
+@rule confide.rival
+on confide
+when circle=rival knew=none
+opens ask,defend,agree
+feel pout
+- [{Rivalwho}? Seriously?|Ugh. {Rivalwho}?|Of all the girls in this school... {rivalwho}.] [You know I can't stand her.|She's the worst.|What do you even see in her?] [I'm not saying anything else.|Fine. Your funeral.|Don't expect me to be happy about it.]
+- [Wow. {Rivalwho}.|You picked {rivalwho}?] [She's going to rub that in my face forever.|She'll never let me hear the end of it.|I can already see her smug face.] [...Whatever. Do what you want.|I'm not jealous. I'm disgusted.|You have terrible taste.]
+- [{Rivalwho}. Of course.|Hmph. {Rivalwho}.] [We don't get along. At all.|I'd rather not talk about her.|She's two-faced, you know.] [Just don't bring her around me.|I'll pretend I didn't hear that.|Good luck. You'll need it.]
+
+@rule confide.mixed
+on confide
+when circle=mixed
+opens ask,defend,share
+feel worried
+- [{Circlewho}, I get. But {rivalwho}?|Okay, {circlewho} is fine, but {rivalwho}...|One of them is my friend and one of them I can't stand.] [What a combination.|That's going to be a disaster.|They're going to tear each other apart.] [Don't drag me into it.|I'm staying out of this.|Good luck with that.]
+- [Wait. {Circlewho} AND {rivalwho}?|Hold on, {rivalwho} too?] [Does {circlewho} know about {rivalwho}?|{Circlewho} is going to hate this.] [Please tell me she knows.|I'm not going to be the one who tells her.|This is going to end badly.]
+- [So my friend and that girl.|Huh. {Circlewho} and {rivalwho}.] [You really know how to pick them.|That's a mess waiting to happen.] [I'll be on {circlewho}'s side, just so you know.|If it blows up, I'm with {circlewho}.|I'm not getting involved. Probably.]
+
+@rule confide.crush
+on confide
+when circle=crush knew=none
+opens comfort,ask,share
+feel sad
+- [{Circlewho}...?|Oh. {Circlewho}.|Oh... you and {circlewho}.] [That's... nice. For you.|I see. That's great.|Of course she'd pick someone like you.] [I need a minute.|I'm fine. I'm totally fine.|Don't look at me like that.]
+- [You and {circlewho}. Huh.|{Circlewho}, huh.] [I kind of... liked her, you know.|I was going to ask her out. Someday.] [Never mind. Forget I said that.|It doesn't matter now.|Be good to her, okay?]
+- [Oh. {Circlewho}.|Ha... {circlewho}.] [She's wonderful, isn't she.|I always thought she was something special.] [Lucky you.|I'm happy for you. Really.|...Okay.]
+
+# ---------------- she wants you herself ----------------
+@rule confide.hurt
+on confide
+when interested=yes dating=no hurt=yes
+opens comfort,admit,share
+feel sad
+- [Oh.|...I see.|Ah. Right.] [I guess I should have figured.|I'm glad you told me. I think.|That's... okay. It's okay.] [I just thought maybe...|Never mind what I thought.|I need to go soon anyway.]
+- [You and {who}.|Ha. Of course.] [I was kind of hoping... no. Forget it.|I didn't think it would sting this much.|I'm fine. I'm just surprised.] [Thanks for being honest.|At least you didn't lie to me.|Okay. I'll get used to it.]
+- [...Oh.|Right. {Who}.] [Why are you telling me this?|You didn't have to tell me.] [It's not like I had any right to you.|It's fine. Really.|I'll be okay. Eventually.]
+
+@rule confide.hurt.friend
+on confide
+when interested=yes dating=no hurt=yes circle=friend|bff
+opens comfort,admit
+feel sad
+- [{Circlewho}...|Of course it's {circlewho}.] [She's my friend. I can't even be mad at her.|I can't hate her for it. She's too nice.|I should be happy for her.] [So why does it hurt?|...Just give me a minute.|I'll smile tomorrow. Promise.]
+- [My friend and the person I... never mind.|You and {circlewho}.] [That's the worst combination.|I'll have to watch you two together now.] [I'm not crying.|It's fine. I'm fine.|Please don't tell her I said anything.]
+- [I'm glad it's {circlewho} and not someone awful.|At least it's {circlewho}.] [She deserves it.|She'll be good to you.] [...I just wish it was me.|I'm going to need some time.|Don't worry about me.]
+
+@rule confide.many.hurt
+on confide
+when interested=yes dating=no count=two|many
+opens comfort,admit,ask
+feel pout
+- [All of them?|More than one?! And you're telling ME?|Wow. You're popular.] [Is there a line I should get in?|Where do I fit in all this?|Am I supposed to be next?] [...Don't answer that.|I'm not sure if I'm angry or impressed.|Unbelievable.]
+- [{Who}... that's a list.|You've been busy.] [And here I thought I had a chance.|I really thought I was special.] [Guess I'm just another name.|I need to think.|Wow. Okay.]
+- [So I'm one of many, or not even that?|How many is "the others", exactly?] [You could have told me sooner.|I feel kind of stupid now.] [Thanks for the honesty, I guess.|Just... don't lie to me again.|Okay. I heard you.]
+
+# ---------------- your girlfriend ----------------
+@rule confide.gf.refuses
+on confide
+when dating=yes stance=refuses
+opens comfort,admit,share
+feel pout
+- [You're telling me this NOW?|What?|Excuse me?] [I'm your girlfriend!|What am I to you, then?|Was I not enough?] [I can't share you. I won't.|You have to choose.|Don't touch me right now.]
+- [So that's where you've been.|{Who}. Of course.] [And you thought telling me would make it okay?|Honesty doesn't make it hurt less.|Did you think I'd just smile?] [I'm not okay with this.|I won't be one of many.|We need to talk about this. Seriously.]
+- [I knew something was off.|...Say that again. Slowly.] [You and {who}.|While we're together.] [I don't know if I can forgive this.|Give me a reason to stay.|It's me or them.]
+
+@rule confide.gf.separate
+on confide
+when dating=yes stance=separate
+opens comfort,thank,ask
+feel worried
+- [...Okay.|I see.|Mm.] [I won't pretend I love it.|I can live with it. I think.|I'm not thrilled.] [Just don't bring it up around me.|Keep it away from me, okay?|As long as you still come back to me.]
+- [Thank you for telling me.|I'd rather know than wonder.] [I don't need the details.|Let's not talk about it much.|You're still mine, right?] [Then it's fine. Mostly.|I'll deal with it my own way.|Don't make me regret this.]
+- [I suppose I can't own you.|It's not what I wanted to hear.] [But I'm glad you told me.|At least you were honest.] [Just remember who your girlfriend is.|Don't forget about me.|We'll be okay. If you make the effort.]
+
+@rule confide.gf.friends
+on confide
+when dating=yes stance=friends|trio
+opens tease,thank,ask
+feel smile
+- [Oh, {who}? I know her.|{Who}! I like her, actually.|Ha, {who}? That's not bad.] [She's sweet. I don't mind.|We get along, so it's fine.|I could see us all hanging out.] [Just don't forget your girlfriend.|I'm still first, right?|Bring her along sometime.]
+- [Honestly? I'm okay with it.|Hehe, so it's {who}.] [I kind of saw it coming.|She's cute. You have good taste.] [I'll have to talk to her properly.|Maybe we can be friends too.|We'll figure it out together.]
+- [You don't need to look so nervous.|Okay, okay. Relax.] [I like {who}.|It's {who}? Then it's fine.] [Just be honest with both of us.|As long as nobody gets hurt.|We'll make it work.]
+
+@rule confide.gf.trio
+on confide
+when dating=yes stance=trio
+opens tease,invite,thank
+feel love
+- [{Who}? Oh, I adore her.|Ooh, {who}!|Really? {Who}?] [We should all go out together.|I wouldn't mind being closer to her too.|She's adorable, you know.] [Maybe... the three of us?|Next time, invite me too.|Hehe. This could be fun.]
+- [I actually really like {who}.|You and {who}... and me?] [We'd make a cute trio, don't you think?|I'm not jealous. I'm curious.] [Let's talk about it with her.|Don't make that face, I'm serious.|Think about it.]
+- [Honestly, I was hoping you'd say that.|{Who}, huh?] [She and I get along great.|I've been wanting to spend more time with her.] [We should make plans. All of us.|Let's not keep secrets, any of us.|This could work.]
+
+# ---------------- how far, how many (no circle) ----------------
+@rule confide.plain
+on confide
+when knew=none
+opens ask,tease,share
+feel surprised
+- [Oh! You and {who}?|Huh. {Who}?|Really? {Who}?] [Good for you.|I didn't see that coming.|That's kind of sweet.] [Thanks for telling me.|I won't spread it around.|Since when?]
+- [Wow, okay.|Hm. {Who}.] [You two, huh.|I didn't know you were close.|That's news to me.] [I hope it goes well.|Well, congrats, I guess.|Interesting.]
+- [Huh. Why tell me, though?|Oh. Okay.] [Not that I mind.|I appreciate it.] [I'll keep it to myself.|That's nice. Really.|Good luck with that.]
+
+@rule confide.many
+on confide
+when count=two|many knew=none interested=no
+opens ask,tease,laugh
+feel surprised
+- [Wait. ALL of them?|{Who}?! At the same time?|How many did you say?] [You're busier than I thought.|When do you even sleep?|Do they know about each other?] [I'm impressed. And a little scared.|That's going to blow up.|You're a brave one.]
+- [Huh. That's a lot of names.|Okay, slow down.] [You're popular, aren't you?|I need a chart to keep up.] [Are you sure you know what you're doing?|Good luck. Seriously.|Wow.]
+- [{Who}. That's... quite the list.|More than one, huh.] [I'm not judging. Much.|I hope everyone's okay with that.] [Be careful.|Somebody's going to get hurt.|Just be honest with them, like you're being with me.]
+
+@rule confide.flirt
+on confide
+when depth=flirt knew=none interested=no
+opens tease,ask,laugh
+feel laugh
+- [Flirting? With {who}? Ha!|Ooh, {who}!|You and {who}, flirting?] [That's adorable.|I wish I'd seen that.|You don't seem the type.] [Make your move already.|Is it serious?|Tell me how it goes.]
+- [Hehe. So you like {who}.|Oh, that's cute.] [She's into you, huh?|Are you sure she's not just being nice?] [Go for it.|Don't be shy about it.|I'll cheer for you.]
+- [Just flirting? That's all?|Huh, {who}.] [That's not news, that's gossip.|You call that a confession?] [Come back when you've kissed her.|Okay, okay, I'll root for you.|Cute.]
+
+@rule confide.h
+on confide
+when depth=h knew=none interested=no
+opens hush,ask,laugh
+feel shy
+- [W-WAIT. You and {who1} did WHAT?|Hold on. You mean... that?|Too much information!] [Why would you tell me that?!|I didn't need to know that!|My face is burning.] [I'm never looking at her the same way.|Don't say it so casually!|Okay. Okay. I heard nothing.]
+- [Oh. Oh!|You actually...?] [Wow. That's... wow.|I don't know what to say.|That's very grown up of you.] [I won't tell anyone. Obviously.|Please spare me the details.|Huh. Okay.]
+- [You two went that far?|Already?!] [That's moving fast.|I didn't think {who1} was like that.] [Your secret's safe with me.|Just... be careful, okay?|My ears are ringing.]
+
+@rule confide.cool
+on confide
+when knew=none interested=no voice=cool|serious|proper
+opens ask,share
+feel serious
+- [I see.|Hm.|Is that so.] [Why are you telling me?|It's not my business.|That's your choice to make.] [But thank you for your honesty.|I'll keep it to myself.|Noted.]
+- [Understood.|Mm.] [I'd advise caution.|Relationships are complicated.] [I hope you know what you're doing.|I won't interfere.|It's your life.]
+- [Hm. I didn't expect that.|I see.] [You seem serious about it.|It doesn't change anything between us.] [Good luck.|I'll say nothing.|Very well.]
+
+@rule confide.stranger
+on confide
+when rel=acquaintance|stranger
+opens ask,laugh
+feel surprised
+- [Um... why are you telling me?|We barely know each other.|Okay...?] [That's kind of personal.|I'm not sure what to say.|Congratulations?] [...I guess thanks?|You're a strange one.|Okay then.]
+- [Oh. Um. Good for you?|That's... a lot to share.] [We just met, you know.|I didn't ask, but okay.] [I'll keep it to myself.|Weird, but okay.|Sure.]
+- [Huh. Okay.|Why me?] [Do you tell everyone this?|That's a bold opener.] [Well, I hope it works out.|Interesting introduction.|Noted, I guess.]
+
+# ---------------- after your answer ----------------
+@rule react.confide.comfort.good
+on react
+when kind=confide move=comfort fit=good
+feel shy
+- [...Thanks.|Mm. Okay.|That helps a little.] [I'll be okay.|You're kind, you know that?|I just needed to hear that.] [Don't worry about me.|Let's talk about something else soon.|I'm not mad. Really.]
+- [You're too nice for your own good.|Hah... okay.] [I'll get over it.|I'm glad you care.] [Just give me some time.|Thanks for not running away.|Okay. I'm okay.]
+- [I know, I know.|Mm.] [It's not your fault.|I'm the one being silly.] [Thank you.|We're still friends, right?|I'll smile for you.]
+
+@rule react.confide.admit.good
+on react
+when kind=confide move=admit fit=good
+feel serious
+- [At least you own it.|Honesty. I'll give you that.|Okay. I respect that.] [Most people would lie.|That counts for something.|It's better than sneaking around.] [Just keep being honest.|Don't change that.|Fine.]
+- [You're not making excuses.|Thanks for not pretending.] [That makes it easier.|I can work with honesty.] [Okay.|We'll see how it goes.|I appreciate it.]
+- [I believe you.|Mm. Okay.] [Thanks for saying it straight.|You didn't dodge it.] [That matters to me.|Alright.|Just don't make me regret trusting you.]

@@ -6,54 +6,63 @@ on me.small
 when likeid=animals
 - [Are you a cat person or a dog person?|Do you have any pets?|I saw a stray cat by the gate this morning.]
 - [If you could have any animal, what would it be?|Have you been to the cat café by the station?]
+- [Do you think dogs dream?|What's the cutest animal you've ever seen?|Would you rather have a cat or a hamster?]
 
 @rule me.small.food
 on me.small
 when likeid=food
 - [What's the best thing you've eaten lately?|Do you have a favorite restaurant?|I'm hungry just thinking about it, but what's your favorite food?]
 - [If you could only eat one thing forever, what would it be?|Any good places to eat around here?]
+- [Bread from the store, or homemade bento?|What did you have for lunch?|What's a food you could never stand?]
 
 @rule me.small.cooking
 on me.small
 when likeid=cooking
 - [Do you cook?|Did you make your own lunch today?|What's the best thing you can cook?]
 - [Could you teach me a recipe sometime?|Do you cook at home a lot?]
+- [What's your signature dish?|Ever burned something really badly?|Do you cook for your family?]
 
 @rule me.small.exercise
 on me.small
 when likeid=exercise
 - [Do you work out?|You look like you run a lot.|What sport do you like best?]
 - [Morning runs or evening runs?|Ever think about joining a sports club?]
+- [How many laps can you run?|Do you stretch before class?|What's your favorite way to stay in shape?]
 
 @rule me.small.study
 on me.small
 when likeid=study
 - [What's your best subject?|Do you study a lot at home?|How do you keep your grades up?]
 - [Library or home, where do you study better?|Got any study tricks?]
+- [How do you survive exam season?|Which teacher do you think explains best?|Do you study with music on?]
 
 @rule me.small.fashion
 on me.small
 when likeid=fashion
 - [Where do you buy your clothes?|You always look put together.|What's in style these days?]
 - [If you weren't in uniform, what would you wear?|Got a favorite brand?]
+- [What's the best outfit you own?|Would you ever dye your hair?|Do you dress up on weekends?]
 
 @rule me.small.coffee
 on me.small
 when likeid=coffee
 - [Coffee or tea?|How do you take your coffee?|Do you drink coffee every day?]
 - [Know any good cafés?|Can you really drink it black?]
+- [Canned coffee from the machine, or the real stuff?|How many cups a day?|Ever had coffee jelly?]
 
 @rule me.small.spicy
 on me.small
 when likeid=spicy
 - [Can you handle spicy food?|What's the spiciest thing you've ever eaten?|Do you like hot curry?]
 - [Ever tried the ghost pepper chips?|How spicy do you go at the ramen place?]
+- [How many chili peppers can you handle on the menu?|Ever cried eating curry?|Mapo tofu: mild or extra hot?]
 
 @rule me.small.sweets
 on me.small
 when likeid=sweets
 - [Do you have a sweet tooth?|What's your favorite dessert?|Cake or ice cream?]
 - [Know any good sweet shops?|Do you bake sweets yourself?]
+- [Melon bread or cream puff?|What's the best sweet at the convenience store?|Ever eaten a whole cake by yourself?]
 
 # ================= her answer, per like: she loves it =================
 @rule small.animals.yes
@@ -73,6 +82,7 @@ opens ask,invite,praise
 feel shy
 - [A-animals? I... I like cats a lot.|Um, I have a little rabbit at home.] [She's very soft.|I talk to her when I'm sad. Is that weird?]
 - [Animals don't make me nervous.|I-I volunteer at a shelter on Sundays.] [Not like people.|Please don't tell anyone.]
+- [Animals are easier than people.|My cat sleeps on my homework.] [They don't judge you.|I-I don't mind. Much.]
 
 @rule small.animals.no
 on small
@@ -80,6 +90,7 @@ when likeid=animals likes=no
 opens ask,share,tease
 - [Animals? I'm allergic to half of them.|I'm more of a... not-animal person.] [Cats make me sneeze.|They're cute from far away.]
 - [A dog chased me when I was little.|Animals don't like me, for some reason.] [I still haven't forgiven it.|Maybe they can tell.]
+- [I'd rather watch animal videos than meet one.|Fish are fine. They stay in the tank.] [Much safer.|That's my limit.]
 
 @rule small.food.yes
 on small
@@ -97,6 +108,7 @@ when likeid=food likes=no
 opens ask,share,tease
 - [Food? I eat to live, that's all.|I'm a picky eater, honestly.] [Rice and miso and I'm done.|Most things are too greasy for me.]
 - [I forget to eat half the time.|I don't get people who photograph their food.] [My mom worries about it.|Just eat it!]
+- [I could live on toast, honestly.|Food's not really my thing.] [Plain toast.|I'd rather sleep than eat.]
 
 @rule small.cooking.yes
 on small
@@ -114,6 +126,7 @@ when likeid=cooking likes=no
 opens ask,share,tease
 - [I burned instant noodles once.|Cooking? Me? I can boil water.] [Somehow.|On a good day.]
 - [The kitchen and I aren't friends.|My mom banned me from the stove.] [We have an understanding.|For good reasons.]
+- [I set off the smoke alarm making toast.|Convenience stores exist for people like me.] [Toast!|Bless them.]
 
 @rule small.exercise.yes
 on small
@@ -131,6 +144,7 @@ when likeid=exercise likes=no
 opens ask,share,tease
 - [Exercise? I get tired climbing the stairs.|P.E. is my least favorite class.] [The courtyard stairs are my enemy.|Every single time.]
 - [I'm more of an indoor person.|Running for fun? I don't get it.] [Sweat is gross.|Nobody's chasing you.]
+- [My idea of sport is walking to the vending machine.|I hide during the marathon every year.] [Twice if I'm thirsty.|Nobody's found my spot yet.]
 
 @rule small.study.yes
 on small
@@ -148,6 +162,7 @@ when likeid=study likes=no
 opens ask,share,tease
 - [Studying? Please, I'm on vacation in my head.|Don't say the word "study" near me.] [Until the exams, anyway.|It gives me hives.]
 - [I fall asleep the moment I open a textbook.|My notes are mostly doodles.] [It's a gift.|Want to see?]
+- [I study the night before. Every time.|Grades are a social construct.] [It works. Kind of.|Tell that to my mom.]
 
 @rule small.fashion.yes
 on small
@@ -165,6 +180,7 @@ when likeid=fashion likes=no
 opens ask,share,tease
 - [Fashion? I wear whatever's clean.|I own three hoodies and I'm happy.] [It's efficient.|Why have more?]
 - [Uniforms are great, I don't have to choose.|I don't get trends at all.] [Best rule this school has.|They change every week.]
+- [I don't even know what's trendy right now.|My sister picks my clothes.] [And I don't care.|I just wear them.]
 
 @rule small.coffee.yes
 on small
@@ -182,6 +198,7 @@ when likeid=coffee likes=no
 opens ask,share,tease
 - [Coffee's too bitter for me.|I'm a tea person, sorry.] [I need lots of milk.|Green tea forever.]
 - [Coffee makes my heart race.|I tried black coffee once.] [I don't need that.|Never again.]
+- [Coffee smells good, but tastes awful.|I'm happy with juice.] [It's a scam.|Strawberry milk, preferably.]
 
 @rule small.spicy.yes
 on small
@@ -199,6 +216,7 @@ when likeid=spicy likes=no
 opens ask,share,tease
 - [Spicy? I can't even handle wasabi.|Mild curry, please. Kids' level.] [My tongue is weak.|Don't laugh.]
 - [I don't get spicy food at all.|It's just pain with flavor.] [Why would you hurt yourself?|No thanks.]
+- [Last time I tried spicy ramen I cried.|I order the kids' curry. Proudly.] [Real tears.|Judge me.]
 
 @rule small.sweets.yes
 on small
@@ -216,6 +234,7 @@ when likeid=sweets likes=no
 opens ask,share,tease
 - [Sweets make my teeth hurt.|I'm more of a salty snack person.] [Too much sugar.|Rice crackers are the best.]
 - [I can't eat a whole cake slice.|Chocolate's okay. A little.] [Too heavy.|Just one piece.]
+- [I give my chocolates away on Valentine's.|Too sweet makes me feel sick.] [Well, the ones I get.|Bitter's better.]
 
 # ================= the new subjects =================
 @rule me.small.club
@@ -223,6 +242,7 @@ on me.small
 when subject=club
 - [How's the {club}?|Anything new at the {club}?|Is the {club} fun?]
 - [What do you guys do at the {club}, anyway?|Busy at the {club} lately?]
+- [Does the {club} need more people?|What's the hardest part of the {club}?|Are you the best one at the {club}?]
 
 @rule small.club
 on small
@@ -230,6 +250,7 @@ when subject=club
 opens ask,praise,invite
 - [The {club}? It's going well.|We're busy at the {club}.] [We've got new members this term.|There's a big thing coming up.]
 - [Honestly, the {club}'s the best part of my day.|The {club} keeps me sane.] [Everyone there's so fun.|Even when it's hard.]
+- [The {club} is like a second home.|Things are a bit messy at the {club}.] [Some days I stay till dark.|But we'll manage.]
 
 @rule small.club.sports
 on small
@@ -238,6 +259,7 @@ opens ask,praise,invite
 feel smile
 - [Practice is brutal, but I love it.|The {club} has a tournament soon.] [Coach makes us run till we drop.|We're training every day.]
 - [I finally beat my best time in the {club}!|My muscles hate the {club} right now.] [I wanted to tell someone.|But it's worth it.]
+- [We lost last match, but barely.|The {club} captain is a monster.] [Next time we win.|In a good way. Mostly.]
 
 @rule small.club.culture
 on small
@@ -246,6 +268,7 @@ opens ask,praise,invite
 feel smile
 - [We're working on something big at the {club}.|The {club} is quiet, but I like it.] [I can't say what yet.|It's like a little hideout.]
 - [You should drop by the {club} sometime.|The {club} is short on members.] [We have snacks.|Want to join?]
+- [The {club} room smells like old paper.|We're making something for the festival.] [I love it.|Come see it when it's done.]
 
 @rule small.club.teacher
 on small
@@ -253,12 +276,14 @@ when subject=club role=teacher
 opens ask,praise,share
 - [I'm advising the {club} this year.|The {club} kids keep me busy.] [They're a handful.|I'm proud of them, though.]
 - [Being a club advisor is more work than people think.|The {club} needs a new budget, sigh.] [Paperwork, mostly.|Don't tell the principal I complained.]
+- [The {club} kids made me a card last week.|I wish the {club} had more time.] [I didn't cry. Much.|Exams eat everything.]
 
 @rule me.small.friend
 on me.small
 when subject=friend
 - [You and {bff} are close, huh?|How's {bff} doing?|I always see you with {bff}.]
 - [How did you and {bff} meet?|Is {bff} your best friend?]
+- [Do you hang out with {bff} after school?|{Bff} talks about you, you know.|What's {bff} like when nobody's around?]
 
 @rule small.friend
 on small
@@ -276,12 +301,14 @@ opens ask,comfort,praise
 feel pout
 - [{Bff}? Why, are you interested in her?|You ask about {bff} a lot.] [Just asking.|...Hm.]
 - [{Bff}'s great. Everyone likes her.|I'd introduce you, but...] [Maybe too great.|Maybe not.]
+- [Do you want her number or something?|You never ask about me like that.] [Kidding.|...Forget it.]
 
 @rule me.small.birthday
 on me.small
 when subject=birthday
 - [When's your birthday, anyway?|Isn't your birthday around now?|Do you do anything for your birthday?]
 - [What would you want for your birthday?|Is it true your birthday's coming up?]
+- [Do you like birthday cake?|Best birthday you ever had?|Do your friends throw you parties?]
 
 @rule small.birthday.today
 on small
@@ -290,6 +317,7 @@ opens praise,invite,thank
 feel smile
 - [It's today, actually!|You remembered? It's today!] [Nobody else said anything.|I'm so happy right now.]
 - [Today! I'm a year older today.|How did you know?] [Spoil me a little?|Did someone tell you?]
+- [Yes! Today's my day!|It's today! Can you believe it?] [You're the first to say anything.|Make it a good one with me?]
 
 @rule small.birthday.week
 on small
@@ -298,6 +326,7 @@ opens ask,invite,praise
 feel smile
 - [It's this week! You noticed?|My birthday's in a few days.] [I want cake. Lots of cake.|I'm pretending I don't care.]
 - [This week, yeah.|I'm turning a year older this week.] [Any ideas for a present?|Don't make a fuss, okay? ...Maybe a little fuss.]
+- [In a few days! I can't wait.|This week. My mom's already baking.] [I'm counting down.|You could come by. Maybe.]
 
 @rule small.birthday.soon
 on small
@@ -305,6 +334,7 @@ when subject=birthday birthday=soon
 opens ask,invite,tease
 - [Next week, actually.|It's coming up soon.] [I haven't planned anything.|Are you asking for a reason?]
 - [Soon. I'm already making a wish list.|Next week. Don't forget.] [Just kidding. Mostly.|I'm watching you.]
+- [Soon. Not that I'm hinting.|It's coming. I'll be expecting something.] [Okay, I'm hinting.|Hehe.]
 
 @rule small.birthday.no
 on small
@@ -312,12 +342,14 @@ when subject=birthday birthday=no
 opens ask,share,tease
 - [My birthday? It's still a while away.|Not for a long time, sadly.] [Why, planning something?|I'll remind you.]
 - [My birthday's not soon, don't worry.|It's months away.] [You've got time to think of a present.|Ask me again later.]
+- [Ages away. Ask me again in a few months.|My birthday's not close at all.] [You'll have forgotten by then.|But thanks for asking.]
 
 @rule me.small.horoscope
 on me.small
 when subject=horoscope
 - [Do you read your horoscope?|What's your sign?|Do you believe in horoscopes?]
 - [What did your horoscope say today?|Are you into astrology?]
+- [Do you think our signs get along?|Have you ever had a horoscope come true?|Is it true you check horoscopes?]
 
 @rule small.horoscope
 on small
@@ -325,6 +357,7 @@ when subject=horoscope sign=*
 opens ask,tease,share
 - [I'm a {sign}. Can you tell?|{Sign}, born and raised.] [People say it fits me.|Don't say anything mean.]
 - [I check it every morning. I'm a {sign}.|Horoscopes are silly, but... I'm a {sign}.] [Today it said something good.|And I read it every day.]
+- [{Sign}. Today's lucky color is pink, apparently.|I'm a {sign}. We're supposed to be romantic.] [I'm wearing it, see?|Supposed to be.]
 
 @rule small.horoscope.cool
 on small
@@ -332,12 +365,14 @@ when subject=horoscope voice=cool|serious|proper
 opens ask,share
 - [I don't believe in that. ...I'm a {sign}, though.|Astrology is nonsense.] [For the record.|My sign is {sign}, if you must know.]
 - [Horoscopes are vague on purpose.|Stars don't decide my day.] [But fine, {sign}.|I do.]
+- [I'm a {sign}. The descriptions never fit me.|Astrology is a business, nothing more.] [Which proves my point.|...Still, I'm a {sign}.]
 
 @rule me.small.teaching
 on me.small
 when subject=teaching
 - [Is teaching hard?|Why did you become a teacher?|Do you like teaching?]
 - [What's the worst part of being a teacher?|Do students ever drive you crazy?]
+- [What were you like as a student?|Do you have favorite students?|Is grading as boring as it looks?]
 
 @rule small.teaching
 on small
@@ -345,6 +380,7 @@ when subject=teaching role=teacher
 opens ask,praise,comfort
 - [Teaching is rewarding. Exhausting, but rewarding.|I wanted to be the teacher I never had.] [When a student finally gets it, it's worth everything.|That's the dream, anyway.]
 - [The grading never ends.|Some days I wonder why I chose this.] [But then someone like you says hello.|Then I remember.]
+- [Every class is different.|I still get nervous on the first day of term.] [That's what keeps it fun.|Don't tell anyone.]
 
 @rule small.teaching.ex
 on small
@@ -352,12 +388,14 @@ when subject=teaching role=exteacher
 opens ask,share,comfort
 - [Teaching? That's behind me now.|I miss it sometimes.] [Being a student again is strange.|The chalk dust, mostly.]
 - [I learned more from my students than they learned from me.|I don't know if I'll go back.] [Funny, right?|We'll see.]
+- [I still dream about grading papers.|Sitting on this side of the desk is humbling.] [Nightmares, really.|Very humbling.]
 
 @rule me.small.future
 on me.small
 when subject=future
 - [What do you want to do after school?|Got any plans for the future?|What's your dream?]
 - [Where do you see yourself in five years?|University, or work?]
+- [Do you know what you want to be?|Any dream jobs?|Do you think you'll stay in this town?]
 
 @rule small.future
 on small
@@ -365,6 +403,7 @@ when subject=future
 opens ask,praise,share
 - [After school? I'm not sure yet.|I want to go to university.] [Maybe something with {fav}.|Somewhere far away.]
 - [I've thought about it a lot.|My parents want me to take over the family shop.] [I'm scared, honestly.|I haven't decided.]
+- [I want to do something that matters.|No idea. Is that bad?] [I just don't know what yet.|Everyone else seems so sure.]
 
 @rule small.future.gf
 on small
@@ -373,6 +412,7 @@ opens ask,praise,invite
 feel shy
 - [My future? I was kind of hoping you'd be in it.|Whatever I do, I want to do it near you.] [Is that too much?|There, I said it.]
 - [We could go to the same university.|I've thought about us after graduation.] [Wouldn't that be nice?|A little.]
+- [Whatever happens, I'm keeping you.|I've already picked a name for our cat.] [You can't escape.|Don't laugh!]
 
 # ================= her reaction to an invite, by what it is and who she is =================
 @rule react.invite.like.good
@@ -381,6 +421,7 @@ when move=invite fit=good kind=small likes=yes
 feel smile
 - [{Likedo}? With you? Yes!|You want to {likedo}? I'm in.] [I know exactly when.|You'd better not back out.]
 - [Okay, we're definitely going to {likedo}.|I've wanted someone to {likedo} with forever.] [This is happening.|Finally!]
+- [You want to {likedo}? With me?|Say no more. We're going to {likedo}.] [Yes, yes, yes!|I'm already excited.]
 
 @rule react.invite.like.gf
 on react
@@ -388,12 +429,14 @@ when move=invite fit=good rel=girlfriend
 feel smile
 - [A date? Of course, silly.|You don't even have to ask.] [I'm your girlfriend.|Pick me up after class.]
 - [Yes. Always yes.|Anywhere with you is fine.] [I'll wear something cute.|Hold my hand on the way, okay?]
+- [Of course I'll go with you.|You and me? Obviously.] [Where are we going?|I was hoping you'd ask.]
 
 @rule react.invite.acq.neutral
 on react
 when move=invite fit=neutral rel=acquaintance
 - [Hmm, we don't really know each other yet.|That's kind of sudden.] [Maybe with a few other people?|Let's talk a bit more first.]
 - [Just the two of us? Hm.|I don't usually go out with boys I just met.] [I'll think about it.|Ask me again sometime.]
+- [Hmm. Not yet, I think.|That's a big step for people who barely talk.] [But I'm not saying never.|Let's get to know each other first.]
 
 @rule react.invite.teacher
 on react
@@ -401,6 +444,7 @@ when move=invite role=teacher
 feel shy
 - [I'm your teacher. I can't just go out with a student.|That's... not appropriate.] [...Outside school, maybe. Quietly.|Ask me after graduation.]
 - [A student asking me out? Ahem.|I'll pretend I didn't hear that.] [...Mostly.|...Where, though? Just curious.]
+- [Mr... no. Let's not.|That's very flattering, but no.] [People would talk.|...For now.]
 
 @rule react.invite.exteacher
 on react
@@ -408,6 +452,7 @@ when move=invite role=exteacher fit=good|neutral
 feel smile
 - [I'm not your teacher anymore, so... why not?|No rules against it now.] [Don't call me sensei on the way.|It's still a little strange.]
 - [It's strange, being asked out by a former student.|I suppose I can say yes now.] [Strange, but nice.|Don't make it weird.]
+- [Well, I'm just a student now too.|Why not? We're both students now.] [I'd like that.|Don't tell my old colleagues.]
 
 @rule react.invite.bday
 on react
@@ -415,6 +460,7 @@ when move=invite subject=birthday birthday=today|week|soon fit=good|neutral
 feel smile
 - [You'd celebrate with me?|For my birthday? Really?] [That's the best present already.|I'll pick the cake!]
 - [My birthday with you... yeah, I'd like that.|You'd remember the day?] [I'll hold you to it.|Okay. It's a promise.]
+- [For my birthday? You're sweet.|Celebrating together? I'd love that.] [Don't be late.|You just made my week.]
 
 # ================= her reaction to asking, by subject =================
 @rule react.ask.friend
@@ -423,6 +469,7 @@ when move=ask subject=friend fit=good|neutral
 opens tease,praise,invite
 - [{Bff} and I met on the first day. She sat in my seat.|{Bff}? She's loud, kind, and terrible at math.] [We've been inseparable since.|I love her.]
 - [{Bff} and I do everything together.|{Bff} would like you, I think.] [Shopping, karaoke, homework.|Maybe a little too much.]
+- [{Bff}? She's the only one who knows all my secrets.|{Bff} saved me in middle school.] [Don't tell her I said that.|Long story.]
 
 @rule react.ask.friend.jealous
 on react
@@ -430,6 +477,7 @@ when move=ask subject=friend interest=yes
 feel pout
 - [Why do you want to know so much about {bff}?|Should I be worried about you and {bff}?] [Just asking.|...Hmph.]
 - [{Bff} is taken. Probably.|Ask her yourself, then.] [...I'm kidding. Mostly.|...Not really.]
+- [Is {bff} more interesting than me?|You could just ask about me, you know.] [Rude.|I'm right here.]
 
 @rule react.ask.birthday
 on react
@@ -438,6 +486,7 @@ opens invite,praise,tease
 feel smile
 - [What I want? Something small. Something you pick.|Usually just cake with my family.] [It's the thought.|But I wouldn't say no to more.]
 - [Last year nobody remembered.|I always make a wish on the candles.] [So this year, maybe you will.|I won't tell you what it is.]
+- [I'd like something you picked yourself.|Honestly? Just spending the day with someone.] [That's all.|That would be enough.]
 
 @rule react.ask.horoscope
 on react
@@ -445,6 +494,7 @@ when move=ask subject=horoscope fit=good|neutral
 opens tease,share,invite
 - [It says {sign}s are loyal and stubborn.|Today's said to watch for a surprise.] [Accurate.|Maybe that's you.]
 - [Do our signs match? Let me think...|Fate? Maybe a little.] [Probably not, ha!|You're here, aren't you?]
+- [Mine said I'd meet someone important.|Apparently my lucky item today is an umbrella.] [Hm. Interesting.|It's not even raining.]
 
 @rule react.ask.club
 on react
@@ -452,6 +502,7 @@ when move=ask subject=club fit=good|neutral
 opens invite,praise,share
 - [The {club} is preparing for the festival.|We've got a small team, but we're close.] [It's a secret, though.|Everyone pulls their weight.]
 - [We could always use more people in the {club}.|I do a bit of everything at the {club}.] [Interested?|Mostly the boring parts.]
+- [The {club} is where I can be myself.|We need someone strong in the {club}.] [It's hard to explain.|Know anyone?]
 
 @rule react.share.like.yes
 on react
@@ -459,9 +510,11 @@ when move=share likes=yes fit=good
 feel smile
 - [You like {like} too? No way!|Finally someone who gets it.] [We should {likedo} sometime.|I knew I liked you.]
 - [Wait, you know about {like}?|You actually listened to me.] [Okay, you're cool.|That's rare.]
+- [You like {like}?! I'm so happy!|No way, I thought nobody liked {like}.] [Tell me everything.|We have to talk more.]
 
 @rule react.share.like.no
 on react
 when move=share likes=no fit=good|neutral
 - [See? You get it. {Like} is overrated.|At least we agree on that.] [Let's find something else.|What do you actually like?]
 - [You're not into {like} either? Ha.|Good, I thought I was the only one.] [We're boring together.|Let's be weird together.]
+- [{Like}? Yeah, no. Same.|Not a fan of {like} either?] [We think alike.|High five.]

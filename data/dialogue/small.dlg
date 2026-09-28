@@ -14,24 +14,28 @@ on me.small
 when subject=weather
 - [Nice weather today, huh?|It's [warm|chilly|cloudy] today.|Do you think it'll rain later?]
 - [Did you see the sky this morning?|Perfect day to skip class, right?|The wind's crazy today.]
+- [Feels like it's going to [rain|clear up] later.|The sun's finally out.|Is it me, or is it humid today?]
 
 @rule me.small.like
 on me.small
 when likes=yes|no
 - [Are you into {like}?|Do you like {like}?|What do you think about {like}?]
 - [Ever tried {like}?|I heard you might like {like}.|How do you feel about {like}?]
+- [Are you a {like} kind of person?|Quick question: {like}, yes or no?|Somebody told me you're into {like}. True?]
 
 @rule me.small.place
 on me.small
 when subject=place
 - [I like {thing}.|This place is nice, huh?|You come here often?]
 - [It's calm here.|Do you hang out here a lot?|Good spot, right?]
+- [Feels different here than in class.|I didn't expect to find you here.|Nice place to take a breather.]
 
 @rule me.small.stranger
 on me.small
 when rel=stranger
 - [Hi. I don't think we've really talked before.|Hey. Nice day, huh?]
 - [Hey, you're in my year, right?|Hi! Mind if I say hello?|Hey there. How's it going?]
+- [Hi. We keep passing each other, so...|Hey, I'm in your grade. Thought I'd say hi.|Hello! I don't bite, promise.]
 
 @rule small.plain
 on small
@@ -153,3 +157,395 @@ feel shy
 - [O-oh, you want to talk to me?|Um... {thing}...] [I don't know what to say.|I-I'll try.]
 - [Sorry, I get nervous.|Um, {thing} is... nice?] [Is that a weird answer?|Please don't laugh.]
 - [Ah... yes, {thing}.|I-I think about it sometimes.] [Do you?|That's all, sorry.]
+
+
+# Pesos de implementação: em cada lugar, primeiro os valores que mudam o sentido da fala. Biblioteca: livros
+# (l_study), silêncio, prova, depois chuva (wet), depois a briga na cabeça dela (fight/{fightwho}); as falas compostas
+# (vários valores juntos) vencem sozinhas quando tudo vale, porque somam mais pontos. Chuva: weather
+# (clear|cloudy|rain|storm), wet, rainlater, outside, rainlover. Gostos como chaves: l_study, l_food, l_animals...
+
+# ---- your lines: the weather as it really is
+@rule me.small.weather.rain
+on me.small
+when subject=weather wet=yes
+- [Some rain, huh?|It's really coming down.|Did you bring an umbrella?]
+- [I love the sound of rain on the windows.|Guess nobody's going outside today.|The whole school smells like rain.]
+- [My shoes are still wet from this morning.|Think it'll stop before we go home?|Rainy days make everything slower, huh?]
+
+@rule me.small.weather.storm
+on me.small
+when subject=weather weather=storm
+- [Did you hear that thunder?|This storm is crazy.|The windows are shaking.]
+- [Are you okay with thunder?|I think the power flickered.|Nobody's going home in this.]
+- [Some storm, huh?|The wind's howling out there.|Glad we're inside.]
+
+@rule me.small.weather.later
+on me.small
+when subject=weather rainlater=yes
+- [Looks like rain later.|The sky's getting dark.|Did you bring an umbrella? It's going to pour.]
+- [Those clouds don't look friendly.|The forecast said rain this afternoon.|Feels like it's about to rain.]
+- [Smells like rain.|The air's heavy today.|I give it an hour before it starts.]
+
+@rule me.small.weather.clear
+on me.small
+when subject=weather weather=clear
+- [Perfect weather today.|Not a cloud in the sky.|Sunny days are the best.]
+- [Great day to be outside, huh?|It's warm today.|The sun's out for real.]
+- [It's so nice out.|Feels like a day off, doesn't it?|Look at that blue sky.]
+
+# ---- her answer: rain, by who she is
+@rule small.weather.rain.gentle
+on small
+when subject=weather wet=yes tone=gentle
+opens share,invite,comfort
+feel smile
+- [I like the rain, a little.|The rain makes everything so quiet.|It's nice, isn't it? The sound.] [It feels like the whole school is whispering.|I could listen to it all day.|It makes me sleepy, though...]
+- [I forgot my umbrella...|My socks got a little wet this morning.] [Hehe, I'll survive.|I'm hoping it stops before we go home.|Maybe someone will share theirs...]
+- [Rainy days are good for staying in.|I always want tea when it rains.] [With a book, maybe.|And a blanket.|Don't you think?]
+
+@rule small.weather.rain.energetic
+on small
+when subject=weather wet=yes tone=energetic
+opens tease,invite,share
+feel pout
+- [Ugh, rain!|Rain, rain, rain!|Boo, rain!] [Practice got cancelled because of it!|I wanted to go out at lunch!|I'm bored out of my mind!]
+- [Did you see people running for the doors?|Somebody slipped in the hallway, it was hilarious!] [Rain makes everyone crazy!|Okay, that part was fun.]
+- [I'm gonna jump in every puddle on the way home.|Wanna race to the gate in it?] [Don't judge me!|Loser buys juice!|Come on, it's just water!]
+
+@rule small.weather.rain.cool
+on small
+when subject=weather wet=yes tone=cool
+opens share,ask
+- [Rain. Yes.|It's raining. I noticed.|...It's raining.] [I don't mind it.|Fewer people outside. Good.|It's quieter.]
+- [The rain keeps people indoors.|Rain is honest weather.] [The halls are crowded now.|No pretending to be cheerful.]
+- [I brought an umbrella. Obviously.|I checked the forecast.] [You didn't?|Unlike some people.]
+
+@rule small.weather.rain.teasing
+on small
+when subject=weather wet=yes tone=teasing
+opens tease,invite
+feel smile
+- [Rain, huh?|Look at you, all damp.|So, no umbrella?] [Want to share mine? It's small, we'd have to stand close~|Hair's a mess. Cute, though.|Fine, I'll rescue you.]
+- [Rainy days are perfect for staying in with someone.|Rain's romantic, don't you think?] [Just saying~|Or am I the only one?]
+- [If I get wet, it's your fault.|I'm blaming you for this weather.] [Don't ask me how.|You look like the type.]
+
+@rule small.weather.rain.lover
+on small
+when subject=weather wet=yes rainlover=yes
+opens share,invite
+feel smile
+- [I love the rain. Really love it.|Rain is my favorite weather.|Don't tell anyone, but I was hoping for rain.] [I went out in it at lunch.|It washes everything clean.|Everything smells new.]
+- [Sometimes I just stand outside and let it fall.|Rain sounds like the world is breathing.] [People think I'm weird.|Is that strange?]
+- [Want to go out in it with me?|Have you ever walked in the rain on purpose?] [Just for a minute!|You should try it.]
+
+@rule small.weather.rain.outside
+on small
+when subject=weather wet=yes outside=yes
+opens invite,tease
+feel surprised
+- [Why are we even out here?|We're getting soaked!|Talking about the rain while standing in it?] [Let's get inside!|My hair is ruined.|This is so dumb. I love it.]
+- [Rain's dripping down my collar.|Everything's soaked.] [You too, huh?|Let's find a roof.]
+- [Out here in this?|Ah, it's getting heavier!] [Come on, under there!|Run!]
+
+@rule small.weather.storm
+on small
+when subject=weather weather=storm
+opens comfort,share,tease
+feel worried
+- [Did you hear that thunder?|The lights flickered just now!|This storm is scary.] [I hate thunder...|Stay close for a bit?|I'm fine. Totally fine.]
+- [The trains might stop if this keeps up.|They might send everyone home.] [How would I even get home?|I hope so.]
+- [The wind's so loud.|Lightning hit somewhere close.] [I jumped!|Did you see the flash?]
+
+@rule small.weather.later
+on small
+when subject=weather rainlater=yes
+opens share,invite
+- [It's going to pour later.|They said rain this afternoon.|The sky's so dark.] [I hope I make it home first.|I brought an umbrella, just in case.|Ugh, and I have practice.]
+- [Smells like rain.|My knee always knows when it's going to rain.] [Weird, right?|Grandma says the same thing.]
+- [Let's hope it holds until after school.|Clouds like that mean business.] [Fingers crossed.|We'll see.]
+
+@rule small.weather.cloudy
+on small
+when subject=weather weather=cloudy
+opens share,ask
+- [It's gray today.|Cloudy days are kind of nice.|The sun's hiding.] [Easier on the eyes.|Makes me lazy.|I don't mind it.]
+- [Can't decide if it'll rain.|The sky can't make up its mind.] [Neither can I, about most things.|Typical.]
+- [Gloomy weather, gloomy mood.|Cloudy. Like my brain today.] [Hehe.|Don't mind me.]
+
+@rule small.weather.clear
+on small
+when subject=weather weather=clear
+opens invite,share
+feel smile
+- [It's so nice out!|Perfect weather.|The sun feels great.] [We should go outside.|I almost skipped class to enjoy it.|Days like this are rare.]
+- [Not a single cloud.|Even the teachers look happy today.] [Let's eat outside!|It's that kind of day.]
+- [Sunny days make me want to do something fun.|I sat by the window all morning.] [Got any ideas?|Totally worth it.]
+
+# ---- the library: books first, then the quiet and the exams, then the rain, then a fight on her mind
+@rule small.place.library.books.rain.fight
+on small
+when subject=place placeid=library l_study=yes wet=yes fight=yes
+opens comfort,ask,share
+feel shy
+- [I came here to read with the rain on the windows...|The library sounds different when it rains.|I like reading while it rains.] [It helps me stop thinking about {fightwho}.|Then I forget about the thing with {fightwho}. Almost.|It's the only place I don't think about the fight with {fightwho}.]
+- [Rain, a good book, and no {fightwho}.|I needed somewhere quiet after what happened with {fightwho}.] [That's all I want today.|The rain kind of covers everything up.]
+- [Is it weird that the rain makes it easier?|Everything feels farther away in here when it rains.] [Even {fightwho}.|Even that stupid fight.]
+
+@rule small.place.library.books.rain
+on small
+when subject=place placeid=library l_study=yes wet=yes
+opens share,invite
+feel smile
+- [Rain outside, a book in here.|Reading while it rains is the best.|Do you hear the rain on the windows?] [Perfect afternoon.|I could stay until they lock the doors.|It's like a soundtrack.]
+- [I always come to the library on rainy days.|The best seat is by the window when it rains.] [It's tradition.|I got here first.]
+- [Rain makes the pages smell older.|Rainy days are reading days.] [I know that sounds weird.|That's the rule.]
+
+@rule small.place.library.books.fight
+on small
+when subject=place placeid=library l_study=yes fight=yes
+opens comfort,ask
+feel sad
+- [I came here to hide in a book.|Books don't argue with you.|Reading helps when people are... complicated.] [After what happened with {fightwho}...|{Fightwho} and I aren't talking right now.]
+- [I keep reading the same page.|I can't focus.] [I keep thinking about {fightwho}.|Stupid fight with {fightwho}.]
+- [The library's the one place {fightwho} never comes.|It's quiet. I needed quiet.] [That's why I'm here.|You can stay, though.]
+
+@rule small.place.library.books.exam
+on small
+when subject=place placeid=library l_study=yes exam=yes
+opens ask,share
+feel serious
+- [Exams are coming. I'm prepared. Mostly.|I've read everything twice.|Studying here is the only way I focus.] [Want to quiz me?|You should study too.|Don't distract me. ...Okay, a little.]
+- [The library's full of panicking people this week.|Every seat's taken during exam week.] [I came early to get this one.|Lucky me.]
+- [I made flash cards for the exam.|I'm on chapter seven.] [Want to borrow some?|How far are you?]
+
+@rule small.place.library.books
+on small
+when subject=place placeid=library l_study=yes
+opens share,invite,ask
+feel smile
+- [I love it here.|The library is my favorite place in school.|Books, quiet, nobody yelling.] [What more do you need?|I'm here every day.|I come here every chance I get.]
+- [Have you read anything good lately?|They got some new books this week.] [I'll lend you one.|I already borrowed three.]
+- [The smell of old books is the best.|I could live in this library.] [Don't laugh!|Seriously.]
+- [I'm halfway through a really good novel.|The librarian knows my name now.] [I can't put it down.|That's how often I'm here.]
+
+@rule small.place.library.nobooks
+on small
+when subject=place placeid=library l_study!=yes
+opens tease,ask
+- [I don't really come here to read.|The library's... quiet.|Honestly? It's a good place to nap.] [Don't tell the librarian.|Too quiet, maybe.|It's warm, at least.]
+- [Books aren't really my thing.|I only came because it's the one quiet place.] [Shh, don't judge.|Is that bad?]
+- [I'm hiding from my homework. In the library. Ironic, huh?|I got dragged here.] [Don't laugh.|By a friend.]
+
+@rule small.place.library.rain
+on small
+when subject=place placeid=library wet=yes
+opens share,invite
+- [Everyone's in the library because of the rain.|The rain sounds nice from in here.|It's so crowded today.] [It's never this full.|At least it's dry.|Too many people.]
+- [Rain on the windows. Library smell.|The library's cozy on rainy days.] [Not bad.|I get it now.]
+- [I came in to get away from the rain.|The rain drove me in here.] [Might as well read something.|I don't even like books.]
+
+# ---- the classroom: the time of day and the exams, then the rain at the windows
+@rule small.place.classroom.rain
+on small
+when subject=place placeid=classroom wet=yes
+opens share,tease
+- [Watching the rain from class is my hobby.|The windows are all fogged up.|Listen to it hit the glass.] [Better than the lesson.|Someone drew a heart on it.|Kind of relaxing.]
+- [Nobody wants to go outside.|The classroom's packed because of the rain.] [So loud in here.|Everyone eats inside now.]
+- [I'm staring out the window again.|Rainy classroom, sleepy classroom.] [Don't tell the teacher.|I almost dozed off.]
+
+@rule small.place.classroom.exam
+on small
+when subject=place placeid=classroom exam=yes
+opens ask,comfort
+feel worried
+- [The classroom feels like a prison during exams.|Everyone's so tense in here.|Exam week. In this room. Again.] [I can't breathe.|Even the class clown is quiet.|Ugh.]
+- [Do you think we'll pass?|I studied until two.] [Tell me we'll pass.|I'm running on nothing.]
+- [I keep looking at the clock.|This desk has seen too many exams.] [Is it over yet?|So many doodles.]
+
+@rule small.place.classroom.lunch
+on small
+when subject=place placeid=classroom period=lunch
+opens invite,share
+- [Eating in the classroom is cozier.|Lunch at your desk is underrated.|Everyone pushes their desks together at lunch.] [No lines, either.|Want to join us?|It's the best part.]
+- [The classroom smells like everyone's bento.|Somebody brought curry again.] [I'm so hungry now.|The whole room smells like it.]
+- [Lunch break is too short.|I always eat too fast.] [Why is it so short?|Then I'm hungry again by fifth period.]
+
+# ---- the cafeteria: food first
+@rule small.place.cafeteria.food
+on small
+when subject=place placeid=cafeteria l_food=yes
+opens invite,share
+feel smile
+- [The cafeteria is my happy place.|I already know today's menu.|I'd come here even if I wasn't hungry.] [Don't judge me.|The katsu curry is calling.|Food is life.]
+- [Have you tried the special?|The new set meal is so good.] [Get it. Trust me.|I had it twice this week.]
+- [I eat first and think later.|Second helpings are a right.] [That's my motto.|Fight me.]
+
+@rule small.place.cafeteria.sweets
+on small
+when subject=place placeid=cafeteria l_sweets=yes
+opens invite,tease
+feel smile
+- [They have pudding today!|Dessert first. Always.|I came for the melon bread, honestly.] [I almost cried.|Life's short.|It sells out so fast.]
+- [Want to split a parfait?|The store has new sweets.] [Half for you, half for me. Mostly me.|I'm buying all of them.]
+- [Sweets fix everything.|My bag is half snacks.] [Science.|Want one?]
+
+@rule small.place.cafeteria.rain
+on small
+when subject=place placeid=cafeteria wet=yes
+opens share,tease
+- [Everybody's eating in here because of the rain.|It's so packed today.|No seats left, thanks to the rain.] [It's like a festival.|We could squeeze in.|Ugh.]
+- [The windows are all steamed up.|Hot soup on a rainy day is perfect.] [Smells good in here, though.|Want some?]
+- [The rain made the line twice as long.|I almost slipped on the wet floor.] [Worth it.|Carry my tray?]
+
+# ---- the rooftop and the courtyard: outside, so the weather weighs a lot
+@rule small.place.rooftop.rain
+on small
+when subject=place placeid=rooftop wet=yes
+opens invite,tease,comfort
+feel surprised
+- [Why are we up here in the rain?|The rooftop's all ours. Nobody else is crazy enough.|We're getting soaked!] [Hehe.|Kinda nice, though.|I don't even care anymore.]
+- [The city looks blurry from up here.|You can see the rain coming over the rooftops.] [Pretty, right?|Look!]
+- [We should go in before we catch a cold.|My shoes are full of water.] [Five more minutes.|Okay, maybe now.]
+
+@rule small.place.rooftop.lover
+on small
+when subject=place placeid=rooftop wet=yes rainlover=yes
+opens invite,share
+feel smile
+- [I come up here when it rains. On purpose.|Rain on the rooftop is the best.|Nobody comes up here when it rains. It's mine.] [Don't tell anyone.|Close your eyes. Listen.|Well, ours now.]
+- [The rain feels different up here.|I like letting it fall on my face.] [Closer to the sky.|Try it.]
+- [Everyone runs from the rain. I don't get it.|Rain on the rooftop is my secret.] [It's just water.|Now it's yours too.]
+
+@rule small.place.rooftop.clear
+on small
+when subject=place placeid=rooftop weather=clear
+opens invite,share
+feel smile
+- [What a view.|You can see the whole town from here.|The wind feels so nice up here.] [I come here to think.|Look, there's the station.|Don't you love it?]
+- [Perfect day for the rooftop.|The sky's so blue today.] [Lunch up here tomorrow?|I could nap right here.]
+- [This is my secret spot. Well, not so secret now.|The breeze is the best part.] [Don't tell anyone.|Feel that?]
+
+@rule small.place.courtyard.rain
+on small
+when subject=place placeid=courtyard wet=yes
+opens invite,tease
+- [The courtyard's empty in the rain.|All the benches are soaked.|Nobody out here but us.] [Kind of peaceful.|No sitting today.|Lucky us?]
+- [The flowers look happy, at least.|Listen to the rain on the leaves.] [Someone has to be.|Pretty.]
+- [We should get under the roof.|My umbrella's tiny.] [Come here.|Squeeze in.]
+
+@rule small.place.courtyard.animals
+on small
+when subject=place placeid=courtyard l_animals=yes
+opens invite,share
+feel smile
+- [There's a cat that sleeps under that bench.|I saw the stray cat again this morning.|Have you met the courtyard cat?] [I call her Mochi.|She let me pet her!|She's so fluffy.]
+- [The birds come down when it's quiet.|I sneak bread out for the sparrows.] [Look, there.|Don't tell the teachers.]
+- [The courtyard cat has a boyfriend now.|I bring treats for the cat on Fridays.] [A big orange one.|She waits for me.]
+
+# ---- the field, the gym and the pool: sports first, then the weather
+@rule small.place.field.sports
+on small
+when subject=place placeid=field clubkind=sports
+opens invite,tease
+feel smile
+- [I practically live on this field.|Practice is my favorite part of the day.|Want to run a lap with me?] [Smell that grass!|No class can beat it.|Bet you can't keep up!]
+- [Coach is making us run extra this week.|We have a match coming up.] [My legs are dead.|Come cheer for us!]
+- [Some days I'm out here before anyone else.|The field at sunset is the best.] [Just me and the track.|Trust me.]
+
+@rule small.place.field.rain
+on small
+when subject=place placeid=field wet=yes
+opens tease,invite
+- [The field is all mud now.|Practice is cancelled. Thanks, rain.|Look at those puddles.] [My cleats are ruined.|I'm so bored!|Wanna jump in one?]
+- [We're running drills in the hallway instead.|The track's flooded.] [Everyone keeps slipping.|Ridiculous.]
+- [Nobody's out here but us idiots.|Running in the rain is kind of fun, though.] [Proud of it.|Don't tell anyone.]
+
+@rule small.place.gym.rain
+on small
+when subject=place placeid=gym wet=yes
+opens invite,tease
+- [Every club's crammed in the gym because of the rain.|The gym's chaos today.|Three teams, one gym.] [We had to share half a court.|Balls flying everywhere.|Watch your head.]
+- [The roof's so loud when it rains.|Rain on the gym roof sounds like drums.] [You can't hear the coach.|Kind of cool.]
+- [Outdoor clubs are stuck in here with us.|The track team is running laps around the gym.] [Hehe.|Dizzy just watching.]
+
+@rule small.place.gym.exercise
+on small
+when subject=place placeid=gym l_exercise=yes
+opens invite,tease
+feel smile
+- [I love the gym.|The gym's where I feel most like me.|Want to shoot some hoops?] [Sweat is just weakness leaving.|No thinking, just moving.|I'll go easy on you.]
+- [I come here even on off days.|Free throws relax me.] [Is that weird?|Weird, right?]
+- [Race you to the wall!|Let's see how many push-ups you can do.] [Loser buys drinks!|Bet I can do more.]
+
+@rule small.place.pool.rain
+on small
+when subject=place placeid=pool wet=yes
+opens tease,invite
+- [Swimming in the rain is weird. You're wet either way.|Pool's closed when it thunders.|The rain makes little circles on the water.] [Hehe.|Rules are rules.|Pretty, right?]
+- [Nobody's swimming today.|The pool looks so sad in the rain.] [Just us.|Poor pool.]
+- [Rain or not, I'm wet anyway.|Coach still made us swim.] [Might as well.|Rain is nothing.]
+
+@rule small.place.pool.clear
+on small
+when subject=place placeid=pool weather=clear
+opens invite,tease
+feel smile
+- [Perfect pool weather.|The water's so blue today.|Want to swim? I'm kidding. Mostly.] [I wish I could jump in right now.|Sparkly.|You're blushing.]
+- [Summer's the best because of the pool.|The sun on the water is so pretty.] [Don't you think?|Look.]
+- [I could float here all day.|The pool smells like summer.] [Lucky swimmers.|Chlorine and sunscreen.]
+
+# ---- the infirmary: how she feels, and what she's hiding from
+@rule small.place.infirmary.fight
+on small
+when subject=place placeid=infirmary fight=yes
+opens comfort,ask
+feel sad
+- [I said I had a headache. I don't.|I'm not sick. I just didn't want to see {fightwho}.|It's quiet here. Nobody asks questions.] [I just needed a break.|Please don't tell anyone.|Except you, apparently.]
+- [The nurse let me lie down for a while.|I've been staring at the ceiling.] [I didn't want to go back to class.|Thinking about {fightwho}.]
+- [Hiding in the infirmary is pathetic, right?|It's easier than facing {fightwho}.] [Don't answer that.|For now.]
+
+@rule small.place.infirmary.sleepy
+on small
+when subject=place placeid=infirmary mood=sleepy
+opens tease,comfort
+feel shy
+- [The infirmary beds are so comfy...|I'm just resting my eyes.|Five more minutes.] [Shh.|Don't tell.|Please?]
+- [I didn't sleep at all last night.|The nurse took pity on me.] [Zombie mode.|Lucky.]
+- [This pillow is better than mine at home.|Can you wake me before the bell?] [Seriously.|Thanks.]
+
+# ---- the club room: her club first
+@rule small.place.clubroom.club
+on small
+when subject=place placeid=clubroom hasclub=yes
+opens invite,share
+feel smile
+- [Welcome to our club room. It's a mess.|This room's like a second home.|We spend so much time in here.] [Don't look at the corner.|I have a drawer of snacks here.|Too much, maybe.]
+- [The {club} needs new members, you know.|We're planning something for the festival.] [Hint, hint.|It's a secret.]
+- [Everyone left their stuff everywhere again.|I'm the only one who cleans in here.] [Typical.|Not fair.]
+
+@rule small.place.clubroom.rain
+on small
+when subject=place placeid=clubroom wet=yes
+opens share,invite
+- [Rainy days are club room days.|Everyone's in here because of the rain.|We made tea because of the rain.] [Cozy, right?|It's packed.|Want some?]
+- [The windows are rattling.|Somebody's umbrella is dripping on my bag.] [I'm keeping the door shut.|Ugh.]
+- [Rain means board games in the club room.|We're playing cards till it stops.] [Join us!|You in?]
+
+# ---- anywhere: a fight on her mind, and the girl she can't stand nearby
+@rule small.place.fight
+on small
+when subject=place fight=yes
+opens comfort,ask
+feel sad
+- [Sorry, I'm not great company today.|I had a fight with {fightwho}.|My head's somewhere else.] [It's stupid.|We're not talking.|You noticed?]
+- [Have you ever said something you couldn't take back?|{Fightwho} and I had a big one.] [Yeah. Me too, today.|It's been a bad week.]
+- [I don't want to talk about {fightwho}.|I'm trying not to think about the fight.] [...Maybe later.|It's not working.]
+
+@rule small.place.rivalnear
+on small
+when subject=place rivalnear=*
+opens tease,ask
+feel pout
+- [Ugh, {rivalnear} is here.|Of all the people... {rivalnear}.|Don't look now, but {rivalnear} is staring.] [Let's go somewhere else.|Just ignore her.|Great.]
+- [{Rivalnear} and I don't exactly get along.|Can we talk somewhere {rivalnear} isn't?] [Long story.|Please?]
+- [If {rivalnear} says anything, I'm leaving.|I can feel {rivalnear} judging me.] [Fair warning.|Ignore it. I'm trying.]

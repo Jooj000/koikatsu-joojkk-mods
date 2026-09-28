@@ -12,7 +12,7 @@ namespace Joojkk.CampusLife
         private static readonly string[] All =
         {
             "coin", "pop_quiz", "carry_boxes", "love_letter", "locker_note", "dropped_notebooks", "gossip",
-            "vending", "wind", "rumor", "inspection", "stray_cat", "rain",
+            "vending", "wind", "rumor", "inspection", "stray_cat", "rain", "drenched",
         };
 
         public static string Name(string id)
@@ -32,13 +32,16 @@ namespace Joojkk.CampusLife
                 case "inspection": return "Student council inspection";
                 case "stray_cat": return "A stray cat";
                 case "rain": return "Sudden rain";
+                case "drenched": return "Caught in the rain";
                 default: return id;
             }
         }
 
         public static string Roll()
         {
-            var pool = All.Where(id => id != "rain" || G.CurrentMask == PeriodMask.After).ToList();
+            // The rain's events only when it rains (Weather): stuck at the entrance after school, soaked any other time.
+            var pool = All.Where(id => id == "rain" ? Weather.Raining && G.CurrentMask == PeriodMask.After : id == "drenched" ? Weather.Raining && G.CurrentMask != PeriodMask.After
+                                       : id != "wind" || !Weather.Raining).ToList();
             return pool[Random.Range(0, pool.Count)];
         }
 
@@ -301,6 +304,30 @@ namespace Joojkk.CampusLife
                         S.AddItem("cat_food", -1);
                         foreach (var h in Board.Students.Where(x => GirlInfo.Likes(x, "animals"))) G.AddFavor(h, 2, 0);
                         Toasts.Show("Animal lovers heard about it. (+2 favor with them)");
+                    });
+                }
+
+                case "drenched":
+                {
+                    // A girl runs in from the rain, soaked to the skin (a rain lover laughs about it).
+                    var g = Near() ?? Girl();
+                    if (g == null) return false;
+                    var name = GirlInfo.FirstName(g);
+                    var tone = GirlInfo.ToneOf(g);
+                    var lover = Weather.RainLover(g);
+                    b.Narr(name + " runs in from outside, soaked to the skin, hair stuck to her cheeks.");
+                    b.Say(g, lover ? Lines.T(tone, "Ehehe... I couldn't help it. I like the rain...", "Woo! That was AMAZING! Did you see how hard it's coming down?!", "...I walked. It's just water.", "Don't look at me like that. Rain is fun~")
+                                   : Lines.T(tone, "Uuu... it came out of nowhere... I'm all wet...", "Gah! Totally soaked! My shoes are squishing!", "...Don't say anything.", "Like what you see? ...Kidding. I'm freezing."));
+                    b.Choice("Give her your handkerchief.", "towel", "Give her your jacket.", "jacket", "Laugh it off with her.", "laugh");
+                    b.Branch("towel"); b.Say(g, Lines.T(tone, "Thank you... it smells like you.", "You're a lifesaver!", "...Thanks. I'll wash it.", "A gentleman. I'll keep it~")); b.End();
+                    b.Branch("jacket"); b.Say(g, Lines.T(tone, "B-but then you'll be cold...! ...It's warm.", "Whoa, really?! So warm!", "...You'll get sick. Idiot. ...Thank you.", "Your jacket? Bold move. I'll take it~")); b.End();
+                    b.Branch("laugh"); b.Say(g, lover ? Lines.T(tone, "Hehe... you get it.", "Right?! Rain is the best!", "...Heh.", "See? Fun~") : Lines.T(tone, "I-it's not funny...", "Hey! Don't laugh! ...Okay it's a little funny.", "...Hmph.", "Laugh now. I'll drip on you later.")); b.End();
+                    return Scenes.PlayOnMap(b, c =>
+                    {
+                        if (c == "towel") Pay(new Rewards { Favor = 4 }, g, "Dried off with your handkerchief");
+                        else if (c == "jacket") { Pay(new Rewards { Favor = 6, Lewd = 1 }, g, name + " in your jacket"); Campus.SpendEnergy(1); }
+                        else if (lover) Pay(new Rewards { Favor = 3 }, g, "Rain buddies");
+                        if (c == "towel" || c == "jacket") Social.Add(Social.Kinds.Helped, g, Witness.Who(g, Witness.Talk));
                     });
                 }
 

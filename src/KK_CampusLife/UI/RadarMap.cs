@@ -51,6 +51,38 @@ namespace Joojkk.CampusLife
         private static readonly AccessTools.FieldRef<NPC, ActionGame.bl_MiniMapItem> NpcIcon = AccessTools.FieldRefAccess<NPC, ActionGame.bl_MiniMapItem>("miniMapIcon");
         private static readonly Dictionary<NPC, Image> Arrows = new Dictionary<NPC, Image>();
 
+        private static readonly AccessTools.FieldRef<ActionGame.bl_MiniMapItem, RectTransform> ItemRoot = AccessTools.FieldRefAccess<ActionGame.bl_MiniMapItem, RectTransform>("RectRoot");
+        private static readonly AccessTools.FieldRef<ActionGame.bl_MiniMapItem, RectTransform> ItemGraphic = AccessTools.FieldRefAccess<ActionGame.bl_MiniMapItem, RectTransform>("graphicRectTransform");
+
+        public static void Install(Harmony harmony)
+        {
+            try { harmony.Patch(AccessTools.Method(typeof(ActionGame.bl_MiniMapItem), "Update"), postfix: new HarmonyMethod(typeof(RadarMap), nameof(OnTheCircle))); }
+            catch (Exception e) { CampusLifePlugin.Log.LogWarning("Radar icons: " + e.Message); }
+        }
+
+        /// <summary>
+        /// An icon out of range (a girl with a request, an event) is kept inside the radar's square by the game, so in the
+        /// ícone de missão no radar parece não ser o centro do radar"). It now sits on the circle's edge, in her direction
+        /// from the center.
+        /// </summary>
+        internal static int Clamped;
+        internal static string LastClamp = "-";
+
+        private static void OnTheCircle(ActionGame.bl_MiniMapItem __instance)
+        {
+            try
+            {
+                if (!Campus.On || !__instance.OffScreen) return;
+                var root = ItemRoot(__instance);
+                var g = ItemGraphic(__instance);
+                if (root == null || g == null) return;
+                var r = Mathf.Min(root.sizeDelta.x, root.sizeDelta.y) * 0.5f - g.sizeDelta.x * 0.5f;
+                var v = g.anchoredPosition;
+                if (r > 0f && v.sqrMagnitude > r * r) { g.anchoredPosition = v.normalized * r; Clamped++; LastClamp = __instance.name + " r " + r.ToString("0") + " from " + v; }
+            }
+            catch { }
+        }
+
         public static void Update()
         {
             if (_failed) return;
@@ -524,7 +556,7 @@ namespace Joojkk.CampusLife
             var floors = string.Join(",", Cache.Select(c => c.Key + ":" + c.Tex.width + "x" + c.Tex.height).ToArray());
             return "camera at " + src.transform.position + " rot " + src.transform.eulerAngles + " ortho " + src.orthographic + " size " + src.orthographicSize.ToString("0.0") +
                    " aspect " + src.aspect.ToString("0.00") + " mask " + src.cullingMask + " target " + (src.targetTexture != null ? src.targetTexture.width + "x" + src.targetTexture.height : "screen " + src.rect) +
-                   " | ours mask " + (_cam != null ? _cam.cullingMask.ToString() : "-") + " | map " + _bounds + " floors " + floors + " | root " + root.rect.size + " | children " + kids + " | layers " + layers;
+                   " | ours mask " + (_cam != null ? _cam.cullingMask.ToString() : "-") + " | map " + _bounds + " floors " + floors + " | root " + root.rect.size + " | children " + kids + " | layers " + layers + " | on the circle " + Clamped + " (last " + LastClamp + ")";
         }
     }
 }

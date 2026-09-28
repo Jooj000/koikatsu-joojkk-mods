@@ -297,7 +297,7 @@ namespace Joojkk.CampusLife
                 result = c =>
                 {
                     if (c == "gf") { G.AddFavor(gf, 5, 0); Social.AddTrust(gf, 4); G.AddFavor(other, -2, 0); }
-                    else if (c == "both") { G.AddFavor(other, 3, 0); Social.AddTrust(gf, -3); Social.Add(Social.Kinds.Flirted, other, new[] { gf }); }
+                    else if (c == "both") { G.AddFavor(other, 3, 0); Social.AddTrust(gf, -3); Social.Add(Social.Kinds.Flirted, other, new[] { gf }, Witness.Flirt); }
                 };
             }
             else if (plan.Why == Motive.Quarrel)
@@ -378,7 +378,7 @@ namespace Joojkk.CampusLife
                     var about = Social.Get(gossip.Girl);
                     var name = about != null ? GirlInfo.FirstName(about) : "";
                     intro.Narr(an + " and " + bn + " come over, whispering to each other.");
-                    sb.Say(a, ConvoLines.GossipLine(ta, gossip.Kind, name));
+                    sb.Say(a, ConvoLines.GossipLine(ta, gossip.Kind, name, gossip.What));
                     sb.Say(bb, Lines.T(tb, "It's true, I heard it too...", "Totally true! Everyone knows!", "That's what they say.", "The whole school's talking."));
                     sb.End();
                     result = c => { Social.Mentioned(a, gossip); Social.Mentioned(bb, gossip); };

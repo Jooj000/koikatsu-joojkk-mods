@@ -56,11 +56,26 @@ namespace Joojkk.SchoolOptimizer
         private static Vector2 _scroll;
         private static Rect _win = new Rect(80, 60, 900, 620);
         private static int _scanned;
+        public static Vector2 ButtonAt;
+        public static int ButtonFrame = -1;
+        public static bool Showing { get { return _show; } }
+        public static bool Busy { get { return _busy; } }
+        public static string Status { get { return _status; } }
 
         /// <summary>The plugin settings row: a button that opens the window (and scans the first time).</summary>
+        public static bool PressNext;
+
         public static void DrawButton(ConfigEntryBase entry)
         {
-            if (GUILayout.Button(_busy ? "Scanning..." : "Show missing zipmods", GUILayout.ExpandWidth(true)))
+            var clicked = GUILayout.Button(_busy ? "Scanning..." : "Show missing zipmods", GUILayout.ExpandWidth(true));
+            if (PressNext && Event.current.type == EventType.Repaint) { PressNext = false; clicked = true; }
+            if (Event.current.type == EventType.Repaint)
+            {
+                var r = GUILayoutUtility.GetLastRect();
+                ButtonAt = GUIUtility.GUIToScreenPoint(r.center);
+                ButtonFrame = Time.frameCount;
+            }
+            if (clicked)
             {
                 _show = true;
                 if (_scanned == 0 && !_busy) Scan();

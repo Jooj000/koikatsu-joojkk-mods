@@ -4,13 +4,18 @@
 on likehint
 - [Oh, and|By the way,] [I've been really into {newlike} lately.|{newlike} always cheers me up.|I'd do anything for some {newlike} right now.]
 - [You know what would make today better? {Newlike}.|If you ever want to make me happy... {newlike}. Just saying.]
+- [Random fact about me:|Not that you asked, but] [{newlike} is my weak spot.|I could talk about {newlike} for hours.|nothing beats {newlike}.]
 
 @rule likehint.shy
 on likehint
 when voice=shy|bookish|proper
 - [U-um... I like {newlike}. In case you wanted to know.|{Newlike}... is kind of my secret weakness.]
+- [I-if you ever see {newlike} somewhere...|Um, {newlike}...] [I wouldn't say no.|it makes me really happy. Just so you know.]
+- [S-sorry, that was random...|I don't tell many people this, but] [{newlike} makes me smile.|I really love {newlike}.]
 
 @rule likehint.gyaru
 on likehint
 when voice=gyaru|open|vamp|teasing
 - [Also, {newlike}? Total obsession. Remember that.|Write this down: {newlike}. You're welcome.]
+- [Fun fact: I'm crazy about {newlike}.|{Newlike}. That's the way to my heart, babe.] [Use it wisely.|Don't forget it.]
+- [Oh, and between us? {Newlike}.|Real talk: {newlike} is life.] [Remember that.|Take notes.]

@@ -75,7 +75,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>Her opening when she heard about something you did.</summary>
-        public static string Incident(Tone t, string kind, string about, bool self, bool friend)
+        public static string Incident(Tone t, string kind, string about, bool self, bool friend, string what = null, bool saw = false)
         {
             switch (kind)
             {
@@ -112,17 +112,63 @@ namespace Joojkk.CampusLife
                         "About the restroom. It was the closest one. We will never speak of it.",
                         "You saw nothing in that restroom. Got it? ...Good.");
                 case Social.Kinds.Flirted:
+                    if (self && what == Witness.Kiss) return T(t, "That kiss... I keep thinking about it.", "Okay, so. The kiss. That happened!", "About the kiss. ...It wasn't bad.", "Thinking about that kiss? Me too~");
+                    if (self && what == Witness.Hand) return T(t, "Your hand was really warm earlier...", "We held hands! Like, actually!", "Holding hands. ...It was fine.", "Still feel my hand in yours? Hehe.");
                     if (self) return T(t, "What you said yesterday... I keep thinking about it.", "You were being kinda smooth earlier, huh?", "About earlier... I didn't hate it.", "Still trying to charm me? Keep trying.");
-                    return T(t, "I heard you were being really sweet to " + about + "...", "So, you and " + about + ", huh? Spill!",
-                        "I hear you've been charming " + about + ".", "Flirting with " + about + "? Interesting.");
+                    return Seen(t, what, about, saw);
                 default:
                     return Greeting(t, 1, Mood.None);
             }
         }
 
-        /// <summary>Your girlfriend heard you were flirting with someone else.</summary>
-        public static string Cheating(Tone t, string other, bool minds)
+        /// <summary>
+        /// You and another girl, from a girl who saw it herself or only heard about it; what it was sets the words (9th
+        /// </summary>
+        public static string Seen(Tone t, string what, string about, bool saw)
         {
+            switch (what)
+            {
+                case Witness.Kiss:
+                    return saw ? T(t, "I... saw you kiss " + about + ". I didn't mean to look.", "I SAW that! You and " + about + ", kissing! Right there!",
+                                   "I saw you kiss " + about + ". Just so you know.", "Kissing " + about + " in front of everyone? I had a front-row seat.")
+                               : T(t, "People are saying you kissed " + about + "... is that true?", "Is it true you kissed " + about + "?! Everyone's talking!",
+                                   "I heard you kissed " + about + ". Rumor or fact?", "So the rumor is you kissed " + about + ". Do tell.");
+                case Witness.Hand:
+                    return saw ? T(t, "I saw you holding hands with " + about + "... you looked happy.", "I saw you two holding hands! You and " + about + "!",
+                                   "You and " + about + ", hand in hand. I saw.", "Holding hands with " + about + " where anyone can see? Bold.")
+                               : T(t, "Someone said you were holding hands with " + about + "...", "I heard you and " + about + " were holding hands!",
+                                   "Word is you held hands with " + about + ".", "Hand in hand with " + about + ", I hear. Cute.");
+                case Witness.Touch:
+                    return saw ? T(t, "I saw where your hands were with " + about + "... w-what was that?", "Hey! I saw you getting all touchy with " + about + "!",
+                                   "I saw you with " + about + ". Your hands were busy.", "Getting handsy with " + about + "? I saw everything~")
+                               : T(t, "People say you were touching " + about + "... that's not true, right?", "Is it true you were all over " + about + "?!",
+                                   "I hear you got handsy with " + about + ".", "Rumor has it your hands wandered with " + about + ". Hm~");
+                case Witness.H:
+                    return saw ? T(t, "I... I saw you and " + about + ". I can't unsee it.", "I SAW you and " + about + "! Out in the open?! Seriously?!",
+                                   "I saw you and " + about + ". All of it.", "You and " + about + ", out where anyone could walk by? I did walk by.")
+                               : T(t, "There's a rumor about you and " + about + "... the kind I can't even say.", "Everyone's whispering about you and " + about + "! Is it true?!",
+                                   "The rumor about you and " + about + ". Tell me it's a rumor.", "You and " + about + ", huh? The whole school is blushing.");
+                default:
+                    return saw ? T(t, "I saw you being really sweet to " + about + "... she was all red.", "I saw you sweet-talking " + about + "! Smooth!",
+                                   "I saw you charming " + about + ". It was something.", "I caught you flirting with " + about + ". Not subtle.")
+                               : T(t, "I heard you were being really sweet to " + about + "...", "So, you and " + about + ", huh? Spill!",
+                                   "I hear you've been charming " + about + ".", "Flirting with " + about + "? Interesting.");
+            }
+        }
+
+        /// <summary>Your girlfriend heard you were flirting with someone else (or saw something more).</summary>
+        public static string Cheating(Tone t, string other, bool minds, string what = null, bool saw = false)
+        {
+            if (minds && saw && (what == Witness.Kiss || what == Witness.H || what == Witness.Touch))
+                return T(t, "I saw you... with " + other + ". I saw it. How could you...?",
+                    "I SAW YOU! With " + other + "! Don't you dare say it's nothing!",
+                    "I saw you with " + other + ". Don't insult me with excuses.",
+                    "I had a lovely view of you and " + other + ". Explain. Slowly.");
+            if (!minds && saw && what == Witness.Kiss)
+                return T(t, "I saw you kiss " + other + "... I trust you. I just... want to hear it from you.",
+                    "I saw you kiss " + other + "! Ugh, fine, as long as I'm still number one!",
+                    "I saw the kiss with " + other + ". I'm not angry. I'm noting it.",
+                    "Kissing " + other + " where I can see? You do like living dangerously~");
             if (!minds)
                 return T(t, "People say you were sweet-talking " + other + "... I trust you, okay?",
                     "Heard you were flirting with " + other + "! Hah, as long as you come back to me!",
@@ -207,7 +253,7 @@ namespace Joojkk.CampusLife
             }
         }
 
-        public static string GossipLine(Tone t, string kind, string about)
+        public static string GossipLine(Tone t, string kind, string about, string what = null)
         {
             switch (kind)
             {
@@ -224,6 +270,9 @@ namespace Joojkk.CampusLife
                 case Social.Kinds.GoodTalk:
                     return T(t, about + " said talking with you was fun.", about + " thinks you're a great listener!", about + " enjoyed your chat, I hear.", about + " seems to like talking with you. Should I be jealous?");
                 case Social.Kinds.Flirted:
+                    if (what == Witness.Kiss) return T(t, "People say you kissed " + about + "... is that true?", "Everyone's saying you kissed " + about + "!", "There's talk you kissed " + about + ".", "You kissed " + about + "? The whole class knows.");
+                    if (what == Witness.Hand) return T(t, "Someone saw you holding hands with " + about + "...", "You and " + about + ", holding hands! Everyone saw!", "Word is you held hands with " + about + ".", "Hand in hand with " + about + "? People noticed.");
+                    if (what == Witness.Touch) return T(t, "People say you were... touching " + about + "...", "Dude, people say you were all over " + about + "!", "There's talk about your hands and " + about + ".", "Your hands and " + about + ". That's the rumor.");
                     return T(t, "People say you and " + about + " are getting close...", "Everyone's talking about you and " + about + "!", "There's talk about you and " + about + ".", "You and " + about + ", huh? The whole class knows.");
                 case Social.Kinds.SeenGirlsRoom:
                 case Social.Kinds.SeenLockers:

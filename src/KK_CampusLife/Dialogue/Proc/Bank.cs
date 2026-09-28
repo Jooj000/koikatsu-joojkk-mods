@@ -44,7 +44,8 @@ namespace Joojkk.CampusLife
         public readonly Dictionary<string, string> Fit = new Dictionary<string, string>();
         public string Feel = "";
         public readonly List<string> Say = new List<string>();
-        public int Score { get { return When.Count; } }
+        /// <summary>How well the rule fits: the weight of each condition for this kind of interaction (weights.dlg).</summary>
+        public float Score = 0f;
     }
 
     /// <summary>
@@ -63,6 +64,7 @@ namespace Joojkk.CampusLife
         private static List<DlgRule> _rules;
         private static Dictionary<string, List<DlgRule>> _byOn;
         private static Dictionary<string, List<string>> _lists;
+        private static Dictionary<string, Dictionary<string, float>> _weights;
         public static string LoadedFrom = "";
 
         public static int Count { get { Ensure(); return _rules.Count; } }
@@ -73,6 +75,7 @@ namespace Joojkk.CampusLife
         {
             _rules = new List<DlgRule>();
             _lists = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+            _weights = new Dictionary<string, Dictionary<string, float>>(StringComparer.OrdinalIgnoreCase);
             var files = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             try
             {
@@ -94,6 +97,7 @@ namespace Joojkk.CampusLife
             foreach (var kv in files)
                 try { Parse(kv.Value, kv.Key); }
                 catch (Exception e) { CampusLifePlugin.Log.LogWarning("Dialogue bank " + kv.Key + ": " + e.Message); }
+            foreach (var r in _rules) r.Score = r.When.Sum(c => WeightOf(r.On, c.Key));
             _byOn = _rules.GroupBy(r => r.On).ToDictionary(g => g.Key, g => g.ToList(), StringComparer.OrdinalIgnoreCase);
             LoadedFrom = files.Count + " files (" + over + " from the folder)";
             CampusLifePlugin.Log.LogInfo("Dialogue bank: " + _rules.Count + " rules, " + _rules.Sum(r => r.Say.Count) + " lines, " + _lists.Count + " lists, " + LoadedFrom);
@@ -103,6 +107,7 @@ namespace Joojkk.CampusLife
         {
             DlgRule rule = null;
             List<string> list = null;
+            Dictionary<string, float> weights = null;
             var n = 0;
             foreach (var raw in text.Replace("\r", "").Split('\n'))
             {
@@ -114,6 +119,7 @@ namespace Joojkk.CampusLife
                     rule = new DlgRule { Id = line.Substring(6).Trim(), File = file };
                     _rules.Add(rule);
                     list = null;
+                    weights = null;
                     continue;
                 }
                 if (line.StartsWith("@list ", StringComparison.Ordinal))
@@ -121,12 +127,30 @@ namespace Joojkk.CampusLife
                     var name = line.Substring(6).Trim();
                     if (!_lists.TryGetValue(name, out list)) _lists[name] = list = new List<string>();
                     rule = null;
+                    weights = null;
+                    continue;
+                }
+                if (line.StartsWith("@weights ", StringComparison.Ordinal))
+                {
+                    var name = line.Substring(9).Trim();
+                    if (!_weights.TryGetValue(name, out weights)) _weights[name] = weights = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
+                    rule = null;
+                    list = null;
                     continue;
                 }
                 if (line.StartsWith("- ", StringComparison.Ordinal) || line == "-")
                 {
                     var body = line.Length > 2 ? line.Substring(2).Trim() : "";
-                    if (rule != null) rule.Say.Add(body);
+                    if (weights != null)
+                    {
+                        foreach (var kv in body.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            var eq = kv.IndexOf('=');
+                            float w;
+                            if (eq > 0 && float.TryParse(kv.Substring(eq + 1), NumberStyles.Float, CultureInfo.InvariantCulture, out w)) weights[kv.Substring(0, eq)] = w;
+                        }
+                    }
+                    else if (rule != null) rule.Say.Add(body);
                     else if (list != null) list.Add(body);
                     continue;
                 }
@@ -170,6 +194,23 @@ namespace Joojkk.CampusLife
         }
 
         // ================= choosing =================
+
+        /// <summary>
+        /// 2026-10-28 ("para cada tipo de interação, os valores têm pesos diferentes"): what a condition is worth depends
+        /// on the interaction. In a touch, the place and how far you went matter most; in an invitation, what she likes and
+        /// the time of day; in small talk, the subject and her club. The table of the situation itself ("me.small" falls
+        /// back to "small", "move.ask" to "move"), then "default"; a key with no weight counts 1.
+        /// </summary>
+        private static float WeightOf(string on, string key)
+        {
+            foreach (var name in new[] { on, on.StartsWith("me.", StringComparison.Ordinal) ? on.Substring(3) : null, on.IndexOf('.') > 0 ? on.Substring(0, on.IndexOf('.')) : null, "default" })
+            {
+                Dictionary<string, float> t;
+                float w;
+                if (name != null && _weights.TryGetValue(name, out t) && t.TryGetValue(key, out w)) return w;
+            }
+            return 1f;
+        }
 
         public static IEnumerable<DlgRule> Matching(string on, Dictionary<string, string> ctx)
         {
@@ -259,7 +300,7 @@ namespace Joojkk.CampusLife
 
         private static string SaidId(DlgRule r, string text) { return r.Id + "#" + Voice.Hash(text).ToString("x", CultureInfo.InvariantCulture); }
 
-        private static float Weight(DlgRule r, int top) { return r.Score >= top ? 3f : 1f; }
+        private static float Weight(DlgRule r, float top) { return r.Score >= top - 0.01f ? 3f : 1f; }
 
         /// <summary>A label for a choice (move.ask, move.tease...): the most specific rule, any of its lines, not marked as said.</summary>
         public static string Label(string on, Dictionary<string, string> ctx)
@@ -267,7 +308,7 @@ namespace Joojkk.CampusLife
             var all = Matching(on, ctx).ToList();
             if (all.Count == 0) return null;
             var top = all.Max(r => r.Score);
-            foreach (var r in all.Where(r => r.Score >= top).OrderBy(_ => Random.value))
+            foreach (var r in all.Where(r => r.Score >= top - 0.01f).OrderBy(_ => Random.value))
                 foreach (var line in r.Say.OrderBy(_ => Random.value))
                 {
                     var text = Expand(line, ctx, 0);

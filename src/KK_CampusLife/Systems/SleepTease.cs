@@ -98,7 +98,7 @@ namespace Joojkk.CampusLife
                 else
                 {
                     G.AddFavor(h, h.relation >= 1 ? -1 : -4, 1);
-                    Social.Add(Social.Kinds.Flirted, h, Social.GirlsOnMyMap());
+                    Social.Add(Social.Kinds.Flirted, h, Witness.Who(h, Witness.Flirt), Witness.Flirt);
                 }
             });
         }

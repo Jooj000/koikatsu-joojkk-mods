@@ -9,18 +9,21 @@ when idle=1 tone=gentle
 feel shy
 - [Um...|So...|Ah, um...] [Did you want to say something?|It's okay, we don't have to talk.|I like quiet too.]
 - [Hehe... this is a little awkward.|You're quiet today.] [Are you thinking about something?|I don't mind, really.]
+- [Um... it's nice, just standing here.|Ah...] [Do you come here often?|Should I say something?]
 
 @rule idle.1.energetic
 on idle
 when idle=1 tone=energetic
 - [Helloooo? Earth to {you}!|Hey, you zoning out?|Uh, hello?] [Say something!|I'm getting bored here!]
 - [Did you fall asleep standing up?|Wow, riveting conversation.] [Come on, talk to me!|Okay, I'll just stare back then.]
+- [Boooored!|Hey hey!] [Tell me a joke!|Quick, say the first thing you think of!]
 
 @rule idle.1.cool
 on idle
 when idle=1 tone=cool
 - [...|...Well?|Hm.] [Take your time.|If you have nothing to say, that's fine.]
 - [Are you going to say something?|...] [I'm not in a hurry.|Silence suits me.]
+- [...You're quiet.|Hm.] [I respect that.|Thinking is underrated.]
 
 @rule idle.1.teasing
 on idle
@@ -28,6 +31,7 @@ when idle=1 tone=teasing
 feel smile
 - [Cat got your tongue?|Lost in my eyes?|Hmm? Nervous?] [Cute.|Take a picture, it lasts longer~]
 - [Are you just going to stare?|Ohh, the silent type.] [I don't mind being admired~|Say something, dummy.]
+- [Hmm~ such intense eye contact.|Oh?] [Are you trying to hypnotize me?|I can wait all day~]
 
 # ================= second silence =================
 @rule idle.2
@@ -36,6 +40,7 @@ when idle=2
 feel worried
 - [Is something wrong?|Are you okay?|You keep spacing out.] [You can tell me.|Did I say something weird?]
 - [Hey... you're really quiet.|Hmm...] [Should I go?|Am I boring you?]
+- [Hey...|Um...] [Is everything okay at home?|You look like something's on your mind.]
 
 @rule idle.2.energetic
 on idle
@@ -43,12 +48,14 @@ when idle=2 tone=energetic
 feel pout
 - [Okay, this is getting weird.|Hellooo, still alive?|Ugh, you're impossible.] [Talk or I'm poking you.|I'm counting to three!]
 - [Did I do something?|Wow, okay.] [Fine, I'll talk then. ...I have nothing.|At least blink!]
+- [Okay, that's it.|Hey!] [I'm narrating your thoughts now. "She's so cool."|Fine, staring contest. Go!]
 
 @rule idle.2.cool
 on idle
 when idle=2 tone=cool
 - [...You're wasting both our time.|Hm. Still nothing?|...] [I'll give you one more minute.|Say what you came to say.]
 - [I'm going to read my book if you don't mind.|...Right.] [Let me know when you're back.|Interesting conversation.]
+- [...|Hm.] [Should I leave you to your thoughts?|I'll be here when you remember how to speak.]
 
 @rule idle.2.teasing
 on idle
@@ -56,6 +63,7 @@ when idle=2 tone=teasing
 feel pout
 - [Hello~? Should I be offended?|Okay, now you're just being rude.|Wow, ignored.] [I'm too cute to be ignored.|Bad boy.]
 - [Thinking about me, aren't you?|You're blushing. Don't deny it.] [I knew it.|So predictable.]
+- [Still nothing?|My, my.] [You're making this easy for me to tease.|Should I talk for both of us?]
 
 # ================= third silence =================
 @rule idle.3
@@ -64,6 +72,7 @@ when idle=3
 feel serious
 - [Well... if you don't have anything to say...|Okay.|Alright then.] [I'll be around.|Talk to me when you're ready.]
 - [I guess I'll just wait.|Hmm.] [You're a mystery, you know that?|Whenever you're ready.]
+- [Alright...|Hm.] [I'll leave you be.|Find me later, okay?]
 
 @rule idle.3.leave
 on idle
@@ -71,6 +80,7 @@ when idle=3 rel=stranger|acquaintance dating=no
 feel pout
 - [Um... I'm going to go now.|Okay, this is weird. Bye.|I have things to do.] [See you around, I guess.|Bye.]
 - [Sorry, I have to go.|Right... well, bye.] [Maybe talk next time?|That was... something.]
+- [This is getting awkward.|Well...] [I'm heading out.|Bye, I guess?]
 
 @rule idle.3.gf
 on idle
@@ -78,6 +88,7 @@ when idle=3 rel=girlfriend|lover
 feel love
 - [Mm... it's nice just being near you.|We don't have to talk.|Hehe.] [I'm happy like this.|Just stay.]
 - [You're cute when you're spacing out.|...] [Let me lean on you a bit.|This is enough.]
+- [Mm... I like this.|...] [Quiet with you is my favorite.|Stay right here.]
 
 # ================= relation =================
 @rule idle.1.gf
@@ -86,6 +97,7 @@ when idle=1 rel=girlfriend
 feel love
 - [Hey... what are you thinking about?|Mm? You okay, love?|Hehe, staring at me again?] [Tell me.|I like that you just want to be with me.]
 - [You don't have to say anything.|Mm...] [Just being here is enough.|Come closer, then.]
+- [Hmm? Daydreaming about me?|Mm...] [I hope so.|Come here, then.]
 
 @rule idle.1.stranger
 on idle
@@ -93,12 +105,14 @@ when idle=1 rel=stranger
 feel worried
 - [Um... can I help you?|...Hello?|Did you need something?] [We don't really know each other...|This is a little strange.]
 - [Uh... are you lost?|Sorry, do I know you?] [You're kind of staring.|I'm going to go if you don't need anything.]
+- [Um... excuse me?|Hello?] [I think you have the wrong person.|Do we know each other?]
 
 @rule idle.1.friend
 on idle
 when idle=1 rel=friend
 - [So... what's up?|You seem distracted.|Hey, you in there?] [Did something happen?|You can talk to me, you know.]
 - [This is comfortable, honestly.|Hehe.] [Not every friend can just sit in silence.|Want to just hang out?]
+- [So... got any plans?|Hey.] [We could just hang out.|You look like you need a break.]
 
 @rule idle.2.gf
 on idle
@@ -106,6 +120,7 @@ when idle=2 rel=girlfriend
 feel pout
 - [Hey, I'm right here, you know.|You're ignoring your girlfriend?|Hmph.] [Pay attention to me.|I'm going to get jealous of whatever you're thinking about.]
 - [Don't make me pout.|Mm... you're so quiet.] [Kiss me or say something.|Should I be worried?]
+- [Helloooo, boyfriend?|Hey.] [Your girlfriend is feeling neglected.|Should I start talking about my day?]
 
 # ================= mood =================
 @rule idle.mood.sleepy
@@ -114,12 +129,14 @@ when mood=sleepy
 feel shy
 - [Yawn... sorry, I'm so sleepy.|Mmh... if you don't talk I'll fall asleep.|Zzz... huh? Sorry.] [Say something exciting.|The silence is making me drowsy.]
 - [I could nap right here.|*yawn*] [Wake me when you've thought of something.|Ahh, so sleepy.]
+- [Hnn...|*yawn*] [Your silence is a lullaby.|I'm going to fall asleep on your shoulder.]
 
 @rule idle.mood.hungry
 on idle
 when mood=hungry
 - [*stomach growls* ...You heard nothing.|I'm so hungry...|Ugh, my stomach.] [Wanna grab food?|If you're not talking, let's eat.]
 - [Is it lunch yet?|...Sorry, that was my stomach.] [I can't think when I'm hungry.|Snacks. I need snacks.]
+- [Grrr... that was my stomach, not me.|Ugh...] [Feed me and I'll talk.|I'd kill for a melon bread.]
 
 @rule idle.mood.bored
 on idle
@@ -127,6 +144,7 @@ when mood=bored
 feel pout
 - [Ugh, I'm so bored.|This day is endless.|Hmm...] [Do something interesting.|Entertain me.]
 - [Today's so slow.|...] [Let's do something.|Say something fun!]
+- [Hmm...|Sigh.] [Tell me something weird about yourself.|I'd rather be doing literally anything.]
 
 @rule idle.mood.lonely
 on idle
@@ -134,6 +152,7 @@ when mood=lonely
 feel shy
 - [...Thanks for staying.|It's nice, just having someone here.|Mm.] [Even if we don't talk.|I didn't want to be alone today.]
 - [You don't have to go yet, right?|...] [Stay a little.|I feel better when you're around.]
+- [...It's okay.|Mm.] [I just like having you here.|Don't go yet.]
 
 @rule idle.mood.upset
 on idle
@@ -141,6 +160,7 @@ when mood=upset
 feel sad
 - [...Sorry, I'm not good company today.|...|Hm.] [It's not you.|Thanks for not pushing.]
 - [I don't really feel like talking.|...] [But you can stay.|Just... be here.]
+- [...Sorry.|...] [Today's just one of those days.|Thanks for not asking.]
 
 @rule idle.mood.flirty
 on idle
@@ -148,6 +168,7 @@ when mood=flirty
 feel love
 - [Are you going to keep staring, or do something about it?|Hmm~|You're so quiet...] [I can think of better things to do than talk.|Come here.]
 - [The silence is kind of... charged.|Mm...] [Your move.|I'm waiting~]
+- [Hmm~ so quiet.|Mm...] [Your eyes are doing all the talking.|You're making me think things.]
 
 @rule idle.mood.stressed
 on idle
@@ -155,6 +176,7 @@ when mood=stressed
 feel worried
 - [Sorry, my head's full of homework.|I keep thinking about tests...|Ugh...] [Distract me, please.|Tell me something nice.]
 - [I should be studying...|...] [But this is nicer.|Five minutes, then I go.]
+- [Sigh...|Ugh.] [Exams are eating my brain.|Say something that isn't about school.]
 
 # ================= place and period =================
 @rule idle.place.rooftop
@@ -162,18 +184,21 @@ on idle
 when placeid=rooftop
 - [The wind's nice up here.|You can see the whole town.|...] [I come here to think.|It's peaceful, isn't it?]
 - [I love the sky from here.|Mm.] [We could just watch the clouds.|No need to talk up here.]
+- [...Hear the wind?|Mm.] [Everything feels smaller from up here.|I'd stay up here all day if I could.]
 
 @rule idle.place.library
 on idle
 when placeid=library
 - [...It's okay. Library rules.|Shh... hehe.|...] [Silence is kind of the point here.|I like quiet places.]
 - [Should we read something?|*flips a page*] [Pick a book, I'll pick one.|We can whisper.]
+- [*whisper* ...hi.|...] [The quiet suits us.|Find me a good book?]
 
 @rule idle.place.pool
 on idle
 when placeid=pool
 - [The water looks nice...|It smells like chlorine here.|...] [Want to jump in?|I'm not swimming in my uniform.]
 - [Splash!|Hehe...] [Gotcha. Wake up!|Too quiet. Had to.]
+- [*dips a toe in the water*|...] [Still cold. Nope.|Want to sit by the edge?]
 
 @rule idle.place.infirmary
 on idle
@@ -181,24 +206,28 @@ when placeid=infirmary
 feel shy
 - [It's so quiet in here...|The nurse isn't here.|...] [Just us and the beds.|Kind of makes you sleepy.]
 - [Are you sick, or just hiding?|Mm.] [I won't tell.|Me too, honestly.]
+- [...Smells like medicine.|Hm.] [I always end up here somehow.|Want to sit on the bed? Just to sit.]
 
 @rule idle.period.lunch
 on idle
 when period=lunch
 - [Lunch is almost over...|Did you eat yet?|...] [We should eat something.|The cafeteria's going to run out.]
 - [I'm getting hungry just standing here.|Hm.] [Lunch together?|Your loss if the bread's gone.]
+- [Lunch is passing us by...|Hm.] [My stomach's going to complain soon.|Did you bring a bento?]
 
 @rule idle.period.after
 on idle
 when period=after
 - [It's getting late...|Everyone's going home.|The sun's going down.] [Walk me home?|We should head out soon.]
 - [School's so quiet after hours.|...] [I like it like this.|Kind of romantic, huh?]
+- [The sky's turning orange.|...] [It's pretty, isn't it?|I don't really want to go home yet.]
 
 @rule idle.club
 on idle
 when hasclub=yes period=club
 - [I should be at {club}...|Club's starting.|...] [Want to come watch?|They'll wonder where I am.]
 - [I'm skipping {club} for this, you know.|Hm.] [So make it worth it.|Don't tell the captain.]
+- [Hmm, {club} is already going.|...] [They'll scold me for being late.|Five more minutes with you won't hurt.]
 
 # ================= who is watching =================
 @rule idle.watch.friends
@@ -206,6 +235,7 @@ on idle
 when wrel=bff|friend
 - [{Watcher} keeps looking over here.|Oh, {watcher} is waving.|Hehe, {watcher} is making faces at us.] [She's so nosy.|Ignore her.]
 - [{Watcher} is totally eavesdropping.|...] [Want to go somewhere else?|She'll grill me later.]
+- [Ugh, {watcher} is giving me a thumbs-up.|...] [I'm going to strangle her.|She's so embarrassing.]
 
 @rule idle.watch.friends.group
 on idle
@@ -213,6 +243,7 @@ when group=friends
 feel shy
 - [My friends are all watching us...|They're whispering about us.|Ugh, the girls are staring.] [Say something so it doesn't look weird!|They think we're on a date.]
 - [Hehe... they're pointing.|...] [We're the talk of the hallway.|I'm going to get so many questions.]
+- [The girls are totally making up stories.|Ah...] [I'll correct them later.|Let them think what they want.]
 
 @rule idle.watch.rival
 on idle
@@ -220,6 +251,7 @@ when wrel=rival
 feel pout
 - [{Watcher} is glaring at us.|Ugh, {watcher}.|Don't look now, but {watcher}...] [Pretend we're laughing about something.|She's so annoying.]
 - [Of course {watcher} is here.|...] [Say something funny. I want her to see me laughing.|Let's go somewhere she isn't.]
+- [{Watcher} is still there.|Hm.] [She's pretending not to listen.|Let's give her nothing.]
 
 @rule idle.watch.rivals.group
 on idle
@@ -227,12 +259,14 @@ when group=rivals
 feel serious
 - [Those girls are whispering about me again.|They're staring.|...] [Let them.|I'm used to it.]
 - [Can we go somewhere else?|Ugh, them.] [I don't want to be around them.|They're the worst.]
+- [They're laughing. At me, probably.|...] [Let's just leave.|I don't care. Really.]
 
 @rule idle.watch.crowd
 on idle
 when watchers=crowd
 - [It's so crowded here.|Everyone's here today.|Too many people...] [Hard to talk, huh?|Want to go somewhere quieter?]
 - [People keep staring.|...] [It's hard to relax.|Let's find a quieter spot.]
+- [So many people...|...] [I can barely hear myself think.|It's like a festival in here.]
 
 @rule idle.watch.yourgf
 on idle
@@ -240,6 +274,7 @@ when wrel=yourgf
 feel worried
 - [Um... {watcher} is looking at us.|Isn't that {watcher}?|...] [Should you go talk to her?|I don't want to cause trouble.]
 - [{Watcher} looks like she wants to come over.|Hm.] [Is it okay that you're here with me?|She's watching you.]
+- [{Watcher} is still watching...|Um.] [You should go to her.|I feel like I'm in the way.]
 
 @rule idle.watch.alone
 on idle
@@ -247,6 +282,7 @@ when watchers=none rel=girlfriend|lover
 feel love
 - [Nobody's around...|It's just us.|So quiet...] [Hehe, what should we do?|Come closer.]
 - [We're alone, you know.|...] [Isn't that nice?|Don't waste it.]
+- [Just us...|Mm.] [I like that.|What now?]
 
 # ================= roles =================
 @rule idle.teacher
@@ -254,3 +290,46 @@ on idle
 when role=teacher
 - [If you have a question, ask.|I have papers to grade.|Hm?] [Don't just stand there.|I'm a busy woman.]
 - [Is something troubling you?|Hm.] [My door's always open.|Speak up.]
+- [Mm? Waiting for something?|Hm.] [Office hours are after school.|You can stay, if you're quiet.]
+
+
+# Silence in the rain: the sound fills it.
+
+@rule idle.rain
+on idle
+when idle=1|2 wet=yes
+- [...Listen to the rain.|...|Mm.] [It's kind of nice, not talking.|The rain's doing the talking.|I don't mind the quiet when it rains.]
+- [*listens to the rain*|...It's getting heavier.] [Hear that?|We're stuck inside anyway.]
+- [Rain's so loud on the windows.|...] [Like it's trying to tell us something.|Peaceful.]
+
+@rule idle.rain.outside
+on idle
+when idle=1|2 wet=yes outside=yes
+feel surprised
+- [Um... we're getting soaked here.|...Are we just going to stand in the rain?|Hey, it's pouring!] [Say something or let's go in!|Hehe, this is so dumb.|Come on!]
+- [*shivers*|...] [It's cold.|My hair's ruined.]
+- [The rain's dripping down my back.|...Are you okay with being this wet?] [Ugh.|Because I'm not.]
+
+@rule idle.rain.library
+on idle
+when idle=1|2 wet=yes placeid=library
+feel smile
+- [...Rain and books.|*turns a page*|...] [This is the best silence.|I could stay here forever.|Don't break the spell.]
+- [*whisper* ...listen to the windows.|...] [Perfect.|The rain is reading with us.]
+- [Mm...|*rain taps on the glass*] [Nice, isn't it?|Shh. Just listen.]
+
+@rule idle.storm
+on idle
+when idle=1|2 weather=storm
+feel worried
+- [...!|Ah!|Was that thunder?] [S-sorry. I jumped.|Say something, please.|I hate this.]
+- [The wind's so loud.|...] [Talk to me.|It's okay. It's okay.]
+- [*flinches at the thunder*|...] [Don't laugh.|Not a fan.]
+
+@rule idle.fight
+on idle
+when idle=1|2 fight=yes
+feel sad
+- [...Sorry. I'm thinking about {fightwho}.|...|Mm.] [I'm bad company today.|It's nothing.|Ignore me.]
+- [*sighs*|...] [Stupid {fightwho}.|I'm okay. Really.]
+- [Sorry, I spaced out.|...] [The thing with {fightwho}.|My head's full.]

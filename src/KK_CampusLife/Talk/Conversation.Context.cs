@@ -98,6 +98,18 @@ namespace Joojkk.CampusLife
             }
             catch { if (!c.ContainsKey("role")) c["role"] = h.isTeacher ? "teacher" : "student"; }
             c["placeid"] = Places.CurrentId ?? "";
+            // then a fight on her mind): the keys the composite lines need.
+            try
+            {
+                c["weather"] = Weather.Now;
+                c["wet"] = Weather.Raining ? "yes" : "no";
+                if (Weather.Later) c["rainlater"] = "yes";
+                c["outside"] = Weather.Outdoor(G.PlayerMapNo) ? "yes" : "no";
+                c["rainlover"] = Weather.RainLover(h) ? "yes" : "no";
+                foreach (var like in GirlInfo.LikesOf(h)) c["l_" + like] = "yes";
+                FightCtx(h, c);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Context weather: " + e.Message); }
             c["interest"] = Interested(h) ? "yes" : "no";
             c["clubkind"] = GirlInfo.InNoClub(h) ? "none" : GirlInfo.InSportsClub(h) ? "sports" : "culture";
             var bff = Social.FriendsOf(h, 45).OrderByDescending(x => Social.Bond(h, x)).FirstOrDefault();
@@ -112,6 +124,28 @@ namespace Joojkk.CampusLife
                 c["fav"] = GirlInfo.LikeLabel(fav);
                 c["favdo"] = Do(fav);
             }
+        }
+
+        /// <summary>A fight on her mind: a girl she fought with (or fell out with) this past week, and not made up since.</summary>
+        private static void FightCtx(SaveData.Heroine h, Dictionary<string, string> c)
+        {
+            var key = GirlInfo.Key(h);
+            LoreFact fight = null;
+            foreach (var kv in Lore.Of(key))
+            {
+                var f = kv.Value;
+                if (!f.Involves(key) || f.Involves(Lore.Player) || S.Day - f.Day > 7) continue;
+                if (f.Verb == "fought" || f.Verb == "insulted" && f.Obj == key) { if (fight == null || f.Day > fight.Day) fight = f; }
+            }
+            if (fight != null)
+            {
+                var other = fight.Subject == key ? fight.Obj : fight.Subject;
+                if (Lore.Of(key).Any(kv => kv.Value.Verb == "made_up" && kv.Value.Between(key, other) && kv.Value.Day >= fight.Day)) fight = null;
+                else { c["fight"] = "yes"; c["fightwho"] = GirlInfo.FirstName(other); return; }
+            }
+            // Or a girl she can't stand (bond), who is on the same map now.
+            var rival = Social.GirlsOnMyMap().Where(o => o != h && Social.Bond(h, o) <= -30).OrderBy(o => Social.Bond(h, o)).FirstOrDefault();
+            if (rival != null) { c["rivalnear"] = GirlInfo.FirstName(rival); }
         }
 
         /// <summary>The other girl of a fact, as she sees her: her best friend, her crush, her rival.</summary>

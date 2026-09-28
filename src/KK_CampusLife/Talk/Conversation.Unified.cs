@@ -398,7 +398,9 @@ namespace Joojkk.CampusLife
                 l.Add(E(topic.Hot ? "<color=#ff9b6a>" + topic.Label + "</color>" : topic.Label, () => PlayTopic(h, topic)));
             }
             var g = stranger ? Social.OwnGrudge(h) : Social.Grudge(h);
-            if (g != null && !s.Did.Contains("cleared:" + g.Id)) l.Add(E("<color=#ff9b6a>Clear the air about " + IncidentLabel(h, g) + "</color>", () => ClearAir(h, g)));
+            var all = stranger ? null : OpenGrudges(h, s);
+            if (all != null && all.Count >= 2) l.Add(E("<color=#ff9b6a>Clear the air about everything</color>", () => ClearAirAll(h, all)));
+            else if (g != null && !s.Did.Contains("cleared:" + g.Id)) l.Add(E("<color=#ff9b6a>Clear the air about " + IncidentLabel(h, g) + "</color>", () => ClearAir(h, g)));
             if (h.isAnger) l.Add(E("Apologize", () => Game(10)));
             var red = RedemptionEntry(h, gs);
             if (red != null) l.Add(red);
@@ -526,6 +528,8 @@ namespace Joojkk.CampusLife
             if (hidden != null && h.relation >= 0) return E("Ask what's on her mind", () => RequestTalk(h, hidden, true));
 
             // 2. A hurt or a rumor she knows.
+            var all = OpenGrudges(h, s);
+            if (all.Count >= 2) return E("Clear the air about everything", () => ClearAirAll(h, all));
             var g = Social.Grudge(h);
             if (g != null && !s.Did.Contains("cleared:" + g.Id)) return E("Talk about " + IncidentLabel(h, g), () => ClearAir(h, g));
             var rumor = SubjectFrom(h, x => x.Id.StartsWith("rumor_", StringComparison.Ordinal));
@@ -692,6 +696,7 @@ namespace Joojkk.CampusLife
             if (_prunedDay == S.Day) return;
             _prunedDay = S.Day;
             foreach (var k in S.Buffs.Keys.Where(k => k.StartsWith("rep:", StringComparison.Ordinal) && S.Buffs[k] / 10 != S.Day).ToList()) S.Buffs.Remove(k);
+            foreach (var k in S.Buffs.Keys.Where(k => k.StartsWith("fday:", StringComparison.Ordinal) && S.Buffs[k] / 1000 != S.Day).ToList()) S.Buffs.Remove(k);
         }
 
         private static string[] Stock(Q q)
@@ -928,7 +933,7 @@ namespace Joojkk.CampusLife
             Beat(h, Lvl.Friend, "school:" + t.Id, b =>
             {
                 b.Me("What do you think about " + t.Line + "?");
-                if (gossip != null) { b.Her_(ConvoLines.GossipLine(tone, gossip.Kind, GossipWho(gossip))); Social.Mentioned(h, gossip); }
+                if (gossip != null) { b.Her_(ConvoLines.GossipLine(tone, gossip.Kind, GossipWho(gossip), gossip.What)); Social.Mentioned(h, gossip); }
                 else b.Her_(T(h, "About " + t.Line + "? I'm a little nervous, honestly... but excited too.", t.Line.Substring(0, 1).ToUpperInvariant() + t.Line.Substring(1) + "? It's gonna be HUGE!",
                     t.Line.Substring(0, 1).ToUpperInvariant() + t.Line.Substring(1) + ". It's all anyone talks about.", "Oh, " + t.Line + "? I have opinions. Many opinions."));
             }, new List<Resp>
@@ -953,7 +958,17 @@ namespace Joojkk.CampusLife
                 case Social.Kinds.BrokePromise: return "the promise you broke" + (who == "" || who == "her" ? "" : " to " + who);
                 case Social.Kinds.SeenGirlsRoom: return "you being seen in the girls' restroom";
                 case Social.Kinds.SeenLockers: return "you being seen in the girls' changing room";
-                case Social.Kinds.Flirted: return "you flirting with " + (who == "" || who == "her" ? "someone" : who);
+                case Social.Kinds.Flirted:
+                    {
+                        var x = who == "" || who == "her" ? "someone" : who;
+                        switch (i.What)
+                        {
+                            case Witness.Kiss: return "you kissing " + x;
+                            case Witness.Hand: return "you holding hands with " + x;
+                            case Witness.Touch: return "you getting handsy with " + x;
+                            default: return "you flirting with " + x;
+                        }
+                    }
                 default: return "what happened" + (who == "" || who == "her" ? "" : " with " + who);
             }
         }
@@ -971,7 +986,10 @@ namespace Joojkk.CampusLife
             {
                 b.Narr(GirlInfo.FirstName(h) + " folds her arms before you say anything.");
                 b.Face(h, Feel.Serious).Her_(self
-                    ? ConvoLines.Incident(GirlInfo.ToneOf(h), g.Kind, GirlInfo.FirstName(h), true, false)
+                    ? ConvoLines.Incident(GirlInfo.ToneOf(h), g.Kind, GirlInfo.FirstName(h), true, false, g.What)
+                    : Social.Saw(h, g)
+                    ? T(h, "I saw it, you know. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". With my own eyes.", "Don't even try! I SAW it! " + char.ToUpperInvariant(what[0]) + what.Substring(1) + "!",
+                        "I was there. I saw " + what + ". So?", "Funny thing. I happened to see " + what + ". Front row.")
                     : T(h, "I heard about " + what + "... from people talking. Is it true?", "Okay, so I heard about " + what + "! Is that true?!",
                         "People are talking about " + what + ". I'd rather hear it from you.", "So. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". The whole class knows. Your version?"));
             }, new List<Resp>
@@ -991,6 +1009,60 @@ namespace Joojkk.CampusLife
                 if (r.Tag == "ca_explain" && explained) { Social.Cleared(h, g); Social.AddTrust(h, -Social.Effect(h, g)); Toasts.Show("Misunderstanding cleared."); }
                 else if (r.Tag == "ca_admit") { Social.Cleared(h, g); Social.AddTrust(h, -Social.Effect(h, g) / 2); Toasts.Show("She accepts it."); }
                 else if (r.Tag == "ca_space") s.Did.Remove("cleared:" + g.Id);
+            });
+        }
+
+        /// <summary>What she holds against you that this talk has not settled yet.</summary>
+        private static List<Incident> OpenGrudges(SaveData.Heroine h, Session s)
+        {
+            return Social.Grudges(h).Where(i => !s.Did.Contains("cleared:" + i.Id)).ToList();
+        }
+
+        /// <summary>
+        /// ter um geral"): one scene for every grudge she holds; the more there are, the harder it lands and the harder
+        /// it is to talk your way out.
+        /// </summary>
+        private static void ClearAirAll(SaveData.Heroine h, List<Incident> all)
+        {
+            var s = Sess;
+            var n = all.Count;
+            var total = all.Sum(i => Social.Effect(h, i));
+            var saw = all.Any(i => Social.Get(i.Girl) == h || Social.Saw(h, i));
+            var many = n >= 3;
+            var explainChance = Mathf.Clamp01(0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f - 0.08f * (n - 1));
+            var explained = Random.value < explainChance;
+            foreach (var i in all) s.Did.Add("cleared:" + i.Id);
+            var kinds = string.Join(", ", all.Select(i => IncidentLabel(h, i)).ToArray());
+            CampusLifePlugin.Log.LogInfo("Talk clear all: " + GirlInfo.FirstName(h) + " " + n + " grudges (" + kinds + "), effect " + total + ", saw " + saw);
+            Beat(h, Lvl.Friend, "clearall:" + all[0].Id, b =>
+            {
+                b.Narr(many ? GirlInfo.FirstName(h) + " has clearly been keeping count." : GirlInfo.FirstName(h) + " folds her arms before you say anything.");
+                b.Face(h, Feel.Serious).Her_(saw
+                    ? (many ? T(h, "...It's not one thing anymore. I saw some of it myself, and I heard the rest.", "No, no, it's not just ONE thing! I saw it! And people keep telling me more!",
+                                 "One thing I could ignore. This is a pattern. I saw part of it with my own eyes.", "Let's see... what I saw, what I heard, what I heard again. You're busy.")
+                            : T(h, "...There's more than one thing. And I saw at least one of them.", "It's not just one thing! And I SAW one of them!",
+                                 "Two things. One I saw myself. Explain.", "Two things, and I had a front-row seat for one. Talk."))
+                    : (many ? T(h, "...People keep telling me things about you. One after another. Are they all true?", "Everyone keeps telling me stuff about you! Is ANY of it made up?!",
+                                 "I keep hearing about you. Again and again. I'd rather hear it from you.", "You're the favorite topic around here. Over and over. Your version?")
+                            : T(h, "...I heard two things about you. I'd like to know if they're true.", "Two things! I heard TWO things! Are they true?!",
+                                 "Two stories about you reached me. Your version.", "Two rumors, one you. Explain.")));
+            }, new List<Resp>
+            {
+                Rp("Tell her you understand why all of it hurt", "ca_feel", Q.Neutral, Tn("...Understanding isn't the same as stopping.", "...Okay. But it's a LOT.", "...Understanding is cheap.", "...Nice words. Lots of things, though.")),
+                Rp("Ask what exactly she heard", "ca_facts", saw ? Q.Bad : Q.Neutral, saw ? Tn("...Some of it I didn't need to hear. I saw it.", "Heard?! I SAW some of it!", "...Part of it I watched.", "Heard? Cute. I had a good view.")
+                                                                          : Tn("...All of it. Bit by bit.", "Everything! Piece by piece!", "...Enough.", "The whole collection.")),
+                Rp("Explain what really happened" + (G.Int >= 40 ? "  <color=#6ab4ff>(" + Mathf.RoundToInt(explainChance * 100) + "%)</color>" : ""), "ca_explain", explained ? Q.Good : Q.Bad,
+                    explained ? Tn("...Oh. So it wasn't all how it looked. I'm sorry.", "Wait, REALLY? All of it? ...Okay, that changes things!", "...That's different from what I heard. Fine.", "...Huh. Smooth. Fine, I believe you.")
+                              : Tn("...One excuse for everything? No.", "That's not gonna cover ALL of it!", "...Too many coincidences.", "One story for all of that? Nice try.")),
+                Rp("Admit all of it", "ca_admit", Q.Good, Tn("...Thank you for being honest. It still hurts.", "...Okay. Respect. Ouch, but respect.", "...All of it. Good. Honest, at least.", "...Well. That's a confession and a half.")),
+                Rp("Give her some space", "ca_space", Q.Neutral, Tn("...Yeah. Maybe that's best for now.", "...Okay. Later, then.", "...Fine.", "...Running away? ...Okay. Fine.")),
+            }, r =>
+            {
+                if (r == null) return;
+                if (r.Tag == "ca_explain" && explained) { foreach (var i in all) Social.Cleared(h, i); Social.AddTrust(h, -total); Toasts.Show("Misunderstandings cleared."); }
+                else if (r.Tag == "ca_admit") { foreach (var i in all) Social.Cleared(h, i); Social.AddTrust(h, -total / 2); Toasts.Show("She accepts it, all of it."); }
+                else if (r.Tag == "ca_explain" || r.Tag == "ca_facts" && saw) { Social.AddTrust(h, -(n - 1)); } // a weak answer to a pile costs more
+                else if (r.Tag == "ca_space") foreach (var i in all) s.Did.Remove("cleared:" + i.Id);
             });
         }
 
@@ -1054,7 +1126,7 @@ namespace Joojkk.CampusLife
             Beat(h, Lvl.Friend, "gossip:" + gossip.Id, b =>
             {
                 b.Me("You heard something about " + who + "?");
-                b.Her_(ConvoLines.GossipLine(GirlInfo.ToneOf(h), gossip.Kind, who));
+                b.Her_(ConvoLines.GossipLine(GirlInfo.ToneOf(h), gossip.Kind, who, gossip.What));
                 Social.Mentioned(h, gossip);
             }, new List<Resp>
             {
@@ -1181,10 +1253,10 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(h, true);
             b.Me(RomanceLines.PlayerHand(close));
             b.Face(h, ok ? Feel.Shy : Feel.Surprised).Her_(ok ? RomanceLines.HandYes(tone, close) : RomanceLines.HandNo(tone));
-            var witnesses = Social.GirlsOnMyMap().Where(o => o != h).ToList();
+            var witnesses = Witness.Who(h, Witness.Hand);
             Plain(h, Lvl.Romance, ok ? Q.Good : Q.Bad, "hand", b, ok ? "♥ " + GirlInfo.FirstName(h) + " holds your hand." : null, () =>
             {
-                if (ok && witnesses.Count > 0) Social.Add(Social.Kinds.Flirted, h, witnesses);
+                if (ok) Social.Add(Social.Kinds.Flirted, h, witnesses, Witness.Hand);
             });
         }
 
@@ -1482,6 +1554,13 @@ namespace Joojkk.CampusLife
             var meet = Board.MeetHere(h);
             if (meet != null && Board.PlayInTalk(meet, h, () => { s.Turns++; AfterScene(); })) return true;
             if (ShareOpening(s, h)) return true;
+            if (S.Girl(GirlInfo.Key(h)).Pending == "SceneTalk:feelings")
+            {
+                Subject f = null;
+                try { f = SceneTalk.Candidates(h).FirstOrDefault(c => c.Id == "feelings"); }
+                catch (Exception e) { CampusLifePlugin.Log.LogDebug("Opening: " + e.Message); }
+                if (f != null) return SceneTalk.Play(h, f, d => s.Interest = Mathf.Clamp(s.Interest + d, 0, MaxInterest), () => { s.Turns++; AfterScene(); });
+            }
             // Something she saw or heard about you that weighs (the H in the hallway, you in the girls' restroom): she
             // brings it up herself.
             var raise = RaiseTopic(h);

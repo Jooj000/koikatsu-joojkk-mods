@@ -361,7 +361,7 @@ namespace Joojkk.CampusLife
                 if (inc.Kind == Social.Kinds.Flirted && about != h && h.isGirlfriend)
                 {
                     var minds = ConvoLines.MindsCheating(h);
-                    b.Her_(ConvoLines.Cheating(tone, aboutName, minds));
+                    b.Her_(ConvoLines.Cheating(tone, aboutName, minds, inc.What, Social.Saw(h, inc)));
                     if (minds) s.Interest = Math.Max(0, s.Interest - 1);
                 }
                 else if (inc.Kind == Social.Kinds.HerBoysRoom)
@@ -379,7 +379,7 @@ namespace Joojkk.CampusLife
                 else
                 {
                     var friend = about != null && about != h && Social.Bond(h, about) >= 35;
-                    b.Her_(ConvoLines.Incident(tone, inc.Kind, aboutName, about == h, friend));
+                    b.Her_(ConvoLines.Incident(tone, inc.Kind, aboutName, about == h, friend, inc.What, Social.Saw(h, inc)));
                 }
             }
             else if (jealous != null)
@@ -851,7 +851,7 @@ namespace Joojkk.CampusLife
             else if (gossip != null)
             {
                 var about = Social.Get(gossip.Girl);
-                b.Her_(ConvoLines.GossipLine(tone, gossip.Kind, about != null ? GirlInfo.FirstName(about) : ""));
+                b.Her_(ConvoLines.GossipLine(tone, gossip.Kind, about != null ? GirlInfo.FirstName(about) : "", gossip.What));
                 Social.Mentioned(h, gossip);
             }
             else if (!s.Did.Contains("anecdote"))
@@ -967,7 +967,7 @@ namespace Joojkk.CampusLife
             if (gossip != null)
             {
                 var about = Social.Get(gossip.Girl);
-                b.Her_(ConvoLines.GossipLine(tone, gossip.Kind, about != null ? GirlInfo.FirstName(about) : ""));
+                b.Her_(ConvoLines.GossipLine(tone, gossip.Kind, about != null ? GirlInfo.FirstName(about) : "", gossip.What));
                 Social.Mentioned(h, gossip);
             }
             Play(b, 0, "Reputation: " + S.Reputation + "/100");
@@ -1057,12 +1057,12 @@ namespace Joojkk.CampusLife
             s.Did.Add("flirt");
             var ok = Random.value < FlirtChance(s);
             b.Her_(ok ? ConvoLines.FlirtGood(tone, close) : ConvoLines.FlirtTooSoon(tone));
-            var witnesses = Social.GirlsOnMyMap().Where(o => o != h).ToList();
+            var witnesses = Witness.Who(h, Witness.Flirt);
             Play(b, ok ? 2 : -1, ok ? "♥ " + GirlInfo.FirstName(h) + " is blushing." : null, ok ? (Action)(() =>
             {
                 Social.AddTrust(h, 2);
                 if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 2);
-                Social.Add(Social.Kinds.Flirted, h, witnesses);
+                Social.Add(Social.Kinds.Flirted, h, witnesses, Witness.Flirt);
             }) : null, ok ? 4 : 0);
         }
 
@@ -1090,11 +1090,11 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(h, true);
             b.Me(RomanceLines.PlayerHand(close));
             b.Her_(ok ? RomanceLines.HandYes(tone, close) : RomanceLines.HandNo(tone));
-            var witnesses = Social.GirlsOnMyMap().Where(o => o != h).ToList();
+            var witnesses = Witness.Who(h, Witness.Hand);
             Play(b, ok ? 2 : -1, ok ? "♥ " + GirlInfo.FirstName(h) + " holds your hand." : null, ok ? (Action)(() =>
             {
                 Social.AddTrust(h, 2);
-                if (witnesses.Count > 0) Social.Add(Social.Kinds.Flirted, h, witnesses);
+                Social.Add(Social.Kinds.Flirted, h, witnesses, Witness.Hand);
             }) : null, ok ? 2 : 0);
         }
 

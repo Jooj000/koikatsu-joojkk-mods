@@ -100,6 +100,7 @@ namespace Joojkk.CampusLife
             S.Energy = Activities.MaxEnergy;
             // Story director bookkeeping (dir:, grad:) is permanent; real buffs expire.
             S.Buffs = S.Buffs.Where(kv => kv.Value >= S.Day - 1 || kv.Key.StartsWith("dir:") || kv.Key.StartsWith("grad:")).ToDictionary(kv => kv.Key, kv => kv.Value);
+            try { Weather.OnDay(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
             S.PendingHappening = "";
 
             Spotlight.OffscreenLife();
@@ -139,6 +140,7 @@ namespace Joojkk.CampusLife
             {
                 Director.OnPeriod();
                 try { Lore.OnPeriod(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+                try { Weather.OnPeriod(period); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
                 Calendar.OnPeriodStart(period);
                 if (period == Cycle.Type.LunchTime && S.Requests.Any(r => r.State == RequestState.Active))
                     Toasts.Show("Club board: " + S.Requests.Count(r => r.State == RequestState.Active) + " open request(s). Press " + Cfg.PlannerKey.Value + ".");

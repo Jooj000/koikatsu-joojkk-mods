@@ -698,8 +698,8 @@ namespace Joojkk.CampusLife
                     if (r != null && r.Trust != 0) Social.AddTrust(h, r.Trust);
                     if (x.Tier >= 0 && delta >= 1)
                     {
-                        var witnesses = Social.GirlsOnMyMap().Where(o => o != h).ToList();
-                        if (witnesses.Count > 0) Social.Add(Social.Kinds.Flirted, h, witnesses);
+                        var witnesses = Witness.Who(h, Witness.Flirt);
+                        if (witnesses.Count > 0) Social.Add(Social.Kinds.Flirted, h, witnesses, Witness.Flirt);
                         if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
                     }
                 };

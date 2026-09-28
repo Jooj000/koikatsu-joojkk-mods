@@ -426,7 +426,7 @@ namespace Joojkk.CampusLife
                 Write = b =>
                 {
                     b.Narr(name + " doesn't smile when she sees you. She waits until you're close.");
-                    b.Face(h, Feel.Serious).Her_(ConvoLines.Incident(GirlInfo.ToneOf(h), g.Kind, an, self, !self && about != null && Social.Bond(h, about) >= 35));
+                    b.Face(h, Feel.Serious).Her_(ConvoLines.Incident(GirlInfo.ToneOf(h), g.Kind, an, self, !self && about != null && Social.Bond(h, about) >= 35, g.What, Social.Saw(h, g)));
                     b.Face(h, Feel.Sad).Her_(self
                         ? T(h, "I kept telling myself it didn't matter. But it did. It still does.", "I tried to shrug it off! I couldn't! So now you get to hear it!", "I don't hold grudges. Usually. This one stuck.", "I was going to let you sweat. But I'd rather just say it.")
                         : T(h, an + " is my friend. When she's hurt, I'm hurt too.", an + "'s my friend, okay?! You don't get to do that!", "What you do to my friends, you do to me.", an + " didn't deserve that. Even I know that."));
@@ -463,10 +463,12 @@ namespace Joojkk.CampusLife
 
         private static Subject Feelings(SaveData.Heroine h)
         {
-            if (h.isGirlfriend || h.relation < 1 || h.favor < 85) return null;
+            if (h.isGirlfriend || h.relation < 1 || h.favor < 80) return null;
             var mood = Forms.MoodOf(h);
-            if (mood != Mood.Flirty && Social.Trust(h) < 60) return null;
             var gs = S.Girl(GirlInfo.Key(h));
+            // A kiss she let happen warily brings it up by itself.
+            var kissed = gs.Moments.Any(m => m.Kind == "kiss_wary" && S.Day - m.Day <= 3);
+            if (!kissed && (h.favor < 85 || mood != Mood.Flirty && Social.Trust(h) < 60)) return null;
             if (gs.Moments.Any(m => m.Kind == "feelings" && S.Day - m.Day < 4)) return null;
             var name = GirlInfo.FirstName(h);
             return new Subject
@@ -474,9 +476,18 @@ namespace Joojkk.CampusLife
                 Id = "feelings", Weight = 1.6f,
                 Write = b =>
                 {
-                    b.Narr(name + " keeps starting sentences and abandoning them. She tucks her hair behind her ear twice.");
-                    b.Face(h, Feel.Shy).Her_(T(h, "Um... do you ever think about... what we are? Like, to each other?", "Okay, hypothetically! If someone liked someone! Would that be weird?!",
-                        "I've been thinking. About us. That's all. ...That's not all.", "Hey. Let's say I liked someone. Hypothetically. What would you do?"));
+                    if (kissed)
+                    {
+                        b.Narr(name + " touches her lips without noticing, then catches you looking and drops her hand.");
+                        b.Face(h, Feel.Shy).Her_(T(h, "About... the kiss. I haven't stopped thinking about it. What did it mean?", "So! The kiss! We're not gonna talk about it?! ...We should talk about it!",
+                            "...The kiss. I need to know what it meant. To you.", "So. You kissed me. And I let you. Explain that. Both parts."));
+                    }
+                    else
+                    {
+                        b.Narr(name + " keeps starting sentences and abandoning them. She tucks her hair behind her ear twice.");
+                        b.Face(h, Feel.Shy).Her_(T(h, "Um... do you ever think about... what we are? Like, to each other?", "Okay, hypothetically! If someone liked someone! Would that be weird?!",
+                            "I've been thinking. About us. That's all. ...That's not all.", "Hey. Let's say I liked someone. Hypothetically. What would you do?"));
+                    }
                     b.Face(h, Feel.Love).Her_(T(h, "Forget it! I'm being strange...", "Ahh, never mind! Forget I said anything!", "...Forget it.", "...You're supposed to say something now."));
                     Choice(b, new List<string[]> { new[] { "Tell her you feel the same", "f_same" }, new[] { "Ask what she's trying to say", "f_ask" }, new[] { "Gently change the subject", "f_away" } });
                     b.Branch("f_same"); b.Face(h, Feel.Surprised).Her_(T(h, "Eh...? You... really?", "W-wait, seriously?! Seriously seriously?!", "...You mean that.", "...You'd better mean that.")); b.Face(h, Feel.Love).Her_(T(h, "Then... can you say it properly? I want to hear it.", "Then say it right! Properly! I'm ready!", "...Then say it properly.", "Then go on. Say it properly.")); b.End();
@@ -485,7 +496,8 @@ namespace Joojkk.CampusLife
                 },
                 Result = c =>
                 {
-                    Memories.Add(h, "feelings", c == "f_away" ? "you changed the subject when I was trying to tell you something" : "we almost said it", c == "f_away" ? -1 : 1, c != "f_same");
+                    Memories.Add(h, "feelings", c == "f_away" ? (kissed ? "you kissed me and then acted like it was nothing" : "you changed the subject when I was trying to tell you something") : "we almost said it", c == "f_away" ? -1 : 1, c != "f_same");
+                    if (kissed && c == "f_away") { Social.AddTrust(h, -4); h.favor = Math.Max(0, h.favor - 3); }
                     if (c == "f_same") { Campus.Apply(new Rewards { Favor = 3, Lewd = 3 }, h); Conversation.QueueConfession(); }
                     else if (c == "f_ask") { Social.AddTrust(h, 3); Campus.Apply(new Rewards { Favor = 3 }, h); }
                     else Social.AddTrust(h, -2);

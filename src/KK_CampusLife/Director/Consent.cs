@@ -90,6 +90,19 @@ namespace Joojkk.CampusLife
         // ================= the answer =================
 
         /// <summary>How likely she says yes (0-1) and the main reasons, for the log.</summary>
+        /// <summary>
+        /// Dating takes days of talking, not one good day (user, 2026-10-28: "tá dando pra namorar qualquer uma em um dia só"):
+        /// a reserved girl wants 5 different days, a normal one 4, an open one 2.
+        /// </summary>
+        public static bool KnownLongEnough(SaveData.Heroine h, out int days, out int need)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
+            var pace = Profile(h);
+            days = gs.TalkDays.Distinct().Count();
+            need = pace == Pace.Reserved ? 5 : pace == Pace.Normal ? 4 : 2;
+            return days >= need;
+        }
+
         public static float Chance(SaveData.Heroine h, Ask ask, out string why)
         {
             var r = new List<string>();
@@ -116,9 +129,8 @@ namespace Joojkk.CampusLife
             {
                 case Ask.Confess:
                 {
-                    var days = gs.TalkDays.Distinct().Count();
-                    var need = pace == Pace.Reserved ? 4 : pace == Pace.Normal ? 3 : 1;
-                    if (days < need) { r.Add("too soon (" + days + "/" + need + " days)"); c = 0.03f; break; }
+                    int days, need;
+                    if (!KnownLongEnough(h, out days, out need)) { r.Add("too soon (" + days + "/" + need + " days)"); c = 0.03f; break; }
                     c = (favor - 50f) / 40f;
                     break;
                 }
@@ -413,12 +425,12 @@ namespace Joojkk.CampusLife
                 if (h == null || h.isAnger) return;
                 var ts = G.TalkScene;
                 if (ts != _touchScene) { _touchScene = ts; TouchCount.Clear(); _touchSeen = false; }
-                // A girlfriend on the same map sees you touching another girl (once per conversation): she knows it
-                // first-hand, so she says "I saw" and not "they told me you flirted".
+                // map, only the ones in range, looking and with nothing in between) knows it first-hand: "I saw", not
+                // "they told me you flirted". Your girlfriend's stance comes from it (Share).
                 if (_touch && !_touchSeen && !h.isGirlfriend)
                 {
-                    var gfs = Social.GirlsOnMyMap().Where(g => g != h && g.isGirlfriend).ToList();
-                    if (gfs.Count > 0) { _touchSeen = true; Social.Add(Social.Kinds.Flirted, h, gfs); Note(GirlInfo.FirstName(h) + ": touched in sight of " + string.Join(", ", gfs.Select(g => GirlInfo.FirstName(g)).ToArray())); }
+                    var seen = Witness.Who(h, Witness.Touch);
+                    if (seen.Count > 0) { _touchSeen = true; Social.Add(Social.Kinds.Flirted, h, seen, Witness.Touch); Note(GirlInfo.FirstName(h) + ": touched in sight of " + string.Join(", ", seen.Select(g => GirlInfo.FirstName(g)).ToArray())); }
                 }
                 var key = _parts + (_touch ? 0 : 10);
                 int n;

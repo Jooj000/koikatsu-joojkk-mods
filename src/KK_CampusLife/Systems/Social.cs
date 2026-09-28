@@ -123,10 +123,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>Records an incident. The girl and the witnesses know at once; friends hear about it in the following days.</summary>
-        public static Incident Add(string kind, SaveData.Heroine girl, IEnumerable<SaveData.Heroine> witnesses = null)
+        public static Incident Add(string kind, SaveData.Heroine girl, IEnumerable<SaveData.Heroine> witnesses = null, string what = null)
         {
             if (S == null) return null;
-            try { Lore.FromIncident(kind, girl, witnesses); } catch (Exception e) { CampusLifePlugin.Log.LogDebug("Lore incident: " + e.Message); }
+            try { Lore.FromIncident(kind, girl, witnesses, what); } catch (Exception e) { CampusLifePlugin.Log.LogDebug("Lore incident: " + e.Message); }
             // Seen in the girls' restroom or changing room again within a day: the same story, more witnesses (before,
             // every visit was a new incident, each one spread and had to be explained again, 2026-10-11).
             if (Merges(kind))
@@ -141,7 +141,7 @@ namespace Joojkk.CampusLife
                     return same;
                 }
             }
-            var inc = new Incident { Id = S.NextIncidentId++, Day = S.Day, Kind = kind, Girl = girl != null ? GirlInfo.Key(girl) : "" };
+            var inc = new Incident { Id = S.NextIncidentId++, Day = S.Day, Kind = kind, Girl = girl != null ? GirlInfo.Key(girl) : "", What = what ?? "" };
             S.Incidents.Add(inc);
             if (S.Incidents.Count > 120) S.Incidents.RemoveRange(0, S.Incidents.Count - 120);
             var seen = 0;
@@ -202,17 +202,43 @@ namespace Joojkk.CampusLife
                 case Kinds.BrokePromise: return self ? -8 : friend ? -3 : -1;
                 case Kinds.SeenGirlsRoom: case Kinds.SeenLockers: return -4;
                 case Kinds.Flirted:
-                    if (self) return 1;
-                    // What she decided about you and that girl (Share): no hurt once she accepted it.
-                    if (listener.isGirlfriend) return about == null || Share.Accepts(listener, about) ? 0 : Share.Stance(listener, about) == Share.Refuses ? -6 : ConvoLines.MindsCheating(listener) ? -6 : 0;
-                    return listener.favor >= 70 ? -1 : 0;
+                    {
+                        if (self) return 1;
+                        // How much it weighs: a sweet word is not a kiss, and seeing it is worse than hearing about it
+                        //.
+                        var w = FlirtWeight(inc.What) + (Saw(listener, inc) ? 1 : 0);
+                        // What she decided about you and that girl (Share): no hurt once she accepted it.
+                        if (listener.isGirlfriend) return about == null || Share.Accepts(listener, about) ? 0 : Share.Stance(listener, about) == Share.Refuses || ConvoLines.MindsCheating(listener) ? -w : 0;
+                        return listener.favor >= 70 ? -(w / 2) : 0;
+                    }
                 default: return 0;
             }
+        }
+
+        /// <summary>How much your being sweet on another girl weighs, by what it was ("" = older saves, before it was kept).</summary>
+        private static int FlirtWeight(string what)
+        {
+            switch (what)
+            {
+                case Witness.Flirt: return 2;
+                case Witness.Hand: return 3;
+                case Witness.Touch: return 4;
+                case Witness.Kiss: return 6;
+                case Witness.H: return 8;
+                default: return 5;
+            }
+        }
+
+        /// <summary>She saw it with her own eyes (a witness), not heard it from someone.</summary>
+        public static bool Saw(SaveData.Heroine h, Incident inc)
+        {
+            return h != null && inc != null && S != null && S.Girl(GirlInfo.Key(h)).Saw.Contains(inc.Id);
         }
 
         private static void Learn(SaveData.Heroine h, Incident inc, bool mention, bool saw = false)
         {
             var gs = S.Girl(GirlInfo.Key(h));
+            if (saw && !gs.Saw.Contains(inc.Id)) { gs.Saw.Add(inc.Id); if (gs.Saw.Count > 40) gs.Saw.RemoveAt(0); }
             if (gs.Known.Contains(inc.Id)) return;
             gs.Known.Add(inc.Id);
             if (gs.Known.Count > 60) gs.Known.RemoveRange(0, gs.Known.Count - 60);
@@ -294,10 +320,16 @@ namespace Joojkk.CampusLife
         /// <summary>A negative thing about you she has heard and not cleared up.</summary>
         public static Incident Grudge(SaveData.Heroine h)
         {
+            return Grudges(h).FirstOrDefault();
+        }
+
+        /// <summary>Everything of the last week she holds against you and has not let go, the newest first.</summary>
+        public static List<Incident> Grudges(SaveData.Heroine h)
+        {
             var gs = S.Girl(GirlInfo.Key(h));
             return gs.Known.Select(id => S.Incidents.FirstOrDefault(i => i.Id == id))
                 .Where(i => i != null && S.Day - i.Day <= 6 && Effect(h, i) < -1 && !gs.Cleared.Contains(i.Id))
-                .OrderByDescending(i => i.Day).FirstOrDefault();
+                .OrderByDescending(i => i.Day).ToList();
         }
 
         /// <summary>

@@ -47,6 +47,7 @@ namespace Joojkk.CampusLife
             V("gave_gift", 2, 1, "{s} gave {o} {note}", "flirted", "gift");
             V("flirted", 1, 1, "{s} {was} flirting with {o}", "kissed", "romance");
             V("held_hands", 1, 1, "{s} held hands with {o}", "kissed", "romance");
+            V("touched", 1, 1, "{s} {was} getting handsy with {o}", "kissed", "romance");
             V("kissed", 2, 2, "{s} kissed {o}", "had_h", "romance");
             V("confessed", 2, 2, "{s} confessed to {o}", "", "romance");
             V("rejected", -2, 2, "{s} turned {o} down", "", "romance");
@@ -358,7 +359,7 @@ namespace Joojkk.CampusLife
         // ================= adapters (the old systems write here) =================
 
         /// <summary>Social.Add's incidents as facts about you.</summary>
-        public static void FromIncident(string kind, SaveData.Heroine girl, IEnumerable<SaveData.Heroine> witnesses)
+        public static void FromIncident(string kind, SaveData.Heroine girl, IEnumerable<SaveData.Heroine> witnesses, string what = null)
         {
             var g = girl != null ? GirlInfo.Key(girl) : "";
             switch (kind)
@@ -373,7 +374,9 @@ namespace Joojkk.CampusLife
                 case Social.Kinds.SeenLockers: Record("seen_lockers", Player, "", witnesses: girl != null ? (witnesses ?? new SaveData.Heroine[0]).Concat(new[] { girl }) : witnesses); break;
                 case Social.Kinds.HerBoysRoom: Record("seen_boys_room", g, "", exposure: LoreFact.Secret, witnesses: witnesses); break;
                 case Social.Kinds.Defended: Record("stood_up_for", Player, g, witnesses: witnesses); break;
-                case Social.Kinds.Flirted: Record("flirted", Player, g, witnesses: witnesses); break;
+                case Social.Kinds.Flirted:
+                    Record(what == Witness.Kiss ? "kissed" : what == Witness.Hand ? "held_hands" : what == Witness.Touch ? "touched" : "flirted", Player, g, witnesses: witnesses);
+                    break;
             }
         }
 
@@ -405,7 +408,8 @@ namespace Joojkk.CampusLife
         {
             if (h == null) return;
             List<SaveData.Heroine> near;
-            try { near = NearPlayer(12f).Where(x => x != h).ToList(); } catch { near = new List<SaveData.Heroine>(); }
+            // Only the ones who really saw or heard it (Witness: in range, looking, nothing in between).
+            try { near = Witness.Who(h, Witness.H); } catch { near = new List<SaveData.Heroine>(); }
             // The ones who ran off while it went on (the escape fires when H starts, before this end) saw it too.
             foreach (var kv in Fled.Where(x => Time.realtimeSinceStartup - x.Value <= 900f).ToList())
             {

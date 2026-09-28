@@ -75,6 +75,7 @@ namespace Joojkk.CampusLife
         {
             if (!On || ac == null || h == null) return false;
             var weights = Weigh(h, not);
+            var tried = false;
             // Draw without putting back: an action with no spot for her falls to the next one.
             while (weights.Count > 0)
             {
@@ -89,6 +90,7 @@ namespace Joojkk.CampusLife
                 // The game's tables lack the class or club of some story girls for some actions (KeyNotFound inside SetAction):
                 // that action is not possible for her, the next one is tried (the director stays in charge of her first
                 ActionControl.ResultInfo res = null;
+                tried = true;
                 try { res = ac.SetAction(h, pick, -1); }
                 catch (Exception e)
                 {
@@ -104,6 +106,12 @@ namespace Joojkk.CampusLife
                     Note(GirlInfo.FirstName(h) + ": action " + pick + " not on " + GirlInfo.FirstName(taken.heroine) + "'s spot");
                     continue;
                 }
+                // Rain: she stays in; a girl who loves the rain goes out anyway, now and then.
+                if (res.point != null && Weather.Shelters(res.point.MapNo, h))
+                {
+                    Note(GirlInfo.FirstName(h) + ": action " + pick + " outside, but it's raining");
+                    continue;
+                }
                 r = res;
                 Decided++;
                 int c;
@@ -114,8 +122,38 @@ namespace Joojkk.CampusLife
             }
             LeftToGame++;
             Note(GirlInfo.FirstName(h) + ": no action of the director's had a spot; the game's " + (r != null ? r.actionNo.ToString() : "none") + " stays");
+            if (tried) GiveBack(ac, h, r);
             return false;
         }
+
+        /// <summary>
+        /// Each SetAction above moves her one reservation (the game keeps a single next spot per girl) to the spot it
+        /// refused every outdoor try, the game's spot was left unreserved, WaitPoint.SetWait threw inside the period load
+        /// (MapMove) and the screen stayed black.
+        /// </summary>
+        private static void GiveBack(ActionControl ac, SaveData.Heroine h, ActionControl.ResultInfo r)
+        {
+            try
+            {
+                var targets = Traverse.Create(ac).Field("dicTarget").GetValue() as System.Collections.IDictionary;
+                var di = targets != null && targets.Contains(h) ? targets[h] : null;
+                if (di == null) return;
+                if (r != null && r.point != null)
+                {
+                    var npc = G.Act != null ? G.Act.npcList.FirstOrDefault(n => n != null && n.heroine == h) : null;
+                    Traverse.Create(di).Method("SetWaitPoint", new[] { typeof(WaitPoint), typeof(ActionGame.Chara.NPC) }).GetValue(r.point, npc);
+                }
+                else if (r != null && r.heroine != null)
+                    Traverse.Create(di).Method("SetHeroine", new[] { typeof(SaveData.Heroine) }).GetValue(r.heroine);
+                else
+                    Traverse.Create(di).Method("SetWaitPoint", new[] { typeof(WaitPoint), typeof(ActionGame.Chara.NPC) }).GetValue(null, null);
+                GaveBack++;
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Brain give back: " + e.Message); }
+        }
+
+        /// <summary>How many times the game's own pick got its spot back.</summary>
+        public static int GaveBack;
 
         /// <summary>
         /// Another girl already has that spot or one right on it: the game reserves each waiting point, but one chair can

@@ -7,16 +7,21 @@
 on me.you
 - [You look like you want to say something.|Is something on your mind?|What's with that look?]
 - [Did you hear something about me?|People are talking about me, aren't they?]
+- [Something wrong?|You've been looking at me funny.|Did I do something?]
 
 @rule me.you.saw
 on me.you
 when how=witness
 - [About {when}... you saw, didn't you?|You were there {when}, weren't you?]
+- [So you saw what happened {when}?|You were watching {when}, right?]
+- [I know you saw {when}.|Don't pretend. You saw {when}.]
 
 @rule me.you.heard
 on me.you
 when how=heard|rumor
 - [What are people saying about me?|What did you hear?|Who's been talking about me?]
+- [Is there a rumor about me?|Someone's been gossiping, huh?|What's going around about me?]
+- [Tell me what they're saying.|Go on, what did you hear?]
 
 # ---------------- H with another girl: she saw it ----------------
 @rule you.h.saw.raised
@@ -26,6 +31,7 @@ opens admit,hush,tease,deny
 feel worried
 - [Um... about {when}.|Hey. {When}, in the {fplace}...|I need to say something.] [I saw you. With {who}.|I saw what you and {who} were doing.|I... walked right into you and {who}.] [I ran. Sorry.|I didn't know where to look.|I can't get it out of my head.]
 - [...You know I saw, right?|Don't pretend you didn't see me run.] [You and {who}. In the {fplace}.|In the middle of the {fplace}, with {who}!] [What were you thinking?|Anyone could have walked by.|I didn't sleep last night.]
+- [Hey. We need to talk about {when}.|About the {fplace}...] [I saw you and {who}.|I know what I saw.] [I'm not mad. Just... shocked.|I can't look at you the same way.|Did you think nobody would notice?]
 
 @rule you.h.saw
 on you
@@ -33,6 +39,8 @@ when realverb=had_h how=witness
 opens admit,hush,tease,deny
 feel worried
 - [I saw you and {who} {when}.|About {when} in the {fplace}...] [I wasn't trying to look!|I didn't mean to see it.|I just turned the corner and...]
+- [You and {who} in the {fplace}... I saw.|I wasn't snooping, I swear.] [It just happened in front of me.|I wish I hadn't seen it.]
+- [I need to tell you: I saw you two {when}.|{When}... I was right there.] [I'm not going to tell anyone.|I just thought you should know.]
 
 @rule you.h.saw.close
 on you
@@ -41,6 +49,7 @@ opens admit,comfort,ask,deny
 feel sad
 - [I saw you {when}. With {who}.|In the {fplace}. With {who}.] [I thought we were... something.|Am I not enough?|Why her?]
 - [You and {who}... I saw everything.|Don't lie to me. I was there.] [It hurts, you know.|I don't even know what to say to you.]
+- [{Who}? Really?|I saw you with {who} {when}.] [After everything we said?|Was I just a game to you?]
 
 @rule you.h.saw.open
 on you
@@ -48,6 +57,8 @@ when realverb=had_h how=witness profile=open
 opens tease,admit,invite
 feel smile
 - [So... you and {who}, huh?|I saw you two {when}.] [Pretty bold, doing it in the {fplace}.|I didn't know you had it in you.|Next time, check the hallway first.] [{laugh}|Not that I'm judging.]
+- [So, you and {who} in the {fplace}?|I got quite the show {when}.] [Not bad.|You should've invited me.] [{laugh}|Just kidding. Mostly.]
+- [Saw you and {who}, by the way.|The {fplace}, huh? Bold.] [I'm impressed.|Very bold.] [Don't worry, I won't tell.|Your secret's safe.]
 
 @rule you.h.saw.shy
 on you
@@ -55,6 +66,8 @@ when realverb=had_h how=witness voice=shy|bookish|proper|serious
 opens admit,hush,comfort
 feel shy
 - [I-I... {when}... I saw...|Um, um... {when}...] [I'm so sorry, I didn't mean to!|I won't tell anyone, I promise!|I ran away as fast as I could.]
+- [About {when}... I s-saw...|I'm sorry, but {when}, I saw you two.] [I won't say anything!|I-I'm not judging!] [I just can't stop blushing.|Forget I said anything.]
+- [Um... the {fplace}...|I-I was there {when}.] [I didn't see much!|I covered my eyes!] [Really!|Mostly...]
 
 @rule you.h.saw.tsundere
 on you
@@ -62,6 +75,8 @@ when realverb=had_h how=witness voice=tsundere
 opens deny,tease,admit
 feel pout
 - [D-don't think I didn't see you and {who}!|You pervert! In the {fplace}!] [Not that I care what you do!|Have some shame!|Ugh, I can't even look at you.]
+- [Hmph. I saw you with {who}.|Don't think I'm jealous, but I saw you two.] [Disgusting.|You could at least lock a door.] [Idiot.|Not that I care!]
+- [In the {fplace}? Seriously?|You and {who}? Ugh!] [Of all places!|I'm not jealous!] [Baka!|Hmph!]
 
 @rule you.h.heard
 on you
@@ -69,12 +84,16 @@ when realverb=had_h how=heard|rumor
 opens deny,correct,admit,laugh
 feel worried
 - [{Src} told me something about you and {who}.|People are saying you and {who}... you know.|There's a rumor about you and {who}.] [In the {fplace}. Is it true?|I didn't believe it at first.|Please tell me it's not true.]
+- [People say you and {who} did it in the {fplace}.|{Src} has been telling everyone about you and {who}.] [Tell me it's a lie.|Is it true?] [I need to know.|Please.]
+- [I heard something about you and {who}.|The story about you and {who} is everywhere.] [Is it real?|I don't want to believe it.]
 
 @rule you.h.heard.nosrc
 on you
 when realverb=had_h how=rumor
 opens deny,correct,laugh
 - [Everyone's whispering about you and {who}.|There's a weird story going around about you.] [Something about the {fplace}?|I'm just telling you what I heard.]
+- [Someone said you and {who} were together in the {fplace}.|There's a nasty rumor going around about you.] [I don't know who started it.|Want me to shut it down?]
+- [Weird rumor about you and {who}.|People say you and {who}...] [Tell me it's nonsense.|In the {fplace}?]
 
 # ---------------- seen where you shouldn't be ----------------
 @rule you.peep.saw
@@ -83,12 +102,16 @@ when realverb=seen_girls_room|seen_lockers how=witness
 opens admit,deny,hush,laugh
 feel pout
 - [I saw you {when}.|Don't think I didn't notice you {when}.] [What were you doing in there?|That's the girls' side, you know.|You'd better have a good excuse.]
+- [You were in the girls' area {when}.|I saw you sneaking around {when}.] [Pervert.|Explain yourself.]
+- [I caught you {when}.|You were peeking {when}, weren't you?] [Don't deny it.|Shameless.]
 
 @rule you.peep.heard
 on you
 when realverb=seen_girls_room|seen_lockers how=heard|rumor
 opens deny,correct,laugh,admit
 - [{Src} says you were in the girls' [restroom|changing room].|There's a story going around about you and the girls' [restroom|changing room].] [Please say it's a misunderstanding.|Were you lost or something?]
+- [Is it true you got caught in the girls' [restroom|changing room]?|Everyone says you were peeking.] [Please tell me it's a mistake.|That's not like you. Right?]
+- [{Src} told me about the [restroom|changing room].|There's a rumor about you peeking.] [I don't know what to believe.|Say something.]
 
 @rule you.peep.teasing
 on you
@@ -96,6 +119,8 @@ when realverb=seen_girls_room|seen_lockers voice=gyaru|vamp|teasing|open
 opens laugh,tease,deny
 feel smile
 - [So I hear you like the girls' side of the building.|Lost again, pervert?] [{laugh}|If you wanted to see something, you could have asked.]
+- [Heard you've been touring the girls' rooms.|Ooh, the little peeper.] [Find anything interesting?|{laugh}]
+- [Next time, take me with you.|So you're curious, huh?] [Kidding!|I could just show you.]
 
 # ---------------- you and another girl ----------------
 @rule you.romance.other
@@ -103,6 +128,8 @@ on you
 when realverb=started_dating|dated|kissed|flirted|held_hands
 opens ask,admit,deny,tease
 - [So you and {who}...|I heard about you and {who}.|You and {who}, huh?] [Is it serious?|I didn't know you two were close.|Good for you, I guess.]
+- [{Who}, huh?|So the rumor about you and {who} is real?] [She's pretty.|Interesting.]
+- [Everyone's talking about you and {who}.|You and {who}? Since when?] [Tell me everything.|Huh. I didn't see that coming.]
 
 @rule you.romance.other.jealous
 on you
@@ -110,6 +137,8 @@ when realverb=started_dating|dated|kissed|flirted|held_hands interest=yes rel!=g
 opens admit,comfort,deny,ask
 feel pout
 - [You and {who}...|So it's {who} now?] [I see how it is.|You could have told me yourself.|I thought... never mind.]
+- [Since when are you and {who} a thing?|{Who}. Of course.] [Whatever.|Good for you.]
+- [I didn't think you liked {who}.|You and {who}, huh.] [I'm fine. Totally fine.|Just... surprised.]
 
 @rule you.romance.other.gf
 on you
@@ -117,6 +146,8 @@ when realverb=started_dating|dated|kissed|flirted|held_hands rel=girlfriend
 opens admit,deny,comfort
 feel sad
 - [What's this about you and {who}?|Why is everyone telling me about you and {who}?] [Explain. Now.|I'm your girlfriend, remember?|Tell me it isn't true.]
+- [Why are you with {who}?|What's going on with {who}?] [I deserve the truth.|Look me in the eyes.]
+- [{Who}? Seriously?|Everyone saw you with {who}.] [How could you?|Don't lie to me.]
 
 # Who is jealous of what: an acquaintance is never jealous of you, only of her friend or her crush;
 # a friend is jealous of the friendship (you'll forget her), unless she is already into you (the rule above).
@@ -126,6 +157,7 @@ when realverb=started_dating|dated|kissed|flirted|held_hands rel=acquaintance|st
 opens ask,laugh,share
 - [Oh, you and {who}? I heard.|So the rumor about you and {who} is true?] [Huh. Good luck, I guess.|Not my business, but it's the talk of the class.]
 - [{Who}, huh? Interesting choice.|People are talking about you and {who}.] [She's nice.|I didn't think you were her type.]
+- [I heard you and {who} are close.|You and {who}? That's the rumor.] [Hope it works out.|Not that it's any of my business.]
 
 @rule you.romance.other.friendship
 on you
@@ -134,6 +166,7 @@ opens ask,comfort,invite
 feel pout
 - [So that's why you've been so busy. {Who}.|You and {who}, huh? I'm happy for you. Really.] [Just don't forget your friends, okay?|But who's going to eat lunch with me now?]
 - [I heard about you and {who}. You didn't tell me!|{Who}? Since when?] [I'm your friend, I should hear these things first.|I feel a little left out, honestly.]
+- [You and {who}, huh? Wow.|{Who}? I'm happy for you, I guess.] [Just remember I'm still here.|Don't ditch me now.]
 
 @rule you.romance.other.herfriend
 on you
@@ -141,6 +174,7 @@ when realverb=started_dating|dated|kissed|flirted|held_hands whorel=friend inter
 opens ask,comfort,defend
 - [{Who}'s my friend, you know.|So you and {who}...] [If you hurt her, you'll answer to me.|She's barely had time for me since.]
 - [{Who} hasn't stopped talking about you.|You stole my lunch buddy, you know that?] [Treat her well.|I'm a little jealous of you, honestly.]
+- [{Who} is my best friend.|Be careful with {who}.] [Make her happy.|She's been hurt before.]
 
 @rule you.romance.other.hercrush
 on you
@@ -149,6 +183,7 @@ opens ask,comfort,admit
 feel sad
 - [You and {who}...? Oh.|{Who}. Of course it's {who}.] [I didn't know she liked boys.|Never mind. It's nothing.]
 - [So {who} picked you.|I heard about you and {who}.] [Lucky you.|I'm fine. I'm totally fine.]
+- [{Who}... and you.|I always wanted {who} to look at me like that.] [I'll get over it.|Oh well.]
 
 # ---------------- what you did for (or to) someone else ----------------
 @rule you.kind.other
@@ -157,6 +192,8 @@ when realverb=helped|stood_up_for|kept_promise
 opens share,laugh,tease
 feel smile
 - [I heard what you did for {who}.|{Who} told me how you helped her.|I saw you with {who} {when}.] [That was really nice of you.|You're kinder than you look.|Not many people would do that.]
+- [You helped {who}, right?|{Who} couldn't stop thanking you.] [That was sweet.|You're a good guy.]
+- [I saw how you treated {who}.|What you did for {who} was nice.] [Respect.|I'll remember that.]
 
 @rule you.rude.other
 on you
@@ -164,6 +201,8 @@ when realverb=insulted|ignored|broke_promise
 opens admit,correct,deny
 feel pout
 - [What happened with {who}?|{Who} was really upset {when}.] [She says you were awful to her.|Was that really necessary?|That's not like you. Is it?]
+- [I heard you were rude to {who}.|What did you say to {who}?] [That's not cool.|She's really hurt.]
+- [{Who} cried because of you.|You and {who} had a problem?] [You should apologize.|Talk to her.]
 
 @rule you.drama
 on you
@@ -171,6 +210,8 @@ when realverb=left_for|cheated
 opens correct,deny,admit,ask
 feel worried
 - [Everyone's talking about {who} and {who2}... and you're in the middle of it.|People say it's your fault {who} and {who2} split.] [Is it true?|What did you do?]
+- [Is it true you came between {who} and {who2}?|There's talk you broke up {who} and {who2}.] [What happened?|Are you behind it?]
+- [{Who} and {who2} broke up, and your name keeps coming up.|People say you're the reason {who} left {who2}.] [Explain.|Tell me the truth.]
 
 # ---------------- twisted on the way ----------------
 @rule you.distorted
@@ -178,8 +219,12 @@ on you
 when distorted=yes
 opens correct,laugh,deny
 - [I heard {deed}.|The way {src} tells it, {deed}.|People say {deed}.] [Is that what happened?|That's what I heard, anyway.|Sounds a bit much, honestly.]
+- [Supposedly {deed}.|I keep hearing {deed}.] [Sounds exaggerated.|What's the real story?]
+- [The story is that {deed}.|{Src} swears {deed}.] [I doubt it.|That can't be right.]
 
 @rule you.generic
 on you
 opens ask,correct,laugh
 - [I heard {deed}.|So... {deed}?|People say {deed} {when}.] [Is that true?|What's the story?]
+- [People are saying {deed}.|So I heard {deed}.] [Care to explain?|Truth or rumor?]
+- [Is it true that {deed}?|Word is {deed}.] [I'm curious.|Tell me.]

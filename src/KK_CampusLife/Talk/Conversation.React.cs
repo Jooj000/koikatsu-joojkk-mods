@@ -24,6 +24,7 @@ namespace Joojkk.CampusLife
             public string Kind = "";       // touch | idle
             public int Part, Level;
             public bool Look;
+            public string PartName, Kiss = "";   // butt / mouth (ours, TouchMore); yes / no for a kiss
             public float At, ReadyAt;
             public Info Info;
         }
@@ -118,7 +119,37 @@ namespace Joojkk.CampusLife
             return l;
         }
 
+        /// <summary>
+        /// The poses the game uses for that body part (touched or looked at), at every stage and level: a poke on the head
+        /// first gets another head pose, so the movement still fits the place.
+        /// </summary>
+        private static List<string> PartPool(Info info, bool touch, int part, int level)
+        {
+            if (info == null) return new List<string>();
+            if (_poseInfo != info) { PosePools.Clear(); _poseInfo = info; }
+            var key = "part" + touch + part + "L" + level;
+            List<string> l;
+            if (PosePools.TryGetValue(key, out l)) return l;
+            var set = new HashSet<string>();
+            foreach (var byGroup in info.dicTalkInfo.Values)
+            {
+                Dictionary<int, List<Info.BasicInfo>> byPart;
+                List<Info.BasicInfo> levels;
+                if (!byGroup.TryGetValue(touch ? Info.Group.Touch : Info.Group.See, out byPart) || !byPart.TryGetValue(part, out levels)) continue;
+                // Only her answers at this level (a pat she likes must not get an angry pose), from every stage.
+                var gi = level >= 0 && level < levels.Count ? levels[level] as Info.GenericInfo : null;
+                if (gi != null && gi.talk != null)
+                    foreach (var t in gi.talk) if (t != null && !string.IsNullOrEmpty(t.pose)) set.Add(t.pose);
+            }
+            var pers = G.TalkScene != null && G.TalkScene.targetHeroine != null ? G.TalkScene.targetHeroine.FixCharaIDOrPersonality : -1;
+            l = set.Where(x => pers < 0 || Singleton<Manager.Communication>.Instance.GetPoseInfo(pers, x) != null).ToList();
+            PosePools[key] = l;
+            CampusLifePlugin.Log.LogDebug("Talk poses " + key + ": " + l.Count + " (" + string.Join(", ", l.ToArray()) + ")");
+            return l;
+        }
+
         private static string _lastPose;
+        private static readonly Dictionary<string, string> LastPoseOf = new Dictionary<string, string>();
 
         private static string OtherPose(List<string> pool, params string[] not)
         {
@@ -126,6 +157,57 @@ namespace Joojkk.CampusLife
             if (fresh.Count == 0) return null;
             var pick = fresh[Random.Range(0, fresh.Count)];
             _lastPose = pick;
+            return pick;
+        }
+
+        /// <summary>
+        /// 2026-10-28 ("a pose do toque já era essa. é para adicionar variações"): the game's own pose for that clip, and
+        /// the last pose of the same place, are never picked again; two times in three a pose of the same body part, else
+        /// any pose of the same feeling.
+        /// </summary>
+        /// <summary>
+        /// Does the pose fit how she took it?
+        /// 0 welcome: no covering, no anger, no sadness; 1 uneasy: she may cover or shrink, not rage; 2-3 stop and angry:
+        /// nothing happy. -1: anything (silence).
+        /// </summary>
+        internal static bool FitsReaction(string pose, int reaction)
+        {
+            if (reaction < 0 || string.IsNullOrEmpty(pose)) return true;
+            if (reaction == 0) return !Covers(pose) && !HasAny(pose, "怒", "嫌", "哀", "拒", "驚");
+            if (reaction == 1) return !HasAny(pose, "怒", "喜", "楽");
+            return !HasAny(pose, "喜", "嬉", "笑", "楽", "好");
+        }
+
+        private static bool HasAny(string s, params string[] words) { return words.Any(w => s.Contains(w)); }
+
+        /// <summary>Happy and shy poses of her whole table (joy, fun, embarrassed), for a touch she welcomes.</summary>
+        private static List<string> WelcomePoses(SaveData.Heroine h)
+        {
+            var table = PoseTable(h);
+            if (table == null) return new List<string>();
+            return table.Keys.Where(x => FitsReaction(x, 0) && HasAny(x, "喜", "楽", "嬉", "笑", "照れ", "恥ずかし")).ToList();
+        }
+
+        private static string VariedPose(List<string> part, List<string> level, string slot, string gamePose, int reaction = -1)
+        {
+            string last;
+            LastPoseOf.TryGetValue(slot, out last);
+            if (reaction >= 0)
+            {
+                var p2 = part.Where(x => FitsReaction(x, reaction)).ToList();
+                var l2 = level.Where(x => FitsReaction(x, reaction)).ToList();
+                if (reaction == 0 && G.TalkScene != null) p2 = p2.Union(WelcomePoses(G.TalkScene.targetHeroine)).ToList();
+                if (p2.Count + l2.Count > 0) { part = p2; level = l2; }
+            }
+            Func<List<string>, List<string>> fresh = l => l.Where(x => x != gamePose && x != last && x != _lastPose).ToList();
+            var a = fresh(part);
+            var b = fresh(level);
+            var from = a.Count > 0 && (b.Count == 0 || Random.value < 0.67f) ? a : b;
+            if (from.Count == 0) return null;
+            var pick = from[Random.Range(0, from.Count)];
+            LastPoseOf[slot] = pick;
+            _lastPose = pick;
+            CampusLifePlugin.Log.LogInfo("Talk pose " + slot + ": " + pick + (gamePose != null ? " (game had " + gamePose + ")" : "") + ", " + (from == a ? "part" : "level") + " pool " + from.Count);
             return pick;
         }
 
@@ -159,12 +241,10 @@ namespace Joojkk.CampusLife
                         var gi = _stage >= 0 && _stage < levels.Count ? levels[_stage] as Info.GenericInfo : null;
                         if (gi != null && gi.talk != null) pool.AddRange(gi.talk);
                     }
+                    var gamePose = __result.pose;
                     Swap(__result, pool, "t" + _touch + _parts + _stage);
-                    if (Random.value < 0.6f)
-                    {
-                        var pose = OtherPose(PosePool(__instance, "touch", _stage), __result.pose);
-                        if (pose != null) __result.pose = pose;
-                    }
+                    var pose = VariedPose(PartPool(__instance, _touch, _parts, _stage), PosePool(__instance, "touch", _stage), "t" + _touch + _parts, gamePose, Mathf.Min(_stage, 3));
+                    if (pose != null) __result.pose = pose;
                 }
                 if (Active) _pend = new Pend { Her = h, Kind = "touch", Part = _parts, Look = !_touch, Level = h.isAnger ? 3 : _stage, At = Time.realtimeSinceStartup, Info = __instance };
             }
@@ -191,12 +271,10 @@ namespace Joojkk.CampusLife
                         foreach (var gi in byKey.Values.SelectMany(l => l).OfType<Info.GenericInfo>().Where(g => g.conditions != 0 && g.talk != null))
                             pool.AddRange(gi.talk);
                     }
+                    var gamePose = __result.pose;
                     Swap(__result, pool, "idle");
-                    if (Random.value < 0.6f)
-                    {
-                        var pose = OtherPose(PosePool(__instance, "idle", 0), __result.pose);
-                        if (pose != null) __result.pose = pose;
-                    }
+                    var pose = VariedPose(new List<string>(), PosePool(__instance, "idle", 0), "idle", gamePose);
+                    if (pose != null) __result.pose = pose;
                 }
                 if (Active) _pend = new Pend { Her = h, Kind = "idle", At = Time.realtimeSinceStartup, Info = __instance };
             }
@@ -315,11 +393,13 @@ namespace Joojkk.CampusLife
             string on;
             if (p.Kind == "touch")
             {
-                var part = PartWord(p.Part, p.Look);
+                var part = p.PartName ?? PartWord(p.Part, p.Look);
                 var n = Count("react:touch:" + part) + 1;
                 s.Did.Add("react:touch:" + part + ":" + n);
-                // Not after every poke: the first touch of each place, every "stop it", and a third of the rest.
-                if (n > 1 && p.Level < 2 && Random.value > 0.35f) return;
+                // Not after every poke: the first touch of each place, every "stop it", and a third of the rest. Our own
+                // places (butt, lips) always answer: the game says nothing for them.
+                if (p.PartName == null && n > 1 && p.Level < 2 && Random.value > 0.35f) return;
+                if (p.Kiss != "") c["kiss"] = p.Kiss;
                 c["part"] = part;
                 c["look"] = p.Look ? "yes" : "no";
                 c["level"] = p.Level == 0 ? "welcome" : p.Level == 1 ? "uneasy" : p.Level == 2 ? "stop" : "angry";
@@ -336,14 +416,17 @@ namespace Joojkk.CampusLife
             }
             DlgRule rule;
             var line = Bank.Pick(on, c, key, out rule);
-            if (string.IsNullOrEmpty(line)) return;
+            if (string.IsNullOrEmpty(line)) { if (p.PartName != null) { var a = SpotAfter(p); if (a != null) a(); } return; }
             var b = new SceneBuilder(h, true);
-            b.Face(h, FeelOf(rule, c)).Her_(line);
+            if (p.Kiss == "yes") b.Narr(Lines.Pick("You lean in and kiss her softly.", "You touch her lips, then lean in and kiss her.", "You lean in. She doesn't pull away, and your lips meet.", "You brush her lips with a finger and kiss her before she can say a word."));
+            else if (p.Kiss == "wary") b.Narr(Lines.Pick("You lean in. She stiffens, hesitates... and doesn't pull away.", "Your lips meet hers. She holds still, eyes squeezed shut.", "You lean in slowly. She flinches, then lets you kiss her.", "She freezes when you lean in, but she doesn't turn her face away."));
+            else if (p.Kiss == "no") b.Narr(Lines.Pick("You lean in for a kiss. She turns her face away.", "Your finger brushes her lips; she steps back before you can lean in.", "You lean in. She puts a hand on your chest and stops you."));
+            b.Face(h, p.Kiss == "yes" ? Feel.Love : p.Kiss == "wary" ? Feel.Shy : FeelOf(rule, c)).Her_(line);
             // Weight: she walks off after the third silence if she barely knows you; a crowd watching you
             // touch her gets talked about; a rival watching remembers.
-            Action after = null;
-            if (on == "idle" && c["idle"] == "3" && h.relation <= 0 && !h.isGirlfriend) after = () => { _endNext = true; };
-            else if (on == "touch" && c.ContainsKey("wrel"))
+            Action after = p.PartName != null ? SpotAfter(p) : null;
+            if (p.PartName == null && on == "idle" && c["idle"] == "3" && h.relation <= 0 && !h.isGirlfriend) after = () => { _endNext = true; };
+            else if (p.PartName == null && on == "touch" && c.ContainsKey("wrel"))
             {
                 var near = Onlookers(h);
                 if (c["wrel"] == "rival" && near.Count > 0) after = () => { foreach (var x in near.Where(x => Social.Bond(h, x) <= -30)) Arcs.AddBond(key, GirlInfo.Key(x), -2); };
@@ -407,7 +490,7 @@ namespace Joojkk.CampusLife
             b.Face(h, Feel.Shy).Say(h, Lines.T(th, "I-it's not like that!", "Shut up, it's not a date!", "...Go away.", "Maybe it is. Jealous?"));
             b.Face(by, Feel.Smile).Say(by, Lines.T(tb, "Hehe. I'll leave you two alone, then.", "Okay, okay! Have fun, lovebirds!", "...Sure. See you later.", "Don't do anything I wouldn't do~"));
             // The friend tells the others: the story spreads, a little warmer between the two of them.
-            return () => { Arcs.AddBond(kh, kb, 2); Social.Add(Social.Kinds.Flirted, h, new[] { by }); };
+            return () => { Arcs.AddBond(kh, kb, 2); Social.Add(Social.Kinds.Flirted, h, new[] { by }, Witness.Flirt); };
         }
     }
 }
