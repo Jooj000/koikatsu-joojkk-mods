@@ -67,6 +67,13 @@ namespace Joojkk.CampusLife
 #endif
         }
 
+        /// <summary>After the game's own camera of the talk screen: the frame with both girls (TrioStage).</summary>
+        private void LateUpdate()
+        {
+            try { if (TrioStage.On) TrioStage.LateTick(Conversation.TrioUiVisible); }
+            catch (Exception e) { Log.LogDebug("Trio camera: " + e.Message); }
+        }
+
         private void Update()
         {
             try
@@ -78,6 +85,7 @@ namespace Joojkk.CampusLife
                 Consent.Tick();
                 Stage.Tick();
                 Sunday.Tick();
+                Achievements.Tick();
                 TransitionScreen.Update();
                 ToastUi.Update();
                 SpotHint.Update();

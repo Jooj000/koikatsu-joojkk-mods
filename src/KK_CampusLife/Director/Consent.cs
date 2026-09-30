@@ -209,6 +209,44 @@ namespace Joojkk.CampusLife
             }
         }
 
+        /// <summary>
+        /// personalidade não aberta e valores que contam interesse, sendo eles favor e H acima de 50% na amiga"):
+        /// "yes", "wary" or "no". Interest is favor and H above half on a friend; then mood, trust, a grudge, who is
+        /// watching and how many times you tried. A girl who says yes but is not open by nature lets it happen warily;
+        /// a girlfriend and an open girl just say yes. The same try in the same period gets the same answer.
+        /// </summary>
+        public static string Kiss(SaveData.Heroine h, int tries, int crowd, out string why)
+        {
+            var r = new List<string>();
+            if (h.isAnger) { why = "angry with you"; return "no"; }
+            var gs = S.Girl(GirlInfo.Key(h));
+            var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
+            var pace = Profile(h);
+            var interest = h.favor > 50 && h.lewdness > 50;
+            float c;
+            if (h.isGirlfriend) { c = 0.92f; r.Add("girlfriend"); }
+            else if (h.relation >= 1 && interest) { c = 0.55f + (h.favor - 50) / 200f + (h.lewdness - 50) / 200f; r.Add("friend, interested"); }
+            else if (h.relation >= 1) { c = 0.08f + h.favor / 400f + h.lewdness / 500f; r.Add("friend"); }
+            else if (h.relation == 0) { c = 0.03f + h.lewdness / 600f; r.Add("knows you"); }
+            else { c = 0f; r.Add("stranger"); }
+            r.Add(pace.ToString().ToLowerInvariant());
+            if (mood == Mood.Flirty) { c += 0.2f; r.Add("flirty"); }
+            else if (mood == Mood.Cheerful) c += 0.05f;
+            else if (mood == Mood.Upset || mood == Mood.Stressed) { c -= 0.3f; r.Add(mood.ToString().ToLowerInvariant()); }
+            c += Mathf.Clamp((Social.Trust(h) - 50) / 500f, -0.1f, 0.1f);
+            if (Social.Grudge(h) != null) { c -= 0.15f; r.Add("a grudge"); }
+            if (crowd >= 4) { c -= h.isGirlfriend ? 0.3f : 0.2f; r.Add("a crowd"); }
+            if (tries > 1) { c -= 0.15f * (tries - 1); r.Add("try " + tries); }
+            c = Mathf.Clamp01(c);
+            var yes = Dice(h, "kiss" + tries) < c;
+            var answer = !yes ? "no" : h.isGirlfriend || pace == Pace.Open ? "yes" : "wary";
+            why = Mathf.RoundToInt(c * 100) + "%: " + string.Join(", ", r.ToArray());
+            var line = GirlInfo.FirstName(h) + ": kiss -> " + answer + " (" + why + ")";
+            if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/kiss" + tries)) Note(line);
+            else CampusLifePlugin.Log.LogInfo("Director decides: " + line);
+            return answer;
+        }
+
         /// <summary>The director's answer to the player asking her.</summary>
         /// <summary>What the director would answer now, without logging it as a decision.</summary>
         public static bool WouldSay(SaveData.Heroine h, Ask ask)

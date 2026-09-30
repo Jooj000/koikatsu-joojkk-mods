@@ -276,7 +276,8 @@ namespace Joojkk.CampusLife
                     var pose = VariedPose(new List<string>(), PosePool(__instance, "idle", 0), "idle", gamePose);
                     if (pose != null) __result.pose = pose;
                 }
-                if (Active) _pend = new Pend { Her = h, Kind = "idle", At = Time.realtimeSinceStartup, Info = __instance };
+                // With both girls a silence is theirs to fill (TrioTick), not her "are you listening?".
+                if (Active && _trio == null) _pend = new Pend { Her = h, Kind = "idle", At = Time.realtimeSinceStartup, Info = __instance };
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Idle clip: " + e.Message); }
         }

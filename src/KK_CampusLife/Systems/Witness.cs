@@ -65,6 +65,9 @@ namespace Joojkk.CampusLife
                     saw.Add(n.heroine);
                     notes.Add(name + " " + (dist <= near && angle > Cone ? "heard" : "saw") + " (" + dist.ToString("0.0") + " m, " + (int)angle + "°)");
                 }
+                // The other girl of a talk with both is right beside you: she always sees it.
+                var other = Conversation.TrioOther(her);
+                if (other != null && !saw.Contains(other)) { saw.Add(other); notes.Add(GirlInfo.FirstName(other) + " saw (right beside you)"); }
                 if (notes.Count > 0) CampusLifePlugin.Log.LogInfo("Witness " + what + (her != null ? " with " + GirlInfo.FirstName(her) : "") + ": " + string.Join("; ", notes.ToArray()));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Witness: " + e.Message); }

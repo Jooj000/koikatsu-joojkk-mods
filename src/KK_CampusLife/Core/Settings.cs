@@ -74,6 +74,7 @@ namespace Joojkk.CampusLife
         public static ConfigEntry<bool> DiscoverRequests;
         public static ConfigEntry<bool> DuoScenes;
         public static ConfigEntry<bool> DuoInTalk;
+        public static ConfigEntry<bool> TrioTalk;
         public static ConfigEntry<bool> EpisodesEnabled;
         public static ConfigEntry<int> EpisodeEveryDays;
         public static ConfigEntry<bool> DevotionEnabled;
@@ -171,6 +172,7 @@ namespace Joojkk.CampusLife
             DiscoverRequests = B(c, gi, "Requests must be discovered", true, "Girls don't post their problems on the board: you learn about them by letting her talk, asking her friends about her, or noticing (Intelligence). Requests pay in favor, trust, reputation and items; only jobs pay money.");
             DuoScenes = B(c, gi, "Two-girl scenes", true, "Sometimes two friends come over to talk to you together: friendship jealousy, introductions, a quarrel where you take a side, gossip told as a pair.");
             DuoInTalk = B(c, gi, "Two-girl scenes in the talk screen", true, "The two girls walk over and call you on the map, then the scene plays in the talk screen with both of them, and they say goodbye on the map. Off: everything plays on the map.");
+            TrioTalk = B(c, gi, "Talk with both girls", true, "After a two-girl scene the talk goes on with both of them side by side: pick who you talk to (one, the other, or both), the other girl reacts to what you do, they talk to each other, and sometimes they disagree and look to you to settle it.");
             EpisodesEnabled = B(c, gi, "Spotlight episodes", true, "The girls in the spotlight (or the ones you see most, in a small class) invite you to an outing played like the story mode: she stands in front of a painted background, with choices built from how close you are, your reputation, what you did for her, what she remembers and what you carry. Friendship stories (food, mysteries, festivals, heart-to-hearts); alone with her, the last choice can turn romantic: her hand, a kiss, a confession, or somewhere private (H).");
             EpisodeEveryDays = B(c, gi, "Days between spotlight episodes", 1, "At most one episode every N school days.", new AcceptableValueRange<int>(1, 7));
             TalkFatigue = B(c, gi, "Repeated questions count less", true, "The game's own questions give the same favor every time. From the 3rd conversation of the day with the same girl, only half (then a quarter) of that favor counts.");

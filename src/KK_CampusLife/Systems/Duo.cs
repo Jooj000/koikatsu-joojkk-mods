@@ -26,10 +26,12 @@ namespace Joojkk.CampusLife
         private static int _lastPeriod = -1;
         private static float _nextTry;
 
+        internal static bool Hold;
+
         /// <summary>Called about once a second from Calendar.Tick, when nothing else is playing.</summary>
         public static void Tick()
         {
-            if (!Campus.On || !Cfg.DuoScenes.Value || Busy || !Scenes.CanPlayOnMap) return;
+            if (!Campus.On || !Cfg.DuoScenes.Value || Hold || Busy || !Scenes.CanPlayOnMap) return;
             var period = S.Day * 16 + (int)G.CurrentMask;
             if (period == _lastPeriod || Time.realtimeSinceStartup < _nextTry) return;
             _nextTry = Time.realtimeSinceStartup + 20f;
@@ -65,7 +67,35 @@ namespace Joojkk.CampusLife
             LeftOut,    // a girl feels her best friend took her place with you
             Gossip,     // two friends have news about another girl
             Hangout,    // close friends who both like you just want your opinion
-            Caught      // your girlfriend saw you with her and confronts you both on the spot (Share)
+            Caught,     // your girlfriend saw you with her and confronts you both on the spot (Share)
+            // Everyday moments: friends who both know you come over with nothing wrong, just to be with you.
+            Lunch,      // lunchtime, one of them likes you: eat together
+            AfterClub,  // same club, club or after school: how it went
+            Study,      // exam week, same class: study together
+            Season,     // a festival or seasonal day this week: plans
+            Trisal      // both your girlfriends, and they agreed to share you
+        }
+
+        /// <summary>The moment's name in duo3.dlg and in the talk with both (the lines and the number of turns follow it).</summary>
+        internal static string MomentOf(Motive m)
+        {
+            switch (m)
+            {
+                case Motive.Rivals: return "rivals";
+                case Motive.Confront: return "confront";
+                case Motive.Thanks: return "thanks";
+                case Motive.Quarrel: return "quarrel";
+                case Motive.Introduce: return "bestfriend";
+                case Motive.LeftOut: return "leftout";
+                case Motive.Gossip: return "gossip";
+                case Motive.Caught: return "caught";
+                case Motive.Lunch: return "lunch";
+                case Motive.AfterClub: return "club";
+                case Motive.Study: return "study";
+                case Motive.Season: return "season";
+                case Motive.Trisal: return "trisal";
+                default: return "hangout";
+            }
         }
 
         internal sealed class Plan
@@ -84,15 +114,29 @@ namespace Joojkk.CampusLife
             var player = act != null && act.Player != null ? act.Player.transform.position : Vector3.zero;
             return act.npcList.Where(n => n != null && n.heroine != null && n.isActive && n.mapNo == act.Map.no && GirlInfo.IsRegular(n.heroine)
                                           && (n.transform.position - player).sqrMagnitude < 20f * 20f && n.AI != null && n.AI.isRunning
-                                          && n.heroine.talkTime > 0 // the game would end the talk at once (she called you over, then sent you away)
-                                          && Rested(n.heroine)).ToList();
+                                          && n.heroine.talkTime > 0).ToList(); // the game would end the talk at once (she called you over, then sent you away)
         }
 
-        /// <summary>A girl comes over with someone at most every other day.</summary>
-        private static bool Rested(SaveData.Heroine h)
+        /// <summary>The same pair with the same reason (and the same incident) is remembered with the period it played.</summary>
+        private static string RepeatKey(Plan p)
         {
-            var d = S.Girl(GirlInfo.Key(h)).DuoDay;
-            return d < 0 || S.Day - d >= 2;
+            var ka = GirlInfo.Key(p.A.heroine);
+            var kb = GirlInfo.Key(p.B.heroine);
+            if (string.CompareOrdinal(ka, kb) > 0) { var x = ka; ka = kb; kb = x; }
+            return "duo:" + ka + "+" + kb + ":" + p.Why + (p.Inc != null ? ":" + p.Inc.Id : "");
+        }
+
+        /// <summary>
+        /// Instead of "every other day": a pair and reason that just played weighs less and comes back with
+        /// time; never twice in the same period, a quarter the same day, then 65%, 95%, full.
+        /// </summary>
+        private static float Fresh(Plan p)
+        {
+            int at;
+            if (!S.Buffs.TryGetValue(RepeatKey(p), out at)) return 1f;
+            if (at == S.Day * 16 + (int)G.CurrentMask) return 0f;
+            var days = S.Day - at / 16;
+            return days <= 0 ? 0.25f : Mathf.Clamp01(0.35f + 0.3f * days);
         }
 
         /// <summary>Every motive found among the girls nearby; one is drawn by weight (stronger reasons first).</summary>
@@ -104,7 +148,9 @@ namespace Joojkk.CampusLife
                 for (var j = i + 1; j < near.Count; j++)
                 {
                     var p = FindMotive(near[i], near[j]);
-                    if (p != null) plans.Add(p);
+                    if (p == null) continue;
+                    p.Weight *= Fresh(p);
+                    if (p.Weight > 0f) plans.Add(p);
                 }
             if (plans.Count == 0) return null;
             var roll = Random.value * plans.Sum(p => p.Weight);
@@ -131,6 +177,9 @@ namespace Joojkk.CampusLife
                     return MakePlan(pair[0], pair[1], Motive.Caught, 12f, null);
             }
 
+            // Both your girlfriends, who agreed to share you: they come over together.
+            if (a.isGirlfriend && b.isGirlfriend && Harem.Agreed(a, b)) return MakePlan(na, nb, Motive.Trisal, 3f, null);
+
             // Your girlfriend and a girl who clearly likes you.
             if (a.isGirlfriend != b.isGirlfriend && (a.isGirlfriend ? b : a).favor >= 70)
                 return a.isGirlfriend ? MakePlan(na, nb, Motive.Rivals, 3f, null) : MakePlan(nb, na, Motive.Rivals, 3f, null);
@@ -149,7 +198,7 @@ namespace Joojkk.CampusLife
                 }
             }
             if (bond <= -30) return MakePlan(na, nb, Motive.Quarrel, 2f, null);
-            if (bond < 35) return null;
+            if (bond < 35) return Everyday(na, nb, bond);
 
             // A best friend you have never talked to, brought by a girl who is already your friend (a stranger came to
             if (bond >= 45)
@@ -168,8 +217,27 @@ namespace Joojkk.CampusLife
             gossip = Social.Gossip(b);
             if (gossip != null) return MakePlan(nb, na, Motive.Gossip, 1.5f, gossip);
 
+            var day = Everyday(na, nb, bond);
+            if (day != null) return day;
             // Close friends who both like you: no news, they just want to see you.
             if (bond >= 60 && Social.Trust(a) >= 40 && Social.Trust(b) >= 40) return MakePlan(na, nb, Motive.Hangout, 0.5f, null);
+            return null;
+        }
+
+        /// <summary>Friends who both know you, with a reason in the day itself: lunch, club, the exams, an event this week.</summary>
+        private static Plan Everyday(NPC na, NPC nb, int bond)
+        {
+            var a = na.heroine;
+            var b = nb.heroine;
+            if (bond < 25 || !YourFriend(a) || !YourFriend(b)) return null;
+            var lead = a.favor >= b.favor ? na : nb;   // the one who likes you more brings the other
+            var other = lead == na ? nb : na;
+            var mask = G.CurrentMask;
+            if (Calendar.IsExamWeek && a.schoolClass == b.schoolClass) return MakePlan(lead, other, Motive.Study, 1.5f, null);
+            if (mask == PeriodMask.Lunch && Mathf.Max(a.favor, b.favor) >= 50) return MakePlan(lead, other, Motive.Lunch, 1.5f, null);
+            if ((mask == PeriodMask.Club || mask == PeriodMask.After) && !GirlInfo.InNoClub(a) && a.clubActivities == b.clubActivities)
+                return MakePlan(lead, other, Motive.AfterClub, 1.5f, null);
+            if (Calendar.SeasonEventThisWeek != "") return MakePlan(lead, other, Motive.Season, 1.2f, null);
             return null;
         }
 
@@ -324,6 +392,18 @@ namespace Joojkk.CampusLife
                     else if (c == "calm") { Social.AddTrust(a, 3); Social.AddTrust(bb, 3); Arcs.AddBond(GirlInfo.Key(a), GirlInfo.Key(bb), 10); Arcs.AddBond(GirlInfo.Key(bb), GirlInfo.Key(a), 10); S.Reputation = Mathf.Clamp(S.Reputation + 2, 0, 100); }
                 };
             }
+            else if (plan.Why >= Motive.Lunch)
+            {
+                // The everyday moments: their reason in their own words (duo3.dlg); the talk with both does the rest.
+                Conversation.TrioOpener(intro, sb, a, bb, MomentOf(plan.Why));
+                if (!inTalk || !Cfg.TrioTalk.Value)
+                {
+                    sb.Choice("Spend a little time with them.", "join", "Say you're busy right now.", "busy");
+                    sb.Branch("join"); sb.Say(a, Lines.T(ta, "Yay... thank you.", "Woohoo!", "Good.", "Knew you'd say yes~")); sb.End();
+                    sb.Branch("busy"); sb.Say(bb, Lines.T(tb, "Ah... okay, next time.", "Boo! Next time then!", "...Understood.", "Your loss~")); sb.End();
+                }
+                result = c => { if (c != "busy") { G.AddFavor(a, 2, 0); G.AddFavor(bb, 2, 0); Arcs.AddBond(GirlInfo.Key(a), GirlInfo.Key(bb), 1); } };
+            }
             else
             {
                 // A comes to you; B is her best friend you never met (Introduce) or the friend who took her place (LeftOut).
@@ -405,6 +485,9 @@ namespace Joojkk.CampusLife
         /// <summary>The talk scene opened for a duo with this girl (the conversation menu stays out of it).</summary>
         public static SaveData.Heroine TalkHer { get; private set; }
 
+        /// <summary>The talk scene opened for a duo that goes on with both girls: our conversation attaches, but waits.</summary>
+        public static bool TrioPending { get; private set; }
+
         /// <summary>
         /// These two come over now: with the director's motive if they have one, else as close friends
         /// passing the time.
@@ -419,7 +502,7 @@ namespace Joojkk.CampusLife
         {
             if (Busy || plan == null || plan.A == null || plan.B == null || G.Act == null || G.Act.Player == null) return false;
             var intro = new SceneBuilder(null, false);
-            var show = new Show { A = plan.A, B = plan.B, Name = "motive " + plan, Intro = intro };
+            var show = new Show { A = plan.A, B = plan.B, Name = "motive " + plan, Intro = intro, Trio = Cfg.TrioTalk.Value ? MomentOf(plan.Why) : null };
             show.Main = inTalk =>
             {
                 Action<string> r;
@@ -428,10 +511,12 @@ namespace Joojkk.CampusLife
                 return sb;
             };
             show.Outro = () => Outro(plan.A.heroine, plan.B.heroine);
+            show.Done = talked => { if (talked) Achievements.Count("duo:" + MomentOf(plan.Why), plan.A.heroine); };
             var main = show.Main(true); // fills the intro's narration too
             CallOver(intro, plan.A.heroine, plan.B.heroine);
             if (!Stage(show, main)) return false;
             foreach (var h in new[] { plan.A.heroine, plan.B.heroine }) S.Girl(GirlInfo.Key(h)).DuoDay = S.Day;
+            S.Buffs[RepeatKey(plan)] = S.Day * 16 + (int)G.CurrentMask;
             return true;
         }
 
@@ -449,6 +534,7 @@ namespace Joojkk.CampusLife
             public Func<SceneBuilder> Outro;        // may be null
             public Func<bool> IntoH;                // may be null; true after the scene: the talk ends in the game's H
             public Action<bool> Done;               // may be null; true when the scene really played
+            public string Trio;                     // may be null; the moment: after the scene the talk goes on with both
         }
 
         /// <summary>Starts a staged scene (Spotlight episodes use it too). <paramref name="main"/> is Main(true), already built.</summary>
@@ -501,6 +587,8 @@ namespace Joojkk.CampusLife
             string choice = null;
             var talked = false;
             var intoH = false;
+            var trioOn = false;
+            var trioEnd = "";
             try { agents = Stop(na, nb); }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo stop: " + e.Message); }
 
@@ -526,7 +614,8 @@ namespace Joojkk.CampusLife
                 {
                     Release(na, nb, agents, false); // the game pauses and hides everyone for the talk itself
                     agents = null;
-                    TalkHer = na.heroine;
+                    var trio = show.Trio != null && nb != null;
+                    if (trio) TrioPending = true; else TalkHer = na.heroine;
                     G.Act.SceneEvent(na);
                     yield return Wait(() => Ready(G.TalkScene), 40f);
                     var ts = G.TalkScene;
@@ -544,18 +633,46 @@ namespace Joojkk.CampusLife
                             Step("talk part over, choice '" + choice + "'");
                         }
                         else Step("could not play in the talk scene");
-                        try { intoH = talked && show.IntoH != null && G.TalkScene == ts && show.IntoH() && IntoH(ts); }
-                        catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
-                        try { if (!intoH && G.TalkScene == ts) Traverse.Create(ts).Method("CommandFunc", new object[] { -1 }).GetValue(); }
-                        catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo end talk: " + e.Message); }
+                        TrioPending = false;
+                        // The talk goes on with both of them: who you talk to, their reactions, how it ends.
+                        if (trio && talked && G.TalkScene == ts)
+                        {
+                            try { trioOn = Conversation.TrioBegin(ts, nb, show.Trio); }
+                            catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+                            Step(trioOn ? "the talk goes on with both (" + show.Trio + ")" : "the talk with both did not start");
+                            if (trioOn)
+                            {
+                                yield return Wait(() => !Conversation.TrioOn || G.TalkScene != ts, 1800f);
+                                trioEnd = Conversation.TrioEnding;
+                                Step("talk with both over: " + trioEnd);
+                            }
+                        }
+                        if (!trioOn)
+                        {
+                            try { intoH = talked && show.IntoH != null && G.TalkScene == ts && show.IntoH() && IntoH(ts); }
+                            catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+                            try { if (!intoH && G.TalkScene == ts) Traverse.Create(ts).Method("CommandFunc", new object[] { -1 }).GetValue(); }
+                            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo end talk: " + e.Message); }
+                        }
                     }
+                    TrioPending = false;
+                    var h3 = trioEnd == "h3";
                     if (intoH) yield return Wait(() => G.TalkScene == null, 60f);
-                    else yield return Wait(() => G.TalkScene == null && G.IsFreeRoaming, 60f);
+                    // With both, the player may go on talking to the first girl (the other walked off): wait for him.
+                    else yield return Wait(() => G.TalkScene == null && G.IsFreeRoaming, trioOn ? 1800f : 60f);
+                    if (h3)
+                    {
+                        intoH = true;
+                        yield return CampusLifePlugin.Instance.StartCoroutine(H3(na, nb));
+                    }
                     TalkHer = null;
                     Step(intoH ? "talk closed into the game's H" : "back on the map, free roaming " + G.IsFreeRoaming);
                     if (!intoH && G.IsFreeRoaming)
                     {
                         // The second girl stood beside the talk scene's copy of the first one: back to her own spot.
+                        // The one who walked off in the talk with both was hidden there: she is back on the map, walking away.
+                        try { if (trioEnd == "bleft" && nb != null && !nb.gameObject.activeSelf) nb.SetActive(true); }
+                        catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo B back: " + e.Message); }
                         try { if (nb != null && spots.Length > 1) nb.transform.position = spots[1]; }
                         catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo back to spot: " + e.Message); }
                         try { agents = Stop(na, nb); Face(na, nb); }
@@ -587,8 +704,8 @@ namespace Joojkk.CampusLife
                     }
                     catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
 
-                    // 4. Back on the map: a last word each.
-                    var outro = show.Outro != null && !intoH ? show.Outro() : null;
+                    // 4. Back on the map: a last word each (not when one of them walked off, or they went off with you).
+                    var outro = show.Outro != null && !intoH && trioEnd != "aleft" && trioEnd != "bleft" ? show.Outro() : null;
                     if (outro != null && G.IsFreeRoaming)
                     {
                         done = false;
@@ -600,6 +717,7 @@ namespace Joojkk.CampusLife
             else if (_besideAgentOff != null) Release(na, nb, new bool[2]);
             _besideAgentOff = null;
             TalkHer = null;
+            TrioPending = false;
             Scenes.Owner = null;
             Busy = false;
             LastPlayed = talked;
@@ -609,6 +727,45 @@ namespace Joojkk.CampusLife
         }
 
         private static void Step(string what) { CampusLifePlugin.Log.LogInfo("Duo: " + what); }
+
+        /// <summary>
+        /// Both said yes to somewhere private: the game's own H with the two of them (an action point H, as a teacher's
+        /// event does, with both girls as its partners), once the map is free after the talk.
+        /// </summary>
+        private static IEnumerator H3(NPC na, NPC nb)
+        {
+            yield return Wait(() => G.IsFreeRoaming && !Scenes.Running, 15f);
+            var act = G.Act;
+            IEnumerator run = null;
+            try
+            {
+                if (act != null && act.Player != null && na != null && nb != null)
+                {
+                    act.Player.isActionNow = true;
+                    // The game's own 3P (free H mode 3, and a girl joining an H): category 3000 at a 3P spot. Without it
+                    // the H opens in the one-girl category, the second girl has no animation and the load hangs
+                    //.
+                    var pos = act.Player.position;
+                    var rot = act.Player.rotation;
+                    try
+                    {
+                        var spot = GlobalMethod.GetHPointAppointNull(new GlobalMethod.HPointAppointNullDatail
+                        {
+                            mode = HFlag.EMode.houshi3P, idMap = act.Map != null ? act.Map.no : 0, kindGet = 2,
+                            lstCategory = new List<int> { 3000 }, pos = pos
+                        });
+                        if (spot != null) { pos = spot.pos; rot = spot.rot; }
+                    }
+                    catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo H with both, spot: " + e.Message); }
+                    run = act.ChangeHSpecial(new List<int> { 3000 }, false, pos, rot, d => { }, na, nb);
+                }
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogError("Duo H with both: " + e); }
+            if (run == null) { if (act != null && act.Player != null) act.Player.isActionNow = false; Step("H with both did not start"); yield break; }
+            Step("H with both " + GirlInfo.FirstName(na.heroine) + " and " + GirlInfo.FirstName(nb.heroine));
+            yield return act.StartCoroutine(run);
+            if (act != null && act.Player != null) act.Player.isActionNow = false;
+        }
 
         /// <summary>
         /// Ends the talk the way the game does when she invites you to H and you accept (TalkScene, heroine event 1):

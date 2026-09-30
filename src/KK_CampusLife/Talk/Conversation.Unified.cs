@@ -66,6 +66,12 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var h = s.Her;
             PruneRepeats();
+            if (_trio != null && _trio.Target != TrioWho.A)
+            {
+                // The second girl, or both: our own five (the game only knows the first one).
+                noTime = false;
+                return TrioCats(false);
+            }
             if (refreshGame) try { if (UpdateUiMethod != null) UpdateUiMethod.Invoke(_scene, new object[] { false }); } catch (Exception e) { CampusLifePlugin.Log.LogDebug("Talk UpdateUI: " + e.Message); }
             // An empty blue bar, or the point given back only for a request: the free options only.
             noTime = h.talkTime <= 0 || Board.TalkKeptFor(h);
@@ -154,8 +160,8 @@ namespace Joojkk.CampusLife
 
         // ================= the five buttons =================
 
-        private static readonly string[] CatNames = { "Talk", "Actions", "Do together", "Romance", "Spicy" };
-        private static readonly string[] CatCaptions = { "Talk", "Actions", "Together", "Romance", "Spicy" };
+        private static string[] CatNames = { "Talk", "Actions", "Do together", "Romance", "Spicy" };
+        private static string[] CatCaptions = { "Talk", "Actions", "Together", "Romance", "Spicy" };
         private static readonly List<Button> CatButtons = new List<Button>();
         private static readonly List<TextMeshProUGUI> CatTexts = new List<TextMeshProUGUI>();
         private static readonly List<GameObject> CatMade = new List<GameObject>();
@@ -188,9 +194,9 @@ namespace Joojkk.CampusLife
                     btn = go.GetComponent<Button>();
                     ((RectTransform)go.transform).anchoredPosition = trt.anchoredPosition + new Vector2(0f, -step * i);
                     foreach (Transform child in go.transform) if (child.name == "cl_cat_caption") UnityEngine.Object.Destroy(child.gameObject);
-                    var name = CatNames[i];
+                    var idx = i;   // by place: with both girls the names change (Settle, Group actions)
                     btn.onClick = new Button.ButtonClickedEvent();
-                    btn.onClick.AddListener(() => CatClick(name));
+                    btn.onClick.AddListener(() => CatClick(CatNames[idx]));
                 }
                 try
                 {
@@ -299,6 +305,7 @@ namespace Joojkk.CampusLife
             var n = CatNames.FirstOrDefault(x => string.Equals(x, name, StringComparison.OrdinalIgnoreCase) || x.StartsWith(name, StringComparison.OrdinalIgnoreCase));
             var ci = Array.FindIndex(CatCaptions, x => string.Equals(x, name, StringComparison.OrdinalIgnoreCase));
             if (n == null) n = ci >= 0 ? CatNames[ci] : name;   // the caption works too ("Together" is "Do together")
+            if (RootOpen && _cat == n) return;
             CatClick(n);
         }
 
@@ -663,6 +670,7 @@ namespace Joojkk.CampusLife
         {
             var h = s.Her;
             var t = Table(lvl, q);
+            if (_trio != null) { _trio.LastLvl = lvl; _trio.LastQ = q; _trio.LastTo = h; }
             // Her rhythm (reserved, normal, open; the day's momentum; the spotlight) scales what is gained, not what is lost.
             var factor = RepeatFactor(h, repKey) * Rhythm.Gain(h, (int)lvl);
             if (q == Q.Good) Rhythm.OnGood(h);
@@ -775,6 +783,7 @@ namespace Joojkk.CampusLife
             SpendTalkTime(s.Her);
             if (FriendsNow(s.Her)) return;
             _sub = null;
+            if (TrioAfter()) return;   // with both girls: the other one reacts, they talk, or the moment ends
             Reopen();   // the list again; with the blue bar empty it keeps only gifts and requests, or says goodbye
         }
 

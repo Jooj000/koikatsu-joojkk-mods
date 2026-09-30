@@ -82,6 +82,7 @@ namespace Joojkk.CampusLife
             root["dating"] = Dating.Cast<object>().ToList();
             root["said"] = LinesSaid.Cast<object>().ToList();
             root["tdone"] = TopicsDone.Cast<object>().ToList();
+            WriteAch(root);
         }
 
         private void ReadLore(Dictionary<string, object> d)
@@ -96,6 +97,7 @@ namespace Joojkk.CampusLife
             Dating = JsonLists.Strings(d.GetList("dating"));
             LinesSaid = JsonLists.Strings(d.GetList("said"));
             TopicsDone = JsonLists.Strings(d.GetList("tdone"));
+            ReadAch(d);
         }
     }
 }

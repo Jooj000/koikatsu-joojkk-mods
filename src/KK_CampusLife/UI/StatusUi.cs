@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace Joojkk.CampusLife
 {
-    internal enum PanelTab { None, Today, Calendar, Activities, Details, Shop }
+    internal enum PanelTab { None, Today, Calendar, Activities, Details, Album, Shop }
 
     /// <summary>
     /// Campus Life inside the game's own clipboard (Character Status screen, middle mouse button):

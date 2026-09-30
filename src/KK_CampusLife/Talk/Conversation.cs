@@ -77,7 +77,7 @@ namespace Joojkk.CampusLife
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Conversation rehook: " + e.Message); }
             // Safety net: whatever opened the list, it shows our page (never the game's buttons).
             var shown = _root.activeInHierarchy;
-            if (shown && !IsOpen && !GiftMenu.IsOpen && !Scenes.Running && !_goodbye) Build();
+            if (shown && !IsOpen && !GiftMenu.IsOpen && !Scenes.Running && !_goodbye && !TrioWaiting) Build();
             if (Unified && (_listen.gameObject.activeSelf || _event.gameObject.activeSelf)) { _listen.gameObject.SetActive(false); _event.gameObject.SetActive(false); }
             else if (!shown && IsOpen && !GiftMenu.IsOpen) Clear();
             if (_eventRoot != null && _eventRoot.activeSelf) _eventRoot.SetActive(false);
@@ -91,7 +91,11 @@ namespace Joojkk.CampusLife
             OpenOnEntry(ts);
             TickCatBar();
             TickReact(ts);
+            TrioTick(ts);
         }
+
+        /// <summary>Duo is bringing the second girl over: the director's scene first, then the talk with both.</summary>
+        private static bool TrioWaiting { get { return Duo.TrioPending && _trio == null; } }
 
         /// <summary>
         /// What she brings up by herself (a note, something she saw) plays as soon as the game's greeting is over, not
@@ -101,7 +105,7 @@ namespace Joojkk.CampusLife
         {
             try
             {
-                if (!Unified || _root == null || Scenes.Running || _goodbye || GiftMenu.IsOpen || ADV.Program.isADVProcessing || !CanvasOn(ts)) return;
+                if (!Unified || _root == null || Scenes.Running || _goodbye || GiftMenu.IsOpen || ADV.Program.isADVProcessing || !CanvasOn(ts) || TrioWaiting) return;
                 var s = Sess;
                 if (s == null || s.Did.Contains("opening")) return;
                 if (OpeningUnified(s)) Hide();
@@ -221,6 +225,7 @@ namespace Joojkk.CampusLife
         public static void Close()
         {
             _reopenAt = 0f;
+            TrioCleanup();
             Finish(true);
             Clear();
             ClearCatBar();
@@ -409,7 +414,7 @@ namespace Joojkk.CampusLife
         private static void Build()
         {
             var s = Sess;
-            if (s == null || _list == null) return;
+            if (s == null || _list == null || TrioWaiting) return;
             if (Unified ? OpeningUnified(s) : Opening(s)) { Hide(); return; }
             Clear();
             if (Unified)
@@ -1397,6 +1402,7 @@ namespace Joojkk.CampusLife
             if (s != null && s.Her != null && s.Her.talkTime <= 0 && !Board.HasOpenNow(s.Her)) { Game(-1); return; }
             if (s != null && FriendsNow(s.Her)) return;
             _sub = null;
+            if (TrioAfter()) return;
             Reopen();
         }
 
@@ -1421,7 +1427,7 @@ namespace Joojkk.CampusLife
         /// </summary>
         private static bool FriendsNow(SaveData.Heroine h)
         {
-            if (_scene == null || h == null || h.relation != 0 || h.favor < 100 || h.isGirlfriend || StartAdvList == null || TalkEndMethod == null) return false;
+            if (_scene == null || h == null || h != _scene.targetHeroine || h.relation != 0 || h.favor < 100 || h.isGirlfriend || StartAdvList == null || TalkEndMethod == null) return false;
             try
             {
                 var tr = Traverse.Create(_scene);
@@ -1498,6 +1504,7 @@ namespace Joojkk.CampusLife
                 btn.onClick.AddListener(() =>
                 {
                     if (Scenes.Running) return;
+                    if (_trio != null) _trio.QuietSince = Time.realtimeSinceStartup;
                     try { Sfx.Select(); onClick(); }
                     catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
                 });

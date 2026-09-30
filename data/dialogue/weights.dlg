@@ -61,3 +61,7 @@
 
 @weights @meopen
 - rel=3 mood=2.5 role=2.5 placeid=1.5 period=1.5
+
+# The talk with both girls: how the two get along and why they came lead; who she is to you colours it.
+@weights duo3
+- pair=3 trisal=3 wrel=3 kiss=3 argue=3 moment=2.5 lvl=2.5 q=2.5 act=2 dating=2.5 othergf=2.5 likes=2 otherlikes=2 tone=1.5 mood=1.5 placeid=1 period=1

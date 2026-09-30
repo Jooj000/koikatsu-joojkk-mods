@@ -15,7 +15,7 @@ namespace Joojkk.CampusLife
     /// everything works: the long explanations live there so the other tabs stay short).
     /// The school store is a separate view opened at the cafeteria.
     /// </summary>
-    internal static class CampusPanel
+    internal static partial class CampusPanel
     {
         private static RectTransform _root;
         private static RectTransform _tabs;
@@ -57,7 +57,7 @@ namespace Joojkk.CampusLife
             _tabs.Place(16f, 14f, 1840f, 44f);
             var x = 0f;
             TabButtons.Clear();
-            foreach (var tab in new[] { PanelTab.Today, PanelTab.Calendar, PanelTab.Activities, PanelTab.Details })
+            foreach (var tab in new[] { PanelTab.Today, PanelTab.Calendar, PanelTab.Activities, PanelTab.Details, PanelTab.Album })
             {
                 var t = tab;
                 var b = GameUi.Button(_tabs, "tab" + tab, tab.ToString(), () => Show(t, null));
@@ -88,6 +88,7 @@ namespace Joojkk.CampusLife
         {
             if (_root == null) return;
             if (tab == PanelTab.None) { Hide(); return; }
+            if (tab == PanelTab.Album) { if (place != null) _albumCat = place; place = null; }   // a category, not a place
             if (place != null) _place = place;
             if (tab == PanelTab.Activities && place == null && string.IsNullOrEmpty(_place)) _place = Places.CurrentId;
             _tab = tab;
@@ -128,6 +129,7 @@ namespace Joojkk.CampusLife
                     case PanelTab.Calendar: CalendarLeft(); CalendarRight(); break;
                     case PanelTab.Activities: ActivitiesLeft(); ActivitiesRight(); break;
                     case PanelTab.Details: DetailsLeft(); DetailsRight(); break;
+                    case PanelTab.Album: AlbumLeft(); AlbumRight(); break;
                     case PanelTab.Shop: ShopLeft(); ShopRight(); break;
                 }
             }

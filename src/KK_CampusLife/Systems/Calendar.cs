@@ -70,6 +70,17 @@ namespace Joojkk.CampusLife
 
         public static bool IsExamWeek { get { return Cfg.CalendarEnabled.Value && Schedule.Any(s => s.Id == "exam" && s.Week == LoopWeek); } }
 
+        /// <summary>This week's event other than the exams (a festival, a seasonal day), or "": girls talk about it.</summary>
+        public static string SeasonEventThisWeek
+        {
+            get
+            {
+                if (!Cfg.CalendarEnabled.Value) return "";
+                foreach (var s in Schedule) if (s.Week == LoopWeek && s.Id != "exam") return s.Id;
+                return "";
+            }
+        }
+
         // ---------------- day / period hooks ----------------
 
         public static void OnSchoolDay(Cycle.Week day)

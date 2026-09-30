@@ -148,6 +148,13 @@ namespace Joojkk.CampusLife
             }
             CampusLifePlugin.Log.LogInfo("Conversation: " + GirlInfo.FirstName(h) + ": " + (look ? "stared at" : "touched") + " " + part + " #" + n + " level " + level + (kiss != "" ? " kiss " + kiss : ""));
             _pend = new Pend { Her = h, Kind = "touch", PartName = part, Look = look, Level = level, Kiss = kiss, At = Time.realtimeSinceStartup, Info = Traverse.Create(ts).Property("info").GetValue<ActionGame.Communication.Info>() };
+            // With both girls the other one is right there: a kiss always gets her reaction, a touch sometimes.
+            if (_trio != null && h == _trio.A)
+            {
+                _trio.LastTo = h;
+                if (kiss != "") _trio.LastKiss = kiss;
+                else { _trio.LastLvl = look ? Lvl.Friend : Lvl.Romance; _trio.LastQ = level <= 0 ? Q.Good : level == 1 ? Q.Neutral : Q.Bad; }
+            }
             // The pose comes at once, the line when her reaction can show (TickReact).
             // No game part matches these places. The kiss looks for its own poses in her whole pose table (shy, happy;
             // annoyed or surprised when she turns away); the level's touch poses are the fallback. Never one that covers
@@ -195,43 +202,15 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Does she take the kiss? "yes", "wary" or "no". A girlfriend almost always (less with a crowd watching);
-        /// otherwise how close you are, whether she likes you, her mood and how lewd she is; never when she is angry, and
-        /// less each time you try again. A close friend who likes you a lot and has a high H (favor 80+, H 50+) lets it
-        /// era amiga máxima e com H alto... deveria pelo menos aceitar receosa").
         /// </summary>
-        private static string KissTaken(SaveData.Heroine h, int tries)
+        internal static string KissTaken(SaveData.Heroine h, int tries)
         {
-            if (h.isAnger) return "no";
-            if (KissRoll(h, tries)) return "yes";
-            var close = !h.isGirlfriend && h.relation >= 1 && h.favor >= 80 && h.lewdness >= 50 && tries <= 2;
-            var mood = MoodOf(h);
-            return close && mood != CampusLife.Mood.Upset && mood != CampusLife.Mood.Stressed ? "wary" : "no";
+            if (ForceKiss != null) return ForceKiss;
+            string why;
+            return Consent.Kiss(h, tries, Onlookers(h).Count, out why);
         }
 
         internal static string ForceKiss;
-
-        private static bool KissRoll(SaveData.Heroine h, int tries)
-        {
-            if (ForceKiss != null) return ForceKiss == "yes";
-            var crowd = Onlookers(h).Count;
-            float p;
-            if (h.isGirlfriend) p = 0.92f - (crowd >= 4 ? 0.3f : 0f);
-            else
-            {
-                p = 0f;
-                if (Interested(h)) p += 0.3f;
-                if (h.relation >= 2) p += 0.25f;
-                else if (h.relation == 1) p += 0.08f;
-                var mood = MoodOf(h);
-                if (mood == CampusLife.Mood.Flirty) p += 0.25f;
-                else if (mood == CampusLife.Mood.Upset || mood == CampusLife.Mood.Stressed) p -= 0.2f;
-                if (h.lewdness >= 60) p += 0.15f;
-                if (crowd >= 4) p -= 0.2f;
-            }
-            p -= 0.15f * (tries - 1);
-            return Random.value < Mathf.Clamp01(p);
-        }
 
         /// <summary>What a touch of ours leaves behind: the kiss is remembered (and seen), going too far costs favor.</summary>
         private static Action SpotAfter(Pend p)
@@ -245,6 +224,7 @@ namespace Joojkk.CampusLife
                     h.lewdness = Mathf.Min(100, h.lewdness + (wary ? 3 : 4));
                     // The kiss as a fact (Lore "kissed") and an incident only the girls who really saw it know.
                     Social.Add(Social.Kinds.Flirted, h, Witness.Who(h, Witness.Kiss), Witness.Kiss);
+                    Achievements.Kissed(h, wary);
                     if (!wary) return;
                     // A story out of it: she keeps thinking about it, and her "what are we" scene comes next time.
                     CampusLife.Memories.Add(h, "kiss_wary", "you kissed me, and I let you", 1, true);

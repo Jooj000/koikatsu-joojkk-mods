@@ -1,0 +1,1237 @@
+# The talk with both girls. Conversation.Trio picks these;
+# every rule has a stock line in the code as a fallback, so a missing slot only means the stock line.
+# Slots: {other} the other girl, {topic} what they disagree about, {event} this week's event.
+# Keys: moment (rivals confront thanks quarrel bestfriend leftout gossip hangout caught lunch club study season trisal),
+# pair (bff friend rival other: how the two get along), trisal, othergf, likes, otherlikes (yes/no),
+# lvl (friend romance spicy) q (good neutral bad) wrel (yourgf trisal bff friend rival other) for the witness,
+# kiss (yes wary no), argue (yes/no), kind (banter idle), act (what you did, for the replies).
+
+# ================= the opening of the everyday moments =================
+@rule duo3.open.a.lunch.gentle
+on duo3.open.a
+when moment=lunch tone=gentle
+feel smile
+- [Um... we were about to eat. Would you like to join us?|We saved you a seat... if you want it.|Lunch? With us? ...Please?]
+
+@rule duo3.open.a.lunch.energetic
+on duo3.open.a
+when moment=lunch tone=energetic
+feel smile
+- [Hey hey! Lunch! You're eating with us, right?!|There you are! We're starving, come on!|Lunch time! You're coming with us!]
+
+@rule duo3.open.a.lunch.cool
+on duo3.open.a
+when moment=lunch tone=cool
+feel smile
+- [We're having lunch. Join us.|You haven't eaten yet. Sit with us.|Lunch. Now. You're coming.]
+
+@rule duo3.open.a.lunch.teasing
+on duo3.open.a
+when moment=lunch tone=teasing
+feel smile
+- [We're having lunch. Join us.|You haven't eaten yet. Sit with us.|Lunch. Now. You're coming.]
+
+@rule duo3.open.b.lunch.gentle
+on duo3.open.b
+when moment=lunch tone=gentle
+- [I made a little extra today...|{Other} wouldn't stop talking about asking you.|It's nicer with three, right?]
+
+@rule duo3.open.b.lunch.energetic
+on duo3.open.b
+when moment=lunch tone=energetic
+- [I brought snacks to share!|Come on, before the bread's all gone!|The roof's free today, let's go!]
+
+@rule duo3.open.b.lunch.cool
+on duo3.open.b
+when moment=lunch tone=cool
+- [There's room.|We don't bite.|You'd better not say no~]
+
+@rule duo3.open.b.lunch.teasing
+on duo3.open.b
+when moment=lunch tone=teasing
+- [There's room.|We don't bite.|You'd better not say no~]
+
+@rule duo3.open.a.club.gentle
+on duo3.open.a
+when moment=club tone=gentle
+- [Ah... club just finished. We were talking about you.|Practice ran long today...|We just got out of club. Do you have a minute?]
+
+@rule duo3.open.a.club.energetic
+on duo3.open.a
+when moment=club tone=energetic
+- [Club was SO intense today! We have to tell you!|Phew, club's done! Guess what happened!|You missed it! Club was crazy today!]
+
+@rule duo3.open.a.club.cool
+on duo3.open.a
+when moment=club tone=cool
+- [Club's over. We wanted your opinion.|Practice is done. Spare a minute?|Club ended early. Lucky you.]
+
+@rule duo3.open.a.club.teasing
+on duo3.open.a
+when moment=club tone=teasing
+- [Club's over. We wanted your opinion.|Practice is done. Spare a minute?|Club ended early. Lucky you.]
+
+@rule duo3.open.b.club.gentle
+on duo3.open.b
+when moment=club tone=gentle
+- [We both messed up the same part... hehe.|{Other} did really well today, you know.|I'm so tired... but it was fun.]
+
+@rule duo3.open.b.club.energetic
+on duo3.open.b
+when moment=club tone=energetic
+- [I totally nailed it today! Ask {other}!|We're gonna win the next one, I can feel it!|Our captain made us run laps AGAIN!]
+
+@rule duo3.open.b.club.cool
+on duo3.open.b
+when moment=club tone=cool
+- [It went fine.|We have a meet coming up.|The club could use more people. Hint.]
+
+@rule duo3.open.b.club.teasing
+on duo3.open.b
+when moment=club tone=teasing
+- [It went fine.|We have a meet coming up.|The club could use more people. Hint.]
+
+@rule duo3.open.a.study.gentle
+on duo3.open.a
+when moment=study tone=gentle
+feel worried
+- [Exams are coming up... would you study with us?|I don't understand anything in this chapter...|Could you help us study? Please?]
+
+@rule duo3.open.a.study.energetic
+on duo3.open.a
+when moment=study tone=energetic
+feel worried
+- [Exams! Help! We're doomed!|Okay, study group! You're in it now!|Tell us you understand math. Please.]
+
+@rule duo3.open.a.study.cool
+on duo3.open.a
+when moment=study tone=cool
+feel worried
+- [Exams are this week. We're studying. Join us.|Three heads are better than two.|You look like you could use a study group.]
+
+@rule duo3.open.a.study.teasing
+on duo3.open.a
+when moment=study tone=teasing
+feel worried
+- [Exams are this week. We're studying. Join us.|Three heads are better than two.|You look like you could use a study group.]
+
+@rule duo3.open.b.study.gentle
+on duo3.open.b
+when moment=study tone=gentle
+- [I made notes... maybe they'll help.|{Other} says you're good at this.|We could quiz each other?]
+
+@rule duo3.open.b.study.energetic
+on duo3.open.b
+when moment=study tone=energetic
+- [If I fail I'm blaming both of you!|Snacks first, then studying! Deal?|I brought three highlighters!]
+
+@rule duo3.open.b.study.cool
+on duo3.open.b
+when moment=study tone=cool
+- [I've already done the reading.|If you slow us down, you buy the drinks.|Don't get distracted, okay?]
+
+@rule duo3.open.b.study.teasing
+on duo3.open.b
+when moment=study tone=teasing
+- [I've already done the reading.|If you slow us down, you buy the drinks.|Don't get distracted, okay?]
+
+@rule duo3.open.a.season.gentle
+on duo3.open.a
+when moment=season tone=gentle
+feel smile
+- [The {event} is this week... have you made plans?|We were talking about the {event}...|Are you going to the {event}?]
+
+@rule duo3.open.a.season.energetic
+on duo3.open.a
+when moment=season tone=energetic
+feel smile
+- [The {event}! The {event}! Are you ready?!|It's almost the {event}! We have SO many plans!|You know what week it is? {Event} week!]
+
+@rule duo3.open.a.season.cool
+on duo3.open.a
+when moment=season tone=cool
+feel smile
+- [The {event} is coming. We need a third.|About the {event}. We have a proposal.|You're free for the {event}, I assume.]
+
+@rule duo3.open.a.season.teasing
+on duo3.open.a
+when moment=season tone=teasing
+feel smile
+- [The {event} is coming. We need a third.|About the {event}. We have a proposal.|You're free for the {event}, I assume.]
+
+@rule duo3.open.b.season.gentle
+on duo3.open.b
+when moment=season tone=gentle
+- [It would be more fun with you...|We could go together, the three of us?|I've been looking forward to it all week.]
+
+@rule duo3.open.b.season.energetic
+on duo3.open.b
+when moment=season tone=energetic
+- [It's gonna be awesome! You HAVE to come!|We already decided you're coming!|I'm so excited I can't sit still!]
+
+@rule duo3.open.b.season.cool
+on duo3.open.b
+when moment=season tone=cool
+- [Think about it.|Don't make other plans.|We'll be waiting~]
+
+@rule duo3.open.b.season.teasing
+on duo3.open.b
+when moment=season tone=teasing
+- [Think about it.|Don't make other plans.|We'll be waiting~]
+
+@rule duo3.open.a.trisal.gentle
+on duo3.open.a
+when moment=trisal tone=gentle
+feel love
+- [Um... we both wanted to see you.|We talked, and... we wanted to spend time with you. Together.|Is it okay if we both stay with you a while?]
+
+@rule duo3.open.a.trisal.energetic
+on duo3.open.a
+when moment=trisal tone=energetic
+feel love
+- [Surprise! Double girlfriend attack!|We came as a set today! Hehe!|Guess who decided to team up?]
+
+@rule duo3.open.a.trisal.cool
+on duo3.open.a
+when moment=trisal tone=cool
+feel love
+- [We agreed. Today you're ours. Both of us.|We've decided to share you. Today, at the same time.|You have two girlfriends. Might as well see them together.]
+
+@rule duo3.open.a.trisal.teasing
+on duo3.open.a
+when moment=trisal tone=teasing
+feel love
+- [We agreed. Today you're ours. Both of us.|We've decided to share you. Today, at the same time.|You have two girlfriends. Might as well see them together.]
+
+@rule duo3.open.b.trisal.gentle
+on duo3.open.b
+when moment=trisal tone=gentle
+feel shy
+- [It's a little embarrassing... but I'm happy.|{Other} said it was okay...|Don't look at us like that...]
+
+@rule duo3.open.b.trisal.energetic
+on duo3.open.b
+when moment=trisal tone=energetic
+feel shy
+- [You're so lucky, you know that?|Two of us! Can you handle it?!|We're the best team ever!]
+
+@rule duo3.open.b.trisal.cool
+on duo3.open.b
+when moment=trisal tone=cool
+feel shy
+- [Don't get used to it~|You should be honored.|Behave and we'll do this more often~]
+
+@rule duo3.open.b.trisal.teasing
+on duo3.open.b
+when moment=trisal tone=teasing
+feel shy
+- [Don't get used to it~|You should be honored.|Behave and we'll do this more often~]
+
+@rule duo3.open.a.any.gentle
+on duo3.open.a
+when tone=gentle
+- [Ah, there you are...|We were looking for you.|Do you have a moment?]
+
+@rule duo3.open.a.any.energetic
+on duo3.open.a
+when tone=energetic
+- [Hey hey! Found you!|There he is!|Yo! We need you!]
+
+@rule duo3.open.a.any.cool
+on duo3.open.a
+when tone=cool
+- [There you are.|Good, you're here.|We wanted a word.]
+
+@rule duo3.open.a.any.teasing
+on duo3.open.a
+when tone=teasing
+- [There you are.|Good, you're here.|We wanted a word.]
+
+@rule duo3.open.b.any.gentle
+on duo3.open.b
+when tone=gentle
+- [We were hoping to see you.|Hi... sorry to bother you.|We won't keep you long.]
+
+@rule duo3.open.b.any.energetic
+on duo3.open.b
+when tone=energetic
+- [We were looking all over!|C'mon, hang out with us!|Don't run off!]
+
+@rule duo3.open.b.any.cool
+on duo3.open.b
+when tone=cool
+- [We were just talking about you.|Speak of the devil.|Don't keep us waiting~]
+
+@rule duo3.open.b.any.teasing
+on duo3.open.b
+when tone=teasing
+- [We were just talking about you.|Speak of the devil.|Don't keep us waiting~]
+
+# ================= the two of them talking (after a turn, or in a silence) =================
+@rule duo3.banter.a.argue.gentle
+on duo3.banter.a
+when argue=yes tone=gentle
+feel pout
+- [About {topic}... I still think I'm right.|We never settled {topic}, you know.|Can we talk about {topic} again? Because you're wrong.]
+
+@rule duo3.banter.a.argue.energetic
+on duo3.banter.a
+when argue=yes tone=energetic
+feel pout
+- [Okay but {topic}! I'm SO right about this!|I'm not letting {topic} go!|Admit it, I won on {topic}!]
+
+@rule duo3.banter.a.argue.cool
+on duo3.banter.a
+when argue=yes tone=cool
+feel pout
+- [About {topic}. I was right.|{Topic}. Let's finish this.|We still haven't settled {topic}.]
+
+@rule duo3.banter.a.argue.teasing
+on duo3.banter.a
+when argue=yes tone=teasing
+feel pout
+- [About {topic}. I was right.|{Topic}. Let's finish this.|We still haven't settled {topic}.]
+
+@rule duo3.banter.b.argue.gentle
+on duo3.banter.b
+when argue=yes tone=gentle
+feel pout
+- [...No, you're not.|I don't think so...|Let's just ask him.]
+
+@rule duo3.banter.b.argue.energetic
+on duo3.banter.b
+when argue=yes tone=energetic
+feel pout
+- [No way! You're totally wrong!|Ugh, not this again!|Fine! He decides!]
+
+@rule duo3.banter.b.argue.cool
+on duo3.banter.b
+when argue=yes tone=cool
+feel pout
+- [...No.|You're wrong and you know it.|Let him decide, then.]
+
+@rule duo3.banter.b.argue.teasing
+on duo3.banter.b
+when argue=yes tone=teasing
+feel pout
+- [...No.|You're wrong and you know it.|Let him decide, then.]
+
+@rule duo3.banter.a.lunch.gentle
+on duo3.banter.a
+when moment=lunch argue=no tone=gentle
+- [Is that your own lunch? It looks so good...|Want to trade a piece of tamagoyaki?|You always eat so little...]
+
+@rule duo3.banter.a.lunch.energetic
+on duo3.banter.a
+when moment=lunch argue=no tone=energetic
+- [Ooh, is that melon bread?! Give me half!|I'm gonna steal your sausage. Too late, it's gone!|Lunch is the best part of the day!]
+
+@rule duo3.banter.a.lunch.cool
+on duo3.banter.a
+when moment=lunch argue=no tone=cool
+- [Your bento is very neat.|You eat too fast.|You're dropping rice.]
+
+@rule duo3.banter.a.lunch.teasing
+on duo3.banter.a
+when moment=lunch argue=no tone=teasing
+- [Your bento is very neat.|You eat too fast.|You're dropping rice.]
+
+@rule duo3.banter.b.lunch.gentle
+on duo3.banter.b
+when moment=lunch argue=no tone=gentle
+- [Hehe... here, have some.|Okay, one piece. Just one.|I'm on a diet... starting tomorrow.]
+
+@rule duo3.banter.b.lunch.energetic
+on duo3.banter.b
+when moment=lunch argue=no tone=energetic
+- [HEY! That was mine!|You owe me a drink now!|Mmm! So good!]
+
+@rule duo3.banter.b.lunch.cool
+on duo3.banter.b
+when moment=lunch argue=no tone=cool
+- [Fine. One.|You owe me.|...It's good, isn't it.]
+
+@rule duo3.banter.b.lunch.teasing
+on duo3.banter.b
+when moment=lunch argue=no tone=teasing
+- [Fine. One.|You owe me.|...It's good, isn't it.]
+
+@rule duo3.banter.a.club.gentle
+on duo3.banter.a
+when moment=club argue=no tone=gentle
+- [You were really good today.|Did you see the new member? She's nice.|My arms are so sore...]
+
+@rule duo3.banter.a.club.energetic
+on duo3.banter.a
+when moment=club argue=no tone=energetic
+- [Next practice I'm beating your record!|Did you see me today?! Did you?!|Coach yelled at me AGAIN!]
+
+@rule duo3.banter.a.club.cool
+on duo3.banter.a
+when moment=club argue=no tone=cool
+- [You were off rhythm today.|We need to practice the start.|The new schedule is terrible.]
+
+@rule duo3.banter.a.club.teasing
+on duo3.banter.a
+when moment=club argue=no tone=teasing
+- [You were off rhythm today.|We need to practice the start.|The new schedule is terrible.]
+
+@rule duo3.banter.b.club.gentle
+on duo3.banter.b
+when moment=club argue=no tone=gentle
+- [You too... thank you.|Let's practice together tomorrow?|Hehe, mine too.]
+
+@rule duo3.banter.b.club.energetic
+on duo3.banter.b
+when moment=club argue=no tone=energetic
+- [In your dreams!|Yeah, I saw you trip! Hahaha!|Coach loves yelling at you!]
+
+@rule duo3.banter.b.club.cool
+on duo3.banter.b
+when moment=club argue=no tone=cool
+- [...I know.|Tomorrow, then.|Agreed.]
+
+@rule duo3.banter.b.club.teasing
+on duo3.banter.b
+when moment=club argue=no tone=teasing
+- [...I know.|Tomorrow, then.|Agreed.]
+
+@rule duo3.banter.a.study.gentle
+on duo3.banter.a
+when moment=study argue=no tone=gentle
+- [Did you finish the history notes?|What did you get for question five?|I can't remember any of the dates...]
+
+@rule duo3.banter.a.study.energetic
+on duo3.banter.a
+when moment=study argue=no tone=energetic
+- [Okay, quiz me! No wait, don't!|My brain is FULL!|If I see one more formula I'll scream!]
+
+@rule duo3.banter.a.study.cool
+on duo3.banter.a
+when moment=study argue=no tone=cool
+- [Question five is a trick.|You skipped a chapter.|Focus.]
+
+@rule duo3.banter.a.study.teasing
+on duo3.banter.a
+when moment=study argue=no tone=teasing
+- [Question five is a trick.|You skipped a chapter.|Focus.]
+
+@rule duo3.banter.b.study.gentle
+on duo3.banter.b
+when moment=study argue=no tone=gentle
+- [Mm, almost... can I copy the last part?|I think it was the second answer...|Me neither...]
+
+@rule duo3.banter.b.study.energetic
+on duo3.banter.b
+when moment=study argue=no tone=energetic
+- [Hahaha! Same!|We're so doomed!|Break time! Snack break!]
+
+@rule duo3.banter.b.study.cool
+on duo3.banter.b
+when moment=study argue=no tone=cool
+- [...I know.|I'll read it tonight.|Fine.]
+
+@rule duo3.banter.b.study.teasing
+on duo3.banter.b
+when moment=study argue=no tone=teasing
+- [...I know.|I'll read it tonight.|Fine.]
+
+@rule duo3.banter.a.season.gentle
+on duo3.banter.a
+when moment=season argue=no tone=gentle
+- [What should we wear to the {event}?|Do you think it'll be crowded?|I want to try everything this year.]
+
+@rule duo3.banter.a.season.energetic
+on duo3.banter.a
+when moment=season argue=no tone=energetic
+- [The {event} is gonna be AMAZING!|We need matching outfits!|I'm making a list of everything we HAVE to do!]
+
+@rule duo3.banter.a.season.cool
+on duo3.banter.a
+when moment=season argue=no tone=cool
+- [We should go early.|I made a schedule.|Don't be late this time.]
+
+@rule duo3.banter.a.season.teasing
+on duo3.banter.a
+when moment=season argue=no tone=teasing
+- [We should go early.|I made a schedule.|Don't be late this time.]
+
+@rule duo3.banter.b.season.gentle
+on duo3.banter.b
+when moment=season argue=no tone=gentle
+- [Something cute... but comfortable.|Probably... we can hold hands so we don't get lost.|Me too!]
+
+@rule duo3.banter.b.season.energetic
+on duo3.banter.b
+when moment=season argue=no tone=energetic
+- [YES! Matching!|Add food to the list! All the food!|This year's gonna be the best one!]
+
+@rule duo3.banter.b.season.cool
+on duo3.banter.b
+when moment=season argue=no tone=cool
+- [...I'm never late.|Early is fine.|Send me the schedule.]
+
+@rule duo3.banter.b.season.teasing
+on duo3.banter.b
+when moment=season argue=no tone=teasing
+- [...I'm never late.|Early is fine.|Send me the schedule.]
+
+@rule duo3.banter.a.trisal.gentle
+on duo3.banter.a
+when moment=trisal argue=no tone=gentle
+feel shy
+- [He's looking at you more today, you know.|Is it weird that I'm not jealous?|We look good together, the three of us.]
+
+@rule duo3.banter.a.trisal.energetic
+on duo3.banter.a
+when moment=trisal argue=no tone=energetic
+feel shy
+- [Hey, it's my turn to hold his arm!|He likes me more today, I can tell!|We should do this every day!]
+
+@rule duo3.banter.a.trisal.cool
+on duo3.banter.a
+when moment=trisal argue=no tone=cool
+feel shy
+- [He's staring again.|Your turn tomorrow.|We agreed on the schedule.]
+
+@rule duo3.banter.a.trisal.teasing
+on duo3.banter.a
+when moment=trisal argue=no tone=teasing
+feel shy
+- [He's staring again.|Your turn tomorrow.|We agreed on the schedule.]
+
+@rule duo3.banter.b.trisal.gentle
+on duo3.banter.b
+when moment=trisal argue=no tone=gentle
+feel smile
+- [N-no he isn't... is he?|It's not weird. It's nice.|Hehe... we do.]
+
+@rule duo3.banter.b.trisal.energetic
+on duo3.banter.b
+when moment=trisal argue=no tone=energetic
+feel smile
+- [No way! You had him all morning!|In your dreams!|Every day! Agreed!]
+
+@rule duo3.banter.b.trisal.cool
+on duo3.banter.b
+when moment=trisal argue=no tone=cool
+feel smile
+- [Let him stare.|Fine.|You wrote the schedule. I'm following it.]
+
+@rule duo3.banter.b.trisal.teasing
+on duo3.banter.b
+when moment=trisal argue=no tone=teasing
+feel smile
+- [Let him stare.|Fine.|You wrote the schedule. I'm following it.]
+
+@rule duo3.banter.a.bff.gentle
+on duo3.banter.a
+when pair=bff argue=no tone=gentle
+- [Remember when we got lost on the school trip?|Are you still coming over Saturday?|I told you he'd be here.]
+
+@rule duo3.banter.a.bff.energetic
+on duo3.banter.a
+when pair=bff argue=no tone=energetic
+- [Hey, show him the video! The one with the cat!|We have to tell him about last weekend!|Bet you can't finish my sentence!]
+
+@rule duo3.banter.a.bff.cool
+on duo3.banter.a
+when pair=bff argue=no tone=cool
+- [You still owe me that manga.|Saturday, right?|Told you so.]
+
+@rule duo3.banter.a.bff.teasing
+on duo3.banter.a
+when pair=bff argue=no tone=teasing
+- [You still owe me that manga.|Saturday, right?|Told you so.]
+
+@rule duo3.banter.b.bff.gentle
+on duo3.banter.b
+when pair=bff argue=no tone=gentle
+- [Hehe, how could I forget...|Of course I'm coming.|You did...]
+
+@rule duo3.banter.b.bff.energetic
+on duo3.banter.b
+when pair=bff argue=no tone=energetic
+- [NO! Not the cat video!|Last weekend was legendary!|...his cat? Yeah, I knew it!]
+
+@rule duo3.banter.b.bff.cool
+on duo3.banter.b
+when pair=bff argue=no tone=cool
+- [I'll bring it.|Of course.|Yes, yes, you're always right.]
+
+@rule duo3.banter.b.bff.teasing
+on duo3.banter.b
+when pair=bff argue=no tone=teasing
+- [I'll bring it.|Of course.|Yes, yes, you're always right.]
+
+@rule duo3.banter.a.rival.gentle
+on duo3.banter.a
+when pair=rival argue=no tone=gentle
+feel pout
+- [...You don't have to stay, you know.|Weren't you busy?|I thought you had somewhere to be.]
+
+@rule duo3.banter.a.rival.energetic
+on duo3.banter.a
+when pair=rival argue=no tone=energetic
+feel pout
+- [Ugh, why are you still here?|Shouldn't you be somewhere else?|Go away, we're talking!]
+
+@rule duo3.banter.a.rival.cool
+on duo3.banter.a
+when pair=rival argue=no tone=cool
+feel pout
+- [You're in the way.|Don't you have club?|Leave.]
+
+@rule duo3.banter.a.rival.teasing
+on duo3.banter.a
+when pair=rival argue=no tone=teasing
+feel pout
+- [You're in the way.|Don't you have club?|Leave.]
+
+@rule duo3.banter.b.rival.gentle
+on duo3.banter.b
+when pair=rival argue=no tone=gentle
+feel pout
+- [...I'm fine right here.|He doesn't mind. Do you?|I was here first.]
+
+@rule duo3.banter.b.rival.energetic
+on duo3.banter.b
+when pair=rival argue=no tone=energetic
+feel pout
+- [Nope! Not going anywhere!|You go away!|Make me!]
+
+@rule duo3.banter.b.rival.cool
+on duo3.banter.b
+when pair=rival argue=no tone=cool
+feel pout
+- [I'm staying.|No.|You first.]
+
+@rule duo3.banter.b.rival.teasing
+on duo3.banter.b
+when pair=rival argue=no tone=teasing
+feel pout
+- [I'm staying.|No.|You first.]
+
+@rule duo3.banter.a.any.gentle
+on duo3.banter.a
+when argue=no tone=gentle
+- [Hey... did you finish the homework?|Did you hear about the new teacher?|It's getting warmer, isn't it?]
+
+@rule duo3.banter.a.any.energetic
+on duo3.banter.a
+when argue=no tone=energetic
+- [Hey hey, did you see what happened in class?!|Did you see that video I sent you?!|Guess what I heard!]
+
+@rule duo3.banter.a.any.cool
+on duo3.banter.a
+when argue=no tone=cool
+- [Did you hear about the test?|Class was long today.|You look tired.]
+
+@rule duo3.banter.a.any.teasing
+on duo3.banter.a
+when argue=no tone=teasing
+- [Did you hear about the test?|Class was long today.|You look tired.]
+
+@rule duo3.banter.b.any.gentle
+on duo3.banter.b
+when argue=no tone=gentle
+- [Mm, almost...|I heard a little...|Yeah, it is.]
+
+@rule duo3.banter.b.any.energetic
+on duo3.banter.b
+when argue=no tone=energetic
+- [Yeah! It was crazy!|I watched it like ten times!|What?! Tell me!]
+
+@rule duo3.banter.b.any.cool
+on duo3.banter.b
+when argue=no tone=cool
+- [...I heard.|It was.|I'm fine.]
+
+@rule duo3.banter.b.any.teasing
+on duo3.banter.b
+when argue=no tone=teasing
+- [...I heard.|It was.|I'm fine.]
+
+@rule duo3.callback.gentle
+on duo3.callback
+when tone=gentle
+- [Ah, sorry, we left you out...|Hehe, sorry, we got carried away...|You've been so quiet...]
+
+@rule duo3.callback.energetic
+on duo3.callback
+when tone=energetic
+- [Hey, you're quiet! Say something!|Earth to you! Hello?|Don't just stand there, join in!]
+
+@rule duo3.callback.cool
+on duo3.callback
+when tone=cool
+- [...You've been quiet.|Say something.|You're thinking about something.]
+
+@rule duo3.callback.teasing
+on duo3.callback
+when tone=teasing
+- [...You've been quiet.|Say something.|You're thinking about something.]
+
+# ================= the witness: what she makes of a turn aimed at her friend =================
+@rule duo3.react.friend.gentle
+on duo3.react
+when lvl=friend q!=bad tone=gentle
+feel smile
+- [Hehe, you two get along.|Aww, that's nice.|You're good at this, you know.]
+
+@rule duo3.react.friend.energetic
+on duo3.react
+when lvl=friend q!=bad tone=energetic
+feel smile
+- [Hey, don't leave me out!|Me next! Me next!|Ooh, I want one too!]
+
+@rule duo3.react.friend.cool
+on duo3.react
+when lvl=friend q!=bad tone=cool
+feel smile
+- [...Hm. Not bad.|You're in a good mood.|Fine. I'll allow it.]
+
+@rule duo3.react.friend.teasing
+on duo3.react
+when lvl=friend q!=bad tone=teasing
+feel smile
+- [...Hm. Not bad.|You're in a good mood.|Fine. I'll allow it.]
+
+@rule duo3.react.bad.gentle
+on duo3.react
+when q=bad tone=gentle
+feel worried
+- [Ah... that didn't go well...|Um... maybe try something else...|Oh no...]
+
+@rule duo3.react.bad.energetic
+on duo3.react
+when q=bad tone=energetic
+feel worried
+- [Pfft! Smooth!|Ouch! Shot down!|Hahaha! Nice try!]
+
+@rule duo3.react.bad.cool
+on duo3.react
+when q=bad tone=cool
+feel worried
+- [...Nice try.|That was painful to watch.|Well. That happened.]
+
+@rule duo3.react.bad.teasing
+on duo3.react
+when q=bad tone=teasing
+feel worried
+- [...Nice try.|That was painful to watch.|Well. That happened.]
+
+@rule duo3.react.romance.yourgf.gentle
+on duo3.react
+when lvl=romance wrel=yourgf q!=bad tone=gentle
+feel pout
+- [U-um... I'm right here, you know...|You're my boyfriend... remember?|...You never say that to me.]
+
+@rule duo3.react.romance.yourgf.energetic
+on duo3.react
+when lvl=romance wrel=yourgf q!=bad tone=energetic
+feel pout
+- [Hey! Your girlfriend is standing RIGHT here!|Excuse me?! Hello?!|Wow. Okay. I see how it is.]
+
+@rule duo3.react.romance.yourgf.cool
+on duo3.react
+when lvl=romance wrel=yourgf q!=bad tone=cool
+feel pout
+- [...I'm still here.|Interesting. Very interesting.|We'll talk later.]
+
+@rule duo3.react.romance.yourgf.teasing
+on duo3.react
+when lvl=romance wrel=yourgf q!=bad tone=teasing
+feel pout
+- [...I'm still here.|Interesting. Very interesting.|We'll talk later.]
+
+@rule duo3.react.spicy.yourgf.gentle
+on duo3.react
+when lvl=spicy wrel=yourgf q!=bad tone=gentle
+feel pout
+- [W-what are you saying to her...?|That's... that's what you say to ME...|Why her...?]
+
+@rule duo3.react.spicy.yourgf.energetic
+on duo3.react
+when lvl=spicy wrel=yourgf q!=bad tone=energetic
+feel pout
+- [WHAT did you just say to her?!|Hey! HEY! I heard that!|Are you kidding me right now?!]
+
+@rule duo3.react.spicy.yourgf.cool
+on duo3.react
+when lvl=spicy wrel=yourgf q!=bad tone=cool
+feel pout
+- [I heard that.|...Unbelievable.|In front of me. Really.]
+
+@rule duo3.react.spicy.yourgf.teasing
+on duo3.react
+when lvl=spicy wrel=yourgf q!=bad tone=teasing
+feel pout
+- [I heard that.|...Unbelievable.|In front of me. Really.]
+
+@rule duo3.react.trisal.gentle
+on duo3.react
+when wrel=trisal lvl!=friend q!=bad tone=gentle
+feel shy
+- [Hehe... don't forget me, okay?|You two are cute.|...My turn next?]
+
+@rule duo3.react.trisal.energetic
+on duo3.react
+when wrel=trisal lvl!=friend q!=bad tone=energetic
+feel shy
+- [Hey! Me too! Me too!|Save some for me!|Ooh, look at you two!]
+
+@rule duo3.react.trisal.cool
+on duo3.react
+when wrel=trisal lvl!=friend q!=bad tone=cool
+feel shy
+- [Fair is fair. I'm next.|I'm keeping count.|Mm. I approve.]
+
+@rule duo3.react.trisal.teasing
+on duo3.react
+when wrel=trisal lvl!=friend q!=bad tone=teasing
+feel shy
+- [Fair is fair. I'm next.|I'm keeping count.|Mm. I approve.]
+
+@rule duo3.react.rival.gentle
+on duo3.react
+when wrel=rival lvl!=friend q!=bad tone=gentle
+feel pout
+- [...|...Really?|Hmph.]
+
+@rule duo3.react.rival.energetic
+on duo3.react
+when wrel=rival lvl!=friend q!=bad tone=energetic
+feel pout
+- [Ugh, seriously?|Gross. Get a room.|You can do better.]
+
+@rule duo3.react.rival.cool
+on duo3.react
+when wrel=rival lvl!=friend q!=bad tone=cool
+feel pout
+- [...Tch.|Please. She's not your type.|How tasteless.]
+
+@rule duo3.react.rival.teasing
+on duo3.react
+when wrel=rival lvl!=friend q!=bad tone=teasing
+feel pout
+- [...Tch.|Please. She's not your type.|How tasteless.]
+
+@rule duo3.react.bff.gentle
+on duo3.react
+when wrel=bff lvl!=friend q!=bad tone=gentle
+feel shy
+- [Ah... I-I'll pretend I didn't see that...|Hehe, you two...|Should I... go?]
+
+@rule duo3.react.bff.energetic
+on duo3.react
+when wrel=bff lvl!=friend q!=bad tone=energetic
+feel shy
+- [Ooh! Look at you two!|Oh my gosh! Tell me everything later!|I KNEW it!]
+
+@rule duo3.react.bff.cool
+on duo3.react
+when wrel=bff lvl!=friend q!=bad tone=cool
+feel shy
+- [Should I give you two a minute?|Interesting.|I'm telling everyone. Kidding.]
+
+@rule duo3.react.bff.teasing
+on duo3.react
+when wrel=bff lvl!=friend q!=bad tone=teasing
+feel shy
+- [Should I give you two a minute?|Interesting.|I'm telling everyone. Kidding.]
+
+@rule duo3.react.other.gentle
+on duo3.react
+when lvl!=friend q!=bad tone=gentle
+feel shy
+- [Um... I'm still here...|O-oh...|Ah... that's...]
+
+@rule duo3.react.other.energetic
+on duo3.react
+when lvl!=friend q!=bad tone=energetic
+feel shy
+- [Whoa, getting bold!|Ooh~|Right in front of me, huh?]
+
+@rule duo3.react.other.cool
+on duo3.react
+when lvl!=friend q!=bad tone=cool
+feel shy
+- [...Should I leave?|Bold.|Don't mind me.]
+
+@rule duo3.react.other.teasing
+on duo3.react
+when lvl!=friend q!=bad tone=teasing
+feel shy
+- [...Should I leave?|Bold.|Don't mind me.]
+
+# ================= the witness of a kiss =================
+@rule duo3.kiss.no.gentle
+on duo3.kiss
+when kiss=no tone=gentle
+feel surprised
+- [Ah... she said no...|Oh... um... are you okay?|...That was awkward.]
+
+@rule duo3.kiss.no.energetic
+on duo3.kiss
+when kiss=no tone=energetic
+feel surprised
+- [Hah! Shot down!|Ooh, denied!|Ouch! Rejected!]
+
+@rule duo3.kiss.no.cool
+on duo3.kiss
+when kiss=no tone=cool
+feel surprised
+- [...Denied.|Well. That was a no.|Ouch. Right in front of me~]
+
+@rule duo3.kiss.no.teasing
+on duo3.kiss
+when kiss=no tone=teasing
+feel surprised
+- [...Denied.|Well. That was a no.|Ouch. Right in front of me~]
+
+@rule duo3.kiss.yourgf.gentle
+on duo3.kiss
+when kiss!=no wrel=yourgf tone=gentle
+feel sad
+- [...You kissed her. Right in front of me.|Why... why her...?|I... I need a moment.]
+
+@rule duo3.kiss.yourgf.energetic
+on duo3.kiss
+when kiss!=no wrel=yourgf tone=energetic
+feel sad
+- [Are you SERIOUS right now?!|You kissed her?! I'm your GIRLFRIEND!|Unbelievable! UNBELIEVABLE!]
+
+@rule duo3.kiss.yourgf.cool
+on duo3.kiss
+when kiss!=no wrel=yourgf tone=cool
+feel sad
+- [...I saw that.|So that's how it is.|We are going to talk about this.]
+
+@rule duo3.kiss.yourgf.teasing
+on duo3.kiss
+when kiss!=no wrel=yourgf tone=teasing
+feel sad
+- [...I saw that.|So that's how it is.|We are going to talk about this.]
+
+@rule duo3.kiss.trisal.gentle
+on duo3.kiss
+when kiss!=no wrel=trisal tone=gentle
+feel shy
+- [Hehe... now me, okay?|You two look so cute...|...I'm next.]
+
+@rule duo3.kiss.trisal.energetic
+on duo3.kiss
+when kiss!=no wrel=trisal tone=energetic
+feel shy
+- [Hey! My turn! My turn!|Save some for me!|Aww! Okay, now me!]
+
+@rule duo3.kiss.trisal.cool
+on duo3.kiss
+when kiss!=no wrel=trisal tone=cool
+feel shy
+- [Fair is fair.|I'm keeping score.|Mm. Don't forget me.]
+
+@rule duo3.kiss.trisal.teasing
+on duo3.kiss
+when kiss!=no wrel=trisal tone=teasing
+feel shy
+- [Fair is fair.|I'm keeping score.|Mm. Don't forget me.]
+
+@rule duo3.kiss.rival.gentle
+on duo3.kiss
+when kiss!=no wrel=rival tone=gentle
+feel pout
+- [...Why her...|...I'm leaving soon.|...]
+
+@rule duo3.kiss.rival.energetic
+on duo3.kiss
+when kiss!=no wrel=rival tone=energetic
+feel pout
+- [EW! Seriously?!|Ugh, get a room!|You have terrible taste!]
+
+@rule duo3.kiss.rival.cool
+on duo3.kiss
+when kiss!=no wrel=rival tone=cool
+feel pout
+- [...Tasteless.|Disgusting.|Hmph.]
+
+@rule duo3.kiss.rival.teasing
+on duo3.kiss
+when kiss!=no wrel=rival tone=teasing
+feel pout
+- [...Tasteless.|Disgusting.|Hmph.]
+
+@rule duo3.kiss.friend.gentle
+on duo3.kiss
+when kiss!=no tone=gentle
+feel shy
+- [Eh?! R-right in front of me...?|W-wow...|I... I didn't see anything!]
+
+@rule duo3.kiss.friend.energetic
+on duo3.kiss
+when kiss!=no tone=energetic
+feel shy
+- [WHOA! Hey! I'm right here!|OH MY GOSH!|Did that just happen?!]
+
+@rule duo3.kiss.friend.cool
+on duo3.kiss
+when kiss!=no tone=cool
+feel shy
+- [...I'm standing right here.|Oh my. Don't mind me~|Well. That's new.]
+
+@rule duo3.kiss.friend.teasing
+on duo3.kiss
+when kiss!=no tone=teasing
+feel shy
+- [...I'm standing right here.|Oh my. Don't mind me~|Well. That's new.]
+
+# ================= one of them walks off; the moment ends =================
+@rule duo3.leave.gf.gentle
+on duo3.leave
+when othergf=no wrel=yourgf tone=gentle
+feel sad
+- [...I'll go. You two have fun.|I don't want to watch this.|I'm going home.]
+
+@rule duo3.leave.gf.energetic
+on duo3.leave
+when othergf=no wrel=yourgf tone=energetic
+feel sad
+- [Forget it! I'm out!|Have fun with HER!|Don't call me!]
+
+@rule duo3.leave.gf.cool
+on duo3.leave
+when othergf=no wrel=yourgf tone=cool
+feel sad
+- [I'm leaving.|We're done here.|Enjoy yourself.]
+
+@rule duo3.leave.gf.teasing
+on duo3.leave
+when othergf=no wrel=yourgf tone=teasing
+feel sad
+- [I'm leaving.|We're done here.|Enjoy yourself.]
+
+@rule duo3.leave.any.gentle
+on duo3.leave
+when tone=gentle
+feel pout
+- [...I'll go. You two have fun.|I think I'm in the way...|Um... I just remembered something.]
+
+@rule duo3.leave.any.energetic
+on duo3.leave
+when tone=energetic
+feel pout
+- [Ugh, forget it! I'm out!|Fine! I'm leaving!|Whatever! Bye!]
+
+@rule duo3.leave.any.cool
+on duo3.leave
+when tone=cool
+feel pout
+- [...I'm leaving.|I have better things to do.|Wow. Okay. Enjoy yourselves.]
+
+@rule duo3.leave.any.teasing
+on duo3.leave
+when tone=teasing
+feel pout
+- [...I'm leaving.|I have better things to do.|Wow. Okay. Enjoy yourselves.]
+
+@rule duo3.left.gentle
+on duo3.left
+when tone=gentle
+feel worried
+- [Ah... she left...|Was that my fault...?|Should we go after her?]
+
+@rule duo3.left.energetic
+on duo3.left
+when tone=energetic
+feel worried
+- [Whoa. She's mad.|Yikes.|Uh oh.]
+
+@rule duo3.left.cool
+on duo3.left
+when tone=cool
+feel worried
+- [...Well. That happened.|She'll get over it.|Oops. Somebody's jealous~]
+
+@rule duo3.left.teasing
+on duo3.left
+when tone=teasing
+feel worried
+- [...Well. That happened.|She'll get over it.|Oops. Somebody's jealous~]
+
+@rule duo3.end.a.gentle
+on duo3.end.a
+when tone=gentle
+- [Ah, look at the time...|We should let you go...|This was really nice.]
+
+@rule duo3.end.a.energetic
+on duo3.end.a
+when tone=energetic
+- [Whoa, it's already that late?!|Aw, I could talk all day!|Time flies, huh?]
+
+@rule duo3.end.a.cool
+on duo3.end.a
+when tone=cool
+- [We should get going.|That's enough for today.|Time's up.]
+
+@rule duo3.end.a.teasing
+on duo3.end.a
+when tone=teasing
+- [We should get going.|That's enough for today.|Time's up.]
+
+@rule duo3.end.a.lunch.gentle
+on duo3.end.a
+when moment=lunch tone=gentle
+- [Ah, the bell's about to ring...|Thank you for eating with us.|Let's do this again tomorrow?]
+
+@rule duo3.end.a.lunch.energetic
+on duo3.end.a
+when moment=lunch tone=energetic
+- [Lunch is over already?!|Same time tomorrow!|That was the best lunch!]
+
+@rule duo3.end.a.lunch.cool
+on duo3.end.a
+when moment=lunch tone=cool
+- [Lunch is over.|Same place tomorrow.|Back to class.]
+
+@rule duo3.end.a.lunch.teasing
+on duo3.end.a
+when moment=lunch tone=teasing
+- [Lunch is over.|Same place tomorrow.|Back to class.]
+
+@rule duo3.end.b.gentle
+on duo3.end.b
+when tone=gentle
+- [This was nice. Let's do it again.|Thank you for spending time with us.|See you soon...]
+
+@rule duo3.end.b.energetic
+on duo3.end.b
+when tone=energetic
+- [That was fun! Again sometime!|Bye! Don't forget us!|Next time, we're going somewhere!]
+
+@rule duo3.end.b.cool
+on duo3.end.b
+when tone=cool
+- [Until next time.|Don't miss us too much~|See you around.]
+
+@rule duo3.end.b.teasing
+on duo3.end.b
+when tone=teasing
+- [Until next time.|Don't miss us too much~|See you around.]
+
+@rule duo3.end.b.trisal.gentle
+on duo3.end.b
+when moment=trisal tone=gentle
+feel love
+- [Let's do this again soon... the three of us.|I'm really happy today.|Thank you... for being ours.]
+
+@rule duo3.end.b.trisal.energetic
+on duo3.end.b
+when moment=trisal tone=energetic
+feel love
+- [Same time tomorrow! Both of us!|Best day ever!|You're stuck with us forever!]
+
+@rule duo3.end.b.trisal.cool
+on duo3.end.b
+when moment=trisal tone=cool
+feel love
+- [Don't go getting a third one.|We'll be back~|Remember, you're ours.]
+
+@rule duo3.end.b.trisal.teasing
+on duo3.end.b
+when moment=trisal tone=teasing
+feel love
+- [Don't go getting a third one.|We'll be back~|Remember, you're ours.]
+
+# ================= her answer to what you said or did (B's turns and both) =================
+@rule duo3.reply.good.gentle
+on duo3.reply
+when q=good tone=gentle
+feel smile
+- [Ehehe... thank you.|That's sweet...|I'm happy.]
+
+@rule duo3.reply.good.energetic
+on duo3.reply
+when q=good tone=energetic
+feel smile
+- [Hehe! You're the best!|Yay!|Aww, I like that!]
+
+@rule duo3.reply.good.cool
+on duo3.reply
+when q=good tone=cool
+feel smile
+- [...Thanks.|Not bad.|Hm. Appreciated.]
+
+@rule duo3.reply.good.teasing
+on duo3.reply
+when q=good tone=teasing
+feel smile
+- [...Thanks.|Not bad.|Hm. Appreciated.]
+
+@rule duo3.reply.good.other.gentle
+on duo3.reply
+when q=good otherlikes=yes act!=kiss tone=gentle
+feel shy
+- [Th-thank you... with {other} right here, too...|Ehehe... {other} is looking at us...|...Don't make {other} jealous.]
+
+@rule duo3.reply.good.other.energetic
+on duo3.reply
+when q=good otherlikes=yes act!=kiss tone=energetic
+feel shy
+- [Hehe! {Other}'s gonna be so jealous!|Look, {other}, he likes me!|Ha! Take that, {other}!]
+
+@rule duo3.reply.good.other.cool
+on duo3.reply
+when q=good otherlikes=yes act!=kiss tone=cool
+feel shy
+- [...{Other} is watching.|Careful. {Other} is right there.|Bold, with {other} here.]
+
+@rule duo3.reply.good.other.teasing
+on duo3.reply
+when q=good otherlikes=yes act!=kiss tone=teasing
+feel shy
+- [...{Other} is watching.|Careful. {Other} is right there.|Bold, with {other} here.]
+
+@rule duo3.reply.neutral.gentle
+on duo3.reply
+when q=neutral tone=gentle
+- [Mm... okay.|I guess...|Hehe...?]
+
+@rule duo3.reply.neutral.energetic
+on duo3.reply
+when q=neutral tone=energetic
+- [Huh. Okay!|Uh, sure!|Hm? Okay!]
+
+@rule duo3.reply.neutral.cool
+on duo3.reply
+when q=neutral tone=cool
+- [...Sure.|If you say so.|Hm.]
+
+@rule duo3.reply.neutral.teasing
+on duo3.reply
+when q=neutral tone=teasing
+- [...Sure.|If you say so.|Hm.]
+
+@rule duo3.reply.bad.gentle
+on duo3.reply
+when q=bad tone=gentle
+feel pout
+- [Ah... um... no...|P-please don't...|That's... no.]
+
+@rule duo3.reply.bad.energetic
+on duo3.reply
+when q=bad tone=energetic
+feel pout
+- [Hey! No way!|Not cool!|Ew, no!]
+
+@rule duo3.reply.bad.cool
+on duo3.reply
+when q=bad tone=cool
+feel pout
+- [...No.|Don't.|Not happening.]
+
+@rule duo3.reply.bad.teasing
+on duo3.reply
+when q=bad tone=teasing
+feel pout
+- [...No.|Don't.|Not happening.]
