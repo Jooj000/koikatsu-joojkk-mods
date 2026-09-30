@@ -5,9 +5,11 @@ using UnityEngine.UI;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// The Album tab: the achievements as a record and a to-do list. Left, the five categories with how many
-    /// of each are done and the "N of M" total; right, the open category, one card each: done ones with the day and the
-    /// girl, the rest with their goal and progress, the secret ones with a hint until they fall.
+    /// The Album tab: the achievements as a record and a to-do list. Left, the
+    /// categories with how many of each are done, the "N of M" total and, in the corner, how many characters the school
+    /// has (all of them, and how many came with the game). Right, the open category in three steps, from the simple ones
+    /// to the long run: done ones with the day and the girl (and, for "every girl", how many there were), the rest with
+    /// their goal and progress, the secret ones with a hint until they fall. Ones about another mod show only with it.
     /// </summary>
     internal static partial class CampusPanel
     {
@@ -15,16 +17,20 @@ namespace Joojkk.CampusLife
 
         private static void AlbumLeft()
         {
-            var all = Achievements.All;
+            var shown = Achievements.Shown.ToList();
             var done = Achievements.DoneCount;
+            int chars, game;
+            Achievements.Roster(out chars, out game);
             var b = GameUi.Block(_left, "album");
-            Header(b, "Album");
-            Line(b, "<color=" + Hex(GameUi.Gold) + ">" + done + " of " + all.Count + "</color> achievements  " + Bar(done, all.Count, 20), 22f);
+            var hrow = GameUi.Row(b, "head", 46f);
+            RowText(hrow, "Album", 28f, GameUi.Gold);
+            RowText(hrow, "<align=right>" + chars + " characters  <color=" + Hex(GameUi.Dim) + ">(" + game + " from the game, " + (chars - game) + " yours)</color></align>", 18f);
+            Line(b, "<color=" + Hex(GameUi.Gold) + ">" + done + " of " + shown.Count + "</color> achievements  " + Bar(done, shown.Count, 20), 22f);
             Line(b, "Each one is a goal while you work on it and a memory once it's done: the day it happened, and with whom.", 18f, GameUi.Dim);
-            foreach (var cat in Achievements.Cats)
+            foreach (var cat in Achievements.ShownCats)
             {
                 var c = cat;
-                var defs = all.Where(d => d.Cat == c).ToList();
+                var defs = shown.Where(d => d.Cat == c).ToList();
                 var n = defs.Count(d => Achievements.Done(d.Id));
                 var row = GameUi.Row(b, "row", 44f);
                 var btn = SmallButton(row, c + "   " + n + "/" + defs.Count, () => { _albumCat = c; Refresh(); }, 400f);
@@ -35,27 +41,53 @@ namespace Joojkk.CampusLife
 
         private static void AlbumRight()
         {
-            var cat = Achievements.Cats.Contains(_albumCat) ? _albumCat : Achievements.Cats[0];
+            var cats = Achievements.ShownCats.ToList();
+            var cat = cats.Contains(_albumCat) ? _albumCat : cats[0];
             var head = GameUi.Block(_right, "head");
             var hrow = GameUi.Row(head, "row", 46f);
             RowText(hrow, cat, 28f, GameUi.Gold);
             if (cat == "Trouble") Line(head, "These only keep the record: nothing is taken from you.", 18f, GameUi.Dim);
             if (cat == "Secrets") Line(head, "Hidden until they happen; each one leaves a hint.", 18f, GameUi.Dim);
-            foreach (var d in Achievements.All.Where(x => x.Cat == cat))
+            if (cat == "Extras") Line(head, "About other mods in your game; each shows only while its mod is installed.", 18f, GameUi.Dim);
+            for (var tier = 1; tier <= 3; tier++)
             {
-                var rec = Achievements.Record(d.Id);
-                var got = rec != null;
-                var card = GameUi.Block(_right, "ach");
-                var row = GameUi.Row(card, "row", 38f);
-                RowText(row, (got ? "<color=" + Hex(GameUi.Gold) + ">★</color> " : "<color=#7f8590>☆</color> ") + (got || !d.Secret ? d.Name : "???"), 24f, got ? GameUi.White : GameUi.Dim);
-                if (got) RowText(row, "<color=" + Hex(GameUi.Green) + ">" + Story(rec) + "</color>", 19f);
-                else if (!d.Secret || d.Target > 1)
-                {
-                    var v = Mathf.Min(Achievements.Value(d), d.Target);
-                    RowText(row, (d.Target > 1 ? Bar(v, d.Target, 10) + "  " : "") + v + "/" + d.Target, 19f, GameUi.Dim);
-                }
-                Line(card, got || !d.Secret ? d.Goal : "Hint: " + d.Hint, 19f, got ? GameUi.Dim : GameUi.White);
+                var t = tier;
+                var defs = Achievements.Shown.Where(x => x.Cat == cat && x.Tier == t).ToList();
+                if (defs.Count == 0) continue;
+                var sec = GameUi.Block(_right, "tier", false);
+                Line(sec, "<color=" + Hex(GameUi.Gold) + ">" + Achievements.Tiers[t] + "</color>  <color=#7f8590>" + defs.Count(d => Achievements.Done(d.Id)) + "/" + defs.Count + "</color>", 20f);
+                foreach (var d in defs) AlbumCard(d);
             }
+        }
+
+        private static void AlbumCard(Achievements.Def d)
+        {
+            var rec = Achievements.Record(d.Id);
+            var got = rec != null;
+            var target = Achievements.TargetOf(d);
+            var card = GameUi.Block(_right, "ach");
+            var row = GameUi.Row(card, "row", 38f);
+            RowText(row, (got ? "<color=" + Hex(GameUi.Gold) + ">★</color> " : "<color=#7f8590>☆</color> ") + (got || !d.Secret ? d.Name : "???"), 24f, got ? GameUi.White : GameUi.Dim);
+            if (got) RowText(row, "<color=" + Hex(GameUi.Green) + ">" + Story(rec) + "</color>", 19f);
+            else if (!d.Secret || target > 1)
+            {
+                var v = Mathf.Min(Achievements.Value(d), target);
+                RowText(row, (target > 1 ? Bar(v, target, 10) + "  " : "") + v + "/" + target, 19f, GameUi.Dim);
+            }
+            Line(card, got || !d.Secret ? d.Goal : "Hint: " + d.Hint, 19f, got ? GameUi.Dim : GameUi.White);
+            if (got && d.Roster) Line(card, RosterNote(d), 18f, GameUi.Dim);
+        }
+
+        /// <summary>For "every girl": how many there were when it fell (and if they were only the game's own).</summary>
+        private static string RosterNote(Achievements.Def d)
+        {
+            var c = Campus.S.AchCount;
+            int girls, all, game;
+            c.TryGetValue("roster:" + d.Id, out girls);
+            c.TryGetValue("rosterAll:" + d.Id, out all);
+            c.TryGetValue("rosterGame:" + d.Id, out game);
+            if (all <= 0) return "";
+            return "With " + girls + " girl" + (girls == 1 ? "" : "s") + " at school" + (all == game ? ", only the game's own characters." : " (" + (all - game) + " of your own characters).");
         }
 
         /// <summary>"Day 12, with Mitama".</summary>

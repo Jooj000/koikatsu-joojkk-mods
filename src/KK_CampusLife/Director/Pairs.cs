@@ -28,7 +28,7 @@ namespace Joojkk.CampusLife
             if (gs.GirlsOk < 0)
             {
                 bool likes;
-                try { likes = h.parameter != null && h.parameter.attribute != null && h.parameter.attribute.likeGirls; } catch { likes = false; }
+                try { likes = h.parameter != null && h.parameter.attribute != null && GirlInfo.Quirks(h).likeGirls; } catch { likes = false; }
                 gs.GirlsOk = likes || (uint)GirlInfo.Key(h).GetHashCode() % 100 < 35 ? 1 : 0;
             }
             return gs.GirlsOk == 1;

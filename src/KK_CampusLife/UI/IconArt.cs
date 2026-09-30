@@ -11,6 +11,8 @@ namespace Joojkk.CampusLife
     internal static partial class IconArt
     {
         public const int Talk = 0, Actions = 1, Together = 2, Romance = 3, Spicy = 4;
+        /// <summary>The conversation with two girls: who you talk to (the left one, the right one, both).</summary>
+        public const int ToA = 5, ToB = 6, ToBoth = 7;
 
         /// <summary>The category colors: the mod's INT blue, gold, green, SEN pink and STR red.</summary>
         public static readonly float[][] Accent =
@@ -20,6 +22,9 @@ namespace Joojkk.CampusLife
             new[] { 0.55f, 0.95f, 0.62f },
             new[] { 1f, 0.54f, 0.85f },
             new[] { 1f, 0.45f, 0.42f },
+            new[] { 1f, 0.82f, 0.35f },
+            new[] { 1f, 0.82f, 0.35f },
+            new[] { 1f, 0.82f, 0.35f },
         };
 
         private static readonly float[] Graphite = { 0.07f, 0.07f, 0.09f };
@@ -107,6 +112,9 @@ namespace Joojkk.CampusLife
                 case Actions: return Gift(u, v);
                 case Together: return People(u, v);
                 case Romance: return Heart(u, v);
+                case ToA: return Pair(u, v, true, false);
+                case ToB: return Pair(u, v, false, true);
+                case ToBoth: return Pair(u, v, true, true);
                 default: return Flame(u, v);
             }
         }
@@ -147,6 +155,20 @@ namespace Joojkk.CampusLife
             var front = Person(u, v + 0.02f, -0.16f, 1f);
             back = Math.Max(back, -(front - 0.07f));        // a cut so the two read as two
             return Math.Min(front, back);
+        }
+
+        /// <summary>Two girls side by side (as they stand on the stage): the one you talk to solid with the marker over
+        /// her head, the other one in outline.</summary>
+        private static float Pair(float u, float v, bool left, bool right)
+        {
+            var l = Person(u, v + 0.08f, -0.34f, 0.8f);
+            var r = Person(u, v + 0.08f, 0.34f, 0.8f);
+            if (!left) l = Math.Abs(l) - 0.035f;
+            if (!right) r = Math.Abs(r) - 0.035f;
+            var d = Math.Min(l, r);
+            if (left) d = Math.Min(d, Triangle(u, v, -0.47f, 0.7f, -0.21f, 0.7f, -0.34f, 0.46f));
+            if (right) d = Math.Min(d, Triangle(u, v, 0.21f, 0.7f, 0.47f, 0.7f, 0.34f, 0.46f));
+            return d;
         }
 
         /// <summary>The heart (Inigo Quilez's exact heart distance), scaled into the tile.</summary>

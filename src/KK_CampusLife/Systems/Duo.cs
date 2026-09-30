@@ -665,6 +665,26 @@ namespace Joojkk.CampusLife
                         intoH = true;
                         yield return CampusLifePlugin.Instance.StartCoroutine(H3(na, nb));
                     }
+                    else if (trioEnd == "aleft" && nb != null && G.IsFreeRoaming)
+                    {
+                        // The first girl walked off: the talk goes on with the second one alone, as a normal talk
+                        //. Back from the stage to her spot first, so the game opens it with her there.
+                        try
+                        {
+                            if (!nb.gameObject.activeSelf) nb.SetActive(true);
+                            if (spots.Length > 1) nb.transform.position = spots[1];
+                        }
+                        catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo B stays: " + e.Message); }
+                        if (nb.heroine.talkTime > 0)
+                        {
+                            G.Act.SceneEvent(nb);
+                            yield return Wait(() => Ready(G.TalkScene), 40f);
+                            var tb = G.TalkScene;
+                            Step("talk goes on with " + GirlInfo.FirstName(nb.heroine) + ": " + (Ready(tb) ? "open" : "did not open"));
+                            if (Ready(tb)) yield return Wait(() => G.TalkScene == null && G.IsFreeRoaming, 1800f);
+                        }
+                        else Step(GirlInfo.FirstName(nb.heroine) + " has no talk time left: no talk with her alone");
+                    }
                     TalkHer = null;
                     Step(intoH ? "talk closed into the game's H" : "back on the map, free roaming " + G.IsFreeRoaming);
                     if (!intoH && G.IsFreeRoaming)

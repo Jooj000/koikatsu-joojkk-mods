@@ -35,10 +35,13 @@ namespace Joojkk.SchoolOptimizer
     [BepInProcess("Koikatu")]
     [BepInProcess("Koikatsu Party")]
     [BepInDependency(KKAPI.KoikatuAPI.GUID, "1.45")]
+    [BepInDependency("com.bepis.bepinex.extendedsave")]   // AbsentPark keeps the parked students' extended data
+    [BepInDependency("com.bepis.bepinex.sideloader")]     // MissingMods reads what Sideloader loaded
     // Optional: loaded first when installed, so OtherMods finds its types (without this the ANAL camera fix never ran).
     [BepInDependency("org.njaecha.plugins.anal", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.deathweasel.bepinex.materialeditor", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.deathweasel.bepinex.hairaccessorycustomizer", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.deathweasel.bepinex.uncensorselector", BepInDependency.DependencyFlags.SoftDependency)]
     public class SchoolOptimizerPlugin : BaseUnityPlugin
     {
         public const string GUID = "joojkk.schooloptimizer";
@@ -157,29 +160,31 @@ namespace Joojkk.SchoolOptimizer
                 "Past this distance from the camera, hair and clothes physics stops.", new AcceptableValueRange<float>(5f, 60f),
                 new ConfigurationManagerAttributes { Order = 1 }));
 
+            // An option about another mod shows only when that mod is installed.
+            Func<string, bool> has = g => BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(g);
             const string m = "5. Other mods";
             AnalCameras = Config.Bind(m, "AmazingNewAccessoryLogic: idle cameras off", true, new ConfigDescription(
                 "AmazingNewAccessoryLogic (by njaecha) gives every character a camera that renders a full-screen texture every " +
                 "frame, even with its editor closed (28 students = 28 extra camera passes and ~300 MB of video memory). This " +
                 "switches each one on only while that character's ANAL editor is open. ANAL's files are not changed.",
-                null, new ConfigurationManagerAttributes { Order = 1 }));
+                null, new ConfigurationManagerAttributes { Order = 1, Browsable = has("org.njaecha.plugins.anal") }));
             UncensorHiddenParts = Config.Bind(m, "UncensorSelector: small textures for hidden parts", true, new ConfigDescription(
                 "UncensorSelector paints the skin of every uncensor part into a 2048 texture (21 MB of video memory), also the " +
                 "penis that most girls keep hidden. While it paints a part the card hides, this makes that texture 512 instead " +
                 "(story mode only). Cards that show the part are untouched. UncensorSelector's files are not changed.",
-                null, new ConfigurationManagerAttributes { Order = 2 }));
+                null, new ConfigurationManagerAttributes { Order = 2, Browsable = has("com.deathweasel.bepinex.uncensorselector") }));
             MeMaxTexture = Config.Bind(m, "MaterialEditor: max texture size", 2048, new ConfigDescription(
                 "MaterialEditor keeps every texture stored in a card uncompressed on the graphics card (a 4096 one takes 85 MB). " +
                 "In story mode, bigger ones are drawn at this size instead; the card itself keeps the full image (saving and " +
                 "exporting are unaffected). 0 = no limit. Applies to characters loaded after the change. MaterialEditor's " +
-                "files are not changed.", new AcceptableValueList<int>(0, 1024, 2048, 4096), new ConfigurationManagerAttributes { Order = 3 }));
+                "files are not changed.", new AcceptableValueList<int>(0, 1024, 2048, 4096), new ConfigurationManagerAttributes { Order = 3, Browsable = has("com.deathweasel.bepinex.materialeditor") }));
             MeRefresh = Config.Bind(m, "Re-apply MaterialEditor and hair accessory colors after slow loads", true, new ConfigDescription(
                 "Outside the maker, MaterialEditor and HairAccessoryCustomizer apply a card's edits once, right after the " +
                 "character loads. Pieces built later (outfits loaded over several frames) stayed without them: white clothes " +
                 "or hair accessories, or the vanilla hair the card hides showing again (fixed by opening the maker). When an " +
                 "outfit load takes more than one frame, and the first time each student appears, both plugins' own update is " +
                 "run again for her. Their files are not changed.",
-                null, new ConfigurationManagerAttributes { Order = 4 }));
+                null, new ConfigurationManagerAttributes { Order = 4, Browsable = has("com.deathweasel.bepinex.materialeditor") || has("com.deathweasel.bepinex.hairaccessorycustomizer") }));
 
             const string l = "4. Loading";
             SkipDuplicateReloads = Config.Bind(l, "Skip duplicate character rebuilds (experimental)", false, new ConfigDescription(

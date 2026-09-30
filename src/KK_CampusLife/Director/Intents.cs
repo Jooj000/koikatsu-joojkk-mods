@@ -479,7 +479,7 @@ namespace Joojkk.CampusLife
                 // A girl the director holds on its stage is not someone else's partner.
                 if (target != null && Stage.Holds(target.heroine))
                 {
-                    var spare = G.Act.npcList.FirstOrDefault(x => x != null && x != me && x.heroine != null && !Stage.Holds(x.heroine) && x.AI != null && x.AI.result != null && !x.AI.result.isPriority && x.AI.isTalkSuccess && !x.AI.isPlayerResWaiting && (x.heroine.parameter.attribute.likeGirls || G.Act.actCtrl.GetDesire(26, x.heroine) >= 80));
+                    var spare = G.Act.npcList.FirstOrDefault(x => x != null && x != me && x.heroine != null && !Stage.Holds(x.heroine) && x.AI != null && x.AI.result != null && !x.AI.result.isPriority && x.AI.isTalkSuccess && !x.AI.isPlayerResWaiting && (GirlInfo.Quirks(x.heroine).likeGirls || G.Act.actCtrl.GetDesire(26, x.heroine) >= 80));
                     if (spare != null) { CampusLifePlugin.Log.LogInfo("Student H: " + GirlInfo.FirstName(target.heroine) + " is on the director's stage; " + GirlInfo.FirstName(me.heroine) + " asks " + GirlInfo.FirstName(spare.heroine)); target = spare; }
                 }
                 if (!Cfg.DirectorEnabled.Value || !Cfg.StudentH.Value || target == null) return;
@@ -496,7 +496,7 @@ namespace Joojkk.CampusLife
                     var theirs = Pairs.PartnerOf(tgt.heroine);
                     if (theirs != null && theirs != me.heroine)
                     {
-                        var other = G.Act.npcList.FirstOrDefault(n => free(n) && n != tgt && Pairs.PartnerOf(n.heroine) == null && (n.heroine.parameter.attribute.likeGirls || G.Act.actCtrl.GetDesire(26, n.heroine) >= 80));
+                        var other = G.Act.npcList.FirstOrDefault(n => free(n) && n != tgt && Pairs.PartnerOf(n.heroine) == null && (GirlInfo.Quirks(n.heroine).likeGirls || G.Act.actCtrl.GetDesire(26, n.heroine) >= 80));
                         if (other != null) target = other;
                         else
                         {

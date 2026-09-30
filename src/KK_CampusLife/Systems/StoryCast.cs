@@ -245,7 +245,7 @@ namespace Joojkk.CampusLife
         public static bool Graduated(SaveData.Heroine h) { return h != null && S.Buffs.ContainsKey(GradKey(h)); }
 
         /// <summary>Her final scene played, or every event of her schedule was seen.</summary>
-        private static bool StoryOver(SaveData.Heroine h)
+        internal static bool StoryOver(SaveData.Heroine h)
         {
             if (h.isTaked) return true;
             var act = G.Act;

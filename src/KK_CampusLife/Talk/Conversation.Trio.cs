@@ -174,6 +174,21 @@ namespace Joojkk.CampusLife
                     _cat = "Talk";
                     Reopen();
                     return;
+                case "aleft":
+                    // The first girl walks off: this talk (hers) closes quietly and Duo opens a normal talk with the
+                    // second one, who stayed.
+                    FinishB();
+                    t.SB = null;
+                    Finish(true);
+                    try
+                    {
+                        TrioStage.End();
+                        if (_scene != null && _scene.resultInfo != null) _scene.resultInfo.result = ActionGame.Communication.ResultEnum.None;
+                        Clear();
+                        Singleton<Manager.Scene>.Instance.UnLoad();
+                    }
+                    catch (Exception e) { CampusLifePlugin.Log.LogError("Trio, first girl left: " + e); Game(-1); }
+                    return;
                 case "h3":
                     FinishB();
                     t.SB = null;
@@ -211,7 +226,6 @@ namespace Joojkk.CampusLife
         private static Button _targetBtn;
         private static TextMeshProUGUI _targetCap;
         private static readonly List<GameObject> TargetMade = new List<GameObject>();
-        private static readonly Dictionary<string, Sprite> Portraits = new Dictionary<string, Sprite>();
 
         private static void BuildTargetButton()
         {
@@ -274,31 +288,13 @@ namespace Joojkk.CampusLife
             var who = t.Target == TrioWho.A ? t.A : t.Target == TrioWho.B ? t.B : null;
             try
             {
-                var sp = who != null ? Portrait(who) : null;
-                ConvArt.Style(_targetBtn, sp ?? ConvArt.Tile(2, true), false);
+                // A drawing like the other buttons, not her face: the two girls as they stand,
+                // the one you talk to solid with the marker over her.
+                ConvArt.Style(_targetBtn, ConvArt.Tile(t.Target == TrioWho.A ? IconArt.ToA : t.Target == TrioWho.B ? IconArt.ToB : IconArt.ToBoth, false), false);
                 _targetBtn.image.preserveAspect = true;
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Trio target tile: " + e.Message); }
             if (_targetCap != null) _targetCap.text = "To: " + (who != null ? GirlInfo.FirstName(who) : "Both");
-        }
-
-        /// <summary>Her face from her card (the game keeps it in the save), cut once per girl.</summary>
-        private static Sprite Portrait(SaveData.Heroine h)
-        {
-            var key = GirlInfo.Key(h);
-            Sprite sp;
-            if (Portraits.TryGetValue(key, out sp) && sp != null) return sp;
-            try
-            {
-                var png = h.charFile != null ? h.charFile.facePngData : null;
-                if (png == null || png.Length == 0) return null;
-                var tex = new Texture2D(2, 2);
-                if (!tex.LoadImage(png)) return null;
-                sp = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-                Portraits[key] = sp;
-                return sp;
-            }
-            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Trio portrait: " + e.Message); return null; }
         }
 
         /// <summary>
@@ -328,6 +324,13 @@ namespace Joojkk.CampusLife
             else if (what == "b") TrioTarget(TrioWho.B);
             else if (what == "both") TrioTarget(TrioWho.Both);
             else return false;
+            return true;
+        }
+
+        internal static bool TrioSlight(string who, int n)
+        {
+            if (_trio == null) return false;
+            if (who == "a") _trio.SlightA = n; else _trio.SlightB = n;
             return true;
         }
 
@@ -363,14 +366,12 @@ namespace Joojkk.CampusLife
                 c1.Add(E("How do you know " + an + "?", () => BAsk("know")));
                 c1.Add(E("What do you think of " + an + "?", () => BAsk("think")));
                 c1.Add(E("Tell her a joke", () => BAsk("joke")));
+                // Touching her (pat, hand, kiss, more) is on her body, like the first girl.
                 c2.Add(E("Offer her a snack", () => BAct("snack")));
-                c2.Add(E("Pat her head", () => BAct("pat")));
                 c2.Add(E("Say goodbye to both", TrioLeave, false));
                 c3.Add(E("Ask her to hang out sometime", () => BAct("hangout")));
                 c4.Add(E("Compliment her looks", () => BAct("compliment")));
-                c4.Add(E("Hold " + bn + "'s hand", () => BAct("hand")));
                 c5.Add(E("Whisper something suggestive", () => BAct("whisper")));
-                c5.Add(E("Kiss " + bn, BKiss));
             }
             else
             {

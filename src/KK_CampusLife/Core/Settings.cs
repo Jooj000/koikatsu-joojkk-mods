@@ -95,6 +95,7 @@ namespace Joojkk.CampusLife
         public static ConfigEntry<bool> StoryDirector;
         public static ConfigEntry<bool> StoryInPerson;
         public static ConfigEntry<bool> StoryGraduates;
+        public static ConfigEntry<bool> CardTraits;
         public static ConfigEntry<bool> TeachersWalk;
         public static ConfigEntry<bool> TeacherTalks;
 
@@ -195,7 +196,7 @@ namespace Joojkk.CampusLife
             StoryInPerson = B(c, a, "Story heroine waits in person", true, "Today's story heroine stands at her event spot, even for events that normally only show a star on the map.");
             TeachersWalk = B(c, a, "Teachers walk around the school", true, "The teachers walk around the school like the students and the story heroines, instead of only standing at their event spot.");
             TeacherTalks = B(c, a, "Teacher conversations with choices", true, "A teacher's event is a conversation with choices that moves her favor and H, instead of the game's string of short talks. Before you are friends she only talks at her event spot; from friend on, anywhere; when the friendship is complete she joins school life as a free character.");
-            StoryGraduates = B(c, a, "Story heroines join a class when their story ends", true, "When a story heroine's story is complete she takes a free seat in a class as a regular student (like the PantyFairy fairy) and all everyday conversations work with her. Her story self stays in the save for the game's own scenes.");
+            StoryGraduates = B(c, a, "Story heroines join a class when their story ends", true, "When a story heroine's story is complete she takes a free seat in a class as a regular student and all everyday conversations work with her. Her story self stays in the save for the game's own scenes.");
 
             const string ca = "7. School calendar";
             CalendarEnabled = B(c, ca, "Enable school events", true, "Exams, sports festival, culture festival, field trips and seasonal days.");
@@ -229,6 +230,7 @@ namespace Joojkk.CampusLife
             WalkAndTalk = B(c, d, "Walk and talk", true, "A girl may ask you to walk her to a few places; she follows you and talks at each stop. Warping cancels the walk.");
             DirectorEnabled = B(c, d, "Enable the school life director", true, "Students have needs and intentions, become friends, fall for each other, fight, make up, and stories spread as rumors.");
             IntentMovement = B(c, d, "Students move by intention", MovementMode.On, "On: where a student walks follows what she wants (food, rest, a friend, her girlfriend, you). Observe: only logged. Off: the game decides as usual.");
+            CardTraits = B(c, d, "Draw unset card traits", true, "A card with every trait marker on (or every one off) was never really set: her traits (easy, lewd, closet pervert, serious...) are drawn instead, always the same for her, from her personality and likes. Cards with some traits on and some off keep theirs; her likes are always her card's.");
             StudentRomance = B(c, d, "Romance between students", true, "Girls who like girls (the card's setting, or about a third of the others) can get crushes, become couples, break up and make up.");
             FullControl = B(c, d, "The director decides every action", true, "Every action of every girl is the director's choice (her needs, intention, mood, club); the game only carries it out. Off: the game draws actions from its own desire table and the director only leans them.");
             StudentH = B(c, d, "Student couples get intimate", true, "Couples between students may slip away together (the game's own scene between two girls), more often the closer they are.");

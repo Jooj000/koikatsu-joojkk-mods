@@ -52,6 +52,7 @@ namespace Joojkk.CampusLife
                 catch (Exception e) { Log.LogWarning("Students keep the game's own movement: " + e.Message); }
                 try { Sunday.Install(harmony); }
                 catch (Exception e) { Log.LogWarning("Sunday stories not available: " + e.Message); }
+                CardTraits.Install(harmony);
                 try { TransitionScreen.Install(harmony); }
                 catch (Exception e) { Log.LogWarning("Loading screen destination not available: " + e.Message); }
             }
@@ -88,6 +89,7 @@ namespace Joojkk.CampusLife
                 Achievements.Tick();
                 TransitionScreen.Update();
                 ToastUi.Update();
+                AchievementPopup.Update();
                 SpotHint.Update();
                 WalkHint.Update();
                 StatusUi.WatchBroken();

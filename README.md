@@ -10,6 +10,7 @@ BepInEx plugins for the Koikatsu main game (Koikatu / Koikatsu Party, HF Patch i
 
 ## Requirements
 - Koikatsu with BepInEx 5.4.23+, KKAPI 1.45+ and ExtensibleSaveFormat (HF Patch has them).
+- The full list of required and optional mods, and what each plugin does with them: `DEPENDENCIES.md`.
 - Building: the Roslyn `csc.exe` of Visual Studio 2019 (the game runs on .NET 3.5 / Unity 5.6).
 
 ## Building

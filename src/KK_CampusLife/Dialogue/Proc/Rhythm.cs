@@ -30,7 +30,7 @@ namespace Joojkk.CampusLife
             if (a.majime) closed += 1;
             if (a.kireizuki) closed += 1;
             if (a.hitori) closed += 1;
-            try { if (h.parameter.denial.kiss) closed += 2; } catch { }
+            try { if (CardTraits.RefusesKiss(h)) closed += 2; } catch { }
             if (v.Kind == "shy" || v.Kind == "ojou" || v.Kind == "serious" || v.Kind == "proper") closed += 1;
             if (open - closed >= 2) return Profile.Open;
             if (closed - open >= 2) return Profile.Reserved;

@@ -55,7 +55,7 @@ namespace Joojkk.CampusLife
             if (q.majime) shy += 2;
             if (q.kireizuki) shy += 1;
             if (q.hitori) shy += 1;
-            try { if (h.parameter.denial.kiss) shy += 2; } catch { }
+            try { if (CardTraits.RefusesKiss(h)) shy += 2; } catch { }
             switch (h.personality)
             {
                 case 0: case 13: open += 2; break;                       // sexy, gyaru

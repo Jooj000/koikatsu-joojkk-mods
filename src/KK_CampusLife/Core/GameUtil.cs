@@ -442,7 +442,7 @@ namespace Joojkk.CampusLife
 
         public static ChaFileParameter.Attribute Quirks(SaveData.Heroine h)
         {
-            return h == null ? new ChaFileParameter.Attribute() : h.parameter.attribute;
+            return h == null ? new ChaFileParameter.Attribute() : CardTraits.Of(h);
         }
 
         public static string RelationLabel(SaveData.Heroine h)

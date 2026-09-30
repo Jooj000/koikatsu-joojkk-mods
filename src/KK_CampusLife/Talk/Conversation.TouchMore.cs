@@ -257,6 +257,7 @@ namespace Joojkk.CampusLife
     internal sealed class TouchSpot : MonoBehaviour
     {
         public string Kind = "";
+        public bool ForB;   // on the second girl of the conversation with both (Conversation.BTouch)
 
         private void OnMouseEnter() { Conversation.SpotHover(true); }
 
@@ -264,7 +265,7 @@ namespace Joojkk.CampusLife
 
         private void OnMouseDown()
         {
-            try { Conversation.SpotTouch(Kind, true); }
+            try { if (ForB) Conversation.BTouch(Kind, true); else Conversation.SpotTouch(Kind, true); }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Talk touch " + Kind + ": " + e.Message); }
         }
     }
