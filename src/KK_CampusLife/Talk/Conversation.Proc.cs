@@ -473,6 +473,10 @@ namespace Joojkk.CampusLife
             c["favor"] = h.favor.ToString();
             c["lewd"] = h.lewdness.ToString();
             c["profile"] = Rhythm.Of(h).ToString().ToLowerInvariant();
+            // Her card's refusals as the talk reads them: touch.dlg answers a kiss or a bold touch
+            // she refuses in her own words. A card that refuses everything only refuses kisses when her drawn traits say so.
+            c["nokiss"] = CardTraits.RefusesKiss(h) ? "yes" : "no";
+            c["nocaress"] = CardTraits.TalkRefuses(h, "caress") ? "yes" : "no";
             var mood = MoodOf(h);
             c["mood"] = mood.ToString().ToLowerInvariant();
             c["moodword"] = mood == CampusLife.Mood.None ? "fine" : Lines.MoodName(mood).ToLowerInvariant();

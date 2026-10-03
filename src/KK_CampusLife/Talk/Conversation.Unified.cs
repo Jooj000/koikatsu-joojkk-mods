@@ -100,6 +100,8 @@ namespace Joojkk.CampusLife
                     BuildRomance(s, h, gs, romance);
                     BuildSpicy(s, h, gs, spicy);
                 }
+                // The other girl is right there.
+                if (_trio != null) PairOptions(h, _trio.B, talk, actions, together, romance, spicy);
             }
 
             var cats = new List<KeyValuePair<string, List<UEntry>>>
@@ -272,7 +274,8 @@ namespace Joojkk.CampusLife
             if (k < 0) return new Color(0.96f, 0.96f, 0.96f, 1f);
             var a = IconArt.Accent[k];
             // user, 2026-10-26: "the color got too strong, make it darker", then "80%, the green 70%"
-            var dark = k == 2 ? 0.7f : 0.8f;
+            // Talk's deeper blue is darkened less, or its letters sink into the graphite.
+            var dark = k == 2 ? 0.7f : k == 0 ? 0.95f : 0.8f;
             return new Color(a[0] * dark, a[1] * dark, a[2] * dark, 1f);
         }
 
@@ -651,16 +654,21 @@ namespace Joojkk.CampusLife
 
         // ================= beats, rewards, repetition =================
 
-        /// <summary>The reward table: level x how fitting the answer was (favor, H, trust).</summary>
+        /// <summary>
+        /// "balancear direito o afeto para não encher tão rápido ... não colocar um limite artificial de piso de dias"):
+        /// with the daily curve (G.AddFavor) the days come out of the affection itself, measured with pacesim.
+        /// </summary>
         private static int[] Table(Lvl l, Q q)
         {
             switch (l)
             {
-                case Lvl.Friend: return q == Q.Good ? new[] { 10, 0, 2 } : q == Q.Neutral ? new[] { 4, 0, 0 } : new[] { -2, 0, -1 };
-                case Lvl.Romance: return q == Q.Good ? new[] { 8, 5, 2 } : q == Q.Neutral ? new[] { 5, 3, 0 } : new[] { -2, -1, -1 };
-                default: return q == Q.Good ? new[] { 5, 12, 1 } : q == Q.Neutral ? new[] { 2, 6, 0 } : new[] { -2, -1, 0 };
+                case Lvl.Friend: return q == Q.Good ? new[] { 5, 0, 2 } : q == Q.Neutral ? new[] { 2, 0, 0 } : new[] { -2, 0, -1 };
+                case Lvl.Romance: return q == Q.Good ? new[] { 4, 3, 2 } : q == Q.Neutral ? new[] { 2, 2, 0 } : new[] { -2, -1, -1 };
+                default: return q == Q.Good ? new[] { 2, 6, 1 } : q == Q.Neutral ? new[] { 1, 3, 0 } : new[] { -2, -1, 0 };
             }
         }
+
+        internal static int[] GoodTable(int level) { return Table((Lvl)level, Q.Good); }
 
         /// <summary>
         /// Pays one beat. The same beat with the same girl on the same day (same key: a new memory, request or place is a
@@ -704,7 +712,7 @@ namespace Joojkk.CampusLife
             if (_prunedDay == S.Day) return;
             _prunedDay = S.Day;
             foreach (var k in S.Buffs.Keys.Where(k => k.StartsWith("rep:", StringComparison.Ordinal) && S.Buffs[k] / 10 != S.Day).ToList()) S.Buffs.Remove(k);
-            foreach (var k in S.Buffs.Keys.Where(k => k.StartsWith("fday:", StringComparison.Ordinal) && S.Buffs[k] / 1000 != S.Day).ToList()) S.Buffs.Remove(k);
+            foreach (var k in S.Buffs.Keys.Where(k => (k.StartsWith("fday:", StringComparison.Ordinal) || k.StartsWith("hday:", StringComparison.Ordinal)) && S.Buffs[k] / 1000 != S.Day).ToList()) S.Buffs.Remove(k);
         }
 
         private static string[] Stock(Q q)
@@ -1476,6 +1484,7 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(h, true);
             b.Me(RomanceLines.PlayerSneak());
             b.Face(h, ok ? Feel.Love : Feel.Pout).Her_(ok ? RomanceLines.SneakYes(tone) : RomanceLines.SneakNo(tone));
+            if (ok) Bounds(b, h);   // what her card still refuses in the game's H, in her words
             Hide();
             Scenes.PlayInTalk(b, c =>
             {
@@ -1496,7 +1505,7 @@ namespace Joojkk.CampusLife
             b.Face(h, Feel.Shy).Her_(T(h, "...About what I owe you. I haven't forgotten.", "So... that thing I owe you. Yeah. I remember!", "...My debt. I keep my word.", "Ah, my little debt. Here to collect?"));
             if (can) b.Choice("Collect it now", "db_now", "Save it for later", "db_later");
             else b.Choice("Save it for somewhere more private", "db_later");
-            b.Branch("db_now"); b.Face(h, Feel.Love).Her_(T(h, "...Okay. Now, then.", "Now?! ...Okay!", "...Fine. Now.", "Now? Bold. I like it.")); b.End();
+            b.Branch("db_now"); b.Face(h, Feel.Love).Her_(T(h, "...Okay. Now, then.", "Now?! ...Okay!", "...Fine. Now.", "Now? Bold. I like it.")); Bounds(b, h); b.End();
             b.Branch("db_later"); b.Face(h, Feel.Smile).Her_(T(h, "...Then I'll be waiting.", "Later! It's a promise!", "...I'll remember.", "I'll hold you to it.")); b.End();
             Hide();
             Scenes.PlayInTalk(b, c =>

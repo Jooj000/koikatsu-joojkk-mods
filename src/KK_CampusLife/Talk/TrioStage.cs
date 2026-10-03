@@ -430,9 +430,16 @@ namespace Joojkk.CampusLife
                 var box = ScreenBox(rects[0]);
                 foreach (var r in rects.Skip(1)) box = Join(box, ScreenBox(r));
                 var near = new Rect(box.xMin - 140f, box.yMin - 140f, box.width + 280f, box.height + 280f);
+                var canvas = rects[0].GetComponentInParent<Canvas>();
+                var root = canvas != null ? canvas.rootCanvas : null;
                 foreach (var b in Object.FindObjectsOfType<Button>())
                 {
                     if (b == null || !b.gameObject.activeInHierarchy || b.name.StartsWith("cl_", StringComparison.Ordinal)) continue;
+                    // Only the talk's own icons: the map's buttons (ClothChange, hidden under the talk) sit near them and
+                    // were pulled into the row as an empty gap.
+                    var bc = b.GetComponentInParent<Canvas>();
+                    if (root != null && (bc == null || bc.rootCanvas != root)) continue;
+                    if (b.GetComponentsInParent<CanvasGroup>().Any(g => g.alpha < 0.05f)) continue;
                     var r = (RectTransform)b.transform;
                     if (rects.Contains(r) || rects.Any(x => r.IsChildOf(x) || x.IsChildOf(r))) continue;
                     var sb = ScreenBox(r);
@@ -440,13 +447,24 @@ namespace Joojkk.CampusLife
                     rects.Add(r);
                     box = Join(box, sb);
                 }
-                var dx = Screen.width * 0.5f - box.center.x;
+                // One row: the game stands them as a corner (two over one); at the top center they go
+                // side by side, left to right as they were, level with the highest one.
+                rects = rects.OrderBy(r => ScreenBox(r).center.x).ThenByDescending(r => ScreenBox(r).center.y).ToList();
+                const float gap = 14f;
+                var total = rects.Sum(r => ScreenBox(r).width) + gap * (rects.Count - 1);
+                var rowY = box.yMax - rects.Max(r => ScreenBox(r).height) * 0.5f;
+                var rowX = Screen.width * 0.5f - total * 0.5f;
+                var said = new List<string>();
                 foreach (var r in rects)
                 {
+                    var sb = ScreenBox(r);
                     _moved.Add(new KeyValuePair<RectTransform, Vector3>(r, r.localPosition));
-                    MoveOnScreen(r, r, false, dx);
+                    MoveTo(r, new Vector2(rowX + sb.width * 0.5f, rowY));
+                    rowX += sb.width + gap;
+                    var now = ScreenBox(r);
+                    said.Add(r.name + " " + now.center.x.ToString("0") + "," + now.center.y.ToString("0") + " " + now.width.ToString("0") + "x" + now.height.ToString("0"));
                 }
-                CampusLifePlugin.Log.LogInfo("Trio icons to the top center: " + string.Join(", ", rects.Select(r => r.name).ToArray()));
+                CampusLifePlugin.Log.LogInfo("Trio icons in a row at the top center (screen " + Screen.width + "x" + Screen.height + "): " + string.Join("; ", said.ToArray()));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Trio icons: " + e.Message); }
         }
@@ -489,6 +507,17 @@ namespace Joojkk.CampusLife
             var s = r.localScale;
             r.localScale = new Vector3(-s.x, s.y, s.z);
             r.position += before - r.TransformPoint(r.rect.center);
+        }
+
+        /// <summary>Moves <paramref name="r"/> so its middle is at screen point <paramref name="want"/>.</summary>
+        private static void MoveTo(RectTransform r, Vector2 want)
+        {
+            var cam = CamOf(r);
+            var c = ScreenBox(r).center;
+            var parent = r.parent as RectTransform;
+            Vector3 w0, w1;
+            if (parent == null || !RectTransformUtility.ScreenPointToWorldPointInRectangle(parent, c, cam, out w0) || !RectTransformUtility.ScreenPointToWorldPointInRectangle(parent, want, cam, out w1)) return;
+            r.position += w1 - w0;
         }
 
         private static void MoveOnScreen(RectTransform r, RectTransform from, bool mirror, float dx)

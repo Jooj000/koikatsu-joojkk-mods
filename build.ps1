@@ -1,9 +1,11 @@
-# Builds KK_CampusLife.dll, KK_HMaleWardrobe.dll and KK_SchoolOptimizer.dll with the Roslyn csc from VS 2019.
+﻿# Builds KK_CampusLife.dll, KK_HMaleWardrobe.dll and KK_SchoolOptimizer.dll with the Roslyn csc from VS 2019.
 # Usage:  powershell -ExecutionPolicy Bypass -File build.ps1 [-Install]
 #   -Install  copies the DLLs (and the CampusLife data folder) into the game's
 #             BepInEx\plugins\Joojkk\ folder.
+#   -Only     builds just that plugin (KK_CampusLife, KK_HMaleWardrobe or KK_SchoolOptimizer). A plugin whose
+#             src folder is missing (a single-mod repository) is skipped.
 #   -Game     the Koikatsu folder (with Koikatu_Data and BepInEx);  -Csc  the Roslyn csc.exe to use.
-param([switch]$Install, [switch]$Dev,
+param([switch]$Install, [switch]$Dev, [string]$Only = '',
       [string]$Game = 'E:\SteamLibrary\steamapps\settings\KK',
       [string]$Csc = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Roslyn\csc.exe')
 
@@ -55,19 +57,18 @@ function Build($name) {
   Write-Host "Built $dll"
 }
 
-Build 'KK_CampusLife'
-Build 'KK_HMaleWardrobe'
-Build 'KK_SchoolOptimizer'
+$names = @('KK_CampusLife', 'KK_HMaleWardrobe', 'KK_SchoolOptimizer') | Where-Object { (Test-Path (Join-Path $root "src\$_")) -and ($Only -eq '' -or $Only -eq $_) }
+foreach ($n in $names) { Build $n }
 
 if ($Install) {
   $dest = Join-Path $plugins 'Joojkk'
   New-Item -ItemType Directory -Force $dest | Out-Null
-  Copy-Item (Join-Path $out 'KK_CampusLife.dll') $dest -Force
-  Copy-Item (Join-Path $out 'KK_HMaleWardrobe.dll') $dest -Force
-  Copy-Item (Join-Path $out 'KK_SchoolOptimizer.dll') $dest -Force
+  foreach ($n in $names) { Copy-Item (Join-Path $out "$n.dll") $dest -Force }
   # Painted event backgrounds.
-  $bgDest = Join-Path $dest 'backgrounds'
-  New-Item -ItemType Directory -Force $bgDest | Out-Null
-  Copy-Item (Join-Path $root 'data\backgrounds\*.jpg') $bgDest -Force
+  if (($names -contains 'KK_CampusLife') -and (Test-Path (Join-Path $root 'data\backgrounds'))) {
+    $bgDest = Join-Path $dest 'backgrounds'
+    New-Item -ItemType Directory -Force $bgDest | Out-Null
+    Copy-Item (Join-Path $root 'data\backgrounds\*.jpg') $bgDest -Force
+  }
   Write-Host "Installed to $dest"
 }

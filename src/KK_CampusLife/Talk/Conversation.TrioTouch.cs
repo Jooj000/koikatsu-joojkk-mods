@@ -62,6 +62,25 @@ namespace Joojkk.CampusLife
             BSpots.Add(go);
         }
 
+        internal static int BTouchClicks;
+        internal static string BTouchLast = "";
+
+        internal static bool BSpotPoint(string kind, out Vector3 world, out string why)
+        {
+            world = Vector3.zero;
+            why = "";
+            if (kind == "lips" || kind == "mouth")
+            {
+                if (_mouthB == null) { why = "no mouth bone found on her"; return false; }
+                world = _mouthB.position;
+                return true;
+            }
+            var go = BSpots.FirstOrDefault(g => g != null && g.name.StartsWith("cl_btouch_" + kind + "_", StringComparison.Ordinal));
+            if (go == null) { why = "no " + kind + " area on her (" + string.Join(", ", BSpots.Where(g => g != null).Select(g => g.name).ToArray()) + ")"; return false; }
+            world = go.transform.position;
+            return true;
+        }
+
         internal static void ClearBSpots()
         {
             foreach (var g in BSpots) if (g != null) UnityEngine.Object.Destroy(g);
@@ -86,11 +105,13 @@ namespace Joojkk.CampusLife
             var t = _trio;
             var ts = G.TalkScene;
             if (t == null || ts == null || ts != _scene) return;
+            if (fromSpot) { BTouchClicks++; BTouchLast = part + (SpotReady(ts) ? "" : " (ignored: the talk is busy or the mouse is over the UI)"); }
             if (fromSpot && !SpotReady(ts)) return;
             if (Scenes.Running) return;
             var look = lookMode ?? ts.touchMode == 1;
             if (part == "head" && !look && (atLips ?? NearMouthB())) part = "mouth";
-            CampusLifePlugin.Log.LogInfo("Trio: " + (look ? "stared at" : "touched") + " " + GirlInfo.FirstName(t.B) + "'s " + part);
+            CampusLifePlugin.Log.LogInfo("Trio: " + (look ? "stared at" : "touched") + " " + GirlInfo.FirstName(t.B) + "'s " + part + (fromSpot ? " (mouse)" : " (direct)"));
+            if (fromSpot) BTouchLast += " -> " + (look ? "look " : "touch ") + part;
             if (part == "mouth") { BKiss(); return; }
             if (look) { BLook(part); return; }
             switch (part)

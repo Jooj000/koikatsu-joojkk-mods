@@ -82,6 +82,33 @@ namespace Joojkk.CampusLife
             return KissShy.Contains(GirlInfo.Key(h));
         }
 
+        /// <summary>
+        /// What her card refuses in the game's H, most telling first: condom (she insists on one), kiss, anal, caress,
+        /// massage (toys). Read as it is: the game's H keeps them, the mod only says them aloud.
+        /// </summary>
+        public static List<string> HRefusals(SaveData.Heroine h)
+        {
+            var l = new List<string>();
+            if (h == null || h.parameter == null) return l;
+            var d = h.parameter.denial;
+            if (d.notCondom) l.Add("condom");
+            if (d.kiss) l.Add("kiss");
+            if (d.anal) l.Add("anal");
+            if (d.aibu) l.Add("caress");
+            if (d.massage) l.Add("massage");
+            return l;
+        }
+
+        /// <summary>A refusal as the talk reads it: the card's, except on a card that refuses everything (as unset as
+        /// the markers), where only a drawn kiss refusal counts (<see cref="RefusesKiss"/>).</summary>
+        public static bool TalkRefuses(SaveData.Heroine h, string what)
+        {
+            if (what == "kiss") return RefusesKiss(h);
+            var l = HRefusals(h);
+            if (l.Count == 5 && h.fixCharaID == 0 && Cfg.CardTraits != null && Cfg.CardTraits.Value && !Raw) return false;
+            return l.Contains(what);
+        }
+
         public static string Describe(ChaFileParameter.Attribute a)
         {
             var f = Flags(a);

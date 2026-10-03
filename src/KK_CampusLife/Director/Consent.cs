@@ -44,24 +44,17 @@ namespace Joojkk.CampusLife
 
         // ================= pace profile =================
 
+        /// <summary>
+        /// two different lists and a girl could be open for one and normal for the other.
+        /// </summary>
         public static Pace Profile(SaveData.Heroine h)
         {
-            var q = GirlInfo.Quirks(h);
-            int open = 0, shy = 0;
-            if (q.bitch) open += 2;
-            if (q.choroi) open += 2;
-            if (q.mutturi) open += 1;
-            if (q.friendly) open += 1;
-            if (q.majime) shy += 2;
-            if (q.kireizuki) shy += 1;
-            if (q.hitori) shy += 1;
-            try { if (CardTraits.RefusesKiss(h)) shy += 2; } catch { }
-            switch (h.personality)
+            switch (Rhythm.Of(h))
             {
-                case 0: case 13: open += 2; break;                       // sexy, gyaru
-                case 1: case 6: case 8: case 19: case 20: shy += 2; break; // ojousama, yamato nadeshiko, pure, bookish, timid
+                case Rhythm.Profile.Open: return Pace.Open;
+                case Rhythm.Profile.Reserved: return Pace.Reserved;
+                default: return Pace.Normal;
             }
-            return open - shy >= 2 ? Pace.Open : shy - open >= 2 ? Pace.Reserved : Pace.Normal;
         }
 
         /// <summary>
@@ -90,19 +83,6 @@ namespace Joojkk.CampusLife
         // ================= the answer =================
 
         /// <summary>How likely she says yes (0-1) and the main reasons, for the log.</summary>
-        /// <summary>
-        /// Dating takes days of talking, not one good day (user, 2026-10-28: "tá dando pra namorar qualquer uma em um dia só"):
-        /// a reserved girl wants 5 different days, a normal one 4, an open one 2.
-        /// </summary>
-        public static bool KnownLongEnough(SaveData.Heroine h, out int days, out int need)
-        {
-            var gs = S.Girl(GirlInfo.Key(h));
-            var pace = Profile(h);
-            days = gs.TalkDays.Distinct().Count();
-            need = pace == Pace.Reserved ? 5 : pace == Pace.Normal ? 4 : 2;
-            return days >= need;
-        }
-
         public static float Chance(SaveData.Heroine h, Ask ask, out string why)
         {
             var r = new List<string>();
@@ -128,34 +108,36 @@ namespace Joojkk.CampusLife
             switch (ask)
             {
                 case Ask.Confess:
-                {
-                    int days, need;
-                    if (!KnownLongEnough(h, out days, out need)) { r.Add("too soon (" + days + "/" + need + " days)"); c = 0.03f; break; }
+                    // No floor of days (user, 2026-10-30): the daily curve of favor (G.AddFavor) makes it take ~5 days
+                    // for a reserved girl, 4 for a normal one, 2-3 for an open one (pacesim).
                     c = (favor - 50f) / 40f;
                     break;
-                }
                 case Ask.Date:
                     c = h.isGirlfriend ? 0.8f : h.relation >= 1 ? 0.2f + (favor - 40f) / 100f : 0.05f;
                     break;
                 case Ask.H:
+                {
+                    // The bar decides, not a floor of days (user, 2026-10-30): H fills a little each day (G.AddFavor), so a
+                    // reserved girl says yes ~2 days after you start dating (day ~7), a normal one the day after (day ~5).
                     if (pace == Pace.Reserved)
                     {
                         if (!h.isGirlfriend || gs.Chapter < 1) { r.Add("only after dating a while"); c = 0.02f; }
-                        else c = 0.3f + lewd / 120f;
+                        else c = (lewd - 60f) / 40f;
                     }
                     else if (pace == Pace.Normal)
                     {
-                        if (h.isGirlfriend) c = 0.45f + lewd / 150f;
+                        if (h.isGirlfriend) c = (lewd - 40f) / 40f;
                         else if (h.relation >= 1 && h.lewdness >= 60 && mood == Mood.Flirty) c = 0.3f + lewd / 200f;
                         else { r.Add("not her girlfriend"); c = 0.03f; }
                     }
                     else
                     {
-                        c = h.isGirlfriend ? 0.7f + lewd / 300f : h.relation >= 0 ? (lewd - 20f) / 80f : 0f;
+                        c = h.isGirlfriend ? 0.7f + lewd / 300f : h.relation >= 0 ? lewd / 60f : 0f;
                         if (gs.TalkDay == S.Day && gs.TalksToday >= 3) { c += 0.25f; r.Add("a perfect day"); }
                     }
                     if (mood == Mood.Sleepy) c -= 0.2f;
                     break;
+                }
                 case Ask.HoldHand:
                     c = h.isGirlfriend ? 0.95f : h.relation >= 0 ? 0.2f + favor / 120f : 0.02f;
                     break;

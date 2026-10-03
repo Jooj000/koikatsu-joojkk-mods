@@ -24,8 +24,8 @@ The game itself: Koikatu / Koikatsu Party main game (story mode), Unity 5.6.2 / 
 | Mod | GUID | What Campus Life does with it | Author |
 |---|---|---|---|
 | School Optimizer | `joojkk.schooloptimizer` | Shares which students are loaded on each map (story heroines walking around, the director's plans). | Joojkk |
-| KK_LewdCrestX | `LewdCrestX` | Achievements "Marked" and "Crest Collector" (girls wearing a crest). | ManlyMarco |
-| KK_PantyFairy | `PantyFairy` | Achievements "A Fairy's Favor", "Fairy Tale Ending" and "Lingerie Thief" (her story and haul). | ManlyMarco |
+| KK_LewdCrestX | `LewdCrestX` | The "Crests" achievement (Marked, Crest Collector). | ManlyMarco |
+| KK_PantyFairy | `PantyFairy` | The "Panty Fairy" and "The Fairy's Collection" achievements (her story and haul). | ManlyMarco |
 | KK_Pregnancy | `KK_Pregnancy` | Achievement "Family Way". | ManlyMarco |
 
 ### School Optimizer (`joojkk.schooloptimizer`)

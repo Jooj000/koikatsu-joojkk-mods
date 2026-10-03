@@ -223,6 +223,7 @@ namespace Joojkk.CampusLife
 
         // ================= who you talk to =================
 
+        private const float TargetScale = 0.8f;
         private static Button _targetBtn;
         private static TextMeshProUGUI _targetCap;
         private static readonly List<GameObject> TargetMade = new List<GameObject>();
@@ -230,14 +231,19 @@ namespace Joojkk.CampusLife
         private static void BuildTargetButton()
         {
             ClearTargetButton();
-            if (_talk == null || CatButtons.Count == 0 || CatButtons[0] == null) return;
-            var trt = (RectTransform)CatButtons[0].transform;
-            var go = UnityEngine.Object.Instantiate(_talk.gameObject, trt.parent, false);
+            if (_talk == null || CatButtons.Count == 0 || CatButtons[CatButtons.Count - 1] == null) return;
+            // Under Spicy, 80% of its size, its right edge on Spicy's.
+            var srt = (RectTransform)CatButtons[CatButtons.Count - 1].transform;
+            var go = UnityEngine.Object.Instantiate(_talk.gameObject, srt.parent, false);
             go.name = "cl_trio_target";
             TargetMade.Add(go);
             foreach (Transform child in go.transform) if (child.name == "cl_cat_caption") UnityEngine.Object.Destroy(child.gameObject);
-            var height = trt.rect.height > 10f ? trt.rect.height : 64f;
-            ((RectTransform)go.transform).anchoredPosition = trt.anchoredPosition + new Vector2(0f, height + 44f);
+            const float k = TargetScale;
+            var w = srt.rect.width > 10f ? srt.rect.width : 64f;
+            var height = srt.rect.height > 10f ? srt.rect.height : 64f;
+            var grt = (RectTransform)go.transform;
+            grt.localScale = new Vector3(k, k, 1f);
+            grt.anchoredPosition = srt.anchoredPosition + new Vector2((1f - srt.pivot.x) * w * (1f - k), -srt.pivot.y * height - 30f - (1f - srt.pivot.y) * height * k);
             _targetBtn = go.GetComponent<Button>();
             _targetBtn.onClick = new Button.ButtonClickedEvent();
             _targetBtn.onClick.AddListener(() =>
@@ -262,14 +268,16 @@ namespace Joojkk.CampusLife
             _targetCap = cap.AddComponent<TextMeshProUGUI>();
             var tmpl = _template != null ? _template.GetComponentInChildren<TextMeshProUGUI>(true) : null;
             if (tmpl != null) { _targetCap.font = tmpl.font; _targetCap.fontSharedMaterial = tmpl.fontSharedMaterial; }
-            _targetCap.fontSize = 17f;
+            // The button is drawn at 80%: the caption is enlarged back so it reads like the others.
+            crt.sizeDelta = new Vector2(112f / TargetScale, 22f / TargetScale);
+            _targetCap.fontSize = 17f / TargetScale;
             _targetCap.enableAutoSizing = true;
-            _targetCap.fontSizeMin = 11f;
-            _targetCap.fontSizeMax = 17f;
+            _targetCap.fontSizeMin = 11f / TargetScale;
+            _targetCap.fontSizeMax = 17f / TargetScale;
             _targetCap.enableWordWrapping = false;
             _targetCap.alignment = TextAlignmentOptions.TopRight;
             _targetCap.raycastTarget = false;
-            _targetCap.color = new Color(1f, 0.82f, 0.35f, 1f);
+            _targetCap.color = Color.white;   // white like its tile
             RefreshTargetButton();
         }
 
@@ -372,6 +380,7 @@ namespace Joojkk.CampusLife
                 c3.Add(E("Ask her to hang out sometime", () => BAct("hangout")));
                 c4.Add(E("Compliment her looks", () => BAct("compliment")));
                 c5.Add(E("Whisper something suggestive", () => BAct("whisper")));
+                PairOptions(b, t.A, c1, c2, c3, c4, c5);
             }
             else
             {
@@ -1047,6 +1056,8 @@ namespace Joojkk.CampusLife
             TLog("H for three: " + GirlInfo.FirstName(a) + " " + (ya ? "yes" : "no") + ", " + GirlInfo.FirstName(b0) + " " + (yb ? "yes" : "no") + ", together " + together);
             if (go)
             {
+                Bounds(b, a);
+                Bounds(b, b0);
                 b.Narr("The three of you slip away together.");
                 t.Ending = "h3";
                 Hide();

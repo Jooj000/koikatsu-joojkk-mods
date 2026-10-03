@@ -8,6 +8,19 @@ BepInEx plugins for the Koikatsu main game (Koikatu / Koikatsu Party, HF Patch i
 | **H Male Wardrobe** (`KK_HMaleWardrobe`) | `joojkk.hmalewardrobe` | Change the male character's outfit during H with a copy of the girl's outfit menu. **F10**. |
 | **School Optimizer** (`KK_SchoolOptimizer`) | `joojkk.schooloptimizer` | Fewer students loaded per period with priority for the important ones, memory guard, crowd avoidance, off-screen animation pause, hair and clothes physics by distance, background outfit changes, outfit texture size limit, and outside fixes for other mods (idle AmazingNewAccessoryLogic cameras, MaterialEditor texture size, hidden UncensorSelector parts) that cut video memory use, removal of character pieces left lying in the middle of the map, and (experimental, off) unloading students on other maps. |
 
+## Repositories
+
+This repository holds the three mods together (it is where they are developed and built). Each one also has a
+repository of its own, with its own README, changelog and releases:
+
+| Mod | Its repository | Docs here |
+|---|---|---|
+| Campus Life | [Jooj000/KK_CampusLife](https://github.com/Jooj000/KK_CampusLife) | [README](src/KK_CampusLife/README.md) · [CHANGELOG](src/KK_CampusLife/CHANGELOG.md) |
+| School Optimizer | [Jooj000/KK_SchoolOptimizer](https://github.com/Jooj000/KK_SchoolOptimizer) | [README](src/KK_SchoolOptimizer/README.md) · [CHANGELOG](src/KK_SchoolOptimizer/CHANGELOG.md) |
+| H Male Wardrobe | [Jooj000/KK_HMaleWardrobe](https://github.com/Jooj000/KK_HMaleWardrobe) | [README](src/KK_HMaleWardrobe/README.md) · [CHANGELOG](src/KK_HMaleWardrobe/CHANGELOG.md) |
+
+The single-mod repositories are exported from this one with `tools\split_repos.ps1`.
+
 ## Requirements
 - Koikatsu with BepInEx 5.4.23+, KKAPI 1.45+ and ExtensibleSaveFormat (HF Patch has them).
 - The full list of required and optional mods, and what each plugin does with them: `DEPENDENCIES.md`.

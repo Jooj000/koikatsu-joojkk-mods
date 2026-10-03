@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ActionGame;
 using UnityEngine;
 
 namespace Joojkk.CampusLife
@@ -10,9 +11,19 @@ namespace Joojkk.CampusLife
     /// fell and with whom, in the Album tab of F7) and a task: its goal and progress always show ("3/10"), the secret
     /// ones show a hint instead of their goal, and the album counts "N of M". Most read what the mod already keeps
     /// (lore, incidents, school events, harem, reputation); the rest are counters the scenes bump (Count).
+    /// <para>Stages: one
+    /// achievement climbs through its stages, each with its own name and goal ("Familiar Face", 3/4, "Talk with 10
+    /// different girls", next: 20). Each story heroine and each teacher has one whose stages are her story's
+    /// interactions, named after the one just reached. Every stage is a record of its own and pops its own card.</para>
     /// </summary>
     internal static class Achievements
     {
+        internal sealed class Stage
+        {
+            public int At;               // the value it falls at; 0: the Def's Goal2 ("every girl")
+            public string Name, Goal;
+        }
+
         internal sealed class Def
         {
             public string Id, Cat, Name, Goal, Hint;
@@ -23,6 +34,8 @@ namespace Joojkk.CampusLife
             public string Mod;           // another mod it is about (Mods.Has): without it, it does not show
             public Func<int> Progress;   // null: the counter with this id
             public Func<int> Goal2;      // a target that depends on the school (every girl, every story)
+            public Stage[] Stages;       // null: a single one (Name, Goal, Target); else Name is the whole climb's
+            public SaveData.Heroine Girl; // the story heroine or teacher it is about (it falls "with" her)
         }
 
         public static readonly string[] Cats = { "Friendship", "Romance", "Campus", "Club", "Stories", "Trouble", "Extras", "Secrets" };
@@ -31,6 +44,8 @@ namespace Joojkk.CampusLife
         private static CampusState S { get { return Campus.S; } }
 
         private static int C(string key) { int v; return S != null && S.AchCount.TryGetValue(key, out v) ? v : 0; }
+
+        private static Stage St(int at, string name, string goal) { return new Stage { At = at, Name = name, Goal = goal }; }
 
         /// <summary>Every student at school (regular ones and story heroines), not the teachers.</summary>
         private static int Students(Func<SaveData.Heroine, bool> f)
@@ -94,74 +109,133 @@ namespace Joojkk.CampusLife
         }
 
         // Inside each category: the simple ones first, then the specific ones, then the long run.
+        // A climb sits in the step of its first stage.
         public static readonly List<Def> All = new List<Def>
         {
             // ---- Friendship ----
-            new Def { Id = "first_talk", Cat = "Friendship", Tier = 1, Name = "Hello There", Goal = "Talk with a girl.", Progress = () => S.MetDay.Count },
-            new Def { Id = "first_friend", Cat = "Friendship", Tier = 1, Name = "A Friend", Goal = "Become friends with a girl.", Progress = () => Students(h => h.relation >= 1 || h.isGirlfriend) },
+            new Def { Id = "first_talk", Cat = "Friendship", Tier = 1, Name = "Social Life", Progress = () => S.MetDay.Count, Stages = new[] {
+                St(1, "Hello There", "Talk with a girl."),
+                St(5, "Making the Rounds", "Talk with 5 different girls."),
+                St(10, "Familiar Face", "Talk with 10 different girls."),
+                St(20, "Everyone's Neighbor", "Talk with 20 different girls.") } },
+            new Def { Id = "first_friend", Cat = "Friendship", Tier = 1, Name = "Friendship", Progress = () => Students(h => h.relation >= 1 || h.isGirlfriend), Stages = new[] {
+                St(1, "A Friend", "Become friends with a girl."),
+                St(3, "Circle of Friends", "Become friends with 3 girls."),
+                St(5, "Inner Circle", "Become friends with 5 girls."),
+                St(10, "Popular Kid", "Become friends with 10 girls.") } },
             new Def { Id = "duo:bestfriend", Cat = "Friendship", Tier = 2, Name = "Friend of a Friend", Goal = "Let a friend introduce you to her best friend." },
             new Def { Id = "settle:middle", Cat = "Friendship", Tier = 2, Name = "Peacemaker", Goal = "Two girls disagree: stay in the middle and settle it." },
-            new Def { Id = "listener", Cat = "Friendship", Tier = 2, Name = "Good Listener", Goal = "Learn 5 things about one girl from her own mouth.", Target = 5, Progress = () => MaxGirl(g => g.Facts.Count) },
-            new Def { Id = "trio:natural", Cat = "Friendship", Tier = 3, Name = "Party of Three", Goal = "Talk with two girls at once until they have to go, 3 times.", Target = 3 },
-            new Def { Id = "familiar_face", Cat = "Friendship", Tier = 3, Name = "Familiar Face", Goal = "Talk with 10 different girls.", Target = 10, Progress = () => S.MetDay.Count },
-            new Def { Id = "inner_circle", Cat = "Friendship", Tier = 3, Name = "Inner Circle", Goal = "Become friends with 5 girls.", Target = 5, Progress = () => Students(h => h.relation >= 1 || h.isGirlfriend) },
-            new Def { Id = "close_ten", Cat = "Friendship", Tier = 3, Name = "Everybody's Favorite", Goal = "Get close to 10 girls.", Target = 10, Progress = () => Students(h => h.relation >= 2 || h.isGirlfriend) },
+            new Def { Id = "close", Cat = "Friendship", Tier = 2, Name = "Closeness", Progress = () => Students(h => h.relation >= 2 || h.isGirlfriend), Stages = new[] {
+                St(1, "Close Friend", "Get close to a girl."),
+                St(3, "Trusted", "Get close to 3 girls."),
+                St(5, "Heart to Heart", "Get close to 5 girls."),
+                St(10, "Everybody's Favorite", "Get close to 10 girls.") } },
+            new Def { Id = "listen", Cat = "Friendship", Tier = 2, Name = "Listening", Progress = () => MaxGirl(g => g.Facts.Count), Stages = new[] {
+                St(3, "Curious", "Learn 3 things about one girl from her own mouth."),
+                St(5, "Good Listener", "Learn 5 things about one girl from her own mouth."),
+                St(10, "Confidant", "Learn 10 things about one girl from her own mouth."),
+                St(20, "Knows Her by Heart", "Learn 20 things about one girl from her own mouth.") } },
+            new Def { Id = "trio_talks", Cat = "Friendship", Tier = 2, Name = "Three Together", Progress = () => C("trio:natural"), Stages = new[] {
+                St(1, "Plus One", "Talk with two girls at once until they have to go."),
+                St(3, "Party of Three", "Talk with two girls at once until they have to go, 3 times."),
+                St(10, "Social Hub", "Talk with two girls at once until they have to go, 10 times.") } },
             new Def { Id = "all_friends", Cat = "Friendship", Tier = 3, Name = "Whole School", Goal = "Become friends with every student at school.", Roster = true, Goal2 = () => Students(h => true), Progress = () => Students(h => h.relation >= 1 || h.isGirlfriend) },
 
             // ---- Romance ----
-            new Def { Id = "held_hands", Cat = "Romance", Tier = 1, Name = "Hand in Hand", Goal = "Hold a girl's hand.", Progress = () => LoreCount("held_hands") },
+            new Def { Id = "held_hands", Cat = "Romance", Tier = 1, Name = "Hand in Hand", Progress = () => LoreCount("held_hands"), Stages = new[] {
+                St(1, "Hand in Hand", "Hold a girl's hand."),
+                St(5, "Warm Hands", "Hold hands 5 times."),
+                St(20, "Never Let Go", "Hold hands 20 times.") } },
             new Def { Id = "first_kiss", Cat = "Romance", Tier = 1, Name = "First Kiss", Goal = "Kiss a girl.", Progress = KissedGirls },
             new Def { Id = "girlfriend", Cat = "Romance", Tier = 1, Name = "Going Steady", Goal = "Have a girlfriend.", Progress = () => Students(h => h.isGirlfriend) },
             new Def { Id = "kiss_wary", Cat = "Romance", Tier = 2, Name = "She Let You", Goal = "Kiss a girl who wasn't sure, and have her let you." },
             new Def { Id = "rain_kiss", Cat = "Romance", Tier = 2, Name = "Rain Date", Goal = "Kiss a girl while it rains." },
-            new Def { Id = "first_night", Cat = "Romance", Tier = 2, Name = "First Night", Goal = "Go all the way with a girl.", Progress = () => Students(h => h.hCount > 0) },
-            new Def { Id = "chapter_one", Cat = "Romance", Tier = 2, Name = "Next Chapter", Goal = "Finish a chapter of your story with your girlfriend.", Progress = () => MaxGirl(g => g.Chapter) },
+            new Def { Id = "first_night", Cat = "Romance", Tier = 2, Name = "Nights", Progress = () => Students(h => h.hCount > 0), Stages = new[] {
+                St(1, "First Night", "Go all the way with a girl."),
+                St(3, "Lady's Man", "Go all the way with 3 different girls."),
+                St(10, "Casanova", "Go all the way with 10 different girls.") } },
+            new Def { Id = "chapter_one", Cat = "Romance", Tier = 2, Name = "Your Story Together", Progress = () => MaxGirl(g => g.Chapter), Stages = new[] {
+                St(1, "Next Chapter", "Finish a chapter of your story with your girlfriend."),
+                St(2, "Turning Pages", "Finish two chapters with one girlfriend."),
+                St(3, "Happily Ever After", "Finish all three chapters with one girlfriend.") } },
             new Def { Id = "harem", Cat = "Romance", Tier = 3, Name = "Shared Heart", Goal = "Have two girlfriends who agreed to share you.", Target = 2, Progress = () => S.Harem.Count },
-            new Def { Id = "chapter_all", Cat = "Romance", Tier = 3, Name = "Happily Ever After", Goal = "Finish all three chapters with one girlfriend.", Target = 3, Progress = () => MaxGirl(g => g.Chapter) },
             new Def { Id = "all_dates", Cat = "Romance", Tier = 3, Name = "Everyone's Sweetheart", Goal = "Date every student at school.", Roster = true, Goal2 = () => Students(h => true), Progress = () => Students(h => h.isGirlfriend) },
 
             // ---- Campus ----
-            new Def { Id = "first_week", Cat = "Campus", Tier = 1, Name = "First Week", Goal = "Spend 7 days at school.", Target = 7, Progress = () => S.Day },
-            new Def { Id = "festival", Cat = "Campus", Tier = 2, Name = "Festival Goer", Goal = "Live through a school event (exams, sports festival, culture festival or field trip).", Progress = SchoolEvents },
+            new Def { Id = "school_days", Cat = "Campus", Tier = 1, Name = "School Days", Progress = () => S.Day, Stages = new[] {
+                St(7, "First Week", "Spend 7 days at school."),
+                St(30, "Regular", "Spend 30 days at school."),
+                St(60, "Old Hand", "Spend 60 days at school."),
+                St(100, "Senpai", "Spend 100 days at school.") } },
+            new Def { Id = "festival", Cat = "Campus", Tier = 2, Name = "School Events", Progress = SchoolEvents, Stages = new[] {
+                St(1, "Festival Goer", "Live through a school event (exams, sports festival, culture festival or field trip)."),
+                St(2, "Event Regular", "Live through 2 different school events."),
+                St(4, "Season Pass", "Live through the exams, sports festival, culture festival and field trip.") } },
             new Def { Id = "honor", Cat = "Campus", Tier = 2, Name = "Honor Roll", Goal = "Score 80 or more on an exam.", Progress = () => S.ExamScores.Any(x => x >= 80) ? 1 : 0 },
-            new Def { Id = "days", Cat = "Campus", Tier = 3, Name = "Regular", Goal = "Spend 30 days at school.", Target = 30, Progress = () => S.Day },
-            new Def { Id = "season_pass", Cat = "Campus", Tier = 3, Name = "Season Pass", Goal = "Live through the exams, sports festival, culture festival and field trip.", Target = 4, Progress = SchoolEvents },
-            new Def { Id = "everyday", Cat = "Campus", Tier = 3, Name = "Everyday Life", Goal = "Have lunch, study or go to club with two friends, 5 times.", Target = 5, Progress = () => C("duo:lunch") + C("duo:study") + C("duo:club") + C("duo:season") },
-            new Def { Id = "popular", Cat = "Campus", Tier = 3, Name = "Popular", Goal = "Reach a reputation of 70.", Target = 70, Progress = () => S.Reputation },
-            new Def { Id = "days_100", Cat = "Campus", Tier = 3, Name = "Senpai", Goal = "Spend 100 days at school.", Target = 100, Progress = () => S.Day },
+            new Def { Id = "routine", Cat = "Campus", Tier = 2, Name = "Everyday Life", Progress = () => C("duo:lunch") + C("duo:study") + C("duo:club") + C("duo:season"), Stages = new[] {
+                St(1, "Lunch Buddy", "Have lunch, study or go to club with two friends."),
+                St(5, "Everyday Life", "Have lunch, study or go to club with two friends, 5 times."),
+                St(15, "Inseparable", "Have lunch, study or go to club with two friends, 15 times.") } },
+            new Def { Id = "reputation", Cat = "Campus", Tier = 3, Name = "Reputation", Progress = () => S.Reputation, Stages = new[] {
+                St(30, "Noticed", "Reach a reputation of 30."),
+                St(50, "Well Known", "Reach a reputation of 50."),
+                St(70, "Popular", "Reach a reputation of 70."),
+                St(90, "Campus Icon", "Reach a reputation of 90.") } },
 
             // ---- Club (the game's own club) ----
-            new Def { Id = "club_member", Cat = "Club", Tier = 1, Name = "Recruiter", Goal = "Bring a girl into the club.", Progress = () => Students(h => h.isStaff) },
-            new Def { Id = "club_room", Cat = "Club", Tier = 2, Name = "Decorator", Goal = "Unlock 5 things for the club.", Target = 5, Progress = ClubContents },
-            new Def { Id = "club_story", Cat = "Club", Tier = 2, Name = "Club Chronicle", Goal = "Live 3 stories of the club.", Target = 3, Progress = () => S.ClubHistory.Count },
-            new Def { Id = "club_five", Cat = "Club", Tier = 3, Name = "Full House", Goal = "Have 5 girls in the club.", Target = 5, Progress = () => Students(h => h.isStaff) },
-            new Def { Id = "club_ten", Cat = "Club", Tier = 3, Name = "Club Legend", Goal = "Have 10 girls in the club.", Target = 10, Progress = () => Students(h => h.isStaff) },
+            new Def { Id = "club_member", Cat = "Club", Tier = 1, Name = "Club Members", Progress = () => Students(h => h.isStaff), Stages = new[] {
+                St(1, "Recruiter", "Bring a girl into the club."),
+                St(5, "Full House", "Have 5 girls in the club."),
+                St(10, "Club Legend", "Have 10 girls in the club.") } },
+            new Def { Id = "club_items", Cat = "Club", Tier = 2, Name = "Club Room", Progress = ClubContents, Stages = new[] {
+                St(1, "First Touch", "Unlock something for the club."),
+                St(5, "Decorator", "Unlock 5 things for the club."),
+                St(15, "Interior Designer", "Unlock 15 things for the club.") } },
+            new Def { Id = "club_stories", Cat = "Club", Tier = 2, Name = "Club Chronicle", Progress = () => S.ClubHistory.Count, Stages = new[] {
+                St(1, "Club Diary", "Live a story of the club."),
+                St(3, "Club Chronicle", "Live 3 stories of the club."),
+                St(6, "Club History", "Live 6 stories of the club.") } },
 
-            // ---- Stories (the game's heroines and teachers) ----
+            // ---- Stories (the game's heroines and teachers; each one also has her own climb, see Dynamic) ----
             new Def { Id = "story_met", Cat = "Stories", Tier = 1, Name = "Main Cast", Goal = "Meet one of the story heroines.", Progress = () => Stories(h => S.MetDay.ContainsKey(GirlInfo.Key(h)) || h.talkEvent.Contains(0)) },
             new Def { Id = "teacher_met", Cat = "Stories", Tier = 1, Name = "Office Hours", Goal = "Talk with a teacher.", Progress = () => TeacherCount(Teachers.Met) },
-            new Def { Id = "route_one", Cat = "Stories", Tier = 2, Name = "The End?", Goal = "Finish a story heroine's route.", Progress = () => Stories(StoryCast.StoryOver) },
-            new Def { Id = "teacher_done", Cat = "Stories", Tier = 2, Name = "Teacher's Pet", Goal = "See a teacher's story to its end.", Progress = () => TeacherCount(Teachers.EventOver) },
+            new Def { Id = "route_one", Cat = "Stories", Tier = 2, Name = "Story Routes", Goal2 = () => Stories(h => true), Progress = () => Stories(StoryCast.StoryOver), Stages = new[] {
+                St(1, "The End?", "Finish a story heroine's route."),
+                St(0, "Completionist", "Finish every story heroine's route.") } },
+            new Def { Id = "teacher_done", Cat = "Stories", Tier = 2, Name = "Faculty", Goal2 = () => TeacherCount(h => true), Progress = () => TeacherCount(Teachers.EventOver), Stages = new[] {
+                St(1, "Teacher's Pet", "See a teacher's story to its end."),
+                St(0, "Faculty Favorite", "See every teacher's story to its end.") } },
             new Def { Id = "teacher_h", Cat = "Stories", Tier = 2, Name = "Extra Lessons", Goal = "Go all the way with a teacher.", Progress = () => TeacherCount(h => h.hCount > 0) },
-            new Def { Id = "routes_all", Cat = "Stories", Tier = 3, Name = "Completionist", Goal = "Finish every story heroine's route.", Goal2 = () => Stories(h => true), Progress = () => Stories(StoryCast.StoryOver) },
-            new Def { Id = "teachers_all", Cat = "Stories", Tier = 3, Name = "Faculty Favorite", Goal = "See every teacher's story to its end.", Goal2 = () => TeacherCount(h => true), Progress = () => TeacherCount(Teachers.EventOver) },
 
             // ---- Trouble (they only record; nothing is taken from you) ----
-            new Def { Id = "seen", Cat = "Trouble", Tier = 1, Name = "Seen", Goal = "Get seen doing something you shouldn't.", Progress = () => S.Incidents.Count },
+            new Def { Id = "seen", Cat = "Trouble", Tier = 1, Name = "Gossip", Progress = () => S.Incidents.Count, Stages = new[] {
+                St(1, "Seen", "Get seen doing something you shouldn't."),
+                St(5, "Rumor Mill", "Be part of 5 things the school talks about."),
+                St(10, "Talk of the School", "Be part of 10 things the school talks about.") } },
             new Def { Id = "duo:caught", Cat = "Trouble", Tier = 2, Name = "Caught Out", Goal = "Get confronted by your girlfriend about another girl." },
-            new Def { Id = "walked_off", Cat = "Trouble", Tier = 2, Name = "Third Wheel", Goal = "Make a girl walk off while you talk with her and a friend.", Progress = () => C("trio:aleft") + C("trio:bleft") },
-            new Def { Id = "settle:side", Cat = "Trouble", Tier = 2, Name = "Picking Sides", Goal = "Two girls disagree: side with one of them.", Progress = () => C("settle:a") + C("settle:b") },
+            new Def { Id = "walked_off", Cat = "Trouble", Tier = 2, Name = "Third Wheel", Progress = () => C("trio:aleft") + C("trio:bleft"), Stages = new[] {
+                St(1, "Third Wheel", "Make a girl walk off while you talk with her and a friend."),
+                St(3, "Crowd Control", "Make a girl walk off on you, 3 times.") } },
+            new Def { Id = "settle:side", Cat = "Trouble", Tier = 2, Name = "Picking Sides", Progress = () => C("settle:a") + C("settle:b"), Stages = new[] {
+                St(1, "Picking Sides", "Two girls disagree: side with one of them."),
+                St(3, "Partisan", "Side with one girl in 3 disagreements.") } },
             new Def { Id = "broke_up", Cat = "Trouble", Tier = 2, Name = "It's Over", Goal = "Break up with a girlfriend.", Progress = () => LoreCount("broke_up") },
-            new Def { Id = "talk_of_school", Cat = "Trouble", Tier = 3, Name = "Talk of the School", Goal = "Be part of 10 things the school talks about.", Target = 10, Progress = () => S.Incidents.Count },
-            new Def { Id = "wrong_door", Cat = "Trouble", Tier = 3, Name = "Wrong Door", Goal = "Walk in on a girl with someone else, 3 times.", Target = 3, Progress = () => SumGirl(g => g.Caught) },
+            new Def { Id = "walked_in", Cat = "Trouble", Tier = 3, Name = "Wrong Door", Progress = () => SumGirl(g => g.Caught), Stages = new[] {
+                St(1, "Oops", "Walk in on a girl with someone else."),
+                St(3, "Wrong Door", "Walk in on a girl with someone else, 3 times.") } },
 
             // ---- Extras (other mods: each one shows only with its mod) ----
-            new Def { Id = "fairy_met", Cat = "Extras", Tier = 1, Mod = Mods.PantyFairy, Name = "A Fairy's Favor", Goal = "Meet the Panty Fairy.", Progress = () => Mods.FairyStage() >= 1 ? 1 : 0 },
-            new Def { Id = "crest_one", Cat = "Extras", Tier = 2, Mod = Mods.LewdCrestX, Name = "Marked", Goal = "A girl at school wears a crest.", Progress = () => Students(h => Mods.Crest(h) != "") },
+            new Def { Id = "fairy_met", Cat = "Extras", Tier = 1, Mod = Mods.PantyFairy, Name = "Panty Fairy", Progress = Mods.FairyStage, Stages = new[] {
+                St(1, "A Fairy's Favor", "Meet the Panty Fairy."),
+                St(2, "Fairy Tale Ending", "Finish the Panty Fairy's story.") } },
+            new Def { Id = "crest_one", Cat = "Extras", Tier = 2, Mod = Mods.LewdCrestX, Name = "Crests", Progress = () => Students(h => Mods.Crest(h) != ""), Stages = new[] {
+                St(1, "Marked", "A girl at school wears a crest."),
+                St(5, "Crest Collector", "Five girls at school wear a crest.") } },
             new Def { Id = "pregnant", Cat = "Extras", Tier = 2, Mod = Mods.Pregnancy, Name = "Family Way", Goal = "A girl gets pregnant.", Progress = () => Students(Mods.EverPregnant) },
-            new Def { Id = "fairy_done", Cat = "Extras", Tier = 2, Mod = Mods.PantyFairy, Name = "Fairy Tale Ending", Goal = "Finish the Panty Fairy's story.", Progress = () => Mods.FairyStage() >= 2 ? 1 : 0 },
-            new Def { Id = "crest_five", Cat = "Extras", Tier = 3, Mod = Mods.LewdCrestX, Name = "Crest Collector", Goal = "Five girls at school wear a crest.", Target = 5, Progress = () => Students(h => Mods.Crest(h) != "") },
-            new Def { Id = "fairy_haul", Cat = "Extras", Tier = 3, Mod = Mods.PantyFairy, Name = "Lingerie Thief", Goal = "Take 20 pairs for the fairy.", Target = 20, Progress = Mods.FairyHaul },
+            new Def { Id = "fairy_pairs", Cat = "Extras", Tier = 3, Mod = Mods.PantyFairy, Name = "The Fairy's Collection", Progress = Mods.FairyHaul, Stages = new[] {
+                St(5, "Pickpocket", "Take 5 pairs for the fairy."),
+                St(20, "Lingerie Thief", "Take 20 pairs for the fairy."),
+                St(50, "Fairy's Champion", "Take 50 pairs for the fairy.") } },
 
             // ---- Secrets (the goal shows once it falls; until then, a hint) ----
             new Def { Id = "trio_kiss", Cat = "Secrets", Tier = 2, Name = "Audience", Secret = true, Goal = "Kiss a girl right in front of her friend.", Hint = "A kiss is louder with someone watching." },
@@ -171,10 +245,131 @@ namespace Joojkk.CampusLife
             new Def { Id = "kissed_five", Cat = "Secrets", Tier = 3, Name = "Heartbreaker", Secret = true, Goal = "Kiss 5 different girls.", Target = 5, Progress = KissedGirls, Hint = "Count the lips, not the days." },
         };
 
-        /// <summary>The ones that show in this game (their mod, if any, is loaded).</summary>
-        public static IEnumerable<Def> Shown { get { return All.Where(d => Mods.Has(d.Mod)); } }
+        // ================= each story heroine's and teacher's own climb =================
 
-        public static int ShownCount { get { return Shown.Count(); } }
+        // The name of her whole climb, then one name per interaction of her story; the last name is always her ending.
+        private static readonly Dictionary<int, string[]> StoryNames = new Dictionary<int, string[]>
+        {
+            { -5, new[] { "Idol Conqueror", "The Idol Next Door", "Autograph", "Off Stage", "Rehearsal", "Behind the Curtain", "Encore", "Duet", "Her Biggest Fan" } },
+            { -8, new[] { "Senpai Material", "The New Girl", "Lost in the Halls", "Bento for Two", "Study Buddy", "A Little Courage", "Brave Words", "Hand in Hand", "Her Senpai" } },
+            { -9, new[] { "Rebel Heart", "Trouble on the Rooftop", "Skipping Class", "The Fight", "Bandages", "Soft Side", "Leaning on You", "No More Fights", "Her Knight" } },
+            { -10, new[] { "Classic Romance", "The Girl on the Rooftop", "Class Rep's Request", "After School", "The Walk Home", "Letters", "Confession", "A Promise", "Ever After" } },
+        };
+
+        private static readonly string[] AnyStory = { "", "First Meeting", "Getting Closer", "Her Secret", "Just Us", "A Hard Day", "Opening Up", "Confession", "Her Ending" };
+
+        private static readonly Stage[] TeacherStages =
+        {
+            St(1, "Office Hours", "Meet her."),
+            St(2, "After Class", "Become her friend."),
+            St(3, "Forbidden Lesson", "Become more than her student."),
+            St(4, "Teacher's Favorite", "Get truly close to her."),
+            St(5, "Off the Clock", "See her story to its end: she joins the school as herself."),
+        };
+
+        private static readonly Dictionary<string, Def> DynDefs = new Dictionary<string, Def>();
+        private static List<Def> _dyn = new List<Def>();
+        private static float _dynAt = -10f;
+        private static CampusState _dynFor;
+
+        /// <summary>Her story's interactions, in order (the game's event schedule), or null outside the school.</summary>
+        private static List<int> StoryEvents(SaveData.Heroine h)
+        {
+            try
+            {
+                var act = G.Act;
+                List<FixEventSchedule.Param> list;
+                if (act == null || act.Cycle == null || act.Cycle.fixEventSchedule == null) return null;
+                if (!act.Cycle.fixEventSchedule.TryGetValue(h.fixCharaID, out list) || list == null || list.Count == 0) return null;
+                var r = new List<int>();
+                foreach (var p in list)
+                {
+                    int a;
+                    if (int.TryParse(p.Asset, out a)) r.Add(a);
+                }
+                return r.Count > 0 ? r : null;
+            }
+            catch { return null; }
+        }
+
+        private static Def StoryDef(SaveData.Heroine h)
+        {
+            var id = "story:" + h.fixCharaID;
+            var ev = StoryEvents(h);
+            if (ev != null) S.AchCount["stages:" + id] = ev.Count;   // the school may be closed next time the album opens
+            int n;
+            if (!S.AchCount.TryGetValue("stages:" + id, out n) || n <= 0) return null;
+            Def d;
+            if (!DynDefs.TryGetValue(id, out d) || d.Stages.Length != n)
+            {
+                string[] names;
+                if (!StoryNames.TryGetValue(h.fixCharaID, out names)) names = AnyStory;
+                var first = GirlInfo.FirstName(h);
+                var st = new Stage[n];
+                for (var k = 1; k <= n; k++)
+                {
+                    var name = k == n ? names[names.Length - 1] : names[Mathf.Min(k, names.Length - 2)];
+                    if (k < n && k > names.Length - 2) name += " " + (k - names.Length + 3);   // more interactions than names
+                    st[k - 1] = St(k, name, k == n ? "See " + first + "'s story to its end." : "Part " + k + " of " + first + "'s story.");
+                }
+                d = new Def { Id = id, Cat = "Stories", Tier = 2, Name = names == AnyStory ? first + "'s Story" : names[0], Stages = st };
+                DynDefs[id] = d;
+            }
+            d.Girl = h;
+            d.Progress = () =>
+            {
+                if (h.isTaked) return d.Stages.Length;
+                var e = StoryEvents(h);
+                int seen;
+                if (e == null) return S.AchCount.TryGetValue("seen:" + d.Id, out seen) ? seen : 0;
+                seen = e.Count(a => h.talkEvent.Contains(a));
+                S.AchCount["seen:" + d.Id] = seen;
+                return seen;
+            };
+            return d;
+        }
+
+        private static Def TeacherDef(SaveData.Heroine h)
+        {
+            var id = "teacher:" + GirlInfo.Key(h);
+            Def d;
+            if (!DynDefs.TryGetValue(id, out d))
+            {
+                d = new Def { Id = id, Cat = "Stories", Tier = 3, Name = GirlInfo.FirstName(h) + "'s Lessons", Stages = TeacherStages };
+                DynDefs[id] = d;
+            }
+            d.Girl = h;
+            d.Progress = () => Teachers.EventOver(h) ? 5 : Teachers.Close(h) ? 4 : Teachers.HOpen(h) ? 3 : Teachers.Friend(h) ? 2 : Teachers.Met(h) ? 1 : 0;
+            return d;
+        }
+
+        /// <summary>One climb per story heroine and per teacher in this save (rebuilt every few seconds at most).</summary>
+        private static List<Def> Dynamic()
+        {
+            if (S == null) return new List<Def>();
+            if (_dynFor == S && Time.realtimeSinceStartup - _dynAt < 3f) return _dyn;
+            _dynFor = S;
+            _dynAt = Time.realtimeSinceStartup;
+            var r = new List<Def>();
+            try
+            {
+                foreach (var h in StoryCast.StoryGirls.OrderByDescending(x => x.fixCharaID))
+                {
+                    var d = StoryDef(h);
+                    if (d != null) r.Add(d);
+                }
+                foreach (var h in Teachers.All) r.Add(TeacherDef(h));
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Achievements (stories): " + e.Message); }
+            _dyn = r;
+            return r;
+        }
+
+        /// <summary>The ones that show in this game (their mod, if any, is loaded), with each story's own climb.</summary>
+        public static IEnumerable<Def> Shown { get { return All.Where(d => Mods.Has(d.Mod)).Concat(Dynamic()); } }
+
+        /// <summary>Every stage that shows (a single achievement is one stage).</summary>
+        public static int ShownCount { get { return Shown.Sum(d => StageCount(d)); } }
 
         /// <summary>The categories with anything to show.</summary>
         public static IEnumerable<string> ShownCats { get { return Cats.Where(c => Shown.Any(d => d.Cat == c)); } }
@@ -187,9 +382,39 @@ namespace Joojkk.CampusLife
             catch { return 1; }
         }
 
-        public static Def Find(string id) { return All.FirstOrDefault(d => d.Id == id); }
+        public static int StageCount(Def d) { return d.Stages == null ? 1 : d.Stages.Length; }
 
-        public static bool Done(string id) { return S != null && S.AchDone.Any(x => x.StartsWith(id + "|", StringComparison.Ordinal)); }
+        /// <summary>Stage k (1-based); a single achievement is its own only stage.</summary>
+        public static Stage StageAt(Def d, int k)
+        {
+            if (d.Stages == null) return new Stage { At = TargetOf(d), Name = d.Name, Goal = d.Goal };
+            k = Mathf.Clamp(k, 1, d.Stages.Length);
+            var s = d.Stages[k - 1];
+            if (s.At > 0) return s;
+            // "Every girl": always past the stage before it, even in a school of one.
+            var prev = k > 1 ? StageAt(d, k - 1).At + 1 : 1;
+            return new Stage { At = Mathf.Max(TargetOf(d), prev), Name = s.Name, Goal = s.Goal };
+        }
+
+        /// <summary>The record's id of stage k: the first stage keeps the plain id (so old records still count).</summary>
+        private static string Key(Def d, int k) { return k <= 1 ? d.Id : d.Id + "#" + k; }
+
+        public static Def Find(string id) { return All.Concat(Dynamic()).FirstOrDefault(d => d.Id == id); }
+
+        private static bool Has(string key) { return S != null && S.AchDone.Any(x => x.StartsWith(key + "|", StringComparison.Ordinal)); }
+
+        /// <summary>How many stages fell (0 none).</summary>
+        public static int Reached(Def d)
+        {
+            for (var k = StageCount(d); k >= 1; k--)
+                if (Has(Key(d, k))) return k;
+            return 0;
+        }
+
+        /// <summary>Every stage fell.</summary>
+        public static bool Complete(Def d) { return Reached(d) >= StageCount(d); }
+
+        public static bool Done(string id) { return Has(id); }
 
         public static int Value(Def d)
         {
@@ -198,14 +423,21 @@ namespace Joojkk.CampusLife
             catch { return 0; }
         }
 
-        /// <summary>"id|day|girl key" of a fallen one, or null.</summary>
-        public static string[] Record(string id)
+        /// <summary>"id|day|girl key" of a fallen stage (the highest one by default), or null.</summary>
+        public static string[] Record(Def d, int k = 0)
         {
-            var r = S == null ? null : S.AchDone.FirstOrDefault(x => x.StartsWith(id + "|", StringComparison.Ordinal));
+            if (k <= 0) k = Reached(d);
+            if (S == null || k <= 0) return null;
+            var key = Key(d, k) + "|";
+            var r = S.AchDone.FirstOrDefault(x => x.StartsWith(key, StringComparison.Ordinal));
             return r == null ? null : r.Split(new[] { '|' }, 3);   // the girl's key has '|' of its own ("c:last|first|...")
         }
 
-        public static int DoneCount { get { return S == null ? 0 : Shown.Count(d => Done(d.Id)); } }
+        /// <summary>Stages that fell, out of ShownCount.</summary>
+        public static int DoneCount { get { return S == null ? 0 : Shown.Sum(d => Reached(d)); } }
+
+        /// <summary>Achievements with every stage done.</summary>
+        public static int CompleteCount { get { return S == null ? 0 : Shown.Count(Complete); } }
 
         /// <summary>A scene says something happened (with a girl, if any): its counter goes up, and anything due falls.</summary>
         public static void Count(string key, SaveData.Heroine with = null, int add = 1)
@@ -240,18 +472,76 @@ namespace Joojkk.CampusLife
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Achievements: " + e.Message); }
         }
 
-        private static void Check(SaveData.Heroine with)
+        private static readonly Dictionary<string, KeyValuePair<string, int>> Moved = new Dictionary<string, KeyValuePair<string, int>>
         {
-            var due = Shown.Where(d => !Done(d.Id) && Value(d) >= TargetOf(d)).ToList();
-            // An old save opening the album for the first time: one card for the whole batch, not a wall of them.
-            foreach (var d in due) Unlock(d, due.Count <= 2 ? with : null, due.Count > 2);
-            if (due.Count > 2) AchievementPopup.Show(due.Count + " achievements unlocked", "See the Album in F7", DoneCount, ShownCount);
+            { "familiar_face", new KeyValuePair<string, int>("first_talk", 3) },
+            { "inner_circle", new KeyValuePair<string, int>("first_friend", 3) },
+            { "close_ten", new KeyValuePair<string, int>("close", 4) },
+            { "listener", new KeyValuePair<string, int>("listen", 2) },
+            { "trio:natural", new KeyValuePair<string, int>("trio_talks", 2) },
+            { "chapter_all", new KeyValuePair<string, int>("chapter_one", 3) },
+            { "first_week", new KeyValuePair<string, int>("school_days", 1) },
+            { "days", new KeyValuePair<string, int>("school_days", 2) },
+            { "days_100", new KeyValuePair<string, int>("school_days", 4) },
+            { "season_pass", new KeyValuePair<string, int>("festival", 3) },
+            { "everyday", new KeyValuePair<string, int>("routine", 2) },
+            { "popular", new KeyValuePair<string, int>("reputation", 3) },
+            { "club_five", new KeyValuePair<string, int>("club_member", 2) },
+            { "club_ten", new KeyValuePair<string, int>("club_member", 3) },
+            { "club_room", new KeyValuePair<string, int>("club_items", 2) },
+            { "club_story", new KeyValuePair<string, int>("club_stories", 2) },
+            { "routes_all", new KeyValuePair<string, int>("route_one", 2) },
+            { "teachers_all", new KeyValuePair<string, int>("teacher_done", 2) },
+            { "talk_of_school", new KeyValuePair<string, int>("seen", 3) },
+            { "wrong_door", new KeyValuePair<string, int>("walked_in", 2) },
+            { "crest_five", new KeyValuePair<string, int>("crest_one", 2) },
+            { "fairy_done", new KeyValuePair<string, int>("fairy_met", 2) },
+            { "fairy_haul", new KeyValuePair<string, int>("fairy_pairs", 2) },
+        };
+
+        private static CampusState _migrated;
+
+        private static void Migrate()
+        {
+            if (_migrated == S) return;
+            _migrated = S;
+            var moved = 0;
+            for (var i = 0; i < S.AchDone.Count; i++)
+            {
+                var rec = S.AchDone[i];
+                var bar = rec.IndexOf('|');
+                KeyValuePair<string, int> to;
+                if (bar <= 0 || !Moved.TryGetValue(rec.Substring(0, bar), out to)) continue;
+                var key = to.Value <= 1 ? to.Key : to.Key + "#" + to.Value;
+                if (Has(key)) { S.AchDone.RemoveAt(i--); continue; }
+                S.AchDone[i] = key + rec.Substring(bar);
+                moved++;
+            }
+            if (moved > 0) CampusLifePlugin.Log.LogInfo("Achievements: " + moved + " old records became stages");
         }
 
-        private static void Unlock(Def d, SaveData.Heroine with, bool quiet = false)
+        private static void Check(SaveData.Heroine with)
         {
-            S.AchDone.Add(d.Id + "|" + S.Day + "|" + (with != null ? GirlInfo.Key(with) : ""));
-            if (d.Roster)
+            Migrate();
+            var due = new List<KeyValuePair<Def, int>>();
+            foreach (var d in Shown)
+            {
+                var n = StageCount(d);
+                var v = Value(d);
+                for (var k = Reached(d) + 1; k <= n && v >= StageAt(d, k).At; k++) due.Add(new KeyValuePair<Def, int>(d, k));
+            }
+            if (due.Count == 0) return;
+            // An old save opening the album for the first time: one card for the whole batch, not a wall of them.
+            var quiet = due.Count > 2;
+            foreach (var x in due) Unlock(x.Key, x.Value, quiet ? null : with ?? x.Key.Girl, quiet);
+            if (quiet) AchievementPopup.Show(due.Count + " achievements unlocked", "See the Album in F7", DoneCount, ShownCount);
+        }
+
+        private static void Unlock(Def d, int k, SaveData.Heroine with, bool quiet = false)
+        {
+            var n = StageCount(d);
+            S.AchDone.Add(Key(d, k) + "|" + S.Day + "|" + (with != null ? GirlInfo.Key(with) : ""));
+            if (d.Roster && k >= n)
             {
                 // "Every girl": it falls with whoever is at school, and the album says how many that was.
                 int all, game;
@@ -260,18 +550,23 @@ namespace Joojkk.CampusLife
                 S.AchCount["rosterAll:" + d.Id] = all;
                 S.AchCount["rosterGame:" + d.Id] = game;
             }
-            var n = DoneCount;
+            var st = StageAt(d, k);
+            var done = DoneCount;
             var total = ShownCount;
-            if (!quiet) AchievementPopup.Show(d.Name, with != null ? "with " + GirlInfo.FirstName(with) : d.Goal, n, total);
-            S.Log("Achievement: " + d.Name + (with != null ? ", with " + GirlInfo.FirstName(with) : "") + ".");
-            CampusLifePlugin.Log.LogInfo("Achievement " + d.Id + " day " + S.Day + (with != null ? " with " + GirlInfo.FirstName(with) : "") + " (" + n + "/" + total + ")");
+            var withText = with != null ? "with " + GirlInfo.FirstName(with) : "";
+            var sub = n > 1 ? d.Name + "  " + k + "/" + n + (withText != "" ? ", " + withText : "") : withText != "" ? withText : st.Goal;
+            if (!quiet) AchievementPopup.Show(st.Name, sub, done, total);
+            S.Log("Achievement: " + st.Name + (n > 1 ? " (" + d.Name + " " + k + "/" + n + ")" : "") + (with != null ? ", with " + GirlInfo.FirstName(with) : "") + ".");
+            CampusLifePlugin.Log.LogInfo("Achievement " + Key(d, k) + " '" + st.Name + "' day " + S.Day + (with != null ? " with " + GirlInfo.FirstName(with) : "") + " (" + done + "/" + total + ")");
         }
 
         public static bool Force(string id)
         {
             var d = Find(id);
-            if (d == null || S == null || Done(id)) return false;
-            Unlock(d, null);
+            if (d == null || S == null) return false;
+            var k = Reached(d) + 1;
+            if (k > StageCount(d)) return false;
+            Unlock(d, k, d.Girl);
             return true;
         }
 
@@ -280,14 +575,20 @@ namespace Joojkk.CampusLife
             if (S == null) return "achievements: no save";
             int all, game;
             Roster(out all, out game);
-            return "achievements " + DoneCount + "/" + ShownCount + " (of " + All.Count + "; characters " + all + ", game's " + game + "; " + Mods.Describe() + "): "
-                + string.Join(", ", Shown.Select(d => d.Id + "[" + d.Tier + "]" + (Done(d.Id) ? " DONE" : " " + Value(d) + "/" + TargetOf(d))).ToArray());
+            return "achievements " + CompleteCount + "/" + Shown.Count() + " complete, stages " + DoneCount + "/" + ShownCount + " (of " + All.Count + " + " + Dynamic().Count + " stories; characters " + all + ", game's " + game + "; " + Mods.Describe() + "): "
+                + string.Join(", ", Shown.Select(d =>
+                {
+                    var r = Reached(d);
+                    var n = StageCount(d);
+                    var next = r < n ? " " + Value(d) + "/" + StageAt(d, r + 1).At : " DONE";
+                    return d.Id + "[" + d.Tier + "]" + (n > 1 ? " " + r + "/" + n + " '" + StageAt(d, Mathf.Max(1, r)).Name + "'" : "") + next;
+                }).ToArray());
         }
     }
 
     internal sealed partial class CampusState
     {
-        public List<string> AchDone = new List<string>();                         // "id|day|girl" (the album)
+        public List<string> AchDone = new List<string>();                         // "id|day|girl" (the album); a climb's stage k: "id#k|day|girl"
         public Dictionary<string, int> AchCount = new Dictionary<string, int>(); // what the scenes counted
 
         private void WriteAch(Dictionary<string, object> root)

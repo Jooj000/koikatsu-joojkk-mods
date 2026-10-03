@@ -1,0 +1,195 @@
+# mod isso vira algum diálogo contextual próprio"). The game's H still refuses these; she says it first, her way.
+# {hbound} the one that matters most: condom (she insists on one) | kiss | anal | caress | massage (toys) | all (the card
+# refuses all five). {hbound2} the next one or none. {hbounds} how many. rel, mood and tone colour it.
+# Every rule has at least three lines.
+
+# ================= protection =================
+@rule bounds.condom.gentle
+on bounds
+when hbound=condom tone=gentle
+- [Um... before anything...|W-wait, one thing...|Ah, um...] [you brought protection, right?|I need you to use protection. Please.|promise me you'll be careful. Protection.]
+- [I-I want to... really.|I'm happy, but...] [only with protection, okay?|we have to be careful. You understand?]
+- [Sorry for ruining the mood...|I know it's not romantic, but...] [protection. Always.|I can't relax unless we're safe.]
+
+@rule bounds.condom.energetic
+on bounds
+when hbound=condom tone=energetic
+- [Okay okay, rule number one!|Hold up!|Wait wait wait!] [You wear something. No arguing!|Protection, or nothing happens!|Got protection? No? Then no!]
+- [Hehe, I'm excited too, but...|Yes! But!] [safety first, mister!|we're doing this the smart way!]
+- [Listen, listen!|Important announcement!] [Protection. Every single time.|I'm not taking chances, got it?!]
+
+@rule bounds.condom.cool
+on bounds
+when hbound=condom tone=cool
+- [Before we go.|One condition.|Understood. But.] [You use protection.|Condom. Non-negotiable.|No protection, no deal.]
+- [...Fine.|Agreed.] [You know my condition.|Protection. I won't repeat myself.]
+- [I'll go.|Very well.] [On my terms: we're careful.|Be responsible about it.]
+
+@rule bounds.condom.teasing
+on bounds
+when hbound=condom tone=teasing
+- [Mm~ okay. But...|Ohh, finally. Just one thing~|Fine, fine...] [you're wearing something. House rules~|no glove, no love, as they say~|protection, or you just get to watch~]
+- [Hehe, eager, aren't you?|So impatient~] [Bring protection, or I'm going home.|Be a gentleman and come prepared.]
+- [I'm in~|Lead the way.] [Oh, and you're being careful. Not optional~|You did bring something, right? Right~?]
+
+# ================= kisses =================
+@rule bounds.kiss.gentle
+on bounds
+when hbound=kiss tone=gentle
+- [Um... just so you know...|Before we... um...|There's one thing...] [please don't kiss me. Not on the lips.|kissing is... too much for me. Still.|I can't do kisses yet. Everything else is okay.]
+- [I-it's not you, I promise...|Is it weird if...] [kissing makes me panic.|could we skip the kissing?]
+- [I'll be okay...|I want to be with you...] [just not the lips.|but kisses are... special. Not yet.]
+
+@rule bounds.kiss.energetic
+on bounds
+when hbound=kiss tone=energetic
+- [Okay, but no kissing!|Deal! Except kisses!|Yes! But hands off my lips!] [It's a me thing, don't ask!|Kisses are for later!|The rest is fine, okay?!]
+- [Hey, listen!|One rule!] [No smooching!|Lips are off limits!]
+- [I'm in! But...|Let's go! Just...] [no kisses, deal?|don't try to kiss me, okay?!]
+
+@rule bounds.kiss.cool
+on bounds
+when hbound=kiss tone=cool
+- [...Don't kiss me.|One thing.|Fine.] [The lips are mine.|No kisses. That's all.|I don't kiss. Don't take it personally.]
+- [...|Understood.] [Kissing is off the table.|Anything but the lips.]
+- [I'll go.|Very well.] [But you won't kiss me.|Keep your lips to yourself.]
+
+@rule bounds.kiss.teasing
+on bounds
+when hbound=kiss tone=teasing
+- [Mm~ okay. But no kissing.|Ohh, I'm in. Lips are off limits, though~|Fine~] [A girl has to keep something special.|You'll have to earn those.|Kisses cost extra~]
+- [Hehe~|So eager...] [Don't even try to kiss me.|Kiss me and the deal's off~]
+- [Lead the way~|Let's go.] [And remember: no kisses.|Everything but the lips, deal?]
+
+# ================= the back door =================
+@rule bounds.anal.gentle
+on bounds
+when hbound=anal tone=gentle
+- [And... um...|One more thing... it's embarrassing...|P-please...] [nothing strange back there, okay?|just... normal things.|don't do anything weird. Please.]
+- [I trust you, but...|I'm nervous enough already...] [only the normal way.|let's keep it simple.]
+- [Okay...|I'm ready...] [as long as it's normal.|just nothing too adventurous.]
+
+@rule bounds.anal.energetic
+on bounds
+when hbound=anal tone=energetic
+- [Normal stuff only!|Okay but nothing weird!|Ground rules!] [Got it?!|Back door's closed!|Front door only, mister!]
+- [I'm in! But!|Yes! Except...] [no funny business!|keep it normal!]
+- [Hehe, okay...|Alright...] [no detours, okay?!|the normal way. Promise?]
+
+@rule bounds.anal.cool
+on bounds
+when hbound=anal tone=cool
+- [...Nothing unusual.|One condition.|Fine.] [Conventional only.|Don't get creative.|The ordinary way. That's it.]
+- [Understood.|...] [Nothing strange.|I'll say no to anything odd.]
+- [Very well.|I'll go.] [Keep it normal.|Don't try anything strange.]
+
+@rule bounds.anal.teasing
+on bounds
+when hbound=anal tone=teasing
+- [Mm~ okay. Vanilla only, though.|Ohh, I'm in. Nothing kinky~|Fine~] [Don't get any ideas.|The back's off limits~|Keep it classic.]
+- [Hehe~|So eager...] [Keep it vanilla, okay~?|One-way street, got it?]
+- [Lead the way~|Let's go.] [And no detours~|Nothing weird. I'll know~]
+
+# ================= touching =================
+@rule bounds.caress.gentle
+on bounds
+when hbound=caress tone=gentle
+- [Um... please don't touch too much...|I get nervous when...|Could you...] [I'm really sensitive.|go easy with your hands?|not touch me all over? I get overwhelmed.]
+- [I'm sorry...|It's silly, but...] [too much touching makes me freeze.|just be gentle with your hands.]
+- [Okay...|I'm ready...] [just don't grope me, please.|gentle hands, okay?]
+
+@rule bounds.caress.energetic
+on bounds
+when hbound=caress tone=energetic
+- [Hands where I can see them!|No groping!|Rule one: hands off!] [I mean it!|Got it?!|Mostly!]
+- [Okay! But!|Yes! Except...] [keep your hands to yourself!|no feeling me up!]
+- [Hehe, let's go!|Alright!] [Just don't get handsy!|And hands behave, okay?!]
+
+@rule bounds.caress.cool
+on bounds
+when hbound=caress tone=cool
+- [...Not too much touching.|One condition.|Fine.] [Keep your hands still.|I dislike being groped.|Don't paw at me.]
+- [Understood.|...] [Hands to yourself.|Minimal touching.]
+- [Very well.|I'll go.] [But keep your hands in check.|And don't grope.]
+
+@rule bounds.caress.teasing
+on bounds
+when hbound=caress tone=teasing
+- [Mm~ okay. Look, don't touch.|Ohh, I'm in. Hands behind your back~|Fine~] [No groping.|I'll do the touching.|Hands off the merchandise~]
+- [Hehe~|So eager...] [Keep those hands to yourself.|Touch me and I stop~]
+- [Lead the way~|Let's go.] [And no grabbing~|Hands where I can see them, darling.]
+
+# ================= toys =================
+@rule bounds.massage.gentle
+on bounds
+when hbound=massage tone=gentle
+- [Um... and...|One thing...|P-please...] [no toys. Please.|nothing with batteries, okay?|just you. No devices.]
+- [I'm sorry...|It's embarrassing, but...] [those machines scare me.|I don't want any... gadgets.]
+- [Okay...|I'm ready...] [just us. Nothing else.|no toys, okay?]
+
+@rule bounds.massage.energetic
+on bounds
+when hbound=massage tone=energetic
+- [No gadgets!|Leave the toys!|And NO buzzing things!] [Just you!|Got it?!|I mean it!]
+- [Okay! But!|Yes! Except...] [no vibrating stuff!|toys stay in the drawer!]
+- [Hehe, let's go!|Alright!] [Just you, no gadgets!|Nothing that needs batteries!]
+
+@rule bounds.massage.cool
+on bounds
+when hbound=massage tone=cool
+- [...No devices.|One condition.|Fine.] [Toys stay out of it.|I don't use gadgets.|Just you. Nothing else.]
+- [Understood.|...] [No machines.|Leave the toys.]
+- [Very well.|I'll go.] [But nothing with batteries.|No devices.]
+
+@rule bounds.massage.teasing
+on bounds
+when hbound=massage tone=teasing
+- [Mm~ okay. Leave the toys at home.|Ohh, I'm in. No gadgets~|Fine~] [You're all I need. Allegedly.|Prove you don't need batteries.|Toys are cheating~]
+- [Hehe~|So eager...] [No buzzing things.|Just you. Let's see if that's enough~]
+- [Lead the way~|Let's go.] [And no toys~|Batteries not included, okay?]
+
+# ================= everything (the card refuses all five) =================
+@rule bounds.all.gentle
+on bounds
+when hbound=all tone=gentle
+- [Um... I'm... not ready for a lot of things.|I'm really nervous...|It's my first time being this...] [Please go slow. And be careful.|No kissing, no... strange things. And protection.|Can we keep it really simple?]
+- [I want to, but...|Promise me...] [we go slowly. I'll tell you when it's too much.|you'll stop if I say so. And protection.]
+- [Okay...|I'm ready... I think...] [just... gentle. Very gentle.|let's not try too many things.]
+
+@rule bounds.all.energetic
+on bounds
+when hbound=all tone=energetic
+- [Okay! But! Rules!|Wait, ground rules first!|Yes! But slow down!] [No kissing, no weird stuff, protection!|Keep it super simple, okay?!|Baby steps!]
+- [Hehe, I'm nervous!|I'm in! But...] [let's not go crazy!|I have like a hundred rules!]
+- [Let's go! Just...|Alright!] [simple stuff only!|protection, no kisses, no gadgets, got it?!]
+
+@rule bounds.all.cool
+on bounds
+when hbound=all tone=cool
+- [...I have conditions.|Fine. But.|Understood.] [Protection. No kissing. Nothing unusual.|Keep it simple. I'll stop you otherwise.|Slowly. And on my terms.]
+- [...|Very well.] [I'll tell you what's off limits.|Don't push your luck.]
+- [I'll go.|Agreed.] [But most things are off the table.|Simple. Careful. Quiet.]
+
+@rule bounds.all.teasing
+on bounds
+when hbound=all tone=teasing
+- [Mm~ okay. But I have rules.|Ohh, finally. Read the fine print first~|Fine~] [Lots of rules.|No kisses, no kink, protection. Still interested~?|You'll have to earn the fun stuff.]
+- [Hehe~|So eager...] [Slow down, tiger. I'm picky.|Vanilla. Very vanilla.]
+- [Lead the way~|Let's go.] [And I'll tell you what you can't do. Which is most things~|Basic package only, darling.]
+
+# ================= your girlfriend: softer =================
+@rule bounds.condom.gf
+on bounds
+when hbound=condom rel=girlfriend|lover
+feel love
+- [I love you, so...|Because I care about us...|You know me...] [protection, okay?|let's be careful. For both of us.|always safe. Always.]
+- [Mm... me too.|I want you too.] [Just... protection first.|You brought it, right?]
+- [Hehe... okay.|Let's go...] [And we're careful, like always.|Protection, my love.]
+
+@rule bounds.kiss.gf
+on bounds
+when hbound=kiss rel=girlfriend|lover
+feel shy
+- [I know it's strange, even now...|I'm your girlfriend, but...|Sorry...] [kisses are still hard for me.|could we skip the kissing?|my lips aren't ready. Everything else is.]
+- [Mm...|I love you...] [I'll kiss you someday. Promise.|just not the lips. Not yet.]
+- [Okay...|Let's go...] [be patient with me?|no kissing, okay?]

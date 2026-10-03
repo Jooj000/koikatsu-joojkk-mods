@@ -582,3 +582,71 @@ feel shy
 - [Here...?|...] [In front of them...|Everyone's going to talk.]
 - [Mm...|Wha...] [Why here, of all places?|My face is burning.]
 
+
+# ================= her card refuses it =================
+# {nokiss} yes when her card refuses kisses (on a card that refuses everything, only when her drawn traits say so);
+# {nocaress} yes when her card refuses being caressed. Her own words, never a generic "no".
+@rule touch.mouth.no.card
+on touch
+when part=mouth kiss=no nokiss=yes
+feel worried
+- [I-I'm sorry...|Wait... no...|Ah...] [I don't kiss. It's not you, really.|my lips are... I can't. Not with anyone yet.|kissing scares me. I'm sorry.]
+- [Please don't be hurt...|It's a me thing...] [I've never let anyone. I'm not ready.|I just can't do that part.]
+- [No, no, I...|...!] [Anything but that. Please.|I'm not like that. Not yet.]
+
+@rule touch.mouth.yes.card
+on touch
+when part=mouth kiss=yes nokiss=yes
+feel shy
+- [...!|Ah...|Mm...] [I don't let anyone do that.|I never kiss anyone. You know that, right?|that was... my first time letting someone.]
+- [Wow...|...] [You're the exception. Don't make me regret it.|I don't do that. ...I just did.]
+- [Hah...|Oh...] [I always said I wouldn't.|Don't tell anyone I let you.]
+
+@rule touch.mouth.wary.card
+on touch
+when part=mouth kiss=wary nokiss=yes
+feel shy
+- [I... I don't kiss...|That was...|...] [but I let you. Why did I let you?|I usually say no. I didn't.|you're the only one I didn't push away.]
+- [Ah...|Mm...] [Just... don't do it often.|Give me time with that.]
+- [...|W-wait...] [I'm shaking. Sorry.|I need a moment.]
+
+@rule touch.chest.card
+on touch
+when part=chest look=no nocaress=yes
+feel worried
+- [Ah-! Please...|Not there...|W-wait...] [I really don't like being touched like that.|I'm too sensitive. Please don't.|that's not okay with me.]
+- [I'm sorry, I just...|Please...] [I can't relax when people touch me.|hands off, okay? Please.]
+- [Eek-!|...!] [Don't.|I asked people not to do that.]
+
+@rule touch.butt.card
+on touch
+when part=butt look=no nocaress=yes
+feel pout
+- [H-hey!|Please don't!|W-what...] [I don't like being grabbed.|not okay. Really.|I hate when people do that.]
+- [Hands off...|That's...] [I'm not comfortable with that.|please, no grabbing.]
+- [...!|Eek!] [Don't do that again.|I'm serious. Don't.]
+
+# ================= more lines =================
+@rule touch.head.welcome.more
+on touch
+when part=head level=welcome
+feel smile
+- [Ehehe...|Mm~|Oh...] [Are you petting me?|I'm not a cat, you know.|Your hand is so big.] [...Don't stop, though.|Okay, maybe a little bit.|It's kind of nice.]
+- [Hey...|Mmh...] [My hair's going to be a mess.|Is there something on my head?] [Hehe, never mind.|Do it again.]
+- [Ah...|...] [That's comforting.|I could get used to this.] [Just a bit longer.|Thank you.]
+
+@rule touch.hand.welcome.more
+on touch
+when part=hand level=welcome
+feel shy
+- [Oh...|Your hand...|Hm?] [It's warm.|It's bigger than mine.|it fits, doesn't it?] [Can I hold it a little?|I don't mind.|...Hehe.]
+- [Holding hands?|Mm...] [Like a couple...|In public, too...] [I don't hate it.|My hand's sweaty, sorry!]
+- [...|Ah...] [Okay.|Just for a moment.] [...Maybe longer.|Don't let go yet.]
+
+@rule touch.cheek.welcome.more
+on touch
+when part=cheek level=welcome
+feel shy
+- [Hm?|Ah...|Oh...] [Is something on my face?|Your fingers are cold!|Why are you touching my cheek?] [...It's nice.|Hehe, that tickles.|I'm blushing, aren't I.]
+- [Mmh...|...] [So gentle.|You're looking at me so seriously...] [What is it?|...Say something.]
+- [Hey~|Oh?] [Poking my cheek?|Are you checking if it's soft?] [It is, isn't it?|Rude... but okay.]

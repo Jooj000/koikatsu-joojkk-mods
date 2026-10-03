@@ -263,10 +263,38 @@ namespace Joojkk.CampusLife
 
         private void OnMouseExit() { Conversation.SpotHover(false); }
 
+        private static int _frame = -1;
+
         private void OnMouseDown()
         {
+            if (ForB && _frame == Time.frameCount) return;
+            _frame = Time.frameCount;
             try { if (ForB) Conversation.BTouch(Kind, true); else Conversation.SpotTouch(Kind, true); }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Talk touch " + Kind + ": " + e.Message); }
+        }
+
+        /// <summary>
+        /// The second girl's areas look for the click themselves: Unity's OnMouseDown goes only to the nearest collider,
+        /// click on her was lost). The nearest of our areas under the mouse takes it, once per click.
+        /// </summary>
+        private void Update()
+        {
+            if (!ForB || !Input.GetMouseButtonDown(0) || _frame == Time.frameCount) return;
+            try
+            {
+                var cam = Camera.main;
+                if (cam == null) return;
+                TouchSpot best = null;
+                var near = float.MaxValue;
+                foreach (var hit in Physics.RaycastAll(cam.ScreenPointToRay(Input.mousePosition), 30f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
+                {
+                    var spot = hit.collider != null ? hit.collider.GetComponent<TouchSpot>() : null;
+                    if (spot != null && spot.ForB && hit.distance < near) { best = spot; near = hit.distance; }
+                }
+                _frame = Time.frameCount;
+                if (best != null) Conversation.BTouch(best.Kind, true);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Talk touch (second girl): " + e.Message); }
         }
     }
 }

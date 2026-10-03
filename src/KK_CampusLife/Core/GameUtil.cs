@@ -231,7 +231,8 @@ namespace Joojkk.CampusLife
         {
             if (h == null) return;
             var before = h.favor;
-            if (favor > 0) favor = DailyFavor(h, favor);
+            if (favor > 0) favor = Daily(h, "fday:", favor, 8f);
+            if (lewd > 0) lewd = Daily(h, "hday:", lewd, 6f);
             h.favor = Mathf.Clamp(h.favor + favor, 0, 100);
             Chat.NoteFavor(h, h.favor - before);
             // The club report counts "contact" from favor won in the game's own talk (Communication.ChangeParam: favor x2,
@@ -242,26 +243,32 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Favor won from one girl in one day has diminishing returns (user, 2026-10-28: "tá dando pra namorar qualquer uma
-        /// em um dia só"): the first 15 points of the day count whole, the next 15 at half, then a quarter. Losses always
-        /// count. Kept in the save (Buffs "fday:girl" = day x 1000 + points won).
+        /// Favor and H won from one girl in one day have diminishing returns (user, 2026-10-28: "tá dando pra namorar
+        /// qualquer uma em um dia só"; 2026-10-30: "balancear direito o afeto para não encher tão rápido ... não colocar
+        /// um limite artificial de piso de dias"): the first 8 favor points of the day (6 of H) count whole, as many again
+        /// at half, then a tenth; the steps grow with her pace (Consent.Multiplier: open x1.4, reserved from x0.7). So a
+        /// well-played day fills ~20 favor for a normal girl, and the days to date her come from the bar, not from a floor.
+        /// Losses always count. Kept in the save (Buffs "fday:girl" / "hday:girl" = day x 1000 + points won).
         /// </summary>
-        private static int DailyFavor(SaveData.Heroine h, int favor)
+        private static int Daily(SaveData.Heroine h, string tag, int add, float step)
         {
             var s = Campus.S;
-            if (s == null) return favor;
-            var k = "fday:" + GirlInfo.Key(h);
+            if (s == null) return add;
+            var k = tag + GirlInfo.Key(h);
             int v;
             var won = s.Buffs.TryGetValue(k, out v) && v / 1000 == s.Day ? v % 1000 : 0;
+            float m = 1f;
+            try { m = Consent.Multiplier(h); } catch { }
+            var full = step * m;
             float got = 0f;
-            for (var i = 0; i < favor; i++)
+            for (var i = 0; i < add; i++)
             {
                 var n = won + i;
-                got += n < 15 ? 1f : n < 30 ? 0.5f : 0.25f;
+                got += n < full ? 1f : n < 2f * full ? 0.5f : 0.1f;
             }
             var paid = Mathf.Max(1, Mathf.RoundToInt(got));
-            s.Buffs[k] = s.Day * 1000 + Math.Min(999, won + favor);
-            if (paid < favor) CampusLifePlugin.Log.LogInfo("Favor today: " + GirlInfo.FirstName(h) + " " + won + " won, +" + favor + " pays +" + paid);
+            s.Buffs[k] = s.Day * 1000 + Math.Min(999, won + add);
+            if (paid < add) CampusLifePlugin.Log.LogInfo((tag == "fday:" ? "Favor" : "H") + " today: " + GirlInfo.FirstName(h) + " " + won + " won, +" + add + " pays +" + paid);
             return paid;
         }
 

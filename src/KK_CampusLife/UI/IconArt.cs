@@ -14,17 +14,18 @@ namespace Joojkk.CampusLife
         /// <summary>The conversation with two girls: who you talk to (the left one, the right one, both).</summary>
         public const int ToA = 5, ToB = 6, ToBoth = 7;
 
-        /// <summary>The category colors: the mod's INT blue, gold, green, SEN pink and STR red.</summary>
+        /// <summary>The category colors: the blue of the game's dialogue boxes, gold, green, SEN pink and STR red; who you
+        /// talk to in white.</summary>
         public static readonly float[][] Accent =
         {
-            new[] { 0.42f, 0.71f, 1f },
+            new[] { 0.24f, 0.56f, 1f },
             new[] { 1f, 0.84f, 0.42f },
             new[] { 0.55f, 0.95f, 0.62f },
             new[] { 1f, 0.54f, 0.85f },
             new[] { 1f, 0.45f, 0.42f },
-            new[] { 1f, 0.82f, 0.35f },
-            new[] { 1f, 0.82f, 0.35f },
-            new[] { 1f, 0.82f, 0.35f },
+            new[] { 0.95f, 0.95f, 0.97f },
+            new[] { 0.95f, 0.95f, 0.97f },
+            new[] { 0.95f, 0.95f, 0.97f },
         };
 
         private static readonly float[] Graphite = { 0.07f, 0.07f, 0.09f };

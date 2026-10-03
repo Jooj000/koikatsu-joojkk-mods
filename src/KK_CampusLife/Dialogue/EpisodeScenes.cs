@@ -138,8 +138,8 @@ namespace Joojkk.CampusLife
         private static void Confess(Ctx c, SceneBuilder b, Tally t)
         {
             var chance = UnityEngine.Mathf.Clamp(0.3f + (c.Favor - 75) / 60f + c.Trust / 250f + G.Sens / 400f + (c.Mood == Mood.Flirty ? 0.15f : 0f) - (c.Mood == Mood.Upset ? 0.2f : 0f), 0.1f, 0.95f);
-            int days, need;
-            var ok = Random.value < chance && Consent.KnownLongEnough(c.Her, out days, out need);
+            string why;
+            var ok = Random.value < chance && Consent.Chance(c.Her, Ask.Confess, out why) >= 0.5f;
             b.Narr("You stop walking. She notices and turns around.");
             b.Me(Lines.Pick("I've been wanting to tell you for a while. I like you. Not as a friend. I really like you.",
                 "Today was one of the best days I've had. Because it was with you. ...I like you. A lot.",

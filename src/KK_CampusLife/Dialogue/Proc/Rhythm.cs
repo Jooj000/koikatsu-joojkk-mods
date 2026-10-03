@@ -22,16 +22,16 @@ namespace Joojkk.CampusLife
             var v = Voice.Of(h);
             var open = 0;
             if (a.bitch) open += 2;
-            if (a.choroi) open += 1;
+            if (a.choroi) open += 2;
             if (a.mutturi && Social.Trust(h) >= 50) open += 1;
-            if (v.Kind == "gyaru" || v.Kind == "vamp") open += 1;
+            if (v.Kind == "gyaru" || v.Kind == "vamp") open += 2;   // the dialogue proposal: gyaru and teasers are the open ones
             if (v.Tease >= 0.75f) open += 1;
             var closed = 0;
             if (a.majime) closed += 1;
             if (a.kireizuki) closed += 1;
             if (a.hitori) closed += 1;
             try { if (CardTraits.RefusesKiss(h)) closed += 2; } catch { }
-            if (v.Kind == "shy" || v.Kind == "ojou" || v.Kind == "serious" || v.Kind == "proper") closed += 1;
+            if (v.Kind == "shy" || v.Kind == "ojou" || v.Kind == "serious" || v.Kind == "proper" || v.Kind == "bookish") closed += 1;
             if (open - closed >= 2) return Profile.Open;
             if (closed - open >= 2) return Profile.Reserved;
             return Profile.Normal;
@@ -43,19 +43,8 @@ namespace Joojkk.CampusLife
             if (h == null || S == null) return 1f;
             var key = GirlInfo.Key(h);
             var f = 1f;
-            if (level > 0)
-            {
-                switch (Of(h))
-                {
-                    case Profile.Reserved:
-                        int met;
-                        var days = S.MetDay.TryGetValue(key, out met) ? S.Day - met : 0;
-                        f = Mathf.Min(1f, 0.7f + days * 0.03f + Social.Trust(h) / 300f);
-                        break;
-                    case Profile.Open: f = 1.4f; break;
-                }
-                if (h.isGirlfriend) f += 0.1f;
-            }
+            // One pace for answers and gains.
+            if (level > 0) f = Consent.Multiplier(h);
             f *= 1f + Mathf.Min(0.5f, Momentum(key) * 0.1f);
             if (Spotlight.IsActive && S.Spotlight.Contains(key)) f *= 1.25f;
             return f;
@@ -70,6 +59,8 @@ namespace Joojkk.CampusLife
             int n;
             return Good.TryGetValue(key, out n) ? n : 0;
         }
+
+        public static void ResetDay() { Good.Clear(); }
 
         /// <summary>A good answer today: the day builds up (resets overnight).</summary>
         public static void OnGood(SaveData.Heroine h)

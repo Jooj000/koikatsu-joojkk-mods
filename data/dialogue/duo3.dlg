@@ -1235,3 +1235,169 @@ on duo3.reply
 when q=bad tone=teasing
 feel pout
 - [...No.|Don't.|Not happening.]
+
+# ================= aimed at one, with the other right there =================
+# on duo3.pair.<act> (her answer) and duo3.pair.<act>.other (the other girl). Keys: pair, otherlikes, rel, tone.
+@rule duo3.pair.about.gentle
+on duo3.pair.about
+when pair!=rival tone=gentle
+feel smile
+- [{other} always notices when I'm down... she's like that.|{other} is the kindest person I know. Really.|She listens. Even when I ramble.]
+- [She shares her lunch with me every time I forget mine.|{other} waits for me after class. Every day.|When I cried last month, she stayed until I stopped.]
+- [I like how {other} laughs. It makes me laugh too.|She's brave in ways I'm not.|She always knows what to say.]
+
+@rule duo3.pair.about.energetic
+on duo3.pair.about
+when pair!=rival tone=energetic
+feel laugh
+- [{other}'s SO fun! Every day's an adventure with her!|She never says no to anything! Ever!|She's the loudest person I know! After me!]
+- [{other} once ate three melon breads in one break! Legend!|She runs faster than the boys! It's amazing!|She's my partner in crime! Literally!]
+- [Everything! She's the best!|{other} makes boring days not boring!|She laughs at my dumb jokes. Every single one!]
+
+@rule duo3.pair.about.cool
+on duo3.pair.about
+when pair!=rival tone=cool
+- [She's honest. That's rare.|{other} doesn't waste words. I respect that.|She's reliable.]
+- [She keeps her promises.|{other} doesn't pretend. I like that.|She knows when to leave me alone.]
+- [...She's good company.|She doesn't make a fuss.|She's smarter than she lets on.]
+
+@rule duo3.pair.about.teasing
+on duo3.pair.about
+when pair!=rival tone=teasing
+feel smile
+- [She laughs at my jokes. Even the bad ones~|{other}? She's adorable when she's flustered. Watch~|She can't keep a secret. It's so cute.]
+- [Her face when she's embarrassed. Priceless~|She falls for every prank. Every time.|She pretends to be mad at me. She never is~]
+- [She's my favorite victim~|Everything. Don't tell her I said that.|She keeps me out of trouble. Mostly.]
+
+@rule duo3.pair.about.rival
+on duo3.pair.about
+when pair=rival
+feel pout
+- [...Like? That's a strong word.|Her? Hm. She tries hard. Too hard.|I don't think about her that much.]
+- [...She's persistent. I'll give her that.|She's annoying in a very consistent way.|...Her taste in snacks is okay. That's it.]
+- [Why are you asking me that with her right here?|...No comment.|Pass.]
+
+@rule duo3.pair.about.other.friend
+on duo3.pair.about.other
+when pair!=rival
+feel shy
+- [E-eh... you're embarrassing me...|Stoooop, I'm blushing!|...You didn't have to say all that.]
+- [Hehe... you too, you know.|Aww... come here.|...I'm going to cry, stop it.]
+- [D-don't believe her, she exaggerates!|Okay, now I owe her lunch.|...Thanks.]
+
+@rule duo3.pair.about.other.rival
+on duo3.pair.about.other
+when pair=rival
+feel pout
+- [...I can hear you, you know.|Wow. Thanks a lot.|...Charming.]
+- [Persistent? That's a compliment from you.|At least I try.|...Hmph.]
+- [Love you too.|I'm standing right here.|...Noted.]
+
+@rule duo3.pair.story.any
+on duo3.pair.story
+when pair!=rival
+feel laugh
+- [Okay, okay... once {other} fell asleep in class and answered the teacher in her sleep. She said "five more minutes, mom."|Last summer {other} got her head stuck in the pool ladder. We needed the lifeguard.|{other} sent a love letter to the wrong locker. The wrong person READ it out loud.]
+- [{other} practices her confessions in the mirror. I've heard it. It's very dramatic.|She tried to dye her hair at home once. It came out green.|{other} waved back at someone who was waving at the person behind her. For a whole minute.]
+- [{other} tripped walking up to get an award. Up the stairs. In front of the whole school.|She called the teacher "mom" once. In class. Loud.|{other} still sleeps with a stuffed rabbit named Sir Fluffington.]
+
+@rule duo3.pair.story.rival
+on duo3.pair.story
+when pair=rival
+feel smile
+- [Oh, gladly. {other} once fell into the koi pond. On purpose, she says.|Where do I start? She cried during the fire drill.|{other} lost to me at everything. Every. Single. Thing.]
+- [She once wore her skirt inside out all day. Nobody told her. Including me.|{other} studied for the wrong test. For a week.|She got stuck in the gym storage. I was the one who heard her.]
+- [Hmm... the time she confessed to a teacher. By accident.|Her singing. Just ask her to sing.|She brought a lunch box with no lunch in it. Twice.]
+
+@rule duo3.pair.story.other.friend
+on duo3.pair.story.other
+when pair!=rival
+feel surprised
+- [Wh-why would you tell him that?!|THAT WAS ONE TIME!|...You promised you'd take that to your grave.]
+- [I'm never telling you anything again!|Okay, that's it, I'm telling him about the bus incident!|You traitor!]
+- [...I want to disappear.|Don't listen to her! ...It's true, but don't listen!|Revenge. I'm planning revenge.]
+
+@rule duo3.pair.story.other.rival
+on duo3.pair.story.other
+when pair=rival
+feel pout
+- [That's a lie and you know it!|At least I don't snore in the library!|...I'll remember this.]
+- [Oh, you want to play that game?|Should I tell him what YOU did at the culture festival?|...Petty.]
+- [Hmph. Enjoy it while it lasts.|That's not how it happened!|You're the worst.]
+
+@rule duo3.pair.talks.yes
+on duo3.pair.talks
+when otherlikes=yes
+feel smile
+- [...She does. A lot, actually.|All the time. It's kind of annoying.|Oh, constantly. Should I tell you what she said~?]
+- [She asked me what you like to eat. Twice.|She knows your class schedule by heart. Just saying.|She says your name in her sleep. Probably.]
+- [You have no idea.|Every lunch break. Every one.|More than she'd ever admit.]
+
+@rule duo3.pair.talks.no
+on duo3.pair.talks
+when otherlikes=no
+- [Not really... why, should she?|Hmm, not that I remember.|Once, maybe? Something about the homework.]
+- [She talks about food, mostly.|Not really. Feeling ignored?|She mentioned you exist. That counts, right?]
+- [...No.|Should she?|You'd have to do something interesting first.]
+
+@rule duo3.pair.talks.other.yes
+on duo3.pair.talks.other
+when otherlikes=yes
+feel shy
+- [D-don't tell him that!|HEY! Traitor!|...I'll remember this.]
+- [Th-that's not true! ...Not completely.|Why are you like this?!|...Okay. Maybe a little.]
+- [I'm going to bury you.|Stop talking. Right now.|...Don't look at me like that.]
+
+@rule duo3.pair.talks.other.no
+on duo3.pair.talks.other
+when otherlikes=no
+- [...Um.|Why would I?|Should I?]
+- [Maybe if you were more interesting~|Don't take it personally.|...I'm busy.]
+- [...Next question.|Hm.|I talk about lots of things.]
+
+@rule duo3.pair.note.other.any
+on duo3.pair.note.other
+feel pout
+- [...Are you two passing notes?|Hey! What was that?! Let me see!|...I saw that.]
+- [Secrets? Without me?|What does it say? Show me!|Very subtle. Not.]
+- [I'm right here, you know.|Is it about me?|...Hmph.]
+
+@rule duo3.pair.invite.other.yes
+on duo3.pair.invite.other
+when pair!=rival
+feel smile
+- [Me too? ...Okay!|Count me in!|...Fine. I'll come.]
+- [Yay! The three of us!|I know a good place!|Wait, I need to pick an outfit.]
+- [Only if you pay~|Sure. Someone has to keep you two in line.|Is this a date? Of three?]
+
+@rule duo3.pair.invite.other.rival
+on duo3.pair.invite.other
+when pair=rival
+feel pout
+- [...I'll pass, thanks.|With HER? No way.|...Pass.]
+- [Have fun without me.|I'd rather stay home.|...I'm busy. Forever.]
+- [Hmm, I'll think about it. No.|Not if she's coming.|...Maybe if she cancels.]
+
+@rule duo3.reply.pair.note
+on duo3.reply
+when act=note q!=bad
+feel shy
+- [...! (She tucks it away, red to the ears.)|(She reads it under the desk and bites her lip.)|(She folds it smaller and smaller, hiding a smile.)]
+- [Hehe... secret mission accepted.|...Later. I'll answer later.|(She mouths: "idiot." She's smiling.)]
+- [(She hides it in her sleeve.)|...You're terrible. (She keeps it.)|(She nods, very slightly.)]
+
+@rule duo3.reply.pair.praise.other
+on duo3.reply
+when act=praise q!=bad otherlikes=yes
+feel shy
+- [E-eh?! With {other} right here...|Don't say that! {other}'s looking!|...You're going to make her jealous.]
+- [Hehe... {other}, did you hear that?|...Stop. {other} is glaring.|Say that when we're alone.]
+- [(She glances at {other}, then at you, and goes red.)|...Thanks. Awkward, but thanks.|Ahaha... um...]
+
+@rule duo3.reply.pair.hidden.good
+on duo3.reply
+when act=hidden q=good
+feel love
+- [(She laces her fingers with yours, eyes on the floor.)|(She squeezes back and doesn't look at you.)|(Her thumb strokes the back of your hand.)]
+- [(She leans a little closer, as if by accident.)|(She stifles a smile.)|(She holds on tighter.)]
+- [...(Her hand stays.)|(She traces a slow circle on your palm.)|(She pretends nothing is happening. Her ears are red.)]
