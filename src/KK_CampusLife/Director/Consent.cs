@@ -157,10 +157,12 @@ namespace Joojkk.CampusLife
         private static float HWant(SaveData.Heroine h, GirlState gs, Pace pace, float favor, float lewd, Mood mood, List<string> r)
         {
             float c;
+            Brakes.Clear();
             if (h.isGirlfriend)
             {
                 c = pace == Pace.Reserved ? (lewd - 60f) / 40f : pace == Pace.Normal ? (lewd - 40f) / 40f : 0.7f + lewd / 300f;
-                if (pace == Pace.Reserved && gs.Chapter < 1) { c -= 0.25f; r.Add("dating only a short while"); }
+                if (pace == Pace.Reserved) Brake("personality", 0.15f);
+                if (pace == Pace.Reserved && gs.Chapter < 1) { c -= 0.25f; r.Add("dating only a short while"); Brake("soon", 0.25f); }
             }
             else if (h.relation >= 1)
             {
@@ -169,44 +171,77 @@ namespace Joojkk.CampusLife
                     : pace == Pace.Normal ? (lewd - 65f) / 40f + (favor - 70f) / 100f
                     : lewd / 60f;
                 r.Add("not dating");
+                if (pace != Pace.Open) Brake("personality", pace == Pace.Reserved ? 0.35f : 0.15f);
             }
-            else if (h.relation == 0) { c = pace == Pace.Open ? lewd / 90f - 0.1f : -0.4f; r.Add("barely knows you"); }
+            else if (h.relation == 0)
+            {
+                c = pace == Pace.Open ? lewd / 90f - 0.1f : -0.4f;
+                r.Add("barely knows you");
+                Brake(pace == Pace.Open ? "soon" : "personality", pace == Pace.Open ? 0.2f : 0.4f);
+            }
             // strangers in a flirty or cheerful mood got 10-23%).
             else return pace == Pace.Open ? lewd / 120f - 0.35f : -0.6f;
             // Days together: a girl you met three days ago is not one you have known for a week.
             var days = gs.TalkDays.Distinct().Count();
             var d = Mathf.Clamp((days - 4) * 0.02f, -0.06f, 0.1f);
-            if (Mathf.Abs(d) > 0.001f) { c += d; r.Add(days + " days together"); }
+            if (Mathf.Abs(d) > 0.001f) { c += d; r.Add(days + " days together"); if (d < 0f) Brake("soon", -d); }
             // Your name at school: a boy everyone speaks well of is easier to trust with this.
             var rep = Mathf.Clamp((S.Reputation - 50) / 500f, -0.1f, 0.1f);
-            if (Mathf.Abs(rep) >= 0.02f) { c += rep; r.Add("reputation " + S.Reputation); }
+            if (Mathf.Abs(rep) >= 0.02f) { c += rep; r.Add("reputation " + S.Reputation); if (rep < 0f) Brake("name", -rep); }
             // What already happened between you.
             if (h.hCount > 0) { c += h.isGirlfriend ? 0.05f : 0.12f; r.Add("H before (" + h.hCount + ")"); }
-            else if (!h.isGirlfriend && pace != Pace.Open) { c -= 0.08f; r.Add("her first time with you"); }
+            else if (!h.isGirlfriend && pace != Pace.Open) { c -= 0.08f; r.Add("her first time with you"); Brake("soon", 0.08f); }
             if (gs.Moments.Any(m => (m.Kind == "kiss_wary" || m.Kind == "almost") && S.Day - m.Day <= 5)) { c += 0.08f; r.Add("a recent kiss or almost"); }
             if (gs.Moments.Any(m => m.Kind == "feelings" && m.Tone > 0 && S.Day - m.Day <= 7)) { c += 0.05f; r.Add("you talked feelings"); }
-            if (gs.Guilt > 0) { c -= 0.3f; r.Add(gs.Guilt == 1 ? "waiting for you to take responsibility" : "pulling away after last time"); }
-            if (gs.DistanceUntil >= S.Day) { c -= 0.25f; r.Add("keeping her distance"); }
+            if (gs.Guilt > 0) { c -= 0.3f; r.Add(gs.Guilt == 1 ? "waiting for you to take responsibility" : "pulling away after last time"); Brake("guilt", 0.3f); }
+            if (gs.DistanceUntil >= S.Day) { c -= 0.25f; r.Add("keeping her distance"); Brake("guilt", 0.25f); }
             // Someone else: another girlfriend weighs on one who is not yours.
             if (!h.isGirlfriend && OtherGirlfriend(h))
             {
-                c -= pace == Pace.Open ? 0.05f : pace == Pace.Normal ? 0.12f : 0.18f;
+                var gfw = pace == Pace.Open ? 0.05f : pace == Pace.Normal ? 0.12f : 0.18f;
+                c -= gfw;
                 r.Add("you have a girlfriend");
+                Brake("girlfriend", gfw);
             }
             // The day: a perfect one helps; asking again after a no does not.
             if (gs.TalkDay == S.Day && gs.TalksToday >= 3) { c += pace == Pace.Open ? 0.25f : 0.1f; r.Add("a perfect day"); }
             int asked;
-            if (HNoToday.TryGetValue(S.Day + "|" + GirlInfo.Key(h), out asked) && asked > 0) { c -= 0.1f * asked; r.Add("said no " + asked + "x today"); }
+            if (HNoToday.TryGetValue(S.Day + "|" + GirlInfo.Key(h), out asked) && asked > 0) { c -= 0.1f * asked; r.Add("said no " + asked + "x today"); Brake("asked", 0.1f * asked); }
             if (gs.Devotion > 0) c += Mathf.Min(0.08f, gs.Devotion / 600f);
-            if (h.isGirlfriend && gs.Attention < 30) { c -= 0.08f; r.Add("feels neglected"); }
+            if (h.isGirlfriend && gs.Attention < 30) { c -= 0.08f; r.Add("feels neglected"); Brake("neglected", 0.08f); }
             switch (mood)
             {
-                case Mood.Sleepy: c -= 0.2f; break;
-                case Mood.Stressed: c -= 0.1f; break;
+                case Mood.Sleepy: c -= 0.2f; Brake("mood", 0.2f); break;
+                case Mood.Stressed: c -= 0.1f; Brake("mood", 0.1f); break;
+                case Mood.Upset: Brake("mood", 0.4f); break;   // Chance takes it off through MoodShift
                 case Mood.Lonely: if (!h.isGirlfriend) { c += 0.08f; r.Add("lonely"); } break;
             }
             return c;
         }
+
+        /// <summary>What held her back in the last <see cref="HWant"/>: each brake and how much it weighed.</summary>
+        private static readonly Dictionary<string, float> Brakes = new Dictionary<string, float>();
+
+        private static void Brake(string what, float amount)
+        {
+            float v;
+            Brakes.TryGetValue(what, out v);
+            Brakes[what] = v + amount;
+        }
+
+        private static readonly Dictionary<string, string> HHeld = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Why she said a wary no this period (her biggest brake: "personality", "mood", "guilt", "girlfriend", "soon",
+        /// "asked", "grudge", "neglected", "name" or "moment"), or "" if she did not.
+        /// </summary>
+        public static string HeldBack(SaveData.Heroine h)
+        {
+            string a;
+            return h != null && HHeld.TryGetValue(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h), out a) ? a : "";
+        }
+
+        private static string _held = "";
 
         private static bool OtherGirlfriend(SaveData.Heroine h)
         {
@@ -254,20 +289,25 @@ namespace Joojkk.CampusLife
                 why += "; unease " + u.ToString("0.00");
                 return u >= 0.5f ? "wary_yes" : "yes";
             }
-            // Interest, added up like the rest.
-            var interest = chance * 1.5f + (h.favor - 60) / 100f + (h.lewdness - 50) / 120f;
-            interest += h.isGirlfriend ? 0.15f : h.relation >= 1 ? 0.05f : h.relation < 0 ? -0.4f : 0f;
-            if (mood == Mood.Flirty) interest += 0.2f;
-            else if (mood == Mood.Lonely) interest += 0.1f;
-            else if (mood == Mood.Upset || mood == Mood.Sleepy) interest -= 0.15f;
-            if (h.hCount > 0) interest += 0.1f;
-            interest += Mathf.Clamp((trust - 50) / 300f, -0.1f, 0.1f);
-            if (Social.Grudge(h) != null) interest -= 0.2f;
-            if (Pairs.IsScorned(h)) interest -= 0.6f;
-            if (gs.Guilt == 2) interest -= 0.2f;
-            interest -= 0.1f * NoToday(h);
-            why += "; interest " + interest.ToString("0.00");
-            return interest >= 0.35f ? "wary_no" : "no";
+            // A wary no is an almost-yes, the mirror of the wary yes (user, 2026-10-30: "não com receio seria um não só que
+            // com interesse, não aceitou por causa de outra coisa (como a personalidade, humor etc)"): she wants it, and
+            // something else held her back. Her wanting is measured apart from the brakes: her bars without her pace,
+            // what already happened, a flirty or lonely day, a perfect day, trust; a grudge or scorn take it away.
+            var desire = (h.lewdness - 40) / 60f + (h.favor - 50) / 100f;
+            desire += h.isGirlfriend ? 0.15f : h.relation >= 1 ? 0.05f : h.relation < 0 ? -0.5f : 0f;
+            if (h.hCount > 0) desire += 0.15f;
+            if (gs.Moments.Any(m => (m.Kind == "kiss_wary" || m.Kind == "almost") && S.Day - m.Day <= 5)) desire += 0.1f;
+            if (gs.Moments.Any(m => m.Kind == "feelings" && m.Tone > 0 && S.Day - m.Day <= 7)) desire += 0.05f;
+            if (mood == Mood.Flirty) desire += 0.25f;
+            else if (mood == Mood.Lonely) desire += 0.1f;
+            if (gs.TalkDay == S.Day && gs.TalksToday >= 3) desire += 0.1f;
+            desire += Mathf.Clamp((trust - 50) / 250f, -0.2f, 0.2f);
+            var grudge = Social.Grudge(h) != null;
+            if (grudge) { desire -= 0.3f; Brake("grudge", 0.15f); }
+            if (Pairs.IsScorned(h)) desire -= 0.8f;
+            _held = Brakes.Count > 0 ? Brakes.OrderByDescending(x => x.Value).First().Key : "moment";
+            why += "; wants it " + desire.ToString("0.00") + (desire >= 0.5f ? ", held back by " + _held : "");
+            return desire >= 0.5f ? "wary_no" : "no";
         }
 
         /// <summary>How many times she said no (or not now) to H today.</summary>
@@ -295,6 +335,7 @@ namespace Joojkk.CampusLife
                 HNoToday[k] = n + 1;
             }
             if (a == "wary_yes") WaryH[GirlInfo.Key(h)] = S.Day;
+            if (a == "wary_no") HHeld[key] = _held;
             if (Logged.Add(key + "/H")) Note(GirlInfo.FirstName(h) + ": H -> " + a.Replace('_', ' ') + " (" + Mathf.RoundToInt(c * 100) + "%: " + why + ")");
             return a;
         }

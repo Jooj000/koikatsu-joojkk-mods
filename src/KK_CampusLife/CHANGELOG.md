@@ -4,6 +4,12 @@ Until 2.5 the plugin's own version (`CampusLifePlugin.Version`) stayed at 2.0.0 
 the combined repository. From 3.0.0 on the plugin carries the version itself; the cycles between 2.5 and 3.0 are
 numbered 2.6 to 2.9 below.
 
+## 3.1.0
+- A wary no is now an almost-yes, the mirror of the wary yes: she wants it (her bars, what already happened between
+  you, a flirty day, trust), and something else held her back. She says what: her personality, her mood, guilt about
+  last time, your girlfriend, too soon, you already asked today, a grudge, feeling neglected, your reputation, or just
+  not here and now.
+
 ## 3.0.0
 - Nothing in a talk acts while a line is still on screen: categories, options, the target button and touches wait
   until the box closes (a click during a line is ignored, with a short beat after it closes).

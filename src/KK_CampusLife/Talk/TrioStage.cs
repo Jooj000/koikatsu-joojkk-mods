@@ -450,23 +450,30 @@ namespace Joojkk.CampusLife
                 // One row: the game stands them as a corner (two over one); at the top center they go
                 // side by side, left to right as they were, level with the highest one.
                 rects = rects.OrderBy(r => ScreenBox(r).center.x).ThenByDescending(r => ScreenBox(r).center.y).ToList();
-                const float gap = 14f;
-                var total = rects.Sum(r => ScreenBox(r).width) + gap * (rects.Count - 1);
-                var rowY = box.yMax - rects.Max(r => ScreenBox(r).height) * 0.5f;
-                var rowX = Screen.width * 0.5f - total * 0.5f;
-                var said = new List<string>();
-                foreach (var r in rects)
-                {
-                    var sb = ScreenBox(r);
-                    _moved.Add(new KeyValuePair<RectTransform, Vector3>(r, r.localPosition));
-                    MoveTo(r, new Vector2(rowX + sb.width * 0.5f, rowY));
-                    rowX += sb.width + gap;
-                    var now = ScreenBox(r);
-                    said.Add(r.name + " " + now.center.x.ToString("0") + "," + now.center.y.ToString("0") + " " + now.width.ToString("0") + "x" + now.height.ToString("0"));
-                }
-                CampusLifePlugin.Log.LogInfo("Trio icons in a row at the top center (screen " + Screen.width + "x" + Screen.height + "): " + string.Join("; ", said.ToArray()));
+                foreach (var r in rects) _moved.Add(new KeyValuePair<RectTransform, Vector3>(r, r.localPosition));
+                _rowY = box.yMax - rects.Max(r => ScreenBox(r).height) * 0.5f;
+                CampusLifePlugin.Log.LogInfo("Trio icons in a row at the top center (screen " + Screen.width + "x" + Screen.height + "): " + Layout(rects));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Trio icons: " + e.Message); }
+        }
+
+        private static float _rowY;
+
+        private static string Layout(List<RectTransform> rects)
+        {
+            const float gap = 14f;
+            var total = rects.Sum(r => ScreenBox(r).width) + gap * (rects.Count - 1);
+            var rowX = Screen.width * 0.5f - total * 0.5f;
+            var said = new List<string>();
+            foreach (var r in rects)
+            {
+                var sb = ScreenBox(r);
+                MoveTo(r, new Vector2(rowX + sb.width * 0.5f, _rowY));
+                rowX += sb.width + gap;
+                var now = ScreenBox(r);
+                said.Add(r.name + " " + now.center.x.ToString("0") + "," + now.center.y.ToString("0") + " " + now.width.ToString("0") + "x" + now.height.ToString("0"));
+            }
+            return string.Join("; ", said.ToArray());
         }
 
         private static void PutIconsBack()

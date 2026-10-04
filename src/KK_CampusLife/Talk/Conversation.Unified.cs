@@ -1478,9 +1478,51 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
+        /// A wary no is an almost-yes (user, 2026-10-30): she wants to, and says what held her back, the director's
+        /// biggest brake (Consent.HeldBack).
+        /// </summary>
+        private static string HeldBackLine(SaveData.Heroine h, string why)
+        {
+            switch (why)
+            {
+                case "personality":
+                    return T(h, "...I want to. I really do. But I'm not... that kind of girl. Not yet. Please don't hate me.", "I-I want to! Honestly! But my brain is screaming and I can't! Give me time?!",
+                        "...Don't misread me. I want to. I just don't do this so easily.", "Mm. Believe me, I'm tempted. But I don't hand that out. Not yet.");
+                case "mood":
+                    return T(h, "...If it were any other day... I'm just not okay today. Ask me again?", "Ugh, today's the worst! Any other day I'd say yes! ...Rain check?",
+                        "...Not today. I'm not in a good place. It's not you.", "Bad day. Really bad. ...Ask me tomorrow, and I'll probably say yes.");
+                case "guilt":
+                    return T(h, "...After last time, I can't. Not until we talk about it. ...I still want to, though.", "I want to, but— we never talked about last time! We have to first!",
+                        "...Not until we settle what happened. Then we'll see.", "Last time is still hanging over us. Fix that first, and then... maybe.");
+                case "girlfriend":
+                    return T(h, "...You have a girlfriend. I... I want to, but I can't do that to her.", "You're taken! I— ugh, why does that make it harder?! No! ...Not like this!",
+                        "...You're with someone. I won't be the other girl. ...Even if I want to.", "Tempting. But you belong to someone. I don't share well. Ask me when that changes.");
+                case "soon":
+                    return T(h, "...It's too soon. We barely... I want to know you more first. Is that okay?", "Too fast, too fast! I like you, but— slow down a little!",
+                        "...We've only just started. Give it time.", "Patience. I want to, but not this fast. Make me wait for it.");
+                case "asked":
+                    return T(h, "...You already asked today. My answer hasn't changed... even if I want it to.", "You asked already! Stop making it so hard to say no!",
+                        "...Still no. Asking again won't change today.", "Again? Persistent. ...Still not today. Tomorrow, maybe.");
+                case "grudge":
+                    return T(h, "...I'm still hurt about what happened. I want to, but... not while it hurts.", "I'm still mad at you! ...Even if I kinda want to! Fix it first!",
+                        "...I haven't forgiven you yet. Ask me when I have.", "You still owe me an apology. Then we'll talk.");
+                case "neglected":
+                    return T(h, "...You've barely looked at me lately. I want to... but I want you to want me first.", "You've been ignoring me! And now this?! ...Spend time with me first!",
+                        "...You've been distant. Fix that, then ask.", "Hm. You remember me only now? Earn it again first.");
+                case "name":
+                    return T(h, "...People already talk about you. I want to, but I'm scared of what they'd say.", "Everyone's already gossiping about you! If they found out— no, no!",
+                        "...With your reputation, I have to be careful. Not now.", "Your name's a little dirty around school. I like mine clean. ...For now.");
+                default:
+                    return T(h, "...It's not that I don't want to. Just... not like this. Not here. Not yet.", "Ahh, you're making my heart race! But not here! Not now! ...Ask me again sometime?",
+                        "...Not here. Not now. Don't take it the wrong way.", "Tempting. Really. ...But not here. Keep that look for later.");
+            }
+        }
+
+        /// <summary>
         /// Asking her to sneak off: the director's four answers. Yes and a wary yes both go to the
-        /// game's H (a wary one leaves her guilty after it, Consent.AfterH); a wary no is "I want to, but not now" and
-        /// leaves the tension as a memory; a no costs a little trust, more when you already heard no today.
+        /// game's H (a wary one leaves her guilty after it, Consent.AfterH); a wary no is an almost-yes, "I want to, but"
+        /// with what held her back, and leaves the tension as a memory; a no costs a little trust, more when you already
+        /// heard no today.
         /// </summary>
         private static void SneakU(SaveData.Heroine h)
         {
@@ -1499,8 +1541,8 @@ namespace Joojkk.CampusLife
                         "...This is a bad idea. ...Lead the way.", "...You know this changes things. ...Fine. Come on, before I think about it."));
                     break;
                 case "wary_no":
-                    b.Face(h, Feel.Shy).Her_(T(h, "...It's not that I don't want to. Just... not like this. Not yet.", "Ahh, you're making my heart race! But no! Not today! ...Ask me again sometime?",
-                        "...Not today. Don't take it the wrong way.", "Tempting. Really. ...But no. Not yet. Keep that look for later."));
+                    b.Narr(GirlInfo.FirstName(h) + " hesitates a moment too long before she answers.");
+                    b.Face(h, Feel.Shy).Her_(HeldBackLine(h, Consent.HeldBack(h)));
                     break;
                 default: b.Face(h, Feel.Pout).Her_(RomanceLines.SneakNo(tone)); break;
             }
