@@ -208,7 +208,18 @@ namespace Joojkk.CampusLife
                         //.
                         var w = FlirtWeight(inc.What) + (Saw(listener, inc) ? 1 : 0);
                         // What she decided about you and that girl (Share): no hurt once she accepted it.
-                        if (listener.isGirlfriend) return about == null || Share.Accepts(listener, about) ? 0 : Share.Stance(listener, about) == Share.Refuses || ConvoLines.MindsCheating(listener) ? -w : 0;
+                        // How she takes it is the director's: her mood, anger, trust, how often, that girl...
+                        if (listener.isGirlfriend)
+                        {
+                            if (about == null || Share.Accepts(listener, about)) return 0;
+                            switch (Consent.Cheat(listener, about, FlirtWeight(inc.What), Saw(listener, inc)))
+                            {
+                                case "shrugs": return 0;
+                                case "teases": return -(w / 2);
+                                case "hurt": return -w;
+                                default: return -(w + 2);
+                            }
+                        }
                         return listener.favor >= 70 ? -(w / 2) : 0;
                     }
                 default: return 0;
@@ -216,6 +227,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>How much your being sweet on another girl weighs, by what it was ("" = older saves, before it was kept).</summary>
+        internal static int WeightOf(string what) { return FlirtWeight(what); }
+
         private static int FlirtWeight(string what)
         {
             switch (what)

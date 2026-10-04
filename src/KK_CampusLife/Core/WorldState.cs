@@ -244,6 +244,9 @@ namespace Joojkk.CampusLife
         public int Pass;                                       // one-time passes: a hurtful thing about you is let go
         public int OwesH;                                      // 1: she owes you, says yes to H once
         public int CaughtTalked;                               // how many of those times you already talked about with her
+        public int Guilt;                                      // after a wary H: 1 she wants you to take responsibility, 2 she pulls away
+        public int GuiltDay = -1;                              // the day of that H
+        public int DistanceUntil = -1;                         // she keeps her distance from you until this day (guilt, space)
 
         // ---- relationship seasons, sundays ----
         public int Chapter;                                    // relationship chapters finished (0-3)
@@ -264,7 +267,7 @@ namespace Joojkk.CampusLife
             d["fct"] = Facts.Cast<object>().ToList();
             d["ns"] = NeedSocial; d["nf"] = NeedFood; d["nr"] = NeedRest;
             d["it"] = Intent; d["its"] = IntentStamp; d["gok"] = GirlsOk;
-            d["cau"] = Caught; d["pas"] = Pass; d["owh"] = OwesH; d["caut"] = CaughtTalked;
+            d["cau"] = Caught; d["pas"] = Pass; d["owh"] = OwesH; d["caut"] = CaughtTalked; d["gui"] = Guilt; d["guid"] = GuiltDay; d["dist"] = DistanceUntil;
             d["scu"] = ScornedUntil; d["sc"] = Scorned; d["rd"] = Redemption; d["cf"] = Conflicted; d["cfd"] = ConflictedDay;
             d["ch"] = Chapter; d["chd"] = ChapterDay; d["cho"] = ChapterOpen;
             d["trd"] = Traditions.Cast<object>().ToList();
@@ -282,7 +285,7 @@ namespace Joojkk.CampusLife
             Facts = JsonLists.Strings(d.GetList("fct"));
             NeedSocial = d.GetInt("ns", 60); NeedFood = d.GetInt("nf", 40); NeedRest = d.GetInt("nr", 70);
             Intent = d.GetString("it"); IntentStamp = d.GetInt("its", -1); GirlsOk = d.GetInt("gok", -1);
-            Caught = d.GetInt("cau"); Pass = d.GetInt("pas"); OwesH = d.GetInt("owh"); CaughtTalked = d.GetInt("caut");
+            Caught = d.GetInt("cau"); Pass = d.GetInt("pas"); OwesH = d.GetInt("owh"); CaughtTalked = d.GetInt("caut"); Guilt = d.GetInt("gui"); GuiltDay = d.GetInt("guid", -1); DistanceUntil = d.GetInt("dist", -1);
             ScornedUntil = d.GetInt("scu", -1); Scorned = d.GetInt("sc"); Redemption = d.GetInt("rd"); Conflicted = d.GetInt("cf"); ConflictedDay = d.GetInt("cfd", -1);
             Chapter = d.GetInt("ch"); ChapterDay = d.GetInt("chd", -1); ChapterOpen = d.GetString("cho");
             Traditions = JsonLists.Strings(d.GetList("trd"));

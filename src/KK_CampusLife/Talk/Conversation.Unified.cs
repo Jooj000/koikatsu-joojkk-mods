@@ -292,8 +292,9 @@ namespace Joojkk.CampusLife
         {
             try
             {
-                if (Scenes.Running || _scene == null) return;
-                if (GiftMenu.IsOpen) GiftMenu.Close();
+                if (_scene == null) return;
+                if (GiftMenu.IsOpen && !TalkBusyLine()) GiftMenu.Close();   // a category click puts the gift menu away
+                if (Busy("category '" + name + "'")) return;
                 Sfx.Select();
                 if (RootOpen && _cat == name) { _cat = null; SetOpen(false); return; }
                 _cat = name;
@@ -1476,23 +1477,48 @@ namespace Joojkk.CampusLife
             Plain(h, Lvl.Spicy, ok ? Q.Good : Q.Neutral, "private:" + mem[1], b, ok ? "♥ " + GirlInfo.FirstName(h) + " remembers it too." : null);
         }
 
+        /// <summary>
+        /// Asking her to sneak off: the director's four answers. Yes and a wary yes both go to the
+        /// game's H (a wary one leaves her guilty after it, Consent.AfterH); a wary no is "I want to, but not now" and
+        /// leaves the tension as a memory; a no costs a little trust, more when you already heard no today.
+        /// </summary>
         private static void SneakU(SaveData.Heroine h)
         {
             var s = Sess;
-            var ok = Consent.Decide(h, Ask.H);
+            var a = Consent.DecideH(h);
+            var ok = a == "yes" || a == "wary_yes";
             var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
             b.Me(RomanceLines.PlayerSneak());
-            b.Face(h, ok ? Feel.Love : Feel.Pout).Her_(ok ? RomanceLines.SneakYes(tone) : RomanceLines.SneakNo(tone));
+            switch (a)
+            {
+                case "yes": b.Face(h, Feel.Love).Her_(RomanceLines.SneakYes(tone)); break;
+                case "wary_yes":
+                    b.Narr(GirlInfo.FirstName(h) + " looks away, then back at you, and doesn't say no.");
+                    b.Face(h, Feel.Shy).Her_(T(h, "...We shouldn't. ...But if it's you... just this once, okay?", "Ah— um— okay! Okay. I think. ...Don't make it weird after, okay?!",
+                        "...This is a bad idea. ...Lead the way.", "...You know this changes things. ...Fine. Come on, before I think about it."));
+                    break;
+                case "wary_no":
+                    b.Face(h, Feel.Shy).Her_(T(h, "...It's not that I don't want to. Just... not like this. Not yet.", "Ahh, you're making my heart race! But no! Not today! ...Ask me again sometime?",
+                        "...Not today. Don't take it the wrong way.", "Tempting. Really. ...But no. Not yet. Keep that look for later."));
+                    break;
+                default: b.Face(h, Feel.Pout).Her_(RomanceLines.SneakNo(tone)); break;
+            }
             if (ok) Bounds(b, h);   // what her card still refuses in the game's H, in her words
             Hide();
             Scenes.PlayInTalk(b, c =>
             {
-                try { Pay(s, Lvl.Spicy, ok ? Q.Good : Q.Bad, "sneak"); }
+                try { Pay(s, Lvl.Spicy, ok || a == "wary_no" ? (a == "yes" ? Q.Good : Q.Neutral) : Q.Bad, "sneak"); }
                 catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
-                if (ok && GameAllows(3)) { Game(13); return; }   // the director already said yes for this period
-                s.Did.Add("refused");   // a light trace: she is not in the mood for more today
-                Social.AddTrust(h, -1);
+                if (ok && GameAllows(3)) { Game(13); return; }   // the director already answered for this period
+                s.Did.Add("refused");   // she is not in the mood for more today
+                if (a == "wary_no") CampusLife.Memories.Add(h, "almost", "you asked, and I almost said yes", 1, true);
+                else if (!ok)
+                {
+                    var no = Consent.NoToday(h);
+                    Social.AddTrust(h, no >= 2 ? -3 : -1);   // pushing after a no hurts more
+                    if (no >= 3) { h.anger = Mathf.Min(100, h.anger + 20); CampusLifePlugin.Log.LogInfo("Talk: " + GirlInfo.FirstName(h) + " is annoyed: asked for H " + no + " times today"); }
+                }
                 AfterBeat(s);
             }, false);
         }
@@ -1572,10 +1598,13 @@ namespace Joojkk.CampusLife
             var meet = Board.MeetHere(h);
             if (meet != null && Board.PlayInTalk(meet, h, () => { s.Turns++; AfterScene(); })) return true;
             if (ShareOpening(s, h)) return true;
-            if (S.Girl(GirlInfo.Key(h)).Pending == "SceneTalk:feelings")
+            // The same for the guilt after a wary H.
+            var waiting = S.Girl(GirlInfo.Key(h)).Pending;
+            if (waiting == "SceneTalk:feelings" || waiting == "SceneTalk:after_h")
             {
                 Subject f = null;
-                try { f = SceneTalk.Candidates(h).FirstOrDefault(c => c.Id == "feelings"); }
+                var id = waiting.Substring("SceneTalk:".Length);
+                try { f = SceneTalk.Candidates(h).FirstOrDefault(c => c.Id == id); }
                 catch (Exception e) { CampusLifePlugin.Log.LogDebug("Opening: " + e.Message); }
                 if (f != null) return SceneTalk.Play(h, f, d => s.Interest = Mathf.Clamp(s.Interest + d, 0, MaxInterest), () => { s.Turns++; AfterScene(); });
             }

@@ -73,6 +73,7 @@ namespace Joojkk.CampusLife
             if (ts == null) { if (_scene != null) Close(); return; }
             if (ts != _scene || (!_decided && ts.targetHeroine != null)) Attach(ts);
             if (_root == null) return;
+            TalkBusy();   // keeps the beat after a line closes (only measured while the talk runs)
             try { if (ForeignListeners()) HookButtons(); }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Conversation rehook: " + e.Message); }
             // Safety net: whatever opened the list, it shows our page (never the game's buttons).
@@ -365,9 +366,11 @@ namespace Joojkk.CampusLife
                 var aboutName = about != null ? GirlInfo.FirstName(about) : "";
                 if (inc.Kind == Social.Kinds.Flirted && about != h && h.isGirlfriend)
                 {
-                    var minds = ConvoLines.MindsCheating(h);
+                    var take = about != null && Share.Accepts(h, about) ? "shrugs" : Consent.Cheat(h, about, Social.WeightOf(inc.What), Social.Saw(h, inc));
+                    var minds = take == "hurt" || take == "furious";
                     b.Her_(ConvoLines.Cheating(tone, aboutName, minds, inc.What, Social.Saw(h, inc)));
-                    if (minds) s.Interest = Math.Max(0, s.Interest - 1);
+                    if (minds) s.Interest = Math.Max(0, s.Interest - (take == "furious" ? 2 : 1));
+                    if (take == "furious") h.anger = Math.Min(100, h.anger + 25);
                 }
                 else if (inc.Kind == Social.Kinds.HerBoysRoom)
                 {
@@ -1223,7 +1226,12 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var h = s.Her;
             var tone = GirlInfo.ToneOf(h);
+            // se ela já estiver irritada"): mood, anger, and how much she has heard about you lately.
             var chance = 0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f;
+            var mood = MoodOf(h);
+            chance += mood == CampusLife.Mood.Cheerful ? 0.12f : mood == CampusLife.Mood.Flirty ? 0.06f : mood == CampusLife.Mood.Upset ? -0.2f : mood == CampusLife.Mood.Stressed ? -0.12f : 0f;
+            chance -= h.isAnger ? 0.2f : h.anger / 400f;
+            chance -= Mathf.Min(0.2f, 0.05f * Social.Grudges(h).Count);
             var ok = Random.value < chance;
             s.Did.Add("cleared");
             var b = new SceneBuilder(h, true);
@@ -1503,7 +1511,7 @@ namespace Joojkk.CampusLife
             if (onClick != null)
                 btn.onClick.AddListener(() =>
                 {
-                    if (Scenes.Running) return;
+                    if (Busy("option '" + label + "'")) return;
                     if (_trio != null) _trio.QuietSince = Time.realtimeSinceStartup;
                     try { Sfx.Select(); onClick(); }
                     catch (Exception e) { CampusLifePlugin.Log.LogError(e); }

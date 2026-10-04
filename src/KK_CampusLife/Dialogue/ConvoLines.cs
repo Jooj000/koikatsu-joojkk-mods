@@ -430,13 +430,6 @@ namespace Joojkk.CampusLife
             return T(t, "Do you... have someone you like?", "So! Do you have a crush on anyone? Tell me!", "Have you ever been in love?", "Who do you like? Come on, I won't tell.");
         }
 
-        public static bool MindsCheating(SaveData.Heroine h)
-        {
-            var roll = (int)((uint)GirlInfo.Key(h).GetHashCode() % 100);
-            var tolerance = GirlInfo.ToneOf(h) == Tone.Teasing ? 55 : GirlInfo.ToneOf(h) == Tone.Energetic ? 35 : 20;
-            return roll >= tolerance;
-        }
-
         // ================= clearing the air =================
 
         public static string PlayerExplain(string kind)

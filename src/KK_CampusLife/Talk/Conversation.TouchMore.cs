@@ -92,10 +92,44 @@ namespace Joojkk.CampusLife
             return ((Vector2)Input.mousePosition - (Vector2)at).sqrMagnitude <= r * r;
         }
 
+        private static float _busyUntil;
+        internal static string BusyWhy = "";
+
+        /// <summary>
+        /// A line is still on screen (ours or the game's), the gift menu is up or she is saying goodbye: nothing the
+        /// player clicks may act until that box closes, plus a short beat after it so the click that closed it does not
+        /// also press what was under it ("as funções só devem funcionar depois de você fechar a caixa de diálogo atual",
+        /// </summary>
+        internal static bool TalkBusy(out string why)
+        {
+            why = Scenes.Running ? "a scene is playing" : ADV.Program.isADVProcessing ? "the game's line is open"
+                : _goodbye ? "she is saying goodbye" : null;
+            var now = Time.realtimeSinceStartup;
+            if (why != null) { _busyUntil = now + 0.35f; BusyWhy = why; return true; }
+            if (now < _busyUntil) { why = "the line just closed"; return true; }
+            if (GiftMenu.IsOpen) { why = "the gift menu is open"; return true; }   // a menu, not a line: no beat after it
+            why = "";
+            return false;
+        }
+
+        internal static bool TalkBusy() { string why; return TalkBusy(out why); }
+
+        /// <summary>Busy for a reason other than the gift menu (a line, its closing beat, the goodbye).</summary>
+        private static bool TalkBusyLine() { string why; return TalkBusy(out why) && why != "the gift menu is open"; }
+
+        /// <summary>Logs a click that came while a line was open (it is dropped, not queued).</summary>
+        private static bool Busy(string what)
+        {
+            string why;
+            if (!TalkBusy(out why)) return false;
+            CampusLifePlugin.Log.LogInfo("Talk: " + what + " ignored: the line is still open (" + why + ")");
+            return true;
+        }
+
         /// <summary>The touch buttons are up and nothing plays (the same moments the game's own areas answer).</summary>
         private static bool SpotReady(TalkScene ts)
         {
-            if (ts == null || ts != G.TalkScene || !Campus.On || _goodbye || Scenes.Running || ADV.Program.isADVProcessing || GiftMenu.IsOpen || !CanvasOn(ts)) return false;
+            if (ts == null || ts != G.TalkScene || !Campus.On || TalkBusy() || !CanvasOn(ts)) return false;
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return false;
             if (TransVoiceField != null && TransVoiceField.GetValue(ts) as UnityEngine.Object != null) return false;
             var wait = TouchWaitField != null ? TouchWaitField.GetValue(ts) : null;

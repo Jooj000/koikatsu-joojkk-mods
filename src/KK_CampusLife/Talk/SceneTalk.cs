@@ -48,6 +48,7 @@ namespace Joojkk.CampusLife
             Add(l, Reveal(h));
             Add(l, Hurt(h));
             Add(l, Feelings(h));
+            Add(l, AfterH(h));
             try { foreach (var s in Pairs.Subjects(h)) Add(l, s); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
             try { foreach (var s in Rumors.Subjects(h)) Add(l, s); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
             try { foreach (var s in Seasons.Subjects(h)) Add(l, s); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
@@ -503,6 +504,84 @@ namespace Joojkk.CampusLife
                     else Social.AddTrust(h, -2);
                 },
                 Interest = 1,
+            };
+        }
+
+        // ================= Scene Talk: after a wary H, her guilt =================
+
+        /// <summary>
+        /// pedir pra vc assumir ela ou tentar se afastar, e você tem que resolver os problemas todos"). The director chose
+        /// which way she went (Consent.Guilt): she asks you to take responsibility, or she pulls away. Until you settle it,
+        /// her H, kiss and invitations come harder, and the scene comes back every couple of days.
+        /// </summary>
+        private static Subject AfterH(SaveData.Heroine h)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
+            if (gs.Guilt <= 0 || gs.Moments.Any(m => m.Kind == "after_h" && S.Day - m.Day < 2)) return null;
+            var name = GirlInfo.FirstName(h);
+            var wants = gs.Guilt == 1;
+            var gf = G.Heroines.Any(x => x != null && x != h && x.isGirlfriend);
+            return new Subject
+            {
+                Id = "after_h", Weight = 2f,
+                Write = b =>
+                {
+                    if (wants)
+                    {
+                        b.Narr(name + " stands a little too close, then a little too far. She has clearly rehearsed this.");
+                        b.Face(h, Feel.Shy).Her_(T(h, "About... what we did. I can't pretend it didn't happen. I don't want to.", "So! About the other day! I've been thinking about it nonstop and I need to know where we stand!",
+                            "...What happened between us. I need to know what it was.", "So. We crossed a line. I'm not the type to just walk away from that. Are you?"));
+                        b.Face(h, Feel.Worried).Her_(T(h, "...Will you take responsibility? For me?", "Are we... something now? Please say we're something!", "...Tell me it wasn't nothing.", "...Well? Take responsibility, or say it was nothing. Pick."));
+                        Choice(b, new List<string[]> { new[] { "Ask her to be your girlfriend", "g_ask" }, new[] { "Tell her it meant something to you", "g_meant" },
+                            new[] { "Ask for a little time", "g_time" }, new[] { "Say it was a one-time thing", "g_once" } });
+                        b.Branch("g_ask"); b.Face(h, Feel.Surprised).Her_(T(h, "...! Then... say it properly. I'm listening.", "Really?! Then say it right! Properly!", "...Then say it properly.", "...Then do it right. I'm waiting.")); b.End();
+                        b.Branch("g_meant"); b.Face(h, Feel.Smile).Her_(T(h, "...Okay. I believe you. Don't make me wait forever.", "It did?! Okay... okay! That's a start!", "...Good. Then act like it.", "...Then show me. Words are cheap.")); b.End();
+                        b.Branch("g_time"); b.Face(h, Feel.Sad).Her_(T(h, "...I understand. I'll wait. A little.", "Time?! ...Okay. But not too much!", "...Fine. Don't take long.", "...Clock's ticking.")); b.End();
+                        b.Branch("g_once"); b.Face(h, Feel.Sad).Her_(T(h, "...Oh. I see. ...I'm such an idiot.", "...Wow. Okay. I really thought... never mind.", "...Understood. Don't talk to me for a while.", "...Right. Of course it was. ...Get away from me.")); b.End();
+                    }
+                    else
+                    {
+                        b.Narr(name + " keeps her eyes on the floor and her bag held in front of her like a shield.");
+                        b.Face(h, Feel.Worried).Her_(T(h, "...We shouldn't have. I keep thinking about what people would say...", "I... I think the other day was a mistake! Not because of you! Just... it was too fast!",
+                            "...That was a mistake. I'm not like that.", "Let's be honest. That was reckless. I don't do reckless."));
+                        if (gf) b.Face(h, Feel.Serious).Her_(T(h, "...And you have a girlfriend. What does that make me?", "And you're not even single! What was I thinking?!", "...You have someone. I forgot that. Conveniently.", "...You're taken. I knew that. That's the worst part."));
+                        b.Face(h, Feel.Sad).Her_(T(h, "...Maybe we should keep some distance for a while.", "Maybe we should... cool off a little? Just for a bit?", "...I need distance.", "...I'm going to keep my distance. For both of us."));
+                        Choice(b, new List<string[]> { new[] { "Tell her you want to be with her", "d_want" }, new[] { "Promise it stays between you", "d_secret" },
+                            new[] { "Give her space", "d_space" }, new[] { "Agree to forget it happened", "d_forget" } });
+                        b.Branch("d_want"); b.Face(h, Feel.Surprised).Her_(T(h, "...You mean that? Even after...?", "Wait, what?! You mean it?!", "...Say that again. Slowly.", "...Don't say that unless you mean it.")); b.End();
+                        b.Branch("d_secret"); b.Face(h, Feel.Shy).Her_(T(h, "...Thank you. That helps. A lot.", "Our secret? ...Okay. Okay, that makes it less scary!", "...Good. Thank you.", "...Fine. Our secret. Don't make me regret it.")); b.End();
+                        b.Branch("d_space"); b.Face(h, Feel.Sad).Her_(T(h, "...Thank you for understanding.", "...Thanks. I'll come find you. Promise.", "...Thank you.", "...Appreciated.")); b.End();
+                        b.Branch("d_forget"); b.Face(h, Feel.Sad).Her_(T(h, "...Right. Forget it. ...If only it were that easy.", "...Yeah. Sure. Forgotten! Totally!", "...Done. It never happened.", "...Just like that, huh. Fine.")); b.End();
+                    }
+                },
+                Result = c =>
+                {
+                    var trust = Social.Trust(h);
+                    var cold = c == "g_once" || c == "d_forget";
+                    Memories.Add(h, "after_h", cold ? "you said it was nothing" : c == "g_time" || c == "d_space" ? "we left it unsaid" : "we talked about what happened", cold ? -1 : 1, false);
+                    switch (c)
+                    {
+                        case "g_ask": gs.Guilt = 0; Social.AddTrust(h, 4); Campus.Apply(new Rewards { Favor = 3 }, h); Conversation.QueueConfession(); break;
+                        case "g_meant":
+                            Social.AddTrust(h, 3);
+                            if (trust >= 60) gs.Guilt = 0;   // she believes you will come around; otherwise she asks again in a couple of days
+                            break;
+                        case "g_time": Social.AddTrust(h, -1); break;
+                        case "g_once":
+                            gs.Guilt = 0; gs.DistanceUntil = S.Day + 3;
+                            h.favor = Math.Max(0, h.favor - 8); Social.AddTrust(h, -8); Social.Add(Social.Kinds.Rude, h);
+                            break;
+                        case "d_want":
+                            if (trust >= 45 || h.favor >= 85) { gs.Guilt = 0; gs.DistanceUntil = -1; Social.AddTrust(h, 3); Conversation.QueueConfession(); }
+                            else { gs.DistanceUntil = S.Day + 1; Social.AddTrust(h, 1); }   // she wants to believe it, not yet
+                            break;
+                        case "d_secret": gs.Guilt = 0; gs.DistanceUntil = -1; Social.AddTrust(h, 3); break;
+                        case "d_space": gs.DistanceUntil = S.Day + 2; Social.AddTrust(h, 1); break;
+                        case "d_forget": gs.Guilt = 0; gs.DistanceUntil = -1; Social.AddTrust(h, -2); h.favor = Math.Max(0, h.favor - 3); break;
+                    }
+                    CampusLifePlugin.Log.LogInfo("Scene talk after H: " + name + " -> " + c + " (guilt " + gs.Guilt + ", distance until day " + gs.DistanceUntil + ", trust " + Social.Trust(h) + ")");
+                },
+                Interest = -1,
             };
         }
 

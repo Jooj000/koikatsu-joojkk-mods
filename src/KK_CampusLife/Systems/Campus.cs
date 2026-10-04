@@ -195,6 +195,7 @@ namespace Joojkk.CampusLife
                 Board.OnIntimate(h);
                 try { Pairs.OnHWithPlayer(h); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
                 try { Lore.FromH(h); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+                Consent.AfterH(h);   // a wary yes leaves her guilty
                 if (gs.Mood == Mood.Flirty) { G.AddFavor(h, Mathf.RoundToInt(5 * Cfg.MoodBonusMultiplier.Value), 0); gs.Mood = Mood.Cheerful; }
             }
         }

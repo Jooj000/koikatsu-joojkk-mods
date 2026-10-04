@@ -1,9 +1,28 @@
 # Campus Life changelog
 
-The plugin's own version (`CampusLifePlugin.Version`) is still 2.0.0; the numbers after it are the development
-milestones of the combined repository.
+Until 2.5 the plugin's own version (`CampusLifePlugin.Version`) stayed at 2.0.0 and the numbers were the milestones of
+the combined repository. From 3.0.0 on the plugin carries the version itself; the cycles between 2.5 and 3.0 are
+numbered 2.6 to 2.9 below.
 
-## Unreleased
+## 3.0.0
+- Nothing in a talk acts while a line is still on screen: categories, options, the target button and touches wait
+  until the box closes (a click during a line is ignored, with a short beat after it closes).
+- H no longer needs dating, for every girl: the director reads the context (what you are to her, her pace and bars,
+  the days together, your reputation, trust, mood, H before, a recent kiss, another girlfriend, a perfect day, how
+  often she already said no) and answers yes, a wary yes, a wary no ("not now") or no. A reserved girl who is not
+  dating you needs very high bars; a normal one less; an open one mostly her lewdness.
+- After a wary yes she feels guilty: next talk she asks you to take responsibility or pulls away, and you settle it
+  (ask her out, say it meant something, ask for time, give her space, keep it secret, or call it a one-time thing).
+  Until then her H, kisses and invitations come harder.
+- Your girlfriend finding out about another girl is the director's call too: her mood, anger, trust, how often it
+  happened, that girl (friend or rival), how far it went and whether she saw it. Explaining yourself reads her mood.
+- Her guilt scene opens the next talk before any other subject.
+- Balance after the tests: a girl who does not know you never says yes to H; a reserved friend can, with maxed bars and
+  a good context; "not now" comes from interest added up (a grudge lowers it instead of ruling it out); with many
+  girlfriends, the count of past flirts weighs less, so a girlfriend in a good mood can tease instead of exploding.
+- The trio's "To: ..." caption no longer runs past the screen edge.
+
+### Also in 3.0.0 (2026-10-03)
 - Achievements climb through stages, each with its own name and goal; each story heroine and teacher has a climb
   with one stage per part of her story. Old saves keep their records (moved to the matching stage).
 - Before the game's H, a girl says what her card refuses (protection, kisses, the back door, touching, toys), in her
@@ -21,10 +40,10 @@ milestones of the combined repository.
 - More dialogue lines (touch, pair talk, refusals).
 
 ## 2.x milestones
-- **2026-10-03**: three-way talk stage, Steam-style achievement cards, mod detection, card traits.
-- **2026-09-29**: talk with two girls (all phases), the director's wary kiss, the achievements Album.
-- **2026-09-29**: rain, witnesses, confiding, clearing the air, giving back a spot.
-- **2026-09-25**: precise talk, jealousy by relationship, shared girlfriends.
+- **2.9 (2026-10-03)**: three-way talk stage, Steam-style achievement cards, mod detection, card traits.
+- **2.8 (2026-09-29)**: talk with two girls (all phases), the director's wary kiss, the achievements Album.
+- **2.7 (2026-09-29)**: rain, witnesses, confiding, clearing the air, giving back a spot.
+- **2.6 (2026-09-25)**: precise talk, jealousy by relationship, shared girlfriends.
 - **2.5 (2026-09-23)**: varied short answers, telling her gossip, the girls' own reputation and bonds.
 - **2.4 / 2.4.1 (2026-09-22)**: procedural talk topics, lore, the dialogue bank, status pages; gossip spread fix, the
   rooftop note scene, the director in charge of first actions.

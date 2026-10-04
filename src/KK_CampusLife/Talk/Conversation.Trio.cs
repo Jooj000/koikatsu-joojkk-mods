@@ -250,7 +250,7 @@ namespace Joojkk.CampusLife
             {
                 try
                 {
-                    if (Scenes.Running || _trio == null) return;
+                    if (_trio == null || Busy("target button")) return;
                     Sfx.Select();
                     TrioTarget(_trio.Target == TrioWho.A ? TrioWho.B : _trio.Target == TrioWho.B ? TrioWho.Both : TrioWho.A);
                 }
@@ -263,7 +263,7 @@ namespace Joojkk.CampusLife
             // Right-aligned to the button and shrinking to fit: the button sits at the screen's edge ("To: Neferpitou" was cut).
             crt.anchorMin = crt.anchorMax = new Vector2(1f, 0f);
             crt.pivot = new Vector2(1f, 1f);
-            crt.anchoredPosition = new Vector2(2f, -1f);
+            crt.anchoredPosition = new Vector2(-8f, -1f);
             crt.sizeDelta = new Vector2(112f, 22f);
             _targetCap = cap.AddComponent<TextMeshProUGUI>();
             var tmpl = _template != null ? _template.GetComponentInChildren<TextMeshProUGUI>(true) : null;
@@ -326,7 +326,7 @@ namespace Joojkk.CampusLife
 
         internal static bool TrioPick(string what)
         {
-            if (_trio == null) return false;
+            if (_trio == null || Busy("target " + what)) return false;
             what = (what ?? "").ToLowerInvariant();
             if (what == "a") TrioTarget(TrioWho.A);
             else if (what == "b") TrioTarget(TrioWho.B);
@@ -590,8 +590,9 @@ namespace Joojkk.CampusLife
                 if (wrel == "yourgf")
                 {
                     Share.Learned(w, to, true);
-                    if (ConvoLines.MindsCheating(w)) { end = w == t.B ? "bleft" : "aleft"; }
-                    else (w == t.B ? (Action)(() => t.SlightB++) : () => t.SlightA++)();
+                    var take = Consent.Cheat(w, to, Social.WeightOf(Witness.Kiss), true);
+                    if (take == "hurt" || take == "furious") { end = w == t.B ? "bleft" : "aleft"; if (take == "furious") w.anger = Math.Min(100, w.anger + 25); }
+                    else if (take == "teases") (w == t.B ? (Action)(() => t.SlightB++) : () => t.SlightA++)();
                 }
                 else if (wrel == "rival" || Interested(w) && !trisal) { Arcs.AddBond(wk, tk, -4); if (w == t.B) t.SlightB++; else t.SlightA++; }
                 else if (wrel == "bff" || wrel == "friend") Arcs.AddBond(wk, tk, 1);

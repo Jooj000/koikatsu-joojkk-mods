@@ -45,7 +45,7 @@ namespace Joojkk.SchoolOptimizer
     public class SchoolOptimizerPlugin : BaseUnityPlugin
     {
         public const string GUID = "joojkk.schooloptimizer";
-        public const string Version = "1.6.0";
+        public const string Version = "1.6.1";
 
         internal static ManualLogSource Log;
         internal static SchoolOptimizerPlugin Instance;

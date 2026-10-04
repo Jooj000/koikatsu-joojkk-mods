@@ -116,28 +116,8 @@ namespace Joojkk.CampusLife
                     c = h.isGirlfriend ? 0.8f : h.relation >= 1 ? 0.2f + (favor - 40f) / 100f : 0.05f;
                     break;
                 case Ask.H:
-                {
-                    // The bar decides, not a floor of days (user, 2026-10-30): H fills a little each day (G.AddFavor), so a
-                    // reserved girl says yes ~2 days after you start dating (day ~7), a normal one the day after (day ~5).
-                    if (pace == Pace.Reserved)
-                    {
-                        if (!h.isGirlfriend || gs.Chapter < 1) { r.Add("only after dating a while"); c = 0.02f; }
-                        else c = (lewd - 60f) / 40f;
-                    }
-                    else if (pace == Pace.Normal)
-                    {
-                        if (h.isGirlfriend) c = (lewd - 40f) / 40f;
-                        else if (h.relation >= 1 && h.lewdness >= 60 && mood == Mood.Flirty) c = 0.3f + lewd / 200f;
-                        else { r.Add("not her girlfriend"); c = 0.03f; }
-                    }
-                    else
-                    {
-                        c = h.isGirlfriend ? 0.7f + lewd / 300f : h.relation >= 0 ? lewd / 60f : 0f;
-                        if (gs.TalkDay == S.Day && gs.TalksToday >= 3) { c += 0.25f; r.Add("a perfect day"); }
-                    }
-                    if (mood == Mood.Sleepy) c -= 0.2f;
+                    c = HWant(h, gs, pace, favor, lewd, mood, r);
                     break;
-                }
                 case Ask.HoldHand:
                     c = h.isGirlfriend ? 0.95f : h.relation >= 0 ? 0.2f + favor / 120f : 0.02f;
                     break;
@@ -152,8 +132,288 @@ namespace Joojkk.CampusLife
             c += Mathf.Clamp((trust - 50) / 500f, -0.1f, 0.1f);
             if (Social.Grudge(h) != null) { c -= 0.15f; r.Add("a grudge"); }
             if (Pairs.IsScorned(h)) { c -= 0.5f; r.Add("scorned"); }
+            // After a wary H: waiting for you to take responsibility makes a confession welcome; pulling away cools the rest.
+            if (gs.Guilt == 1 && ask == Ask.Confess) { c += 0.3f; r.Add("wants you to take responsibility"); }
+            if (gs.DistanceUntil >= S.Day && ask != Ask.H && ask != Ask.Breakup)
+            {
+                var romantic = ask == Ask.Confess || ask == Ask.Date || ask == Ask.HoldHand;
+                c -= romantic ? 0.3f : 0.15f;
+                r.Add("keeping her distance");
+            }
             why = string.Join(", ", r.ToArray());
             return Mathf.Clamp01(c);
+        }
+
+        // ================= H: the context decides =================
+
+        /// <summary>
+        /// How much she wants it now, before mood, trust, a grudge and scorn (Chance adds those for every ask). No fixed
+        /// gates (user, 2026-10-30: "para todas, permita ter H sem namorar, porém, crie a restrição pelo contexto, não
+        /// artificialmente"): the base comes from what you are to her, her pace and her bars, and every other thing that
+        /// makes sense moves it: the days you have spent together, your reputation, H you already had, a recent kiss, a
+        /// wary H she still feels guilty about, another girlfriend, a perfect day, how often she already said no today.
+        /// A reserved girl who is not dating you needs very high bars and good context; a normal one needs less; an open
+        /// </summary>
+        private static float HWant(SaveData.Heroine h, GirlState gs, Pace pace, float favor, float lewd, Mood mood, List<string> r)
+        {
+            float c;
+            if (h.isGirlfriend)
+            {
+                c = pace == Pace.Reserved ? (lewd - 60f) / 40f : pace == Pace.Normal ? (lewd - 40f) / 40f : 0.7f + lewd / 300f;
+                if (pace == Pace.Reserved && gs.Chapter < 1) { c -= 0.25f; r.Add("dating only a short while"); }
+            }
+            else if (h.relation >= 1)
+            {
+                // situations); she now needs maxed bars plus a good context (flirty, trust) to reach ~30%.
+                c = pace == Pace.Reserved ? (lewd - 75f) / 40f + (favor - 80f) / 80f
+                    : pace == Pace.Normal ? (lewd - 65f) / 40f + (favor - 70f) / 100f
+                    : lewd / 60f;
+                r.Add("not dating");
+            }
+            else if (h.relation == 0) { c = pace == Pace.Open ? lewd / 90f - 0.1f : -0.4f; r.Add("barely knows you"); }
+            // strangers in a flirty or cheerful mood got 10-23%).
+            else return pace == Pace.Open ? lewd / 120f - 0.35f : -0.6f;
+            // Days together: a girl you met three days ago is not one you have known for a week.
+            var days = gs.TalkDays.Distinct().Count();
+            var d = Mathf.Clamp((days - 4) * 0.02f, -0.06f, 0.1f);
+            if (Mathf.Abs(d) > 0.001f) { c += d; r.Add(days + " days together"); }
+            // Your name at school: a boy everyone speaks well of is easier to trust with this.
+            var rep = Mathf.Clamp((S.Reputation - 50) / 500f, -0.1f, 0.1f);
+            if (Mathf.Abs(rep) >= 0.02f) { c += rep; r.Add("reputation " + S.Reputation); }
+            // What already happened between you.
+            if (h.hCount > 0) { c += h.isGirlfriend ? 0.05f : 0.12f; r.Add("H before (" + h.hCount + ")"); }
+            else if (!h.isGirlfriend && pace != Pace.Open) { c -= 0.08f; r.Add("her first time with you"); }
+            if (gs.Moments.Any(m => (m.Kind == "kiss_wary" || m.Kind == "almost") && S.Day - m.Day <= 5)) { c += 0.08f; r.Add("a recent kiss or almost"); }
+            if (gs.Moments.Any(m => m.Kind == "feelings" && m.Tone > 0 && S.Day - m.Day <= 7)) { c += 0.05f; r.Add("you talked feelings"); }
+            if (gs.Guilt > 0) { c -= 0.3f; r.Add(gs.Guilt == 1 ? "waiting for you to take responsibility" : "pulling away after last time"); }
+            if (gs.DistanceUntil >= S.Day) { c -= 0.25f; r.Add("keeping her distance"); }
+            // Someone else: another girlfriend weighs on one who is not yours.
+            if (!h.isGirlfriend && OtherGirlfriend(h))
+            {
+                c -= pace == Pace.Open ? 0.05f : pace == Pace.Normal ? 0.12f : 0.18f;
+                r.Add("you have a girlfriend");
+            }
+            // The day: a perfect one helps; asking again after a no does not.
+            if (gs.TalkDay == S.Day && gs.TalksToday >= 3) { c += pace == Pace.Open ? 0.25f : 0.1f; r.Add("a perfect day"); }
+            int asked;
+            if (HNoToday.TryGetValue(S.Day + "|" + GirlInfo.Key(h), out asked) && asked > 0) { c -= 0.1f * asked; r.Add("said no " + asked + "x today"); }
+            if (gs.Devotion > 0) c += Mathf.Min(0.08f, gs.Devotion / 600f);
+            if (h.isGirlfriend && gs.Attention < 30) { c -= 0.08f; r.Add("feels neglected"); }
+            switch (mood)
+            {
+                case Mood.Sleepy: c -= 0.2f; break;
+                case Mood.Stressed: c -= 0.1f; break;
+                case Mood.Lonely: if (!h.isGirlfriend) { c += 0.08f; r.Add("lonely"); } break;
+            }
+            return c;
+        }
+
+        private static bool OtherGirlfriend(SaveData.Heroine h)
+        {
+            return G.Heroines.Any(x => x != null && x != h && x.isGirlfriend);
+        }
+
+        private static readonly Dictionary<string, int> HNoToday = new Dictionary<string, int>();
+        private static readonly Dictionary<string, string> HCache = new Dictionary<string, string>();
+
+        /// <summary>The H answer this period ("yes", "wary_yes", "wary_no", "no"), or "" if she was not asked.</summary>
+        public static string LastH(SaveData.Heroine h)
+        {
+            string a;
+            return h != null && HCache.TryGetValue(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h), out a) ? a : "";
+        }
+
+        /// <summary>
+        /// The four answers (user, 2026-10-30: "o diretor lê todas as variáveis, e decide se sim, sim com receio, não com
+        /// receio ou não"). The dice against the chance say yes or no; then her unease turns a yes into a wary yes (she lets
+        /// it happen, then feels guilty), and her interest turns a no into a wary no (she wanted to, but not now). Unease
+        /// reads what you are to her, her pace, whether it is her first time, trust, another girlfriend, guilt still open,
+        /// the days together and her mood; interest reads the chance itself, her bars, her mood and old hurts.
+        /// </summary>
+        public static string HAnswer(SaveData.Heroine h, out float chance, out string why)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
+            chance = Chance(h, Ask.H, out why);
+            if (h.isAnger) return "no";
+            if (Reactions.OwesH(h, false)) return "yes";
+            var pace = Profile(h);
+            var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
+            var trust = Social.Trust(h);
+            if (Dice(h, Ask.H.ToString()) < chance)
+            {
+                var u = h.isGirlfriend ? 0f : 0.5f;
+                u += pace == Pace.Reserved ? 0.25f : pace == Pace.Normal ? 0.1f : -0.35f;
+                u += h.hCount == 0 ? 0.15f : -0.1f;
+                u += trust < 40 ? 0.15f : trust >= 70 ? -0.1f : 0f;
+                if (!h.isGirlfriend && OtherGirlfriend(h)) u += 0.2f;
+                if (gs.Guilt > 0) u += 0.2f;
+                if (gs.TalkDays.Distinct().Count() < 5) u += 0.1f;
+                if (mood == Mood.Flirty) u -= 0.15f;
+                else if (mood == Mood.Stressed || mood == Mood.Upset) u += 0.1f;
+                if (h.isGirlfriend && gs.Chapter < 1 && pace == Pace.Reserved) u += 0.3f;
+                why += "; unease " + u.ToString("0.00");
+                return u >= 0.5f ? "wary_yes" : "yes";
+            }
+            // Interest, added up like the rest.
+            var interest = chance * 1.5f + (h.favor - 60) / 100f + (h.lewdness - 50) / 120f;
+            interest += h.isGirlfriend ? 0.15f : h.relation >= 1 ? 0.05f : h.relation < 0 ? -0.4f : 0f;
+            if (mood == Mood.Flirty) interest += 0.2f;
+            else if (mood == Mood.Lonely) interest += 0.1f;
+            else if (mood == Mood.Upset || mood == Mood.Sleepy) interest -= 0.15f;
+            if (h.hCount > 0) interest += 0.1f;
+            interest += Mathf.Clamp((trust - 50) / 300f, -0.1f, 0.1f);
+            if (Social.Grudge(h) != null) interest -= 0.2f;
+            if (Pairs.IsScorned(h)) interest -= 0.6f;
+            if (gs.Guilt == 2) interest -= 0.2f;
+            interest -= 0.1f * NoToday(h);
+            why += "; interest " + interest.ToString("0.00");
+            return interest >= 0.35f ? "wary_no" : "no";
+        }
+
+        /// <summary>How many times she said no (or not now) to H today.</summary>
+        public static int NoToday(SaveData.Heroine h)
+        {
+            int n;
+            return HNoToday.TryGetValue(S.Day + "|" + GirlInfo.Key(h), out n) ? n : 0;
+        }
+
+        /// <summary>The director's H answer, fixed for the period and logged once.</summary>
+        public static string DecideH(SaveData.Heroine h)
+        {
+            var key = S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h);
+            string a;
+            if (HCache.TryGetValue(key, out a)) return a;
+            float c;
+            string why;
+            a = HAnswer(h, out c, out why);
+            HCache[key] = a;
+            if (a == "no" || a == "wary_no")
+            {
+                var k = S.Day + "|" + GirlInfo.Key(h);
+                int n;
+                HNoToday.TryGetValue(k, out n);
+                HNoToday[k] = n + 1;
+            }
+            if (a == "wary_yes") WaryH[GirlInfo.Key(h)] = S.Day;
+            if (Logged.Add(key + "/H")) Note(GirlInfo.FirstName(h) + ": H -> " + a.Replace('_', ' ') + " (" + Mathf.RoundToInt(c * 100) + "%: " + why + ")");
+            return a;
+        }
+
+        // ---------------- after a wary yes: guilt ----------------
+
+        private static readonly Dictionary<string, int> WaryH = new Dictionary<string, int>();
+
+        /// <summary>
+        /// The H ended (Campus.OnHEnd). If she said yes warily, the guilt comes (user, 2026-10-30: "depois ela vai se
+        /// sentir culpada, etc, pedir pra vc assumir ela ou tentar se afastar, e você tem que resolver os problemas
+        /// todos"). Which way she goes is the director's: she asks you to take responsibility when she likes you a lot,
+        /// trusts you, you have no girlfriend and it meant a lot to her; she pulls away when trust is low, you have a
+        /// girlfriend, she cares about her name at school, or you barely know each other. Her scene is next time you talk.
+        /// </summary>
+        public static void AfterH(SaveData.Heroine h)
+        {
+            try
+            {
+                int day;
+                var key = GirlInfo.Key(h);
+                if (!WaryH.TryGetValue(key, out day) || S.Day - day > 1) return;
+                WaryH.Remove(key);
+                Guilt(h, "the H");
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+        }
+
+        /// <summary>Starts her guilt: which way she goes, and her scene next talk.</summary>
+        public static int Guilt(SaveData.Heroine h, string after)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
+            var r = new List<string>();
+            var trust = Social.Trust(h);
+            var stay = (h.favor - 70) / 60f + (trust - 50) / 80f;
+            r.Add("favor " + h.favor);
+            r.Add("trust " + trust);
+            if (OtherGirlfriend(h)) { stay -= 0.4f; r.Add("you have a girlfriend"); }
+            if (gs.Rep >= 70) { stay -= 0.15f; r.Add("her name at school"); }
+            if (gs.TalkDays.Distinct().Count() < 5) { stay -= 0.2f; r.Add("barely know each other"); }
+            if (Profile(h) == Pace.Reserved) { stay += 0.1f; r.Add("reserved: it meant a lot"); }
+            if (gs.Moments.Any(m => m.Kind == "feelings" && m.Tone > 0)) { stay += 0.2f; r.Add("you talked feelings"); }
+            var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
+            if (mood == Mood.Lonely) { stay += 0.1f; r.Add("lonely"); }
+            else if (mood == Mood.Stressed || mood == Mood.Upset) { stay -= 0.1f; r.Add(mood.ToString().ToLowerInvariant()); }
+            stay += (Dice(h, "guilt") - 0.5f) * 0.3f;
+            gs.Guilt = stay >= 0f ? 1 : 2;
+            gs.GuiltDay = S.Day;
+            if (gs.Guilt == 2) gs.DistanceUntil = S.Day + 1;
+            CampusLife.Memories.Add(h, "h_wary", "we went too far, and I let it happen", 0, true);
+            gs.Pending = "SceneTalk:after_h";
+            Note(GirlInfo.FirstName(h) + ": guilt after " + after + " -> " + (gs.Guilt == 1 ? "wants you to take responsibility" : "pulls away") +
+                 " (" + stay.ToString("0.00") + ": " + string.Join(", ", r.ToArray()) + ")");
+            return gs.Guilt;
+        }
+
+        // ================= your girlfriend finds out =================
+
+        /// <summary>
+        /// How your girlfriend takes you being sweet on another girl: "shrugs", "teases", "hurt" or "furious". Until the
+        /// 2026-10-30: "assim como a traição, que se ela estiver de bom humor é mais fácil se safar do que se ela já
+        /// estiver irritada, etc. tudo depende das variáveis"). Now the director reads: her tone and pace, her mood today,
+        /// whether she is already angry or holds a grudge, how often she already heard about you and other girls, trust,
+        /// what she decided about that girl (Share), whether that girl is her friend or her rival, how far it went and
+        /// whether she saw it, plus the dice of the day. The same thing on the same day gets the same answer.
+        /// </summary>
+        public static string Cheat(SaveData.Heroine her, SaveData.Heroine other, int weight, bool saw, out string why)
+        {
+            var r = new List<string>();
+            var gs = S.Girl(GirlInfo.Key(her));
+            var tone = GirlInfo.ToneOf(her);
+            var ease = tone == Tone.Teasing ? 0.45f : tone == Tone.Energetic ? 0.3f : 0.2f;
+            r.Add(tone.ToString().ToLowerInvariant());
+            var pace = Profile(her);
+            if (pace == Pace.Open) { ease += 0.15f; r.Add("open"); }
+            else if (pace == Pace.Reserved) { ease -= 0.05f; r.Add("reserved"); }
+            var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
+            switch (mood)
+            {
+                case Mood.Cheerful: ease += 0.15f; r.Add("cheerful"); break;
+                case Mood.Flirty: ease += 0.1f; r.Add("flirty"); break;
+                case Mood.Lonely: ease -= 0.12f; r.Add("lonely"); break;
+                case Mood.Stressed: ease -= 0.2f; r.Add("stressed"); break;
+                case Mood.Upset: ease -= 0.3f; r.Add("upset"); break;
+            }
+            if (her.isAnger) { ease -= 0.4f; r.Add("already angry"); }
+            else if (her.anger > 0) { ease -= her.anger / 250f; r.Add("anger " + her.anger); }
+            // 108: the game died of a stack overflow on the first day change).
+            if (S.Incidents.Any(i => i.Kind != Social.Kinds.Flirted && S.Day - i.Day <= 6 && gs.Known.Contains(i.Id) && !gs.Cleared.Contains(i.Id) && Social.Effect(her, i) < -1))
+            { ease -= 0.15f; r.Add("a grudge"); }
+            var before =S.Incidents.Count(i => i.Kind == Social.Kinds.Flirted && i.Girl != GirlInfo.Key(her) && gs.Known.Contains(i.Id) && S.Day - i.Day <= 14);
+            // From the third, softer and capped.
+            if (before > 2) { ease -= Mathf.Min(0.2f, 0.05f * (before - 2)); r.Add(before + " times lately"); }
+            var trust = Social.Trust(her);
+            ease += Mathf.Clamp((trust - 50) / 200f, -0.2f, 0.2f);
+            r.Add("trust " + trust);
+            if (gs.Attention < 30) { ease -= 0.1f; r.Add("feels neglected"); }
+            if (other != null)
+            {
+                var st = Share.Stance(her, other);
+                if (st == Share.Refuses) { ease -= 0.3f; r.Add("she said no to her"); }
+                var bond = Social.Bond(her, other);
+                if (bond <= -30) { ease -= 0.2f; r.Add("her rival"); }
+                else if (bond >= 60) { ease += 0.05f; r.Add("her close friend"); }
+            }
+            ease -= 0.06f * weight;
+            if (saw) { ease -= 0.1f; r.Add("she saw it"); }
+            var score = ease + (Dice(her, "cheat:" + (other != null ? GirlInfo.Key(other) : "")) - 0.5f) * 0.3f;
+            var answer = score >= 0.45f ? "shrugs" : score >= 0.2f ? "teases" : score >= -0.15f ? "hurt" : "furious";
+            why = score.ToString("0.00") + ": " + string.Join(", ", r.ToArray());
+            var key = S.Day + "/" + GirlInfo.Key(her) + "/cheat/" + (other != null ? GirlInfo.Key(other) : "") + "/" + weight + (saw ? "s" : "");
+            if (Logged.Add(key)) Note(GirlInfo.FirstName(her) + ": you and " + (other != null ? GirlInfo.FirstName(other) : "another girl") + " -> " + answer + " (" + why + ")");
+            return answer;
+        }
+
+        public static string Cheat(SaveData.Heroine her, SaveData.Heroine other, int weight, bool saw)
+        {
+            string why;
+            return Cheat(her, other, weight, saw, out why);
         }
 
         private static float MoodShift(Mood mood, Ask ask, SaveData.Heroine h)
@@ -217,6 +477,7 @@ namespace Joojkk.CampusLife
             else if (mood == Mood.Upset || mood == Mood.Stressed) { c -= 0.3f; r.Add(mood.ToString().ToLowerInvariant()); }
             c += Mathf.Clamp((Social.Trust(h) - 50) / 500f, -0.1f, 0.1f);
             if (Social.Grudge(h) != null) { c -= 0.15f; r.Add("a grudge"); }
+            if (gs.Guilt > 0 || gs.DistanceUntil >= S.Day) { c -= 0.25f; r.Add("still unsettled about last time"); }
             if (crowd >= 4) { c -= h.isGirlfriend ? 0.3f : 0.2f; r.Add("a crowd"); }
             if (tries > 1) { c -= 0.15f * (tries - 1); r.Add("try " + tries); }
             c = Mathf.Clamp01(c);
@@ -233,12 +494,14 @@ namespace Joojkk.CampusLife
         /// <summary>What the director would answer now, without logging it as a decision.</summary>
         public static bool WouldSay(SaveData.Heroine h, Ask ask)
         {
+            if (ask == Ask.H) { float c; string w; var a = HAnswer(h, out c, out w); return a == "yes" || a == "wary_yes"; }
             string why;
             return Dice(h, ask.ToString()) < Chance(h, ask, out why);
         }
 
         public static bool Decide(SaveData.Heroine h, Ask ask)
         {
+            if (ask == Ask.H) { var a = DecideH(h); return a == "yes" || a == "wary_yes"; }
             string why;
             var c = Chance(h, ask, out why);
             var yes = Dice(h, ask.ToString()) < c;
