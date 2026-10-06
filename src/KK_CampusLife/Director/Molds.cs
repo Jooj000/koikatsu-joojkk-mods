@@ -74,23 +74,23 @@ namespace Joojkk.CampusLife
         {
             var a = s.A; var o = s.B;
             var romance = Pairs.GirlsOk(a) && Pairs.GirlsOk(o);
-            intro.Say(a, T(a, "Ah, there you are! We were just talking about you...", "Hey hey! Perfect timing!", "You. We need a judge.", "Oh, look who's here. Just in time~"));
-            intro.Say(o, T(o, "Only good things, I promise!", "Don't listen to her, it was nothing bad!", "Mostly good things.", "Mostly."));
+            intro.Say(a, T(a, "Ah, there you are! We were just talking about you... || Oh, you're here! We were talking about you... || Ah, hello! Your name just came up. || There you are! Perfect timing...", "Hey hey! Perfect timing! || Perfect timing! Come here! || Hey! Just who we needed! || Yo! Get over here!", "You. We need a judge. || You. Judge for us. || We need an opinion. You. || Good. A neutral party.", "Oh, look who's here. Just in time~ || Right on time~ || Speak of the devil~ || Oh, perfect. Look who it is."));
+            intro.Say(o, T(o, "Only good things, I promise! || Good things, promise! || Nothing bad, really! || Only nice things!", "Don't listen to her, it was nothing bad! || Nothing bad! Swear! || Ignore her! All good! || Totally positive stuff!", "Mostly good things. || Mostly good. || Largely positive. || Mostly.", "Mostly. || Mostly. || Sort of. || Some of it."));
             b.Narr(N(a) + " and " + N(o) + " stand close, shoulders touching, finishing each other's sentences.");
-            b.Say(a, T(a, "We've been spending every break together lately. " + N(o) + " is teaching me her secret study method.", "Me and " + N(o) + " are basically joined at the hip now! We even have a handshake!",
-                "We've been studying together. It's... efficient.", "We've been inseparable lately. People are starting to talk~"));
-            b.Say(o, romance ? T(o, "...I like being with her. A lot.", "She's the best! Seriously!", "...She's tolerable. Very tolerable.", "She's cute when she concentrates. Don't tell her.") : T(o, "She's a good friend.", "Best friend material!", "She's reliable.", "She's fun to tease."));
+            b.Say(a, T(a, "We've been spending every break together lately. " + N(o) + " is teaching me her secret study method." + " || " + N(o) + " and I spend every break together now... she's teaching me to study." + " || " + N(o) + " has been so kind to me lately. We're always together. || I've been with " + N(o) + " a lot. She's wonderful.", "Me and " + N(o) + " are basically joined at the hip now! We even have a handshake! || Me and " + N(o) + "? Inseparable! Secret handshake and all!" + " || " + N(o) + "'s my partner in crime now! || We're always together! Me and " + N(o) + "!",
+                "We've been studying together. It's... efficient." + " || " + N(o) + " and I study together. Productive." + " || " + N(o) + " and I. Efficient pairing. || We work well together. " + N(o) + " and I.", "We've been inseparable lately. People are starting to talk~" + " || " + N(o) + " and I are inseparable. Rumors are flying~ || People talk about me and " + N(o) + ". Let them." + " || " + N(o) + " and I are close. Very."));
+            b.Say(o, romance ? T(o, "...I like being with her. A lot. || ...I like being with her. So much. || ...She makes me happy. || ...I really like her company.", "She's the best! Seriously! || She's amazing! || The best! Really! || She rocks!", "...She's tolerable. Very tolerable. || ...Very tolerable. || ...Pleasant company. || ...I like her. Somewhat.", "She's cute when she concentrates. Don't tell her. || She's cute focused. Shh. || Adorable when serious. Secret. || She's cute. Don't tell.") : T(o, "She's a good friend. || She's a good friend. || She's kind to me. || A dear friend.", "Best friend material! || Best friend material! || Bestie! || Top friend!", "She's reliable. || Reliable. || Dependable. || Solid.", "She's fun to tease. || Fun to tease. || Easy target. || Teasing her is fun."));
             b.Face(a, Feel.Shy);
             b.Choice("Say they look like a couple", "ap_tease", "Invite them both to lunch", "ap_lunch", "Say you're glad they found each other", "ap_glad", "Leave them to it with a smile", "ap_leave");
             b.Branch("ap_tease");
-            b.Face(a, Feel.Surprised).Say(a, T(a, "A c-couple?! W-we're not... are we?", "W-WHAT?! No! ...Wait, are we?", "...That's an unfounded conclusion.", "Hah! ...Hah. ...Wait."));
-            b.Face(o, Feel.Shy).Say(o, romance ? T(o, "...Would that be so bad?", "...I mean... I wouldn't hate it?", "...Not impossible.", "...Don't say it so loud.") : T(o, "Ahaha, no way!", "We're just friends, silly!", "No.", "In your dreams."));
+            b.Face(a, Feel.Surprised).Say(a, T(a, "A c-couple?! W-we're not... are we? || A couple?! We're not... are we? || C-couple?! Um... || W-what? Us?!", "W-WHAT?! No! ...Wait, are we? || WHAT?! No! ...Are we?! || Couple?! Nah! ...Wait! || Huh?! Us?! ...Maybe?!", "...That's an unfounded conclusion. || ...Unfounded. || ...Baseless. || ...Speculation.", "Hah! ...Hah. ...Wait. || Hah! ...Wait. || Ha! ...Hm. || Funny. ...Hm."));
+            b.Face(o, Feel.Shy).Say(o, romance ? T(o, "...Would that be so bad? || ...Would that be bad? || ...Maybe I wouldn't mind... || ...Is that so wrong?", "...I mean... I wouldn't hate it? || ...Wouldn't hate it! || ...I mean... maybe! || ...Not bad, actually!", "...Not impossible. || ...Not impossible. || ...Possible. || ...Conceivable.", "...Don't say it so loud. || ...Not so loud. || ...Shh. || ...Keep it down.") : T(o, "Ahaha, no way! || Ahaha, no way! || No, no! Friends! || Hehe, of course not!", "We're just friends, silly! || Just friends, silly! || Nope! Friends! || Haha! No!", "No. || No. || Incorrect. || Friends.", "In your dreams. || In your dreams. || Dream on. || As if."));
             b.End();
             b.Branch("ap_lunch");
-            b.Face(a, Feel.Smile).Say(a, T(a, "Lunch together? I'd love that!", "Yes! Lunch party!", "...Acceptable.", "Oh? Treating us both? Generous."));
+            b.Face(a, Feel.Smile).Say(a, T(a, "Lunch together? I'd love that! || Lunch together? Yes! || I'd love lunch together! || Lunch? Oh, yes!", "Yes! Lunch party! || Lunch party! || Yes! Food! || Let's eat!", "...Acceptable. || ...Acceptable. || ...Fine. || ...Agreed.", "Oh? Treating us both? Generous. || Treating us? Generous. || Paying for both? Nice. || Oh? Lunch on you?"));
             b.End();
             b.Branch("ap_glad");
-            b.Face(o, Feel.Smile).Say(o, T(o, "Thank you... me too.", "Hehe, me too!", "...Me too.", "...Yeah. Me too."));
+            b.Face(o, Feel.Smile).Say(o, T(o, "Thank you... me too. || Thank you... me too. || Me too... || Same...", "Hehe, me too! || Me too! || Hehe, same! || Me too!!", "...Me too. || ...Same. || ...Me too. || ...Agreed.", "...Yeah. Me too. || ...Me too. || ...Yeah. || ...Same here."));
             b.End();
             b.Branch("ap_leave");
             b.Narr("You leave them to their laughter. Behind you, " + N(a) + " whispers something and " + N(o) + " turns red.");
@@ -139,49 +139,49 @@ namespace Joojkk.CampusLife
         {
             var a = s.A; var o = s.B; var why = s.Why;
             var couple = why == "jealousy" || why == "a rough patch";
-            intro.Say(a, T(a, "Um... can you help us with something?", "You! Settle this for us!", "We need a third opinion.", "Perfect, a witness. Get over here."));
-            intro.Say(o, T(o, "It's not a big deal...", "It IS a big deal!", "It's a minor matter.", "Don't believe a word she says."));
+            intro.Say(a, T(a, "Um... can you help us with something? || Could you help us? || Um... can we ask you something? || Help us, please?", "You! Settle this for us! || Settle this! || You! Judge! || Help! Decide!", "We need a third opinion. || A third opinion. || We need a judge. || Arbitrate.", "Perfect, a witness. Get over here. || A witness. Come here. || You. Testify. || Perfect. Get over here."));
+            intro.Say(o, T(o, "It's not a big deal... || It's nothing big... || It's minor... || Not a big deal...", "It IS a big deal! || It IS big! || Super big deal! || Huge!", "It's a minor matter. || Minor. || Trivial. || Small.", "Don't believe a word she says. || Don't trust her. || She lies. || Ignore her version."));
             b.Narr("The air between " + N(a) + " and " + N(o) + " is tight enough to snap.");
             if (couple)
             {
-                b.Face(a, Feel.Pout).Say(a, T(a, "She was laughing with another girl all lunch. She forgot we were supposed to eat together.", "She ditched me for lunch! For someone else! Again!",
-                    "She broke a plan we had. Twice now.", "Apparently I'm only her girlfriend when it's convenient."));
-                b.Face(o, Feel.Worried).Say(o, T(o, "I didn't forget! I just... lost track of time. I'm sorry...", "That's not fair! I said sorry! I was helping a friend!", "I said I was sorry. She's not listening.", "And she's being dramatic. As usual."));
+                b.Face(a, Feel.Pout).Say(a, T(a, "She was laughing with another girl all lunch. She forgot we were supposed to eat together. || She laughed with another girl all lunch... she forgot our plans. || She forgot we were eating together... || She left me alone at lunch...", "She ditched me for lunch! For someone else! Again! || She ditched me! Again! || Lunch! Abandoned! Again! || She bailed! For someone else!",
+                    "She broke a plan we had. Twice now. || She broke plans. Twice. || Plans canceled. Again. || Twice now. Broken promises.", "Apparently I'm only her girlfriend when it's convenient. || Girlfriend when convenient, apparently. || Only her girlfriend when it suits her. || I'm part-time, apparently."));
+                b.Face(o, Feel.Worried).Say(o, T(o, "I didn't forget! I just... lost track of time. I'm sorry... || I didn't forget! I lost track... sorry... || I'm sorry... time just slipped... || I didn't mean to... sorry...", "That's not fair! I said sorry! I was helping a friend! || I said sorry! I was helping! || Not fair! I apologized! || I was busy helping! Sorry!", "I said I was sorry. She's not listening. || I apologized. She ignores it. || I said sorry. Unheard. || Apology given. Rejected.", "And she's being dramatic. As usual. || She's being dramatic. As always. || Drama queen. || Overreacting, as usual."));
             }
             else
             {
-                b.Face(a, Feel.Pout).Say(a, T(a, "She took the spot I'd reserved for my club. Without asking.", "She said my drawing was childish! In front of everyone!",
-                    "She keeps undermining me in class.", "She thinks she's better than me. She isn't."));
-                b.Face(o, Feel.Serious).Say(o, T(o, "That isn't what happened...", "Oh come ON! I was joking!", "Her version is selective.", "I'm just honest. She can't take it."));
+                b.Face(a, Feel.Pout).Say(a, T(a, "She took the spot I'd reserved for my club. Without asking. || She took my club's spot. Without asking. || She took our space... || She didn't ask before taking it...", "She said my drawing was childish! In front of everyone! || She called my drawing childish! Publicly! || In front of everyone! Mean! || She mocked me!",
+                    "She keeps undermining me in class. || She undermines me. || She contradicts me. Constantly. || She belittles me in class.", "She thinks she's better than me. She isn't. || She thinks she's better. She's not. || She acts superior. Laughable. || Miss Perfect. Hardly."));
+                b.Face(o, Feel.Serious).Say(o, T(o, "That isn't what happened... || That's not what happened... || It wasn't like that... || That's not true...", "Oh come ON! I was joking! || It was a JOKE! || Come ON! Joking! || Lighten up!", "Her version is selective. || Selective version. || Partial truth. || Incomplete.", "I'm just honest. She can't take it. || I'm honest. She can't handle it. || Truth hurts. || I'm just frank."));
             }
             var opts = new List<string> { "Take " + N(a) + "'s side", "fr_a", "Take " + N(o) + "'s side", "fr_b" };
             opts.Add(G.Int >= 40 ? "Get them to say what really hurt [INT]" : "Try to calm them down"); opts.Add("fr_mid");
             opts.Add("Say it's between the two of them"); opts.Add("fr_out");
             b.Choice(opts.ToArray());
             b.Branch("fr_a");
-            b.Face(a, Feel.Smile).Say(a, T(a, "...Thank you.", "See?! Thank you!", "Obviously.", "Told you."));
-            b.Face(o, Feel.Sad).Say(o, T(o, "...I see. Fine.", "Ugh! Whatever!", "...Noted.", "Wow. Okay."));
+            b.Face(a, Feel.Smile).Say(a, T(a, "...Thank you. || ...Thank you. || ...Thanks. || ...I'm grateful.", "See?! Thank you! || See?! Thanks! || Ha! Thanks! || Yes! Thank you!", "Obviously. || Obviously. || Naturally. || Of course.", "Told you. || Told you. || Duh. || See?"));
+            b.Face(o, Feel.Sad).Say(o, T(o, "...I see. Fine. || ...Fine. || ...I see. || ...Okay.", "Ugh! Whatever! || Whatever! || Ugh! || Fine!", "...Noted. || ...Noted. || ...Hm. || ...Remembered.", "Wow. Okay. || Wow. || Okay. || Noted."));
             b.End();
             b.Branch("fr_b");
-            b.Face(o, Feel.Smile).Say(o, T(o, "...Thank you.", "Ha! See?!", "Thank you.", "Finally, someone sensible."));
-            b.Face(a, Feel.Sad).Say(a, T(a, "...Oh.", "Seriously?!", "...Hmph.", "Traitor."));
+            b.Face(o, Feel.Smile).Say(o, T(o, "...Thank you. || ...Thank you. || ...Thanks. || ...Thank you so much.", "Ha! See?! || Ha! See?! || Yes! || Told you!", "Thank you. || Thank you. || Thanks. || Good.", "Finally, someone sensible. || Someone sensible. || Finally. || A reasonable person."));
+            b.Face(a, Feel.Sad).Say(a, T(a, "...Oh. || ...Oh. || ...I see. || ...Hm.", "Seriously?! || Seriously?! || What?! || No way!", "...Hmph. || ...Hmph. || ...Tch. || ...Fine.", "Traitor. || Traitor. || Turncoat. || Wow."));
             b.End();
             b.Branch("fr_mid");
             var good = G.Int >= 40 || Random.value < 0.5f;
             if (good)
             {
                 b.Narr("You get each of them to say one thing, slowly. It turns out the fight was never about lunch or a seat.");
-                b.Say(a, T(a, "...I just felt left behind.", "...I just wanted you to pick me. That's all.", "...I felt unimportant.", "...Fine. I was jealous. Happy?"));
-                b.Say(o, T(o, "...I didn't know. I'm sorry.", "...Oh. I'm sorry. For real.", "...Understood. I'm sorry.", "...Idiot. You could've just said so."));
+                b.Say(a, T(a, "...I just felt left behind. || ...I felt left behind. || ...I felt forgotten. || ...I was lonely.", "...I just wanted you to pick me. That's all. || ...I wanted you to pick me. || ...I just wanted to be first. || ...Choose me, that's all.", "...I felt unimportant. || ...I felt unimportant. || ...Overlooked. || ...Secondary.", "...Fine. I was jealous. Happy? || ...Fine. Jealous. Happy? || ...Okay. I was jealous. || ...Jealous. There."));
+                b.Say(o, T(o, "...I didn't know. I'm sorry. || ...I didn't know. Sorry. || ...I'm sorry. I didn't realize. || ...Oh... I'm so sorry.", "...Oh. I'm sorry. For real. || ...Oh. Sorry. For real. || ...I'm sorry! Really! || ...Oh no. Sorry!", "...Understood. I'm sorry. || ...Understood. Sorry. || ...I see. Apologies. || ...Sorry.", "...Idiot. You could've just said so. || ...Idiot. Just say so. || ...Dummy. Tell me next time. || ...You could've said."));
             }
             else
             {
                 b.Narr("You try, but every word you say is taken by one of them as proof she's right.");
-                b.Say(o, T(o, "...Let's just drop it.", "Forget it!", "This is pointless.", "Nice try, peacemaker."));
+                b.Say(o, T(o, "...Let's just drop it. || ...Let's drop it. || ...Never mind. || ...Forget it.", "Forget it! || Forget it! || Whatever! || Drop it!", "This is pointless. || Pointless. || Futile. || Enough.", "Nice try, peacemaker. || Nice try. || Cute attempt. || No."));
             }
             b.End();
             b.Branch("fr_out");
-            b.Say(a, T(a, "...You're right. Sorry for pulling you in.", "Ugh, fine. Sorry.", "...Fair.", "Coward. ...Fair, though."));
+            b.Say(a, T(a, "...You're right. Sorry for pulling you in. || ...You're right. Sorry. || ...Sorry for involving you. || ...You're right.", "Ugh, fine. Sorry. || Fine. Sorry. || Ugh. Okay. Sorry. || Sorry!", "...Fair. || ...Fair. || ...Reasonable. || ...True.", "Coward. ...Fair, though. || Coward. Fair. || Neutral? Coward. Fine. || Fair. Cowardly, but fair."));
             b.End();
             result = c =>
             {
@@ -242,30 +242,30 @@ namespace Joojkk.CampusLife
             var a = s.A; var o = s.B;
             var p = P(s);
             var yes = p.RomanceOf(K(o)) >= 40;
-            intro.Say(a, T(a, "C-can you stay with me for a moment? I need courage...", "Stay! Please! I need backup!", "Don't go anywhere. I need a witness.", "Stay. If I chicken out, push me."));
-            intro.Say(o, T(o, "What's going on...?", "Huh? What's with the serious faces?", "What is this about?", "Ooh, mysterious."));
+            intro.Say(a, T(a, "C-can you stay with me for a moment? I need courage... || Stay with me? I need courage... || Please stay... I'm scared. || Could you stay a moment?", "Stay! Please! I need backup! || Stay! Backup needed! || Don't leave! Help! || Stay! Moral support!", "Don't go anywhere. I need a witness. || Stay. Witness. || Don't leave. || Remain here.", "Stay. If I chicken out, push me. || Stay. Push me if I chicken out. || If I run, stop me. || Stay. Keep me brave."));
+            intro.Say(o, T(o, "What's going on...? || What's happening...? || What's going on? || Hm...?", "Huh? What's with the serious faces? || Serious faces?! || Huh? What's up?! || Why so serious?!", "What is this about? || What is this? || Explain. || What's this about?", "Ooh, mysterious. || Mysterious. || Ooh, drama. || Intriguing."));
             b.Narr(N(a) + " takes a long breath, glances at you, and turns to " + N(o) + ".");
-            b.Face(a, Feel.Love).Say(a, T(a, N(o) + "... I like you. Not as a friend. I've liked you for a while.", N(o) + "! I like you! Like, really LIKE you! There, I said it!",
-                N(o) + ". I have feelings for you. Romantic ones.", "So, " + N(o) + "... I like you. Seriously. Don't laugh."));
+            b.Face(a, Feel.Love).Say(a, T(a, N(o) + "... I like you. Not as a friend. I've liked you for a while." + " || " + N(o) + "... I like you. More than a friend." + " || " + N(o) + ", I've liked you for so long... || I love you, " + N(o) + ". Not as friends.", N(o) + "! I like you! Like, really LIKE you! There, I said it!" + " || " + N(o) + "! I LIKE you! Really!" + " || " + N(o) + "! Crush! You! Done! || I like you, " + N(o) + "! A lot!",
+                N(o) + ". I have feelings for you. Romantic ones." + " || " + N(o) + ". Romantic feelings. For you." + " || " + N(o) + ". I love you." + " || " + N(o) + ". Feelings. Romantic.", "So, " + N(o) + "... I like you. Seriously. Don't laugh." + " || " + N(o) + "... I like you. Don't laugh. || So, " + N(o) + ". I like you. Seriously." + " || " + N(o) + ", I'm into you. Really."));
             b.Choice("Give her an encouraging nod", "cf_nod", "Step back and give them privacy", "cf_back", "Break the tension with a joke", "cf_joke");
             b.Branch("cf_nod"); b.Label("cf_answer");
             if (yes)
             {
-                b.Face(o, Feel.Love).Say(o, T(o, "...Me too. I was too scared to say it first.", "...REALLY?! Me too! Oh my gosh!", "...The feeling is mutual.", "...Took you long enough. Me too."));
+                b.Face(o, Feel.Love).Say(o, T(o, "...Me too. I was too scared to say it first. || ...Me too. I was too scared. || ...I feel the same... || ...Me too. Always.", "...REALLY?! Me too! Oh my gosh! || REALLY?! Me too! || No way! Same! || Yes! Me too!", "...The feeling is mutual. || ...Mutual. || ...Same. || ...Reciprocated.", "...Took you long enough. Me too. || ...Took long enough. Me too. || ...Finally. Same. || ...About time. Me too."));
                 b.Narr("Their hands find each other. You've never seen either of them smile like that.");
             }
             else
             {
-                b.Face(o, Feel.Worried).Say(o, T(o, "I... I'm sorry. I care about you, but not like that. Can we still be friends?", "Oh... I'm so sorry. I love you as a friend, but...", "...I don't feel the same. I'm sorry.", "...Hey. I'm flattered. But no. Sorry."));
-                b.Face(a, Feel.Sad).Say(a, T(a, "...I see. Thank you for being honest.", "...Ahaha. Yeah. Okay. Okay...", "...Understood.", "...Yeah. Figured. It's fine."));
+                b.Face(o, Feel.Worried).Say(o, T(o, "I... I'm sorry. I care about you, but not like that. Can we still be friends? || I care about you... but not that way. Friends? || I'm so sorry... only as a friend. || Please... stay my friend?", "Oh... I'm so sorry. I love you as a friend, but... || I'm so sorry! Friend love only! || Oh no... friends? || Sorry! Just friends!", "...I don't feel the same. I'm sorry. || ...Not the same. Sorry. || ...I don't reciprocate. || ...No. Sorry.", "...Hey. I'm flattered. But no. Sorry. || Flattered. But no. Sorry. || Sweet. No. Sorry. || Nice. But no."));
+                b.Face(a, Feel.Sad).Say(a, T(a, "...I see. Thank you for being honest. || ...Thank you for honesty. || ...I understand. Thank you. || ...Okay. Thanks.", "...Ahaha. Yeah. Okay. Okay... || ...Ahaha. Okay... || ...Yeah. Okay... || ...Okay. Okay.", "...Understood. || ...Understood. || ...I see. || ...Accepted.", "...Yeah. Figured. It's fine. || ...Figured. Fine. || ...Expected. It's fine. || ...Yeah. Okay."));
             }
             b.End();
             b.Branch("cf_back");
             b.Narr("You step away. From the corner of the hall you hear " + N(o) + "'s voice, then a silence that " + (yes ? "ends in laughter." : "goes on a little too long."));
             b.End();
             b.Branch("cf_joke");
-            b.Face(a, Feel.Pout).Say(a, T(a, "D-don't make fun of me right now...!", "Dude! Not now!", "...Unhelpful.", "...I'm going to kill you later."));
-            b.Face(o, Feel.Smile).Say(o, T(o, "...Hehe. Okay. I'm listening, " + N(a) + ".", "Pfft! Okay, okay. Go on.", "...Continue.", "Heh. Go on, then."));
+            b.Face(a, Feel.Pout).Say(a, T(a, "D-don't make fun of me right now...! || Don't tease me now...! || Please, not now...! || S-stop it...!", "Dude! Not now! || Not now! || Dude! Seriously! || Not the time!", "...Unhelpful. || ...Unhelpful. || ...Not helpful. || ...Stop.", "...I'm going to kill you later. || ...I'll kill you later. || ...You're dead later. || ...Revenge pending."));
+            b.Face(o, Feel.Smile).Say(o, T(o, "...Hehe. Okay. I'm listening, " + N(a) + ". || ...Okay. Listening, " + N(a) + ". || ...Hehe. Go on, " + N(a) + ". || ...I'm listening.", "Pfft! Okay, okay. Go on. || Okay! Go on! || Pfft! Continue! || Alright! Go!", "...Continue. || ...Continue. || ...Go on. || ...Proceed.", "Heh. Go on, then. || Go on, then. || Heh. Continue. || Proceed."));
             b.Goto("cf_answer");
             result = c =>
             {
@@ -312,19 +312,19 @@ namespace Joojkk.CampusLife
             var cheating = s.Why == "cheating";
             var third = cheating ? (Pairs.PartnerOf(a) ?? Pairs.PartnerOf(o)) : null;
             intro.Narr("You turn the corner and almost walk right into " + N(a) + " and " + N(o) + ", much closer than friends usually stand.");
-            intro.Say(a, T(a, "Ah?! W-wait, it's not...!", "WAAH! Where did you come from?!", "...This is awkward.", "...Well. This is a thing that's happening."));
-            b.Face(a, Feel.Shy).Say(a, T(a, "Please... can you keep this between us?", "Okay, okay, you saw nothing, right? RIGHT?", "I'd appreciate your discretion.", "So. You're going to keep quiet. Aren't you?"));
-            b.Face(o, Feel.Shy).Say(o, cheating ? T(o, "If " + N(third) + " finds out...", "If " + N(third) + " hears about this, I'm dead!", N(third) + " can't know.", "Not a word to " + N(third) + ".")
-                : T(o, "We're not ready for everyone to know yet...", "We wanted to tell people ourselves!", "We prefer privacy.", "It's our business. For now."));
+            intro.Say(a, T(a, "Ah?! W-wait, it's not...! || W-wait! It's not...! || Ah! It's not what...! || Eek! Wait!", "WAAH! Where did you come from?! || WAAH! Where'd you come from?! || Eek! Hi?! || Whoa! Surprise!", "...This is awkward. || ...Awkward. || ...Uncomfortable. || ...Hm.", "...Well. This is a thing that's happening. || ...Well. This is happening. || ...Oops. || ...Hello there."));
+            b.Face(a, Feel.Shy).Say(a, T(a, "Please... can you keep this between us? || Please keep this secret? || Between us... please? || Could you not tell anyone?", "Okay, okay, you saw nothing, right? RIGHT? || You saw NOTHING! Right?! || Nothing happened! Okay?! || Shh! Secret!", "I'd appreciate your discretion. || Discretion, please. || Silence appreciated. || Keep it private.", "So. You're going to keep quiet. Aren't you? || You'll keep quiet. Right? || Silence. Understood? || Not a word. Got it?"));
+            b.Face(o, Feel.Shy).Say(o, cheating ? T(o, "If " + N(third) + " finds out... || If " + N(third) + " finds out..." + " || " + N(third) + " can't know... || Please, not " + N(third) + "...", "If " + N(third) + " hears about this, I'm dead!" + " || " + N(third) + " can't hear this! || If " + N(third) + " knows, I'm dead! || Keep it from " + N(third) + "!", N(third) + " can't know." + " || " + N(third) + " must not know. || Not " + N(third) + "." + " || " + N(third) + " stays uninformed.", "Not a word to " + N(third) + ". || Not a word to " + N(third) + "." + " || " + N(third) + " hears nothing. || Keep " + N(third) + " out of it.")
+                : T(o, "We're not ready for everyone to know yet... || We're not ready to tell everyone... || We want to wait... || It's too soon to tell people...", "We wanted to tell people ourselves! || We'll tell people ourselves! || Our announcement! Later! || We wanna tell them!", "We prefer privacy. || Privacy, please. || We prefer discretion. || Private matter.", "It's our business. For now. || Our business. For now. || Private. For now. || None of their business."));
             var opts = new List<string> { "Promise to keep their secret", "cg_keep", "Tease them a little", "cg_tease" };
             if (cheating) { opts.Add("Say " + N(third) + " deserves the truth"); opts.Add("cg_truth"); }
             else { opts.Add("Tell them they make a cute couple"); opts.Add("cg_cute"); }
             opts.Add("Pretend you saw nothing and walk on"); opts.Add("cg_walk");
             b.Choice(opts.ToArray());
-            b.Branch("cg_keep"); b.Face(a, Feel.Smile).Say(a, T(a, "Thank you... really.", "You're the best! I owe you one!", "...I owe you.", "...Good. You're alright.")); b.End();
-            b.Branch("cg_tease"); b.Face(o, Feel.Pout).Say(o, T(o, "S-stop it...!", "Hey! Don't make it weird!", "...Childish.", "...Laugh it up.")); b.End();
-            b.Branch("cg_truth"); b.Face(a, Feel.Sad).Say(a, T(a, "...You're right. I can't keep doing this.", "...Ugh. Yeah. I know. I KNOW.", "...I know.", "...Yeah. I know.")); b.End();
-            b.Branch("cg_cute"); b.Face(a, Feel.Love).Say(a, T(a, "Y-you think so? ...Thank you.", "Hehe, right?! We are!", "...Thank you.", "Obviously.")); b.End();
+            b.Branch("cg_keep"); b.Face(a, Feel.Smile).Say(a, T(a, "Thank you... really. || Thank you... really. || Thank you so much. || I'm grateful...", "You're the best! I owe you one! || You're the best! || Owe you one! || Thanks a ton!", "...I owe you. || ...I owe you. || ...Indebted. || ...Thanks.", "...Good. You're alright. || ...You're alright. || ...Good. || ...Okay, you pass.")); b.End();
+            b.Branch("cg_tease"); b.Face(o, Feel.Pout).Say(o, T(o, "S-stop it...! || S-stop...! || Don't...! || Please stop...", "Hey! Don't make it weird! || Don't make it weird! || Hey! Stop! || Not weird!", "...Childish. || ...Childish. || ...Juvenile. || ...Stop.", "...Laugh it up. || ...Laugh it up. || ...Enjoy it. || ...Funny, huh.")); b.End();
+            b.Branch("cg_truth"); b.Face(a, Feel.Sad).Say(a, T(a, "...You're right. I can't keep doing this. || ...You're right. I can't keep this up. || ...I know. I need to stop. || ...You're right...", "...Ugh. Yeah. I know. I KNOW. || ...Ugh. I KNOW. || ...Yeah. I know! || ...Fine! I know!", "...I know. || ...I know. || ...Aware. || ...Yes.", "...Yeah. I know. || ...Yeah. I know. || ...I'm aware. || ...Yeah.")); b.End();
+            b.Branch("cg_cute"); b.Face(a, Feel.Love).Say(a, T(a, "Y-you think so? ...Thank you. || You think so? Thank you. || Really? ...Thanks. || Oh... thank you.", "Hehe, right?! We are! || Right?! We are! || Hehe! Yes! || We are, right?!", "...Thank you. || ...Thanks. || ...Thank you. || ...Appreciated.", "Obviously. || Obviously. || Of course. || Naturally.")); b.End();
             b.Branch("cg_walk"); b.Narr("You keep walking. Behind you, two sighs of relief."); b.End();
             result = c =>
             {
@@ -383,18 +383,18 @@ namespace Joojkk.CampusLife
             var sc = Rumors.ById(s.Why);
             var version = sc == null ? "something about a girl in class" : Rumors.VersionFor(sc, a);
             var subj = sc == null ? null : Social.Get(sc.Subject);
-            intro.Say(a, T(a, "Psst! Did you hear...?", "Oh my gosh, you HAVE to hear this!", "You'll want to hear this.", "Ooh, perfect, fresh ears."));
-            b.Face(a, Feel.Surprised).Say(a, T(a, "They say " + version + "...", "So apparently " + version + "! Can you believe it?!", "Word is that " + version + ".", "Rumor has it " + version + ". Juicy, right?"));
-            b.Face(o, Feel.Normal).Say(o, T(o, "I don't know if it's true, though...", "No way! Is it true?!", "Unverified.", "Totally true. Probably."));
+            intro.Say(a, T(a, "Psst! Did you hear...? || Psst! Have you heard...? || Um, did you hear? || Psst... come here...", "Oh my gosh, you HAVE to hear this! || You HAVE to hear this! || OMG! News! || Listen listen!", "You'll want to hear this. || Worth hearing. || Listen. || You'll want this.", "Ooh, perfect, fresh ears. || Fresh ears. Perfect. || Ooh, a new audience. || Come here. Gossip."));
+            b.Face(a, Feel.Surprised).Say(a, T(a, "They say " + version + "... || People say " + version + "... || I heard " + version + "... || Someone said " + version + "...", "So apparently " + version + "! Can you believe it?! || Apparently " + version + "! Crazy!" + " || " + version + "! Can you believe it?! || Get this: " + version + "!", "Word is that " + version + ". || Reportedly, " + version + "." + " || " + version + ", they say. || The word: " + version + ".", "Rumor has it " + version + ". Juicy, right? || Rumor: " + version + ". Juicy." + " || " + version + ". Delicious. || They say " + version + ". Spicy."));
+            b.Face(o, Feel.Normal).Say(o, T(o, "I don't know if it's true, though... || Maybe it's not true... || I'm not sure it's real... || It might be wrong...", "No way! Is it true?! || Is it true?! || Real?! || No way!", "Unverified. || Unconfirmed. || Unverified. || Uncertain.", "Totally true. Probably. || True. Probably. || Definitely real. Maybe. || Totally. Possibly."));
             var opts = new List<string> { "Ask where they heard it", "gs_where" };
             if (subj != null) { opts.Add("Stand up for " + N(subj)); opts.Add("gs_defend"); }
             opts.Add("Join in"); opts.Add("gs_join");
             opts.Add("Change the subject"); opts.Add("gs_change");
             b.Choice(opts.ToArray());
-            b.Branch("gs_where"); b.Say(a, T(a, "Um... from " + (sc != null && !string.IsNullOrEmpty(sc.Teller) ? GirlInfo.FirstName(sc.Teller) : "someone") + ", I think?", "Uh... everyone's saying it!", "...Second-hand.", "Does it matter? ...Fine, I don't know.")); b.End();
-            b.Branch("gs_defend"); b.Face(o, Feel.Shy).Say(o, T(o, "...You're right. We shouldn't spread it.", "...Okay, okay. You're right.", "...Fair.", "...Boring. But fair.")); b.End();
-            b.Branch("gs_join"); b.Face(a, Feel.Laugh).Say(a, T(a, "I know, right?!", "RIGHT?! Ahaha!", "Hm. You agree.", "Ha! I knew you'd get it.")); b.End();
-            b.Branch("gs_change"); b.Say(o, T(o, "...Yeah, let's talk about something else.", "Aw, fine. Boring!", "...Fine.", "Spoilsport.")); b.End();
+            b.Branch("gs_where"); b.Say(a, T(a, "Um... from " + (sc != null && !string.IsNullOrEmpty(sc.Teller) ? GirlInfo.FirstName(sc.Teller) : "someone") + ", I think? || From " + ((sc != null && !string.IsNullOrEmpty(sc.Teller) ? GirlInfo.FirstName(sc.Teller) : "someone")) + ", I think... || I heard it from " + ((sc != null && !string.IsNullOrEmpty(sc.Teller) ? GirlInfo.FirstName(sc.Teller) : "someone")) + "... || Um... " + ((sc != null && !string.IsNullOrEmpty(sc.Teller) ? GirlInfo.FirstName(sc.Teller) : "someone")) + " said it.", "Uh... everyone's saying it! || Everyone! || The whole school! || Everybody's saying it!", "...Second-hand. || ...Second-hand. || ...Hearsay. || ...Indirect.", "Does it matter? ...Fine, I don't know. || Who cares? ...Don't know. || Does it matter? || No idea. Who cares.")); b.End();
+            b.Branch("gs_defend"); b.Face(o, Feel.Shy).Say(o, T(o, "...You're right. We shouldn't spread it. || ...Right. We shouldn't spread it. || ...You're right. Let's stop. || ...Okay. No more gossip.", "...Okay, okay. You're right. || ...Okay! You're right! || ...Fine! Fair! || ...Yeah, okay!", "...Fair. || ...Fair. || ...True. || ...Agreed.", "...Boring. But fair. || ...Boring. Fair. || ...Dull. Okay. || ...Spoilsport. Fine.")); b.End();
+            b.Branch("gs_join"); b.Face(a, Feel.Laugh).Say(a, T(a, "I know, right?! || I know, right?! || Right?! || Hehe, yes!", "RIGHT?! Ahaha! || RIGHT?! || Ahaha! Yes! || Totally!", "Hm. You agree. || You agree. || Hm. Yes. || Agreed.", "Ha! I knew you'd get it. || Knew you'd get it. || Ha! Yes. || See?")); b.End();
+            b.Branch("gs_change"); b.Say(o, T(o, "...Yeah, let's talk about something else. || ...Let's talk about something else. || ...Okay, new topic. || ...Never mind.", "Aw, fine. Boring! || Boring! Fine! || Aw! Okay! || Lame! Fine!", "...Fine. || ...Fine. || ...Okay. || ...Next.", "Spoilsport. || Spoilsport. || Party pooper. || Killjoy.")); b.End();
             result = c =>
             {
                 if (sc == null) return;
@@ -442,27 +442,27 @@ namespace Joojkk.CampusLife
         public override void Write(Situation s, SceneBuilder intro, SceneBuilder b, out Action<string> result)
         {
             var f = s.A; var h = s.B;
-            intro.Say(f, T(f, "Um... " + N(h) + " isn't doing so well. Can you talk to her a little?", "Hey! " + N(h) + " needs cheering up. Help me out!", N(h) + " needs company. Yours will do.", "Make yourself useful. " + N(h) + "'s down."));
+            intro.Say(f, T(f, "Um... " + N(h) + " isn't doing so well. Can you talk to her a little?" + " || " + N(h) + " is feeling down... could you talk to her? || Um, " + N(h) + " needs someone... please? || Could you cheer " + N(h) + " up?", "Hey! " + N(h) + " needs cheering up. Help me out!" + " || " + N(h) + " needs cheering! Help! || Help me cheer up " + N(h) + "!" + " || " + N(h) + "'s sad! Mission time!", N(h) + " needs company. Yours will do." + " || " + N(h) + " needs company. || Talk to " + N(h) + "." + " || " + N(h) + " could use you.", "Make yourself useful. " + N(h) + "'s down. || Be useful. " + N(h) + "'s down." + " || " + N(h) + " needs you. Go. || Fix " + N(h) + "'s mood."));
             b.Narr(N(h) + " keeps her eyes on the floor. " + N(f) + " stays close, a hand on her back.");
-            var line = s.Why == "breakup" ? T(h, "It's over between us... I thought it would last.", "We broke up. It's dumb. I'm fine. I'm totally fine.", "We broke up. That's all.", "Got dumped. Or I dumped her. I don't even know anymore.")
-                : s.Why == "rumor" ? T(h, "Everyone's whispering about me... I can hear them.", "Everyone keeps staring at me! I hate it!", "The rumors are... tiresome.", "Apparently I'm the school's favorite topic. Lucky me.")
-                : T(h, "It's just been one of those days...", "Today was the WORST. Everything went wrong!", "...Bad day.", "Today sucked. That's all.");
+            var line = s.Why == "breakup" ? T(h, "It's over between us... I thought it would last. || It's over... I thought it would last. || We broke up... I'm so sad. || It ended... I didn't want it to.", "We broke up. It's dumb. I'm fine. I'm totally fine. || Broke up! I'm FINE! Totally! || Single now! Fine! Really! || Dumped! I'm okay! Kinda!", "We broke up. That's all. || Broke up. That's all. || It ended. || Over. Moving on.", "Got dumped. Or I dumped her. I don't even know anymore. || Dumped. Or dumper. Whatever. || It's over. Who cares. || Single. Again.")
+                : s.Why == "rumor" ? T(h, "Everyone's whispering about me... I can hear them. || Everyone's whispering... || I can hear them talking about me... || The rumors hurt...", "Everyone keeps staring at me! I hate it! || Everyone's staring! Hate it! || Stop looking at me! || Whispers everywhere!", "The rumors are... tiresome. || Tiresome rumors. || The gossip is exhausting. || Rumors. Tedious.", "Apparently I'm the school's favorite topic. Lucky me. || School's favorite topic. Me. || Celebrity status. Yay. || Everyone loves talking about me.")
+                : T(h, "It's just been one of those days... || Just one of those days... || A hard day... || Today was tough...", "Today was the WORST. Everything went wrong! || WORST day! || Everything went wrong! || Today stinks!", "...Bad day. || ...Bad day. || ...Rough. || ...Off day.", "Today sucked. That's all. || Today sucked. || Awful day. || Bad. Leave it.");
             b.Face(h, Feel.Sad).Say(h, line);
             b.Choice("Sit with her and listen", "co_listen", "Make her laugh", "co_laugh", "Give her some honest advice", "co_advice", "Let " + N(f) + " handle it", "co_friend");
             b.Branch("co_listen");
             b.Narr("You sit on either side of her and say nothing for a while. Slowly her shoulders come down.");
-            b.Face(h, Feel.Smile).Say(h, T(h, "...Thank you. Both of you.", "...Okay. That helped. Weirdly.", "...Thanks.", "...You two are sappy. ...Thanks."));
+            b.Face(h, Feel.Smile).Say(h, T(h, "...Thank you. Both of you. || ...Thank you both. || ...You two are so kind. || ...Thanks, both of you.", "...Okay. That helped. Weirdly. || ...That helped! Weirdly! || ...Okay! Better! || ...Thanks, guys!", "...Thanks. || ...Thanks. || ...Appreciated. || ...Thank you.", "...You two are sappy. ...Thanks. || ...Sappy. Thanks. || ...Gross. Thanks. || ...So cheesy. Thanks."));
             b.End();
             b.Branch("co_laugh");
             var ok = GirlInfo.ToneOf(h) == Tone.Energetic || GirlInfo.ToneOf(h) == Tone.Teasing || Random.value < 0.5f;
-            if (ok) b.Face(h, Feel.Laugh).Say(h, T(h, "Pfft... ahaha! Stop it, that's so stupid!", "AHAHA! What even was that?!", "...Heh. Idiot.", "Hah! Okay, okay, you win."));
-            else b.Face(h, Feel.Pout).Say(h, T(h, "...I'm not in the mood.", "...Not now, okay?", "...No.", "...Read the room."));
+            if (ok) b.Face(h, Feel.Laugh).Say(h, T(h, "Pfft... ahaha! Stop it, that's so stupid! || Ahaha! Stop, so stupid! || Pfft! That's silly! || Hehe! Stop it!", "AHAHA! What even was that?! || AHAHA! What was that?! || Hahaha! Dumb! || LOL! Again!", "...Heh. Idiot. || ...Heh. Idiot. || ...Pfft. || ...Stupid. Funny.", "Hah! Okay, okay, you win. || Okay, you win. || Hah! Fine. || Alright, funny."));
+            else b.Face(h, Feel.Pout).Say(h, T(h, "...I'm not in the mood. || ...Not in the mood. || ...Not now. || ...Please, no.", "...Not now, okay? || ...Not now! || ...Nope. || ...Later.", "...No. || ...No. || ...Stop. || ...Not now.", "...Read the room. || ...Read the room. || ...Bad timing. || ...Not funny."));
             b.End();
             b.Branch("co_advice");
-            b.Say(h, T(h, "...Mm. You might be right.", "...Yeah. Maybe. Thanks.", "...Logical.", "...Ugh. Annoyingly wise."));
+            b.Say(h, T(h, "...Mm. You might be right. || ...You might be right. || ...Maybe... || ...That makes sense.", "...Yeah. Maybe. Thanks. || ...Maybe. Thanks. || ...Yeah. Thanks! || ...True!", "...Logical. || ...Logical. || ...Reasonable. || ...Sound.", "...Ugh. Annoyingly wise. || ...Annoyingly wise. || ...Smart. Ugh. || ...Fine. Wise."));
             b.End();
             b.Branch("co_friend");
-            b.Say(f, T(f, "...Okay. I've got her.", "Leave it to me!", "Understood.", "Fine, fine. I've got this."));
+            b.Say(f, T(f, "...Okay. I've got her. || ...I've got her. || ...I'll take care of her. || ...Leave it to me.", "Leave it to me! || On it! || Leave it to me! || Got it!", "Understood. || Understood. || Handled. || On it.", "Fine, fine. I've got this. || I've got this. || Fine. Mine now. || I'll handle it."));
             b.End();
             result = c =>
             {
@@ -514,31 +514,31 @@ namespace Joojkk.CampusLife
         {
             var a = s.A; var o = s.B;
             var gfs = s.Why == "your girlfriends";
-            intro.Say(a, T(a, "There you are. We need you to decide something.", "YOU. Come here. Now.", "We need a decision.", "Ah, the man of the hour."));
-            intro.Say(o, T(o, "In front of everyone, apparently...", "Yeah! Decide!", "Publicly.", "Choose wisely~"));
+            intro.Say(a, T(a, "There you are. We need you to decide something. || There you are. Help us decide. || We need you to choose something. || Oh, good. Decide for us?", "YOU. Come here. Now. || YOU! Here! Now! || Come here! || Get over here!", "We need a decision. || A decision is needed. || Decide. || Choose.", "Ah, the man of the hour. || The man of the hour. || Ah, our judge. || Perfect. Decide."));
+            intro.Say(o, T(o, "In front of everyone, apparently... || In front of everyone... || Publicly, apparently... || Everyone's watching...", "Yeah! Decide! || Decide! || Choose! || Pick!", "Publicly. || Publicly. || Openly. || Now.", "Choose wisely~ || Choose wisely~ || Careful~ || No pressure~"));
             b.Narr("A few students slow down to watch. " + (s.W != null ? N(s.W) + " pretends not to listen, very badly." : "This is going to be all over school by tomorrow."));
             if (gfs)
             {
-                b.Face(a, Feel.Pout).Say(a, T(a, "You promised to walk me home today.", "You said you'd walk ME home today!", "You're walking me home. As agreed.", "You're walking me home. Obviously."));
-                b.Face(o, Feel.Pout).Say(o, T(o, "But you promised me too...", "Nuh-uh! He promised ME!", "He agreed to walk me home first.", "Funny. He told me the same thing."));
+                b.Face(a, Feel.Pout).Say(a, T(a, "You promised to walk me home today. || You promised to walk me home. || You said you'd walk with me today... || Our walk home... you promised.", "You said you'd walk ME home today! || You said you'd walk ME! || Me! You promised me! || My walk! Mine!", "You're walking me home. As agreed. || You're walking me. Agreed. || As promised. Me. || Our agreement. Me.", "You're walking me home. Obviously. || Walking me home. Obviously. || Me. Duh. || You're mine this evening."));
+                b.Face(o, Feel.Pout).Say(o, T(o, "But you promised me too... || But you promised me too... || You said the same to me... || But... me too...", "Nuh-uh! He promised ME! || Nuh-uh! ME! || No! He promised me! || Mine first!", "He agreed to walk me home first. || He agreed with me first. || I was first. || My agreement predates yours.", "Funny. He told me the same thing. || He told me the same thing. || Funny. Same promise. || Oh? Me too."));
             }
             else
             {
-                b.Face(a, Feel.Serious).Say(a, T(a, "The class trip should go to the aquarium. It's obvious.", "The class trip HAS to be the amusement park!", "The trip should be educational. The museum.", "The trip should be fun. Unlike her ideas."));
-                b.Face(o, Feel.Serious).Say(o, T(o, "No, it should be the hot spring town...", "No way! The beach!", "Incorrect.", "Wrong, as usual."));
+                b.Face(a, Feel.Serious).Say(a, T(a, "The class trip should go to the aquarium. It's obvious. || The aquarium for the trip. Obviously. || The aquarium... it'd be lovely. || I think the aquarium is best.", "The class trip HAS to be the amusement park! || Amusement park! Has to be! || Theme park! Rides! || Roller coasters!", "The trip should be educational. The museum. || Museum. Educational. || The museum. Logical. || Educational. Museum.", "The trip should be fun. Unlike her ideas. || Fun. Unlike her ideas. || Somewhere fun. Not hers. || Fun place. Hers is boring."));
+                b.Face(o, Feel.Serious).Say(o, T(o, "No, it should be the hot spring town... || No, the hot springs... || The hot spring town... || I'd prefer the onsen...", "No way! The beach! || The beach! || No! Beach! || Ocean!", "Incorrect. || Incorrect. || Wrong. || No.", "Wrong, as usual. || Wrong. As usual. || Typical. Wrong. || Nope. Wrong again."));
             }
             var opts = new List<string> { "Side with " + N(a), "sd_a", "Side with " + N(o), "sd_b" };
             if (G.Int >= 45 || G.Sens >= 45) { opts.Add(gfs ? "Walk them both home [SEN]" : "Suggest a plan with both [INT]"); opts.Add("sd_both"); }
             opts.Add("Refuse to choose"); opts.Add("sd_none");
             b.Choice(opts.ToArray());
-            b.Branch("sd_a"); b.Face(a, Feel.Smile).Say(a, T(a, "...Thank you!", "YES! Ha!", "As expected.", "Good boy.")); b.Face(o, Feel.Sad).Say(o, T(o, "...Okay.", "Hmph!", "...I see.", "...Remember this.")); b.End();
-            b.Branch("sd_b"); b.Face(o, Feel.Smile).Say(o, T(o, "...Thank you!", "YES! Ha!", "As expected.", "Good boy.")); b.Face(a, Feel.Sad).Say(a, T(a, "...Okay.", "Hmph!", "...I see.", "...Remember this.")); b.End();
+            b.Branch("sd_a"); b.Face(a, Feel.Smile).Say(a, T(a, "...Thank you! || ...Thank you! || ...Yay! || ...I'm glad!", "YES! Ha! || YES! || Ha! Win! || Woo!", "As expected. || As expected. || Naturally. || Correct.", "Good boy. || Good boy. || Smart choice. || Obviously.")); b.Face(o, Feel.Sad).Say(o, T(o, "...Okay. || ...Okay. || ...I see. || ...Fine.", "Hmph! || Hmph! || Boo! || Ugh!", "...I see. || ...I see. || ...Noted. || ...Hm.", "...Remember this. || ...Remember this. || ...Noted. || ...You'll regret it.")); b.End();
+            b.Branch("sd_b"); b.Face(o, Feel.Smile).Say(o, T(o, "...Thank you! || ...Thank you! || ...Yay! || ...I'm glad!", "YES! Ha! || YES! || Ha! Win! || Woo!", "As expected. || As expected. || Naturally. || Correct.", "Good boy. || Good boy. || Smart choice. || Obviously.")); b.Face(a, Feel.Sad).Say(a, T(a, "...Okay. || ...Okay. || ...I see. || ...Fine.", "Hmph! || Hmph! || Boo! || Ugh!", "...I see. || ...I see. || ...Noted. || ...Hm.", "...Remember this. || ...Remember this. || ...Noted. || ...You'll regret it.")); b.End();
             b.Branch("sd_both");
             b.Narr(gfs ? "You offer each of them an arm. After a second of shock, both of them take one." : "You lay out a plan that takes the best of both. The watching students actually nod.");
-            b.Say(a, T(a, "...That's... actually nice.", "...Huh. Okay. That works!", "...Acceptable.", "...Smooth. Too smooth."));
-            b.Say(o, T(o, "...Mm. Fine.", "...Okay, fine! Yeah!", "...Agreed.", "...Hmph. Fine."));
+            b.Say(a, T(a, "...That's... actually nice. || ...That's nice. || ...Oh, that's sweet. || ...That works.", "...Huh. Okay. That works! || ...Huh! Works! || ...Okay! Cool! || ...Nice!", "...Acceptable. || ...Acceptable. || ...Fine. || ...Reasonable.", "...Smooth. Too smooth. || ...Too smooth. || ...Slick. || ...Smooth operator."));
+            b.Say(o, T(o, "...Mm. Fine. || ...Fine. || ...Okay. || ...Alright.", "...Okay, fine! Yeah! || ...Fine! Yeah! || ...Okay! || ...Sure!", "...Agreed. || ...Agreed. || ...Fine. || ...Okay.", "...Hmph. Fine. || ...Hmph. Fine. || ...Fine. || ...Okay, then."));
             b.End();
-            b.Branch("sd_none"); b.Say(a, T(a, "...You're no help.", "Ugh! Useless!", "...Indecisive.", "Coward~")); b.End();
+            b.Branch("sd_none"); b.Say(a, T(a, "...You're no help. || ...No help. || ...You're no use. || ...Hmph.", "Ugh! Useless! || Useless! || Ugh! || Come on!", "...Indecisive. || ...Indecisive. || ...Weak. || ...Hm.", "Coward~ || Coward~ || Chicken~ || Spineless~")); b.End();
             result = c =>
             {
                 var wit = s.W != null ? new[] { s.W } : new SaveData.Heroine[0];
@@ -605,13 +605,13 @@ namespace Joojkk.CampusLife
             var a = s.A; var o = s.B;
             var exes = s.Why == "exes";
             intro.Narr(N(a) + " and " + N(o) + " stop dead when they see each other, then both look at you as if you could save them.");
-            b.Say(a, T(a, "...Hi, " + N(o) + ". It's been a while.", "...Oh. Hey. ...Hi.", "...Hello.", "...Well. Look who it is."));
-            b.Say(o, T(o, "...Yeah. It has.", "...H-hey!", "...Hi.", "...Hey yourself."));
+            b.Say(a, T(a, "...Hi, " + N(o) + ". It's been a while. || ...Hi, " + N(o) + ". It's been long. || ..." + N(o) + "... hello. || ...It's been a while, " + N(o) + ".", "...Oh. Hey. ...Hi. || ...Oh. Hey. || ...Hi! Um. || ...Hey, " + N(o) + ".", "...Hello. || ...Hello. || ..." + N(o) + ". || ...Hi.", "...Well. Look who it is. || ...Look who it is. || ...Well, well. || ...Oh. You."));
+            b.Say(o, T(o, "...Yeah. It has. || ...Yes. It has. || ...Long time. || ...It has.", "...H-hey! || ...H-hey! || ...Hi! || ...Yeah!", "...Hi. || ...Hi. || ...Yes. || ...Hello.", "...Hey yourself. || ...Hey yourself. || ...Hi. || ...Yeah, hi."));
             b.Narr(exes ? "Neither of them knows where to look. There's a lot they never said." : "They used to be inseparable. Now they stand an arm's length apart.");
             b.Choice("Help them start talking", "re_help", "Remind them of a good memory", "re_memory", "Leave them alone", "re_leave");
             b.Branch("re_help");
-            b.Say(a, T(a, "...I've missed you, you know.", "...Honestly? I missed you. A lot.", "...I missed this.", "...Fine. I missed you. Don't make it weird."));
-            b.Say(o, T(o, "...Me too.", "...ME TOO, you dummy!", "...Likewise.", "...Yeah. Me too."));
+            b.Say(a, T(a, "...I've missed you, you know. || ...I missed you. || ...I've missed you so much. || ...I missed this.", "...Honestly? I missed you. A lot. || ...I missed you! A lot! || ...Honestly? Missed you! || ...So much!", "...I missed this. || ...I missed this. || ...I missed you. || ...Missed.", "...Fine. I missed you. Don't make it weird. || ...Missed you. Don't make it weird. || ...Fine. Missed you. || ...Okay. I missed you."));
+            b.Say(o, T(o, "...Me too. || ...Me too. || ...Same. || ...I did too.", "...ME TOO, you dummy! || ...ME TOO, dummy! || ...Me too! || ...Same!!", "...Likewise. || ...Likewise. || ...Same. || ...Me too.", "...Yeah. Me too. || ...Yeah. Me too. || ...Same. || ...Me too, idiot."));
             b.End();
             b.Branch("re_memory");
             b.Narr("You bring up the time they " + (exes ? "skipped class to see the cherry blossoms" : "got locked in the art room together") + ". Both of them try not to smile, and fail.");
@@ -661,21 +661,21 @@ namespace Joojkk.CampusLife
         public override void Write(Situation s, SceneBuilder intro, SceneBuilder b, out Action<string> result)
         {
             var finder = s.A; var secret = s.B;
-            intro.Say(finder, T(finder, "Um... I found something. I don't know what to do...", "Okay, I found something and I'm FREAKING OUT.", "I need advice. Quietly.", "Okay, this is big. Come here."));
+            intro.Say(finder, T(finder, "Um... I found something. I don't know what to do... || I found something... what should I do? || Um... I found this... help? || I don't know what to do...", "Okay, I found something and I'm FREAKING OUT. || Found something! FREAKING OUT! || Help! I found a thing! || Emergency! Look!", "I need advice. Quietly. || Advice. Quietly. || I need counsel. || Discreetly. Help.", "Okay, this is big. Come here. || This is big. Come here. || Big news. Here. || Look at this."));
             b.Narr(N(finder) + " holds a folded note. Your name isn't on it. Hers is, in " + N(secret) + "'s neat handwriting, with a small heart.");
-            b.Face(finder, Feel.Surprised).Say(finder, T(finder, "Does " + N(secret) + "... like me? Like THAT?", "Is this... a love letter? For ME?! From " + N(secret) + "?!", "This appears to be a confession. Addressed to me.", "So... " + N(secret) + " has a crush on me. Apparently."));
-            b.Face(secret, Feel.Shy).Say(secret, T(secret, "W-wait! Where did you find that?!", "NO NO NO give that back!", "...That wasn't meant to be found.", "...Oh, come on."));
+            b.Face(finder, Feel.Surprised).Say(finder, T(finder, "Does " + N(secret) + "... like me? Like THAT?" + " || " + N(secret) + "... likes me? Like that? || Is this from " + N(secret) + "...? For me?" + " || " + N(secret) + " wrote this... to me?", "Is this... a love letter? For ME?! From " + N(secret) + "?! || A love letter?! From " + N(secret) + "?! || For ME?! " + N(secret) + "?!" + " || " + N(secret) + " likes me?!", "This appears to be a confession. Addressed to me. || A confession. To me. || Addressed to me. From " + N(secret) + "." + " || " + N(secret) + ". A confession.", "So... " + N(secret) + " has a crush on me. Apparently." + " || " + N(secret) + " has a crush on me. || So " + N(secret) + " likes me." + " || " + N(secret) + "? Interesting."));
+            b.Face(secret, Feel.Shy).Say(secret, T(secret, "W-wait! Where did you find that?! || Where did you find that?! || Wait! Give it back! || No! Where...?!", "NO NO NO give that back! || NO! Give it back! || NOOO! Mine! || Return it!", "...That wasn't meant to be found. || ...Not meant to be found. || ...That was private. || ...Hidden for a reason.", "...Oh, come on. || ...Oh, come on. || ...Seriously? || ...Great."));
             b.Choice("Tell " + N(finder) + " to answer her honestly", "dc_honest", "Help " + N(secret) + " take it back", "dc_cover", "Say it's sweet", "dc_sweet");
             b.Branch("dc_honest");
             var yes = Pairs.GirlsOk(finder) && Pairs.Of(finder, secret).RomanceOf(K(finder)) >= 25;
-            b.Say(finder, yes ? T(finder, "...I don't hate it. Can we... take it slow?", "...Okay, honestly? I'm kinda happy?!", "...I'm not opposed.", "...Heh. Okay. Maybe.") : T(finder, "...I'm sorry. I don't feel that way. But I'm glad you told me... kind of.", "...I'm really sorry. You're my friend, though! Always!", "...I don't share those feelings. I'm sorry.", "...Sorry. Not like that. Still friends?"));
+            b.Say(finder, yes ? T(finder, "...I don't hate it. Can we... take it slow? || ...I don't hate it. Slowly? || ...Maybe... slowly? || ...Let's go slow?", "...Okay, honestly? I'm kinda happy?! || ...Honestly? Happy! || ...I'm kinda thrilled! || ...Okay! Yes!", "...I'm not opposed. || ...Not opposed. || ...Open to it. || ...Possible.", "...Heh. Okay. Maybe. || ...Okay. Maybe. || ...Heh. Sure. || ...Maybe.") : T(finder, "...I'm sorry. I don't feel that way. But I'm glad you told me... kind of. || ...Sorry. Not that way. Glad you told me. || ...I can't return it... sorry. || ...I'm sorry... friends?", "...I'm really sorry. You're my friend, though! Always! || ...Sorry! Friends always! || ...I'm sorry! Still pals! || ...Friends forever, okay?!", "...I don't share those feelings. I'm sorry. || ...I don't share it. Sorry. || ...Not mutual. Sorry. || ...No. Apologies.", "...Sorry. Not like that. Still friends? || ...Sorry. Friends? || ...Not like that. Friends. || ...No. Still friends."));
             b.End();
             b.Branch("dc_cover");
             b.Narr("You snatch the note and declare it's yours, a practice letter for a story. Nobody believes you. Everyone pretends to.");
-            b.Face(secret, Feel.Love).Say(secret, T(secret, "...Thank you.", "...You're a lifesaver.", "...I owe you.", "...You idiot. ...Thanks."));
+            b.Face(secret, Feel.Love).Say(secret, T(secret, "...Thank you. || ...Thank you. || ...Thanks. || ...I'm grateful.", "...You're a lifesaver. || ...Lifesaver! || ...Thanks! || ...You rock!", "...I owe you. || ...I owe you. || ...Thanks. || ...Indebted.", "...You idiot. ...Thanks. || ...Idiot. Thanks. || ...Dummy. Thanks. || ...Thanks."));
             b.End();
             b.Branch("dc_sweet");
-            b.Face(secret, Feel.Shy).Say(secret, T(secret, "...D-don't say that...", "Stoooop!", "...Please stop.", "...I'll get you for this."));
+            b.Face(secret, Feel.Shy).Say(secret, T(secret, "...D-don't say that... || ...Don't say that... || ...S-stop... || ...Please, no...", "Stoooop! || Stoooop! || Stop it! || No!", "...Please stop. || ...Stop. || ...Enough. || ...Please stop.", "...I'll get you for this. || ...I'll get you. || ...Payback later. || ...You'll pay."));
             b.End();
             result = c =>
             {

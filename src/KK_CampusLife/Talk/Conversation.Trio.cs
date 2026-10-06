@@ -505,8 +505,8 @@ namespace Joojkk.CampusLife
                     : moment == "season" ? an + " and " + bn + " hurry over, full of plans."
                     : moment == "trisal" ? an + " and " + bn + " come over together, arm in arm."
                     : an + " and " + bn + " come over together.");
-                Say2(sb, a, b, "duo3.open.a", T(a, "Ah, there you are...", "Hey hey! Found you!", "There you are.", "Look who it is~"));
-                Say2(sb, b, a, "duo3.open.b", T(b, "We were hoping to see you.", "We were looking for you!", "We wanted a word.", "We were just talking about you."));
+                Say2(sb, a, b, "duo3.open.a", T(a, "Ah, there you are... || Oh, you're here... || Ah, hello... || There you are... hi.", "Hey hey! Found you! || Found you! || Hey! There you are! || Yo! Gotcha!", "There you are. || Found you. || You're here. || There.", "Look who it is~ || Well, look who's here~ || Oh, it's you~ || Speak of the devil~"));
+                Say2(sb, b, a, "duo3.open.b", T(b, "We were hoping to see you. || We hoped we'd run into you. || We were wondering where you were. || We wanted to see you.", "We were looking for you! || We searched everywhere! || Been looking for you! || We hunted you down!", "We wanted a word. || We need to talk. || A word. || We wanted you.", "We were just talking about you. || We were gossiping about you. || Your ears burning? || We were discussing you~"));
             }
             finally { _trio = keep; }
         }
@@ -540,16 +540,16 @@ namespace Joojkk.CampusLife
                 {
                     var goes = end == "bleft" ? t.B : t.A;
                     var stays = end == "bleft" ? t.A : t.B;
-                    Say2(b, goes, stays, "duo3.leave", T(goes, "...I'll go. You two have fun.", "Ugh, forget it! I'm out!", "...I'm leaving.", "Wow. Okay. Enjoy yourselves."), null, Feel.Pout);
+                    Say2(b, goes, stays, "duo3.leave", T(goes, "...I'll go. You two have fun. || ...I'll leave. Have fun, you two. || ...I'll go now. || ...You two enjoy yourselves.", "Ugh, forget it! I'm out! || Forget it! Bye! || I'm done! Later! || Ugh! Leaving!", "...I'm leaving. || ...Leaving. || ...I'm going. || ...Goodbye.", "Wow. Okay. Enjoy yourselves. || Wow. Fine. Have fun. || Okay then. Enjoy. || Sure. Bye."), null, Feel.Pout);
                     b.Narr(GirlInfo.FirstName(goes) + " turns on her heel and walks off.");
-                    Say2(b, stays, goes, "duo3.left", T(stays, "Ah... she left...", "Whoa. She's mad.", "...Well. That happened.", "Oops. Somebody's jealous~"));
+                    Say2(b, stays, goes, "duo3.left", T(stays, "Ah... she left... || Ah... she's gone... || Oh no... she left... || She walked away...", "Whoa. She's mad. || Yikes! She's mad! || Whoa! Angry! || Uh oh!", "...Well. That happened. || ...Well. || ...That happened. || ...Hm.", "Oops. Somebody's jealous~ || Oops. Jealousy~ || Someone's upset~ || Touchy, isn't she?"));
                     any = true;
                 }
                 else if (end == null && t.Beats >= t.Max)
                 {
                     end = "natural";
-                    Say2(b, t.A, t.B, "duo3.end.a", T(t.A, "Ah, look at the time...", "Whoa, it's already that late?!", "We should get going.", "Time flies, huh?"));
-                    Say2(b, t.B, t.A, "duo3.end.b", T(t.B, "This was nice. Let's do it again.", "That was fun! Again sometime!", "Until next time.", "Don't miss us too much~"));
+                    Say2(b, t.A, t.B, "duo3.end.a", T(t.A, "Ah, look at the time... || Oh, it's getting late... || Ah... time went so fast... || Look how late it is...", "Whoa, it's already that late?! || Already this late?! || Whoa! Time flew! || Late already?!", "We should get going. || Time to go. || It's late. || We should leave.", "Time flies, huh? || Time flies with me, huh? || Late already? Fun's over. || Where'd the time go~"));
+                    Say2(b, t.B, t.A, "duo3.end.b", T(t.B, "This was nice. Let's do it again. || That was lovely. Again sometime? || I had fun. Let's do this again. || This was nice. Thank you.", "That was fun! Again sometime! || So fun! Again! || Best hangout! Again soon! || Let's repeat this!", "Until next time. || Next time, then. || Again sometime. || Later.", "Don't miss us too much~ || You'll miss us~ || Try not to miss us. || Dream of us~"));
                     any = true;
                 }
                 else if (end == null && (Random.value < 0.45f || t.Disagree && Random.value < 0.6f))
@@ -579,8 +579,8 @@ namespace Joojkk.CampusLife
             var trisal = w.isGirlfriend && to.isGirlfriend && Harem.Agreed(w, to);
             var wrel = trisal ? "trisal" : w.isGirlfriend ? "yourgf" : PairWord(w, to);
             Say2(b, w, to, "duo3.kiss", kiss == "no"
-                ? T(w, "Ah... she said no...", "Hah! Shot down!", "...Denied.", "Ouch. Rejected right in front of me~")
-                : T(w, "Eh?! R-right in front of me...?", "WHOA! Hey! I'm right here!", "...I'm standing right here.", "Oh my. Don't mind me~"),
+                ? T(w, "Ah... she said no... || Oh... she refused... || Ah... no, huh... || She said no...", "Hah! Shot down! || Ha! Rejected! || Oof! Denied! || Shot down! Hah!", "...Denied. || ...Refused. || ...No. || ...Declined.", "Ouch. Rejected right in front of me~ || Ouch. Right in front of me~ || Rejected, live! || That stung, didn't it~")
+                : T(w, "Eh?! R-right in front of me...? || Eh?! In front of me...? || W-with me right here...? || Um... I'm right here...", "WHOA! Hey! I'm right here! || Hey! I'm RIGHT here! || Whoa! Hello?! || Excuse me?!", "...I'm standing right here. || ...I'm present. || ...I'm here. || ...Hello.", "Oh my. Don't mind me~ || Oh my. Ignore me~ || Don't mind me~ || Go on. I'll watch."),
                 X("kiss", kiss, "wrel", wrel), kiss == "no" ? Feel.Surprised : wrel == "yourgf" ? Feel.Pout : Feel.Shy);
             var wk = GirlInfo.Key(w);
             var tk = GirlInfo.Key(to);
@@ -632,11 +632,11 @@ namespace Joojkk.CampusLife
 
         private static string WitnessStock(SaveData.Heroine w, string lv, string q, string wrel)
         {
-            if (q == "bad") return T(w, "Ah... that didn't go well...", "Pfft! Smooth.", "...Nice try.", "Ooh, that's gotta hurt~");
-            if (lv == "friend") return T(w, "Hehe, you two get along.", "Hey, don't leave me out!", "...Hm.", "Aww, cute.");
-            if (wrel == "yourgf") return T(w, "U-um... I'm right here, you know...", "Hey! Your girlfriend is standing RIGHT here!", "...I'm still here.", "Careful. I'm watching~");
-            if (wrel == "rival") return T(w, "...", "Ugh, seriously?", "...Tch.", "Please. She's not your type.");
-            return T(w, "Ah... I-I'll pretend I didn't see that...", "Ooh! Look at you two!", "...Should I give you two a minute?", "Ooh~ getting bold, are we?");
+            if (q == "bad") return T(w, "Ah... that didn't go well... || Oh... that went badly... || Ah... not so good... || Um... oops...", "Pfft! Smooth. || Pfft! Smooth! || Haha! Fail! || Oof!", "...Nice try. || ...Nice try. || ...Failed. || ...Hm.", "Ooh, that's gotta hurt~ || Ooh, ouch~ || That hurt~ || Yikes~");
+            if (lv == "friend") return T(w, "Hehe, you two get along. || You two get along so well. || Hehe, you're cute together. || You're close, huh?", "Hey, don't leave me out! || Hey! Include me! || Don't forget me! || Me too!", "...Hm. || ...Hm. || ...I see. || ...Mm.", "Aww, cute. || Aww. || Adorable. || Sweet~");
+            if (wrel == "yourgf") return T(w, "U-um... I'm right here, you know... || U-um... I'm still here... || I'm right here, you know... || Hello...? I'm here...", "Hey! Your girlfriend is standing RIGHT here! || Your GIRLFRIEND is right here! || Hello! Girlfriend present! || HEY! Me! Here!", "...I'm still here. || ...I'm here. || ...Still present. || ...Ahem.", "Careful. I'm watching~ || Careful. Watching~ || I see everything~ || Eyes on you~");
+            if (wrel == "rival") return T(w, "... || ...... || ...Hmph. || ......Mm.", "Ugh, seriously? || Seriously?! || Ugh! || Oh, come on!", "...Tch. || ...Tch. || ...Hmph. || ...Ugh.", "Please. She's not your type. || Please. Not your type. || She's not your style. || As if.");
+            return T(w, "Ah... I-I'll pretend I didn't see that... || I-I'll pretend I didn't see... || Ah... I saw nothing... || Um... I'll look away...", "Ooh! Look at you two! || Ooh! You two! || Whoa! Look at you! || Hey hey!", "...Should I give you two a minute? || ...A minute alone? || ...Shall I leave? || ...Should I go?", "Ooh~ getting bold, are we? || Getting bold~ || Ooh, daring~ || My, my~");
         }
 
         /// <summary>The two of them talking to each other (after a turn, or in a silence); maybe a disagreement.</summary>
@@ -651,13 +651,13 @@ namespace Joojkk.CampusLife
             var x = X("kind", kind, "argue", t.Disagree ? "yes" : "no", "idle", t.Idles.ToString());
             if (t.Disagree) x["topic"] = t.Argue;
             Say2(b, first, second, "duo3." + kind + ".a", t.Disagree
-                ? T(first, "Um... about " + t.Argue + "... I still think I'm right.", "Okay but about " + t.Argue + ", I'm SO right!", "About " + t.Argue + ". I was right.", "Still mad about " + t.Argue + "? Admit it, I won~")
-                : T(first, "Hey... did you finish the homework?", "Hey hey, did you see what happened in class?!", "Did you hear about the test?", "So... what do you think of him, really?"), x);
+                ? T(first, "Um... about " + t.Argue + "... I still think I'm right. || About " + t.Argue + "... I still think I'm right. || Um, " + t.Argue + "... I haven't changed my mind. || I still believe I was right about " + t.Argue + "...", "Okay but about " + t.Argue + ", I'm SO right!" + " || " + t.Argue + "! I'm SO right! || About " + t.Argue + "! Still right!" + " || " + t.Argue + "?! Totally me!", "About " + t.Argue + ". I was right." + " || " + t.Argue + ". I was correct. || About " + t.Argue + ". Still right." + " || " + t.Argue + ". My position stands.", "Still mad about " + t.Argue + "? Admit it, I won~" + " || " + t.Argue + "? Admit I won~ || Still sulking about " + t.Argue + "? I won." + " || " + t.Argue + ". Surrender~")
+                : T(first, "Hey... did you finish the homework? || Did you finish the homework? || Um, the homework... done? || Did you get the homework?", "Hey hey, did you see what happened in class?! || Did you see what happened in class?! || Hey! Class today! Crazy, right?! || OMG, class today!", "Did you hear about the test? || The test. Heard? || About the exam. || Did you hear about the quiz?", "So... what do you think of him, really? || So, what do you really think of him? || Him? Thoughts? Honestly. || Be honest. Him?"), x);
             Say2(b, second, first, "duo3." + kind + ".b", t.Disagree
-                ? T(second, "...You're not.", "No way! You're totally wrong!", "...No.", "In your dreams~")
-                : T(second, "Mm, almost...", "Yeah! It was crazy!", "...I heard.", "Hehe. Wouldn't you like to know~"), x);
+                ? T(second, "...You're not. || ...No, you're not. || ...I don't think so. || ...That's wrong.", "No way! You're totally wrong! || Nope! Wrong! || No way! || Totally wrong!", "...No. || ...No. || ...Incorrect. || ...Wrong.", "In your dreams~ || Dream on~ || Keep dreaming~ || Not a chance~")
+                : T(second, "Mm, almost... || Mm, almost... || Nearly... || Almost done...", "Yeah! It was crazy! || Yeah! Wild! || Totally! || Insane, right?!", "...I heard. || ...Heard. || ...Yes. || ...I know.", "Hehe. Wouldn't you like to know~ || Hehe. Secret~ || Wouldn't you love to know~ || Maybe~"), x);
             if (t.Disagree) b.Narr("They both look at you.");
-            else if (kind == "idle" && t.Idles >= 2) Say2(b, first, second, "duo3.callback", T(first, "Ah, sorry, we left you out...", "Hey, you're quiet! Say something!", "...You've been quiet.", "Don't just stand there looking cute~"));
+            else if (kind == "idle" && t.Idles >= 2) Say2(b, first, second, "duo3.callback", T(first, "Ah, sorry, we left you out... || Sorry, we forgot you... || Ah, sorry, we left you out... || Oh, sorry... join us.", "Hey, you're quiet! Say something! || You're quiet! Talk! || Say something! || Hey, speak up!", "...You've been quiet. || ...Quiet today. || ...You're silent. || ...Nothing to say?", "Don't just stand there looking cute~ || Don't just stand there being cute~ || Speak, handsome~ || Quiet? How cute~"));
             return true;
         }
 
@@ -738,18 +738,18 @@ namespace Joojkk.CampusLife
                     b.Me("So how do you know " + an + "?");
                     q = Q.Good;
                     var pair = PairWord(b0, a);
-                    Say2(b, b0, a, "duo3.know", pair == "bff" ? T(b0, an + " and I have been friends forever...", "Me and " + an + "? Since FOREVER!", "We go way back.", "Oh, she's stuck with me~")
-                        : pair == "rival" ? T(b0, "...We're in the same class. That's all.", "Ugh, we just... know each other.", "...Same class.", "Unfortunately? Classmates.")
-                        : T(b0, "We're in the same class.", "We hang out sometimes!", "Class. Club. You know.", "Around. Why, curious~?"), X("act", "know"));
-                    if (pair == "bff") Say2(b, a, b0, "duo3.know.other", T(a, "Hehe... it's true.", "Best friends!", "...Unfortunately.", "She'd be lost without me~"));
+                    Say2(b, b0, a, "duo3.know", pair == "bff" ? T(b0, an + " and I have been friends forever..." + " || " + an + " and I have been friends forever... || I've known " + an + " since we were little..." + " || " + an + " and I go way back...", "Me and " + an + "? Since FOREVER! || Me and " + an + "? Since forever!" + " || " + an + "?! Childhood buddies!" + " || " + an + " and me! Ages!", "We go way back. || Long history. || We go back. || Years.", "Oh, she's stuck with me~ || She's stuck with me~ || She can't escape me. || She's mine forever~")
+                        : pair == "rival" ? T(b0, "...We're in the same class. That's all. || ...Just classmates. || ...We share a class, that's all. || ...Same class. Nothing more.", "Ugh, we just... know each other. || We just know each other! || Ugh, classmates! || We're... acquainted!", "...Same class. || ...Classmates. || ...Same room. || ...Class.", "Unfortunately? Classmates. || Classmates. Sadly. || Unfortunately, same class. || Stuck in the same class.")
+                        : T(b0, "We're in the same class. || Same class. || We share a classroom. || We're classmates.", "We hang out sometimes! || We hang out! || Sometimes we chill! || Friends-ish!", "Class. Club. You know. || Class. Club. || Around. || Here and there.", "Around. Why, curious~? || Around. Curious~? || Why do you ask~? || We know each other. Why?"), X("act", "know"));
+                    if (pair == "bff") Say2(b, a, b0, "duo3.know.other", T(a, "Hehe... it's true. || Hehe... it's true. || That's right... || Mm, yes.", "Best friends! || Besties! || BFFs! || Best friends!", "...Unfortunately. || ...Sadly. || ...Unfortunately. || ...Yes.", "She'd be lost without me~ || She'd be lost without me~ || She needs me~ || She can't live without me."));
                     break;
                 case "think":
                     b.Me("What do you think of " + an + "?");
                     var p2 = PairWord(b0, a);
                     q = p2 == "rival" ? Q.Neutral : Q.Good;
-                    Say2(b, b0, a, "duo3.think", p2 == "rival" ? T(b0, "...Why would you ask me that, with her right here?", "Her? She's... ugh. Fine. She's okay.", "...No comment.", "She's alright. For a rival~")
-                        : T(b0, an + " is really kind. I'm lucky to know her.", an + "'s the best! Seriously!", an + " is reliable.", an + "? She's a handful. I love her."), X("act", "think"));
-                    Say2(b, a, b0, "duo3.think.other", p2 == "rival" ? T(a, "...I heard that.", "HEY!", "...Hm.", "Aww, she's shy~") : T(a, "E-eh?! Stop it...", "Awww! You're the best too!", "...Thanks.", "Flatterer~"), null, p2 == "rival" ? Feel.Pout : Feel.Shy);
+                    Say2(b, b0, a, "duo3.think", p2 == "rival" ? T(b0, "...Why would you ask me that, with her right here? || ...Why ask with her right here? || ...That's not fair, she's listening... || ...Do I have to answer?", "Her? She's... ugh. Fine. She's okay. || Her?! Ugh. Fine. She's okay. || She's... fine! Okay?! || Argh. She's alright!", "...No comment. || ...No comment. || ...Pass. || ...Next.", "She's alright. For a rival~ || She's alright. For a rival~ || Decent. For competition. || She's fine. I'm better.")
+                        : T(b0, an + " is really kind. I'm lucky to know her." + " || " + an + " is so kind. I'm lucky. || I'm happy to know " + an + "." + " || " + an + " is wonderful.", an + "'s the best! Seriously!" + " || " + an + " rocks!" + " || " + an + "'s amazing! || Best ever, " + an + "!", an + " is reliable." + " || " + an + " is dependable." + " || " + an + " is solid." + " || " + an + " is trustworthy.", an + "? She's a handful. I love her." + " || " + an + "? A handful. Love her." + " || " + an + " is trouble. My kind." + " || " + an + "? Exhausting. Adore her."), X("act", "think"));
+                    Say2(b, a, b0, "duo3.think.other", p2 == "rival" ? T(a, "...I heard that. || ...I heard that. || ...I can hear you. || ...Ahem.", "HEY! || HEY! || Rude! || I heard!", "...Hm. || ...Hm. || ...Noted. || ...I see.", "Aww, she's shy~ || Aww, shy~ || She's blushing~ || Look, she's flustered.") : T(a, "E-eh?! Stop it... || E-eh?! Stop... || Ah... don't... || You're embarrassing me...", "Awww! You're the best too! || Aww! You too! || Hehe! You're the best too! || Same to you!", "...Thanks. || ...Thanks. || ...Hm. Thanks. || ...Appreciated.", "Flatterer~ || Flatterer~ || Smooth~ || Sweet talker~"), null, p2 == "rival" ? Feel.Pout : Feel.Shy);
                     if (p2 != "rival") Arcs.AddBond(GirlInfo.Key(a), GirlInfo.Key(b0), 2);
                     break;
                 default:
@@ -871,14 +871,14 @@ namespace Joojkk.CampusLife
             {
                 case "what":
                     b.Me("So, what were you two talking about?");
-                    Say2(b, a, b0, "duo3.what.a", T(a, "Ah, n-nothing much...", "Oh, you know! Stuff!", "Nothing important.", "Wouldn't you like to know~"));
-                    Say2(b, b0, a, "duo3.what.b", T(b0, "Hehe... it's a secret.", "It was about YOU! Kidding! ...Maybe.", "Girl stuff.", "Hmm~ should we tell him?"));
+                    Say2(b, a, b0, "duo3.what.a", T(a, "Ah, n-nothing much... || N-nothing much... || Ah, just chatting... || Um, nothing...", "Oh, you know! Stuff! || Stuff! You know! || Things! Hehe! || Just stuff!", "Nothing important. || Nothing important. || Trivial things. || Nothing.", "Wouldn't you like to know~ || Wouldn't you like to know~ || Secrets~ || Girl talk~"));
+                    Say2(b, b0, a, "duo3.what.b", T(b0, "Hehe... it's a secret. || Hehe... secret. || It's a secret... || Shh... secret.", "It was about YOU! Kidding! ...Maybe. || About YOU! Kidding! Maybe! || You! Joking! ...Kinda! || Your name came up! Hehe!", "Girl stuff. || Girl stuff. || Private. || Nothing for you.", "Hmm~ should we tell him? || Should we tell him~? || Hmm, tell him? || Tell or not tell~?"));
                     break;
                 case "met":
                     b.Me("How did you two meet?");
                     var pw = PairWord(a, b0);
-                    Say2(b, a, b0, "duo3.met.a", pw == "rival" ? T(a, "...We didn't 'meet'. We just ended up in the same places.", "Ugh, long story.", "...Unavoidably.", "Fate hates me, apparently.") : T(a, "We sat next to each other on the first day...", "First day of school! She lent me an eraser!", "Class. She was the only one who made sense.", "She tripped over my bag. Love at first sight~"));
-                    Say2(b, b0, a, "duo3.met.b", pw == "rival" ? T(b0, "...Let's not talk about it.", "Don't remind me!", "...", "Her version is wrong, by the way.") : T(b0, "Hehe... that's right.", "And we've been inseparable since!", "...That's roughly accurate.", "That is NOT how it went~"));
+                    Say2(b, a, b0, "duo3.met.a", pw == "rival" ? T(a, "...We didn't 'meet'. We just ended up in the same places. || ...We didn't really meet. We just kept running into each other. || ...It just happened. || ...We ended up together. That's all.", "Ugh, long story. || Long story! Ugh! || Don't ask! || Oof, long story!", "...Unavoidably. || ...Unavoidable. || ...Circumstance. || ...Inevitable.", "Fate hates me, apparently. || Fate's cruel. || Destiny's joke. || The universe hates me.") : T(a, "We sat next to each other on the first day... || We sat together on the first day... || She smiled at me on the first day... || We were seatmates from day one...", "First day of school! She lent me an eraser! || First day! She lent me a pencil! || Day one! Instant friends! || She shared her lunch on day one!", "Class. She was the only one who made sense. || Class. She made sense. || Classmates. She was competent. || She was the only sensible one.", "She tripped over my bag. Love at first sight~ || She tripped over me. Love at first sight~ || She bumped into me. Destiny~ || She dropped her books. Classic."));
+                    Say2(b, b0, a, "duo3.met.b", pw == "rival" ? T(b0, "...Let's not talk about it. || ...Let's not. || ...Please, never mind. || ...I'd rather not.", "Don't remind me! || Don't remind me! || Nooo, stop! || Ugh, forget it!", "... || ...... || ...No. || ...Skip.", "Her version is wrong, by the way. || Her version's wrong. || Don't believe her. || She lies. Cutely.") : T(b0, "Hehe... that's right. || Hehe... yes. || That's right... || Mm, true.", "And we've been inseparable since! || Inseparable ever since! || Best friends since! || Together ever since!", "...That's roughly accurate. || ...Roughly. || ...Accurate enough. || ...More or less.", "That is NOT how it went~ || That's NOT how it happened~ || Lies~ || Total fiction~"));
                     if (pw == "rival") { qa = qb = Q.Neutral; } else bond = 2;
                     break;
                 case "joke":
@@ -891,8 +891,8 @@ namespace Joojkk.CampusLife
                     break;
                 case "moment":
                     b.Me(MomentSubject(t.Moment) + "?");
-                    Say2(b, a, b0, "duo3.subject.a", T(a, "Ah, well...", "Oh! Okay, so-", "Hm. Simple.", "Glad you asked~"));
-                    Say2(b, b0, a, "duo3.subject.b", T(b0, "Hehe, it's nothing special.", "Yeah! And then-", "...That's about it.", "Isn't it obvious?"));
+                    Say2(b, a, b0, "duo3.subject.a", T(a, "Ah, well... || Ah, well... || Um, let's see... || Oh, well...", "Oh! Okay, so- || Okay so-! || Oh! Right! || So, so!", "Hm. Simple. || Simple. || Easy. || Hm.", "Glad you asked~ || Glad you asked~ || Oh, this is good~ || Funny you ask~"));
+                    Say2(b, b0, a, "duo3.subject.b", T(b0, "Hehe, it's nothing special. || It's nothing special. || Hehe, just ordinary. || Nothing much.", "Yeah! And then- || Yeah! And then-! || Right?! Then-! || And THEN-!", "...That's about it. || ...That's it. || ...Basically. || ...Done.", "Isn't it obvious? || Obviously. || Isn't it clear? || Duh."));
                     bond = 1;
                     break;
                 case "drink":
@@ -903,8 +903,8 @@ namespace Joojkk.CampusLife
                     break;
                 case "photo":
                     b.Narr("You hold out your phone; the three of you squeeze into the frame.");
-                    Say2(b, a, b0, "duo3.photo.a", T(a, "Ah, wait, my hair...", "Say cheese!", "...Fine. One picture.", "Get my good side~"));
-                    Say2(b, b0, a, "duo3.photo.b", T(b0, "Hehe... send it to me later?", "Again! I blinked!", "...Delete it if I look weird.", "Ooh, this is going on my wall~"));
+                    Say2(b, a, b0, "duo3.photo.a", T(a, "Ah, wait, my hair... || Wait, my hair...! || Ah, hold on...! || Not yet, my bangs...!", "Say cheese! || Cheese! || Smile! || Pose!", "...Fine. One picture. || ...One photo. || ...Fine. Once. || ...Quickly.", "Get my good side~ || My good side~ || Make me look good~ || Angle it right~"));
+                    Say2(b, b0, a, "duo3.photo.b", T(b0, "Hehe... send it to me later? || Send it to me later? || Can I have a copy? || Hehe... send it?", "Again! I blinked! || Again! I blinked! || One more! || Redo!", "...Delete it if I look weird. || ...Delete if bad. || ...Erase it if I look odd. || ...Check it first.", "Ooh, this is going on my wall~ || Going on my wall~ || Framing this~ || Wallpaper material~"));
                     bond = 2;
                     break;
                 case "glad":
@@ -988,15 +988,15 @@ namespace Joojkk.CampusLife
                     break;
                 case "middle":
                     b.Me("Honestly? You're both a little right.");
-                    Say2(b, a, b0, "duo3.middle.a", T(a, "...I guess that's fair.", "Ugh, that's such a cop-out! ...Fine.", "...Diplomatic.", "Boring answer. But okay."));
-                    Say2(b, b0, a, "duo3.middle.b", T(b0, "Hehe... okay, truce?", "Fine! Truce!", "...Truce.", "Truce. For now~"));
+                    Say2(b, a, b0, "duo3.middle.a", T(a, "...I guess that's fair. || ...That's fair. || ...I suppose that's fine. || ...Okay, fair.", "Ugh, that's such a cop-out! ...Fine. || Cop-out! ...Fine! || Lame! ...Okay! || Ugh! ...Alright!", "...Diplomatic. || ...Diplomatic. || ...Neutral. || ...Safe answer.", "Boring answer. But okay. || Boring. Okay. || Coward's answer. Fine. || Safe. Yawn."));
+                    Say2(b, b0, a, "duo3.middle.b", T(b0, "Hehe... okay, truce? || Truce? || Hehe... peace? || Let's make up?", "Fine! Truce! || Truce! || Fine! Peace! || Deal! Truce!", "...Truce. || ...Truce. || ...Agreed. || ...Peace.", "Truce. For now~ || Truce. For now~ || Ceasefire~ || Temporary truce."));
                     qa = qb = Q.Neutral;
                     bond = PairWord(a, b0) == "rival" ? 3 : 2;
                     break;
                 default:
                     b.Me("Hey, did you two hear about the new cafe near the station?");
-                    Say2(b, a, b0, "duo3.change.a", T(a, "Ah... the one with the cakes?", "Oh! The pancake place?!", "...Nice dodge.", "Smooth subject change~"));
-                    Say2(b, b0, a, "duo3.change.b", T(b0, "I've wanted to go there...", "We should ALL go!", "...I heard it's good.", "Is that an invitation~?"));
+                    Say2(b, a, b0, "duo3.change.a", T(a, "Ah... the one with the cakes? || The one with cakes? || Oh, the café? || The bakery?", "Oh! The pancake place?! || The pancake place?! || Ooh! The crepe shop?! || That dessert place?!", "...Nice dodge. || ...Nice dodge. || ...Smooth. || ...Evasive.", "Smooth subject change~ || Smooth change~ || Clever dodge~ || Changing the subject?"));
+                    Say2(b, b0, a, "duo3.change.b", T(b0, "I've wanted to go there... || I've wanted to go... || I'd love to try it... || It looks so nice...", "We should ALL go! || Let's all go! || Group trip! || Everyone!", "...I heard it's good. || ...I hear it's good. || ...Worth a try. || ...Supposedly good.", "Is that an invitation~? || An invitation~? || Asking me out~? || Is that a date offer?"));
                     qa = qb = Q.Neutral;
                     break;
             }
@@ -1028,8 +1028,8 @@ namespace Joojkk.CampusLife
             if (t == null) return;
             var b = new SceneBuilder(t.A, true);
             b.Me(Lines.Pick("I should get going. See you two later.", "Sorry, I have to run. Later!", "I'll leave you two to it."));
-            Say2(b, t.A, t.B, "duo3.bye.a", T(t.A, "Ah, okay... see you.", "Aww, already? Bye!", "Later.", "Running away? Bye~"));
-            Say2(b, t.B, t.A, "duo3.bye.b", T(t.B, "Bye bye...", "See ya!", "...Bye.", "Don't be a stranger~"));
+            Say2(b, t.A, t.B, "duo3.bye.a", T(t.A, "Ah, okay... see you. || Okay... see you. || Alright, bye then. || See you later...", "Aww, already? Bye! || Already? Bye! || Aww! Bye! || Leaving? See ya!", "Later. || Later. || Bye. || Until next time.", "Running away? Bye~ || Fleeing? Bye~ || Running off? Bye. || Escaping? Later~"));
+            Say2(b, t.B, t.A, "duo3.bye.b", T(t.B, "Bye bye... || Bye bye... || See you... || Take care...", "See ya! || See ya! || Bye bye! || Later!", "...Bye. || ...Bye. || ...Later. || ...Farewell.", "Don't be a stranger~ || Don't be a stranger~ || Come back soon~ || Miss me~"));
             t.Ending = "leave";
             Hide();
             if (!Scenes.PlayInTalk(b, c => TrioEnd("leave"), false)) TrioEnd("leave");

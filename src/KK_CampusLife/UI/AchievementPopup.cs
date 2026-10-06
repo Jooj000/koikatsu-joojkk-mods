@@ -25,6 +25,7 @@ namespace Joojkk.CampusLife
 
         public static void Show(string title, string sub, int done, int total)
         {
+            if (Cfg.AchievementPopups != null && !Cfg.AchievementPopups.Value) return;
             Waiting.Enqueue(new Card { Title = title, Sub = sub ?? "", Count = done + "/" + total });
             if (Waiting.Count > 4) Waiting.Dequeue();
         }

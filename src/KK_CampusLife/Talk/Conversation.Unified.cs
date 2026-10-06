@@ -464,7 +464,7 @@ namespace Joojkk.CampusLife
         // ---------------- Romance ----------------
 
         /// <summary>Romance can land: she knows you, likes you a little (or is in a flirty mood) and is not angry.</summary>
-        private static bool RomanceOpen(SaveData.Heroine h)
+        internal static bool RomanceOpen(SaveData.Heroine h)
         {
             return h.relation >= 0 && !h.isAnger && (h.isGirlfriend || h.favor >= 25 || MoodOf(h) == CampusLife.Mood.Flirty);
         }
@@ -813,7 +813,7 @@ namespace Joojkk.CampusLife
             Beat(h, Lvl.Friend, "intro", b =>
             {
                 b.Me(Lines.Pick("Hi. I don't think we've really talked yet. I'm " + EventUtilsPlayerName() + ".", "Hey, I'm " + EventUtilsPlayerName() + ". I see you around a lot."));
-                b.Her_(T(h, "Oh... h-hello. I'm " + name + ".", "Hi hi! I'm " + name + "! Nice to meet you!", "..." + name + ". Hello.", "Oh? Finally saying hi? I'm " + name + "."));
+                b.Her_(T(h, "Oh... h-hello. I'm " + name + ". || Um... hello. My name's " + name + ". || H-hi... I'm " + name + ". Nice to meet you. || Oh... hello. I'm " + name + ".", "Hi hi! I'm " + name + "! Nice to meet you! || Hey! " + name + ", that's me! || Yo! I'm " + name + "! Let's be friends! || Hello hello! " + name + " here!", "..." + name + ". Hello." + " || " + name + ". || ...I'm " + name + ". || Hello. " + name + ".", "Oh? Finally saying hi? I'm " + name + ". || Took you long enough. " + name + ". || Finally. I'm " + name + ". || Oh, hello. " + name + ". Remember it."));
             }, new List<Resp>
             {
                 Rp("Say it's nice to finally meet her", "in_nice", Q.Good, Tn("...Nice to meet you too.", "Same here! Let's be friends!", "...Likewise.", "Smooth. I'll allow it.")),
@@ -952,8 +952,8 @@ namespace Joojkk.CampusLife
             {
                 b.Me("What do you think about " + t.Line + "?");
                 if (gossip != null) { b.Her_(ConvoLines.GossipLine(tone, gossip.Kind, GossipWho(gossip), gossip.What)); Social.Mentioned(h, gossip); }
-                else b.Her_(T(h, "About " + t.Line + "? I'm a little nervous, honestly... but excited too.", t.Line.Substring(0, 1).ToUpperInvariant() + t.Line.Substring(1) + "? It's gonna be HUGE!",
-                    t.Line.Substring(0, 1).ToUpperInvariant() + t.Line.Substring(1) + ". It's all anyone talks about.", "Oh, " + t.Line + "? I have opinions. Many opinions."));
+                else b.Her_(T(h, "About " + t.Line + "? I'm a little nervous, honestly... but excited too." + " || " + t.Line + "? I'm nervous... but a little excited. || Oh, " + t.Line + "... I'm looking forward to it, kind of." + " || " + t.Line + "... I hope it goes well.", t.Line.Substring(0, 1).ToUpperInvariant() + t.Line.Substring(1) + "? It's gonna be HUGE!" + " || " + t.Line + "?! Can't wait! || Ooh, " + t.Line + "! It's gonna be epic!" + " || " + t.Line + "! So hyped!",
+                    t.Line.Substring(0, 1).ToUpperInvariant() + t.Line.Substring(1) + ". It's all anyone talks about." + " || " + t.Line + ". Everyone's talking about it." + " || " + t.Line + ". I'm aware." + " || " + t.Line + ". We'll see.", "Oh, " + t.Line + "? I have opinions. Many opinions." + " || " + t.Line + "? I have thoughts." + " || " + t.Line + ", huh? Spicy topic." + " || " + t.Line + "? Let me tell you what I think."));
             }, new List<Resp>
             {
                 Rp("Ask what she's planning for " + t.Label, "sc_plan", Q.Good, Tn("I-I haven't decided yet... Maybe you could help?", "Oh, I've got PLANS! You'll see!", "...I have a few ideas.", "That's a secret. For now.")),
@@ -1006,10 +1006,10 @@ namespace Joojkk.CampusLife
                 b.Face(h, Feel.Serious).Her_(self
                     ? ConvoLines.Incident(GirlInfo.ToneOf(h), g.Kind, GirlInfo.FirstName(h), true, false, g.What)
                     : Social.Saw(h, g)
-                    ? T(h, "I saw it, you know. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". With my own eyes.", "Don't even try! I SAW it! " + char.ToUpperInvariant(what[0]) + what.Substring(1) + "!",
-                        "I was there. I saw " + what + ". So?", "Funny thing. I happened to see " + what + ". Front row.")
-                    : T(h, "I heard about " + what + "... from people talking. Is it true?", "Okay, so I heard about " + what + "! Is that true?!",
-                        "People are talking about " + what + ". I'd rather hear it from you.", "So. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". The whole class knows. Your version?"));
+                    ? T(h, "I saw it, you know. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". With my own eyes. || I saw " + what + ". I really did. || With my own eyes... " + what + ". || I was there. I saw " + what + ".", "Don't even try! I SAW it! " + char.ToUpperInvariant(what[0]) + what.Substring(1) + "! || I SAW " + what + "! Don't lie!" + " || " + what + "! I was right there! || Caught you! " + what + "!",
+                        "I was there. I saw " + what + ". So? || I witnessed " + what + ". Explain." + " || " + what + ". I saw. || I was present for " + what + ".", "Funny thing. I happened to see " + what + ". Front row." + " || " + what + "? I had a great view. || I saw " + what + ". Front row seat. || Guess who saw " + what + "?")
+                    : T(h, "I heard about " + what + "... from people talking. Is it true? || People are saying " + what + "... is it true? || I heard about " + what + "... please tell me. || Someone told me " + what + "...", "Okay, so I heard about " + what + "! Is that true?! || I heard " + what + "! True?! || Everyone's saying " + what + "! || Spill! " + what + "?!",
+                        "People are talking about " + what + ". I'd rather hear it from you." + " || " + what + ". I've heard. Your side? || There's talk of " + what + ". Explain. || I'd rather hear " + what + " from you.", "So. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". The whole class knows. Your version?" + " || " + what + "? The whole school knows. || So, " + what + ". Care to explain?" + " || " + what + ". Your version, please."));
             }, new List<Resp>
             {
                 Rp("Tell her you understand why " + what + " hurt", "ca_feel", self ? Q.Good : Q.Neutral, Tn("...Thank you for saying that.", "...Okay. That helps. A little.", "...At least you get it.", "...Hm. Fine. That's a start.")),
@@ -1056,14 +1056,14 @@ namespace Joojkk.CampusLife
             {
                 b.Narr(many ? GirlInfo.FirstName(h) + " has clearly been keeping count." : GirlInfo.FirstName(h) + " folds her arms before you say anything.");
                 b.Face(h, Feel.Serious).Her_(saw
-                    ? (many ? T(h, "...It's not one thing anymore. I saw some of it myself, and I heard the rest.", "No, no, it's not just ONE thing! I saw it! And people keep telling me more!",
-                                 "One thing I could ignore. This is a pattern. I saw part of it with my own eyes.", "Let's see... what I saw, what I heard, what I heard again. You're busy.")
-                            : T(h, "...There's more than one thing. And I saw at least one of them.", "It's not just one thing! And I SAW one of them!",
-                                 "Two things. One I saw myself. Explain.", "Two things, and I had a front-row seat for one. Talk."))
-                    : (many ? T(h, "...People keep telling me things about you. One after another. Are they all true?", "Everyone keeps telling me stuff about you! Is ANY of it made up?!",
-                                 "I keep hearing about you. Again and again. I'd rather hear it from you.", "You're the favorite topic around here. Over and over. Your version?")
-                            : T(h, "...I heard two things about you. I'd like to know if they're true.", "Two things! I heard TWO things! Are they true?!",
-                                 "Two stories about you reached me. Your version.", "Two rumors, one you. Explain.")));
+                    ? (many ? T(h, "...It's not one thing anymore. I saw some of it myself, and I heard the rest. || ...It's more than one thing now. I saw some of it. || ...So many things... I saw some myself. || ...It keeps piling up. I saw part of it.", "No, no, it's not just ONE thing! I saw it! And people keep telling me more! || It's not just one thing! I saw it AND heard it! || So many things! I saw some! || It keeps happening! I saw!",
+                                 "One thing I could ignore. This is a pattern. I saw part of it with my own eyes. || It's a pattern. I saw part of it. || Multiple incidents. One witnessed. || Not isolated. I saw some.", "Let's see... what I saw, what I heard, what I heard again. You're busy. || Saw some, heard more. You've been busy. || What I saw, plus what I heard. Wow. || You've been very busy, haven't you?")
+                            : T(h, "...There's more than one thing. And I saw at least one of them. || ...More than one thing. I saw one. || ...Two things. I saw one myself. || ...It's not just one. I saw it.", "It's not just one thing! And I SAW one of them! || Two things! I SAW one! || More than one! I saw it! || Not just one! Saw it!",
+                                 "Two things. One I saw myself. Explain. || Two. One witnessed. Explain. || Two things. One firsthand. || Two. I saw one.", "Two things, and I had a front-row seat for one. Talk. || Two things. Front row for one. || Two. One I watched. Talk. || Two, and I saw one. Explain."))
+                    : (many ? T(h, "...People keep telling me things about you. One after another. Are they all true? || ...People keep telling me things about you. || ...I keep hearing about you... are they true? || ...So many stories about you...", "Everyone keeps telling me stuff about you! Is ANY of it made up?! || Everyone keeps telling me stuff! Is any of it fake?! || Stories everywhere! True?! || I keep hearing things! Explain!",
+                                 "I keep hearing about you. Again and again. I'd rather hear it from you. || Repeated reports. Your version. || I keep hearing. I'd rather hear you. || Again and again. Explain.", "You're the favorite topic around here. Over and over. Your version? || You're everyone's favorite topic. || Over and over, your name. Explain. || The gossip loves you.")
+                            : T(h, "...I heard two things about you. I'd like to know if they're true. || ...Two things about you. Are they true? || ...I heard two things... || ...Two stories reached me...", "Two things! I heard TWO things! Are they true?! || Two things! True?! || I heard TWO things! || Two! Explain!",
+                                 "Two stories about you reached me. Your version. || Two stories. Your version. || Two reports. Explain. || Two things. Clarify.", "Two rumors, one you. Explain. || Two rumors, one you. || Two stories. Talk. || Two things. Explain yourself.")));
             }, new List<Resp>
             {
                 Rp("Tell her you understand why all of it hurt", "ca_feel", Q.Neutral, Tn("...Understanding isn't the same as stopping.", "...Okay. But it's a LOT.", "...Understanding is cheap.", "...Nice words. Lots of things, though.")),
@@ -1101,8 +1101,8 @@ namespace Joojkk.CampusLife
             {
                 b.Narr(GirlInfo.FirstName(h) + " looks at you for a long moment.");
                 b.Face(h, Feel.Sad).Her_(start
-                    ? T(h, "...You want to talk? After everything?", "Oh, NOW you want to talk?", "...Say what you came to say.", "...Go on. I'm listening. Barely.")
-                    : T(h, "...You're still trying. I noticed.", "...You keep coming back, huh.", "...You haven't given up.", "...Persistent. I'll give you that."));
+                    ? T(h, "...You want to talk? After everything? || ...You want to talk now? || ...After everything...? || ...Now you want to talk?", "Oh, NOW you want to talk? || NOW you want to talk?! || Oh, now?! || Seriously, now?!", "...Say what you came to say. || ...Speak. || ...Go ahead. || ...Say it.", "...Go on. I'm listening. Barely. || ...Go on. I'm barely listening. || ...Talk. Quickly. || ...I'm listening. Sort of.")
+                    : T(h, "...You're still trying. I noticed. || ...You're still trying. || ...I see you haven't given up. || ...You keep coming...", "...You keep coming back, huh. || ...You keep coming back. || ...Still here, huh. || ...You don't quit.", "...You haven't given up. || ...Persistent. || ...You keep trying. || ...Not giving up.", "...Persistent. I'll give you that. || ...Persistent. Fine. || ...Stubborn. I'll admit it. || ...You're relentless."));
             }, start ? new List<Resp>
             {
                 Rp("Take responsibility, no excuses", "rd_own", Q.Good, Tn("...Thank you for not making excuses.", "...Okay. That... that matters.", "...Good. No excuses.", "...Fine. That's the right start."), () => Pairs.Redeem(h, "talk")),
@@ -1161,7 +1161,7 @@ namespace Joojkk.CampusLife
             Beat(h, Lvl.Friend, "mem:" + m.Id, b =>
             {
                 b.Me(Lines.Pick("I was thinking about " + when + "...", "Hey, about " + when + "..."));
-                b.Her_(T(h, "When " + m.Text + "? Hehe... I remember.", "Oh yeah! When " + m.Text + "!", "...When " + m.Text + ". I remember.", "When " + m.Text + "? You remember that? Cute."));
+                b.Her_(T(h, "When " + m.Text + "? Hehe... I remember." + " || " + m.Text + "? I remember. || Hehe... " + m.Text + ". Yes. || Oh, when " + m.Text + ". I remember.", "Oh yeah! When " + m.Text + "! || Yeah! " + m.Text + "!" + " || " + m.Text + "! I remember! || Oh! " + m.Text + "!", "...When " + m.Text + ". I remember. || ..." + m.Text + ". Yes. || ...I remember " + m.Text + ". || ..." + m.Text + ". Mm.", "When " + m.Text + "? You remember that? Cute." + " || " + m.Text + "? Sweet. || You remember " + m.Text + "? Cute." + " || " + m.Text + "? Sentimental."));
                 CampusLife.Memories.Mentioned(m);
             }, new List<Resp>
             {
@@ -1204,7 +1204,7 @@ namespace Joojkk.CampusLife
                 rs.Add(Rp("Make a light joke about " + thing, "md_joke", Q.Good, Tn("Hehe... you're silly.", "Ahaha! Stop it!", "...Hm. Almost funny.", "Heh. Okay, that one was good.")));
             Beat(h, Lvl.Friend, "mood:" + mood, b =>
             {
-                b.Me(T(h, "You looked " + seems + " earlier. Want to talk about it?", "You look " + seems + "! What's up?", "You seem " + seems + ". Something wrong?", "So, why so " + seems + "?"));
+                b.Me(T(h, "You looked " + seems + " earlier. Want to talk about it? || You seemed " + seems + "... want to talk? || Are you okay? You looked " + seems + ". || You look " + seems + "... what happened?", "You look " + seems + "! What's up? || You're " + seems + "! What's up?! || Why so " + seems + "?! || Hey! You look " + seems + "!", "You seem " + seems + ". Something wrong?" + " || " + seems + ". Why? || You appear " + seems + ". || Something's off. You seem " + seems + ".", "So, why so " + seems + "? || Why so " + seems + ", hm?" + " || " + seems + "? Tell me. || What made you " + seems + "?"));
                 b.Her_(Lines.MoodLine(GirlInfo.ToneOf(h), mood, Lines.Closeness(h)));
             }, rs, r => { gs.MoodKnownDay = S.Day; });
         }
@@ -1214,7 +1214,7 @@ namespace Joojkk.CampusLife
             Beat(h, Lvl.Friend, "event:" + name, b =>
             {
                 b.Me("The " + name + " is " + when.ToLowerInvariant() + ". Ready?");
-                b.Her_(T(h, "The " + name + "...? I'm a little nervous.", "The " + name + "! I can't wait!", "...The " + name + ". I'm prepared. Mostly.", "Ready? I was born ready. ...Mostly."));
+                b.Her_(T(h, "The " + name + "...? I'm a little nervous. || The " + name + "... I'm nervous. || The " + name + "? I'm a little scared. || Oh, the " + name + "...", "The " + name + "! I can't wait! || The " + name + "! Yes! || Can't wait for the " + name + "! || The " + name + "! Hype!", "...The " + name + ". I'm prepared. Mostly. || The " + name + ". Prepared. Mostly. || ...The " + name + ". Ready. || The " + name + ". We'll see.", "Ready? I was born ready. ...Mostly. || The " + name + "? Born ready. Mostly. || Ready? Always. Almost. || The " + name + "? Easy."));
             }, new List<Resp>
             {
                 Rp("Tell her she'll do great at the " + name, "ev_feel", Q.Good),
@@ -1229,7 +1229,7 @@ namespace Joojkk.CampusLife
             Beat(h, Lvl.Friend, "place:" + place, b =>
             {
                 b.Me("Have you noticed " + place + "?");
-                b.Her_(T(h, "Hm? Oh... yes. I like it, actually.", "Right?! I noticed too!", "...I noticed.", "Making small talk? Cute. ...Yes, I noticed."));
+                b.Her_(T(h, "Hm? Oh... yes. I like it, actually. || Oh... yes. I like it too. || Mm, yes. Nice, isn't it? || Ah, yes... I noticed.", "Right?! I noticed too! || Right?! I noticed! || Yes! Totally! || Me too!", "...I noticed. || ...Noticed. || ...Yes. || ...I saw.", "Making small talk? Cute. ...Yes, I noticed. || Small talk? Cute. Yes. || Making conversation? Yes, I noticed. || Cute attempt. Yes."));
             }, new List<Resp>
             {
                 Rp("Say it's nicer with her around", "pl_feel", h.relation >= 1 ? Q.Good : Q.Neutral, Tn("...Th-that's a nice thing to say.", "Aww! Smooth!", "...Hm.", "Flirting already?")),
@@ -1258,8 +1258,8 @@ namespace Joojkk.CampusLife
             var ok = RomanceOpen(h);
             var b = new SceneBuilder(h, true);
             b.Me("I really like " + trait[0].Replace("her ", "your ").Replace("she ", "you ") + ".");
-            b.Face(h, ok ? Feel.Shy : Feel.Normal).Her_(ok ? T(h, "Y-you noticed that? ...Thank you.", "You noticed?! That makes me so happy!", "...You pay attention. I like that.", "Oh? Someone's been watching me~")
-                                                        : T(h, "Um... thanks, I guess?", "Oh, uh, thanks!", "...Okay.", "...Where's this coming from?"));
+            b.Face(h, ok ? Feel.Shy : Feel.Normal).Her_(ok ? T(h, "Y-you noticed that? ...Thank you. || You noticed...? Thank you. || Oh... you saw that? Thanks. || Ah... thank you for noticing.", "You noticed?! That makes me so happy! || You noticed?! Yay! || You saw?! Happy! || No way! You noticed!", "...You pay attention. I like that. || ...Observant. Good. || ...You noticed. Good. || ...Attentive.", "Oh? Someone's been watching me~ || Watching me? || Someone's been looking~ || Noticed, did you?")
+                                                        : T(h, "Um... thanks, I guess? || Um... thanks? || Oh... thank you? || Ah... okay, thanks.", "Oh, uh, thanks! || Uh, thanks! || Oh! Thanks! || Huh, thanks!", "...Okay. || ...Okay. || ...Hm. || ...Alright.", "...Where's this coming from? || ...Why? || ...Random. || ...Okay?"));
             Plain(h, Lvl.Romance, ok ? Q.Good : Q.Bad, "compliment:" + trait[1], b, ok ? "♥ " + GirlInfo.FirstName(h) + " is happy you noticed." : null);
         }
 
@@ -1306,7 +1306,7 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(h, true);
             b.Me(RomanceLines.PlayerAskFeelings());
             b.Face(h, ok ? Feel.Shy : Feel.Surprised).Her_(ok ? RomanceLines.Feelings(GirlInfo.ToneOf(h), h)
-                : T(h, "Eh? We... don't really know each other that well yet...", "Whoa, that's a big question! Ask me again later, okay?", "...That's a strange thing to ask so soon.", "Already? Slow down, hotshot."));
+                : T(h, "Eh? We... don't really know each other that well yet... || We don't know each other well yet... || Um... that's a bit soon... || Eh? We just met...", "Whoa, that's a big question! Ask me again later, okay? || Big question! Later! || Whoa! Ask later! || That's a lot! Later!", "...That's a strange thing to ask so soon. || ...Strange to ask so soon. || ...Premature. || ...Too early.", "Already? Slow down, hotshot. || Slow down, hotshot. || Already? Easy. || Whoa, eager."));
             Plain(h, Lvl.Romance, ok ? Q.Good : Q.Bad, "meaning", b, null);
         }
 
@@ -1318,30 +1318,30 @@ namespace Joojkk.CampusLife
             {
                 case "date":
                     b.Me("Would you go out with me this weekend?");
-                    b.Face(h, Feel.Worried).Her_(T(h, "Ah... not this time, I'm sorry. Maybe another week?", "Aww, I can't this time! Ask me again, okay?", "...Not this week.", "This weekend? Hm. No. Try again later."));
+                    b.Face(h, Feel.Worried).Her_(T(h, "Ah... not this time, I'm sorry. Maybe another week? || Not this time, sorry. Another week? || I'm sorry, I can't. Maybe later? || Not this weekend... sorry.", "Aww, I can't this time! Ask me again, okay? || Can't this time! Ask again! || Aww, no! Next time! || Busy! Ask later!", "...Not this week. || ...Not this week. || ...No. Another time. || ...Not now.", "This weekend? Hm. No. Try again later. || This weekend? No. Later. || Hm, no. Try later. || Not this time."));
                     break;
                 case "confess":
                     b.Me("There's something I want to tell you...");
-                    b.Face(h, Feel.Surprised).Her_(T(h, "W-wait... I don't think I'm ready to hear it yet...", "Eh?! W-wait! Not yet! I'm not ready!", "...Not yet. Let's get to know each other first.", "Hold that thought. Not yet."));
+                    b.Face(h, Feel.Surprised).Her_(T(h, "W-wait... I don't think I'm ready to hear it yet... || Wait... I'm not ready to hear it... || Please... not yet... || Ah... not yet...", "Eh?! W-wait! Not yet! I'm not ready! || Wait! Not yet! || Hold on! Not ready! || Eh?! Wait!", "...Not yet. Let's get to know each other first. || ...Not yet. || ...First, know me. || ...Too soon.", "Hold that thought. Not yet. || Hold that thought. || Not yet. || Save it."));
                     break;
                 case "lunch":
                     b.Me("Want to have lunch together?");
-                    b.Face(h, Feel.Worried).Her_(T(h, "Sorry... I already promised someone today.", "Ahh, not today! Tomorrow, okay?", "...Not today.", "Lunch? Not today. Ask me tomorrow."));
+                    b.Face(h, Feel.Worried).Her_(T(h, "Sorry... I already promised someone today. || Sorry, I promised someone. || I already have plans today... sorry. || Not today... sorry.", "Ahh, not today! Tomorrow, okay? || Not today! Tomorrow! || Can't! Tomorrow, okay? || Nope! Tomorrow!", "...Not today. || ...Not today. || ...Busy. || ...Another day.", "Lunch? Not today. Ask me tomorrow. || Not today. Tomorrow. || Tomorrow, maybe. || Ask tomorrow."));
                     break;
                 case "home":
                     b.Me("Want to walk home together?");
-                    b.Face(h, Feel.Worried).Her_(T(h, "I'm sorry, I have somewhere to be after school...", "Can't today! Errands, ugh!", "...I'm going alone today.", "Not today. I've got plans."));
+                    b.Face(h, Feel.Worried).Her_(T(h, "I'm sorry, I have somewhere to be after school... || Sorry, I have somewhere to be. || I'm busy after school... sorry. || I can't today, sorry.", "Can't today! Errands, ugh! || Can't! Errands! || Busy today! || Nope! Stuff to do!", "...I'm going alone today. || ...Alone today. || ...Busy. || ...Not today.", "Not today. I've got plans. || Plans. Sorry. || Busy. || Not today."));
                     break;
                 case "study":
                 case "exercise":
                 case "club":
                 case "follow":
                     b.Me(what == "study" ? "Want to study together?" : what == "exercise" ? "Want to work out together?" : what == "follow" ? "Come with me for a bit?" : "Want to do club activities together?");
-                    b.Face(h, Feel.Worried).Her_(T(h, "Ah... not right now, sorry. Maybe later?", "Hmm, not now! Later, later!", "...Not now.", "Not now. Catch me another time."));
+                    b.Face(h, Feel.Worried).Her_(T(h, "Ah... not right now, sorry. Maybe later? || Not right now... later? || Sorry, not now. || Maybe later?", "Hmm, not now! Later, later! || Not now! Later! || Later! || Hmm, later!", "...Not now. || ...Not now. || ...Later. || ...No.", "Not now. Catch me another time. || Another time. || Later. || Not now."));
                     break;
                 default:
                     b.Me(Lines.Pick("Want to go somewhere... more private?", "How about we find somewhere quiet, just the two of us?"));
-                    b.Face(h, Feel.Shy).Her_(T(h, "Eh?! N-not here... not now...", "Whoa! Not now, okay?!", "...Not now.", "Not here, not now. Patience."));
+                    b.Face(h, Feel.Shy).Her_(T(h, "Eh?! N-not here... not now... || N-not here... || Not now... please. || Eh?! Not here...", "Whoa! Not now, okay?! || Not now! || Whoa! Later! || Not here!", "...Not now. || ...Not now. || ...Not here. || ...No.", "Not here, not now. Patience. || Patience. || Not here. || Wait."));
                     break;
             }
             Plain(h, Lvl.Romance, Q.Neutral, "notnow:" + what, b, null, null, false);
@@ -1379,7 +1379,7 @@ namespace Joojkk.CampusLife
             b.Narr("You're about to end things with " + name + ". This can't be taken back.");
             b.Choice("End it with " + name, "bu_end", "Stay together", "bu_stay");
             b.Branch("bu_end"); b.End();
-            b.Branch("bu_stay"); b.Face(h, Feel.Normal).Her_(T(h, "...Hm? Is something wrong?", "What? What's with that face?", "...You looked serious for a second.", "What's that look for?")); b.End();
+            b.Branch("bu_stay"); b.Face(h, Feel.Normal).Her_(T(h, "...Hm? Is something wrong? || ...Is something wrong? || ...Hm? What's the matter? || ...Are you okay?", "What? What's with that face? || What's with that face? || What?! || Why the face?!", "...You looked serious for a second. || ...Serious look. || ...You look serious. || ...What?", "What's that look for? || What's that look? || Why so serious? || Hm? That face?")); b.End();
             Hide();
             Scenes.PlayInTalk(b, c =>
             {
@@ -1442,9 +1442,9 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(h, true);
             b.Me(h.isGirlfriend ? "I can't stop thinking about you. All of you." : "Honestly? I've been wanting to get a lot closer to you.");
             b.Face(h, q == Q.Good ? Feel.Love : q == Q.Neutral ? Feel.Shy : Feel.Pout).Her_(q == Q.Good
-                ? T(h, "...M-me too. Don't make me say it twice.", "Ah... you can't just SAY that! ...But me too.", "...Then come closer.", "Finally. I was wondering when you'd say it.")
-                : q == Q.Neutral ? T(h, "Eh... th-that's... um...", "Whoa, okay! That's... a lot!", "...Bold.", "Oh? Bold today, aren't we?")
-                : T(h, "...That's too much, I'm sorry.", "Whoa, back up! Too fast!", "...No.", "Down, boy."));
+                ? T(h, "...M-me too. Don't make me say it twice. || ...Me too. Don't make me repeat it. || ...I feel the same. || ...Me too... so much.", "Ah... you can't just SAY that! ...But me too. || You can't just say that! ...Me too! || Ahh! ...Me too! || Hey! ...Same!", "...Then come closer. || ...Then come here. || ...Closer. || ...Same.", "Finally. I was wondering when you'd say it. || Finally. Took you long enough. || About time you said it. || Knew it. Me too.")
+                : q == Q.Neutral ? T(h, "Eh... th-that's... um... || Eh... that's... um... || Ah... um... || W-well...", "Whoa, okay! That's... a lot! || Whoa! That's a lot! || Wow, okay! || Eep!", "...Bold. || ...Bold. || ...Daring. || ...Hm.", "Oh? Bold today, aren't we? || Bold today, aren't we? || Oh? Brave. || My, my.")
+                : T(h, "...That's too much, I'm sorry. || ...That's too much, sorry. || ...I can't... sorry. || ...Too fast, sorry.", "Whoa, back up! Too fast! || Back up! Too fast! || Whoa! Slow down! || Too much!", "...No. || ...No. || ...Stop. || ...Not happening.", "Down, boy. || Down, boy. || Easy. || Nope."));
             Plain(h, Lvl.Spicy, q, "bold", b, q == Q.Good ? "♥ " + GirlInfo.FirstName(h) + " is clearly into it." : null);
         }
 
@@ -1466,13 +1466,13 @@ namespace Joojkk.CampusLife
             if (mem[2] != null)
             {
                 b.Me("I keep thinking about when " + mem[2] + "...");
-                b.Face(h, ok ? Feel.Shy : Feel.Normal).Her_(ok ? T(h, "...M-me too. Every time I see you.", "Shh! Not so loud! ...Me too.", "...I remember.", "Oh? Me too. Often.")
-                                                             : T(h, "...Let's not talk about that here.", "Not here!", "...Not now.", "...Later."));
+                b.Face(h, ok ? Feel.Shy : Feel.Normal).Her_(ok ? T(h, "...M-me too. Every time I see you. || ...Me too. Every time. || ...I think about it too. || ...Me too... often.", "Shh! Not so loud! ...Me too. || Shh! ...Me too! || Quiet! ...Same! || Not so loud! ...Me too!", "...I remember. || ...I remember. || ...Same. || ...Yes.", "Oh? Me too. Often. || Me too. Often. || Same. Frequently. || Oh, me too.")
+                                                             : T(h, "...Let's not talk about that here. || ...Not here, please. || ...Let's not, here. || ...Another place.", "Not here! || Not here! || Shh! || Later!", "...Not now. || ...Not now. || ...Later. || ...No.", "...Later. || ...Later. || ...Not here. || ...Patience."));
             }
             else
             {
                 b.Me(RomanceLines.PlayerMemories(h.hCount));
-                b.Face(h, ok ? Feel.Love : Feel.Normal).Her_(ok ? RomanceLines.Memories(tone, h.hCount) : T(h, "...Not here, please.", "Shh! Not here!", "...Not now.", "...Patience."));
+                b.Face(h, ok ? Feel.Love : Feel.Normal).Her_(ok ? RomanceLines.Memories(tone, h.hCount) : T(h, "...Not here, please. || ...Not here. || ...Please, not here. || ...Somewhere else.", "Shh! Not here! || Not here! || Shh! || Quiet!", "...Not now. || ...Not now. || ...No. || ...Later.", "...Patience. || ...Patience. || ...Later. || ...Wait."));
             }
             Plain(h, Lvl.Spicy, ok ? Q.Good : Q.Neutral, "private:" + mem[1], b, ok ? "♥ " + GirlInfo.FirstName(h) + " remembers it too." : null);
         }
@@ -1486,35 +1486,35 @@ namespace Joojkk.CampusLife
             switch (why)
             {
                 case "personality":
-                    return T(h, "...I want to. I really do. But I'm not... that kind of girl. Not yet. Please don't hate me.", "I-I want to! Honestly! But my brain is screaming and I can't! Give me time?!",
-                        "...Don't misread me. I want to. I just don't do this so easily.", "Mm. Believe me, I'm tempted. But I don't hand that out. Not yet.");
+                    return T(h, "...I want to. I really do. But I'm not... that kind of girl. Not yet. Please don't hate me. || ...I want to. Really. But not yet. Please understand. || ...My heart says yes, but I'm not ready. Don't hate me. || ...I do want to... just not so soon.", "I-I want to! Honestly! But my brain is screaming and I can't! Give me time?! || I want to! But my brain's screaming! Give me time! || Honestly, yes! But no! Ugh! Wait for me?! || I wanna! But I can't yet! Sorry!",
+                        "...Don't misread me. I want to. I just don't do this so easily. || ...I want to. I just don't move this fast. || ...Desire isn't the issue. Pace is. || ...Yes, I want to. Not yet.", "Mm. Believe me, I'm tempted. But I don't hand that out. Not yet. || Tempted? Very. But I don't give that away so fast. || Mm. Wanting isn't the same as saying yes. Not yet. || I'm tempted. You'll have to wait.");
                 case "mood":
-                    return T(h, "...If it were any other day... I'm just not okay today. Ask me again?", "Ugh, today's the worst! Any other day I'd say yes! ...Rain check?",
-                        "...Not today. I'm not in a good place. It's not you.", "Bad day. Really bad. ...Ask me tomorrow, and I'll probably say yes.");
+                    return T(h, "...If it were any other day... I'm just not okay today. Ask me again? || ...Any other day... today I'm just not okay. Ask again? || ...I'm sorry, today is bad. Another day? || ...Not today. I'm not feeling well.", "Ugh, today's the worst! Any other day I'd say yes! ...Rain check? || Today's awful! Any other day, yes! Rain check?! || Ugh, bad day! Ask tomorrow! || Not today! But soon!",
+                        "...Not today. I'm not in a good place. It's not you. || ...Not today. It's not you. || ...Bad day. Not your fault. || ...Today, no. Another day.", "Bad day. Really bad. ...Ask me tomorrow, and I'll probably say yes. || Awful day. Ask tomorrow. I'll probably say yes. || Bad timing. Tomorrow, maybe. || Not today. Tomorrow's likely.");
                 case "guilt":
-                    return T(h, "...After last time, I can't. Not until we talk about it. ...I still want to, though.", "I want to, but— we never talked about last time! We have to first!",
-                        "...Not until we settle what happened. Then we'll see.", "Last time is still hanging over us. Fix that first, and then... maybe.");
+                    return T(h, "...After last time, I can't. Not until we talk about it. ...I still want to, though. || ...Not until we talk about last time. I still want to, though. || ...We need to talk about before. Then... yes. || ...After last time, I can't yet. Let's talk first.", "I want to, but— we never talked about last time! We have to first! || We have to talk about last time first! || Last time! We never talked! Do that first! || Talk first! Then maybe!",
+                        "...Not until we settle what happened. Then we'll see. || ...Settle last time first. || ...Resolve the past. Then ask. || ...We talk. Then we'll see.", "Last time is still hanging over us. Fix that first, and then... maybe. || Fix last time first. Then maybe. || Last time's unresolved. Fix it. || Deal with last time. Then ask.");
                 case "girlfriend":
-                    return T(h, "...You have a girlfriend. I... I want to, but I can't do that to her.", "You're taken! I— ugh, why does that make it harder?! No! ...Not like this!",
-                        "...You're with someone. I won't be the other girl. ...Even if I want to.", "Tempting. But you belong to someone. I don't share well. Ask me when that changes.");
+                    return T(h, "...You have a girlfriend. I... I want to, but I can't do that to her. || ...You have a girlfriend. I can't do that to her. || ...You're with someone. I want to, but no. || ...She'd be hurt. I can't.", "You're taken! I— ugh, why does that make it harder?! No! ...Not like this! || You're taken! No! Not like this! || You have a girlfriend! Argh! No! || Taken! Off limits! Even if...!",
+                        "...You're with someone. I won't be the other girl. ...Even if I want to. || ...You're with someone. I won't be the other girl. || ...Not while you're taken. || ...You belong to someone. No.", "Tempting. But you belong to someone. I don't share well. Ask me when that changes. || You're taken. I don't share. Ask when you're free. || Spoken for. Come back single. || You belong to someone. Not my style.");
                 case "soon":
-                    return T(h, "...It's too soon. We barely... I want to know you more first. Is that okay?", "Too fast, too fast! I like you, but— slow down a little!",
-                        "...We've only just started. Give it time.", "Patience. I want to, but not this fast. Make me wait for it.");
+                    return T(h, "...It's too soon. We barely... I want to know you more first. Is that okay? || ...Too soon. I want to know you more. || ...We've barely started... please wait. || ...Let's get closer first. Okay?", "Too fast, too fast! I like you, but— slow down a little! || Too fast! Slow down! || Whoa! Too soon! || Slow down a bit!",
+                        "...We've only just started. Give it time. || ...Give it time. || ...Too early. || ...We just started.", "Patience. I want to, but not this fast. Make me wait for it. || Make me wait for it. || Patience. Not yet. || Too fast. Earn it.");
                 case "asked":
-                    return T(h, "...You already asked today. My answer hasn't changed... even if I want it to.", "You asked already! Stop making it so hard to say no!",
-                        "...Still no. Asking again won't change today.", "Again? Persistent. ...Still not today. Tomorrow, maybe.");
+                    return T(h, "...You already asked today. My answer hasn't changed... even if I want it to. || ...You asked already. Still no... even if I want to. || ...My answer's the same today. || ...Still no, today. Sorry.", "You asked already! Stop making it so hard to say no! || You asked already! Stop making it hard! || Again?! Still no! || Asked already! No!",
+                        "...Still no. Asking again won't change today. || ...Still no. || ...Same answer. || ...No. Today, no.", "Again? Persistent. ...Still not today. Tomorrow, maybe. || Persistent. Still no. Tomorrow, maybe. || Again? No. Tomorrow. || Still no. Try tomorrow.");
                 case "grudge":
-                    return T(h, "...I'm still hurt about what happened. I want to, but... not while it hurts.", "I'm still mad at you! ...Even if I kinda want to! Fix it first!",
-                        "...I haven't forgiven you yet. Ask me when I have.", "You still owe me an apology. Then we'll talk.");
+                    return T(h, "...I'm still hurt about what happened. I want to, but... not while it hurts. || ...It still hurts. Not while it hurts. || ...I'm still sad about what happened. || ...I need to heal first.", "I'm still mad at you! ...Even if I kinda want to! Fix it first! || Still mad! Fix it first! || I'm upset! Apologize first! || Mad at you! Fix it!",
+                        "...I haven't forgiven you yet. Ask me when I have. || ...Not forgiven yet. || ...Forgiveness first. || ...I'm still angry.", "You still owe me an apology. Then we'll talk. || Apology first. Then we talk. || You owe me. Pay first. || Say sorry first.");
                 case "neglected":
-                    return T(h, "...You've barely looked at me lately. I want to... but I want you to want me first.", "You've been ignoring me! And now this?! ...Spend time with me first!",
-                        "...You've been distant. Fix that, then ask.", "Hm. You remember me only now? Earn it again first.");
+                    return T(h, "...You've barely looked at me lately. I want to... but I want you to want me first. || ...You've been distant. I want you to want me first. || ...You barely see me lately... || ...Show me you care first.", "You've been ignoring me! And now this?! ...Spend time with me first! || You ignored me! Spend time with me first! || You've been gone! Hang out first! || Ignored! Fix that first!",
+                        "...You've been distant. Fix that, then ask. || ...You've been distant. Fix it. || ...Absent lately. Correct that. || ...Attention first.", "Hm. You remember me only now? Earn it again first. || Only now you remember me? Earn it. || Neglect me, then ask? Earn it back. || You forgot me. Make it up.");
                 case "name":
-                    return T(h, "...People already talk about you. I want to, but I'm scared of what they'd say.", "Everyone's already gossiping about you! If they found out— no, no!",
-                        "...With your reputation, I have to be careful. Not now.", "Your name's a little dirty around school. I like mine clean. ...For now.");
+                    return T(h, "...People already talk about you. I want to, but I'm scared of what they'd say. || ...People talk about you. I'm scared of what they'd say. || ...Your reputation scares me a little. || ...I'm afraid of the rumors.", "Everyone's already gossiping about you! If they found out— no, no! || Everyone gossips about you! If they found out-! || The rumors! No way! || People would talk! No!",
+                        "...With your reputation, I have to be careful. Not now. || ...Your reputation. I must be careful. || ...Too risky, given the talk. || ...Not with those rumors.", "Your name's a little dirty around school. I like mine clean. ...For now. || Your name's a bit dirty. I like mine clean. || Your reputation precedes you. Not yet. || Too much gossip about you.");
                 default:
-                    return T(h, "...It's not that I don't want to. Just... not like this. Not here. Not yet.", "Ahh, you're making my heart race! But not here! Not now! ...Ask me again sometime?",
-                        "...Not here. Not now. Don't take it the wrong way.", "Tempting. Really. ...But not here. Keep that look for later.");
+                    return T(h, "...It's not that I don't want to. Just... not like this. Not here. Not yet. || ...Not like this. Not here. Not yet. || ...It's not that I don't want to... || ...Just... not now.", "Ahh, you're making my heart race! But not here! Not now! ...Ask me again sometime? || Heart racing! But not here! Ask again! || Not here! Not now! Later?! || Ahh! Not now!",
+                        "...Not here. Not now. Don't take it the wrong way. || ...Not here. Not now. || ...Don't misunderstand. Not now. || ...Not the right moment.", "Tempting. Really. ...But not here. Keep that look for later. || Tempting. Not here. Later. || Keep that look for later. || Not here, darling.");
             }
         }
 
@@ -1537,8 +1537,8 @@ namespace Joojkk.CampusLife
                 case "yes": b.Face(h, Feel.Love).Her_(RomanceLines.SneakYes(tone)); break;
                 case "wary_yes":
                     b.Narr(GirlInfo.FirstName(h) + " looks away, then back at you, and doesn't say no.");
-                    b.Face(h, Feel.Shy).Her_(T(h, "...We shouldn't. ...But if it's you... just this once, okay?", "Ah— um— okay! Okay. I think. ...Don't make it weird after, okay?!",
-                        "...This is a bad idea. ...Lead the way.", "...You know this changes things. ...Fine. Come on, before I think about it."));
+                    b.Face(h, Feel.Shy).Her_(T(h, "...We shouldn't. ...But if it's you... just this once, okay? || ...We shouldn't. But for you... just once. || ...It's you... so... okay. || ...Just this once. Because it's you.", "Ah— um— okay! Okay. I think. ...Don't make it weird after, okay?! || Um! Okay! I think! Don't make it weird! || Okay! Yes! Ahh! || Alright! Let's go before I panic!",
+                        "...This is a bad idea. ...Lead the way. || ...Bad idea. Lead on. || ...Unwise. Go. || ...Fine. Lead.", "...You know this changes things. ...Fine. Come on, before I think about it. || This changes things. Come on. || Before I think twice. Come. || Fine. Hurry, before I change my mind."));
                     break;
                 case "wary_no":
                     b.Narr(GirlInfo.FirstName(h) + " hesitates a moment too long before she answers.");
@@ -1570,11 +1570,11 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var can = GameAllows(3);
             var b = new SceneBuilder(h, true);
-            b.Face(h, Feel.Shy).Her_(T(h, "...About what I owe you. I haven't forgotten.", "So... that thing I owe you. Yeah. I remember!", "...My debt. I keep my word.", "Ah, my little debt. Here to collect?"));
+            b.Face(h, Feel.Shy).Her_(T(h, "...About what I owe you. I haven't forgotten. || ...What I owe you. I remember. || ...I haven't forgotten my promise. || ...About what I owe...", "So... that thing I owe you. Yeah. I remember! || That thing I owe you! I remember! || My debt! Yep! || I owe you! I know!", "...My debt. I keep my word. || ...My debt. I keep my word. || ...I owe you. I remember. || ...Debt acknowledged.", "Ah, my little debt. Here to collect? || My debt? Collecting? || Here to collect? || Ah, the debt. Ready?"));
             if (can) b.Choice("Collect it now", "db_now", "Save it for later", "db_later");
             else b.Choice("Save it for somewhere more private", "db_later");
-            b.Branch("db_now"); b.Face(h, Feel.Love).Her_(T(h, "...Okay. Now, then.", "Now?! ...Okay!", "...Fine. Now.", "Now? Bold. I like it.")); Bounds(b, h); b.End();
-            b.Branch("db_later"); b.Face(h, Feel.Smile).Her_(T(h, "...Then I'll be waiting.", "Later! It's a promise!", "...I'll remember.", "I'll hold you to it.")); b.End();
+            b.Branch("db_now"); b.Face(h, Feel.Love).Her_(T(h, "...Okay. Now, then. || ...Okay. Now. || ...Alright. Right now. || ...Now, then.", "Now?! ...Okay! || Now?! Okay! || Right now?! Yes! || Now! Alright!", "...Fine. Now. || ...Now. || ...Fine. || ...Very well.", "Now? Bold. I like it. || Now? Bold. || Right now? I like it. || Eager. Good.")); Bounds(b, h); b.End();
+            b.Branch("db_later"); b.Face(h, Feel.Smile).Her_(T(h, "...Then I'll be waiting. || ...I'll wait. || ...I'll be waiting for you. || ...Later, then.", "Later! It's a promise! || Later! Promise! || Later! Deal! || Okay! Later!", "...I'll remember. || ...Remembered. || ...Noted. || ...Later.", "I'll hold you to it. || I'll hold you to it. || Don't forget. || Later, then.")); b.End();
             Hide();
             Scenes.PlayInTalk(b, c =>
             {
@@ -1590,7 +1590,7 @@ namespace Joojkk.CampusLife
             Beat(h, Lvl.Spicy, "caught:" + gs.Caught, b =>
             {
                 b.Narr(GirlInfo.FirstName(h) + " goes red the moment you bring it up.");
-                b.Face(h, Feel.Shy).Her_(T(h, "...You saw me. Back then. I know you did.", "You SAW! When I was... ugh! I know you saw!", "...About when you walked in on me.", "So. You walked in on me. Let's talk about that."));
+                b.Face(h, Feel.Shy).Her_(T(h, "...You saw me. Back then. I know you did. || ...You saw me. I know. || ...Back then... you saw. || ...I know you saw me.", "You SAW! When I was... ugh! I know you saw! || You SAW! I know! || You walked in! Ugh! || You saw me! I know it!", "...About when you walked in on me. || ...When you walked in. || ...About that incident. || ...You saw.", "So. You walked in on me. Let's talk about that. || You walked in on me. Let's discuss. || So. You saw. Let's talk. || You got a show. Now talk."));
             }, new List<Resp>
             {
                 Rp("Admit you saw everything", "cg_admit", Q.Good, Tn("...At least you're honest.", "Everything?! ...Okay. Okay.", "...Honest. Fine.", "Everything, huh? ...Good.")),

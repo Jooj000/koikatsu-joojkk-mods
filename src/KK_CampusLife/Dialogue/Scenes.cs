@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using ADV;
@@ -84,6 +84,7 @@ namespace Joojkk.CampusLife
         public SceneBuilder Narr(string text)
         {
             if (string.IsNullOrEmpty(text)) return this;
+            text = Gender.Fix(text, null, Her);
             Line(text);
             List.Add(Program.Transfer.Text(EventUtils.Narrator, text));
             Voices[text] = new VoiceTag { IsNarrator = true };
@@ -93,6 +94,7 @@ namespace Joojkk.CampusLife
         public SceneBuilder Me(string text)
         {
             if (string.IsNullOrEmpty(text)) return this;
+            text = Gender.Fix(text, null, Her);
             Line(text);
             List.Add(Program.Transfer.Text(PlayerSpeaker, text));
             Voices[text] = new VoiceTag { IsPlayer = true };
@@ -105,6 +107,7 @@ namespace Joojkk.CampusLife
             if (string.IsNullOrEmpty(text)) return this;
             // In her own voice (fillers, exclaims, a stutter, her ~): every line of a talk, old or procedural.
             if (_inTalk && Her != null) text = Voice.Say(Her, Variants.Swap(Her, text));
+            text = Gender.Fix(text, Her, Her);
             if (_inTalk) { Line(text); List.Add(Program.Transfer.Text(HerSpeaker, text)); }
             else return Say(Her, text);
             Voices[text] = new VoiceTag { GirlKey = GirlInfo.Key(Her) };
@@ -117,7 +120,7 @@ namespace Joojkk.CampusLife
             if (string.IsNullOrEmpty(text)) return this;
             if (girl == null) return Narr(text);
             if (_inTalk && girl == Her) return Her_(text);
-            text = Variants.Swap(girl, text);
+            text = Gender.Fix(Variants.Swap(girl, text), girl, Her);
             var name = GirlInfo.FirstName(girl);
             if (_registeredNames.Add(name))
                 List.Add(Program.Transfer.Create(true, Command.FontColor, "Color2", name));
@@ -132,7 +135,7 @@ namespace Joojkk.CampusLife
         {
             var args = new List<string> { "true" };
             for (var i = 0; i + 1 < labelsAndTags.Length; i += 2)
-                args.Add(labelsAndTags[i].Replace(",", " ") + "," + labelsAndTags[i + 1]);
+                args.Add(Gender.Fix(labelsAndTags[i], null, Her).Replace(",", " ") + "," + labelsAndTags[i + 1]);
             // Not "multi", as the game's own choices (Communication.Info): a multi choice let the ADV run on into the first
             // branch's tag and variables before the click, so every first option counted as taken.
             List.Add(Program.Transfer.Create(false, Command.Choice, args.ToArray()));

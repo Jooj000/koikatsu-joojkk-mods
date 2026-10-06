@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -805,8 +805,8 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(h, true);
             b.Me(mine ?? Opener(t));
             if (delta > 0) b.Her_(t == Topic.Love ? ConvoLines.LoveTalk(tone, Lines.Closeness(h)) : Good(t, tone));
-            else if (delta == 0) b.Her_(Lines.T(tone, "Oh, um... that's nice, I guess.", "Huh, yeah, sure!", "I see.", "Mm-hm. Fascinating. Kind of."));
-            else b.Her_(Lines.T(tone, "Um... could we talk about something else?", "Ehh, boring! Next topic!", "Not interested.", "Wow. You really know how to kill a conversation."));
+            else if (delta == 0) b.Her_(Lines.T(tone, "Oh, um... that's nice, I guess. || Oh... that's interesting, I think. || Um, okay... I see. || Ah... mm, that's nice.", "Huh, yeah, sure! || Ha, sure, okay! || Oh yeah? Neat! || Huh! Cool, I guess!", "I see. || Mm. || Is that so. || ...Right.", "Mm-hm. Fascinating. Kind of. || Riveting. Truly. || Uh-huh. Go on. Or don't. || Wow. Tell me more. Actually, don't."));
+            else b.Her_(Lines.T(tone, "Um... could we talk about something else? || Um... maybe another topic? || Sorry... could we talk about something different? || I'm not sure what to say to that... something else?", "Ehh, boring! Next topic! || Snooze! New topic, please! || Boring! Next! || Nope, nope, next topic!", "Not interested. || I don't care about that. || Let's skip that. || Uninteresting.", "Wow. You really know how to kill a conversation. || Do you practice being this dull? || And the conversation dies. Impressive. || Wow. My eyelids are getting heavy."));
             Play(b, delta, delta >= 2 ? "♪♪ She loved that topic." : delta == 1 ? "♪ She liked that topic." : null, null, t == Topic.Love && delta > 0 ? 2 : 0);
         }
 
@@ -1061,7 +1061,7 @@ namespace Joojkk.CampusLife
             var close = Lines.Closeness(h);
             var b = new SceneBuilder(h, true);
             b.Me(RomanceLines.PlayerSweet(close));
-            if (s.Did.Contains("flirt")) { b.Her_(Lines.T(tone, "Y-you already said something like that...", "Okay, okay, I get it! Hehe!", "Once is enough.", "Laying it on thick, aren't you?")); Play(b, 0, null); return; }
+            if (s.Did.Contains("flirt")) { b.Her_(Lines.T(tone, "Y-you already said something like that... || Y-you said that already... || Ah... again? You're making me blush... || Um... I heard you the first time...", "Okay, okay, I get it! Hehe! || Okay, okay! I heard you! Ehehe! || Again?! Alright, I get it! || Haha, you're repeating yourself!", "Once is enough. || You said that. || I heard you the first time. || Once was sufficient.", "Laying it on thick, aren't you? || Running out of material? || Again? Someone's desperate. || Twice in a row? Try harder.")); Play(b, 0, null); return; }
             s.Did.Add("flirt");
             var ok = Random.value < FlirtChance(s);
             b.Her_(ok ? ConvoLines.FlirtGood(tone, close) : ConvoLines.FlirtTooSoon(tone));
@@ -1527,7 +1527,7 @@ namespace Joojkk.CampusLife
                 txt.fontSizeMax = txt.fontSize;
                 // the letters' face in the button's color, with a black outline (user, 2026-10-26)
                 ConvArt.ColorFace(txt, onClick == null ? GameUi.Dim : OptionColor());
-                txt.text = label;
+                txt.text = Gender.Fix(label, null, TalkingTo);
             }
             Created.Add(go);
         }
@@ -1571,29 +1571,29 @@ namespace Joojkk.CampusLife
             switch (t)
             {
                 case Topic.Classes:
-                    return Lines.T(tone, "Classes are going well! I finally understood today's math lesson.", "Classes? Ugh. But okay, history was actually kinda cool today!",
-                        "Fine. I like it when a teacher actually explains things properly.", "I aced the quiz. Go on, be impressed.");
+                    return Lines.T(tone, "Classes are going well! I finally understood today's math lesson. || Classes are fine! I even understood math today. || I've been keeping up in class. The teacher was really kind today. || School's going well, I think! I got a good grade on a quiz.", "Classes? Ugh. But okay, history was actually kinda cool today! || Ugh, classes! But PE was awesome today! || Class is class, but history had a cool story today! || Honestly? Science was fun! We blew something up! Kinda!",
+                        "Fine. I like it when a teacher actually explains things properly. || Classes are tolerable. Today's lecture was well structured. || Good. I appreciate a teacher who prepares. || Productive. I understood everything.", "I aced the quiz. Go on, be impressed. || Top of the class, as usual. You may applaud. || I answered every question today. Jealous? || Classes? Easy. Next question.");
                 case Topic.Club:
-                    return Lines.T(tone, "The club is so much fun lately. Everyone has been really kind to me.", "The club's on fire! We're practicing like crazy!",
-                        "We've been productive. I like that.", "My club? Of course it's going great. I'm in it.");
+                    return Lines.T(tone, "The club is so much fun lately. Everyone has been really kind to me. || The club makes me happy lately. Everyone's so nice. || I really like the club these days... I feel welcome. || Club activities are fun! I'm getting better, little by little.", "The club's on fire! We're practicing like crazy! || Club's amazing! We're totally fired up! || We've been practicing nonstop! It's great! || The club's the best! You should come see!",
+                        "We've been productive. I like that. || The club has been efficient. I approve. || We're making progress. Good. || The club is in good shape.", "My club? Of course it's going great. I'm in it. || My club's thriving. Naturally, I'm the reason. || Of course it's going well. I'm there. || Club's great. Thanks to me, mostly.");
                 case Topic.Food:
-                    return Lines.T(tone, "Oh, the cafeteria curry! I could eat it every day.", "Food? My favorite subject! The yakisoba bread is the best!",
-                        "The set lunch is decent. I have opinions about the miso soup.", "Food talk? Now you're speaking my language.");
+                    return Lines.T(tone, "Oh, the cafeteria curry! I could eat it every day. || The curry at the cafeteria is so good... I'd eat it every day. || I love the little desserts at the store... don't tell anyone. || Mm, the bento I made today turned out nice.", "Food? My favorite subject! The yakisoba bread is the best! || Yakisoba bread! The best food ever invented! || Food! The fried chicken today was SO good! || Don't get me started on melon bread! I love it!",
+                        "The set lunch is decent. I have opinions about the miso soup. || The set lunch is acceptable. The soup could improve. || I have strong views on the cafeteria's rice. || The menu is predictable. The curry is fine.", "Food talk? Now you're speaking my language. || Food? You've found my weakness. || Talk about food and I'm all yours. Almost. || Mmm, food. Now this is a real topic.");
                 case Topic.Sports:
-                    return Lines.T(tone, "I'm not very athletic, but I love cheering at games with friends.", "Sports! Yes! I ran my best time this morning!",
-                        "I swim on weekends. It clears my head.", "Sports? Bet I could beat you at anything. Want to find out?");
+                    return Lines.T(tone, "I'm not very athletic, but I love cheering at games with friends. || I'm not good at sports, but cheering is fun! || I like watching games... I get so nervous for our team. || I went jogging once. Once. Hehe...", "Sports! Yes! I ran my best time this morning! || Sports! I beat my record this morning! || I could run all day! Wanna race?! || I'm all about sports! Basketball, volleyball, everything!",
+                        "I swim on weekends. It clears my head. || I swim. It helps me think. || Running in the morning clears my mind. || Some exercise every day. Discipline.", "Sports? Bet I could beat you at anything. Want to find out? || Sports? I'd win. Want to bet? || Challenge me sometime. I don't lose. || I'm good at everything. Sports included.");
                 case Topic.Hobbies:
-                    return Lines.T(tone, "I've been reading a really good novel... I can't put it down.", "I got into a new game and I'm SO hooked!",
-                        "I've been sketching. I'm not showing you. Yet.", "My hobbies? Collecting interesting people. You might qualify.");
+                    return Lines.T(tone, "I've been reading a really good novel... I can't put it down. || I'm reading a novel... I stayed up too late with it. || I've been knitting a little. It's relaxing. || There's a book I love right now... I could lend it to you.", "I got into a new game and I'm SO hooked! || I'm obsessed with a new game! Can't stop! || I started a new anime! It's SO good! || New hobby: skateboarding! I fell a lot!",
+                        "I've been sketching. I'm not showing you. Yet. || Sketching. You can't see them. Not yet. || I've been reading philosophy. Slowly. || Calligraphy. It requires patience.", "My hobbies? Collecting interesting people. You might qualify. || My hobby? People-watching. You're interesting. || I collect secrets. Want to give me one? || Hobbies? Teasing you might count.");
                 case Topic.Rumors:
-                    return Lines.T(tone, "Um, I heard the library is getting new books... does that count as a rumor?", "Oh oh oh! Did you hear about the class rep and the vending machine?!",
-                        "...I heard something. Fine, I'll tell you. Quietly.", "Rumors are my specialty. Lean in.");
+                    return Lines.T(tone, "Um, I heard the library is getting new books... does that count as a rumor? || Um, I heard the library got new books... that's a rumor, right? || Someone said there's a stray cat behind the gym... is it true? || I heard the festival might be bigger this year...", "Oh oh oh! Did you hear about the class rep and the vending machine?! || Okay, did you hear what happened at the vending machine?! || Oh! Someone confessed on the roof yesterday! || Big news! The teacher wore mismatched socks!",
+                        "...I heard something. Fine, I'll tell you. Quietly. || ...I heard something. Keep it to yourself. || ...There's a rumor. I'll tell you once. || ...Quietly. I heard something interesting.", "Rumors are my specialty. Lean in. || Rumors? Oh, I have the good ones. Come closer. || I know everything. Want a sample? || Gossip is my art. Lean in.");
                 case Topic.Weekend:
-                    return Lines.T(tone, "I might bake something this weekend. Maybe cookies?", "Karaoke! I'm going to sing until my voice gives out!",
-                        "A quiet weekend. Books, tea, maybe a walk.", "My weekend plans are secret. But they're good ones.");
+                    return Lines.T(tone, "I might bake something this weekend. Maybe cookies? || I might try baking cookies this weekend... || Maybe I'll visit the flower shop this weekend. || I'd like to rest and read this weekend.", "Karaoke! I'm going to sing until my voice gives out! || Karaoke all weekend! Want to come?! || I'm going to the arcade! All day! || Beach trip! Or the mall! Or both!",
+                        "A quiet weekend. Books, tea, maybe a walk. || A quiet weekend. Tea and books. || Nothing planned. That's the plan. || A walk, some reading. Calm.", "My weekend plans are secret. But they're good ones. || Weekend plans? Secret. Fun ones, though. || Wouldn't you like to know~ || Maybe I'll tell you. If you're good.");
                 default:
-                    return Lines.T(tone, "About me? Well... I've always wanted to see the sea in winter.", "Me? I want to try everything at least once! Skydiving, maybe!",
-                        "...Not many people ask. I want to study abroad someday.", "About me? Okay, one secret: I'm terrible at mornings.");
+                    return Lines.T(tone, "About me? Well... I've always wanted to see the sea in winter. || About me? I'd love to see the sea in winter someday. || Um... I've always wanted a little garden. || Me? I'd like to have a quiet café someday.", "Me? I want to try everything at least once! Skydiving, maybe! || Me? I wanna try everything! Bungee jumping! || I want to travel everywhere! The whole world! || My dream? Something HUGE! Not sure what yet!",
+                        "...Not many people ask. I want to study abroad someday. || ...Few ask. I'd like to study abroad. || ...I want to be good at one thing. Truly good. || ...I plan to live somewhere quiet. Eventually.", "About me? Okay, one secret: I'm terrible at mornings. || One secret: I hate mornings. Truly. || A secret? I'm ticklish. Don't you dare. || Fine, a secret: I'm a terrible cook.");
             }
         }
     }

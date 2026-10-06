@@ -287,23 +287,23 @@ namespace Joojkk.CampusLife
                 var rude = plan.Inc.Kind == Social.Kinds.Rude;
                 intro.Narr(an + " marches over, " + bn + " trailing behind her.");
                 sb.Say(a, rude
-                    ? Lines.T(ta, "Um... " + bn + " told me what you said to her. That wasn't very nice...", "Hey! What's the big idea, being mean to " + bn + "?!", "I heard how you treated " + bn + ". Explain.", "So you were rude to my friend. Want to try that again?")
-                    : Lines.T(ta, "You promised " + bn + " something... and didn't keep it. She was really waiting...", "Hey! You stood " + bn + " up! Not cool!", "You gave " + bn + " your word. Then nothing.", "Breaking promises to my friend? Bold move."));
-                sb.Say(bb, Lines.T(tb, "I-it's fine, really... you don't have to...", "Ehh, I'm not THAT mad... okay, a little.", "...I can speak for myself. But yes.", "Hmph. Let him squirm a little."));
+                    ? Lines.T(ta, "Um... " + bn + " told me what you said to her. That wasn't very nice..." + " || " + bn + " told me what you said... that wasn't kind. || Um... " + bn + " was hurt by what you said. || What you said to " + bn + "... it made her sad.", "Hey! What's the big idea, being mean to " + bn + "?! || Hey! Why were you mean to " + bn + "?! || Not cool, being rude to " + bn + "! || What's your problem with " + bn + "?!", "I heard how you treated " + bn + ". Explain. || You mistreated " + bn + ". Explain." + " || " + bn + " told me. Account for it. || Your behavior toward " + bn + ". Explain.", "So you were rude to my friend. Want to try that again? || Rude to my friend? Try again. || You hurt " + bn + ". Bold. || So you were nasty to " + bn + ". Brave.")
+                    : Lines.T(ta, "You promised " + bn + " something... and didn't keep it. She was really waiting... || You promised " + bn + "... and didn't come. She waited." + " || " + bn + " waited for you... you forgot. || You broke your promise to " + bn + "...", "Hey! You stood " + bn + " up! Not cool! || You stood " + bn + " up! Uncool! || Hey! " + bn + " waited forever! || You ditched " + bn + "! Seriously?!", "You gave " + bn + " your word. Then nothing. || You promised " + bn + ". Nothing followed. || A broken promise. To " + bn + "." + " || " + bn + " trusted your word.", "Breaking promises to my friend? Bold move. || Breaking promises to my friend? Brave. || Ghosting " + bn + "? Bold. || You flaked on " + bn + ". Explain."));
+                sb.Say(bb, Lines.T(tb, "I-it's fine, really... you don't have to... || It's okay, really... || Y-you don't have to... || It's fine... honestly.", "Ehh, I'm not THAT mad... okay, a little. || I'm not THAT mad! Kinda! || Okay, maybe a little mad! || Eh, I'm only a bit upset!", "...I can speak for myself. But yes. || ...I can speak. But yes. || ...True. || ...Yes. That.", "Hmph. Let him squirm a little. || Let him squirm. || Make him sweat a bit. || Hmph. Let him suffer."));
                 var opts = new List<string> { "Apologize to " + bn + " sincerely.", "sorry" };
                 if (G.Int >= 40) { opts.Add("Explain what really happened. [INT]"); opts.Add("explain"); }
                 opts.Add("That's none of your business."); opts.Add("brush");
                 sb.Choice(opts.ToArray());
                 sb.Branch("sorry");
-                sb.Say(bb, Lines.T(tb, "...Okay. Thank you for saying that.", "Apology accepted! Just this once!", "...Accepted.", "Fine. You're forgiven. Barely."));
-                sb.Say(a, Lines.T(ta, "See? That wasn't so hard.", "Good! Now we're all friends again!", "Good.", "Hm. Respectable."));
+                sb.Say(bb, Lines.T(tb, "...Okay. Thank you for saying that. || Okay. Thank you. || Thank you for saying that. || ...I forgive you.", "Apology accepted! Just this once! || Accepted! This time! || Okay! Forgiven! || Fine! Apology accepted!", "...Accepted. || ...Accepted. || ...Fine. || ...Very well.", "Fine. You're forgiven. Barely. || Forgiven. Barely. || Fine. Just barely. || You're forgiven. Don't push it."));
+                sb.Say(a, Lines.T(ta, "See? That wasn't so hard. || See? Easy. || That wasn't so hard, was it? || Good... thank you.", "Good! Now we're all friends again! || Yay! Friends again! || Great! All good now! || Perfect! Group hug!", "Good. || Good. || Settled. || Fine.", "Hm. Respectable. || Respectable. || Not bad. || Hm. Decent."));
                 sb.End();
                 sb.Branch("explain");
                 sb.Narr("You tell them how it really went. " + bn + "'s face softens.");
-                sb.Say(bb, Lines.T(tb, "Oh... I didn't know that...", "Ohh, so THAT's what happened!", "...That changes things.", "Hm. Alright, that's a decent excuse."));
+                sb.Say(bb, Lines.T(tb, "Oh... I didn't know that... || I didn't know... || Oh... I see now. || Ah... that's different.", "Ohh, so THAT's what happened! || Ohh, THAT'S what happened! || Oh! Got it! || Ahh, makes sense!", "...That changes things. || ...That changes things. || ...Different context. || ...I see.", "Hm. Alright, that's a decent excuse. || Decent excuse. || Alright, fair. || Hm. Acceptable reason."));
                 sb.End();
                 sb.Branch("brush");
-                sb.Say(a, Lines.T(ta, "...I see. Come on, " + bn + ".", "Wow. Unbelievable. Let's go, " + bn + "!", "Noted. Let's go.", "Charming. Come on, " + bn + "."));
+                sb.Say(a, Lines.T(ta, "...I see. Come on, " + bn + ". || ...I see. Let's go, " + bn + ". || ...Okay. Come on, " + bn + ". || ...Alright. " + bn + ", let's go.", "Wow. Unbelievable. Let's go, " + bn + "! || Unbelievable! Come on, " + bn + "! || Wow! Let's go, " + bn + "! || Ugh! " + bn + ", we're leaving!", "Noted. Let's go. || Noted. Go. || Understood. " + bn + ", come. || Fine. Let's go.", "Charming. Come on, " + bn + ". || Charming. " + bn + ", let's go. || Lovely. Come on, " + bn + ". || Wow. " + bn + ", we're done here."));
                 sb.End();
                 var inc = plan.Inc;
                 result = c =>
@@ -319,13 +319,13 @@ namespace Joojkk.CampusLife
                 // A: the friend who heard about it. B: the girl you helped.
                 var defended = plan.Inc.Kind == Social.Kinds.Defended;
                 intro.Narr(an + " comes over with " + bn + ", nudging her forward.");
-                sb.Say(a, Lines.T(ta, "Go on, " + bn + "... you wanted to say something, right?", "C'mon, " + bn + ", tell him! You've been talking about it all day!", "She has something to tell you.", "Go on. Don't be shy now~"));
+                sb.Say(a, Lines.T(ta, "Go on, " + bn + "... you wanted to say something, right? || Go ahead, " + bn + "..." + " || " + bn + ", you wanted to tell him, right? || Come on, " + bn + "... say it.", "C'mon, " + bn + ", tell him! You've been talking about it all day! || C'mon, " + bn + "! Tell him! || Go, " + bn + "! You talked about it all day!" + " || " + bn + "! Spit it out!", "She has something to tell you. || She has something to say." + " || " + bn + ". Speak. || Go on, " + bn + ".", "Go on. Don't be shy now~ || Don't be shy now~ || Go on, " + bn + "~ || Say it, " + bn + ". He's waiting."));
                 sb.Say(bb, defended
-                    ? Lines.T(tb, "Thank you... for taking my side. It meant a lot.", "Thanks for having my back! You're the best!", "...Thank you for standing up for me.", "So. You took my side. ...Thanks, I guess.")
-                    : Lines.T(tb, "Thank you for helping me the other day...", "Thanks for the help! Seriously!", "Thank you for your help. I mean it.", "You helped me out. I owe you one... maybe."));
+                    ? Lines.T(tb, "Thank you... for taking my side. It meant a lot. || Thank you for taking my side. || You defended me... thank you. || It meant so much... thank you.", "Thanks for having my back! You're the best! || You had my back! Thanks! || Thanks for sticking up for me! || You're the best! Thanks!", "...Thank you for standing up for me. || ...Thank you for that. || ...You stood up for me. Thanks. || ...I appreciate it.", "So. You took my side. ...Thanks, I guess. || You took my side. Thanks, I guess. || So, my side. Thanks. || Heh. Thanks for that.")
+                    : Lines.T(tb, "Thank you for helping me the other day... || Thank you for helping me... || Thanks for the other day... || I'm grateful for your help.", "Thanks for the help! Seriously! || Thanks for the help! || Seriously, thanks! || You helped! Thanks!", "Thank you for your help. I mean it. || Thank you. I mean it. || Your help mattered. Thanks. || Thanks. Sincerely.", "You helped me out. I owe you one... maybe. || I owe you. Maybe. || You helped. I'll consider repaying. || Thanks. Don't let it go to your head."));
                 sb.Choice("It was nothing.", "modest", "Anytime. I've got your back.", "anytime");
-                sb.Branch("modest"); sb.Say(bb, Lines.T(tb, "It wasn't nothing to me...", "Don't be so humble!", "...Still. Thanks.", "Modest, too? Hm.")); sb.End();
-                sb.Branch("anytime"); sb.Say(a, Lines.T(ta, "Ehehe... he's reliable, isn't he?", "See?! Told you he's great!", "Reliable. Good.", "Ooh, smooth.")); sb.End();
+                sb.Branch("modest"); sb.Say(bb, Lines.T(tb, "It wasn't nothing to me... || It wasn't nothing to me... || It meant a lot to me... || It mattered to me...", "Don't be so humble! || Don't be humble! || Stop being modest! || Take the credit!", "...Still. Thanks. || ...Still. Thanks. || ...Regardless. Thanks. || ...Thank you anyway.", "Modest, too? Hm. || Modest? Hm. || Humble, too? || Oh, modest. Cute.")); sb.End();
+                sb.Branch("anytime"); sb.Say(a, Lines.T(ta, "Ehehe... he's reliable, isn't he? || He's reliable, isn't he? || Hehe... he's dependable. || He's so kind, right?", "See?! Told you he's great! || Told you he's great! || See?! Awesome guy! || He's cool, right?!", "Reliable. Good. || Reliable. Good. || Dependable. || Competent.", "Ooh, smooth. || Smooth. || Ooh, charming. || Slick.")); sb.End();
                 var inc = plan.Inc;
                 result = c =>
                 {
@@ -337,10 +337,10 @@ namespace Joojkk.CampusLife
             else if (plan.Why == Motive.Caught)
             {
                 intro.Narr(an + " storms over, pulling " + bn + " along by the wrist.");
-                sb.Say(bb, Lines.T(tb, "I-I'm sorry, I didn't...", "Whoa, whoa, okay, I can explain!", "...This is awkward.", "Oh, this is going to be fun."));
+                sb.Say(bb, Lines.T(tb, "I-I'm sorry, I didn't... || I-I'm sorry, I didn't mean... || Ah! Sorry... || Oh no... sorry...", "Whoa, whoa, okay, I can explain! || Whoa! I can explain! || Wait! Explanation! || Uh! Hold on!", "...This is awkward. || ...Awkward. || ...Uncomfortable. || ...Hm.", "Oh, this is going to be fun. || This'll be fun. || Oh, entertaining. || Ooh, drama."));
                 var act = Share.Write(a, bb, true, sb);
                 Share.Hush(a, bb);
-                if (act == null) sb.Say(a, Lines.T(ta, "...Never mind. Sorry.", "...Forget it! Sorry!", "...Never mind.", "...Eh, forget it."));
+                if (act == null) sb.Say(a, Lines.T(ta, "...Never mind. Sorry. || ...Never mind. Sorry. || ...Forget it. || ...It's nothing.", "...Forget it! Sorry! || Forget it! Sorry! || Never mind! || Nothing! Sorry!", "...Never mind. || ...Never mind. || ...Disregard. || ...Nothing.", "...Eh, forget it. || ...Forget it. || ...Eh, whatever. || ...Never mind."));
                 result = c => { if (act != null) act(c); };
             }
             else if (plan.Why == Motive.Rivals)
@@ -351,16 +351,16 @@ namespace Joojkk.CampusLife
                 var gn = GirlInfo.FirstName(gf);
                 var on = GirlInfo.FirstName(other);
                 intro.Narr(gn + " and " + on + " walk up to you at the same time. The air gets a little tense.");
-                sb.Say(other, Lines.T(GirlInfo.ToneOf(other), "Um, I was hoping to talk to you a little...", "Hey! I wanted to hang out with you!", "I wanted a word with you.", "Mind if I borrow him for a bit?"));
-                sb.Say(gf, Lines.T(GirlInfo.ToneOf(gf), "Ah... he's with me today, sorry...", "Hey, hey! He's MY boyfriend, you know!", "He's busy. With me.", "Borrow? He's not a library book. He's mine."));
+                sb.Say(other, Lines.T(GirlInfo.ToneOf(other), "Um, I was hoping to talk to you a little... || I hoped to talk to you a bit... || Um, could we talk? || I wanted to see you...", "Hey! I wanted to hang out with you! || I wanted to hang out! || Hey! Let's chill! || Hang with me!", "I wanted a word with you. || A word. || I wanted to talk. || A moment.", "Mind if I borrow him for a bit? || Can I borrow him? || Mind if I steal him? || He's coming with me for a bit."));
+                sb.Say(gf, Lines.T(GirlInfo.ToneOf(gf), "Ah... he's with me today, sorry... || He's with me today... sorry. || Sorry... he's mine today. || Ah... we're together today.", "Hey, hey! He's MY boyfriend, you know! || He's MY boyfriend! || Hands off! Mine! || Hey! Taken!", "He's busy. With me. || He's busy. With me. || Occupied. By me. || He's mine today.", "Borrow? He's not a library book. He's mine. || He's not a library book. Mine. || Borrow? No. Mine. || Not available. Mine."));
                 sb.Choice("Take your girlfriend's hand.", "gf", "We can all talk together.", "both");
                 sb.Branch("gf");
-                sb.Say(gf, Lines.T(GirlInfo.ToneOf(gf), "...Thank you.", "Hehe! See?", "Good answer.", "Heh. Knew it."));
-                sb.Say(other, Lines.T(GirlInfo.ToneOf(other), "I see... sorry for interrupting.", "Aw, okay! Another time!", "...Understood.", "Hmph. Fine. For now."));
+                sb.Say(gf, Lines.T(GirlInfo.ToneOf(gf), "...Thank you. || ...Thank you. || ...Thanks. || ...I'm glad.", "Hehe! See? || See?! || Hehe! || Told you!", "Good answer. || Good answer. || Correct. || Good.", "Heh. Knew it. || Knew it. || Obviously. || Heh."));
+                sb.Say(other, Lines.T(GirlInfo.ToneOf(other), "I see... sorry for interrupting. || Sorry for interrupting. || I see... sorry. || Okay... another time.", "Aw, okay! Another time! || Another time! || Okay! Later! || Aw! Next time!", "...Understood. || ...Understood. || ...Fine. || ...Noted.", "Hmph. Fine. For now. || Fine. For now. || Hmph. Later. || For now."));
                 sb.End();
                 sb.Branch("both");
-                sb.Say(gf, Lines.T(GirlInfo.ToneOf(gf), "...Okay. If you say so.", "Fiiine. Together.", "...Fine.", "Generous of you. Hmph."));
-                sb.Say(other, Lines.T(GirlInfo.ToneOf(other), "Thank you! I'm happy.", "Yay!", "Thanks.", "How kind~"));
+                sb.Say(gf, Lines.T(GirlInfo.ToneOf(gf), "...Okay. If you say so. || If you say so... || Okay... || Alright.", "Fiiine. Together. || Fine! Together! || Okay! All of us! || Fiiine!", "...Fine. || ...Fine. || ...Acceptable. || ...Alright.", "Generous of you. Hmph. || Generous. Hmph. || How kind. Hmph. || Fine. Hmph."));
+                sb.Say(other, Lines.T(GirlInfo.ToneOf(other), "Thank you! I'm happy. || Thank you! I'm happy. || Yay... thanks. || Thank you so much.", "Yay! || Yay! || Woo! || Yes!", "Thanks. || Thanks. || Good. || Appreciated.", "How kind~ || How kind~ || Sweet~ || Generous~"));
                 sb.End();
                 result = c =>
                 {
@@ -373,18 +373,18 @@ namespace Joojkk.CampusLife
                 // A quarrel: you take a side, or calm them both down.
                 var topic = Lines.Pick("the last melon bread", "whose turn it was to clean the classroom", "who gets the window seat", "the club room schedule", "a borrowed manga that came back bent");
                 intro.Narr(an + " and " + bn + " are arguing about " + topic + ". They turn to you.");
-                sb.Say(a, Lines.T(ta, "You saw it too, right? It was my turn...", "Tell her I'm right!", "You're impartial. Settle this.", "Go on, tell her she's wrong."));
-                sb.Say(bb, Lines.T(tb, "Please, say something...", "No way, I'm right! Right?!", "This is ridiculous. Decide.", "Oh, this'll be good. Choose wisely."));
+                sb.Say(a, Lines.T(ta, "You saw it too, right? It was my turn... || It was my turn, right? || You saw it too...? || Tell her it was my turn...", "Tell her I'm right! || Tell her I'm right! || I'm right, right?! || Back me up!", "You're impartial. Settle this. || You're neutral. Decide. || Settle it. || Judge.", "Go on, tell her she's wrong. || Tell her she's wrong. || Go on, choose me. || Say I'm right."));
+                sb.Say(bb, Lines.T(tb, "Please, say something... || Please, say something... || Help us... || Um... what do you think?", "No way, I'm right! Right?! || I'm right! Right?! || Tell her! || Me! Obviously!", "This is ridiculous. Decide. || Ridiculous. Decide. || Pick. || Resolve this.", "Oh, this'll be good. Choose wisely. || Choose wisely. || Careful now. || This'll be fun."));
                 var opts = new List<string> { "Side with " + an + ".", "a", "Side with " + bn + ".", "b" };
                 if (G.Int >= 40) { opts.Add("Find a compromise. [INT]"); opts.Add("calm"); }
                 sb.Choice(opts.ToArray());
-                sb.Branch("a"); sb.Say(a, Lines.T(ta, "Thank you...!", "Ha! Told you!", "Obviously.", "See?"));
-                sb.Say(bb, Lines.T(tb, "...I see how it is.", "Traitor!", "...Noted.", "Wow. Okay.")); sb.End();
-                sb.Branch("b"); sb.Say(bb, Lines.T(tb, "Thank you...!", "Ha! Told you!", "Obviously.", "See?"));
-                sb.Say(a, Lines.T(ta, "...I see how it is.", "Traitor!", "...Noted.", "Wow. Okay.")); sb.End();
+                sb.Branch("a"); sb.Say(a, Lines.T(ta, "Thank you...! || Thank you! || Yay... thanks! || I knew it!", "Ha! Told you! || Told you! || Ha! || Yes!", "Obviously. || Obviously. || Naturally. || Of course.", "See? || See? || Told you. || Duh."));
+                sb.Say(bb, Lines.T(tb, "...I see how it is. || ...I see. || ...Oh. || ...Okay.", "Traitor! || Traitor! || Hey! || Unfair!", "...Noted. || ...Noted. || ...Hm. || ...Remembered.", "Wow. Okay. || Wow. || Okay then. || Noted.")); sb.End();
+                sb.Branch("b"); sb.Say(bb, Lines.T(tb, "Thank you...! || Thank you! || Yay... thanks! || I knew it!", "Ha! Told you! || Told you! || Ha! || Yes!", "Obviously. || Obviously. || Naturally. || Of course.", "See? || See? || Told you. || Duh."));
+                sb.Say(a, Lines.T(ta, "...I see how it is. || ...I see. || ...Oh. || ...Okay.", "Traitor! || Traitor! || Hey! || Unfair!", "...Noted. || ...Noted. || ...Hm. || ...Remembered.", "Wow. Okay. || Wow. || Okay then. || Noted.")); sb.End();
                 sb.Branch("calm");
                 sb.Narr("You suggest a fair way to split it. They grumble, then agree.");
-                sb.Say(a, Lines.T(ta, "That's... actually fair.", "Huh. Okay, fine!", "Acceptable.", "Hmph. Smart.")); sb.End();
+                sb.Say(a, Lines.T(ta, "That's... actually fair. || That's fair. || That works... || Okay, that's fair.", "Huh. Okay, fine! || Fine! Okay! || Huh! Alright! || Okay, fair!", "Acceptable. || Acceptable. || Reasonable. || Fair.", "Hmph. Smart. || Smart. || Clever. || Hmph. Good.")); sb.End();
                 result = c =>
                 {
                     if (c == "a") { Social.Add(Social.Kinds.Defended, a, new[] { bb }); Social.AddTrust(bb, -4); G.AddFavor(a, 4, 0); }
@@ -399,8 +399,8 @@ namespace Joojkk.CampusLife
                 if (!inTalk || !Cfg.TrioTalk.Value)
                 {
                     sb.Choice("Spend a little time with them.", "join", "Say you're busy right now.", "busy");
-                    sb.Branch("join"); sb.Say(a, Lines.T(ta, "Yay... thank you.", "Woohoo!", "Good.", "Knew you'd say yes~")); sb.End();
-                    sb.Branch("busy"); sb.Say(bb, Lines.T(tb, "Ah... okay, next time.", "Boo! Next time then!", "...Understood.", "Your loss~")); sb.End();
+                    sb.Branch("join"); sb.Say(a, Lines.T(ta, "Yay... thank you. || Yay... thank you. || Thank you! || I'm so happy.", "Woohoo! || Woohoo! || Yay! || Yes!", "Good. || Good. || Fine. || Excellent.", "Knew you'd say yes~ || Knew you'd agree~ || Of course~ || Obviously~")); sb.End();
+                    sb.Branch("busy"); sb.Say(bb, Lines.T(tb, "Ah... okay, next time. || Okay... next time. || Another time, then. || Alright...", "Boo! Next time then! || Boo! Next time! || Aww! Later! || Next time!", "...Understood. || ...Understood. || ...Fine. || ...Later.", "Your loss~ || Your loss~ || Pity~ || Too bad~")); sb.End();
                 }
                 result = c => { if (c != "busy") { G.AddFavor(a, 2, 0); G.AddFavor(bb, 2, 0); Arcs.AddBond(GirlInfo.Key(a), GirlInfo.Key(bb), 1); } };
             }
@@ -416,11 +416,11 @@ namespace Joojkk.CampusLife
                     var hn = GirlInfo.FirstName(host);
                     var nn = GirlInfo.FirstName(newcomer);
                     intro.Narr(hn + " comes over, pulling " + nn + " by the hand.");
-                    sb.Say(host, Lines.T(GirlInfo.ToneOf(host), "This is my friend " + nn + "! I wanted you two to meet.", "Meet " + nn + ", my best friend! Be nice!", "This is " + nn + ". You should know each other.", "Here, I brought you a friend. Her name's " + nn + "."));
-                    sb.Say(newcomer, Lines.T(GirlInfo.ToneOf(newcomer), "N-nice to meet you...", "Heya! I've heard about you!", "Hello.", "So you're the famous club guy. Hm."));
+                    sb.Say(host, Lines.T(GirlInfo.ToneOf(host), "This is my friend " + nn + "! I wanted you two to meet. || This is " + nn + ", my friend! || I'd like you to meet " + nn + ". || Meet " + nn + "... she's my friend.", "Meet " + nn + ", my best friend! Be nice! || Meet " + nn + "! Bestie! || This is " + nn + "! Be nice! || Say hi to " + nn + "!", "This is " + nn + ". You should know each other." + " || " + nn + ". You should meet. || This is " + nn + "." + " || " + nn + ". Introductions.", "Here, I brought you a friend. Her name's " + nn + ". || Brought you a friend. " + nn + ". || Here's " + nn + ". Be charming." + " || " + nn + ". Behave yourself."));
+                    sb.Say(newcomer, Lines.T(GirlInfo.ToneOf(newcomer), "N-nice to meet you... || N-nice to meet you... || H-hello... || Um... hi...", "Heya! I've heard about you! || Heya! Heard about you! || Hi! Finally! || Hey hey!", "Hello. || Hello. || Hi. || ...Hello.", "So you're the famous club guy. Hm. || The famous club guy. Hm. || So you're him. || Oh, you're the one."));
                     sb.Choice("Greet her warmly.", "warm", "Give a quick nod.", "nod");
-                    sb.Branch("warm"); sb.Say(newcomer, Lines.T(GirlInfo.ToneOf(newcomer), "You're nice... I'm glad.", "Ooh, I like him!", "...Pleasure.", "Polite. I approve.")); sb.End();
-                    sb.Branch("nod"); sb.Say(host, Lines.T(GirlInfo.ToneOf(host), "Um... he's nicer than he looks, I promise!", "Hey, be friendlier!", "...Charming as always.", "Wow, so cool and mysterious.")); sb.End();
+                    sb.Branch("warm"); sb.Say(newcomer, Lines.T(GirlInfo.ToneOf(newcomer), "You're nice... I'm glad. || You're nice. I'm glad. || You seem kind... || I like you.", "Ooh, I like him! || I like him! || He's fun! || Cool guy!", "...Pleasure. || ...Pleasure. || ...Nice to meet you. || ...Fine.", "Polite. I approve. || Polite. Approved. || Good manners. || Not bad.")); sb.End();
+                    sb.Branch("nod"); sb.Say(host, Lines.T(GirlInfo.ToneOf(host), "Um... he's nicer than he looks, I promise! || He's nicer than he looks! || He's really kind, I promise! || He's sweet, really!", "Hey, be friendlier! || Be friendlier! || Smile more! || Hey, be nice!", "...Charming as always. || ...Charming. || ...As usual. || ...Typical.", "Wow, so cool and mysterious. || So mysterious. || Wow, so cool. || Brooding, huh?")); sb.End();
                     result = c =>
                     {
                         if (c == "warm") { G.AddFavor(newcomer, 5, 0); Social.AddTrust(newcomer, 5); Social.AddTrust(host, 2); Social.RecordTalk(newcomer); }
@@ -433,12 +433,12 @@ namespace Joojkk.CampusLife
                     var ln = GirlInfo.FirstName(left);
                     var jn = GirlInfo.FirstName(jealousOf);
                     intro.Narr(an + " and " + bn + " walk up to you together.");
-                    sb.Say(left, Lines.T(GirlInfo.ToneOf(left), "You and " + jn + " are always together lately... can I join sometimes?", "Hey! You keep stealing " + jn + " from me! Or me from... wait. Whatever!", "You two have been inseparable. I've noticed.", "So you've been monopolizing " + jn + ". Or is it the other way around?"));
-                    sb.Say(jealousOf, Lines.T(GirlInfo.ToneOf(jealousOf), "Ah, sorry! I didn't mean to leave you out...", "Haha, don't be jealous!", "...It's not like that.", "Jealous? How cute."));
+                    sb.Say(left, Lines.T(GirlInfo.ToneOf(left), "You and " + jn + " are always together lately... can I join sometimes? || You and " + jn + " are always together... can I join?" + " || " + jn + " and you are so close... may I come along? || I'd like to join you and " + jn + " sometimes...", "Hey! You keep stealing " + jn + " from me! Or me from... wait. Whatever! || You keep stealing " + jn + "! || Hey! " + jn + "'s always with you! || No fair! " + jn + " time!", "You two have been inseparable. I've noticed. || You and " + jn + ". Inseparable. || I've noticed you two." + " || " + jn + " and you. Always.", "So you've been monopolizing " + jn + ". Or is it the other way around? || Monopolizing " + jn + "? || Hogging " + jn + ", are we? || You and " + jn + "? Suspicious."));
+                    sb.Say(jealousOf, Lines.T(GirlInfo.ToneOf(jealousOf), "Ah, sorry! I didn't mean to leave you out... || Sorry! I didn't mean to leave you out... || Ah, sorry... || I'm sorry, we forgot you...", "Haha, don't be jealous! || Don't be jealous! || Haha! Jealous?! || Aww, jealous!", "...It's not like that. || ...Not like that. || ...It's nothing. || ...Misunderstanding.", "Jealous? How cute. || Jealous? Cute. || Aww, envious? || Jealousy suits you."));
                     sb.Choice("Let's all hang out together.", "all", "Invite " + ln + " to lunch soon.", "lunch", "Shrug it off.", "shrug");
-                    sb.Branch("all"); sb.Say(left, Lines.T(GirlInfo.ToneOf(left), "Really? Okay!", "Yes! Group hangout!", "...Fine. Good.", "Deal.")); sb.End();
-                    sb.Branch("lunch"); sb.Say(left, Lines.T(GirlInfo.ToneOf(left), "J-just us? Okay...!", "A date? Kidding! Lunch it is!", "...I'll hold you to it.", "Oh? Now that's interesting.")); sb.End();
-                    sb.Branch("shrug"); sb.Say(left, Lines.T(GirlInfo.ToneOf(left), "...Oh. Okay.", "Wow. Okay then!", "...Right.", "Noted. Very noted.")); sb.End();
+                    sb.Branch("all"); sb.Say(left, Lines.T(GirlInfo.ToneOf(left), "Really? Okay! || Really? Okay! || Yay... okay! || Thank you!", "Yes! Group hangout! || Group hangout! || Yes! All of us! || Woo!", "...Fine. Good. || ...Good. || ...Fine. || ...Agreed.", "Deal. || Deal. || Done. || Agreed.")); sb.End();
+                    sb.Branch("lunch"); sb.Say(left, Lines.T(GirlInfo.ToneOf(left), "J-just us? Okay...! || Just us? Okay...! || J-just the two of us? || Oh... okay!", "A date? Kidding! Lunch it is! || Date? Kidding! Lunch! || Lunch! Hehe! || Just us! Fun!", "...I'll hold you to it. || ...I'll remember. || ...Noted. || ...Holding you to it.", "Oh? Now that's interesting. || Now that's interesting. || Oh? Just us? || Intriguing.")); sb.End();
+                    sb.Branch("shrug"); sb.Say(left, Lines.T(GirlInfo.ToneOf(left), "...Oh. Okay. || ...Oh. Okay. || ...I see. || ...Alright.", "Wow. Okay then! || Wow. Okay! || Fine then! || Huh! Okay!", "...Right. || ...Right. || ...Hm. || ...Noted.", "Noted. Very noted. || Noted. || Very noted. || Remembered.")); sb.End();
                     result = c =>
                     {
                         if (c == "all") { Social.AddTrust(left, 3); G.AddFavor(left, 3, 0); G.AddFavor(jealousOf, 2, 0); }
@@ -459,18 +459,18 @@ namespace Joojkk.CampusLife
                     var name = about != null ? GirlInfo.FirstName(about) : "";
                     intro.Narr(an + " and " + bn + " come over, whispering to each other.");
                     sb.Say(a, ConvoLines.GossipLine(ta, gossip.Kind, name, gossip.What));
-                    sb.Say(bb, Lines.T(tb, "It's true, I heard it too...", "Totally true! Everyone knows!", "That's what they say.", "The whole school's talking."));
+                    sb.Say(bb, Lines.T(tb, "It's true, I heard it too... || I heard it too... || It's true... || Yes, I heard...", "Totally true! Everyone knows! || Totally true! || Everyone knows! || Yep!", "That's what they say. || So they say. || That's the talk. || Reportedly.", "The whole school's talking. || Whole school's talking. || Everyone knows. || The gossip's everywhere."));
                     sb.End();
                     result = c => { Social.Mentioned(a, gossip); Social.Mentioned(bb, gossip); };
                 }
                 else
                 {
                     intro.Narr(an + " and " + bn + " wave you over.");
-                    sb.Say(a, Lines.T(ta, "We were just talking about you. Only good things!", "Hey! We need a tiebreaker: cats or dogs?", "We were discussing the festival. Opinions?", "Speak of the devil."));
-                    sb.Say(bb, Lines.T(tb, "Hehe, it's true.", "Answer carefully!", "Your input is required.", "Go on, say something interesting."));
+                    sb.Say(a, Lines.T(ta, "We were just talking about you. Only good things! || We were just talking about you. Good things! || Oh, we were talking about you... || Hehe, your ears must be burning.", "Hey! We need a tiebreaker: cats or dogs? || Tiebreaker: cats or dogs?! || Quick! Pizza or ramen?! || Settle it: summer or winter?!", "We were discussing the festival. Opinions? || The festival. Your opinion? || We need a third view. || Discussing plans. Input?", "Speak of the devil. || Speak of the devil. || Oh, it's you. Perfect. || Just the boy we wanted."));
+                    sb.Say(bb, Lines.T(tb, "Hehe, it's true. || It's true, hehe. || Hehe... || Mm-hm.", "Answer carefully! || Careful! || Choose wisely! || No pressure!", "Your input is required. || Your input. || Answer. || Opinion required.", "Go on, say something interesting. || Say something interesting. || Impress us. || Go on."));
                     sb.Choice("Cats, obviously.", "x", "Dogs, no contest.", "y");
-                    sb.Branch("x"); sb.Say(a, Lines.T(ta, "I knew it!", "YES!", "Correct.", "Good taste.")); sb.End();
-                    sb.Branch("y"); sb.Say(bb, Lines.T(tb, "I knew it!", "YES!", "Correct.", "Good taste.")); sb.End();
+                    sb.Branch("x"); sb.Say(a, Lines.T(ta, "I knew it! || I knew it! || Yay! || Right!", "YES! || YES! || Woo! || Ha!", "Correct. || Correct. || Right. || Good.", "Good taste. || Good taste. || Smart. || Correct choice.")); sb.End();
+                    sb.Branch("y"); sb.Say(bb, Lines.T(tb, "I knew it! || I knew it! || Yay! || Right!", "YES! || YES! || Woo! || Ha!", "Correct. || Correct. || Right. || Good.", "Good taste. || Good taste. || Smart. || Correct choice.")); sb.End();
                     result = c => { G.AddFavor(c == "x" ? a : bb, 3, 0); G.AddFavor(a, 1, 0); G.AddFavor(bb, 1, 0); };
                 }
             }
@@ -556,15 +556,15 @@ namespace Joojkk.CampusLife
         /// <summary>Both of them ask for a moment (on the map, before the talk scene opens).</summary>
         private static void CallOver(SceneBuilder intro, SaveData.Heroine a, SaveData.Heroine b)
         {
-            intro.Say(a, Lines.T(GirlInfo.ToneOf(a), "Um... do you have a minute?", "Hey hey! Got a sec?", "A moment of your time.", "Hey, you. Come here a sec."));
-            intro.Say(b, Lines.T(GirlInfo.ToneOf(b), "We wanted to talk to you...", "C'mon, it'll be quick!", "It won't take long.", "Don't keep us waiting~"));
+            intro.Say(a, Lines.T(GirlInfo.ToneOf(a), "Um... do you have a minute? || Do you have a moment? || Um... a minute? || Could we talk?", "Hey hey! Got a sec? || Got a sec?! || Hey! Quick! || Yo! Minute?!", "A moment of your time. || A moment. || Time? || Briefly.", "Hey, you. Come here a sec. || Come here. || You. Here. || Hey, handsome. Moment?"));
+            intro.Say(b, Lines.T(GirlInfo.ToneOf(b), "We wanted to talk to you... || We wanted to talk... || We'd like to talk to you. || Just a little chat...", "C'mon, it'll be quick! || Quick! Promise! || It'll be fast! || Short, really!", "It won't take long. || Brief. || Short. || Not long.", "Don't keep us waiting~ || Don't keep us waiting~ || Hurry~ || Chop chop~"));
         }
 
         private static SceneBuilder Outro(SaveData.Heroine a, SaveData.Heroine b)
         {
             var o = new SceneBuilder(null, false);
-            o.Say(a, Lines.T(GirlInfo.ToneOf(a), "Thank you for listening...", "That was fun! See ya!", "That's all. Thanks.", "Well, that was something. Later~"));
-            o.Say(b, Lines.T(GirlInfo.ToneOf(b), "S-see you later...", "Bye bye!", "Until next time.", "Don't miss us too much."));
+            o.Say(a, Lines.T(GirlInfo.ToneOf(a), "Thank you for listening... || Thank you for listening. || Thanks... || That was nice.", "That was fun! See ya! || Fun! See ya! || Great! Bye! || Awesome! Later!", "That's all. Thanks. || That's all. Thanks. || Done. || Thanks.", "Well, that was something. Later~ || Later~ || That was something. || See you around~"));
+            o.Say(b, Lines.T(GirlInfo.ToneOf(b), "S-see you later... || See you... || Bye... || Take care...", "Bye bye! || Bye bye! || See ya! || Later!", "Until next time. || Until next time. || Later. || Bye.", "Don't miss us too much. || Don't miss us. || Miss us~ || Later, cutie."));
             o.Narr(GirlInfo.FirstName(a) + " and " + GirlInfo.FirstName(b) + " walk off together.");
             return o;
         }

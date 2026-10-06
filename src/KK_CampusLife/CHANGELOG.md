@@ -4,6 +4,17 @@ Until 2.5 the plugin's own version (`CampusLifePlugin.Version`) stayed at 2.0.0 
 the combined repository. From 3.0.0 on the plugin carries the version itself; the cycles between 2.5 and 3.0 are
 numbered 2.6 to 2.9 below.
 
+## 3.2.0
+- Male cards: a card saved as male is detected on its own, and "Boys in the class" (Girls section) lists first names
+  of others (a femboy saved as a girl). Lines about him say he/him/his and boyfriend, his own lines call himself a
+  boyfriend or a guy, his card says "Boyfriend"; voice and personality stay the same.
+- A girlfriend is never below a friend with the same favor when you ask to hold hands, for a date or for a kiss (an
+  upset girlfriend with low trust used to refuse your hand forever while a friend who liked you would take it).
+- Three more versions of every line in every voice (4,464 lines now have four or more per voice).
+- Plugin options reviewed: sections are numbered 01 to 10 so the Configuration Manager lists them in order (old values
+  carry over); "Achievement pop-ups" turns the Steam-style card off; "Debug tools" and "Enable Chat button" (read by
+  nothing) are gone; "How are you today" and "Conversation by scene" say what they really do.
+
 ## 3.1.0
 - A wary no is now an almost-yes, the mirror of the wary yes: she wants it (her bars, what already happened between
   you, a flirty day, trust), and something else held her back. She says what: her personality, her mood, guilt about

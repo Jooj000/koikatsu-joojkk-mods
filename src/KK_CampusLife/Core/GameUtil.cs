@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using ActionGame;
@@ -455,7 +455,7 @@ namespace Joojkk.CampusLife
         public static string RelationLabel(SaveData.Heroine h)
         {
             if (h == null) return "";
-            if (h.isGirlfriend) return "Girlfriend";
+            if (h.isGirlfriend) return Gender.IsBoy(h) ? "Boyfriend" : "Girlfriend";
             switch (h.relation)
             {
                 case 1: return "Friend";

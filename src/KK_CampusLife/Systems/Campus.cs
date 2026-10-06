@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using ActionGame;
@@ -343,6 +343,7 @@ namespace Joojkk.CampusLife
         public static void Show(string text)
         {
             if (string.IsNullOrEmpty(text)) return;
+            text = Gender.Fix(text, null, null);
             CampusLifePlugin.Log.LogInfo(text);
             if (!Cfg.ShowToasts.Value) return;
             Active.Add(new Toast { Text = text, Until = Time.realtimeSinceStartup + Cfg.ToastSeconds.Value });

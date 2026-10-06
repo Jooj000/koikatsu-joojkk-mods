@@ -161,11 +161,11 @@ namespace Joojkk.CampusLife
                     if (g == null) return false;
                     var name = GirlInfo.FirstName(g);
                     b.Narr("Someone bumps into " + name + " and her notebooks scatter across the floor.");
-                    b.Say(g, Lines.T(GirlInfo.ToneOf(g), "Ah... my notes...", "Nooo! My stuff!", "...Great.", "Ugh. Perfect timing."));
+                    b.Say(g, Lines.T(GirlInfo.ToneOf(g), "Ah... my notes... || Oh no... my notes... || Ah... everything's falling... || Wah... my papers...", "Nooo! My stuff! || Noooo! Everything's everywhere! || Gah! My stuff! || Argh! Not again!", "...Great. || ...Wonderful. || ...Of course. || ...Typical.", "Ugh. Perfect timing. || Ugh. Great. || Lovely. Just lovely. || Well, that's annoying."));
                     b.Choice("Help her pick them up.", "help", "Keep walking.", "walk");
                     b.Branch("help");
                     b.Narr("You gather everything and hand it back.");
-                    b.Say(g, Lines.T(GirlInfo.ToneOf(g), "Thank you so much!", "You're a lifesaver!", "...Thanks.", "Oh? A gentleman. Thanks~"));
+                    b.Say(g, Lines.T(GirlInfo.ToneOf(g), "Thank you so much! || Thank you! You're so kind. || Ah, thank you so much! || Thank you... that really helped.", "You're a lifesaver! || You saved me! Thanks! || Thanks a million! || Woo! You're the best!", "...Thanks. || ...Thank you. || ...Appreciated. || ...Thanks. Really.", "Oh? A gentleman. Thanks~ || How gallant. Thanks~ || A knight! Thanks~ || Oh, chivalry. Thanks."));
                     b.End();
                     b.Branch("walk"); b.End();
                     return Scenes.PlayOnMap(b, c =>
@@ -224,16 +224,16 @@ namespace Joojkk.CampusLife
                     if (G.Sens >= 30) { opts.Add("\"...Cute.\" [SEN]"); opts.Add("cute"); }
                     b.Choice(opts.ToArray());
                     b.Branch("away");
-                    b.Say(g, Lines.T(tone, "Th-thank you for looking away...", "Phew! You didn't see anything, right?! RIGHT?!", "...You looked away. Good.", "Aww, you didn't even peek? How boring~"));
+                    b.Say(g, Lines.T(tone, "Th-thank you for looking away... || Th-thank you... for not looking... || You looked away... thank you... || I-I'm so glad you didn't look...", "Phew! You didn't see anything, right?! RIGHT?! || You didn't see anything, right?! Promise?! || Phew! You saw nothing! Got it?! || Nothing happened! Nothing!", "...You looked away. Good. || ...Good. You looked away. || ...Thank you for your discretion. || ...Decent of you.", "Aww, you didn't even peek? How boring~ || Not even a peek? Disappointing~ || What a gentleman. How dull~ || You didn't look? I'm almost offended."));
                     b.End();
                     b.Branch("nothing");
-                    b.Say(g, Lines.T(tone, "Y-you saw, didn't you...?", "You totally saw!", "...Forget it. Now.", "Enjoy the show?"));
+                    b.Say(g, Lines.T(tone, "Y-you saw, didn't you...? || Y-you saw it... didn't you...? || Ah... you saw... || Please tell me you didn't see...", "You totally saw! || You saw! You totally saw! || Hey! You looked! || Don't lie! You saw!", "...Forget it. Now. || ...Erase that memory. || ...You saw nothing. Understood? || ...Forget it.", "Enjoy the show? || Like the view? || Enjoyed that? || A free show, huh?"));
                     b.End();
                     b.Branch("cute");
                     var lewdOk = g.lewdness >= 40 || tone == Tone.Teasing || g.isGirlfriend;
                     b.Say(g, lewdOk
-                        ? Lines.T(tone, "Eh?! ...Y-you think so...?", "Hehe, really? I picked them this morning!", "...Idiot. ...Thanks.", "Only cute? I'll show you something better later~")
-                        : Lines.T(tone, "P-pervert!!", "WHAT?! Pervert!", "Die.", "Wow. Gross."));
+                        ? Lines.T(tone, "Eh?! ...Y-you think so...? || Eh?! ...R-really...? || W-wait, you think they're cute...? || Ah... um... thank you...?", "Hehe, really? I picked them this morning! || Hehe, right? They're my favorite! || Oh! You like them? Yay! || Really?! Thanks! I picked them myself!", "...Idiot. ...Thanks. || ...Idiot. ...Thank you. || ...Don't comment. ...Thanks. || ...Shut up. ...Thanks.", "Only cute? I'll show you something better later~ || Cute? Wait till you see the rest~ || Just cute? You've seen nothing yet. || Only cute? Hmph. Next time, then.")
+                        : Lines.T(tone, "P-pervert!! || P-pervert! || Ah! You're terrible! || N-no! Pervert!", "WHAT?! Pervert! || PERVERT! || Ew! Pervert! || Whaaat?! Creep!", "Die. || Disgusting. || Vanish. || Never speak again.", "Wow. Gross. || Gross. || Ew. Seriously? || Wow. Yikes."));
                     b.End();
                     return Scenes.PlayOnMap(b, c =>
                     {
@@ -316,12 +316,12 @@ namespace Joojkk.CampusLife
                     var tone = GirlInfo.ToneOf(g);
                     var lover = Weather.RainLover(g);
                     b.Narr(name + " runs in from outside, soaked to the skin, hair stuck to her cheeks.");
-                    b.Say(g, lover ? Lines.T(tone, "Ehehe... I couldn't help it. I like the rain...", "Woo! That was AMAZING! Did you see how hard it's coming down?!", "...I walked. It's just water.", "Don't look at me like that. Rain is fun~")
-                                   : Lines.T(tone, "Uuu... it came out of nowhere... I'm all wet...", "Gah! Totally soaked! My shoes are squishing!", "...Don't say anything.", "Like what you see? ...Kidding. I'm freezing."));
+                    b.Say(g, lover ? Lines.T(tone, "Ehehe... I couldn't help it. I like the rain... || Ehehe... I like rain. I couldn't resist. || The rain felt nice... sorry. || Hehe... I just wanted to feel it.", "Woo! That was AMAZING! Did you see how hard it's coming down?! || Wooo! The rain's crazy today! Did you see?! || That was so fun! Rain dance! || Yeah! Rain is awesome!", "...I walked. It's just water. || ...It's only water. || ...I didn't mind walking. || ...Rain is fine.", "Don't look at me like that. Rain is fun~ || Rain is fun. You should try it~ || Don't judge. Rain's fun. || What? Wet suits me.")
+                                   : Lines.T(tone, "Uuu... it came out of nowhere... I'm all wet... || Uuu... I'm soaked... || Ah... the rain came so suddenly... || I'm all wet... how embarrassing...", "Gah! Totally soaked! My shoes are squishing! || Soaked! Totally soaked! || Ugh, my socks are wet! || I look like a drowned cat!", "...Don't say anything. || ...Not a word. || ...Don't comment. || ...Don't look.", "Like what you see? ...Kidding. I'm freezing. || Enjoying the view? Joke. I'm cold. || Wet look. Trendy, huh? Brr. || Stop staring. ...I'm freezing."));
                     b.Choice("Give her your handkerchief.", "towel", "Give her your jacket.", "jacket", "Laugh it off with her.", "laugh");
-                    b.Branch("towel"); b.Say(g, Lines.T(tone, "Thank you... it smells like you.", "You're a lifesaver!", "...Thanks. I'll wash it.", "A gentleman. I'll keep it~")); b.End();
-                    b.Branch("jacket"); b.Say(g, Lines.T(tone, "B-but then you'll be cold...! ...It's warm.", "Whoa, really?! So warm!", "...You'll get sick. Idiot. ...Thank you.", "Your jacket? Bold move. I'll take it~")); b.End();
-                    b.Branch("laugh"); b.Say(g, lover ? Lines.T(tone, "Hehe... you get it.", "Right?! Rain is the best!", "...Heh.", "See? Fun~") : Lines.T(tone, "I-it's not funny...", "Hey! Don't laugh! ...Okay it's a little funny.", "...Hmph.", "Laugh now. I'll drip on you later.")); b.End();
+                    b.Branch("towel"); b.Say(g, Lines.T(tone, "Thank you... it smells like you. || Thank you... it smells nice. || Thank you... it's warm. || Ah... thank you so much.", "You're a lifesaver! || You're a hero! Thanks! || Thanks! So warm! || Yay! Thank you!", "...Thanks. I'll wash it. || ...Thank you. I'll return it washed. || ...Appreciated. || ...Thanks. Clean, when I return it.", "A gentleman. I'll keep it~ || How sweet. I'm keeping this. || Mine now. Thanks~ || A gift? I accept~")); b.End();
+                    b.Branch("jacket"); b.Say(g, Lines.T(tone, "B-but then you'll be cold...! ...It's warm. || B-but you'll be cold... ...It's so warm. || Are you sure...? ...Thank you. || But... ...it's really warm. Thank you.", "Whoa, really?! So warm! || Really?! Whoa, warm! || Your jacket?! Thanks! || Ahh, toasty! You're the best!", "...You'll get sick. Idiot. ...Thank you. || ...You'll catch a cold. ...Thank you. || ...Idiot. ...Thanks. || ...Fine. Thank you.", "Your jacket? Bold move. I'll take it~ || Your jacket? Bold. Mine now~ || Ooh, smooth move. I'll take it. || Giving me your jacket? Adorable.")); b.End();
+                    b.Branch("laugh"); b.Say(g, lover ? Lines.T(tone, "Hehe... you get it. || Hehe... you understand. || Ehehe... right? || Mm. You get it.", "Right?! Rain is the best! || Right?! Rain rules! || See?! Best weather! || Yes! Rain buddy!", "...Heh. || ...Heh. || ...Hm. Yes. || ...Right.", "See? Fun~ || Told you. Fun~ || See? Rain's fun. || Admit it. It's fun.") : Lines.T(tone, "I-it's not funny... || D-don't laugh... || I-it's not funny... || Please don't laugh at me...", "Hey! Don't laugh! ...Okay it's a little funny. || Hey! Stop laughing! ...Okay it's funny. || Don't laugh! ...Pfft. || Rude! ...Haha, fine.", "...Hmph. || ...Hmph. || ...Not amusing. || ...Stop.", "Laugh now. I'll drip on you later. || Laugh it up. I'll drip on you. || Oh, you think it's funny? Hug time. || Keep laughing. I'm getting you wet.")); b.End();
                     return Scenes.PlayOnMap(b, c =>
                     {
                         if (c == "towel") Pay(new Rewards { Favor = 4 }, g, "Dried off with your handkerchief");
@@ -339,10 +339,10 @@ namespace Joojkk.CampusLife
                     b.Narr("It starts pouring right as school ends. " + name + " is stuck at the entrance without an umbrella.");
                     b.Choice("Share your umbrella with her.", "share", "Lend it to her and run home in the rain.", "lend", "Wait for the rain to stop.", "wait");
                     b.Branch("share");
-                    b.Say(g, Lines.T(GirlInfo.ToneOf(g), "Together...? O-okay. Your shoulder is getting wet...", "Umbrella buddies! Squeeze in!", "...Fine. Don't get any closer than necessary.", "Sharing an umbrella? How romantic~"));
+                    b.Say(g, Lines.T(GirlInfo.ToneOf(g), "Together...? O-okay. Your shoulder is getting wet... || Together...? Okay... you're getting wet, though. || Sharing...? Mm. Your shoulder's wet... || Th-thank you... let's share.", "Umbrella buddies! Squeeze in! || Umbrella squad! Get in here! || Share! Squeeze closer! || Umbrella buddies! Yay!", "...Fine. Don't get any closer than necessary. || ...Fine. Not too close. || ...Acceptable. Keep your distance. || ...Share, then. Carefully.", "Sharing an umbrella? How romantic~ || Sharing an umbrella? So cliché. I love it. || Under one umbrella? How scandalous~ || Romantic, aren't we?"));
                     b.End();
                     b.Branch("lend");
-                    b.Say(g, Lines.T(GirlInfo.ToneOf(g), "But you'll get soaked...! Thank you...", "Whoa, really?! You're the best!", "...You're an idiot. Thank you.", "My knight in soaked armor~"));
+                    b.Say(g, Lines.T(GirlInfo.ToneOf(g), "But you'll get soaked...! Thank you... || But you'll get wet... thank you... || You'll be soaked... thank you so much. || Are you sure...? Thank you...", "Whoa, really?! You're the best! || Seriously?! You rock! || For me?! Best day! || Wow! Thanks!", "...You're an idiot. Thank you. || ...Idiot. Thank you. || ...You'll get sick. Thanks. || ...Foolish. Thank you.", "My knight in soaked armor~ || My soggy hero~ || Drenched chivalry. Cute. || A wet knight. I'm charmed."));
                     b.End();
                     b.Branch("wait"); b.End();
                     return Scenes.PlayOnMap(b, c =>

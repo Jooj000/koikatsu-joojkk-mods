@@ -130,7 +130,7 @@ namespace Joojkk.CampusLife
             b.Narr("The moment of the season: " + (moment != null ? moment.Text + "." : "a quiet season, the kind you only miss later."));
             if (people.Count > 0) b.Narr("People who changed: " + string.Join("; ", people.ToArray()) + ".");
             if (open.Count > 0) b.Narr("Unfinished stories: " + string.Join("; ", open.ToArray()) + ".");
-            if (host != null) b.Say(host, Lines.T(GirlInfo.ToneOf(host), "...It went by so fast. What should we celebrate?", "Okay! Speech time! What do we celebrate?!", "We should choose what to highlight.", "So. What's the toast to?"));
+            if (host != null) b.Say(host, Lines.T(GirlInfo.ToneOf(host), "...It went by so fast. What should we celebrate? || ...A whole loop already. What should we remember most? || It feels like yesterday we started... What do we celebrate? || Um... I'd like to raise a glass. To what, though?", "Okay! Speech time! What do we celebrate?! || Wooo! End of the loop! What's the big toast?! || Okay okay, everyone quiet! What are we celebrating?! || Party time! So what's the headline of this loop?!", "We should choose what to highlight. || Let's decide what this loop was about. || A toast needs a subject. Choose one. || ...Pick the moment worth remembering.", "So. What's the toast to? || Well? What are we drinking to, hm? || Toast time. Make it a good one. || So, which moment gets the honor?"));
             b.Choice("Celebrate the club", "an_club", "Celebrate the friendships and couples", "an_bonds", "Celebrate how everyone grew", "an_growth", "Celebrate the class as a whole", "an_class");
             foreach (var t in new[] { "an_club", "an_bonds", "an_growth", "an_class" })
             {

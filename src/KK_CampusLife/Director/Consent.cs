@@ -112,14 +112,15 @@ namespace Joojkk.CampusLife
                     // for a reserved girl, 4 for a normal one, 2-3 for an open one (pacesim).
                     c = (favor - 50f) / 40f;
                     break;
+                // upset girlfriend under a friend who likes you a lot, and she never held your hand).
                 case Ask.Date:
-                    c = h.isGirlfriend ? 0.8f : h.relation >= 1 ? 0.2f + (favor - 40f) / 100f : 0.05f;
+                    c = h.isGirlfriend ? Mathf.Max(0.8f, 0.5f + (favor - 40f) / 100f) : h.relation >= 1 ? 0.2f + (favor - 40f) / 100f : 0.05f;
                     break;
                 case Ask.H:
                     c = HWant(h, gs, pace, favor, lewd, mood, r);
                     break;
                 case Ask.HoldHand:
-                    c = h.isGirlfriend ? 0.95f : h.relation >= 0 ? 0.2f + favor / 120f : 0.02f;
+                    c = h.isGirlfriend ? Mathf.Max(0.95f, 0.55f + favor / 120f) : h.relation >= 0 ? 0.2f + favor / 120f : 0.02f;
                     break;
                 default: // together: lunch, club, going home, study, exercise, the club, follow me
                     c = h.isGirlfriend ? 0.85f : h.relation >= 1 ? 0.55f + h.favor / 400f : h.relation == 0 ? 0.25f + h.favor / 300f : 0.1f;
@@ -267,14 +268,20 @@ namespace Joojkk.CampusLife
         /// </summary>
         public static string HAnswer(SaveData.Heroine h, out float chance, out string why)
         {
-            var gs = S.Girl(GirlInfo.Key(h));
             chance = Chance(h, Ask.H, out why);
             if (h.isAnger) return "no";
             if (Reactions.OwesH(h, false)) return "yes";
+            return HTier(h, Dice(h, Ask.H.ToString()) < chance, ref why);
+        }
+
+        /// <summary>The answer once the dice said yes or no.</summary>
+        internal static string HTier(SaveData.Heroine h, bool yes, ref string why)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
             var pace = Profile(h);
             var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
             var trust = Social.Trust(h);
-            if (Dice(h, Ask.H.ToString()) < chance)
+            if (yes)
             {
                 var u = h.isGirlfriend ? 0f : 0.5f;
                 u += pace == Pace.Reserved ? 0.25f : pace == Pace.Normal ? 0.1f : -0.35f;
@@ -500,14 +507,27 @@ namespace Joojkk.CampusLife
         /// </summary>
         public static string Kiss(SaveData.Heroine h, int tries, int crowd, out string why)
         {
-            var r = new List<string>();
             if (h.isAnger) { why = "angry with you"; return "no"; }
+            var c = KissChance(h, tries, crowd, out why);
+            var yes = Dice(h, "kiss" + tries) < c;
+            var answer = !yes ? "no" : h.isGirlfriend || Profile(h) == Pace.Open ? "yes" : "wary";
+            var line = GirlInfo.FirstName(h) + ": kiss -> " + answer + " (" + why + ")";
+            if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/kiss" + tries)) Note(line);
+            else CampusLifePlugin.Log.LogInfo("Director decides: " + line);
+            return answer;
+        }
+
+        /// <summary>The kiss chance and its reasons, without asking.</summary>
+        internal static float KissChance(SaveData.Heroine h, int tries, int crowd, out string why)
+        {
+            var r = new List<string>();
+            if (h.isAnger) { why = "angry with you"; return 0f; }
             var gs = S.Girl(GirlInfo.Key(h));
             var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
             var pace = Profile(h);
             var interest = h.favor > 50 && h.lewdness > 50;
             float c;
-            if (h.isGirlfriend) { c = 0.92f; r.Add("girlfriend"); }
+            if (h.isGirlfriend) { c = Mathf.Max(0.92f, 0.75f + (h.favor - 50) / 200f + (h.lewdness - 50) / 200f); r.Add("girlfriend"); }
             else if (h.relation >= 1 && interest) { c = 0.55f + (h.favor - 50) / 200f + (h.lewdness - 50) / 200f; r.Add("friend, interested"); }
             else if (h.relation >= 1) { c = 0.08f + h.favor / 400f + h.lewdness / 500f; r.Add("friend"); }
             else if (h.relation == 0) { c = 0.03f + h.lewdness / 600f; r.Add("knows you"); }
@@ -522,13 +542,8 @@ namespace Joojkk.CampusLife
             if (crowd >= 4) { c -= h.isGirlfriend ? 0.3f : 0.2f; r.Add("a crowd"); }
             if (tries > 1) { c -= 0.15f * (tries - 1); r.Add("try " + tries); }
             c = Mathf.Clamp01(c);
-            var yes = Dice(h, "kiss" + tries) < c;
-            var answer = !yes ? "no" : h.isGirlfriend || pace == Pace.Open ? "yes" : "wary";
             why = Mathf.RoundToInt(c * 100) + "%: " + string.Join(", ", r.ToArray());
-            var line = GirlInfo.FirstName(h) + ": kiss -> " + answer + " (" + why + ")";
-            if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/kiss" + tries)) Note(line);
-            else CampusLifePlugin.Log.LogInfo("Director decides: " + line);
-            return answer;
+            return c;
         }
 
         /// <summary>The director's answer to the player asking her.</summary>

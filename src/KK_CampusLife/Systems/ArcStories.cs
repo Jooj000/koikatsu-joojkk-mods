@@ -43,19 +43,19 @@ namespace Joojkk.CampusLife
             if (c.St.Step == 0)
             {
                 b.Me("What's wrong? You look like you saw a ghost.");
-                b.Her_(Lines.T(t, "I... I failed the math test. If I fail the make-up exam too, they'll call my parents...",
-                    "I bombed the math test. Like, totally. There's a make-up exam and I'm DOOMED.",
-                    "I failed a test. It happens. ...There's a make-up exam. I'd rather not fail twice.",
-                    "Don't laugh. I failed the math test. If you laugh, you're dead."));
+                b.Her_(Lines.T(t, "I... I failed the math test. If I fail the make-up exam too, they'll call my parents... || I failed math... if I fail the make-up too, my parents will find out... || The math test... I failed. I'm so scared of the make-up... || I got a terrible score... and there's a retest soon...",
+                    "I bombed the math test. Like, totally. There's a make-up exam and I'm DOOMED. || Math test? Total disaster! Make-up exam incoming! Help! || I failed! Spectacularly! And there's a retest! || Zero hope! Math destroyed me!",
+                    "I failed a test. It happens. ...There's a make-up exam. I'd rather not fail twice. || I failed. A make-up exam follows. Failing twice is unacceptable. || Math. Failed. I need to pass the retest. || A failing grade. I intend to fix it.",
+                    "Don't laugh. I failed the math test. If you laugh, you're dead. || I failed math. Laugh and I'll end you. || Don't you dare laugh. I failed. || Math beat me. Not a word."));
                 b.Choice("I'll tutor you.", "help", "You'll be fine on your own.", "skip");
                 b.Branch("help");
-                b.Her_(Lines.T(t, "Really? You'd do that for me? Thank you... I'll do my best!",
-                    "Seriously?! You're a lifesaver! Let's start today!",
-                    "...Fine. I accept. Don't waste my time.",
-                    "Oh? A private tutor? I'll be a very attentive student~"));
+                b.Her_(Lines.T(t, "Really? You'd do that for me? Thank you... I'll do my best! || You'd help me? Thank you so much... I'll work hard! || Really? Thank you... I won't let you down. || You're so kind... let's study together!",
+                    "Seriously?! You're a lifesaver! Let's start today! || You're my hero! Let's start now! || Yes! Study buddy! Today! || Awesome! Lessons start now!",
+                    "...Fine. I accept. Don't waste my time. || ...Accepted. Don't waste my time. || ...Fine. Teach efficiently. || ...Good. Begin.",
+                    "Oh? A private tutor? I'll be a very attentive student~ || A private tutor? I'll be attentive~ || Tutoring me? Lucky you. || Lessons with you? I'll pay attention. To you."));
                 b.End();
                 b.Branch("skip");
-                b.Her_(Lines.T(t, "Oh... yeah. You're right. I'll try.", "Easy for you to say...", "Hmph. Of course.", "Wow. Thanks for nothing."));
+                b.Her_(Lines.T(t, "Oh... yeah. You're right. I'll try. || Oh... right. I'll try. || Mm... I guess so. || Okay... I'll do my best.", "Easy for you to say... || Easy for YOU to say! || Gee, thanks! || Ugh, sure!", "Hmph. Of course. || Hmph. Obviously. || ...Of course. || ...Naturally.", "Wow. Thanks for nothing. || Thanks for nothing. || Wow. So helpful. || Brilliant advice. Really."));
                 b.End();
                 return;
             }
@@ -65,15 +65,15 @@ namespace Joojkk.CampusLife
             c.St.Counter = pass ? 100 : 50;
             b.Me("So? How did the make-up exam go?");
             if (pass)
-                b.Her_(Lines.T(t, "I passed! I really passed! It's all thanks to you... thank you so much!",
-                    "I PASSED! Eighty-two points! You're the best teacher ever!",
-                    "I passed. With a decent score, even. ...Your explanations were good.",
-                    "Passed~ Guess you're good for something after all. I owe you one... a big one."));
+                b.Her_(Lines.T(t, "I passed! I really passed! It's all thanks to you... thank you so much! || I passed! Thank you so much! || I really passed... it's all because of you! || I did it! Thank you!",
+                    "I PASSED! Eighty-two points! You're the best teacher ever! || PASSED! You're the best teacher! || I passed! Treat time! || Yes! Passed! You rock!",
+                    "I passed. With a decent score, even. ...Your explanations were good. || Passed. Good score. Your explanations helped. || A pass. Thanks to you. || Passed. You're a competent teacher.",
+                    "Passed~ Guess you're good for something after all. I owe you one... a big one. || Passed~ You're useful after all. I owe you. || Passed. I'll repay you. Generously. || Passed! You earned a reward."));
             else
-                b.Her_(Lines.T(t, "I barely passed... but I passed. Thank you for staying with me.",
-                    "Phew, just above the line! Close call, but we did it!",
-                    "Barely passed. Still, better than failing.",
-                    "Scraped by. Next time, teach better~ Kidding. Thanks."));
+                b.Her_(Lines.T(t, "I barely passed... but I passed. Thank you for staying with me. || I barely made it... thank you for staying with me. || Just barely... but I passed. Thanks. || Close, but I passed. Thank you.",
+                    "Phew, just above the line! Close call, but we did it! || Just over the line! We did it! || Phew! Barely! But yes! || Close call! Passed!",
+                    "Barely passed. Still, better than failing. || Barely. Better than failing. || Narrow pass. Acceptable. || Passed. Barely.",
+                    "Scraped by. Next time, teach better~ Kidding. Thanks. || Scraped by. Teach better next time. Kidding. || Barely. Your fault. Joking. Thanks. || Close one. Thanks, sensei."));
         }
 
         public override void OnChoice(ArcCtx c, Request r, string choice)
@@ -128,16 +128,16 @@ namespace Joojkk.CampusLife
             {
                 case 0:
                     b.Me("I heard there's a tournament coming up.");
-                    b.Her_(Lines.T(t, "Yes... I'm a little nervous. Everyone's counting on me.",
-                        "Yup! And this year we're gonna WIN! ...Probably! Maybe!",
-                        "It's this weekend. I intend to win. Obviously.",
-                        "Coming to watch me? I look pretty good in my uniform, you know~"));
+                    b.Her_(Lines.T(t, "Yes... I'm a little nervous. Everyone's counting on me. || Yes... I'm nervous. Everyone's relying on me. || The tournament... I'm scared I'll let them down. || I'm a little anxious about the match...",
+                        "Yup! And this year we're gonna WIN! ...Probably! Maybe! || Yep! We're gonna WIN! Probably! || This year's ours! Hopefully! || Tournament time! Victory! Maybe!",
+                        "It's this weekend. I intend to win. Obviously. || This weekend. I'll win. || The match is soon. Victory is the plan. || I intend to take first place.",
+                        "Coming to watch me? I look pretty good in my uniform, you know~ || Coming to watch? I look great in uniform~ || Watching me play? Good choice. || Come see me win. And look cute."));
                     b.Choice("Let me train with you.", "train", "Good luck out there.", "luck");
                     b.Branch("train");
-                    b.Her_(Lines.T(t, "You'd train with me? Then... I'll count on you!", "Yes! A training buddy! Don't you dare slack off!", "Try to keep up.", "Hope you can handle my pace~"));
+                    b.Her_(Lines.T(t, "You'd train with me? Then... I'll count on you! || You'd train with me? I'll count on you! || Thank you... let's train together! || With you, I'll work harder!", "Yes! A training buddy! Don't you dare slack off! || Training buddy! No slacking! || Yes! Let's sweat! || Partner! Keep up!", "Try to keep up. || Keep up. || Don't fall behind. || Try not to slow me down.", "Hope you can handle my pace~ || Can you handle my pace~? || Hope you have stamina. || Let's see if you can keep up."));
                     b.End();
                     b.Branch("luck");
-                    b.Her_(Lines.T(t, "Thank you. I'll do my best.", "Thanks! Come cheer for me, okay?", "Luck has nothing to do with it.", "Luck? I'll need more than that from you~"));
+                    b.Her_(Lines.T(t, "Thank you. I'll do my best. || Thank you. I'll try my best. || Thanks... I'll do it. || Thank you so much.", "Thanks! Come cheer for me, okay? || Thanks! Come cheer! || Cheer for me! || Be there, okay?!", "Luck has nothing to do with it. || Luck is irrelevant. || I don't need luck. || Skill decides.", "Luck? I'll need more than that from you~ || Luck? I want more than that. || Just luck? Stingy. || I expected a kiss. Kidding."));
                     b.End();
                     break;
                 case 2:
@@ -149,10 +149,10 @@ namespace Joojkk.CampusLife
                         c.St.Counter += 2;
                     }
                     else c.St.Counter += 1;
-                    b.Her_(Lines.T(t, "Hah... hah... thank you for coming. It really helps.",
-                        "Did you see that?! I'm on fire today!",
-                        "...Your cheering is loud. ...It's not bad.",
-                        "Watching me sweat, huh? Enjoying the view?"));
+                    b.Her_(Lines.T(t, "Hah... hah... thank you for coming. It really helps. || Thank you for coming... it helps so much. || You came... hah... thank you. || Your cheering helps me...",
+                        "Did you see that?! I'm on fire today! || Did you see that?! On fire! || Woo! I'm unstoppable! || Watch me go!",
+                        "...Your cheering is loud. ...It's not bad. || ...Loud cheering. Not bad. || ...I heard you. Thanks. || ...Your voice carried.",
+                        "Watching me sweat, huh? Enjoying the view? || Enjoying watching me sweat? || Like the view? || Watching closely, hm?"));
                     break;
                 case 3:
                 {
@@ -161,15 +161,15 @@ namespace Joojkk.CampusLife
                     c.St.Counter = won ? 100 : 0;
                     b.Me("So? How did the tournament go?");
                     if (won)
-                        b.Her_(Lines.T(t, "We won! I scored the winning point... I kept thinking about how you trained with me.",
-                            "WE WON! Champions! I'm treating you to crepes, no arguing!",
-                            "First place. As expected. ...Your training helped. A little. A lot.",
-                            "We won~ So, what's my reward from you?"));
+                        b.Her_(Lines.T(t, "We won! I scored the winning point... I kept thinking about how you trained with me. || We won! I thought of our training when I scored... || We won... thank you for training with me. || Victory... I couldn't have done it without you.",
+                            "WE WON! Champions! I'm treating you to crepes, no arguing! || CHAMPIONS! Crepes on me! || We WON! Celebrate! || Victory! You're coming to the party!",
+                            "First place. As expected. ...Your training helped. A little. A lot. || First place. Your training helped. Considerably. || We won. You contributed. || Champions. Thanks to you, partly.",
+                            "We won~ So, what's my reward from you? || We won. My reward? || Victory. Now spoil me. || Won! What's my prize?"));
                     else
-                        b.Her_(Lines.T(t, "We lost in the semifinals... but I'm not sad. I did my best, and you were there.",
-                            "Lost by one point! ONE! ...Next year for sure!",
-                            "We lost. I'll be stronger next time.",
-                            "We lost. Comfort me properly, okay?"));
+                        b.Her_(Lines.T(t, "We lost in the semifinals... but I'm not sad. I did my best, and you were there. || We lost... but I did my best, and you were there. || Semifinals... it's okay. You came. || We didn't win... but I'm not sad.",
+                            "Lost by one point! ONE! ...Next year for sure! || Lost by ONE point! Next year! || So close! Next time! || Argh! One point! Next year!",
+                            "We lost. I'll be stronger next time. || We lost. I'll improve. || Defeat. I'll train harder. || Lost. Lesson learned.",
+                            "We lost. Comfort me properly, okay? || We lost. Comfort me. Properly. || Lost. Make me feel better. || Defeat. You owe me hugs."));
                     break;
                 }
                 default:
@@ -223,30 +223,30 @@ namespace Joojkk.CampusLife
             if (c.St.Step == 0)
             {
                 b.Me("Lose something?");
-                b.Her_(Lines.T(t, "My charm... my grandma gave it to me. I had it this morning, and now it's gone...",
-                    "My lucky charm's gone! I can't lose it, it's my LUCKY charm!",
-                    "A charm. It's not important. ...It's important.",
-                    "My charm. If you find it, I'll make it worth your while~"));
+                b.Her_(Lines.T(t, "My charm... my grandma gave it to me. I had it this morning, and now it's gone... || My grandma's charm... it's gone... || I lost my charm... it means so much to me... || The charm my grandmother gave me... I can't find it...",
+                    "My lucky charm's gone! I can't lose it, it's my LUCKY charm! || My lucky charm's missing! Emergency! || I lost my charm! Help me find it! || No! My charm! Gone!",
+                    "A charm. It's not important. ...It's important. || A charm. Unimportant. ...It's important. || I lost something. A charm. It matters. || My charm is missing. I need it.",
+                    "My charm. If you find it, I'll make it worth your while~ || Find my charm and I'll reward you~ || Lost my charm. Hero wanted. || My charm's gone. Find it, get a prize."));
                 b.Me("I'll help you look for it.");
                 return;
             }
             b.Me("Is this the one you lost?");
             b.Narr("You hold out a small, worn charm.");
-            b.Her_(Lines.T(t, "That's it! You found it! Oh... thank you, thank you so much...!",
-                "NO WAY! You found it! You're amazing!",
-                "...That's it. You actually found it. I... thank you.",
-                "Oh! My hero~ Seriously, thanks."));
+            b.Her_(Lines.T(t, "That's it! You found it! Oh... thank you, thank you so much...! || You found it! Thank you so much! || That's it! Oh, thank you...! || My charm! Thank you, thank you!",
+                "NO WAY! You found it! You're amazing! || You found it! Amazing! || YES! You're incredible! || No way! Found it! Hero!",
+                "...That's it. You actually found it. I... thank you. || ...You found it. Thank you. || ...That's it. I'm grateful. || ...Found. Thank you. Truly.",
+                "Oh! My hero~ Seriously, thanks. || My hero~ Thanks. || Look at you. Thanks, really. || Impressive. Thank you."));
             var opts = new List<string> { "Here you go.", "give" };
             if (G.Sens >= 40) { opts.Add("What do I get for finding it? [SEN]"); opts.Add("tease"); }
             b.Choice(opts.ToArray());
             b.Branch("give");
-            b.Her_(Lines.T(t, "I'll never forget this.", "I owe you big time!", "I'll repay you. Someday.", "You're too nice. That's dangerous~"));
+            b.Her_(Lines.T(t, "I'll never forget this. || I'll never forget this. || I'll always remember. || Thank you, forever.", "I owe you big time! || I owe you huge! || Big debt! || I'll pay you back!", "I'll repay you. Someday. || I'll repay you. || A debt. Noted. || Someday, I'll repay this.", "You're too nice. That's dangerous~ || Too nice. Dangerous~ || You're dangerously sweet. || Careful, I'll fall for you."));
             b.End();
             b.Branch("tease");
             if (c.H.lewdness >= 50 || c.H.isGirlfriend)
-                b.Her_(Lines.T(t, "W-what do you want...? M-maybe... a kiss on the cheek?", "Ha! Fine, a reward! Close your eyes... *smooch*", "...Close your eyes. Don't tell anyone.", "Hmm~ How about I tell you later... in private?"));
+                b.Her_(Lines.T(t, "W-what do you want...? M-maybe... a kiss on the cheek? || A reward...? Maybe... a kiss on the cheek? || Um... would a little kiss be okay? || W-what would you like...? A kiss?", "Ha! Fine, a reward! Close your eyes... *smooch* || Reward time! Eyes closed! *smooch* || Fine! Close your eyes! Hehe! || Okay! Cheek kiss! Ready?!", "...Close your eyes. Don't tell anyone. || ...Close your eyes. Secret. || ...Eyes shut. Tell no one. || ...Don't look. Quickly.", "Hmm~ How about I tell you later... in private? || Later. In private~ || Hmm. I'll pay you somewhere quiet. || Patience. Private reward later."));
             else
-                b.Her_(Lines.T(t, "Eh? Um... a thank-you note?", "My eternal gratitude! That's a lot!", "My thanks. Don't push it.", "Nice try~"));
+                b.Her_(Lines.T(t, "Eh? Um... a thank-you note? || A thank-you card? || Um... a letter of thanks? || My gratitude?", "My eternal gratitude! That's a lot! || Eternal gratitude! Huge! || My thanks! Forever! || Gratitude! Lots!", "My thanks. Don't push it. || Thanks. Enough. || My gratitude. That's all. || Thanks. Don't push.", "Nice try~ || Nice try~ || Cute. No. || Ha. No."));
             b.End();
         }
 
@@ -334,32 +334,32 @@ namespace Joojkk.CampusLife
             if (c.St.Step == 0)
             {
                 b.Me("So... I saw you earlier.");
-                b.Her_(Lines.T(t, "Y-you saw that?! Please don't tell anyone... it's embarrassing...",
-                    "Ah! You saw?! Okay, okay, yes, I love " + GirlInfo.LikeLabel(like) + ". Happy?",
-                    "...You saw nothing.",
-                    "Spying on me? That's a bit creepy. ...Fine, you know my secret now."));
+                b.Her_(Lines.T(t, "Y-you saw that?! Please don't tell anyone... it's embarrassing... || You saw?! Please don't tell... || Oh no... you saw that... it's so embarrassing... || P-please keep it secret...",
+                    "Ah! You saw?! Okay, okay, yes, I love " + GirlInfo.LikeLabel(like) + ". Happy? || You saw?! Fine, I love " + GirlInfo.LikeLabel(like) + "! Happy?! || Caught! Yes, " + GirlInfo.LikeLabel(like) + "! || Argh! Okay! " + GirlInfo.LikeLabel(like) + " is my thing!",
+                    "...You saw nothing. || ...You saw nothing. || ...Forget it. || ...That didn't happen.",
+                    "Spying on me? That's a bit creepy. ...Fine, you know my secret now. || Spying? Creepy. Fine, you know. || Peeking? Fine. Secret's out. || Caught me. Now you owe silence."));
                 var opts = new List<string> { "Your secret is safe with me.", "keep", "That's actually really cool.", "cool" };
                 if (G.Sens >= 50) { opts.Add("What will you do to keep me quiet? [SEN]"); opts.Add("tease"); }
                 b.Choice(opts.ToArray());
                 b.Branch("keep");
-                b.Her_(Lines.T(t, "Thank you... You're really kind.", "Pinky promise? Okay! Thanks!", "...Good. I trust you, then.", "Good boy~"));
+                b.Her_(Lines.T(t, "Thank you... You're really kind. || Thank you... you're so kind. || Thank you for keeping it secret... || You're really kind.", "Pinky promise? Okay! Thanks! || Pinky promise! Thanks! || Promise?! Thanks! || Deal! Thanks!", "...Good. I trust you, then. || ...Good. I trust you. || ...Trust given. || ...Fine.", "Good boy~ || Good boy~ || Smart. || Good choice~"));
                 b.End();
                 b.Branch("cool");
-                b.Her_(Lines.T(t, "You think so? ...Nobody ever said that before.", "Right?! Finally someone gets it!", "...You're strange. But thank you.", "Heh. Flattery works on me, just so you know."));
+                b.Her_(Lines.T(t, "You think so? ...Nobody ever said that before. || Really? Nobody's said that before... || You think so? That's nice... || No one ever told me that...", "Right?! Finally someone gets it! || Finally someone gets it! || Right?! Yes! || See?! You get it!", "...You're strange. But thank you. || ...Strange. Thank you. || ...Odd. Thanks. || ...Unexpected. Thank you.", "Heh. Flattery works on me, just so you know. || Flattery works. Just so you know. || Keep flattering. || Oh, sweet talk. Continue."));
                 b.End();
                 b.Branch("tease");
                 if (c.H.lewdness >= 40)
-                    b.Her_(Lines.T(t, "Eh?! Um... w-whatever you want...?", "Ooh, blackmail? Kinky. I'm in.", "...You're terrible. Fine. We'll talk later.", "Now you're speaking my language~"));
+                    b.Her_(Lines.T(t, "Eh?! Um... w-whatever you want...? || Um... w-whatever you want...? || Eh?! W-what do you want...? || Um... okay...?", "Ooh, blackmail? Kinky. I'm in. || Blackmail? Kinky. I'm in. || Ooh, a deal! Okay! || Bribery? Fun!", "...You're terrible. Fine. We'll talk later. || ...Terrible. Later. || ...You're awful. We'll discuss. || ...Fine. Later.", "Now you're speaking my language~ || Now we're talking~ || My language~ || Ooh. Negotiations."));
                 else
-                    b.Her_(Lines.T(t, "That's mean...", "Not funny!", "Tell anyone and you die.", "Ha. In your dreams."));
+                    b.Her_(Lines.T(t, "That's mean... || That's mean... || So mean... || Don't be cruel...", "Not funny! || Not funny! || Rude! || Hey!", "Tell anyone and you die. || Tell anyone and you die. || Silence. Or else. || Breathe a word and regret it.", "Ha. In your dreams. || In your dreams. || Ha. Never. || Nice try."));
                 b.End();
                 return;
             }
             b.Narr("You spend a while with " + c.Name + ", and she shows you all about " + GirlInfo.LikeLabel(like) + ".");
-            b.Her_(Lines.T(t, "It's nice to share this with someone. With you.",
-                "See?! Isn't it the best?! Let's do this again!",
-                "You didn't laugh. ...I'm glad it was you who found out.",
-                "Not bad, huh? Now you know one of my secrets. Want to know more?"));
+            b.Her_(Lines.T(t, "It's nice to share this with someone. With you. || I'm glad I can share this with you. || It's nice to have someone to share it with. || Sharing this with you makes me happy.",
+                "See?! Isn't it the best?! Let's do this again! || Best, right?! Again! || Isn't it great?! || So fun! Let's do it more!",
+                "You didn't laugh. ...I'm glad it was you who found out. || You didn't laugh. I'm glad it was you. || ...Good that it's you. || ...You understood. Thanks.",
+                "Not bad, huh? Now you know one of my secrets. Want to know more? || One secret down. Want more? || Now you know. More secrets? || Like it? There's more."));
             var gs = c.Gs;
             gs.KnownLikes |= 1 << (c.St.Counter - 1);
         }
@@ -417,31 +417,31 @@ namespace Joojkk.CampusLife
                 case 0:
                 {
                     b.Me("Hey, what happened back there?");
-                    b.Her_(Lines.T(t, "It's " + c.OName + "... she said things about me behind my back. I thought we were okay...",
-                        "Ugh, " + c.OName + " is SO annoying! She took my spot and acted like it was nothing!",
-                        c.OName + " took credit for my work. I won't forgive that.",
-                        c.OName + " has been flirting with you, hasn't she? Don't play dumb."));
+                    b.Her_(Lines.T(t, "It's " + c.OName + "... she said things about me behind my back. I thought we were okay... || It's " + c.OName + "... she talked behind my back..." + " || " + c.OName + " said mean things about me... I thought we were friends." + " || " + c.OName + "... she hurt me.",
+                        "Ugh, " + c.OName + " is SO annoying! She took my spot and acted like it was nothing!" + " || " + c.OName + " is SO annoying! || Ugh! " + c.OName + " stole my spot!" + " || " + c.OName + "! Argh!",
+                        c.OName + " took credit for my work. I won't forgive that." + " || " + c.OName + " took my credit. Unforgivable." + " || " + c.OName + " wronged me." + " || " + c.OName + ". I won't forgive her.",
+                        c.OName + " has been flirting with you, hasn't she? Don't play dumb." + " || " + c.OName + "'s been flirting with you. Don't deny it." + " || " + c.OName + " has eyes for you. I noticed." + " || " + c.OName + ". You know why."));
                     var opts = new List<string> { "You're right, that's not okay.", "side", "Maybe it was a misunderstanding.", "defend" };
                     if (G.Int >= 40) { opts.Add("Let me talk to both of you. [INT]"); opts.Add("mediate"); }
                     b.Choice(opts.ToArray());
                     b.Branch("side");
-                    b.Her_(Lines.T(t, "You believe me... thank you.", "See?! Even you think so!", "...At least you understand.", "Good answer~"));
+                    b.Her_(Lines.T(t, "You believe me... thank you. || You believe me... thank you. || Thank you for believing me. || You're on my side... thanks.", "See?! Even you think so! || See?! You agree! || Right?! || Ha! See!", "...At least you understand. || ...You understand. || ...Good. || ...At least you see it.", "Good answer~ || Good answer~ || Correct. || Smart boy."));
                     b.End();
                     b.Branch("defend");
-                    b.Her_(Lines.T(t, "You're taking her side...?", "Huh?! Whose friend are you?!", "...I see.", "Oh, so that's how it is."));
+                    b.Her_(Lines.T(t, "You're taking her side...? || You're on her side...? || You think she's right...? || Oh... you side with her...", "Huh?! Whose friend are you?! || Whose friend ARE you?! || Seriously?! Her?! || Traitor!", "...I see. || ...I see. || ...Noted. || ...Understood.", "Oh, so that's how it is. || Oh, so that's how it is. || Interesting choice. || Wow. Okay."));
                     b.End();
                     b.Branch("mediate");
-                    b.Her_(Lines.T(t, "You'd do that? ...Okay. I'll trust you.", "Ugh, fine. But she has to say sorry first!", "...Fine. Try it.", "Playing peacemaker? Cute. Go ahead."));
+                    b.Her_(Lines.T(t, "You'd do that? ...Okay. I'll trust you. || You'd do that? Okay, I trust you. || You'll help? ...Alright. || Thank you... I'll trust you.", "Ugh, fine. But she has to say sorry first! || Fine! But she apologizes first! || Okay! She says sorry first! || Ugh, okay! Her first!", "...Fine. Try it. || ...Try it. || ...Fine. Attempt it. || ...Go ahead.", "Playing peacemaker? Cute. Go ahead. || Peacemaker? Cute. Go. || Diplomat? Adorable. Try. || Playing hero? Go on."));
                     b.End();
                     break;
                 }
                 case 1:
                 {
                     b.Me(c.Name + " is pretty upset about earlier.");
-                    b.Her_(Lines.T(ot, "I know... I didn't mean it like that. I just didn't know how to say sorry.",
-                        "She's upset?! SHE started it!",
-                        "Her reaction was excessive. ...Though I may have been careless.",
-                        "Oh, she sent you? How cute. Tell her to come herself."));
+                    b.Her_(Lines.T(ot, "I know... I didn't mean it like that. I just didn't know how to say sorry. || I didn't mean it... I didn't know how to apologize. || I never meant to hurt her... || I wanted to say sorry, but...",
+                        "She's upset?! SHE started it! || She's upset?! She started it! || What?! She started it! || Her? Upset? Seriously?!",
+                        "Her reaction was excessive. ...Though I may have been careless. || Excessive reaction. Though I was careless. || ...Perhaps I was thoughtless. || ...Partly my fault. Partly.",
+                        "Oh, she sent you? How cute. Tell her to come herself. || She sent you? Tell her to come herself. || Messenger boy? Cute. Send her. || She can come herself."));
                     if (c.St.Counter == 3)
                     {
                         int roll;
@@ -450,29 +450,29 @@ namespace Joojkk.CampusLife
                         if (ok)
                         {
                             b.Narr("You calmly explain how " + c.Name + " sees it. Little by little, " + c.OName + "'s expression softens.");
-                            b.Her_(Lines.T(ot, "...You're right. I'll apologize to her. Thank you.", "...Okay, okay. I'll talk to her. Happy?", "Very well. I'll speak to her.", "Fine, fine. You win. I'll make up with her."));
+                            b.Her_(Lines.T(ot, "...You're right. I'll apologize to her. Thank you. || You're right. I'll apologize. Thank you. || I'll say sorry to her. Thanks. || Okay... I'll make up with her.", "...Okay, okay. I'll talk to her. Happy? || Okay! I'll talk to her! || Fine! I'll fix it! || Alright, alright!", "Very well. I'll speak to her. || Very well. I'll speak with her. || ...Fine. I'll talk. || ...I'll handle it.", "Fine, fine. You win. I'll make up with her. || You win. I'll make up. || Fine. Peace. || Okay, okay. I'll apologize."));
                         }
                         else
                         {
                             b.Narr("You try to reason with her, but she isn't ready to listen.");
-                            b.Her_(Lines.T(ot, "I'm sorry... I need more time.", "Nope! Not happening!", "Drop it.", "Nice try, peacemaker."));
+                            b.Her_(Lines.T(ot, "I'm sorry... I need more time. || Sorry... I need more time. || I can't yet... || Not yet... please.", "Nope! Not happening! || Nope! || Not happening! || No way!", "Drop it. || Drop it. || No. || Enough.", "Nice try, peacemaker. || Nice try, peacemaker. || Cute. No. || Not today."));
                         }
                     }
                     else if (c.St.Counter == 2)
-                        b.Her_(Lines.T(ot, "You stood up for me? ...Thank you. That means a lot.", "Wait, you defended me? Huh. You're alright!", "...You defended me. I won't forget it.", "Taking my side? I like you more already~"));
+                        b.Her_(Lines.T(ot, "You stood up for me? ...Thank you. That means a lot. || You stood up for me...? Thank you. || You defended me... that means so much. || Thank you for protecting me.", "Wait, you defended me? Huh. You're alright! || You defended me?! You're alright! || Whoa! Thanks! || You had my back! Cool!", "...You defended me. I won't forget it. || ...You defended me. Remembered. || ...I won't forget. || ...Thank you for that.", "Taking my side? I like you more already~ || My side? I like you more. || Defending me? Good boy. || Smart choice. I like you."));
                     else
-                        b.Her_(Lines.T(ot, "So you're on her side... I see.", "Whatever! Go hang out with HER then!", "Then we have nothing to discuss.", "Wow. Okay. Noted."));
+                        b.Her_(Lines.T(ot, "So you're on her side... I see. || You're on her side... I see. || So it's her... okay. || I understand... her side.", "Whatever! Go hang out with HER then! || Go hang with HER then! || Fine! Go! || Whatever! Her!", "Then we have nothing to discuss. || Nothing to discuss. || Then we're done. || Understood. Goodbye.", "Wow. Okay. Noted. || Noted. || Wow. Okay. || Remembered."));
                     break;
                 }
                 default:
                 {
                     b.Me("I talked to " + c.OName + ".");
                     if (c.St.Counter == 3 && c.St.Choice == "peace")
-                        b.Her_(Lines.T(t, "She apologized to me... We're okay now. You really did it.", "She said sorry! We're friends again! You're a genius!", "We talked. It's settled. ...Thank you.", "She apologized. Impressive. You're full of surprises."));
+                        b.Her_(Lines.T(t, "She apologized to me... We're okay now. You really did it. || She apologized... we're okay. You did it. || We made up... thank you so much. || She said sorry... it's all thanks to you.", "She said sorry! We're friends again! You're a genius! || Friends again! Genius! || She said sorry! You're amazing! || Made up! Woo!", "We talked. It's settled. ...Thank you. || Settled. Thank you. || Resolved. Thanks. || We talked. Thank you.", "She apologized. Impressive. You're full of surprises. || She apologized. Impressive. || You fixed it. Surprising. || Full of surprises, aren't you?"));
                     else if (c.St.Counter == 2)
-                        b.Her_(Lines.T(t, "...I guess I overreacted too. But you didn't have to take her side.", "Hmph. Fine. Whatever.", "...Noted.", "I'll remember this."));
+                        b.Her_(Lines.T(t, "...I guess I overreacted too. But you didn't have to take her side. || I overreacted too... but you didn't have to side with her. || Maybe I was wrong too... still... || I guess... but it hurt.", "Hmph. Fine. Whatever. || Hmph! Fine! || Whatever! || Ugh! Fine!", "...Noted. || ...Noted. || ...Hm. || ...I see.", "I'll remember this. || I'll remember this. || Noted for later. || Don't forget I remember."));
                     else
-                        b.Her_(Lines.T(t, "Thank you for being on my side.", "Thanks for having my back!", "You were on my side. Good.", "You chose me. Smart."));
+                        b.Her_(Lines.T(t, "Thank you for being on my side. || Thank you for being on my side. || You were with me... thank you. || Thanks for supporting me.", "Thanks for having my back! || Thanks for backing me! || You had my back! || Thanks, partner!", "You were on my side. Good. || You sided with me. Good. || Good choice. || You supported me. Noted.", "You chose me. Smart. || You chose me. Smart. || Wise choice. || Of course you picked me."));
                     break;
                 }
             }
@@ -543,18 +543,18 @@ namespace Joojkk.CampusLife
             if (c.St.Step == 0)
             {
                 b.Me("You look like you want to say something.");
-                b.Her_(Lines.T(t, "Um... you know " + c.OName + ", right? I'd like to be friends with her, but I never know what to say...",
-                    "Hey, you're friends with " + c.OName + ", right? She seems super fun! Introduce me!",
-                    "You know " + c.OName + ". ...I wouldn't mind getting to know her. That's all.",
-                    c.OName + " seems interesting. Be a dear and introduce us?"));
+                b.Her_(Lines.T(t, "Um... you know " + c.OName + ", right? I'd like to be friends with her, but I never know what to say... || You know " + c.OName + "? I'd like to be friends with her... || Um... could you help me talk to " + c.OName + "? || I want to be friends with " + c.OName + ", but I'm shy...",
+                    "Hey, you're friends with " + c.OName + ", right? She seems super fun! Introduce me! || You know " + c.OName + "?! Introduce me!" + " || " + c.OName + " seems fun! Help me meet her! || Hook me up with " + c.OName + "! As friends!",
+                    "You know " + c.OName + ". ...I wouldn't mind getting to know her. That's all." + " || " + c.OName + ". I'd like to know her. || Introduce me to " + c.OName + "." + " || " + c.OName + " seems worthwhile. Arrange it.",
+                    c.OName + " seems interesting. Be a dear and introduce us? || Introduce me to " + c.OName + ", dear?" + " || " + c.OName + " intrigues me. Make it happen. || Be useful. Introduce " + c.OName + "."));
                 b.Me("Leave it to me.");
                 return;
             }
             b.Me("Hey, do you know " + c.Name + "? She'd like to have lunch with us sometime.");
-            b.Her_(Lines.T(c.OTone, "Oh, " + c.Name + "? I've always wanted to talk to her! Of course!",
-                "Sure! The more the merrier!",
-                "...If you're there, I suppose it's fine.",
-                "Ooh, matchmaking? Fine, I'm curious."));
+            b.Her_(Lines.T(c.OTone, "Oh, " + c.Name + "? I've always wanted to talk to her! Of course!" + " || " + c.Name + "? I've wanted to talk to her! || Oh, " + c.Name + "! Of course! || I'd love to meet " + c.Name + "!",
+                "Sure! The more the merrier! || Sure! More friends! || Yes! Let's go! || The more the better!",
+                "...If you're there, I suppose it's fine. || ...With you there, fine. || ...Acceptable. || ...If you're present.",
+                "Ooh, matchmaking? Fine, I'm curious. || Matchmaking? I'm curious. || Fine. Intriguing. || Ooh, a setup? Okay."));
         }
 
         public override void OnStepDone(ArcCtx c, Request r)
@@ -598,33 +598,33 @@ namespace Joojkk.CampusLife
             var t = c.Tone;
             if (c.St.Step == 0)
             {
-                b.Her_(Lines.T(t, "My friend wants to confess to someone, and... she asked me to practice with her. But I need someone to practice on... would you help?",
-                    "So! A friend of mine wants to confess and I'm helping her practice! Be my target, okay?!",
-                    "A friend needs help with a confession. I need a practice partner. You'll do.",
-                    "I need to practice a confession. For a friend, obviously. You're the dummy~"));
+                b.Her_(Lines.T(t, "My friend wants to confess to someone, and... she asked me to practice with her. But I need someone to practice on... would you help? || My friend wants to confess... would you help me practice? || Could you be my practice partner? For a friend... || I need to practice a confession... for a friend. Help?",
+                    "So! A friend of mine wants to confess and I'm helping her practice! Be my target, okay?! || Friend's confessing! Be my practice target! || Practice dummy wanted! You! || Help me rehearse! For a friend!",
+                    "A friend needs help with a confession. I need a practice partner. You'll do. || A friend's confession. You're my practice partner. || I need a target for practice. You. || Practice partner required. You'll do.",
+                    "I need to practice a confession. For a friend, obviously. You're the dummy~ || Practice confession. For a friend. Obviously. || You're my practice dummy. For a friend~ || Rehearsal time. Totally for a friend."));
                 b.Me("Uh... sure. Where?");
-                b.Her_(Lines.T(t, "The rooftop... after school. Please don't be late.", "Rooftop, after school! It's the classic spot!", "Rooftop. After school.", "The rooftop after school. Very cliché. Perfect."));
+                b.Her_(Lines.T(t, "The rooftop... after school. Please don't be late. || The rooftop, after school. Don't be late. || Meet me on the roof after school... please. || After school... the rooftop.", "Rooftop, after school! It's the classic spot! || Rooftop! After school! Classic! || Roof! After class! || Rooftop time! Be there!", "Rooftop. After school. || Rooftop. After school. || The roof. Later. || After school. Rooftop.", "The rooftop after school. Very cliché. Perfect. || Rooftop after school. Cliché. Perfect. || The roof. Very dramatic. || Rooftop. Don't be late."));
                 return;
             }
             b.Narr("The wind is gentle on the rooftop. " + c.Name + " takes a deep breath.");
-            b.Her_(Lines.T(t, "I... I've liked you for a long time. Every day, I look for you in the hallway... W-will you go out with me?",
-                "I like you! A lot! Like, really a lot! Go out with me!",
-                "I like you. I've thought about it carefully, and it's the only answer. Date me.",
-                "I like you. Not as a joke. Not as practice... Wait. Pretend I didn't say that last part."));
+            b.Her_(Lines.T(t, "I... I've liked you for a long time. Every day, I look for you in the hallway... W-will you go out with me? || I've liked you for so long... will you go out with me? || Every day I look for you... please, date me. || I really like you... will you be my boyfriend?",
+                "I like you! A lot! Like, really a lot! Go out with me! || I like you! So much! Go out with me! || I LIKE YOU! Date me! || You! Me! Dating! Please!",
+                "I like you. I've thought about it carefully, and it's the only answer. Date me. || I like you. Date me. || I've decided. I like you. Go out with me. || My answer is you. Date me.",
+                "I like you. Not as a joke. Not as practice... Wait. Pretend I didn't say that last part. || I like you. For real. ...Pretend I didn't say that. || Not practice. ...Wait, forget that. || I like you. Oops. That wasn't practice."));
             var opts = new List<string> { "That was great practice!", "practice", "Was that really practice?", "really" };
             if (G.Sens >= 30 || G.Int >= 50) { opts.Add("I like you too."); opts.Add("too"); }
             b.Choice(opts.ToArray());
             b.Branch("practice");
-            b.Her_(Lines.T(t, "R-really? Ahaha... yeah. Practice. Of course.", "Haha... yeah! Totally! Practice!", "...Of course. Practice.", "...Idiot."));
+            b.Her_(Lines.T(t, "R-really? Ahaha... yeah. Practice. Of course. || R-right... practice. Of course. || Ahaha... yes. Just practice. || Oh... practice. Right.", "Haha... yeah! Totally! Practice! || Haha! Totally practice! || Yeah! Practice! Obviously! || Right! Just pretend!", "...Of course. Practice. || ...Practice. Yes. || ...Of course. || ...Naturally.", "...Idiot. || ...Idiot. || ...Dummy. || ...Clueless."));
             b.End();
             b.Branch("really");
-            b.Her_(Lines.T(t, "...Maybe not. Don't make me say it twice.", "D-don't ask that! ...Maybe it wasn't!", "...You figure it out.", "What do you think~?"));
+            b.Her_(Lines.T(t, "...Maybe not. Don't make me say it twice. || ...Maybe not. || ...It might not have been. || ...Don't make me say it.", "D-don't ask that! ...Maybe it wasn't! || Don't ask! Maybe not! || Stop asking! ...Maybe! || Ugh! Maybe it wasn't!", "...You figure it out. || ...Figure it out. || ...You decide. || ...Think.", "What do you think~? || What do you think~? || Guess~ || You tell me~"));
             b.End();
             b.Branch("too");
-            b.Her_(Lines.T(t, "Huh...? You... you mean it? I'm so happy... Then next time, please say it properly. For real.",
-                "WAIT, REALLY?! Okay, okay, I'm not crying! Say it again for real sometime!",
-                "...I see. Then I expect you to confess properly. Soon.",
-                "...Took you long enough. Now do it right, with a real confession, okay?"));
+            b.Her_(Lines.T(t, "Huh...? You... you mean it? I'm so happy... Then next time, please say it properly. For real. || You mean it...? I'm so happy... say it properly next time. || Really...? Then confess for real, okay? || I'm so happy... please say it again, properly.",
+                "WAIT, REALLY?! Okay, okay, I'm not crying! Say it again for real sometime! || REALLY?! Not crying! Say it for real! || Wait! Yes! Say it properly! || OMG! Again! For real!",
+                "...I see. Then I expect you to confess properly. Soon. || ...Then confess properly. Soon. || ...I expect a real confession. || ...Good. Properly, next time.",
+                "...Took you long enough. Now do it right, with a real confession, okay? || Took you long enough. Do it right. || Finally. A real confession, please. || About time. Properly, now."));
             b.End();
         }
 
@@ -674,10 +674,10 @@ namespace Joojkk.CampusLife
 
         public override void Scene(ArcCtx c, Request r, SceneBuilder b)
         {
-            b.Her_(Lines.T(c.Tone, "Exams are coming... so I thought, maybe we could study together? Just the two of us.",
-                "Study date! Snacks, notes, and you! Best plan ever!",
-                "We study together this week. That's decided.",
-                "Let's study together. I'll even let you look at my notes... and other things~"));
+            b.Her_(Lines.T(c.Tone, "Exams are coming... so I thought, maybe we could study together? Just the two of us. || Exams are close... study together? Just us? || Could we study together? Just the two of us... || I'd like to study with you...",
+                "Study date! Snacks, notes, and you! Best plan ever! || Study date! Snacks included! || Study party! Us two! || Let's study! Together! Fun!",
+                "We study together this week. That's decided. || We study together. Decided. || This week, we study. Together. || Study session. You and me.",
+                "Let's study together. I'll even let you look at my notes... and other things~ || Study with me. I'll show my notes. And more. || Let's study. Among other things~ || Study date? I'll make it interesting."));
             b.Me("It's a date.");
         }
 
@@ -715,22 +715,22 @@ namespace Joojkk.CampusLife
         {
             var t = c.Tone;
             b.Me("Hey... are you okay?");
-            b.Her_(Lines.T(t, "N-no... everything went wrong today. I forgot my homework, I tripped in the hallway, and...",
-                "NO! Today is the WORST! Everything is going wrong!",
-                "...Not now.",
-                "Do I LOOK okay?"));
+            b.Her_(Lines.T(t, "N-no... everything went wrong today. I forgot my homework, I tripped in the hallway, and... || Everything went wrong today... || I forgot everything and tripped... it's awful... || Today's been terrible...",
+                "NO! Today is the WORST! Everything is going wrong! || WORST day! Everything's broken! || Nothing's going right! || Today hates me!",
+                "...Not now. || ...Not now. || ...Leave it. || ...Bad day.",
+                "Do I LOOK okay? || Do I look okay? || Does it look like it? || Obviously not."));
             var opts = new List<string> { "Want to talk about it?", "listen", "Want to hear a joke?", "joke" };
             if (G.Int >= 30) { opts.Add("I'll just sit here with you. [INT]"); opts.Add("sit"); }
             b.Choice(opts.ToArray());
             b.Branch("listen");
-            b.Her_(Lines.T(t, "...Thank you for listening. I feel a bit lighter.", "...Yeah. Thanks. Venting helps.", "...You're a decent listener.", "...Fine. Thanks for not running away."));
+            b.Her_(Lines.T(t, "...Thank you for listening. I feel a bit lighter. || Thank you for listening. || I feel better... thank you. || Thanks for hearing me out.", "...Yeah. Thanks. Venting helps. || Thanks! Venting helps! || Yeah. Thanks! || That helped!", "...You're a decent listener. || ...Decent listener. || ...Thanks. || ...Helpful.", "...Fine. Thanks for not running away. || Thanks for not running. || You stayed. Thanks. || You didn't flee. Impressive."));
             b.End();
             b.Branch("joke");
-            b.Her_(Lines.T(t, "...Pfft. That was so bad. ...Thanks.", "HAHA! That's so dumb! ...I needed that.", "...That's not funny. ...Okay, it's a little funny.", "Seriously? ...Ugh, I laughed. You win."));
+            b.Her_(Lines.T(t, "...Pfft. That was so bad. ...Thanks. || Pfft... so bad. Thanks. || Hehe... that was silly. Thank you. || That was awful... I laughed.", "HAHA! That's so dumb! ...I needed that. || HAHA! Dumb! Needed that! || So dumb! Thanks! || Ahaha! Perfect!", "...That's not funny. ...Okay, it's a little funny. || ...Not funny. ...A little. || ...Idiot. ...Funny. || ...Hm. Amusing.", "Seriously? ...Ugh, I laughed. You win. || Ugh, I laughed. You win. || Fine. Funny. || Seriously? ...Okay, I laughed."));
             b.End();
             b.Branch("sit");
             b.Narr("You sit next to her in silence. After a while, she leans on your shoulder.");
-            b.Her_(Lines.T(t, "...You always know what I need.", "...This is nice. Thanks.", "...Stay a bit longer.", "...Don't tell anyone I did this."));
+            b.Her_(Lines.T(t, "...You always know what I need. || You always know what I need. || You're always here for me... || This is exactly what I needed.", "...This is nice. Thanks. || This is nice. Thanks. || Thanks! This helps! || Mm! Nice!", "...Stay a bit longer. || ...Stay longer. || ...Don't go yet. || ...A little longer.", "...Don't tell anyone I did this. || Don't tell anyone. || Secret, okay? || Nobody hears about this."));
             b.End();
         }
 

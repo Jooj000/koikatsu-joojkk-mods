@@ -52,11 +52,11 @@ namespace Joojkk.CampusLife
                     q = rival ? Q.Neutral : Q.Good;
                     b.Me(Lines.Pick("So what do you like about " + on + "?", "What's the best thing about " + on + ", in your opinion?", "Be honest. What's " + on + " really like?"));
                     Say2(b, to, other, "duo3.pair.about", rival
-                        ? T(to, "...Like? That's a strong word.", "LIKE?! Ugh... she's... fine. Okay?", "...Her persistence. Barely.", "Hmm... her face when she loses to me~")
-                        : T(to, on + " always notices when I'm down...", on + "'s SO fun! Every day's an adventure with her!", "She's honest. That's rare.", "She laughs at my jokes. Even the bad ones~"), x);
+                        ? T(to, "...Like? That's a strong word. || ...Like? That's a big word. || ...Um, like? Hmm... || ...What do I like about her? Let me think...", "LIKE?! Ugh... she's... fine. Okay? || Like?! She's... okay! FINE! || Ugh, okay! She's alright! || What do I like? ...She's fun. Don't tell her!", "...Her persistence. Barely. || ...She doesn't give up. That's all. || ...Her stubbornness. Slightly. || ...She's tolerable.", "Hmm... her face when she loses to me~ || Her face when I win. Priceless~ || When she pouts. Adorable. || How easy she is to tease~")
+                        : T(to, on + " always notices when I'm down..." + " || " + on + " always knows when I'm sad..." + " || " + on + " is so kind to me..." + " || " + on + " always cheers me up.", on + "'s SO fun! Every day's an adventure with her!" + " || " + on + " makes everything fun!" + " || " + on + "'s the best partner in crime! || Life with " + on + " is never boring!", "She's honest. That's rare. || She's honest. Rare quality. || She's reliable. || She doesn't lie. I value that.", "She laughs at my jokes. Even the bad ones~ || She laughs at all my jokes~ || She puts up with me. Brave girl. || She's fun to mess with."), x);
                     Say2(b, other, to, "duo3.pair.about.other", rival
-                        ? T(other, "...I can hear you, you know.", "HEY! I'm right here!", "...Charming.", "Aww, she does care~")
-                        : T(other, "E-eh... you're embarrassing me...", "Stoooop, you're making me blush!", "...Thanks. I suppose.", "Keep going, I'm listening~"), x, rival ? Feel.Pout : Feel.Shy);
+                        ? T(other, "...I can hear you, you know. || ...I can hear you. || ...I'm right here, you know... || ...You know I can hear you, right?", "HEY! I'm right here! || HELLO! Standing right here! || Hey! I can hear you! || I'm RIGHT HERE!", "...Charming. || ...How flattering. || ...Lovely. || ...I'm present.", "Aww, she does care~ || Aww, she likes me~ || She cares! How sweet! || Oh? She really does like me.")
+                        : T(other, "E-eh... you're embarrassing me... || Ah... that's embarrassing... || D-don't say that... || Um... you're making me blush...", "Stoooop, you're making me blush! || Stop! I'm blushing! || Aww, quit it! || Hehe! Stop!", "...Thanks. I suppose. || ...Thank you. I guess. || ...Hm. Thanks. || ...Appreciated.", "Keep going, I'm listening~ || Go on, I'm enjoying this~ || More, please~ || Don't stop now."), x, rival ? Feel.Pout : Feel.Shy);
                     more = () => Arcs.AddBond(GirlInfo.Key(to), GirlInfo.Key(other), rival ? 1 : 2);
                     seen = false;
                     break;
@@ -64,11 +64,11 @@ namespace Joojkk.CampusLife
                     q = rival ? Q.Good : Funny(to);
                     b.Me(Lines.Pick("Tell me something embarrassing about " + on + ".", "Got any good stories about " + on + "?", "What's the dumbest thing " + on + " ever did?"));
                     Say2(b, to, other, "duo3.pair.story", T(to,
-                        "Um... once " + on + " fell asleep in class and answered the teacher in her sleep...",
-                        "Oh! Oh! " + on + " walked into the wrong locker room once! In front of EVERYONE!",
-                        on + " cried at a cartoon last week. A cartoon about a lost umbrella.",
-                        "She practices her confessions in the mirror. I've seen it~"), x);
-                    Say2(b, other, to, "duo3.pair.story.other", T(other, "Wh-why would you tell him that?!", "THAT WAS ONE TIME!", "...You promised.", "Oh, you are so dead later~"), x, Feel.Surprised);
+                        "Um... once " + on + " fell asleep in class and answered the teacher in her sleep..." + " || " + on + " once sneezed so loud the whole library jumped..." + " || " + on + " once waved back at someone who wasn't waving at her..." + " || " + on + " talks to the school cat. In full sentences.",
+                        "Oh! Oh! " + on + " walked into the wrong locker room once! In front of EVERYONE!" + " || " + on + " tripped on the stage at assembly! Twice!" + " || " + on + " once ate my lunch thinking it was hers!" + " || " + on + " sang in the shower and the whole floor heard!",
+                        on + " cried at a cartoon last week. A cartoon about a lost umbrella." + " || " + on + " got lost in the school. In second year." + " || " + on + " apologized to a door she walked into." + " || " + on + " named her plants. All of them.",
+                        "She practices her confessions in the mirror. I've seen it~" + " || " + on + " writes his name in her notebook. Hearts too~ || She sleeps with a plushie. Named it after you~" + " || " + on + " rehearses talking to you. Out loud~"), x);
+                    Say2(b, other, to, "duo3.pair.story.other", T(other, "Wh-why would you tell him that?! || Why did you tell him that?! || N-no! That's a secret! || Please stop!", "THAT WAS ONE TIME! || ONE TIME! It was ONE TIME! || HEY! You swore! || That's slander!", "...You promised. || ...We had a deal. || ...Traitor. || ...Unforgivable.", "Oh, you are so dead later~ || Oh, you're going to regret that~ || Payback's coming, sweetie. || You're so dead later~"), x, Feel.Surprised);
                     more = () => Arcs.AddBond(GirlInfo.Key(to), GirlInfo.Key(other), rival ? -1 : 1);
                     seen = false;
                     break;
@@ -78,11 +78,11 @@ namespace Joojkk.CampusLife
                     b.Me(Lines.Pick("Does " + on + " ever talk about me?", "Be honest: does " + on + " mention me when I'm not around?", "So... does " + on + " say anything about me?"));
                     x["otherlikes"] = into ? "yes" : "no";
                     Say2(b, to, other, "duo3.pair.talks", into
-                        ? T(to, "...She does. A lot, actually.", "ALL the time! It's kind of annoying!", "...More than she'd admit.", "Oh, constantly. Should I tell him what she said~?")
-                        : T(to, "Not really... why, should she?", "Hmm, not that I remember!", "...No.", "Not really. Feeling ignored~?"), x);
+                        ? T(to, "...She does. A lot, actually. || ...Yes. Quite a lot. || ...She does, actually. || ...Mm. Often.", "ALL the time! It's kind of annoying! || Nonstop! It's exhausting! || Constantly! Ugh! || All. The. Time!", "...More than she'd admit. || ...Frequently. || ...More than she lets on. || ...Often.", "Oh, constantly. Should I tell him what she said~? || Constantly. Want details~? || All the time. Should I share? || Oh, nonstop. I have quotes~")
+                        : T(to, "Not really... why, should she? || Not really... should she? || Hmm, I don't think so. || Not that I know...", "Hmm, not that I remember! || Nope, not that I know! || Hmm, nah! || Not really!", "...No. || ...No. || ...Not that I've heard. || ...No.", "Not really. Feeling ignored~? || Not really. Jealous~? || Nope. Feeling neglected? || Hmm, no. Poor you."), x);
                     Say2(b, other, to, "duo3.pair.talks.other", into
-                        ? T(other, "D-don't tell him that!", "HEY! Traitor!", "...I'll remember this.", "...You're the worst. Okay, maybe a little.")
-                        : T(other, "...Um.", "Why would I?!", "...Should I?", "Maybe if you were more interesting~"), x, into ? Feel.Shy : Feel.Normal);
+                        ? T(other, "D-don't tell him that! || Don't tell him! || P-please, don't! || No! That's private!", "HEY! Traitor! || TRAITOR! || Hey! Zip it! || You promised!", "...I'll remember this. || ...I won't forget this. || ...Noted. || ...Unacceptable.", "...You're the worst. Okay, maybe a little. || ...Worst. ...Okay, maybe a bit true. || ...You're terrible. ...Fine. || ...Rude. Accurate, but rude.")
+                        : T(other, "...Um. || ...Um... || ...Well... || ...I don't know...", "Why would I?! || Why would I?! || As if! || Nope!", "...Should I? || ...Should I? || ...Why? || ...Hm.", "Maybe if you were more interesting~ || Maybe if you tried harder~ || Be more interesting, then. || Earn it."), x, into ? Feel.Shy : Feel.Normal);
                     q = Q.Good;
                     if (into) more = () => PayTo(other, Lvl.Romance, Q.Good, "t3pair:talked");
                     seen = false;
@@ -95,15 +95,15 @@ namespace Joojkk.CampusLife
                         ? Tn("...Um. I'll read it later.", "A note? What is this, middle school?", "...No.", "Cute. Not happening~")
                         : Tn("...! (She tucks it away, red to the ears.)", "Hehe! Secret mission accepted!", "...Fine. Later.", "Ooh, a love letter? Saved~"));
                     seen = Random.value < 0.35f;
-                    if (seen) Say2(b, other, to, "duo3.pair.note.other", T(other, "...Are you two passing notes?", "Hey! What was that?! Let me see!", "...I saw that.", "Secrets? Without me~?"), x, Feel.Pout);
+                    if (seen) Say2(b, other, to, "duo3.pair.note.other", T(other, "...Are you two passing notes? || ...Are you two passing secrets? || ...What was that? || ...Did you just whisper something?", "Hey! What was that?! Let me see! || Hey! What's that?! Share! || I saw! What was it?! || No secrets! Show me!", "...I saw that. || ...I noticed. || ...Caught that. || ...Hm. I saw.", "Secrets? Without me~? || Secrets without me~? Rude. || Whispering? Spill. || Oh~ What's the secret?"), x, Feel.Pout);
                     break;
                 case "invite":
                     q = QFromFavor(to, 40, 15);
                     b.Me(Lines.Pick("Want to go out after school sometime, " + tn + "? " + on + " can come too.", "Let's all hang out this weekend. You and " + on + ".", "There's a place I want to take you. " + on + " too, if she wants."));
                     Reply(b, to, other, "invite", q, q == Q.Bad ? Tn("Um... maybe...", "Eh? I'll think about it!", "...We'll see.", "Hmm. Earn it~") : Tn("I'd like that...", "Yes! The three of us!", "...Sure.", "A group date? Bold~"));
                     Say2(b, other, to, "duo3.pair.invite.other", rival
-                        ? T(other, "...I'll pass, thanks.", "With HER? No way.", "...Pass.", "Hmm, I'll think about it. No.")
-                        : T(other, "Me too? ...Okay!", "Count me in!", "...Fine. I'll come.", "Of course I'm coming~"), x, rival ? Feel.Pout : Feel.Smile);
+                        ? T(other, "...I'll pass, thanks. || ...No, thank you. || ...I'll skip it. || ...Maybe not.", "With HER? No way. || With her?! Nope! || No way! || Ew, no!", "...Pass. || ...No. || ...Pass. || ...Decline.", "Hmm, I'll think about it. No. || Let me think... no. || Tempting. No. || Hmm. Nah.")
+                        : T(other, "Me too? ...Okay! || Me too? Okay! || I can come too? Yay... || Oh! Okay, I'll come!", "Count me in! || I'm in! || Woo! Count me in! || Me too! Yay!", "...Fine. I'll come. || ...I'll come. || ...Fine. || ...Alright.", "Of course I'm coming~ || Obviously I'm coming~ || Like I'd miss it. || Of course. I'm the fun one."), x, rival ? Feel.Pout : Feel.Smile);
                     if (q != Q.Bad)
                         more = () =>
                         {
@@ -188,12 +188,12 @@ namespace Joojkk.CampusLife
         {
             switch (what)
             {
-                case "condom": return T(h, "...You have protection, right? I won't, otherwise.", "Protection first! No arguing!", "Condom. Non-negotiable.", "Rule one: you wear something. No exceptions~");
-                case "kiss": return T(h, "Um... just... not on the lips. Not yet.", "No kissing, okay?! The rest is... fine.", "...Don't kiss me. That's all.", "Kisses are off the table. For now~");
-                case "anal": return T(h, "And... nothing strange back there, please...", "Normal stuff only, got it?!", "...Nothing weird.", "Keep it vanilla, okay~?");
-                case "caress": return T(h, "Don't... touch too much. I get nervous.", "Hands where I can see them!", "...Not too much touching.", "No groping. I mean it~");
-                case "massage": return T(h, "...No toys. Please.", "No gadgets! Just you!", "...No devices.", "Leave the toys at home~");
-                default: return T(h, "...Go slow. There's a lot I'm not ready for yet.", "Okay but... let's keep it simple, alright?!", "...Gently. I'll tell you what's off limits.", "Slow down, tiger. I have rules~");
+                case "condom": return T(h, "...You have protection, right? I won't, otherwise. || ...You'll use protection, right? Otherwise, no. || ...Please, protection first. || ...Only with protection. Okay?", "Protection first! No arguing! || Protection! Not optional! || Condom first! Rules are rules! || Safety first! No arguments!", "Condom. Non-negotiable. || Protection. Mandatory. || Condom. Or nothing. || Protection or no.", "Rule one: you wear something. No exceptions~ || You wear something. No negotiation~ || Protection, darling. Always. || Wrap it up, or forget it~");
+                case "kiss": return T(h, "Um... just... not on the lips. Not yet. || ...Not on the lips. Not yet, please. || ...Um, no kissing yet... || ...Kissing is... too much for now.", "No kissing, okay?! The rest is... fine. || No kisses! The rest is okay! || Kissing's off! Got it?! || Lips are off limits!", "...Don't kiss me. That's all. || ...No kissing. || ...Lips are excluded. || ...Don't kiss me.", "Kisses are off the table. For now~ || No kisses. You'll have to earn those~ || Kisses later. Maybe. || Lips are off the menu. For now.");
+                case "anal": return T(h, "And... nothing strange back there, please... || ...Nothing strange, please. || ...Only... normal things. || ...Please don't go back there.", "Normal stuff only, got it?! || Normal only! Deal?! || No weird stuff! || Keep it normal!", "...Nothing weird. || ...Nothing unusual. || ...Standard only. || ...Nothing strange.", "Keep it vanilla, okay~? || Vanilla only, sweetie~ || Normal, please. Don't get creative. || Keep it simple~");
+                case "caress": return T(h, "Don't... touch too much. I get nervous. || ...Not too much touching. I'm nervous. || ...Gently. Not too much. || ...Please, don't touch too much.", "Hands where I can see them! || Hands! Where I can see them! || Watch the hands! || No grabbing!", "...Not too much touching. || ...Limited touching. || ...Keep your hands in check. || ...Minimal contact.", "No groping. I mean it~ || No groping. Seriously~ || Hands to yourself. Mostly. || Behave those hands.");
+                case "massage": return T(h, "...No toys. Please. || ...No toys, please. || ...Nothing like that... || ...Just you. No toys.", "No gadgets! Just you! || No toys! Only you! || Gadgets? Nope! || Leave the toys!", "...No devices. || ...No devices. || ...No tools. || ...No toys.", "Leave the toys at home~ || Toys stay home~ || No toys. You're enough. Barely. || Just you. Don't bring toys.");
+                default: return T(h, "...Go slow. There's a lot I'm not ready for yet. || ...Slowly. I'm not ready for a lot yet. || ...Please be gentle. || ...Let's go slow. Okay?", "Okay but... let's keep it simple, alright?! || Simple! Keep it simple! || Okay, but nothing fancy, okay?! || Slow and simple! Deal!", "...Gently. I'll tell you what's off limits. || ...Gently. I'll say what's off limits. || ...Slowly. I have limits. || ...Carefully. With rules.", "Slow down, tiger. I have rules~ || Easy, tiger. Rules first~ || Slow down. I set the pace. || Patience. I have rules.");
             }
         }
     }

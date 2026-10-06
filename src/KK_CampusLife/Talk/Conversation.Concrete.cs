@@ -158,8 +158,8 @@ namespace Joojkk.CampusLife
             b.Me(Lines.Pick("I was thinking about " + CampusLife.Memories.When(m) + "...", "Hey, about " + CampusLife.Memories.When(m) + "..."));
             var good = m.Tone >= 0;
             b.Her_(good
-                ? Lines.T(tone, "When " + m.Text + "? Hehe... I remember. I was really happy.", "Oh yeah! When " + m.Text + "! That was great!", "...When " + m.Text + ". I remember.", "When " + m.Text + "? You remember that? Cute.")
-                : Lines.T(tone, "...When " + m.Text + "? Let's not dwell on it.", "Ugh, when " + m.Text + "? Don't remind me!", "...I'd rather not talk about that.", "Oh, THAT. Smooth move bringing it up."));
+                ? Lines.T(tone, "When " + m.Text + "? Hehe... I remember. I was really happy. || When " + m.Text + "... I still think about it sometimes. || Ah, when " + m.Text + "? That made me so happy." + " || " + m.Text + "... yes, I remember. It was a nice day.", "Oh yeah! When " + m.Text + "! That was great! || Ahh, when " + m.Text + "! Best day! || Oh man, " + m.Text + "! That was awesome! || Yes! " + m.Text + "! I loved that!", "...When " + m.Text + ". I remember. || ...When " + m.Text + ". Yes. || ..." + m.Text + ". I haven't forgotten. || ...I remember that. " + m.Text + ".", "When " + m.Text + "? You remember that? Cute. || You still remember when " + m.Text + "? Sweet." + " || " + m.Text + "~ You think about that a lot, hm? || Oh, when " + m.Text + ". Sentimental, aren't you?")
+                : Lines.T(tone, "...When " + m.Text + "? Let's not dwell on it. || ...When " + m.Text + "... I'd rather forget that. || ...Let's not talk about " + m.Text + ", please. || ..." + m.Text + "? That still hurts a little.", "Ugh, when " + m.Text + "? Don't remind me! || Ugh! " + m.Text + "?! Why bring that up?! || Nooo, not " + m.Text + "! Forget it! || Hey! Let's not talk about " + m.Text + "!", "...I'd rather not talk about that. || ...Let's not. || ...I'd prefer to forget " + m.Text + ". || ...Drop it.", "Oh, THAT. Smooth move bringing it up. || Ah, " + m.Text + ". Great timing, really. || Wow. Bringing up " + m.Text + "? Bold." + " || " + m.Text + "? You really want to go there?"));
             CampusLife.Memories.Mentioned(m);
             Play(b, good ? 2 : -1, good ? "♪ She remembers it fondly." : null);
         }
@@ -195,8 +195,8 @@ namespace Joojkk.CampusLife
             var ok = Social.Trust(h) >= 40 || Random.value < 0.4f;
             var b = new SceneBuilder(h, true);
             b.Me("Could you help me study a bit? The next test is going to wreck me.");
-            b.Her_(ok ? Lines.T(tone, "Of course! Let's go over the hard parts together.", "Study buddies! I'll quiz you!", "...Fine. Pay attention, I won't repeat myself.", "Tutoring costs extra. Kidding. Sit.")
-                      : Lines.T(tone, "Ah... I'm not really good at explaining, sorry...", "Ehh, I can barely study myself!", "...Not today.", "Ask me when we're closer."));
+            b.Her_(ok ? Lines.T(tone, "Of course! Let's go over the hard parts together. || Sure! Let's work through it together. || Of course! I'll help as much as I can. || Mm! Let's study side by side.", "Study buddies! I'll quiz you! || Study date! I'll make flash cards! || Let's go! I'll quiz you till you get it! || Yes! Two brains are better than one!", "...Fine. Pay attention, I won't repeat myself. || ...Fine. Listen closely. || ...Sit. We'll go through it once. || ...Alright. Don't waste my time.", "Tutoring costs extra. Kidding. Sit. || My lessons are expensive, you know. Kidding~ Sit. || A private tutor? Lucky you. Come here. || Fine, I'll teach you. Try to keep up.")
+                      : Lines.T(tone, "Ah... I'm not really good at explaining, sorry... || Sorry... I'm bad at explaining things... || Um... I don't think I'd be much help... sorry. || I'm not that good at it myself... sorry.", "Ehh, I can barely study myself! || Ehh?! I'm terrible at studying! || Me? Teach? Ha! No way! || Sorry, I'm the one who needs a tutor!", "...Not today. || ...Not now. || ...Another time. || ...I'm busy.", "Ask me when we're closer. || Get closer to me first. Then maybe. || Hmm, I don't tutor just anyone. || Earn it first."));
             Play(b, ok ? 1 : 0, ok ? "She went through your notes with you. (+2 INT)" : null, ok ? (Action)(() => { G.AddStats(2, 0, 0); Social.AddTrust(h, 1); }) : null);
         }
 
@@ -208,8 +208,8 @@ namespace Joojkk.CampusLife
             var ok = Social.Trust(h) >= 35;
             var b = new SceneBuilder(h, true);
             b.Me("Could you put in a good word for me with " + fn + "?");
-            b.Her_(ok ? Lines.T(tone, "Hehe... okay. I'll tell her you're nice.", "Leave it to me! I'll hype you up!", "...Fine. I'll say you're tolerable.", "Oh? Interested in " + fn + "? ...Fine. I'll do it.")
-                      : Lines.T(tone, "Um... I don't know you well enough for that yet...", "Eh? Why me? Do it yourself!", "...No.", "Earn my good word first."));
+            b.Her_(ok ? Lines.T(tone, "Hehe... okay. I'll tell her you're nice. || Okay! I'll tell her good things about you. || Hehe... sure. I'll put in a good word. || Mm, I'll tell her you're kind.", "Leave it to me! I'll hype you up! || Sure! I'll make you sound amazing! || You got it! Best wingwoman ever! || Leave it to me! I'll sell you hard!", "...Fine. I'll say you're tolerable. || ...Fine. I'll say you're acceptable. || ...I'll mention you. Briefly. || ...Alright. One good word.", "Oh? Interested in " + fn + "? ...Fine. I'll do it. || Oho, you like " + fn + "? Fine, I'll help." + " || " + fn + ", huh? Interesting. I'll do it. || Wanting " + fn + "? Okay~ I'll put in a word.")
+                      : Lines.T(tone, "Um... I don't know you well enough for that yet... || Sorry... we're not that close yet. || Um... maybe when we know each other better? || I don't think I can do that yet...", "Eh? Why me? Do it yourself! || Huh? Why should I? Go yourself! || Nah! Do your own talking! || Eh? Nope! You've got a mouth!", "...No. || ...No. || ...Not my job. || ...Do it yourself.", "Earn my good word first. || My good word isn't free, you know. || Hmm, you haven't earned that. || Win me over first~"));
             Play(b, ok ? 0 : -1, ok ? fn + " will hear good things about you. (+favor with " + fn + ")" : null, ok ? (Action)(() => { G.AddFavor(friend, 4, 0); Social.AddTrust(friend, 3); }) : null);
         }
 
@@ -223,8 +223,8 @@ namespace Joojkk.CampusLife
             var ok = like != null && Social.Trust(h) >= 30;
             var b = new SceneBuilder(h, true);
             b.Me("What does " + fn + " like? Asking for... reasons.");
-            b.Her_(ok ? Lines.T(tone, fn + "? She loves " + GirlInfo.LikeLabel(like) + ". Don't tell her I told you!", "Easy! " + GirlInfo.LikeLabel(like) + "! She can't resist!", "..." + GirlInfo.LikeLabel(like) + ". You didn't hear it from me.", "Hm. " + GirlInfo.LikeLabel(like) + ". Use it wisely.")
-                      : Lines.T(tone, "Hmm... I'm not sure. Ask her yourself?", "No idea! Ask her!", "...Ask her.", "Do your own research."));
+            b.Her_(ok ? Lines.T(tone, fn + "? She loves " + GirlInfo.LikeLabel(like) + ". Don't tell her I told you!" + " || " + fn + " really likes " + GirlInfo.LikeLabel(like) + "... Keep it secret that I told you! || I think " + fn + " would love " + GirlInfo.LikeLabel(like) + ". Shh!" + " || " + GirlInfo.LikeLabel(like) + "! That's her favorite. Don't say it was me...", "Easy! " + GirlInfo.LikeLabel(like) + "! She can't resist! || Oh, that's easy! " + GirlInfo.LikeLabel(like) + "!" + " || " + GirlInfo.LikeLabel(like) + "! She goes crazy for it! || Psst! " + GirlInfo.LikeLabel(like) + "! Trust me!", "..." + GirlInfo.LikeLabel(like) + ". You didn't hear it from me. || ..." + GirlInfo.LikeLabel(like) + ". Don't quote me. || ...She likes " + GirlInfo.LikeLabel(like) + ". That's all. || ..." + GirlInfo.LikeLabel(like) + ". Keep my name out of it.", "Hm. " + GirlInfo.LikeLabel(like) + ". Use it wisely." + " || " + GirlInfo.LikeLabel(like) + ". Now you owe me. || Hmm~ " + GirlInfo.LikeLabel(like) + ". Don't waste it. || Fine, a hint: " + GirlInfo.LikeLabel(like) + ".")
+                      : Lines.T(tone, "Hmm... I'm not sure. Ask her yourself? || Hmm... I don't really know. Maybe ask her? || Sorry, I'm not sure... ask her directly? || I don't know... she might tell you herself.", "No idea! Ask her! || No clue! Just ask her! || Beats me! Go ask! || Huh, no idea! Ask her yourself!", "...Ask her. || ...No idea. Ask her. || ...I don't know. || ...Ask her directly.", "Do your own research. || Do your own homework. || Why would I know? Ask her. || Figure it out yourself~"));
             Play(b, 0, ok ? "Learned: " + fn + " likes " + GirlInfo.LikeLabel(like) + "." : null, ok ? (Action)(() => fs.KnownLikes |= 1 << Array.IndexOf(GirlInfo.LikeIds, like)) : null);
         }
 
@@ -235,8 +235,8 @@ namespace Joojkk.CampusLife
             var ok = Social.Trust(h) >= 50;
             var b = new SceneBuilder(h, true);
             b.Me("If the class rep asks where I was during cleaning... could you cover for me?");
-            b.Her_(ok ? Lines.T(tone, "Ehh... just this once, okay?", "Hehe, partners in crime!", "...You owe me.", "Fine. But now you owe me a favor.")
-                      : Lines.T(tone, "I-I can't lie to the class rep...", "No way! She's scary!", "...No.", "And what do I get? Nothing? Then no."));
+            b.Her_(ok ? Lines.T(tone, "Ehh... just this once, okay? || Um... okay, but only this one time. || Just this once... please don't tell anyone. || Okay... but it's our secret.", "Hehe, partners in crime! || Ehehe! Partners in crime! || Okay! Our little secret! || Deal! I'll cover for you!", "...You owe me. || ...Fine. You owe me. || ...Once. Remember it. || ...Alright. Don't make it a habit.", "Fine. But now you owe me a favor. || Fine. But I'm collecting on this later. || Okay~ That's one favor you owe me. || Sure. You'll pay me back, of course.")
+                      : Lines.T(tone, "I-I can't lie to the class rep... || I can't lie to the class rep... sorry... || I-I'm too scared to lie to her... || No... I'd get in so much trouble...", "No way! She's scary! || No way! She'd kill me! || Nope! The class rep is terrifying! || Not happening! She sees through everything!", "...No. || ...No. || ...I won't lie for you. || ...Not doing that.", "And what do I get? Nothing? Then no. || What's in it for me? Nothing? Then no. || Lie for free? I don't think so. || No reward, no lie."));
             Play(b, 0, ok ? "She covered for you. (+1 reputation, you owe her one)" : null, ok ? (Action)(() =>
             {
                 S.Reputation = Mathf.Clamp(S.Reputation + 1, 0, 100);
@@ -262,7 +262,7 @@ namespace Joojkk.CampusLife
             var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
             b.Me(fn + " asked me to tell you: " + r.Item + ".");
-            b.Her_(Lines.T(tone, "Oh! Thank you for telling me... " + fn + " is so thoughtful.", "Ohh, got it! Thanks, messenger!", "...Understood. Thanks.", "A messenger, huh? Thanks, I guess."));
+            b.Her_(Lines.T(tone, "Oh! Thank you for telling me... " + fn + " is so thoughtful. || Oh... thank you for telling me. That's so sweet of " + fn + "." + " || " + fn + " said that? ...Thank you for passing it on. || That's kind of " + fn + "... thank you.", "Ohh, got it! Thanks, messenger! || Ohh, nice! Thanks, mailman! || Got it! Thanks for the message! || Aww, cool! Thanks!", "...Understood. Thanks. || ...Understood. Thank you. || ...Message received. Thanks. || ...I see. Thanks.", "A messenger, huh? Thanks, I guess. || Playing messenger now? Thanks, I suppose. || How cute, a little messenger. Thanks. || Delivered, hm? Thanks~"));
             Play(b, 1, "Message delivered. " + fn + " will be glad.", () =>
             {
                 if (from != null)
