@@ -1,8 +1,6 @@
 # School Optimizer for Koikatsu
 
-**A smoother, lighter school in Koikatsu's story mode.** Fewer students loaded at once (the important ones first),
-a memory guard, physics and animation only where you can see them, background outfit changes, and outside fixes
-for other mods that eat video memory.
+**A smoother, lighter school in Koikatsu's story mode.** Fewer students loaded at once (the important ones first), a memory guard, physics and animation only where you can see them, background outfit changes, and outside fixes for other mods that eat video memory.
 
 > Part of [Joojkk's Koikatsu mods](https://github.com/Jooj000/koikatsu-joojkk-mods) ·
 > Sister mods: [Campus Life](https://github.com/Jooj000/KK_CampusLife) ·
@@ -17,10 +15,8 @@ for other mods that eat video memory.
 ## Features
 
 **Students**
-- A cap on the students loaded per period, with slots reserved for the girls that matter (girlfriends, story
-  heroines, the ones you talked to); the cap goes down by itself when RAM is almost full.
-- Absent students keep only their game data; students on other maps can drop their clothes meshes (and, as an
-  experiment, be unloaded entirely).
+- A cap on the students loaded per period, with slots reserved for the girls that matter (girlfriends, story heroines, the ones you talked to); the cap goes down by itself when RAM is almost full.
+- Absent students keep only their game data; students on other maps can drop their clothes meshes (and, as an experiment, be unloaded entirely).
 - Students avoid walking into each other (personal space).
 
 **Rendering**
@@ -48,16 +44,12 @@ for other mods that eat video memory.
 
 ## Installation
 
-1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx), [KKAPI 1.45+, ExtensibleSaveFormat and
-   Sideloader](https://github.com/IllusionMods) (the HF Patch has them).
-2. Download `KK_SchoolOptimizer.dll` from the [releases](https://github.com/Jooj000/KK_SchoolOptimizer/releases) and
-   put it in `BepInEx\plugins\Joojkk\`.
+1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx), [KKAPI 1.45+, ExtensibleSaveFormat and Sideloader](https://github.com/IllusionMods) (the HF Patch has them).
+2. Download `KK_SchoolOptimizer.dll` from the [releases](https://github.com/Jooj000/KK_SchoolOptimizer/releases) and put it in `BepInEx\plugins\Joojkk\`.
 
 ## Configuration
 
-`BepInEx\config\joojkk.schooloptimizer.cfg`, or ConfigurationManager (F1), in six groups: students, crowding,
-rendering, other mods (shown only for the mods you have), loading, and the missing zipmods list. Defaults are safe;
-the experimental options start off.
+`BepInEx\config\joojkk.schooloptimizer.cfg`, or ConfigurationManager (F1), in six groups: students, crowding, rendering, other mods (shown only for the mods you have), loading, and the missing zipmods list. Defaults are safe; the experimental options start off.
 
 ## Compatibility
 
@@ -71,9 +63,7 @@ See [CHANGELOG.md](CHANGELOG.md).
 ## Credits
 
 - Made by **Joojkk**.
-- The outside fixes touch AmazingNewAccessoryLogic (njaecha), MaterialEditor, HairAccessoryCustomizer,
-  UncensorSelector and KK_Plugins (DeathWeasel1337 and the IllusionMods contributors), KK_Pregnancy, KK_LewdCrestX and
-  KK_GameplayMod (ManlyMarco). All credit for those mods stays with their authors.
+- The outside fixes touch AmazingNewAccessoryLogic (njaecha), MaterialEditor, HairAccessoryCustomizer, UncensorSelector and KK_Plugins (DeathWeasel1337 and the IllusionMods contributors), KK_Pregnancy, KK_LewdCrestX and KK_GameplayMod (ManlyMarco). All credit for those mods stays with their authors.
 - Koikatsu is © ILLUSION. No game files are included.
 
 ## License

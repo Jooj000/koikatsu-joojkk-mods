@@ -451,7 +451,8 @@ namespace Joojkk.CampusLife
             _lastMapName = name;
             var kind = PlaceKind(name);
             if (kind == null || NotedThisPeriod.Contains(name)) return;
-            var here = GirlsOnMyMap().ToList();
+            // Boys are not bothered by you there; their own trouble is in Boys.Tick.
+            var here = GirlsOnMyMap().Where(g => !Boys.Is(g)).ToList();
             if (here.Count == 0) return;
             NotedThisPeriod.Add(name);
             if (kind == "boys")

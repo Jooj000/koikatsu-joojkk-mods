@@ -469,6 +469,40 @@ namespace Joojkk.CampusLife
             return h.relation >= 0 && !h.isAnger && (h.isGirlfriend || h.favor >= 25 || MoodOf(h) == CampusLife.Mood.Flirty);
         }
 
+        /// <summary>
+        /// The director's answer to a romance or spicy line: "yes",
+        /// "wary_yes" (she takes it, flustered), "wary_no" (she wanted to, something held her back) or "no".
+        /// </summary>
+        private static string FlirtAnswer(SaveData.Heroine h, bool spicy, string what)
+        {
+            var s = Sess;
+            return Consent.Flirt(h, spicy, what, Onlookers(h).Count, s != null && s.Did.Contains("refused"));
+        }
+
+        private static bool Took(string a) { return a == "yes" || a == "wary_yes"; }
+
+        private static Q QOf(string a) { return Took(a) ? Q.Good : a == "wary_no" ? Q.Neutral : Q.Bad; }
+
+        /// <summary>A wary yes: a flustered beat before her line.</summary>
+        private static string WaryLead(SaveData.Heroine h)
+        {
+            return T(h, "Eh... um... || A-ah... || Um... || Oh... um...", "W-whoa, okay... || Eh?! Um... || H-hey... || Uh... wow...", "...Hm. || ...... || ...Well. || ...Oh.", "W-well... || Hmph... || Oh... || My, my...") + " ";
+        }
+
+        /// <summary>A wary no: she wanted to take it and something held her back; flustered, never cold.</summary>
+        private static string WaryNoLine(SaveData.Heroine h, bool spicy)
+        {
+            return spicy
+                ? T(h, "...I-I can't answer that. Not yet. Please don't stop liking me. || ...My face is burning. Let's... not, for now. || ...I want to say something back. I just can't. Not yet. || ...Ask me again some other time. Please.",
+                    "Ahh, you can't just SAY stuff like that! ...Ask me later, okay?! || Wh-what am I supposed to say to that?! Later! || My brain just stopped! Give me a minute! || Not fair! ...Ask me again sometime.",
+                    "...Don't say things like that here. ...Not that I hated it. || ...Not now. Ask me again. || ...I'm not answering that. Yet. || ...You'll have to wait for that one.",
+                    "Oh, you're tempting me. ...Not today. || Mm, nice try. Ask me another day~ || Careful, I almost said yes. || Not yet. Keep trying, though~")
+                : T(h, "...Th-thank you. I don't know what to say yet. || ...That makes me happy. I just... can't answer properly. || ...I-I'll think about that, okay? || ...You're making me nervous. In a good way.",
+                    "Eh?! Um! I... I'll answer later, okay?! || Wait, wait, I'm not ready for that! ...But thanks! || Whoa, my heart! Ask me again sometime! || Ahh, I don't know what to say!",
+                    "...I heard you. Give me time. || ...Not yet. But I heard you. || ...I'll remember that. || ...Hm. Ask me again sometime.",
+                    "Oh? Sweet. ...I'll let you know. || Mm, flattery. Maybe it'll work someday~ || Cute. Ask me again later. || Almost got me there.");
+        }
+
         private static void BuildRomance(Session s, SaveData.Heroine h, GirlState gs, List<UEntry> l)
         {
             var trait = ComplimentTrait(h, gs);
@@ -1255,24 +1289,26 @@ namespace Joojkk.CampusLife
 
         private static void ComplimentU(SaveData.Heroine h, string[] trait)
         {
-            var ok = RomanceOpen(h);
+            var a = FlirtAnswer(h, false, "compliment");
+            var ok = Took(a);
             var b = new SceneBuilder(h, true);
             b.Me("I really like " + trait[0].Replace("her ", "your ").Replace("she ", "you ") + ".");
-            b.Face(h, ok ? Feel.Shy : Feel.Normal).Her_(ok ? T(h, "Y-you noticed that? ...Thank you. || You noticed...? Thank you. || Oh... you saw that? Thanks. || Ah... thank you for noticing.", "You noticed?! That makes me so happy! || You noticed?! Yay! || You saw?! Happy! || No way! You noticed!", "...You pay attention. I like that. || ...Observant. Good. || ...You noticed. Good. || ...Attentive.", "Oh? Someone's been watching me~ || Watching me? || Someone's been looking~ || Noticed, did you?")
+            b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Normal).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + T(h, "Y-you noticed that? ...Thank you. || You noticed...? Thank you. || Oh... you saw that? Thanks. || Ah... thank you for noticing.", "You noticed?! That makes me so happy! || You noticed?! Yay! || You saw?! Happy! || No way! You noticed!", "...You pay attention. I like that. || ...Observant. Good. || ...You noticed. Good. || ...Attentive.", "Oh? Someone's been watching me~ || Watching me? || Someone's been looking~ || Noticed, did you?")
                                                         : T(h, "Um... thanks, I guess? || Um... thanks? || Oh... thank you? || Ah... okay, thanks.", "Oh, uh, thanks! || Uh, thanks! || Oh! Thanks! || Huh, thanks!", "...Okay. || ...Okay. || ...Hm. || ...Alright.", "...Where's this coming from? || ...Why? || ...Random. || ...Okay?"));
-            Plain(h, Lvl.Romance, ok ? Q.Good : Q.Bad, "compliment:" + trait[1], b, ok ? "♥ " + GirlInfo.FirstName(h) + " is happy you noticed." : null);
+            Plain(h, Lvl.Romance, QOf(a), "compliment:" + trait[1], b, ok ? "♥ " + GirlInfo.FirstName(h) + (a == "wary_yes" ? " is flustered, but happy you noticed." : " is happy you noticed.") : null);
         }
 
         private static void HoldHandU(SaveData.Heroine h)
         {
-            var ok = Consent.Decide(h, Ask.HoldHand);
+            var a = Consent.HoldHand(h, Onlookers(h).Count);
+            var ok = Took(a);
             var close = Lines.Closeness(h);
             var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
             b.Me(RomanceLines.PlayerHand(close));
-            b.Face(h, ok ? Feel.Shy : Feel.Surprised).Her_(ok ? RomanceLines.HandYes(tone, close) : RomanceLines.HandNo(tone));
+            b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Surprised).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceLines.HandYes(tone, close) : RomanceLines.HandNo(tone));
             var witnesses = Witness.Who(h, Witness.Hand);
-            Plain(h, Lvl.Romance, ok ? Q.Good : Q.Bad, "hand", b, ok ? "♥ " + GirlInfo.FirstName(h) + " holds your hand." : null, () =>
+            Plain(h, Lvl.Romance, QOf(a), "hand", b, ok ? "♥ " + GirlInfo.FirstName(h) + (a == "wary_yes" ? " lets you hold her hand, blushing." : " holds your hand.") : null, () =>
             {
                 if (ok) Social.Add(Social.Kinds.Flirted, h, witnesses, Witness.Hand);
             });
@@ -1280,7 +1316,8 @@ namespace Joojkk.CampusLife
 
         private static void SweetTalk(SaveData.Heroine h, GirlState gs)
         {
-            var ok = RomanceOpen(h);
+            var a = FlirtAnswer(h, false, "sweet");
+            var ok = Took(a);
             var tone = GirlInfo.ToneOf(h);
             // Always about something real between you: a tradition, a good memory, a like you learned, or today.
             string detail;
@@ -1293,8 +1330,8 @@ namespace Joojkk.CampusLife
             }
             var b = new SceneBuilder(h, true);
             b.Me(detail);
-            b.Face(h, ok ? Feel.Love : Feel.Normal).Her_(ok ? ConvoLines.FlirtGood(tone, Lines.Closeness(h)) : ConvoLines.FlirtTooSoon(tone));
-            Plain(h, Lvl.Romance, ok ? Q.Good : Q.Bad, "sweet", b, ok ? "♥ " + GirlInfo.FirstName(h) + " is blushing." : null, () =>
+            b.Face(h, a == "yes" ? Feel.Love : ok || a == "wary_no" ? Feel.Shy : Feel.Normal).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + ConvoLines.FlirtGood(tone, Lines.Closeness(h)) : ConvoLines.FlirtTooSoon(tone));
+            Plain(h, Lvl.Romance, QOf(a), "sweet", b, ok ? "♥ " + GirlInfo.FirstName(h) + " is blushing." : null, () =>
             {
                 if (ok && Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
             });
@@ -1411,23 +1448,25 @@ namespace Joojkk.CampusLife
         private static void TeaseU(SaveData.Heroine h, string[] ctx)
         {
             var s = Sess;
-            var ok = SpicyOpen(s, h);
+            var a = FlirtAnswer(h, true, "tease");
+            var ok = Took(a);
             var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
             b.Me(ctx[1]);
-            b.Face(h, ok ? Feel.Shy : Feel.Pout).Her_(ok ? RomanceLines.TeaseGood(tone, Lines.Closeness(h)) : RomanceLines.TeaseBad(tone));
-            Plain(h, Lvl.Spicy, ok ? Q.Good : Q.Bad, "tease:" + ctx[0], b, ok ? "♥ " + GirlInfo.FirstName(h) + " is flustered." : null);
+            b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Pout).Her_(a == "wary_no" ? WaryNoLine(h, true) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceLines.TeaseGood(tone, Lines.Closeness(h)) : RomanceLines.TeaseBad(tone));
+            Plain(h, Lvl.Spicy, QOf(a), "tease:" + ctx[0], b, ok ? "♥ " + GirlInfo.FirstName(h) + " is flustered." : null);
         }
 
         private static void WhisperU(SaveData.Heroine h)
         {
             var s = Sess;
-            var ok = SpicyOpen(s, h);
+            var a = FlirtAnswer(h, true, "whisper");
+            var ok = Took(a);
             var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
             b.Me(RomanceLines.PlayerWhisper(h.isGirlfriend));
-            b.Face(h, ok ? Feel.Love : Feel.Pout).Her_(ok ? RomanceLines.WhisperGood(tone, h.isGirlfriend) : RomanceLines.WhisperBad(tone));
-            Plain(h, Lvl.Spicy, ok ? Q.Good : Q.Bad, "whisper", b, ok ? "♥ " + GirlInfo.FirstName(h) + " is breathing faster." : null, () =>
+            b.Face(h, a == "yes" ? Feel.Love : ok || a == "wary_no" ? Feel.Shy : Feel.Pout).Her_(a == "wary_no" ? WaryNoLine(h, true) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceLines.WhisperGood(tone, h.isGirlfriend) : RomanceLines.WhisperBad(tone));
+            Plain(h, Lvl.Spicy, QOf(a), "whisper", b, ok ? "♥ " + GirlInfo.FirstName(h) + " is breathing faster." : null, () =>
             {
                 if (ok && Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
             });
@@ -1436,13 +1475,14 @@ namespace Joojkk.CampusLife
         private static void FlirtBold(SaveData.Heroine h)
         {
             var s = Sess;
-            var open = SpicyOpen(s, h);
-            var strong = open && (MoodOf(h) == CampusLife.Mood.Flirty || h.lewdness >= 50 || h.isGirlfriend);
-            var q = strong ? Q.Good : open ? Q.Neutral : Q.Bad;
+            var a = FlirtAnswer(h, true, "bold");
+            var strong = a == "yes" && (MoodOf(h) == CampusLife.Mood.Flirty || h.lewdness >= 50 || h.isGirlfriend);
+            var q = strong ? Q.Good : a == "no" ? Q.Bad : Q.Neutral;
             var b = new SceneBuilder(h, true);
             b.Me(h.isGirlfriend ? "I can't stop thinking about you. All of you." : "Honestly? I've been wanting to get a lot closer to you.");
             b.Face(h, q == Q.Good ? Feel.Love : q == Q.Neutral ? Feel.Shy : Feel.Pout).Her_(q == Q.Good
                 ? T(h, "...M-me too. Don't make me say it twice. || ...Me too. Don't make me repeat it. || ...I feel the same. || ...Me too... so much.", "Ah... you can't just SAY that! ...But me too. || You can't just say that! ...Me too! || Ahh! ...Me too! || Hey! ...Same!", "...Then come closer. || ...Then come here. || ...Closer. || ...Same.", "Finally. I was wondering when you'd say it. || Finally. Took you long enough. || About time you said it. || Knew it. Me too.")
+                : a == "wary_no" ? WaryNoLine(h, true)
                 : q == Q.Neutral ? T(h, "Eh... th-that's... um... || Eh... that's... um... || Ah... um... || W-well...", "Whoa, okay! That's... a lot! || Whoa! That's a lot! || Wow, okay! || Eep!", "...Bold. || ...Bold. || ...Daring. || ...Hm.", "Oh? Bold today, aren't we? || Bold today, aren't we? || Oh? Brave. || My, my.")
                 : T(h, "...That's too much, I'm sorry. || ...That's too much, sorry. || ...I can't... sorry. || ...Too fast, sorry.", "Whoa, back up! Too fast! || Back up! Too fast! || Whoa! Slow down! || Too much!", "...No. || ...No. || ...Stop. || ...Not happening.", "Down, boy. || Down, boy. || Easy. || Nope."));
             Plain(h, Lvl.Spicy, q, "bold", b, q == Q.Good ? "♥ " + GirlInfo.FirstName(h) + " is clearly into it." : null);
@@ -1460,7 +1500,8 @@ namespace Joojkk.CampusLife
         private static void PrivateMemoryU(SaveData.Heroine h, string[] mem)
         {
             var s = Sess;
-            var ok = SpicyOpen(s, h);
+            var a = FlirtAnswer(h, true, "private");
+            var ok = Took(a);
             var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
             if (mem[2] != null)
@@ -1474,6 +1515,7 @@ namespace Joojkk.CampusLife
                 b.Me(RomanceLines.PlayerMemories(h.hCount));
                 b.Face(h, ok ? Feel.Love : Feel.Normal).Her_(ok ? RomanceLines.Memories(tone, h.hCount) : T(h, "...Not here, please. || ...Not here. || ...Please, not here. || ...Somewhere else.", "Shh! Not here! || Not here! || Shh! || Quiet!", "...Not now. || ...Not now. || ...No. || ...Later.", "...Patience. || ...Patience. || ...Later. || ...Wait."));
             }
+            if (a == "wary_yes") b.Narr("She looks away, red to the ears, but she doesn't change the subject.");
             Plain(h, Lvl.Spicy, ok ? Q.Good : Q.Neutral, "private:" + mem[1], b, ok ? "♥ " + GirlInfo.FirstName(h) + " remembers it too." : null);
         }
 

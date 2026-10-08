@@ -66,6 +66,9 @@ namespace Joojkk.CampusLife
         public static ConfigEntry<bool> MoodsEnabled;
         public static ConfigEntry<int> MoodHintMinIntelligence;
         public static ConfigEntry<float> MoodBonusMultiplier;
+        public static ConfigEntry<float> EaseReserved;
+        public static ConfigEntry<float> EaseNormal;
+        public static ConfigEntry<float> EaseOpen;
         public static ConfigEntry<bool> GiftsEnabled;
         public static ConfigEntry<bool> AskAboutDayButton;
         public static ConfigEntry<bool> TalkFatigue;
@@ -79,7 +82,6 @@ namespace Joojkk.CampusLife
         public static ConfigEntry<bool> EpisodesEnabled;
         public static ConfigEntry<int> EpisodeEveryDays;
         public static ConfigEntry<bool> DevotionEnabled;
-        public static ConfigEntry<string> BoyCards;
 
         // 5. Large classes
         public static ConfigEntry<bool> SpotlightEnabled;
@@ -191,6 +193,9 @@ namespace Joojkk.CampusLife
             MoodsEnabled = B(c, gi, "Enable daily moods", true, "Each girl wakes up with a mood (hungry, bored, stressed, lonely, flirty, sleepy, cheerful). Matching it gives bonus favor.");
             MoodHintMinIntelligence = B(c, gi, "Intelligence to read moods", 30, "Below this Intelligence you only learn a girl's mood by asking her ('How are you today?').", new AcceptableValueRange<int>(0, 100));
             MoodBonusMultiplier = B(c, gi, "Mood bonus multiplier", 1f, "", new AcceptableValueRange<float>(0f, 4f));
+            EaseReserved = B(c, gi, "Ease: reserved girls", 1f, "Multiplies how readily a reserved girl says yes (touches, kiss, romance, invitations, H): her favor and H count this much more in every answer. 1 = the tuned default; lower is harder, higher is easier.", new AcceptableValueRange<float>(0.25f, 3f));
+            EaseNormal = B(c, gi, "Ease: normal girls", 1f, "The same for girls of normal pace.", new AcceptableValueRange<float>(0.25f, 3f));
+            EaseOpen = B(c, gi, "Ease: open girls", 1f, "The same for open girls (they already start at x1.4).", new AcceptableValueRange<float>(0.25f, 3f));
             GiftsEnabled = B(c, gi, "Enable gifts", true, "Adds 'Give a gift' to conversations. Gifts matching her profile (sweets, coffee, sports...) work best.");
             AskAboutDayButton = B(c, gi, "Enable How are you today button", true, "The game's talk button \"How are you today?\" (reveals her mood and a hint about what she likes), for the talks Campus Life leaves to the game: story heroines, teachers, or with \"New conversation system\" off. In Campus Life's own talk the same question is under Talk.");
             NewConversation = B(c, gi, "New conversation system", true, "The talk screen's buttons open Campus Life's conversation: the speech bubble for talking (topics, let her talk, ask about friends, jokes, compliments, the game's small talk and listen), the heart for romance and H, the question mark for invitations, gifts and \"come with me\". Game options only show when the game allows them. Off = the game's buttons as they were.");
@@ -203,7 +208,6 @@ namespace Joojkk.CampusLife
             EpisodesEnabled = B(c, gi, "Spotlight episodes", true, "The girls in the spotlight (or the ones you see most, in a small class) invite you to an outing played like the story mode: she stands in front of a painted background, with choices built from how close you are, your reputation, what you did for her, what she remembers and what you carry. Friendship stories (food, mysteries, festivals, heart-to-hearts); alone with her, the last choice can turn romantic: her hand, a kiss, a confession, or somewhere private (H).");
             EpisodeEveryDays = B(c, gi, "Days between spotlight episodes", 1, "At most one episode every N school days.", new AcceptableValueRange<int>(1, 7));
             TalkFatigue = B(c, gi, "Repeated questions count less", true, "The game's own questions give the same favor every time. From the 3rd conversation of the day with the same girl, only half (then a quarter) of that favor counts.");
-            BoyCards = B(c, gi, "Boys in the class", "", "First names, separated by commas, of class members who are boys (a femboy card saved as a girl, for example). Lines about them say he/him and boyfriend, and they call themselves a boyfriend; their voice and personality stay the same. Male card files are detected by themselves.");
             DevotionEnabled = B(c, gi, "Enable devotion", true, "Long-term bond that keeps growing after favor reaches 100. Every level unlocks a perk (more pay, energy, daily presents, stat bonuses, double rewards).");
 
             const string s = "05. Large classes";

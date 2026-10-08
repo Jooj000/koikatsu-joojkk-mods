@@ -1,8 +1,6 @@
 # H Male Wardrobe for Koikatsu
 
-**Dress the male in H the same way you dress the girl.** The game's own dress icon is copied into the H menu bar,
-right after hers, with all its sub-menus (clothes, accessories, change outfit, outfit type). Every copied button does
-for him exactly what the original does for her. Changes last only for that H scene.
+**Dress the male in H the same way you dress the girl.** The game's own dress icon is copied into the H menu bar, right after hers, with all its sub-menus (clothes, accessories, change outfit, outfit type). Every copied button does for him exactly what the original does for her. Changes last only for that H scene.
 
 > Part of [Joojkk's Koikatsu mods](https://github.com/Jooj000/koikatsu-joojkk-mods) ·
 > Sister mods: [Campus Life](https://github.com/Jooj000/KK_CampusLife) ·
@@ -16,10 +14,8 @@ for him exactly what the original does for her. Changes last only for that H sce
 
 ## Installation
 
-1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx) and
-   [KKAPI 1.30.1+](https://github.com/IllusionMods/IllusionModdingAPI) (the HF Patch has them).
-2. Download `KK_HMaleWardrobe.dll` from the [releases](https://github.com/Jooj000/KK_HMaleWardrobe/releases) and put
-   it in `BepInEx\plugins\Joojkk\`.
+1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx) and [KKAPI 1.30.1+](https://github.com/IllusionMods/IllusionModdingAPI) (the HF Patch has them).
+2. Download `KK_HMaleWardrobe.dll` from the [releases](https://github.com/Jooj000/KK_HMaleWardrobe/releases) and put it in `BepInEx\plugins\Joojkk\`.
 
 ## Configuration
 

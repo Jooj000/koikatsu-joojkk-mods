@@ -24,7 +24,7 @@ namespace Joojkk.CampusLife
             public string Kind = "";       // touch | idle
             public int Part, Level;
             public bool Look;
-            public string PartName, Kiss = "";   // butt / mouth (ours, TouchMore); yes / no for a kiss
+            public string PartName, Kiss = "", Answer = "";   // butt / mouth (ours, TouchMore); yes / wary / wary_no / no for a kiss; the director's answer to a touch
             public float At, ReadyAt;
             public Info Info;
         }
@@ -246,7 +246,7 @@ namespace Joojkk.CampusLife
                     var pose = VariedPose(PartPool(__instance, _touch, _parts, _stage), PosePool(__instance, "touch", _stage), "t" + _touch + _parts, gamePose, Mathf.Min(_stage, 3));
                     if (pose != null) __result.pose = pose;
                 }
-                if (Active) _pend = new Pend { Her = h, Kind = "touch", Part = _parts, Look = !_touch, Level = h.isAnger ? 3 : _stage, At = Time.realtimeSinceStartup, Info = __instance };
+                if (Active) _pend = new Pend { Her = h, Kind = "touch", Part = _parts, Look = !_touch, Level = h.isAnger ? 3 : _stage, Answer = h.isAnger ? "no" : Consent.LastTouch, At = Time.realtimeSinceStartup, Info = __instance };
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Touch clip: " + e.Message); }
         }
@@ -401,6 +401,7 @@ namespace Joojkk.CampusLife
                 // places (butt, lips) always answer: the game says nothing for them.
                 if (p.PartName == null && n > 1 && p.Level < 2 && Random.value > 0.35f) return;
                 if (p.Kiss != "") c["kiss"] = p.Kiss;
+                if (p.Answer != "") c["answer"] = p.Answer;
                 c["part"] = part;
                 c["look"] = p.Look ? "yes" : "no";
                 c["level"] = p.Level == 0 ? "welcome" : p.Level == 1 ? "uneasy" : p.Level == 2 ? "stop" : "angry";
@@ -421,8 +422,9 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(h, true);
             if (p.Kiss == "yes") b.Narr(Lines.Pick("You lean in and kiss her softly.", "You touch her lips, then lean in and kiss her.", "You lean in. She doesn't pull away, and your lips meet.", "You brush her lips with a finger and kiss her before she can say a word."));
             else if (p.Kiss == "wary") b.Narr(Lines.Pick("You lean in. She stiffens, hesitates... and doesn't pull away.", "Your lips meet hers. She holds still, eyes squeezed shut.", "You lean in slowly. She flinches, then lets you kiss her.", "She freezes when you lean in, but she doesn't turn her face away."));
+            else if (p.Kiss == "wary_no") b.Narr(Lines.Pick("You lean in. She leans in too... then stops an inch away and turns aside, flustered.", "Your lips almost meet. She pulls back at the last second, cheeks burning.", "She closes her eyes when you lean in, then catches herself and steps back.", "For a moment she lets you come close. Then she puts a finger on your lips."));
             else if (p.Kiss == "no") b.Narr(Lines.Pick("You lean in for a kiss. She turns her face away.", "Your finger brushes her lips; she steps back before you can lean in.", "You lean in. She puts a hand on your chest and stops you."));
-            b.Face(h, p.Kiss == "yes" ? Feel.Love : p.Kiss == "wary" ? Feel.Shy : FeelOf(rule, c)).Her_(line);
+            b.Face(h, p.Kiss == "yes" ? Feel.Love : p.Kiss == "wary" || p.Kiss == "wary_no" ? Feel.Shy : FeelOf(rule, c)).Her_(line);
             // Weight: she walks off after the third silence if she barely knows you; a crowd watching you
             // touch her gets talked about; a rival watching remembers.
             Action after = p.PartName != null ? SpotAfter(p) : null;

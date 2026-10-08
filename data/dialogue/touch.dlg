@@ -2,7 +2,7 @@
 # {part} hand | head | cheek | chest | face (looking) | butt (touched or stared at) | mouth, {look} yes when you only stare, {level} welcome | uneasy | stop |
 # angry, {again} yes after the first touch of that place in this conversation. Who is watching: {watchers} none | one |
 # few | crowd, {watcher} the one that matters, {wrel} yourgf | rival | bff | friend | other, {group} friends | rivals |
-# mixed. {kiss} yes | no for the mouth. Weights per key in weights.dlg (@weights touch); the best-scoring rules
+# mixed. {kiss} yes | wary | wary_no | no for the mouth; {answer} the director's answer to every other touch. Weights per key in weights.dlg (@weights touch); the best-scoring rules
 # share the draw. Every rule has at least three lines.
 
 # ================= base: level x tone =================
@@ -650,3 +650,103 @@ feel shy
 - [Hm?|Ah...|Oh...] [Is something on my face?|Your fingers are cold!|Why are you touching my cheek?] [...It's nice.|Hehe, that tickles.|I'm blushing, aren't I.]
 - [Mmh...|...] [So gentle.|You're looking at me so seriously...] [What is it?|...Say something.]
 - [Hey~|Oh?] [Poking my cheek?|Are you checking if it's soft?] [It is, isn't it?|Rude... but okay.]
+
+
+# ================= the director's four answers =================
+# {answer} yes | wary_yes | wary_no | no for every touch (the game's hand, head, cheek and chest, our butt): a wary yes
+# lets it happen, flustered; a wary no wanted to and held back, never cold. {kiss} wary_no: she almost let you.
+@rule touch.answer.waryyes.gentle
+on touch
+when answer=wary_yes tone=gentle
+feel shy
+- [A-ah...|Um...|Eh...] [I-it's okay... I think.|I don't mind... I'm just not used to it.|My face is so hot right now.]
+- [...!|Oh...] [You surprised me. ...You can keep going.|I'm nervous, but... it's fine.]
+- [Mm...|Ah...] [Just... be gentle, okay?|Don't look at me while you do that.]
+
+@rule touch.answer.waryyes.energetic
+on touch
+when answer=wary_yes tone=energetic
+feel shy
+- [W-whoa!|Eh?!|H-hey!] [Okay, okay, it's fine! ...I think!|I'm not freaking out! You're freaking out!]
+- [Ahaha... ha...|Um!] [That's new! ...Not bad, though.|My heart's doing a whole thing right now.]
+- [Hey...|Eep!] [Warn me first next time! ...But okay.|I'll allow it. Barely!]
+
+@rule touch.answer.waryyes.cool
+on touch
+when answer=wary_yes tone=cool
+feel shy
+- [...|...Hm.] [I didn't stop you. Don't read into it.|...Fine. Carefully.]
+- [...You're bold.|...] [I'm only letting it go this once.|My pulse is none of your business.]
+- [...Hah.|...] [Unexpected. Not unpleasant.|...Keep your hand still.]
+
+@rule touch.answer.waryyes.teasing
+on touch
+when answer=wary_yes tone=teasing
+feel shy
+- [O-oh?|W-well...|Hmph...] [Look at you, being all brave.|I'm not blushing. It's warm in here.]
+- [Ah...|...!] [Okay, that one got me. Just a little.|You're lucky I'm in a good mood.]
+- [My, my...|Heh...] [Don't get used to it~|I'll pretend that didn't fluster me.]
+
+@rule touch.answer.waryno.gentle
+on touch
+when answer=wary_no tone=gentle
+feel shy
+- [Ah... wait...|Um, I...|Sorry...] [It's not that I don't like it. Just not yet.|I want to... I just can't, right now.|Can we go a little slower?]
+- [...I'm sorry.|Please don't be hurt...] [My heart isn't ready yet.|Another time. I promise I'm not angry.]
+- [Ah...|Mm...] [Not here, okay? ...Not that I hated it.|I'm too nervous. Give me time?]
+
+@rule touch.answer.waryno.energetic
+on touch
+when answer=wary_no tone=energetic
+feel shy
+- [W-wait wait wait!|Hold on!|Eep!] [Not now! ...But not never, okay?!|My brain just short-circuited! Later!]
+- [Hey!|Ahh!] [I'm not mad! I just can't right now!|Too much, too fast! Ask me again sometime!]
+- [Uh!|Gah!] [Timeout! I need to breathe!|Rain check! Rain check!]
+
+@rule touch.answer.waryno.cool
+on touch
+when answer=wary_no tone=cool
+feel shy
+- [...Not now.|...Wait.|...] [I didn't say I disliked it.|Ask me again another day.]
+- [...Stop. For now.|...] [That isn't a no forever.|I'm not ready. That's all.]
+- [...Hm.|...] [Later. Somewhere better.|Patience. You'll get your answer.]
+
+@rule touch.answer.waryno.teasing
+on touch
+when answer=wary_no tone=teasing
+feel shy
+- [Ah-ah~|Not so fast~|Oh, wait...] [You almost had me there.|Tempting. Not today, though.]
+- [Mm, no~|Hold on...] [I'm not saying no. I'm saying not yet.|You'll have to earn that one.]
+- [Careful...|Heh...] [I nearly let you.|Ask me again when I'm in the mood~]
+
+@rule touch.mouth.waryno.gentle
+on touch
+when part=mouth kiss=wary_no tone=gentle
+feel shy
+- [Ah... I...|W-wait...|Sorry...] [I wanted to. I really did. Just... not yet.|My heart's too loud. Another time?|Please don't be hurt. I'm just scared.]
+- [...!|Um...] [That was so close...|I'll be ready soon. I think.]
+- [Mm...|Ah...] [Not here. Somewhere just us.|Let me keep this feeling a little longer.]
+
+@rule touch.mouth.waryno.energetic
+on touch
+when part=mouth kiss=wary_no tone=energetic
+feel shy
+- [Whoa whoa whoa!|W-wait!|Eek!] [Not yet! But... soon, maybe?!|I almost did it! Ahh!]
+- [Hey!|Ahh...] [My heart nearly exploded!|Rain check, okay?! A real one!]
+- [Uh!|Gah!] [Give me a second to be brave!|Next time! I swear!]
+
+@rule touch.mouth.waryno.cool
+on touch
+when part=mouth kiss=wary_no tone=cool
+feel shy
+- [...Not yet.|...Wait.|...] [I wanted to. That's what bothers me.|Ask me again. Somewhere quiet.]
+- [...Hah.|...] [That was closer than I meant to let it get.|Another day.]
+- [...|...Hm.] [Don't look so disappointed. It's not a no.|Patience.]
+
+@rule touch.mouth.waryno.teasing
+on touch
+when part=mouth kiss=wary_no tone=teasing
+feel shy
+- [Ah-ah~|Not so fast...|Mm...] [I almost let you, you know.|You'll have to try a little harder.]
+- [Heh...|Oh my...] [So close. Too bad~|Ask me when nobody's around.]
+- [Careful...|...!] [Don't make that face. Next time, maybe.|You nearly stole it.]

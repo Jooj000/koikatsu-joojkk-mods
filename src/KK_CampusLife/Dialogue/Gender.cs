@@ -5,15 +5,16 @@ using System.Text.RegularExpressions;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// seja explicitamente feminino, troca para um masculino, mantendo a voz"). A male card file, or a first name listed
-    /// in "Boys in the class" (for femboy cards saved as girls), is a boy: lines about him say he/him/his and boyfriend,
-    /// and his own lines call himself a boyfriend or a guy. Tone and voice stay the same.
+    /// only the card's own sex counts, the femboy list is gone): lines about him say he/him/his and boyfriend, and his
+    /// own lines call himself a boyfriend or a guy. Tone and voice stay the same. See <see cref="Boys"/> for the rest.
     /// </summary>
     internal static class Gender
     {
         private static HashSet<string> _boys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private static List<string> _girls = new List<string>();
         private static string _cfg;
+
+        internal static string Forced = "";
         private static int _day = -2, _count = -1;
 
         public static bool IsBoy(SaveData.Heroine h)
@@ -25,12 +26,12 @@ namespace Joojkk.CampusLife
 
         public static bool AnyBoys { get { Refresh(); return _boys.Count > 0; } }
 
-        /// <summary>Rebuilt once a day, when the class changes size or the setting changes.</summary>
+        /// <summary>Rebuilt once a day, or when the class changes size.</summary>
         private static void Refresh()
         {
             try
             {
-                var cfg = Cfg.BoyCards != null ? Cfg.BoyCards.Value ?? "" : "";
+                var cfg = Forced ?? "";
                 var day = Campus.S != null ? Campus.S.Day : -1;
                 var count = G.Heroines.Count;
                 if (cfg == _cfg && day == _day && count == _count) return;

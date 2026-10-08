@@ -128,6 +128,7 @@ namespace Joojkk.CampusLife
             Social.DailySpread();
             ClubStory.Tick();
             Social.Tick();
+            Boys.Tick();
             try { WalkTalk.Tick(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
             if (Quiet) return;
             if (Time.realtimeSinceStartup - _periodStartedAt > 30f) Duo.Tick();

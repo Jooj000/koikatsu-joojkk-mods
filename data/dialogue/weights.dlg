@@ -9,7 +9,7 @@
 
 # Touches: where and how far you went, then who is watching and who she is to you.
 @weights touch
-- part=3 level=3 look=2 kiss=3 wrel=2.5 interrupt=2.5 rel=2.5 interest=2 lewd=2 mood=2 watchers=1.5 group=1.5 again=1 tone=1.5 placeid=1 period=0.5 sign=0.5
+- part=3 level=3 look=2 kiss=3 answer=6 wrel=2.5 interrupt=2.5 rel=2.5 interest=2 lewd=2 mood=2 watchers=1.5 group=1.5 again=1 tone=1.5 placeid=1 period=0.5 sign=0.5
 
 # Silence: how long it has lasted and how close you are; the place and the moment colour it.
 @weights idle

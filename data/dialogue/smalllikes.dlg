@@ -422,6 +422,11 @@ feel smile
 - [{Likedo}? With you? Yes!|You want to {likedo}? I'm in.] [I know exactly when.|You'd better not back out.]
 - [Okay, we're definitely going to {likedo}.|I've wanted someone to {likedo} with forever.] [This is happening.|Finally!]
 - [You want to {likedo}? With me?|Say no more. We're going to {likedo}.] [Yes, yes, yes!|I'm already excited.]
+- [Let's {likedo}! I know just the place.|You want to {likedo} with me? Yes!] [You won't regret it.|I'll show you everything about {like}.]
+- [Nobody ever wants to {likedo} with me.|I've been dying to {likedo} with someone.] [This is great!|Really?]
+- [Then I'll bring my favorite {like} stuff.|You're serious about {like}, then?] [Hehe!|This'll be fun.]
+- [If you get bored of {like}, it's too late.|Once we start with {like}, there's no going back.] [Warning you.|Hehe.]
+- [Saturday? We could {likedo} all day.|Let's {likedo} after school.] [I can't wait.|Okay!]
 
 @rule react.invite.like.gf
 on react
@@ -430,6 +435,10 @@ feel smile
 - [A date? Of course, silly.|You don't even have to ask.] [I'm your girlfriend.|Pick me up after class.]
 - [Yes. Always yes.|Anywhere with you is fine.] [I'll wear something cute.|Hold my hand on the way, okay?]
 - [Of course I'll go with you.|You and me? Obviously.] [Where are we going?|I was hoping you'd ask.]
+- [A date! And {like}! I'm so happy.|You remembered about {like}?] [I love you.|Hehe.]
+- [Of course. You don't even have to ask me.|Hey, you're my boyfriend. Silly.] [When?|Just tell me when.]
+- [I'll wear the outfit you like.|Should I dress up for you?] [Hehe.|It's a date.]
+- [Take me anywhere, as long as it's with you.|Anywhere's good with you.] [I mean it.|Hehe.]
 
 @rule react.invite.acq.neutral
 on react
@@ -437,6 +446,11 @@ when move=invite fit=neutral rel=acquaintance
 - [Hmm, we don't really know each other yet.|That's kind of sudden.] [Maybe with a few other people?|Let's talk a bit more first.]
 - [Just the two of us? Hm.|I don't usually go out with boys I just met.] [I'll think about it.|Ask me again sometime.]
 - [Hmm. Not yet, I think.|That's a big step for people who barely talk.] [But I'm not saying never.|Let's get to know each other first.]
+- [We don't really know each other yet.|We've only talked a few times.] [Maybe after a while?|Let's see.]
+- [Hm, that's a bit quick.|You're moving fast.] [Talk to me a little more first.|Ask me again later.]
+- [Would it just be us?|Are other people going?] [I'd feel better with a group.|I'm just asking.]
+- [Let's start with lunch, maybe.|What about something simple first?] [Then we'll see.|Okay?]
+- [I don't say yes to people I hardly know.|I'd need to know you better.] [No offense.|Sorry.]
 
 @rule react.invite.teacher
 on react
@@ -445,6 +459,11 @@ feel shy
 - [I'm your teacher. I can't just go out with a student.|That's... not appropriate.] [...Outside school, maybe. Quietly.|Ask me after graduation.]
 - [A student asking me out? Ahem.|I'll pretend I didn't hear that.] [...Mostly.|...Where, though? Just curious.]
 - [Mr... no. Let's not.|That's very flattering, but no.] [People would talk.|...For now.]
+- [I'm your teacher, remember?|As your teacher, I shouldn't say yes to that.] [Careful.|Hmm.]
+- [What would the other teachers say?|If the principal heard that...] [Don't get me in trouble.|Keep it down.]
+- [Is your homework done?|Finish your assignments, and then we'll talk.] [Hehe.|That's an order.]
+- [You shouldn't say that at school.|Not here.] [Lower your voice.|Someone could hear.]
+- [You're a bold student.|Students don't usually ask me things like that.] [I'll pretend I didn't hear.|Hm.]
 
 @rule react.invite.exteacher
 on react
@@ -461,6 +480,11 @@ feel smile
 - [You'd celebrate with me?|For my birthday? Really?] [That's the best present already.|I'll pick the cake!]
 - [My birthday with you... yeah, I'd like that.|You'd remember the day?] [I'll hold you to it.|Okay. It's a promise.]
 - [For my birthday? You're sweet.|Celebrating together? I'd love that.] [Don't be late.|You just made my week.]
+- [For my birthday? You remembered!|You'd spend my birthday with me?] [I'm so happy.|Really?]
+- [I wasn't expecting anyone to care about my birthday.|Nobody's offered to do anything for my birthday yet.] [You're the first.|Thanks.]
+- [Is there going to be cake?|I want cake. That's my only condition.] [Hehe.|Deal?]
+- [Don't spend too much, okay?|You don't need to get me anything.] [Just being there is enough.|But I won't stop you.]
+- [I'll keep that day free for you.|Then that day is yours.] [Hehe.|Don't forget.]
 
 # ================= her reaction to asking, by subject =================
 @rule react.ask.friend
@@ -470,6 +494,11 @@ opens tease,praise,invite
 - [{Bff} and I met on the first day. She sat in my seat.|{Bff}? She's loud, kind, and terrible at math.] [We've been inseparable since.|I love her.]
 - [{Bff} and I do everything together.|{Bff} would like you, I think.] [Shopping, karaoke, homework.|Maybe a little too much.]
 - [{Bff}? She's the only one who knows all my secrets.|{Bff} saved me in middle school.] [Don't tell her I said that.|Long story.]
+- [{Bff} and I met in first year.|With {bff}, it just clicked.] [We've been stuck together since.|I don't know why.]
+- [{Bff} knows all my secrets.|There's nothing I don't tell {bff}.] [That's kind of scary.|Almost nothing.]
+- [We usually just walk home and talk about nothing.|Mostly {bff} and I just kill time together.] [It's the best part of my day.|It's nice.]
+- [{Bff} is louder than you'd think.|You should see {bff} when nobody's looking.] [Hehe.|Don't say I told you.]
+- [Why so curious about {bff}?|Want me to introduce you to {bff}?] [Hm?|Careful.]
 
 @rule react.ask.friend.jealous
 on react
@@ -478,6 +507,11 @@ feel pout
 - [Why do you want to know so much about {bff}?|Should I be worried about you and {bff}?] [Just asking.|...Hmph.]
 - [{Bff} is taken. Probably.|Ask her yourself, then.] [...I'm kidding. Mostly.|...Not really.]
 - [Is {bff} more interesting than me?|You could just ask about me, you know.] [Rude.|I'm right here.]
+- [Why are you asking me about {bff}?|Are you interested in {bff}, or what?] [Just curious.|Hm.]
+- [{Bff} is great. Too great, maybe.|Everyone likes {bff}.] [Why would you want to know?|Hmph.]
+- [You could ask about me, you know.|I'm right here, and you're asking about {bff}?]
+- [Should I be worried about you and {bff}?|Is this why you came to talk to me?] [Be honest.|Hm?]
+- [Fine, {bff} is nice. Happy?|I'm not saying any more about {bff}.] [Now talk about something else.|Next topic.]
 
 @rule react.ask.birthday
 on react
@@ -487,6 +521,11 @@ feel smile
 - [What I want? Something small. Something you pick.|Usually just cake with my family.] [It's the thought.|But I wouldn't say no to more.]
 - [Last year nobody remembered.|I always make a wish on the candles.] [So this year, maybe you will.|I won't tell you what it is.]
 - [I'd like something you picked yourself.|Honestly? Just spending the day with someone.] [That's all.|That would be enough.]
+- [I don't need much for my birthday.|I usually keep my birthday simple.] [Cake, maybe.|Just friends and food.]
+- [Nobody ever remembers my birthday.|My birthday usually gets lost in the shuffle.] [So thanks for asking.|Hehe.]
+- [My family makes a fuss about it.|We always have dinner at home on my birthday.] [It's embarrassing.|It's nice, though.]
+- [Are you planning something?|Why do you ask? Is there a surprise?] [Hehe.|Tell me!]
+- [If you're asking what I want, {fav}.|Anything to do with {fav}.] [Hint, hint.|You know me.]
 
 @rule react.ask.horoscope
 on react
@@ -495,6 +534,11 @@ opens tease,share,invite
 - [It says {sign}s are loyal and stubborn.|Today's said to watch for a surprise.] [Accurate.|Maybe that's you.]
 - [Do our signs match? Let me think...|Fate? Maybe a little.] [Probably not, ha!|You're here, aren't you?]
 - [Mine said I'd meet someone important.|Apparently my lucky item today is an umbrella.] [Hm. Interesting.|It's not even raining.]
+- [{Sign}s are supposed to be stubborn.|I'm a {sign}, so I'm told I'm trouble.] [It's kind of true.|Hehe.]
+- [Today's said I'd have a meeting with someone important.|Mine said to watch for an unexpected encounter.] [Hm.|Is that you?]
+- [I read it every morning, but I only believe the good ones.|I only trust it when it's nice to me.] [Everyone does that.|Hehe.]
+- [What's your sign? Let me see if we match.|Tell me yours, and I'll tell you what it means.] [I've got a chart.|Come on.]
+- [Fate or not, it's fun.|I don't really believe it, but I don't skip it either.] [Don't laugh.|Mm.]
 
 @rule react.ask.club
 on react
@@ -503,6 +547,11 @@ opens invite,praise,share
 - [The {club} is preparing for the festival.|We've got a small team, but we're close.] [It's a secret, though.|Everyone pulls their weight.]
 - [We could always use more people in the {club}.|I do a bit of everything at the {club}.] [Interested?|Mostly the boring parts.]
 - [The {club} is where I can be myself.|We need someone strong in the {club}.] [It's hard to explain.|Know anyone?]
+- [The {club} is preparing for something big.|We've got a lot going on in the {club}.] [I can't say more.|It's exhausting, but fun.]
+- [I joined the {club} on a whim.|I got dragged into the {club} in first year.] [Now I can't leave.|I don't regret it.]
+- [Everyone in the {club} is a little strange.|The people in the {club} are the best part.] [I fit right in.|Hehe.]
+- [We could always use more people in the {club}.|Thinking of joining the {club}?] [Come and see.|Hm?]
+- [My favorite part of the {club}?|What I like most about the {club}?] [When it's over, and we all go get food.|The quiet after everyone leaves.]
 
 @rule react.share.like.yes
 on react
@@ -511,6 +560,11 @@ feel smile
 - [You like {like} too? No way!|Finally someone who gets it.] [We should {likedo} sometime.|I knew I liked you.]
 - [Wait, you know about {like}?|You actually listened to me.] [Okay, you're cool.|That's rare.]
 - [You like {like}?! I'm so happy!|No way, I thought nobody liked {like}.] [Tell me everything.|We have to talk more.]
+- [Finally, someone who gets {like}!|You really do like {like}, then.] [I knew I liked you.|We'll get along.]
+- [Wait, I want to hear your opinion on {like}.|So what's your favorite thing about {like}?] [Tell me.|Come on.]
+- [We should {likedo} together sometime.|You and I need to {likedo}.] [Seriously.|It's decided.]
+- [Nobody in my class gets it about {like}.|I never get to talk about {like} like this.] [This is great.|I'm so happy.]
+- [You're not just saying that about {like}, right?|You're not making fun of {like}, are you?] [Good.|Okay.]
 
 @rule react.share.like.no
 on react
@@ -518,3 +572,8 @@ when move=share likes=no fit=good|neutral
 - [See? You get it. {Like} is overrated.|At least we agree on that.] [Let's find something else.|What do you actually like?]
 - [You're not into {like} either? Ha.|Good, I thought I was the only one.] [We're boring together.|Let's be weird together.]
 - [{Like}? Yeah, no. Same.|Not a fan of {like} either?] [We think alike.|High five.]
+- [Ha, you sound more into {like} than I am.|You may like {like} more than I do.] [Good for you.|Fair.]
+- [Well, I never really got {like}.|I can't say I share your taste for {like}.] [But okay.|Maybe you could show me.]
+- [Maybe I've just been doing {like} wrong.|Is {like} really that good?] [Convince me.|Hm.]
+- [I'd rather {favdo}, honestly.|Give me {fav} any day.] [No offense.|Sorry.]
+- [I respect it, even if {like} isn't for me.|Everyone has their thing, and {like} is yours.] [Heh.|Fine by me.]

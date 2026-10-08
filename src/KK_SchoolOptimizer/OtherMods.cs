@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using BepInEx;
+using BepInEx.Configuration;
 using HarmonyLib;
 using UnityEngine;
 
@@ -231,6 +233,27 @@ namespace Joojkk.SchoolOptimizer
             var d = data.GetValue(controller, null);
             var f = d == null ? null : AccessTools.Field(d.GetType(), "File");
             return f != null && file == f.GetValue(d) as string;
+        }
+
+        /// <summary>
+        /// KSOX (Skin Overlay Mod, ManlyMarco): turns on its own "Compress overlay textures in RAM" and sets "Texture size
+        /// limit" to Original, the low-memory setup this install uses. Only through KSOX's config entries.
+        /// </summary>
+        public static void ApplyKsox()
+        {
+            try
+            {
+                if (!SchoolOptimizerPlugin.KsoxLowMemory.Value) return;
+                PluginInfo info;
+                if (!BepInEx.Bootstrap.Chainloader.PluginInfos.TryGetValue("KSOX", out info) || info.Instance == null) return;
+                var cfg = info.Instance.Config;
+                ConfigEntryBase e;
+                if (((IDictionary<ConfigDefinition, ConfigEntryBase>)cfg).TryGetValue(new ConfigDefinition("General", "Compress overlay textures in RAM"), out e) && e.SettingType == typeof(bool))
+                    e.BoxedValue = true;
+                if (((IDictionary<ConfigDefinition, ConfigEntryBase>)cfg).TryGetValue(new ConfigDefinition("General", "Texture size limit"), out e) && e.SettingType.IsEnum)
+                    e.BoxedValue = Enum.Parse(e.SettingType, "Original");
+            }
+            catch (Exception ex) { SchoolOptimizerPlugin.Log.LogWarning("KSOX options not set: " + ex.Message); }
         }
 
         private static void PatchAnal(Harmony harmony)

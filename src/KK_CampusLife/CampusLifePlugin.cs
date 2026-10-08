@@ -53,6 +53,8 @@ namespace Joojkk.CampusLife
                 try { Sunday.Install(harmony); }
                 catch (Exception e) { Log.LogWarning("Sunday stories not available: " + e.Message); }
                 CardTraits.Install(harmony);
+                try { Boys.Install(harmony); }
+                catch (Exception e) { Log.LogWarning("Boys in the class not available: " + e.Message); }
                 try { TransitionScreen.Install(harmony); }
                 catch (Exception e) { Log.LogWarning("Loading screen destination not available: " + e.Message); }
             }

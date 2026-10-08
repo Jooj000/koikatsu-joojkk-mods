@@ -1,8 +1,6 @@
 # Campus Life for Koikatsu
 
-**School life on top of Koikatsu's story mode.** The girls at your school get moods, memories, friendships and
-grudges of their own; a director plans their days; conversations become real conversations; and everything you do
-with them becomes part of a story the whole school talks about.
+**School life on top of Koikatsu's story mode.** The girls at your school get moods, memories, friendships and grudges of their own; a director plans their days; conversations become real conversations; and everything you do with them becomes part of a story the whole school talks about.
 
 > Part of [Joojkk's Koikatsu mods](https://github.com/Jooj000/koikatsu-joojkk-mods) ·
 > Sister mods: [School Optimizer](https://github.com/Jooj000/KK_SchoolOptimizer) ·
@@ -16,48 +14,33 @@ with them becomes part of a story the whole school talks about.
 | Menu | **F7** |
 | Language | English (the XUnity AutoTranslator does not touch it) |
 
-**At a glance:** ~46k lines of C# · ~2,600 hand-written situations plus a procedural bank of ~6,500 lines · four
-voices (gentle, energetic, cool, teasing) with 4+ versions of every line · 45 staged achievements plus a climb for
-every story heroine and teacher.
+**At a glance:** ~46k lines of C# · ~2,600 hand-written situations plus a procedural bank of ~6,500 lines · four voices (gentle, energetic, cool, teasing) with 4+ versions of every line · 45 staged achievements plus a climb for every story heroine and teacher.
 
 ## Features
 
 ### Conversation
-- **A new talk screen** with five icon categories (Talk, Actions, Together, Romance, Spicy). Options are built from
-  what she knows, what she likes, where you are and what happened today, not from a fixed list.
-- **Procedural topics**: her day, the two of you, you, gossip, school, small talk, each scored for this moment. She
-  keeps facts (and who told her, and twisted versions), remembers what you said and brings it back days later.
-- **Her voice**: every line is written for four tones and shaped by her personality, mood and your relationship; short
-  answers vary and never repeat back to back; a fitting clip of her own recorded game voice plays with each line.
-- **Touches that answer**: head, cheek, hands, chest, plus places of our own (butt, lips). She answers in her own words
-  by part, by how often you insisted, by how close you are and by what her card allows. A kiss can be yes, wary or no.
-- **Talk with two girls**: aim at one, the other or both. They react to each other, tease, get jealous, help you out or
-  walk off. Pair-only options: ask one about the other, an embarrassing story, a note, invite both, a compliment in
-  front of her, a hidden touch.
+- **A new talk screen** with five icon categories (Talk, Actions, Together, Romance, Spicy). Options are built from what she knows, what she likes, where you are and what happened today, not from a fixed list.
+- **Procedural topics**: her day, the two of you, you, gossip, school, small talk, each scored for this moment. She keeps facts (and who told her, and twisted versions), remembers what you said and brings it back days later.
+- **Her voice**: every line is written for four tones and shaped by her personality, mood and your relationship; short answers vary and never repeat back to back; a fitting clip of her own recorded game voice plays with each line.
+- **Touches that answer**: head, cheek, hands, chest, plus places of our own (butt, lips). She answers in her own words by part, by how often you insisted, by how close you are and by what her card allows. A kiss can be yes, wary or no.
+- **Talk with two girls**: aim at one, the other or both. They react to each other, tease, get jealous, help you out or walk off. Pair-only options: ask one about the other, an embarrassing story, a note, invite both, a compliment in front of her, a hidden touch.
 - **Scene shapes**: a scene, an aside, a one-liner, a favor, a walk together, a quiet moment, a triangle, a callback.
 - **Badges** under the H bar show her mood and likes once you have found them out.
 - Nothing acts while a line is on screen: categories, options and touches wait until the box closes.
 
 ### The director
-- **The director runs 100% of the girls' AI**: every action of every girl is its choice, from her needs (company, food,
-  rest), her bonds and her life. Nothing of the vanilla AI is left.
-- **Four answers** to everything that matters: **yes**, **wary yes**, **wary no** and **no**, read from as many factors
-  as it can: what you are to her, her pace and bars, the days together, your reputation, trust, mood, H before, a
-  recent kiss, another girlfriend, a perfect day, how often she already said no.
+- **The director runs 100% of the girls' AI**: every action of every girl is its choice, from her needs (company, food, rest), her bonds and her life. Nothing of the vanilla AI is left.
+- **Four answers** to everything that matters: **yes**, **wary yes**, **wary no** and **no**, read from as many factors as it can: what you are to her, her pace and bars, the days together, your reputation, trust, mood, H before, a recent kiss, another girlfriend, a perfect day, how often she already said no.
   - A **wary yes** leaves guilt: next talk she asks you to take responsibility or pulls away, and you settle it.
   - A **wary no** is an almost-yes: she wanted to, and she says what held her back.
-- **Pace by personality**: reserved, normal and open girls take different numbers of days (see below). H does not
-  need dating; it depends on the context.
-- Invitations, confessions, holding hands, kisses, breakups and cheating are all the director's call. A girlfriend who
-  finds out about another girl reacts by her mood, anger, trust, how often it happened, who the other girl is and
-  whether she saw it.
+- **Pace by personality**: reserved, normal and open girls take different numbers of days (see below). H does not need dating; it depends on the context.
+- Invitations, confessions, holding hands, kisses, breakups and cheating are all the director's call. A girlfriend who finds out about another girl reacts by her mood, anger, trust, how often it happened, who the other girl is and whether she saw it.
 - **Card markers** (easy, lewd, submissive, serious...) are read sensibly even when a card has all of them ticked.
-- **Before the game's H** she says aloud what her card refuses (protection, kisses, the back door, touching, toys), in
-  her own voice. The game's H itself is unchanged.
+- **Before the game's H** she says aloud what her card refuses (protection, kisses, the back door, touching, toys), in her own voice. The game's H itself is unchanged.
 
 #### Days to each milestone
 
-girls of each pace, no special mood:
+Well-played days (three talks a day, good answers), averaged over two girls of each pace, no special mood:
 
 | Milestone | Reserved | Normal | Open |
 |---|---|---|---|
@@ -71,19 +54,14 @@ girls of each pace, no special mood:
 | H while dating | yes on day 7 | yes on day 5 | wary yes on 2, yes on 3 |
 | H as friends only | wary yes on day 8 | wary yes on day 6-7 | wary yes on 2, yes on 5 |
 
-- The game's own hand and chest touches are welcomed at the first touch on any day; the stage (acquaintance, friend,
-  girlfriend) picks her voice table, and insisting on the same place goes to uneasy, "stop" and anger.
-- **Mood**: flirty brings everything about a day earlier (hands, flirting and butt on day 1; an open girl says yes to H
-  on day 1); cheerful half a day; lonely barely changes it; upset holds hands back to day 5 and H by 1-2 days.
-- **Answer order**: in all 60 runs (6 girls x 5 moods x dating or not) the H answer never went back down: no, wary no,
-  wary yes, yes (sometimes skipping a step, never going back).
+- The game's own hand and chest touches are welcomed at the first touch on any day; the stage (acquaintance, friend, girlfriend) picks her voice table, and insisting on the same place goes to uneasy, "stop" and anger.
+- **Mood**: flirty brings everything about a day earlier (hands, flirting and butt on day 1; an open girl says yes to H on day 1); cheerful half a day; lonely barely changes it; upset holds hands back to day 5 and H by 1-2 days.
+- **Answer order**: in all 60 runs (6 girls x 5 moods x dating or not) the H answer never went back down: no, wary no, wary yes, yes (sometimes skipping a step, never going back).
 
 ### A school that lives
-- **Friendships, rivalries and romances between the girls** (crush, talking, couple, strained, broken and back), with
-  trust, jealousy and intimacy.
+- **Friendships, rivalries and romances between the girls** (crush, talking, couple, strained, broken and back), with trust, jealousy and intimacy.
 - **Gossip and rumors** that travel along friendships and get twisted on the way.
-- **Real witnesses**: only someone close enough for what happened (a talk, a flirt, holding hands, a touch, a kiss, H)
-  saw it.
+- **Real witnesses**: only someone close enough for what happened (a talk, a flirt, holding hands, a touch, a kiss, H) saw it.
 - **Each girl's reputation** (0-100), popular or left out, driven by her friendships.
 - **Bonds in Motion**: three- or four-day stories two students live on their own.
 - **Pairs on the map**: two girls walk over together with a reason to call you.
@@ -113,22 +91,17 @@ girls of each pace, no special mood:
 - **Calendar events** as long scenes with choices that meet again.
 - **Club project** before the festival, **student council race** every 9-week loop, **club rank** as a story chapter.
 - **The Class Anthology**: the season's big moments, shown as a book on the last Saturday of the loop.
-- **Album of achievements** (F7): a record and a to-do list, with stages ("Familiar Face, 3/4"), secrets with hints
-  and a Steam-style card with a ding when one falls.
+- **Album of achievements** (F7): a record and a to-do list, with stages ("Familiar Face, 3/4"), secrets with hints and a Steam-style card with a ding when one falls.
 - **Weekly report** and journal in the menu.
 
 ### Male cards (new in 3.2)
-- A card saved as male is detected on its own; a femboy card saved as a girl can be listed under **Boys in the class**
-  (first names, comma separated).
-- Lines **about him** say he/him/his and boyfriend; **his own** lines call himself a boyfriend or a guy; his voice and
-  personality stay the same. His card says "Boyfriend".
+- A card saved as male is detected on its own; a femboy card saved as a girl can be listed under **Boys in the class** (first names, comma separated).
+- Lines **about him** say he/him/his and boyfriend; **his own** lines call himself a boyfriend or a guy; his voice and personality stay the same. His card says "Boyfriend".
 
 ## Installation
 
-1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx) and
-   [KKAPI 1.45+ / ExtensibleSaveFormat](https://github.com/IllusionMods/IllusionModdingAPI) (the HF Patch has them).
-2. Download `KK_CampusLife.dll` from the [releases](https://github.com/Jooj000/KK_CampusLife/releases) and put it in
-   `BepInEx\plugins\Joojkk\`.
+1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx) and [KKAPI 1.45+ / ExtensibleSaveFormat](https://github.com/IllusionMods/IllusionModdingAPI) (the HF Patch has them).
+2. Download `KK_CampusLife.dll` from the [releases](https://github.com/Jooj000/KK_CampusLife/releases) and put it in `BepInEx\plugins\Joojkk\`.
 3. Optional: put the `backgrounds` folder next to it for the painted event backgrounds.
 4. Start the story mode and press **F7**.
 
@@ -147,8 +120,7 @@ Detected at run time, never required. Without them, every option, line or achiev
 
 ## Configuration
 
-Everything is in the F7 menu and in `BepInEx\config\joojkk.campuslife.cfg` (also through ConfigurationManager, F1,
-grouped by subject). Hotkeys: **F7** opens the menu. The game's own keys (Esc, F1-F5, F8, F11) are left alone.
+Everything is in the F7 menu and in `BepInEx\config\joojkk.campuslife.cfg` (also through ConfigurationManager, F1, grouped by subject). Hotkeys: **F7** opens the menu. The game's own keys (Esc, F1-F5, F8, F11) are left alone.
 
 ## Compatibility
 
@@ -157,9 +129,7 @@ grouped by subject). Hotkeys: **F7** opens the menu. The game's own keys (Esc, F
 
 ## Building from source
 
-See the [combined repository](https://github.com/Jooj000/koikatsu-joojkk-mods#building): `build.ps1` compiles with
-the Roslyn `csc.exe` of Visual Studio 2019 against the game's own DLLs (.NET 3.5 / Unity 5.6). The dialogue bank
-(`data\dialogue\*.dlg`) is built into the DLL.
+See the [combined repository](https://github.com/Jooj000/koikatsu-joojkk-mods#building): `build.ps1` compiles with the Roslyn `csc.exe` of Visual Studio 2019 against the game's own DLLs (.NET 3.5 / Unity 5.6). The dialogue bank (`data\dialogue\*.dlg`) is built into the DLL.
 
 ## Changelog
 

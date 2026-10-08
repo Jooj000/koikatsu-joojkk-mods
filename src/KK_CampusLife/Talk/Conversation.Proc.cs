@@ -507,7 +507,7 @@ namespace Joojkk.CampusLife
             if (t.Kind == "day")
             {
                 c["thing"] = mood == CampusLife.Mood.Stressed ? (Calendar.IsExamWeek ? "the exams" : "her classes") : mood == CampusLife.Mood.Sleepy ? "last night" : mood == CampusLife.Mood.Hungry ? "lunch"
-                             : mood == CampusLife.Mood.Lonely ? "her friends" : !GirlInfo.InNoClub(h) && (G.CurrentMask == PeriodMask.Club || G.CurrentMask == PeriodMask.After) ? GirlInfo.ClubName(h) : "her day";
+                             : mood == CampusLife.Mood.Lonely ? "her friends" : !GirlInfo.InNoClub(h) && (G.CurrentMask == PeriodMask.Club || G.CurrentMask == PeriodMask.After) ? "the " + GirlInfo.ClubName(h) : "her day";
                 c["already"] = gs.MoodKnownDay == S.Day ? "yes" : "no";
             }
             var f = t.Fact;
@@ -545,7 +545,8 @@ namespace Joojkk.CampusLife
             if (!c.ContainsKey("thing")) c["thing"] = "that";
             // The same thing from her own mouth ("her classes" -> "my classes").
             var th = c["thing"];
-            c["mything"] = th.StartsWith("her ", StringComparison.Ordinal) ? "my " + th.Substring(4) : th;
+            c["mything"] = th.StartsWith("her ", StringComparison.Ordinal) ? "my " + th.Substring(4) : th == "what you two did" ? "that"
+                           : th == "your date" ? "our date" : th.StartsWith("what she saw", StringComparison.Ordinal) ? "what I saw" + th.Substring(12) : th;
             c["raised"] = t.Opening ? "yes" : "no";
             MoreCtx(h, gs, c);
             if (!c.ContainsKey("likedo")) c["likedo"] = c.ContainsKey("favdo") ? c["favdo"] : "hang out";
@@ -739,7 +740,7 @@ namespace Joojkk.CampusLife
 
         // ================= moves =================
 
-        private static readonly string[] AllMoves = { "ask", "comfort", "share", "tease", "praise", "invite", "correct", "agree", "defend", "laugh", "admit", "hush", "deny", "thank" };
+        private static readonly string[] AllMoves = { "ask", "comfort", "share", "tease", "praise", "invite", "correct", "agree", "defend", "laugh", "admit", "hush", "deny", "thank", "noted" };
 
         /// <summary>Three moves on what she said (from what her line opened, then the topic's usual ones), and "change the subject".</summary>
         private static List<PMove> Moves(SaveData.Heroine h, PTopic t, Dictionary<string, string> ctx, DlgRule rule, int step)
@@ -747,6 +748,8 @@ namespace Joojkk.CampusLife
             var ids = new List<string>();
             if (rule != null) ids.AddRange(rule.Opens.Where(o => AllMoves.Contains(o)));
             foreach (var d in DefaultMoves(t, ctx)) if (!ids.Contains(d)) ids.Add(d);
+            // Her last words were a like she let slip.
+            if (step == 1 && ctx.ContainsKey("newlike")) ids.Insert(0, "noted");
             // "correct" only where there is something wrong to correct, "comfort" where it hurts.
             if (!(ctx.ContainsKey("distorted") && ctx["distorted"] == "yes") && !(ctx.ContainsKey("subj") && ctx["subj"] == "player" && ctx.ContainsKey("valence") && Num(ctx, "valence") < 0)) ids.Remove("correct");
             var picked = ids.Take(3).ToList();
@@ -798,6 +801,7 @@ namespace Joojkk.CampusLife
                 case "hush": return "Ask her to keep it quiet";
                 case "deny": return "Deny everything";
                 case "thank": return "Thank her";
+                case "noted": return "Say you'll remember that";
                 default: return "Nod along";
             }
         }
@@ -838,6 +842,7 @@ namespace Joojkk.CampusLife
                 case "hush": score = 0.2f + (v.Shy * 0.6f) + (Social.Trust(h) >= 50 ? 0.4f : -0.2f) - (v.Blunt > 0.75f ? 0.4f : 0f); break;
                 case "deny": score = c.ContainsKey("how") && c["how"] == "witness" ? -1f : c.ContainsKey("distorted") && c["distorted"] == "yes" ? 0.8f : -0.2f; break;
                 case "thank": score = 0.7f + v.Warm * 0.4f; break;
+                case "noted": score = 0.9f + v.Warm * 0.3f - (v.Blunt > 0.8f && !close ? 0.3f : 0f); break;
             }
             return score >= 0.8f ? Q.Good : score >= 0f ? Q.Neutral : Q.Bad;
         }

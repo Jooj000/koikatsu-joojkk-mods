@@ -103,6 +103,7 @@ namespace Joojkk.CampusLife
         public static bool CalmWhenSeen(SaveData.Heroine h)
         {
             if (h == null || h.isAnger) return false;
+            if (Boys.Is(h)) return true; // a boy does not mind
             if (h.isGirlfriend) return true;
             if (h.relation >= 2 && h.lewdness >= 50) return true;
             return h.lewdness >= 85;

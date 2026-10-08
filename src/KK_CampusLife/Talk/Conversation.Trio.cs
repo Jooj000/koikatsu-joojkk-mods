@@ -835,23 +835,26 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(a, true);
             if (answer == "yes") b.Narr("You lean in and kiss " + bn + ". She doesn't pull away.");
             else if (answer == "wary") b.Narr("You lean in. " + bn + " stiffens, hesitates... and lets you kiss her.");
+            else if (answer == "wary_no") b.Narr("You lean in. " + bn + " almost lets you... then turns aside at the last second, flustered.");
             else b.Narr("You lean in for a kiss. " + bn + " turns her face away.");
-            var q = answer == "no" ? Q.Bad : Q.Good;
+            var q = answer == "no" ? Q.Bad : answer == "wary_no" ? Q.Neutral : Q.Good;
             Reply(b, b0, a, "kiss", q, answer == "yes" ? Tn("...Mm. In front of her, too...", "Hehe... wow...", "...That was... okay.", "Mmm~ again later?")
                 : answer == "wary" ? Tn("Ah... um... th-that was...", "W-whoa... okay...", "...I didn't say no.", "...Huh. Okay then.")
+                : answer == "wary_no" ? Tn("N-not with her watching... I mean... not now.", "W-wait! Not... not here! ...Later?", "...Almost. Not in front of her.", "Mm, tempting. Not with an audience, though.")
                 : Tn("N-no... not here...", "Hey! No way!", "...No.", "Not a chance, buddy."));
             TLog("kiss " + bn + " #" + tries + " -> " + answer);
             TrioPlay(b0, b, () =>
             {
                 PayTo(b0, Lvl.Spicy, q, "t3b:kiss");
-                if (answer != "no")
+                if (answer == "wary_no") CampusLife.Memories.Add(b0, "almost", "we almost kissed", 1, true);
+                if (answer == "yes" || answer == "wary")
                 {
                     Social.Add(Social.Kinds.Flirted, b0, Witness.Who(b0, Witness.Kiss), Witness.Kiss);
                     Lore.Record("kissed", Lore.Player, GirlInfo.Key(b0), witnesses: new[] { a });
                     if (answer == "wary") CampusLife.Memories.Add(b0, "kiss_wary", "you kissed me, and I let you", 1, true);
                     Achievements.Kissed(b0, answer == "wary");
                 }
-                if (_trio != null) { _trio.LastKiss = answer; _trio.LastTo = b0; _trio.LastLvl = null; }
+                if (_trio != null) { _trio.LastKiss = answer == "wary_no" ? "no" : answer; _trio.LastTo = b0; _trio.LastLvl = null; }
             });
         }
 

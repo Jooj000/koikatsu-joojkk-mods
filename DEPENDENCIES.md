@@ -1,9 +1,6 @@
 # Dependencies
 
-What each plugin needs to load (**required**) and what it uses only when it is installed (**optional**). Everything
-in both lists comes with the HF Patch; without the HF Patch, install the required ones by hand. Optional mods are
-detected at run time (`BepInEx.Bootstrap.Chainloader.PluginInfos`) and read by reflection, never linked: when one is
-missing, every option, achievement or line about it is hidden and the plugin works the same without it.
+What each plugin needs to load (**required**) and what it uses only when it is installed (**optional**). Everything in both lists comes with the HF Patch; without the HF Patch, install the required ones by hand. Optional mods are detected at run time (`BepInEx.Bootstrap.Chainloader.PluginInfos`) and read by reflection, never linked: when one is missing, every option, achievement or line about it is hidden and the plugin works the same without it.
 
 ## Required
 
@@ -49,4 +46,3 @@ No optional mods.
 
 ## Developer only
 
-(Sideloader, ConfigurationManager, KK_Plugins). It is not part of the release build.

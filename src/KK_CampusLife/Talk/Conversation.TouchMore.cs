@@ -165,28 +165,30 @@ namespace Joojkk.CampusLife
             try { if (ExitFuncMethod != null) ExitFuncMethod.Invoke(ts, new object[] { part }); }
             catch { }
 
-            var gf = h.isGirlfriend;
-            var flirty = Interested(h) && h.relation >= 2 || MoodOf(h) == CampusLife.Mood.Flirty || h.lewdness >= 60 && h.relation >= 1; // a stranger is never "in the mood" from H alone
             int level;
             var kiss = "";
+            var answer = "";
             if (part == "mouth")
             {
                 kiss = KissTaken(h, n);
-                level = kiss == "yes" ? 0 : kiss == "wary" ? 1 : n >= 3 || h.relation <= 0 ? 3 : n == 2 ? 2 : 1;
+                level = kiss == "yes" ? 0 : kiss == "wary" || kiss == "wary_no" ? 1 : n >= 3 || h.relation <= 0 ? 3 : n == 2 ? 2 : 1;
             }
             else
             {
-                // Staring is softer than touching; a girlfriend or a girl in the mood takes more before it is too much.
-                var steps = (look ? 1 : 0) + (gf || flirty ? 1 : 0);
-                level = h.isAnger ? 3 : Mathf.Clamp(n - 1 - steps + (gf || flirty ? 0 : 1), 0, 3);
+                // The director's four answers, like the game's hand and chest; a no after insisting,
+                // from a girl who barely knows you, is the angry one.
+                float c;
+                string why;
+                answer = h.isAnger ? "no" : Consent.TouchAnswer(h, part, look, n, Onlookers(h).Count, out c, out why);
+                level = answer == "yes" ? 0 : answer == "wary_yes" || answer == "wary_no" ? 1 : h.isAnger || n >= 3 || h.relation < 0 ? 3 : 2;
             }
-            CampusLifePlugin.Log.LogInfo("Conversation: " + GirlInfo.FirstName(h) + ": " + (look ? "stared at" : "touched") + " " + part + " #" + n + " level " + level + (kiss != "" ? " kiss " + kiss : ""));
-            _pend = new Pend { Her = h, Kind = "touch", PartName = part, Look = look, Level = level, Kiss = kiss, At = Time.realtimeSinceStartup, Info = Traverse.Create(ts).Property("info").GetValue<ActionGame.Communication.Info>() };
+            CampusLifePlugin.Log.LogInfo("Conversation: " + GirlInfo.FirstName(h) + ": " + (look ? "stared at" : "touched") + " " + part + " #" + n + " level " + level + (kiss != "" ? " kiss " + kiss : " " + answer));
+            _pend = new Pend { Her = h, Kind = "touch", PartName = part, Look = look, Level = level, Kiss = kiss, Answer = answer, At = Time.realtimeSinceStartup, Info = Traverse.Create(ts).Property("info").GetValue<ActionGame.Communication.Info>() };
             // With both girls the other one is right there: a kiss always gets her reaction, a touch sometimes.
             if (_trio != null && h == _trio.A)
             {
                 _trio.LastTo = h;
-                if (kiss != "") _trio.LastKiss = kiss;
+                if (kiss != "") _trio.LastKiss = kiss == "wary_no" ? "no" : kiss;
                 else { _trio.LastLvl = look ? Lvl.Friend : Lvl.Romance; _trio.LastQ = level <= 0 ? Q.Good : level == 1 ? Q.Neutral : Q.Bad; }
             }
             // The pose comes at once, the line when her reaction can show (TickReact).
@@ -194,7 +196,7 @@ namespace Joojkk.CampusLife
             // annoyed or surprised when she turns away); the level's touch poses are the fallback. Never one that covers
             // the chest (mid-cycle, 2026-10-28: "ela tampa o peito ao ser beijada").
             var level2 = PosePool(_pend.Info, "touch", Mathf.Min(level, 2)).Where(x => !Covers(x)).ToList();
-            var own = part == "mouth" ? (kiss == "wary" ? WaryPoses(h) : KissPoses(h, kiss == "yes")) : new List<string>();
+            var own = part == "mouth" ? (kiss == "wary" || kiss == "wary_no" ? WaryPoses(h) : KissPoses(h, kiss == "yes")) : new List<string>();
             var pose = VariedPose(own, own.Count > 0 ? own : level2, "t" + part + kiss, null, level);
             if (pose != null) PlayPose(ts, pose);
         }
@@ -266,6 +268,13 @@ namespace Joojkk.CampusLife
                     if (string.IsNullOrEmpty(gs.Pending)) gs.Pending = "SceneTalk:feelings";
                     CampusLifePlugin.Log.LogInfo("Talk kiss wary: " + GirlInfo.FirstName(h) + " let it happen; her feelings scene is next (" + gs.Pending + ")");
                 };
+            // A wary no: she almost let you. No favor lost; she remembers how close it was.
+            if (p.PartName == "mouth" && p.Kiss == "wary_no")
+                return () =>
+                {
+                    CampusLife.Memories.Add(h, "almost", "we almost kissed", 1, true);
+                    CampusLifePlugin.Log.LogInfo("Talk kiss almost: " + GirlInfo.FirstName(h) + " wanted to, and held back");
+                };
             if (p.PartName == "mouth")
                 return () =>
                 {
@@ -276,6 +285,7 @@ namespace Joojkk.CampusLife
             return () =>
             {
                 if (p.Level == 0) h.lewdness = Mathf.Min(100, h.lewdness + (p.Look ? 1 : 3));
+                else if (p.Answer == "wary_yes") h.lewdness = Mathf.Min(100, h.lewdness + 1);
                 else if (p.Level == 2) h.favor = Mathf.Max(0, h.favor - 2);
                 else if (p.Level >= 3) { h.favor = Mathf.Max(0, h.favor - 5); h.anger = Mathf.Min(100, h.anger + 40); _endNext = true; }
                 if (!p.Look)

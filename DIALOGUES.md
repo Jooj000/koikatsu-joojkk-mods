@@ -2,9 +2,7 @@
 
 Total lines (counting every personality version): 2062
 
-Every line below was written for Campus Life (author: Joojkk). Lines of the game itself
-(normal conversations, story events, H) are not listed. Lines marked 'by personality' have four
-versions: gentle / energetic / cool / teasing, chosen from the girl's personality.
+Every line below was written for Campus Life (author: Joojkk). Lines of the game itself (normal conversations, story events, H) are not listed. Lines marked 'by personality' have four versions: gentle / energetic / cool / teasing, chosen from the girl's personality.
 
 Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in during the game.
 
@@ -1714,8 +1712,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Variants:** Hey, you wanted to talk? | I saw your note on the club board.
 
 ### Board / NoteScene
-- **Narration:** { Wind, a far-off club practice, and "}{name}{",
-                              name}{ "}{name}{")}
+- **Narration:** { Wind, a far-off club practice, and "}{name}{", name}{ "}{name}{")}
 - **Variants:** The rooftop is empty at this hour. Wind, a far-off club practice, and {name} waiting by the fence. | {name} is waiting by the fence, up on the rooftop. The sky is going orange behind her. | Nobody else is up here. {name} turns around the moment the door creaks.
 - **You:** {Pick}
 - **Variants:** I got your note. What's up? | So you're the one who left the note.
@@ -1804,8 +1801,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Narration:** {Name} is drilling hard. Sweat runs down her face.
 - **You:** Go, {Name}! You've got this!
 - **Narration:** You jump in and run the drills with her. She has to push herself to keep up with you.
-- **Her:** {",
-                        "Watching me sweat, huh? Enjoying the view? || Enjoying watching me sweat? || Like the view? || Watching closely, hm?")}
+- **Her:** {", "Watching me sweat, huh? Enjoying the view? || Enjoying watching me sweat? || Like the view? || Watching closely, hm?")}
 - **Her (by personality)**
   - _gentle:_ Hah... hah... thank you for coming. It really helps. || Thank you for coming... it helps so much. || You came... hah... thank you. || Your cheering helps me...
   - _energetic:_ Did you see that?! I'm on fire today! || Did you see that?! On fire! || Woo! I'm unstoppable! || Watch me go!
@@ -1865,8 +1861,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### SecretHobbyArc / Scene
 - **You:** So... I saw you earlier.
-- **Her:** {",
-                    "Ah! You saw?! Okay, okay, yes, I love "}{LikeLabel}. Happy? || You saw?! Fine, I love {LikeLabel}! Happy?! || Caught! Yes, {LikeLabel}! || Argh! Okay! {LikeLabel}{")}
+- **Her:** {", "Ah! You saw?! Okay, okay, yes, I love "}{LikeLabel}. Happy? || You saw?! Fine, I love {LikeLabel}! Happy?! || Caught! Yes, {LikeLabel}! || Argh! Okay! {LikeLabel}{")}
 - **Her (by personality)**
   - _gentle:_ Y-you saw that?! Please don't tell anyone... it's embarrassing... || You saw?! Please don't tell... || Oh no... you saw that... it's so embarrassing... || P-please keep it secret...
   - _energetic:_ Ah! You saw?! Okay, okay, yes, I love {LikeLabel}. Happy? || You saw?! Fine, I love {LikeLabel}! Happy?! || Caught! Yes, {LikeLabel}! || Argh! Okay! {LikeLabel} is my thing!
@@ -1906,8 +1901,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### RivalryArc / Scene / step 0
 - **You:** Hey, what happened back there?
-- **Her:** {T(t, "It's "}{OName}... she said things about me behind my back. I thought we were okay... || It's {OName}... she talked behind my back... || {OName} said mean things about me... I thought we were friends. || {OName}{",
-                        "Ugh, "}{OName} is SO annoying! She took my spot and acted like it was nothing! || {OName} is SO annoying! || Ugh! {OName} stole my spot! || {OName}{OName} took credit for my work. I won't forgive that. || {OName} took my credit. Unforgivable. || {OName} wronged me. || {OName}{OName} has been flirting with you, hasn't she? Don't play dumb. || {OName}'s been flirting with you. Don't deny it. || {OName} has eyes for you. I noticed. || {OName}{")}
+- **Her:** {T(t, "It's "}{OName}... she said things about me behind my back. I thought we were okay... || It's {OName}... she talked behind my back... || {OName} said mean things about me... I thought we were friends. || {OName}{", "Ugh, "}{OName} is SO annoying! She took my spot and acted like it was nothing! || {OName} is SO annoying! || Ugh! {OName} stole my spot! || {OName}{OName} took credit for my work. I won't forgive that. || {OName} took my credit. Unforgivable. || {OName} wronged me. || {OName}{OName} has been flirting with you, hasn't she? Don't play dumb. || {OName}'s been flirting with you. Don't deny it. || {OName} has eyes for you. I noticed. || {OName}{")}
 - **Her (by personality)**
   - _gentle:_ It's {OName}... she said things about me behind my back. I thought we were okay... || It's {OName}... she talked behind my back... || {OName} said mean things about me... I thought we were friends. || {OName}... she hurt me.
   - _energetic:_ Ugh, {OName} is SO annoying! She took my spot and acted like it was nothing! || {OName} is SO annoying! || Ugh! {OName} stole my spot! || {OName}! Argh!
@@ -1988,9 +1982,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### FriendshipArc / Scene
 - **You:** You look like you want to say something.
-- **Her:** { you know "}{OName}, right? I'd like to be friends with her, but I never know what to say... || You know {OName}? I'd like to be friends with her... || Um... could you help me talk to {OName}? || I want to be friends with {OName}{",
-                    "Hey, you're friends with "}{OName}, right? She seems super fun! Introduce me! || You know {OName}?! Introduce me! || {OName} seems fun! Help me meet her! || Hook me up with {OName}{"! As friends!",
-                    "You know "}{OName}. ...I wouldn't mind getting to know her. That's all. || {OName}. I'd like to know her. || Introduce me to {OName}. || {OName}{OName} seems interesting. Be a dear and introduce us? || Introduce me to {OName}, dear? || {OName} intrigues me. Make it happen. || Be useful. Introduce {OName}{")}
+- **Her:** { you know "}{OName}, right? I'd like to be friends with her, but I never know what to say... || You know {OName}? I'd like to be friends with her... || Um... could you help me talk to {OName}? || I want to be friends with {OName}{", "Hey, you're friends with "}{OName}, right? She seems super fun! Introduce me! || You know {OName}?! Introduce me! || {OName} seems fun! Help me meet her! || Hook me up with {OName}{"! As friends!", "You know "}{OName}. ...I wouldn't mind getting to know her. That's all. || {OName}. I'd like to know her. || Introduce me to {OName}. || {OName}{OName} seems interesting. Be a dear and introduce us? || Introduce me to {OName}, dear? || {OName} intrigues me. Make it happen. || Be useful. Introduce {OName}{")}
 - **Her (by personality)**
   - _gentle:_ Um... you know {OName}, right? I'd like to be friends with her, but I never know what to say... || You know {OName}? I'd like to be friends with her... || Um... could you help me talk to {OName}? || I want to be friends with {OName}, but I'm shy...
   - _energetic:_ Hey, you're friends with {OName}, right? She seems super fun! Introduce me! || You know {OName}?! Introduce me! || {OName} seems fun! Help me meet her! || Hook me up with {OName}! As friends!
@@ -2257,8 +2249,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Narration:** Next year, for sure.
 - **Narration:** At lunch, it starts.
 - **Narration:** {N} walks up to your desk, hands hidden behind her back.
-- **Girl:** {")
-                        : T}
+- **Girl:** {") : T}
 - **Her (by personality)**
   - _gentle:_ I made these myself... for you. Only for you. || I made these... just for you. || Homemade... for you alone. || I worked hard on these... they're yours.
   - _energetic:_ Homemade! Eat them all, okay?! || Homemade! Eat every one! || I made them! All for you! || Kitchen chaos! For you!
@@ -2384,8 +2375,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Narration:** You cheer from the tent until your throat hurts.
 - **Narration:** Closing ceremony in the gym. The scoreboard is covered with a cloth while the principal talks... and talks.
 - **Narration:** {"}
-- **Girl:** {")
-                                       : T}
+- **Girl:** {") : T}
 - **Her (by personality)**
   - _gentle:_ We won... we really won! I'm so glad I was on your team. || We won! I'm glad we were a team. || We really won... thank you! || Victory... with you.
   - _energetic:_ WE WON WE WON WE WON! || WE WON! || Champions! || Yes yes YES!
@@ -2445,8 +2435,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Choice:** Maid cafe [SEN] | Haunted house [STR] | Science exhibit [INT]
 - **Narration:** {"}
 - **Narration:** You stay late to work on it with {N}.
-- **Girl:** {")
-                        : T}
+- **Girl:** {") : T}
 - **Her (by personality)**
   - _gentle:_ The aprons are done... Do you think this one suits me? || The aprons are done... does it suit me? || Do I look okay in this? || I sewed this... how is it?
   - _energetic:_ Look, look! I'm practicing my 'Welcome home, master'! || 'Welcome home, master!' Practicing! || Look! Café mode! || Maid practice! How's this?!

@@ -4,8 +4,7 @@
 - An option about another mod shows in the settings only when that mod is installed.
 
 ## 1.6.0 (2026-09-20)
-- Outside fixes for other mods (AmazingNewAccessoryLogic cameras, MaterialEditor texture size, UncensorSelector
-  hidden parts), the missing zipmods list, clothes left behind removed, background outfit changes.
+- Outside fixes for other mods (AmazingNewAccessoryLogic cameras, MaterialEditor texture size, UncensorSelector hidden parts), the missing zipmods list, clothes left behind removed, background outfit changes.
 
 ## 1.5.x (2026-09-03 / 2026-09-04)
 - 1.5.0: MaterialEditor and HairAccessoryCustomizer edits applied again after slow loads.

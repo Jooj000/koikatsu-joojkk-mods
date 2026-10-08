@@ -10,8 +10,7 @@ BepInEx plugins for the Koikatsu main game (Koikatu / Koikatsu Party, HF Patch i
 
 ## Repositories
 
-This repository holds the three mods together (it is where they are developed and built). Each one also has a
-repository of its own, with its own README, changelog and releases:
+This repository holds the three mods together (it is where they are developed and built). Each one also has a repository of its own, with its own README, changelog and releases:
 
 | Mod | Its repository | Docs here |
 |---|---|---|
@@ -39,8 +38,7 @@ powershell -ExecutionPolicy Bypass -File build.ps1 -Game "<Koikatsu folder>" [-I
 
 ## Credits
 - Made by **Joojkk**.
-- Built on [BepInEx](https://github.com/BepInEx/BepInEx), [HarmonyX](https://github.com/BepInEx/HarmonyX) and
-  [KKAPI / ExtensibleSaveFormat](https://github.com/IllusionMods/IllusionModdingAPI) (IllusionMods).
+- Built on [BepInEx](https://github.com/BepInEx/BepInEx), [HarmonyX](https://github.com/BepInEx/HarmonyX) and [KKAPI / ExtensibleSaveFormat](https://github.com/IllusionMods/IllusionModdingAPI) (IllusionMods).
 - The School Optimizer patches some other plugins from outside, without changing their files: AmazingNewAccessoryLogic (njaecha), MaterialEditor and UncensorSelector (DeathWeasel1337 and the IllusionMods contributors). Each fix can be turned off in its config.
 - Koikatsu is © ILLUSION. No game files are included in this repository.
 

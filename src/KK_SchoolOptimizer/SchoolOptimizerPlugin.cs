@@ -71,6 +71,7 @@ namespace Joojkk.SchoolOptimizer
         public static ConfigEntry<bool> UncensorHiddenParts;
         public static ConfigEntry<int> MeMaxTexture;
         public static ConfigEntry<bool> MeRefresh;
+        public static ConfigEntry<bool> KsoxLowMemory;
         public static ConfigEntry<bool> UnloadOffMap;
         public static ConfigEntry<bool> StripOffMap;
         public static ConfigEntry<bool> OrphanCleanup;
@@ -186,6 +187,13 @@ namespace Joojkk.SchoolOptimizer
                 "run again for her. Their files are not changed.",
                 null, new ConfigurationManagerAttributes { Order = 4, Browsable = has("com.deathweasel.bepinex.materialeditor") || has("com.deathweasel.bepinex.hairaccessorycustomizer") }));
 
+            KsoxLowMemory = Config.Bind(m, "Skin Overlay Mod: compressed overlays at original size", true, new ConfigDescription(
+                "Sets two of KSOX's own options (by ManlyMarco) the way this install runs them: overlay textures compressed in " +
+                "RAM (about a quarter of the memory) and never larger than the body texture they paint over. Off leaves " +
+                "KSOX's options as you set them. Takes effect after a scene reload. KSOX's files are not changed.",
+                null, new ConfigurationManagerAttributes { Order = 5, Browsable = has("KSOX") }));
+            KsoxLowMemory.SettingChanged += (o, e) => OtherMods.ApplyKsox();
+
             const string l = "4. Loading";
             SkipDuplicateReloads = Config.Bind(l, "Skip duplicate character rebuilds (experimental)", false, new ConfigDescription(
                 "The game builds every student when she is loaded and then rebuilds her whole body and outfit again the first " +
@@ -242,6 +250,11 @@ namespace Joojkk.SchoolOptimizer
         {
             try { MissingMods.OnGUI(); }
             catch (Exception e) { Log.LogDebug("Missing zipmods window: " + e.Message); }
+        }
+
+        private void Start()
+        {
+            OtherMods.ApplyKsox();
         }
 
         private void Update()

@@ -60,7 +60,7 @@ namespace Joojkk.CampusLife
         /// <summary>
         /// The pace multiplier (user, 2026-10-26: "little by little the reserved ones' multiplier must grow, and when
         /// dating, everyone's goes up 0.1"): open 1.4, normal 1.0, reserved from 0.7 up to 1.0 with the days you spent
-        /// with her and her trust; +0.1 while she is your girlfriend.
+        /// with her and her trust; +0.1 while she is your girlfriend; then times the player's "Ease" option for her pace.
         /// </summary>
         public static float Multiplier(SaveData.Heroine h)
         {
@@ -77,6 +77,9 @@ namespace Joojkk.CampusLife
                     break;
             }
             if (h.isGirlfriend) m += 0.1f;
+            // The player's own difficulty per pace, 1 by default.
+            var pace = Profile(h);
+            m *= (pace == Pace.Open ? Cfg.EaseOpen : pace == Pace.Normal ? Cfg.EaseNormal : Cfg.EaseReserved).Value;
             return m;
         }
 
@@ -501,7 +504,7 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// personalidade não aberta e valores que contam interesse, sendo eles favor e H acima de 50% na amiga"):
-        /// "yes", "wary" or "no". Interest is favor and H above half on a friend; then mood, trust, a grudge, who is
+        /// "yes", "wary", "wary_no" or "no" (<see cref="KissTier"/>). Interest is favor and H above half on a friend; then mood, trust, a grudge, who is
         /// watching and how many times you tried. A girl who says yes but is not open by nature lets it happen warily;
         /// a girlfriend and an open girl just say yes. The same try in the same period gets the same answer.
         /// </summary>
@@ -509,12 +512,47 @@ namespace Joojkk.CampusLife
         {
             if (h.isAnger) { why = "angry with you"; return "no"; }
             var c = KissChance(h, tries, crowd, out why);
-            var yes = Dice(h, "kiss" + tries) < c;
-            var answer = !yes ? "no" : h.isGirlfriend || Profile(h) == Pace.Open ? "yes" : "wary";
+            var answer = KissTier(h, tries, crowd, Dice(h, "kiss" + tries) < c, ref why);
             var line = GirlInfo.FirstName(h) + ": kiss -> " + answer + " (" + why + ")";
             if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/kiss" + tries)) Note(line);
             else CampusLifePlugin.Log.LogInfo("Director decides: " + line);
             return answer;
+        }
+
+        /// <summary>
+        /// The kiss answer once the dice said yes or no: "yes", "wary" (a wary yes: she lets it happen), "wary_no" (16th
+        /// are to her, her pace, trust, who is watching, her mood and guilt; wanting reads her bars, a flirty or lonely
+        /// day, trust, a grudge, scorn and how many times you already tried.
+        /// </summary>
+        internal static string KissTier(SaveData.Heroine h, int tries, int crowd, bool yes, ref string why)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
+            var pace = Profile(h);
+            var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
+            var trust = Social.Trust(h);
+            if (yes)
+            {
+                var u = h.isGirlfriend ? 0f : 0.4f;
+                u += pace == Pace.Reserved ? 0.2f : pace == Pace.Normal ? 0.1f : -0.2f;
+                if (!h.isGirlfriend && gs.TalkDays.Distinct().Count() < 5) u += 0.1f;   // a girl met days ago lets it happen warily first
+                u += trust < 40 ? 0.15f : trust >= 70 ? -0.1f : 0f;
+                if (crowd >= 2) u += 0.1f;
+                if (mood == Mood.Flirty) u -= 0.15f;
+                if (gs.Guilt > 0) u += 0.15f;
+                if (!gs.Moments.Any(m => m.Kind == "kiss_wary") && !h.isGirlfriend) u += 0.05f;   // the first one
+                why += "; unease " + u.ToString("0.00");
+                return u >= 0.5f ? "wary" : "yes";
+            }
+            var desire = (h.favor - 50) / 60f + (h.lewdness - 40) / 120f;
+            desire += h.isGirlfriend ? 0.15f : h.relation >= 1 ? 0.05f : h.relation < 0 ? -0.5f : -0.1f;
+            if (mood == Mood.Flirty) desire += 0.2f;
+            else if (mood == Mood.Lonely) desire += 0.1f;
+            desire += Mathf.Clamp((trust - 50) / 250f, -0.15f, 0.15f);
+            if (Social.Grudge(h) != null) desire -= 0.3f;
+            if (Pairs.IsScorned(h)) desire -= 0.8f;
+            if (tries > 1) desire -= 0.2f * (tries - 1);
+            why += "; wants it " + desire.ToString("0.00");
+            return desire >= 0.5f ? "wary_no" : "no";
         }
 
         /// <summary>The kiss chance and its reasons, without asking.</summary>
@@ -525,12 +563,16 @@ namespace Joojkk.CampusLife
             var gs = S.Girl(GirlInfo.Key(h));
             var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
             var pace = Profile(h);
-            var interest = h.favor > 50 && h.lewdness > 50;
+            // Her pace and its multiplier count here too.
+            var mult = Multiplier(h);
+            var favor = h.favor * mult;
+            var lewd = h.lewdness * mult;
+            var interest = favor > 45 && lewd > 45;
             float c;
-            if (h.isGirlfriend) { c = Mathf.Max(0.92f, 0.75f + (h.favor - 50) / 200f + (h.lewdness - 50) / 200f); r.Add("girlfriend"); }
-            else if (h.relation >= 1 && interest) { c = 0.55f + (h.favor - 50) / 200f + (h.lewdness - 50) / 200f; r.Add("friend, interested"); }
-            else if (h.relation >= 1) { c = 0.08f + h.favor / 400f + h.lewdness / 500f; r.Add("friend"); }
-            else if (h.relation == 0) { c = 0.03f + h.lewdness / 600f; r.Add("knows you"); }
+            if (h.isGirlfriend) { c = Mathf.Max(0.92f, 0.75f + (favor - 50) / 200f + (lewd - 50) / 200f); r.Add("girlfriend"); }
+            else if (h.relation >= 1 && interest) { c = 0.55f + (favor - 50) / 200f + (lewd - 50) / 200f; r.Add("friend, interested"); }
+            else if (h.relation >= 1) { c = 0.08f + favor / 400f + lewd / 500f; r.Add("friend"); }
+            else if (h.relation == 0) { c = 0.03f + lewd / 600f; r.Add("knows you"); }
             else { c = 0f; r.Add("stranger"); }
             r.Add(pace.ToString().ToLowerInvariant());
             if (mood == Mood.Flirty) { c += 0.2f; r.Add("flirty"); }
@@ -546,7 +588,101 @@ namespace Joojkk.CampusLife
             return c;
         }
 
-        /// <summary>The director's answer to the player asking her.</summary>
+        // ================= romance and spicy lines: the same four answers =================
+
+        /// <summary>
+        /// A romance or spicy line of yours (a compliment, sweet talk, a tease, a whisper, flirting boldly, an intimate
+        /// romance/spicy"): "yes", "wary_yes" (she takes it, flustered), "wary_no" (she wanted to, something held her
+        /// back) or "no". The chance reads what you are to her, her pace and its multiplier, her bars, mood, trust, a
+        /// grudge, scorn, guilt, who is watching and whether she already turned you down in this conversation.
+        /// </summary>
+        public static string Flirt(SaveData.Heroine h, bool spicy, string what, int crowd, bool refused)
+        {
+            string why;
+            var c = FlirtChance(h, spicy, crowd, refused, out why);
+            if (h.isAnger) return "no";
+            var yes = Dice(h, (spicy ? "spicy:" : "romance:") + what) < c;
+            var gs = S.Girl(GirlInfo.Key(h));
+            var pace = Profile(h);
+            var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
+            var trust = Social.Trust(h);
+            string a;
+            if (yes)
+            {
+                var u = h.isGirlfriend ? 0f : spicy ? 0.35f : 0.15f;
+                u += pace == Pace.Reserved ? 0.2f : pace == Pace.Normal ? 0.05f : -0.3f;
+                u += trust < 40 ? 0.15f : trust >= 70 ? -0.1f : 0f;
+                if (spicy && crowd >= 3) u += 0.1f;
+                if (mood == Mood.Flirty) u -= 0.15f;
+                why += "; unease " + u.ToString("0.00");
+                a = u >= 0.5f ? "wary_yes" : "yes";
+            }
+            else
+            {
+                var desire = spicy ? (h.lewdness - 30) / 60f + (h.favor - 40) / 150f : (h.favor - 20) / 60f;
+                desire += h.isGirlfriend ? 0.15f : h.relation >= 1 ? 0.05f : h.relation < 0 ? -0.5f : 0f;
+                if (mood == Mood.Flirty) desire += 0.2f;
+                desire += Mathf.Clamp((trust - 50) / 250f, -0.15f, 0.15f);
+                if (Social.Grudge(h) != null) desire -= 0.3f;
+                if (Pairs.IsScorned(h)) desire -= 0.8f;
+                why += "; wants it " + desire.ToString("0.00");
+                a = desire >= 0.5f ? "wary_no" : "no";
+            }
+            var key = S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/" + (spicy ? "spicy:" : "romance:") + what;
+            if (Logged.Add(key)) Note(GirlInfo.FirstName(h) + ": " + (spicy ? "spicy " : "romance ") + what + " -> " + a.Replace('_', ' ') + " (" + why + ")");
+            return a;
+        }
+
+        /// <summary>The romance or spicy chance and its reasons, without asking.</summary>
+        internal static float FlirtChance(SaveData.Heroine h, bool spicy, int crowd, bool refused, out string why)
+        {
+            var r = new List<string>();
+            if (h.isAnger) { why = "angry with you"; return 0f; }
+            var gs = S.Girl(GirlInfo.Key(h));
+            var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
+            var pace = Profile(h);
+            var mult = Multiplier(h);
+            var favor = h.favor * mult;
+            var lewd = h.lewdness * mult;
+            float c;
+            if (!spicy)
+                c = h.isGirlfriend ? 0.95f : h.relation >= 1 ? 0.6f + favor / 150f : h.relation == 0 ? 0.35f + favor / 120f : 0.05f;
+            else
+                c = h.isGirlfriend ? 0.7f + lewd / 200f
+                    : h.relation >= 1 ? 0.2f + lewd / 100f + (favor - 40f) / 200f + (pace == Pace.Open ? 0.15f : 0f)
+                    : h.relation == 0 ? lewd / 120f - 0.05f + (pace == Pace.Open ? 0.15f : 0f)
+                    : -0.3f;
+            r.Add(h.isGirlfriend ? "girlfriend" : h.relation >= 1 ? "friend" : h.relation == 0 ? "knows you" : "stranger");
+            r.Add(pace.ToString().ToLowerInvariant() + " x" + mult.ToString("0.00"));
+            switch (mood)
+            {
+                case Mood.Flirty: c += 0.2f; r.Add("flirty"); break;
+                case Mood.Cheerful: c += 0.05f; break;
+                case Mood.Sleepy: c -= 0.05f; break;
+                case Mood.Stressed: if (spicy) { c -= 0.15f; r.Add("stressed"); } break;
+                case Mood.Upset: c -= 0.4f; r.Add("upset"); break;
+            }
+            c += Mathf.Clamp((Social.Trust(h) - 50) / 250f, -0.1f, 0.1f);
+            if (Social.Grudge(h) != null) { c -= 0.15f; r.Add("a grudge"); }
+            if (Pairs.IsScorned(h)) { c -= 0.5f; r.Add("scorned"); }
+            if (spicy && (gs.Guilt > 0 || gs.DistanceUntil >= S.Day)) { c -= 0.2f; r.Add("still unsettled about last time"); }
+            if (spicy && crowd >= 3 && lewd < 60 && !GirlInfo.Quirks(h).bitch) { c -= 0.15f; r.Add("a crowd"); }
+            if (refused) { c -= 0.3f; r.Add("turned you down already"); }
+            c = Mathf.Clamp01(c);
+            why = Mathf.RoundToInt(c * 100) + "%: " + string.Join(", ", r.ToArray());
+            return c;
+        }
+
+        /// <summary>Holding hands in the conversation: the hold-hands chance, then the touch tiers of the hand.</summary>
+        public static string HoldHand(SaveData.Heroine h, int crowd)
+        {
+            string why;
+            var c = Chance(h, Ask.HoldHand, out why);
+            var a = h.isAnger ? "no" : TouchTier(h, "hand", false, 1, crowd, Dice(h, Ask.HoldHand.ToString()) < c, ref why);
+            if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/" + Ask.HoldHand)) Note(GirlInfo.FirstName(h) + ": hold hands -> " + a.Replace('_', ' ') + " (" + Mathf.RoundToInt(c * 100) + "%: " + why + ")");
+            return a;
+        }
+
         /// <summary>What the director would answer now, without logging it as a decision.</summary>
         public static bool WouldSay(SaveData.Heroine h, Ask ask)
         {
@@ -775,36 +911,137 @@ namespace Joojkk.CampusLife
                 int n;
                 TouchCount.TryGetValue(key, out n);
                 TouchCount[key] = ++n;
-                var tol = TouchTolerance(h, _touch, _parts);
-                var level = n <= tol ? 0 : n <= tol + 2 ? 1 : 2;
-                if (level != _stage)
-                    Note(GirlInfo.FirstName(h) + ": touch " + (_touch ? "" : "(look) ") + PartName(_parts, _touch) + " #" + n + " -> " + (level == 0 ? "welcome" : level == 1 ? "uneasy" : "stop it") + " (the game rolled " + _stage + "; tolerance " + tol + ")");
+                var part = !_touch ? (_parts == 1 ? "chest" : "face") : _parts == 1 ? "chest" : _parts == 2 ? "head" : _parts == 3 ? "cheek" : "hand";
+                float c;
+                string why;
+                var answer = TouchAnswer(h, part, !_touch, n, Conversation.Onlookers(h).Count, out c, out why);
+                LastTouch = answer;
+                // The game's three reactions: welcome, uneasy (she lets it happen, or almost does) and "stop it".
+                var level = answer == "yes" ? 0 : answer == "no" ? 2 : 1;
+                var line = GirlInfo.FirstName(h) + ": touch " + (_touch ? "" : "(look) ") + part + " #" + n + " -> " + answer.Replace('_', ' ') + " (the game rolled " + _stage + "; " + why + ")";
+                if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/touch" + key + "/" + n)) Note(line);
                 _stage = level;
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Director answers (touch): " + e.Message); }
         }
 
-        /// <summary>How many touches of that place she enjoys before it gets too much.</summary>
-        private static int TouchTolerance(SaveData.Heroine h, bool touch, int part)
+        /// <summary>The answer to the game's last touch (yes, wary_yes, wary_no, no), for her line.</summary>
+        internal static string LastTouch = "";
+
+        // ================= touches: the same four answers =================
+
+        /// <summary>
+        /// cadê o diretor onipotente que eu sempre falo?"). Every place (hand, head, cheek, chest, butt, a look) gets the
+        /// four answers of H and the kiss: the chance reads what you are to her, her pace and its multiplier, her bars,
+        /// how intimate the place is, whether you only look, her mood, trust, a grudge, scorn, guilt still open, a recent
+        /// kiss, who is watching and how many times you already touched it; the dice say yes or no; her unease turns a
+        /// yes into a wary yes and her wanting turns a no into a wary no. The same touch in the same period gets the
+        /// same answer.
+        /// </summary>
+        public static string TouchAnswer(SaveData.Heroine h, string part, bool look, int n, int crowd, out float chance, out string why)
         {
+            chance = TouchChance(h, part, look, n, crowd, out why);
+            if (h.isAnger) return "no";
+            var yes = Dice(h, "touch:" + part + (look ? ":look" : "") + ":" + n) < chance;
+            return TouchTier(h, part, look, n, crowd, yes, ref why);
+        }
+
+        private static bool Intimate(string part) { return part == "chest" || part == "butt"; }
+
+        /// <summary>How many touches of a place feel natural before more is insisting.</summary>
+        private static int Comfort(SaveData.Heroine h, bool intimate)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
+            var c = h.isGirlfriend ? (intimate ? 3 : 6) : h.relation >= 1 ? (intimate ? 1 : 3) : 1;
+            if (gs.MoodDay == S.Day && gs.Mood == Mood.Flirty) c++;
+            if (Social.Trust(h) >= 75) c++;
+            return c;
+        }
+
+        /// <summary>The touch chance (0-1) and its reasons, without asking.</summary>
+        internal static float TouchChance(SaveData.Heroine h, string part, bool look, int n, int crowd, out string why)
+        {
+            var r = new List<string>();
+            if (h.isAnger) { why = "angry with you"; return 0f; }
             var gs = S.Girl(GirlInfo.Key(h));
             var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
             var pace = Profile(h);
-            var lewd = h.lewdness * Multiplier(h);
-            int tol;
-            if (part == 1) // chest
-                tol = h.isGirlfriend ? (lewd >= 20 ? 3 : 1) : pace == Pace.Open && lewd >= 50 && h.relation >= 1 ? 2 : 0;
+            var mult = Multiplier(h);
+            var favor = h.favor * mult;
+            var lewd = h.lewdness * mult;
+            var intimate = Intimate(part);
+            float c;
+            if (!intimate)
+                c = (h.isGirlfriend ? 0.95f : h.relation >= 1 ? 0.5f + favor / 150f : h.relation == 0 ? 0.2f + favor / 200f : 0.03f) - (part == "cheek" || part == "face" ? 0.05f : 0f);
             else
-                tol = h.isGirlfriend ? 6 : h.relation >= 1 ? 3 : h.relation == 0 ? 1 : 0;
-            if (!touch) tol += 1;
-            if (mood == Mood.Flirty) tol += 1;
-            if (mood == Mood.Upset) tol -= 1;
-            if (Social.Trust(h) >= 75) tol += 1;
+            {
+                var butt = part == "butt" ? 0.08f : 0f;   // a little less personal than the chest
+                if (h.isGirlfriend) c = 0.55f + lewd / 150f + butt;
+                else if (h.relation >= 1) c = (lewd - 40f) / 50f + (favor - 50f) / 150f + butt + (pace == Pace.Open ? 0.15f : 0f);
+                else if (h.relation == 0) c = (pace == Pace.Open ? lewd / 200f - 0.15f : -0.35f) + butt;
+                else c = -0.5f;
+            }
+            r.Add(h.isGirlfriend ? "girlfriend" : h.relation >= 1 ? "friend" : h.relation == 0 ? "knows you" : "stranger");
+            r.Add(pace.ToString().ToLowerInvariant() + " x" + mult.ToString("0.00"));
+            if (look) { c += 0.15f; r.Add("only looking"); }
+            switch (mood)
+            {
+                case Mood.Flirty: c += intimate ? 0.2f : 0.1f; r.Add("flirty"); break;
+                case Mood.Cheerful: c += 0.05f; break;
+                case Mood.Lonely: if (!intimate) { c += 0.05f; r.Add("lonely"); } break;
+                case Mood.Sleepy: c -= 0.05f; break;
+                case Mood.Stressed: c -= 0.15f; r.Add("stressed"); break;
+                case Mood.Upset: c -= 0.4f; r.Add("upset"); break;
+            }
+            c += Mathf.Clamp((Social.Trust(h) - 50) / 250f, -0.1f, 0.1f);
+            if (Social.Grudge(h) != null) { c -= 0.15f; r.Add("a grudge"); }
+            if (Pairs.IsScorned(h)) { c -= 0.5f; r.Add("scorned"); }
+            if (gs.Guilt > 0 || gs.DistanceUntil >= S.Day) { c -= 0.2f; r.Add("still unsettled about last time"); }
+            if (intimate && gs.Moments.Any(m => (m.Kind == "kiss_wary" || m.Kind == "almost") && S.Day - m.Day <= 5)) { c += 0.08f; r.Add("a recent kiss or almost"); }
             // Who is watching: a crowd makes her shy unless she enjoys the show; alone she lets you closer.
-            var watching = Conversation.Onlookers(h).Count;
-            if (watching >= 3 && lewd < 60 && !GirlInfo.Quirks(h).bitch) tol -= 1;
-            else if (watching == 0 && h.relation >= 1) tol += 1;
-            return Math.Max(0, tol);
+            if (crowd >= 3 && lewd < 60 && !GirlInfo.Quirks(h).bitch) { c -= intimate ? 0.25f : 0.1f; r.Add("a crowd"); }
+            else if (crowd == 0 && h.relation >= 1) { c += 0.05f; r.Add("alone"); }
+            var comfort = Comfort(h, intimate);
+            if (n > comfort) { c -= (intimate ? 0.15f : 0.1f) * (n - comfort); r.Add("touch #" + n); }
+            c = Mathf.Clamp01(c);
+            why = Mathf.RoundToInt(c * 100) + "%: " + string.Join(", ", r.ToArray());
+            return c;
+        }
+
+        /// <summary>The touch answer once the dice said yes or no.</summary>
+        internal static string TouchTier(SaveData.Heroine h, string part, bool look, int n, int crowd, bool yes, ref string why)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
+            var pace = Profile(h);
+            var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
+            var trust = Social.Trust(h);
+            var intimate = Intimate(part);
+            var comfort = Comfort(h, intimate);
+            if (yes)
+            {
+                var u = h.isGirlfriend ? 0f : intimate ? 0.45f : 0.2f;
+                u += pace == Pace.Reserved ? 0.2f : pace == Pace.Normal ? 0.05f : -0.2f;
+                if (intimate && !h.isGirlfriend && gs.TalkDays.Distinct().Count() < 5) u += 0.1f;
+                u += trust < 40 ? 0.15f : trust >= 70 ? -0.1f : 0f;
+                if (crowd >= 3) u += 0.15f;
+                if (n > comfort) u += 0.15f;
+                if (look) u -= 0.1f;
+                if (mood == Mood.Flirty) u -= 0.15f;
+                else if (mood == Mood.Stressed || mood == Mood.Upset) u += 0.1f;
+                if (gs.Guilt > 0) u += 0.15f;
+                why += "; unease " + u.ToString("0.00");
+                return u >= 0.5f ? "wary_yes" : "yes";
+            }
+            var desire = intimate ? (h.lewdness - 40) / 60f + (h.favor - 50) / 120f : (h.favor - 30) / 60f;
+            desire += h.isGirlfriend ? 0.15f : h.relation >= 1 ? 0.05f : h.relation < 0 ? -0.5f : 0f;
+            if (mood == Mood.Flirty) desire += 0.2f;
+            else if (mood == Mood.Lonely && !intimate) desire += 0.1f;
+            desire += Mathf.Clamp((trust - 50) / 250f, -0.15f, 0.15f);
+            if (Social.Grudge(h) != null) desire -= 0.3f;
+            if (Pairs.IsScorned(h)) desire -= 0.8f;
+            if (n > comfort + 1) desire -= 0.15f * (n - comfort - 1);   // insisting turns an almost into a no
+            why += "; wants it " + desire.ToString("0.00");
+            return desire >= 0.5f ? "wary_no" : "no";
         }
 
         private static string PartName(int part, bool touch)
