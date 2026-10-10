@@ -8,6 +8,11 @@ on me.tell
 - [Have you heard about {who}?|Don't tell anyone I said this, but...|So, about {who}...] [{Deed}.|Apparently {deed}.]
 - [I heard something {when}.|Funny thing happened {when}.] [{Deed}.|Turns out {deed}.]
 - [You know {who}, right?|Can I tell you something about {who}?] [{Deed}.|Well... {deed}.]
+- [Promise you won't laugh.|Keep this between us.|Are you sitting down?] [{Deed}.|{Deed}, {when}.]
+- [You're friends with {who}, so you should know.|I thought you'd want to know about {who}.] [{Deed}.|Apparently {deed}.]
+- [I'm not one to gossip, but...|Nobody's talking about this yet, but...] [{Deed}.|Turns out {deed}.]
+- [Word is going around about {who}.|People are saying things about {who}.] [{Deed}.|They say {deed}.]
+- [I saw it myself {when}.|I only heard this {when}.] [{Deed}.|Well... {deed}.]
 
 @rule tell.good
 on tell
@@ -18,6 +23,11 @@ feel surprised
 - [Oh my gosh.|Huh! Who would've thought.] [Thanks for telling me!|That's huge.|I'm so glad I heard it from you.]
 - [Ooh, juicy!|Wow, okay!] [Tell me more later.|I won't say who told me.|You're my favorite source now.]
 - [That's actually great news.|Ha! I knew it.] [Good for {who}.|I'll have to ask {who} about it.]
+- [Hold on, say that again.|Are you sure about this?|Where did you hear that?] [This changes everything.|I've got so many questions.]
+- [So that's what was going on.|That explains the look on {who}'s face.] [Thanks!|It all makes sense now.]
+- [I can't believe I didn't hear this first.|How do you always hear these things first?] [I'm usually the first to know.|Teach me.]
+- [I'm telling no one. Well, maybe one person.|My lips are sealed.] [Hehe.|Probably.]
+- [You just made a boring day interesting.|Okay, this is the best thing I've heard all week.] [Got any more?|Thank you.]
 
 @rule tell.good.couple
 on tell
@@ -28,6 +38,11 @@ feel laugh
 - [Oh, that's so sweet.|Ehh?! Since when?] [I'm a little jealous, honestly.|I have to see it with my own eyes.]
 - [Stop, really?|Oh my gosh, {who}!] [I'm screaming inside.|That explains so much.]
 - [Hehe, so that's why {who} was smiling.|Ha! I called it.] [Thanks for the scoop.|You're the best informant.]
+- [Wait, {who} of all people?|I never would've guessed {who}.] [That's adorable.|Love is strange.]
+- [Who made the first move?|Tell me it was {who} who asked.] [I need details.|I bet it was.]
+- [Everyone's getting together except me.|Even {who}?] [So unfair.|I feel so left behind.]
+- [I want to see the look on {who}'s face tomorrow.|I'm going to tease {who} so much.] [Hehe.|Don't stop me.]
+- [No wonder {who} has been so distracted.|I noticed {who} checking their phone all day.] [That's why.|It all fits.]
 
 @rule tell.neutral
 on tell
@@ -37,6 +52,11 @@ opens ask,laugh,share
 - [Hm. Is that so.|Huh.] [Not my business, but okay.|I'll keep it in mind.]
 - [Oh. Okay then.|Mm.] [People sure talk a lot.|Weird.]
 - [I see.|Okay.] [Thanks, I guess.|Well, now I know.]
+- [Everyone's talking about something.|There's always something.] [It'll blow over.|Not sure why it matters.]
+- [I guess that happens.|Sounds like {who}.] [Okay.|Nothing new.]
+- [Did you hear that from someone reliable?|Are you sure?] [I'll wait and see.|Hm.]
+- [Should I be surprised?|Is that supposed to be big news?] [Sorry.|I'm not really shocked.]
+- [That's nice for {who}, I guess.|Well, good luck to {who}.] [Moving on.|Anyway.]
 
 @rule tell.neutral.cool
 on tell
@@ -46,6 +66,11 @@ opens ask,share
 - [Is that so.|Noted.] [I'll not repeat it.|Why tell me, though?]
 - [Hm. Interesting.|Huh.] [People's lives are complicated.|I suppose it was bound to happen.]
 - [That's... a lot of detail.|You hear everything, huh.] [I'll pretend I didn't.|Okay.]
+- [I had already guessed.|That isn't surprising.] [The signs were there.|People are predictable.]
+- [What {who} does is no concern of mine.|I don't see how that involves me.] [Is there anything else?|Hm.]
+- [You seem to enjoy this.|You collect these stories, don't you?] [Curious hobby.|Hm.]
+- [Your source may be unreliable.|That sounds exaggerated.] [I'll reserve judgment.|We'll see.]
+- [Thank you for the information. I think.|Very well. Now I'm informed.] [Hm.|Good.]
 
 @rule tell.bad
 on tell
@@ -56,6 +81,11 @@ feel pout
 - [Wow. Talking behind {who}'s back?|Is that how you talk about people?] [What do you say about me, then?|I don't like this.]
 - [{Who}'s my friend.|Hey, careful.] [I'm not passing that on.|Don't tell anyone else.]
 - [That's gossip. Mean gossip.|Ugh.] [I thought better of you.|Let's not.]
+- [Would you say that to {who}'s face?|Does {who} know you go around saying that?] [Didn't think so.|Think about it.]
+- [That could really hurt {who}.|Rumors like that follow people around.] [Think before you talk.|Stop it.]
+- [I don't want to be part of this.|Leave me out of it.] [Seriously.|Find someone else to tell.]
+- [What's your problem with {who}?|What did {who} ever do to you?] [Honestly.|Well?]
+- [And if it's not even true?|You don't know the whole story.] [Then what?|Neither do I.]
 
 @rule tell.bad.friend
 on tell
@@ -66,3 +96,8 @@ feel sad
 - [You're telling me this about {who}? My friend?|That's my friend you're talking about.] [Not cool.|I'll hear it from her, thanks.]
 - [I don't believe it.|That can't be right.] [{Who} would never.|You'd better not spread that.]
 - [That's awful.|Ugh, I hate this.] [Please don't tell anyone else.|Let me talk to {who} first.]
+- [{Who} trusted people here.|{Who} doesn't deserve this.] [I can't believe it.|This isn't fair.]
+- [If this gets back to {who}, I'll know it was you.|I'm going to tell {who} what you said.] [Remember that.|Don't look at me like that.]
+- [Did someone put you up to this?|Who else have you told about {who}?] [Tell me the truth.|Tell me.]
+- [I've known {who} for a long time.|I know {who} better than you do.] [It's not like that.|So stop.]
+- [I need to go find {who}.|Sorry, I can't talk about {who} like this.] [Excuse me.|Not with you.]

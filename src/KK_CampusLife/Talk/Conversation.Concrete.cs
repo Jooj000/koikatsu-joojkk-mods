@@ -46,8 +46,11 @@ namespace Joojkk.CampusLife
             {
                 foreach (var x in Catalog.Where(x => x.Teacher && x.Tier < 0 && Offerable(x, h)))
                 { var subj = x; l.Add(C("c:" + x.Id, x.Topic.ToString(), Fill(x.Label, h), 2.5f, () => RunSubject(subj))); }
-                l.Add(C("c:t_day", "Day", "Ask how her day is going", 1.5f, () => AskDay(null)));
-                return Three(l, gs);
+                if (h.isTeacher)
+                {
+                    l.Add(C("c:t_day", "Day", "Ask how her day is going", 1.5f, () => AskDay(null)));
+                    return Three(l, gs);
+                }
             }
 
             switch (mood)

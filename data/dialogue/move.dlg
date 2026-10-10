@@ -4,7 +4,7 @@
 # ---------------- ask ----------------
 @rule move.ask
 on move.ask
-- [Ask more about {thing}|Ask her to tell you more|Ask her to go on|Ask what she means|Ask how that went]
+- [Ask more about {thing}|Ask her to tell you more|Ask her to go on|Ask what she means|Ask what she's thinking]
 
 @rule move.ask.low
 on move.ask
@@ -78,17 +78,17 @@ on move.comfort
 
 @rule move.comfort.stress
 on move.comfort
-when mood=stressed
+when kind=day mood=stressed
 - [Say she's doing her best|Tell her not to push herself|Offer to help her through it|Tell her to take a breather]
 
 @rule move.comfort.lonely
 on move.comfort
-when mood=lonely
+when kind=day mood=lonely
 - [Say you're here now|Tell her she's not alone|Say you'll keep her company|Say you were hoping to see her]
 
 @rule move.comfort.upset
 on move.comfort
-when mood=upset
+when kind=day mood=upset
 - [Just stay with her|Say she doesn't have to talk|Sit quietly beside her|Tell her you're listening]
 
 @rule move.comfort.fight
@@ -143,12 +143,12 @@ on move.tease
 
 @rule move.tease.sleepy
 on move.tease
-when mood=sleepy
+when kind=day mood=sleepy
 - [Tease her about dozing off|Call her a sleepyhead|Ask if she slept in class|Offer her a pillow, grinning]
 
 @rule move.tease.hungry
 on move.tease
-when mood=hungry
+when kind=day mood=hungry
 - [Tease her about her appetite|Joke about her stomach|Ask if she heard that growl|Wave a snack in front of her]
 
 @rule move.tease.couple
@@ -188,17 +188,17 @@ on move.invite
 
 @rule move.invite.food
 on move.invite
-when mood=hungry
+when kind=day mood=hungry
 - [Offer to get food together|Offer to share your lunch|Suggest the cafeteria|Offer to buy her a snack]
 
 @rule move.invite.bored
 on move.invite
-when mood=bored
+when kind=day mood=bored
 - [Suggest something fun|Offer to break the boredom|Suggest skipping to the roof|Propose a little adventure]
 
 @rule move.invite.study
 on move.invite
-when exam=yes
+when kind=day exam=yes
 - [Offer to study together|Suggest a study session|Offer to quiz each other|Suggest the library after class]
 
 @rule move.invite.event
@@ -267,3 +267,658 @@ on move.thank
 @rule move.change
 on move.change
 - [Change the subject|Talk about something else|Move on to something else|Bring up something else]
+
+@rule move.ask.sleepy
+on move.ask
+when kind=day mood=sleepy
+- [Ask what kept her up|Ask why she's so tired|Ask when she went to bed|Ask if she slept at all]
+
+@rule move.ask.hungry
+on move.ask
+when kind=day mood=hungry
+- [Ask when she last ate|Ask why she skipped breakfast|Ask what she's craving|Ask what she'd eat right now]
+
+@rule move.ask.bored
+on move.ask
+when kind=day mood=bored
+- [Ask what she'd rather be doing|Ask what would cheer up her day|Ask why today's so slow|Ask what she does for fun]
+
+@rule move.ask.lonely
+on move.ask
+when kind=day mood=lonely
+- [Ask where her friends are|Ask why she's alone today|Ask who she usually sits with|Ask if she wants company]
+
+@rule move.ask.fight
+on move.ask
+when kind=day fight=yes
+- [Ask what happened with {fightwho}|Ask what started the fight|Ask if she'll talk to {fightwho}|Ask how bad it is with {fightwho}]
+
+# ================= 2026-10-31: the options answer what she just said =================
+# {said} is the rule of her last line: the most exact way to answer it. Below that, the topic and its subject. Her mood alone never
+# picks an option: it answered the mood, not the line (tools/dlg_fix_options.py).
+
+# ---------------- small talk, by subject ----------------
+@rule move.ask.small
+on move.ask
+when kind=small
+- [Ask what she thinks about {thing}|Ask why she says that|Ask what she means|Ask her to say more]
+
+@rule move.ask.weather
+on move.ask
+when kind=small subject=weather
+- [Ask what weather she likes best|Ask if she minds it|Ask if she brought an umbrella|Ask how it looks later]
+
+@rule move.share.weather
+on move.share
+when kind=small subject=weather
+- [Say what you think of it|Say you like this weather too|Say you can't stand it|Say it makes you sleepy too]
+
+@rule move.tease.weather
+on move.tease
+when kind=small subject=weather
+- [Joke about the weather|Say she sounds like the forecast|Ask if she ordered this weather|Bet it changes in an hour]
+
+@rule move.invite.weather
+on move.invite
+when kind=small subject=weather
+- [Suggest going outside|Suggest finding somewhere nice to sit|Suggest getting something warm|Suggest a walk later]
+
+@rule move.invite.weather.rain
+on move.invite
+when kind=small subject=weather wet=yes
+- [Offer to share your umbrella|Suggest waiting it out together|Suggest getting something warm|Offer to walk her home]
+
+@rule move.comfort.storm
+on move.comfort
+when kind=small subject=weather weather=storm
+- [Say the storm will pass soon|Tell her it's safe in here|Say you'll stay until it stops|Tell her you've got her]
+
+@rule move.ask.lunch
+on move.ask
+when kind=small subject=lunch
+- [Ask what she brought|Ask what's good today|Ask if she made it herself|Ask where she likes to eat]
+
+@rule move.share.lunch
+on move.share
+when kind=small subject=lunch
+- [Say what you're having|Say you skipped breakfast|Complain about the line|Say what you'd rather eat]
+
+@rule move.tease.lunch
+on move.tease
+when kind=small subject=lunch
+- [Joke about her lunch|Offer to taste it for her|Ask if there's enough for two|Say you'll steal a bite]
+
+@rule move.invite.lunch
+on move.invite
+when kind=small subject=lunch
+- [Ask to eat together|Offer to swap lunches|Suggest eating on the roof|Offer to buy her a drink]
+
+@rule move.ask.weekend
+on move.ask
+when kind=small subject=weekend
+- [Ask what she'd like to do|Ask if she's going out|Ask where she'd go|Ask what she usually does]
+
+@rule move.share.weekend
+on move.share
+when kind=small subject=weekend
+- [Tell her your plans|Say you've got nothing planned either|Say you'll sleep till noon|Say you're counting the days]
+
+@rule move.invite.weekend
+on move.invite
+when kind=small subject=weekend
+- [Ask her out this weekend|Suggest going somewhere together|Ask if she's free on Saturday|Offer to go with her]
+
+@rule move.ask.place
+on move.ask
+when kind=small subject=place
+- [Ask why she comes here|Ask how often she's here|Ask what she does here|Ask what she likes about it]
+
+@rule move.share.place
+on move.share
+when kind=small subject=place
+- [Say you like it here too|Say you never noticed this place|Say what you think of it|Say it's nice to get away]
+
+@rule move.tease.place
+on move.tease
+when kind=small subject=place
+- [Joke about this place|Say you've caught her here again|Ask if she lives here now|Say you know her hiding spot now]
+
+@rule move.invite.place
+on move.invite
+when kind=small subject=place
+- [Ask if you can stay with her|Suggest staying a little longer|Suggest going somewhere else together|Ask her to show you around]
+
+@rule move.comfort.exams
+on move.comfort
+when said=school.exam|school.teacher.exam|small.exams|small.exams.teacher|small.place.classroom.exam|small.place.library.books.exam
+- [Say she'll do fine|Tell her not to panic|Say you're behind too|Say she's got time]
+
+@rule move.invite.exams
+on move.invite
+when said=school.exam|school.teacher.exam|small.exams|small.exams.teacher|small.place.classroom.exam|small.place.library.books.exam
+- [Offer to study together|Suggest a study session|Offer to quiz each other|Suggest the library after class]
+
+@rule move.share.exams
+on move.share
+when kind=small subject=exams
+- [Say you haven't studied either|Say which subject scares you|Complain about the exams|Say you just want them over]
+
+@rule move.ask.exams
+on move.ask
+when said=small.place.classroom.exam|small.place.library.books.exam|small.exams.teacher
+- [Ask which subject worries her|Ask how the studying is going|Ask if she's ready|Ask what's on the test]
+
+@rule move.share.school
+on move.share
+when kind=small subject=school
+- [Complain about the homework|Say you feel the same|Say which class you can't stand|Say you can't wait for the break]
+
+@rule move.ask.subject.school
+on move.ask
+when kind=small subject=school
+- [Ask which class she likes|Ask which teacher is the worst|Ask how her classes are going|Ask what she'd change]
+
+@rule move.tease.school
+on move.tease
+when kind=small subject=school
+- [Joke about her grades|Ask if she was awake in class|Say she sounds like a teacher|Bet she forgot the homework]
+
+@rule move.ask.pet
+on move.ask
+when kind=small subject=pet
+- [Ask more about {pet}|Ask how she got into {pet}|Ask what's so great about {pet}|Ask for her favorite story about {pet}]
+
+@rule move.share.pet
+on move.share
+when kind=small subject=pet
+- [Say {pet} sounds fun|Admit you know nothing about {pet}|Say you can see why she likes it|Say you'd like to know more]
+
+@rule move.invite.pet
+on move.invite
+when kind=small subject=pet
+- [Ask her to show you {pet}|Suggest doing something with {pet} together|Ask if you can join her|Offer to go with her]
+
+@rule move.tease.like.yes
+on move.tease
+when kind=small likes=yes
+- [Tease her about {like}|Say she's obsessed with {like}|Joke that {like} is all she thinks about|Bet you're better at {like}]
+
+@rule move.tease.like.no
+on move.tease
+when kind=small likes=no
+- [Tease her for not liking {like}|Say she's missing out on {like}|Joke about her and {like}|Bet she'd come round to {like}]
+
+@rule move.praise.like
+on move.praise
+when kind=small likes=yes
+- [Say she must be good at it|Say it suits her|Say it's great that she loves {like}|Say you admire how much she cares]
+
+@rule move.praise.small.club
+on move.praise
+when kind=small subject=club
+- [Say she works hard|Say the {club} is lucky to have her|Say it sounds like she's doing great|Say you admire her for it]
+
+@rule move.invite.small.club
+on move.invite
+when kind=small subject=club
+- [Offer to drop by the {club}|Ask if you can watch sometime|Offer to help the {club}|Suggest walking home after the {club}]
+
+@rule move.praise.friend
+on move.praise
+when kind=small subject=friend
+- [Say {bff} is lucky to have her|Say it's nice to have a friend like that|Say she's a good friend|Say they sound great together]
+
+@rule move.tease.friend
+on move.tease
+when kind=small subject=friend
+- [Joke about the two of them|Ask who's the troublemaker|Say they sound like a comedy duo|Ask what {bff} says about her]
+
+@rule move.comfort.friend
+on move.comfort
+when kind=small subject=friend
+- [Say you only asked about her|Say she's the one you came to see|Tell her she has nothing to worry about|Say you're here for her]
+
+@rule move.praise.small.birthday
+on move.praise
+when kind=small subject=birthday
+- [Say she deserves a good one|Say you'll remember the date|Say you're glad you asked|Say she's a treat to celebrate]
+
+@rule move.tease.birthday
+on move.tease
+when kind=small subject=birthday
+- [Joke about her getting old|Ask if she wants a very big cake|Say you'll count the candles|Ask if she's dropping hints]
+
+@rule move.tease.horoscope
+on move.tease
+when kind=small subject=horoscope
+- [Joke about her sign|Ask if the stars said you'd talk|Say that explains a lot|Ask if your luck is her fault]
+
+@rule move.ask.future
+on move.ask
+when kind=small subject=future
+- [Ask what she wants to do|Ask where she'd like to go|Ask what she dreams of|Ask if she's decided yet]
+
+@rule move.praise.future
+on move.praise
+when kind=small subject=future
+- [Say she'll do great|Say you believe in her|Say it suits her|Say she'll get there]
+
+@rule move.share.future
+on move.share
+when kind=small subject=future
+- [Share your own plans|Say you haven't decided either|Say what you dream of|Say you're a bit scared of it]
+
+@rule move.invite.future
+on move.invite
+when kind=small subject=future
+- [Say you'd like to be part of it|Ask if there's room for you in it|Say you'll go with her|Suggest thinking it over together]
+
+@rule move.ask.teaching
+on move.ask
+when kind=small subject=teaching
+- [Ask what the hard part is|Ask why she became a teacher|Ask about her worst class|Ask if she'd do it again]
+
+@rule move.praise.teaching
+on move.praise
+when kind=small subject=teaching
+- [Say she's a good teacher|Say her class is your favorite|Say the students like her|Say you learn a lot from her]
+
+@rule move.comfort.teaching
+on move.comfort
+when kind=small subject=teaching
+- [Say she should rest more|Say the students notice how hard she works|Tell her not to overdo it|Say it's okay to be tired]
+
+@rule move.praise.small
+on move.praise
+when kind=small rel=stranger|acquaintance
+- [Say it's nice to talk to her|Say she's easy to talk to|Say you're glad you said hi|Say she seems nice]
+
+# ---------------- small talk, line by line ----------------
+@rule move.ask.said.fight
+on move.ask
+when said=small.place.fight|small.place.infirmary.fight|small.place.library.books.fight|small.place.library.books.rain.fight
+- [Ask what happened with {fightwho}|Ask what started the fight|Ask if she'll talk to {fightwho}|Ask how bad it is with {fightwho}]
+
+@rule move.comfort.said.fight
+on move.comfort
+when said=small.place.fight|small.place.infirmary.fight|small.place.library.books.fight|small.place.library.books.rain.fight
+- [Say it'll blow over|Tell her it's not her fault|Say she can stay here as long as she likes|Say you'll keep her company]
+
+@rule move.tease.said.rival
+on move.tease
+when said=small.place.rivalnear
+- [Joke about {rivalnear}|Offer to hide her from {rivalnear}|Say {rivalnear} heard her|Ask if she wants to go say hi]
+
+@rule move.ask.said.rival
+on move.ask
+when said=small.place.rivalnear
+- [Ask what's with her and {rivalnear}|Ask what {rivalnear} did|Ask how long this has gone on|Ask if she wants to leave]
+
+@rule move.tease.said.sleepy
+on move.tease
+when said=small.place.infirmary.sleepy
+- [Tease her about napping here|Call her a sleepyhead|Ask if she's really sick|Say you'll tell the nurse]
+
+@rule move.comfort.said.sleepy
+on move.comfort
+when said=small.place.infirmary.sleepy
+- [Tell her to get some sleep|Say you'll wake her before class|Say you'll keep watch|Say she's earned the rest]
+
+@rule move.tease.said.rain
+on move.tease
+when said=small.weather.rain.outside|small.place.rooftop.rain|small.place.courtyard.rain|small.place.field.rain|small.place.pool.rain|small.place.classroom.rain|small.place.gym.rain|small.place.cafeteria.rain
+- [Joke about the rain|Say she looks like a wet cat|Ask who picked this place|Say the rain followed her here]
+
+@rule move.invite.said.rain
+on move.invite
+when said=small.weather.rain.outside|small.place.rooftop.rain|small.place.rooftop.lover|small.place.courtyard.rain|small.place.field.rain|small.place.gym.rain|small.place.library.rain|small.place.clubroom.rain
+- [Offer to share your umbrella|Suggest going in somewhere dry|Suggest waiting it out together|Offer to walk her home]
+
+@rule move.comfort.said.rain
+on move.comfort
+when said=small.weather.rain.gentle|small.place.rooftop.rain
+- [Say she can stay as long as she wants|Say you'll stay with her|Tell her she doesn't have to be alone|Say the rain will pass]
+
+# ---------------- school ----------------
+@rule move.share.kind.school
+on move.share
+when kind=school
+- [Say what you're planning|Say you're looking forward to it|Tell her what you think of {event}|Say you haven't thought about it]
+
+@rule move.tease.kind.school
+on move.tease
+when kind=school
+- [Joke about {event}|Say she's way too excited|Bet she'll be first in line|Ask if she's even ready]
+
+@rule move.comfort.kind.school
+on move.comfort
+when kind=school
+- [Say it'll be fun once it starts|Say you'll go with her|Tell her not to worry about {event}|Say she doesn't have to go alone]
+
+# ---------------- gossip ----------------
+@rule move.tease.gossip
+on move.tease
+when kind=gossip
+- [Ask if she's jealous|Say she loves this stuff|Ask how she knows everything|Joke about it]
+
+@rule move.comfort.gossip
+on move.comfort
+when said=gossip.friend.worried
+- [Say {who} will get through it|Say it's kind of her to worry|Say {who} is lucky to have her|Offer to help {who} too]
+
+@rule move.praise.gossip
+on move.praise
+when said=gossip.friend.happy
+- [Say she's a good friend|Say it's nice she's happy for {who}|Say {who} is lucky to have her|Say you like that about her]
+
+# ---------------- about you ----------------
+@rule move.share.you
+on move.share
+when kind=you
+- [Tell her your side|Say it's not a big deal|Say it's nothing serious|Say you'd rather not talk about it]
+
+@rule move.comfort.you
+on move.comfort
+when kind=you
+- [Say nothing's changed between you|Say she still matters to you|Tell her not to worry about it|Say you're sorry she heard it this way]
+
+@rule move.invite.you
+on move.invite
+when kind=you
+- [Say you still have time for her|Promise to hang out soon|Ask if you can make it up to her|Suggest talking about it later]
+
+@rule move.ask.said.admit
+on move.ask
+when said=react.admit.good.go
+- [Ask what she wants to know|Ask what she's thinking|Ask if she's mad|Ask what you can do]
+
+@rule move.comfort.said.admit
+on move.comfort
+when said=react.admit.good.go
+- [Say you're sorry it hurt her|Say she still matters to you|Promise to talk it through|Say you never meant to upset her]
+
+# ---------------- what you did together ----------------
+@rule move.tease.us.plain
+on move.tease
+when kind=us
+- [Grin and bring it up again|Ask if she's still thinking about it|Say she's cute when she remembers|Joke about that day]
+
+@rule move.share.said.gift
+on move.share
+when said=us.gift.liked|us.gift.meh
+- [Say you picked it for her|Say you're glad she has it|Tell her why you chose it|Say it made you think of her]
+
+@rule move.ask.said.gift
+on move.ask
+when said=us.gift.meh
+- [Ask if she really likes it|Ask what she'd have liked|Ask where she put it|Ask if you got it wrong]
+
+@rule move.invite.said.gift
+on move.invite
+when said=us.gift.liked
+- [Suggest using it together|Offer to find her another one|Suggest going to that shop together|Ask her to show you where it is]
+
+@rule move.tease.said.gift
+on move.tease
+when said=us.gift.liked
+- [Say you expect one back|Ask if she sleeps with it|Say you have great taste|Say she owes you now]
+
+@rule move.share.said.help
+on move.share
+when said=us.helped|us.defended|us.promise
+- [Say it was nothing|Say anyone would have done it|Say you were glad to help|Say you'd do it again]
+
+@rule move.praise.said.help
+on move.praise
+when said=us.helped|us.defended|us.promise
+- [Say she'd do the same for you|Say she deserves it|Say she's worth it|Say you like seeing her smile]
+
+@rule move.tease.said.help
+on move.tease
+when said=us.helped|us.defended
+- [Say she owes you one|Say you'll collect later|Say you're a hero now|Ask what the reward is]
+
+@rule move.thank.said.help
+on move.thank
+when said=us.promise|us.gift.meh
+- [Say thanks for telling you|Say it means a lot|Say you're glad she noticed|Thank her with a smile]
+
+@rule move.share.said.lunch
+on move.share
+when said=us.lunch
+- [Say you liked eating together|Say it was the best part of your day|Say the time flew|Say her company beats the food]
+
+@rule move.tease.said.lunch
+on move.tease
+when said=us.lunch
+- [Joke about how fast you eat|Say you'll judge her bento|Ask who's paying next time|Say you're expecting a feast]
+
+@rule move.invite.said.lunch
+on move.invite
+when said=us.lunch
+- [Ask to eat together again|Suggest lunch tomorrow|Suggest a new place to eat|Say you'll save her a seat]
+
+@rule move.share.said.walk
+on move.share
+when said=us.walk
+- [Say you liked walking with her|Say it went by too fast|Say you got home fine too|Say it was a good walk]
+
+@rule move.tease.said.walk
+on move.tease
+when said=us.walk
+- [Tease her about the walk|Say you walk too fast for her|Ask if anyone saw you|Say next time she carries the bags]
+
+@rule move.invite.said.walk
+on move.invite
+when said=us.walk
+- [Suggest the long way next time|Offer to walk her home again|Suggest stopping somewhere on the way|Say you'll wait for her after class]
+
+# ---------------- what you told her ----------------
+@rule move.ask.tell
+on move.ask
+when kind=tell
+- [Tell her what you know|Give her the details|Tell her the rest|Say who told you]
+
+@rule move.share.tell
+on move.share
+when kind=tell
+- [Say what you think about it|Say it surprised you too|Say you only just found out|Say it's not your business either]
+
+@rule move.defend.tell
+on move.defend
+when kind=tell
+- [Say you're worried about {who}|Say you meant no harm|Say you told her out of concern|Say you're on {who}'s side]
+
+@rule move.agree.tell
+on move.agree
+when kind=tell
+- [Say you didn't see it coming either|Say you thought the same|Say it's big news|Say she called it]
+
+@rule move.tease.tell
+on move.tease
+when kind=tell
+- [Ask if she's jealous|Say she loves this stuff|Say you knew she'd react like that|Joke about it]
+
+# ---------------- what you confessed ----------------
+@rule move.ask.confide
+on move.ask
+when kind=confide
+- [Ask what she thinks|Ask if she's okay with it|Ask if she's upset|Ask what she'd do]
+
+@rule move.share.confide
+on move.share
+when kind=confide
+- [Tell her how it happened|Say it just happened|Say how you feel about it|Say you wanted her to hear it from you]
+
+@rule move.tease.confide
+on move.tease
+when kind=confide
+- [Ask if she's jealous|Joke about your love life|Say she's taking it well|Wink and say nothing]
+
+@rule move.comfort.confide
+on move.comfort
+when kind=confide
+- [Say it doesn't change things with her|Say she still matters to you|Say you're sorry if it hurt|Promise you won't hide things]
+
+@rule move.thank.confide
+on move.thank
+when kind=confide
+- [Thank her for understanding|Say you're glad you told her|Say it means a lot|Say you owe her one]
+
+# ---------------- when she answers and it goes on ----------------
+@rule move.invite.said.stay
+on move.invite
+when said=react.comfort.good.go
+- [Say you'll stay with her|Suggest getting some fresh air|Suggest going somewhere to clear her head|Offer to walk with her]
+
+@rule move.share.said.stay
+on move.share
+when said=react.comfort.good.go
+- [Tell her something funny|Tell her about your day|Say you're happy to listen|Say you've had days like that]
+
+@rule move.tease.said.stay
+on move.tease
+when said=react.comfort.good.go
+- [Make a silly joke to cheer her up|Pull a funny face|Say she owes you a smile|Say she's cute when she's better]
+
+@rule move.share.said.tell
+on move.share
+when said=react.share.good.go
+- [Tell her more|Tell her how it ended|Say there's more to it|Tell her the funny part]
+
+@rule move.share.said.plan
+on move.share
+when said=react.invite.good.go
+- [Tell her what you have in mind|Say you'll plan the whole thing|Say you'll surprise her|Say to leave it to you]
+
+@rule move.praise.said.plan
+on move.praise
+when said=react.invite.good.go
+- [Say you're looking forward to it|Say you're glad she said yes|Say it'll be better with her|Say you can't wait]
+
+@rule move.tease.said.plan
+on move.tease
+when said=react.invite.good.go
+- [Say she sounds excited|Joke that she'd better not be late|Say you might just pay|Ask if it's a date]
+
+@rule move.praise.said.spar
+on move.praise
+when said=react.tease.good.go
+- [Say she's fun to tease|Say you only do it because you like her|Admit she's quicker than you|Say you give up, she wins]
+
+@rule move.invite.said.spar
+on move.invite
+when said=react.tease.good.go
+- [Offer to make it up to her|Offer to buy her something|Suggest settling it after class|Offer a truce over a snack]
+
+# ---------------- small talk, by what kind of line hers was (2026-10-31) ----------------
+# A statement, a question or something she offers: the options answer that. These win over the rules by subject.
+@rule move.ask.state
+on move.ask
+when kind=small shape=state
+- [Ask her to tell you more|Ask why she says that|Ask what she means|Ask how she feels about it]
+
+@rule move.share.state
+on move.share
+when kind=small shape=state
+- [Say what you think|Give her your take|Tell her how you see it]
+
+@rule move.share.state.like
+on move.share
+when kind=small shape=state likes=yes
+- [Say you like {like} too|Say you've been getting into {like}|Tell her what you like about {like}]
+
+@rule move.tease.state
+on move.tease
+when kind=small shape=state
+- [Tease her about it|Joke about it|Make a joke|Tease her a little]
+
+@rule move.praise.state
+on move.praise
+when kind=small shape=state
+- [Say that's great|Say you like that about her|Say good for her]
+
+@rule move.comfort.state
+on move.comfort
+when kind=small shape=state
+- [Say it'll be okay|Tell her it's all right|Say you're there for her|Cheer her up]
+
+@rule move.invite.state
+on move.invite
+when kind=small shape=state likes=yes
+- [Suggest doing it together|Ask to join her sometime|Say you'd like to try it with her]
+
+@rule move.share.q
+on move.share
+when kind=small shape=q
+- [Answer her|Tell her what you think|Give her an honest answer]
+
+@rule move.ask.q
+on move.ask
+when kind=small shape=q
+- [Ask her the same thing|Turn the question around|Ask what she'd say]
+
+@rule move.tease.q
+on move.tease
+when kind=small shape=q
+- [Answer with a joke|Dodge with a joke|Give her a silly answer]
+
+@rule move.invite.offer
+on move.invite
+when kind=small shape=offer
+- [Say you'd like that|Say yes|Take her up on it|Say you're in]
+
+@rule move.ask.offer
+on move.ask
+when kind=small shape=offer
+- [Ask what she has in mind|Ask her for the details]
+
+@rule move.tease.offer
+on move.tease
+when kind=small shape=offer
+- [Tease her for asking|Ask if she's serious|Say only if she's paying]
+
+@rule move.invite.show
+on move.invite
+when kind=small shape=show
+- [Say you'd love to see it|Say yes, show her|Say you want to see]
+
+@rule move.ask.show
+on move.ask
+when kind=small shape=show
+- [Ask what it's like|Ask what's so special about it|Ask why she's showing you]
+
+@rule move.tease.show
+on move.tease
+when kind=small shape=show
+- [Tease her for showing off|Ask if it's any good|Say you've seen better]
+
+@rule move.invite.tell
+on move.invite
+when kind=small shape=tell
+- [Say you want to hear it|Ask her to tell you|Say you're listening]
+
+@rule move.ask.tell
+on move.ask
+when kind=small shape=tell
+- [Ask what it's about|Ask who told her|Ask if it's any good]
+
+@rule move.tease.tell
+on move.tease
+when kind=small shape=tell
+- [Say you'd rather not know|Ask if it's another of her stories|Say you already know]
+
+@rule move.invite.give
+on move.invite
+when kind=small shape=give
+- [Say yes|Say sure, thanks|Take her up on it]
+
+@rule move.ask.give
+on move.ask
+when kind=small shape=give
+- [Ask if she's sure|Ask if it's any good]
+
+@rule move.tease.give
+on move.tease
+when kind=small shape=give
+- [Tease her about it|Ask if it's safe|Ask what the catch is]

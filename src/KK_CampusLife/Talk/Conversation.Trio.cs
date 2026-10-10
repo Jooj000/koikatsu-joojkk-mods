@@ -440,7 +440,8 @@ namespace Joojkk.CampusLife
         {
             var c = Ctx(h, S.Girl(GirlInfo.Key(h)), new PTopic { Kind = "duo3" });
             var t = _trio;
-            c["other"] = GirlInfo.FirstName(other);
+            c["other"] = Teachers.Called(other);
+            c["otherrole"] = Teachers.IsTeacherVoice(other) ? "teacher" : "student";
             c["moment"] = t != null ? t.Moment : "hangout";
             c["pair"] = PairWord(h, other);
             c["trisal"] = h.isGirlfriend && other.isGirlfriend && Harem.Agreed(h, other) ? "yes" : "no";
@@ -650,15 +651,73 @@ namespace Joojkk.CampusLife
             if (argue) { t.Disagree = true; t.Argue = ArgueAbout(t.Moment); }
             var x = X("kind", kind, "argue", t.Disagree ? "yes" : "no", "idle", t.Idles.ToString());
             if (t.Disagree) x["topic"] = t.Argue;
-            Say2(b, first, second, "duo3." + kind + ".a", t.Disagree
-                ? T(first, "Um... about " + t.Argue + "... I still think I'm right. || About " + t.Argue + "... I still think I'm right. || Um, " + t.Argue + "... I haven't changed my mind. || I still believe I was right about " + t.Argue + "...", "Okay but about " + t.Argue + ", I'm SO right!" + " || " + t.Argue + "! I'm SO right! || About " + t.Argue + "! Still right!" + " || " + t.Argue + "?! Totally me!", "About " + t.Argue + ". I was right." + " || " + t.Argue + ". I was correct. || About " + t.Argue + ". Still right." + " || " + t.Argue + ". My position stands.", "Still mad about " + t.Argue + "? Admit it, I won~" + " || " + t.Argue + "? Admit I won~ || Still sulking about " + t.Argue + "? I won." + " || " + t.Argue + ". Surrender~")
-                : T(first, "Hey... did you finish the homework? || Did you finish the homework? || Um, the homework... done? || Did you get the homework?", "Hey hey, did you see what happened in class?! || Did you see what happened in class?! || Hey! Class today! Crazy, right?! || OMG, class today!", "Did you hear about the test? || The test. Heard? || About the exam. || Did you hear about the quiz?", "So... what do you think of him, really? || So, what do you really think of him? || Him? Thoughts? Honestly. || Be honest. Him?"), x);
-            Say2(b, second, first, "duo3." + kind + ".b", t.Disagree
-                ? T(second, "...You're not. || ...No, you're not. || ...I don't think so. || ...That's wrong.", "No way! You're totally wrong! || Nope! Wrong! || No way! || Totally wrong!", "...No. || ...No. || ...Incorrect. || ...Wrong.", "In your dreams~ || Dream on~ || Keep dreaming~ || Not a chance~")
-                : T(second, "Mm, almost... || Mm, almost... || Nearly... || Almost done...", "Yeah! It was crazy! || Yeah! Wild! || Totally! || Insane, right?!", "...I heard. || ...Heard. || ...Yes. || ...I know.", "Hehe. Wouldn't you like to know~ || Hehe. Secret~ || Wouldn't you love to know~ || Maybe~"), x);
+            Exchange(b, first, second, x);
             if (t.Disagree) b.Narr("They both look at you.");
             else if (kind == "idle" && t.Idles >= 2) Say2(b, first, second, "duo3.callback", T(first, "Ah, sorry, we left you out... || Sorry, we forgot you... || Ah, sorry, we left you out... || Oh, sorry... join us.", "Hey, you're quiet! Say something! || You're quiet! Talk! || Say something! || Hey, speak up!", "...You've been quiet. || ...Quiet today. || ...You're silent. || ...Nothing to say?", "Don't just stand there looking cute~ || Don't just stand there being cute~ || Speak, handsome~ || Quiet? How cute~"));
             return true;
+        }
+
+        /// <summary>
+        /// One exchange, line and answer written together (banter.dlg): "first >> answer", or four answers for the voice of the
+        /// second. Drawn apart they didn't answer each other (user, 2026-10-31).
+        /// </summary>
+        private static string[] PickExchange(SaveData.Heroine first, SaveData.Heroine second, Dictionary<string, string> x, out DlgRule rule, out Dictionary<string, string> c)
+        {
+            c = TrioCtx(first, second);
+            if (x != null) foreach (var kv in x) c[kv.Key] = kv.Value;
+            BanterCtx(first, second, c);
+            if (x != null) foreach (var kv in x) c[kv.Key] = kv.Value;
+            var raw = Bank.Pick("duo3.talk", c, GirlInfo.Key(first), out rule);
+            var parts = (raw ?? "").Split(new[] { ">>" }, StringSplitOptions.None).Select(p => p.Trim()).ToArray(); // the voice may eat the space before "..."
+            if (parts.Length < 2) return null;
+            return new[] { parts[0], parts[parts.Length == 5 ? 1 + (int)GirlInfo.ToneOf(second) : 1] };
+        }
+
+        private static string _lastExchange;
+
+        private static void Exchange(SceneBuilder b, SaveData.Heroine first, SaveData.Heroine second, Dictionary<string, string> x)
+        {
+            DlgRule r;
+            Dictionary<string, string> c;
+            var pair = PickExchange(first, second, x, out r, out c);
+            for (var i = 0; i < 4 && pair != null && pair[0] == _lastExchange; i++) pair = PickExchange(first, second, x, out r, out c); // never the same line twice running
+            if (pair == null) return;
+            _lastExchange = pair[0];
+            var feel = FeelOf(r, c);
+            b.Face(first, feel).Say(first, pair[0]);
+            b.Face(second, feel).Say(second, pair[1]);
+            TLog("exchange " + (r != null ? r.Id : "?") + ": " + pair[0] + " / " + pair[1]);
+        }
+
+        /// <summary>What is really true of the two of them right now.</summary>
+        private static void BanterCtx(SaveData.Heroine a, SaveData.Heroine b, Dictionary<string, string> c)
+        {
+            c["first"] = Teachers.Called(a);
+            c["myrole"] = Teachers.IsTeacherVoice(a) ? "teacher" : "student";
+            c["wet"] = Weather.Raining ? "yes" : "no";
+            c["othermood"] = S.Girl(GirlInfo.Key(b)).Mood.ToString().ToLowerInvariant();
+            var likes = GirlInfo.LikesOf(a).Intersect(GirlInfo.LikesOf(b)).ToList();
+            if (likes.Count > 0) { c["shared"] = "yes"; c["sharedlike"] = GirlInfo.LikeLabel(likes[Random.Range(0, likes.Count)]); }
+            if (!GirlInfo.InNoClub(a) && GirlInfo.ClubName(a) == GirlInfo.ClubName(b)) { c["sameclub"] = "yes"; c["club"] = GirlInfo.ClubName(a); }
+        }
+
+        /// <summary>Their exchanges side by side, in each situation.</summary>
+        internal static string AuditExchanges(SaveData.Heroine a, SaveData.Heroine b)
+        {
+            if (a == null || b == null) return "no girls";
+            var sb = new System.Text.StringBuilder();
+            var cases = new[] { "", "pair=bff", "pair=rival", "period=lunch", "period=after", "wet=yes", "exam=yes", "sameclub=yes,club=Tennis Club", "shared=yes,sharedlike=cooking", "othermood=sleepy", "othermood=upset", "argue=yes,topic=where to eat after school", "trisal=yes" };
+            foreach (var cs in cases)
+                for (var i = 0; i < 3; i++)
+                {
+                    var x = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var kv in cs.Split(',')) { var p = kv.Split('='); if (p.Length == 2) x[p[0]] = p[1]; }
+                    DlgRule r;
+                    Dictionary<string, string> c;
+                    var pair = PickExchange(i == 2 ? b : a, i == 2 ? a : b, x, out r, out c);
+                    sb.Append("\n  [").Append(cs).Append("] ").Append(r != null ? r.Id : "none").Append(": ").Append(pair != null ? pair[0] + " / " + pair[1] : "(nothing)");
+                }
+            return sb.ToString();
         }
 
         /// <summary>Every frame: a silence becomes their own conversation (instead of the game's "are you listening?").</summary>

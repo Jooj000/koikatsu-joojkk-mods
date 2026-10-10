@@ -85,7 +85,8 @@ namespace Joojkk.CampusLife
             {
                 var story = h.fixCharaID <= -5;
                 var grad = StoryCast.Graduated(h);
-                c["role"] = h.isTeacher ? (grad ? "exteacher" : "teacher") : story ? (grad ? "exstory" : "story") : "student";
+                c["role"] = Teachers.IsTeacherVoice(h) ? "teacher" : story ? (grad ? "exstory" : "story") : "student";
+                c["free"] = Teachers.Freed(h) ? "yes" : "no";
                 var p = h.charFile.parameter;
                 var sign = SignOf(p.birthMonth, p.birthDay);
                 if (sign != "") c["sign"] = sign;
@@ -96,7 +97,7 @@ namespace Joojkk.CampusLife
                 c["height"] = height >= 0.66f ? "tall" : height <= 0.36f ? "short" : "average";
                 c["bust"] = bust >= 0.7f ? "big" : bust <= 0.3f ? "small" : "average";
             }
-            catch { if (!c.ContainsKey("role")) c["role"] = h.isTeacher ? "teacher" : "student"; }
+            catch { if (!c.ContainsKey("role")) c["role"] = Teachers.IsTeacherVoice(h) ? "teacher" : "student"; }
             c["placeid"] = Places.CurrentId ?? "";
             // then a fight on her mind): the keys the composite lines need.
             try
@@ -154,6 +155,7 @@ namespace Joojkk.CampusLife
             if (other == null) return;
             var bond = Social.Bond(h, other);
             c["whorel"] = RomanceFor(h, other) >= 40 ? "crush" : bond >= 40 ? "friend" : bond <= -30 ? "rival" : "none";
+            c["whorole"] = Teachers.IsTeacherVoice(other) ? "teacher" : "student";
         }
 
         private static string Do(string like)
@@ -162,31 +164,40 @@ namespace Joojkk.CampusLife
             return LikeDo.TryGetValue(like, out l) ? l[Random.Range(0, l.Length)] : "hang out";
         }
 
+        private static bool Heavy(Dictionary<string, string> c)
+        {
+            string v;
+            var kind = c.TryGetValue("kind", out v) ? v : "";
+            return kind == "you" || kind == "gossip" && (Num(c, "valence") < 0 || Num(c, "weight") >= 2);
+        }
+
         /// <summary>
-        /// Her line with, now and then, an opener before it and a tail after it, chosen by the context (pieces.dlg). Never
-        /// both on a short line, never a tail on a bad reaction or on gossip that hurts (the tails are light).
+        /// The first line of a topic with, now and then, an opener before it, chosen by the context (pieces.dlg). No tail here
+        /// (2026-10-31): a tail is another subject, and it stood between her line and your options. No opener later in the
+        /// exchange either: they greet you ("Hi, you."), which made no sense as an answer.
         /// </summary>
         private static string Compose(string line, Dictionary<string, string> c)
         {
             if (string.IsNullOrEmpty(line)) return line;
-            string v;
-            var kind = c.TryGetValue("kind", out v) ? v : "";
-            var bad = c.TryGetValue("fit", out v) && v == "bad";
-            var heavy = kind == "you" || kind == "gossip" && (Num(c, "valence") < 0 || Num(c, "weight") >= 2);
-            var open = Random.value < (heavy ? 0.2f : 0.4f) ? Bank.Piece("open", c, 1) : "";
-            var tail = !bad && !heavy && Random.value < (open == "" ? 0.5f : 0.25f) ? Bank.Piece("tail", c, 1) : "";
-            if (open == "" && tail == "") return line;
-            var s = line;
+            var open = Random.value < (Heavy(c) ? 0.2f : 0.4f) ? Bank.Piece("open", c, 1) : "";
             // Openers end in a stop ("Mm, babe...", "Sensei!"), so her line keeps its capital and names stay whole.
-            if (open != "") s = open.Trim() + " " + s;
-            if (tail != "") s = s.TrimEnd() + " " + tail.Trim();
-            return s;
+            return open == "" ? line : open.Trim() + " " + line;
+        }
+
+        /// <summary>The last line of an exchange that went well takes a tail now and then: nothing comes after it to answer.</summary>
+        private static string Close(string line, Dictionary<string, string> c)
+        {
+            if (string.IsNullOrEmpty(line) || Heavy(c) || Random.value >= 0.35f) return line;
+            var tail = Bank.Piece("tail", c, 1);
+            return tail == "" ? line : line.TrimEnd() + " " + tail.Trim();
         }
 
         /// <summary>Your line with an opener for who she is to you ("Hey, babe," "Sensei,").</summary>
         private static string ComposeMe(string line, Dictionary<string, string> c)
         {
             if (string.IsNullOrEmpty(line) || Random.value > 0.35f) return line;
+            // The line may greet already: "Hey, sensei. Sensei, hi."
+            if (line.IndexOf("ensei", StringComparison.Ordinal) >= 0 || line.StartsWith("Hey", StringComparison.Ordinal) || line.StartsWith("Hi", StringComparison.Ordinal)) return line;
             var open = Bank.Piece("meopen", c, 1);
             if (open == "") return line;
             return open.Trim() + " " + line;

@@ -364,7 +364,7 @@ feel shy
 # ================= roles =================
 @rule touch.teacher
 on touch
-when role=teacher level=welcome|uneasy
+when role=teacher level=welcome|uneasy rel!=girlfriend rel!=lover
 feel serious
 - [Ahem. I'm your teacher.|That's inappropriate.|Hands to yourself, please.] [Do you want detention?|We'll pretend that didn't happen.]
 - [Not at school.|...I'll let that slide.] [Once.|Don't make it a habit.]
@@ -687,6 +687,22 @@ feel shy
 - [Ah...|...!] [Okay, that one got me. Just a little.|You're lucky I'm in a good mood.]
 - [My, my...|Heh...] [Don't get used to it~|I'll pretend that didn't fluster me.]
 
+@rule touch.answer.waryyes.chest
+on touch
+when answer=wary_yes part=chest
+feel shy
+- [Ah...!|Hya...|W-wait...] [...It's okay. Just... slowly.|I can't believe I'm letting you.|Nobody's looking, right...?]
+- [Mm...|...!] [My heart's pounding. Can you feel it?|Don't say anything. Please.]
+- [Eh...|Um...] [Only because it's you.|I-I'm not saying stop...]
+
+@rule touch.answer.waryyes.butt
+on touch
+when answer=wary_yes part=butt
+feel shy
+- [Hyaa?!|Eh...!|W-what are you...] [...F-fine. Just this once.|I'm pretending I didn't notice.|Nobody saw that, right?]
+- [Ah...|Mm...] [Your hand is... really there, huh.|I didn't say no. ...Did I?]
+- [Hey...|...!] [Sneaky. ...Okay.|I should be mad. I'm not.]
+
 @rule touch.answer.waryno.gentle
 on touch
 when answer=wary_no tone=gentle
@@ -718,6 +734,22 @@ feel shy
 - [Ah-ah~|Not so fast~|Oh, wait...] [You almost had me there.|Tempting. Not today, though.]
 - [Mm, no~|Hold on...] [I'm not saying no. I'm saying not yet.|You'll have to earn that one.]
 - [Careful...|Heh...] [I nearly let you.|Ask me again when I'm in the mood~]
+
+@rule touch.answer.waryno.chest
+on touch
+when answer=wary_no part=chest
+feel shy
+- [W-wait!|Ah, no, I...|Not there...] [...Not yet. I'm sorry.|I want to... I'm just scared.|Somewhere nobody can see, maybe... someday.]
+- [Mm...!|Hold on...] [My heart can't take it right now.|It's not you. I'm just not ready.]
+- [Eh...|...] [Please don't think I hate it.|Let's... wait a little more.]
+
+@rule touch.answer.waryno.butt
+on touch
+when answer=wary_no part=butt
+feel shy
+- [H-hey!|Wait!|Eep!] [Not here... people could see.|...Ask me again later, okay?|I almost let you. Almost.]
+- [Ah...|Mm...!] [Too bold, too soon.|I'm not angry. Just... not now.]
+- [Hold it...|...!] [Hands up here, please. For now.|You're going to make me lose my nerve.]
 
 @rule touch.mouth.waryno.gentle
 on touch

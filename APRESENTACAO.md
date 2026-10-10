@@ -2,7 +2,7 @@
 
 **Um mod de vida escolar para o modo história do Koikatsu.** As garotas da escola ganham humor, memória, amizades e mágoas próprias; um diretor planeja o dia de cada uma; a conversa vira uma conversa de verdade; e tudo o que você faz com elas vira parte de uma história que a escola inteira comenta.
 
-Feito por **Joojkk** · versão **3.2.0** · BepInEx 5 / KKAPI · Koikatu (HF Patch) · menu **F7** · interface e falas em inglês.
+Feito por **Joojkk** · versão **3.3.0** · BepInEx 5 / KKAPI · Koikatu (HF Patch) · menu **F7** · interface e falas em inglês.
 
 Junto vêm dois mods irmãos: **School Optimizer** (escola cheia sem travar) e **H Male Wardrobe** (roupa do protagonista no H, F10).
 
@@ -102,7 +102,7 @@ Dias bem jogados (3 conversas por dia, respostas boas), média de duas garotas d
 
 ## 6. Cards masculinos (novo na 3.2)
 
-- Um card salvo como homem é detectado sozinho; um femboy salvo como garota entra pela opção **Boys in the class** (primeiros nomes, separados por vírgula).
+- Um card salvo como homem é detectado sozinho, e a pasta **male** aparece ao lado da **female** na escolha da turma. Ele usa o banheiro masculino, perde reputação se entrar nas áreas femininas e pega as garotas que entram no masculino.
 - As falas **sobre ele** dizem he/him/his e boyfriend; **ele mesmo** se chama de boyfriend ou guy; a voz e a personalidade continuam as mesmas. O cartão dele diz "Boyfriend".
 
 ## 7. Menu e opções

@@ -68,26 +68,38 @@ namespace Joojkk.CampusLife
                 _nb = nb;
                 _a = ts.targetHeroine.chaCtrl;
                 _b = nb.chaCtrl;
-                _aHome = _a.transform.position;
-                _aHomeRot = _a.transform.rotation;
+                // Frame() may have moved her already: the spot the game gave her is what counts.
+                var framed = _framed == _a && _framedTalk == ts;
+                _aHome = framed ? _framedHome : _a.transform.position;
+                _aHomeRot = framed ? _framedRot : _a.transform.rotation;
+                _framed = null;
                 _mid = _aHome;
                 var right = _now.transform.right;
                 right.y = 0f;
                 right.Normalize();
-                // Apart enough not to overlap, close enough to both fit the game's own framing.
                 var fwd0 = _now.transform.forward;
                 var depth0 = Mathf.Max(0.5f, Vector3.Dot(_mid - _now.transform.position, fwd0));
                 var halfW0 = depth0 * Mathf.Tan(_now.fieldOfView * 0.5f * Mathf.Deg2Rad) * _now.aspect;
-                _half = Mathf.Clamp(0.3f * halfW0, 0.24f, 0.36f);
+                _half = HalfGap(depth0, _now);
                 Place(_a.transform, _mid - right * _half, right);
                 Place(_nb.transform, _mid + right * _half, -right);
                 if (_nb.transform != _b.transform) _b.transform.SetPositionAndRotation(_nb.transform.position, _nb.transform.rotation);
+                Duo.KeepStill(_nb);
                 _headA = Bone(_a, "cf_j_head");
                 _headB = Bone(_b, "cf_j_head");
                 _bCtrl = _b.animBody != null ? _b.animBody.runtimeAnimatorController : null;
                 _fovAdded = 0f;
                 _hasBase = false;
                 _offset = Vector3.zero;
+                if (framed)
+                {
+                    // The camera is already between them (FrameTick): carry on from there, no jump to her and back.
+                    _offset = _aHome - _a.transform.position;
+                    _offset.y = 0f;
+                    _basePos = _now.transform.position - _offset;
+                    _baseRot = _now.transform.rotation;
+                    _hasBase = true;
+                }
                 _bGone = false;
                 On = true;
                 PoseB("通常立ち");
@@ -109,13 +121,83 @@ namespace Joojkk.CampusLife
             }
         }
 
-        private static void Place(Transform t, Vector3 pos, Vector3 toward)
+        private static void Place(Transform t, Vector3 pos, Vector3 toward) { Place(t, pos, toward, _now, _aHome.y); }
+
+        private static void Place(Transform t, Vector3 pos, Vector3 toward, Camera cam, float y)
         {
-            var look = _now.transform.position - pos;
+            var look = cam.transform.position - pos;
             look.y = 0f;
-            if (look.sqrMagnitude < 0.01f) look = -_now.transform.forward;
+            if (look.sqrMagnitude < 0.01f) look = -cam.transform.forward;
             look = Vector3.RotateTowards(look.normalized, toward, Turn * Mathf.Deg2Rad, 0f);
-            t.SetPositionAndRotation(new Vector3(pos.x, _aHome.y, pos.z), Quaternion.LookRotation(look));
+            t.SetPositionAndRotation(new Vector3(pos.x, y, pos.z), Quaternion.LookRotation(look));
+        }
+
+        /// <summary>Half the gap between them: apart enough not to overlap, close enough to both fit the game's own framing.</summary>
+        private static float HalfGap(float depth, Camera cam)
+        {
+            return Mathf.Clamp(0.3f * depth * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * cam.aspect, 0.24f, 0.36f);
+        }
+
+        private static ChaControl _framed;
+        private static TalkScene _framedTalk;
+        private static Vector3 _framedHome;
+        private static Quaternion _framedRot;
+        private static Camera _framedCam, _framedMap;
+        private static NPC _framedB;
+        private static int _framedTicks;
+
+        /// <summary>Two of them in a talk scene: side by side around the first girl's spot, before any talk with both.</summary>
+        public static void Frame(ChaControl a, NPC nb, Camera cam)
+        {
+            if (_framed != a || _framedTalk != G.TalkScene)
+            {
+                _framed = a;
+                _framedTalk = G.TalkScene;
+                _framedHome = a.transform.position;
+                _framedRot = a.transform.rotation;
+                _framedTicks = 0;
+            }
+            _framedCam = cam;
+            _framedMap = G.TalkScene != null ? Traverse.Create(G.TalkScene).Field("cameraMap").GetValue<Camera>() : null;
+            _framedB = nb;
+            // From her, not from the camera: the game has not placed it yet at the first call (she faces where it will be).
+            var right = _framedRot * Vector3.left;
+            right.y = 0f;
+            right.Normalize();
+            var front = _framedRot * Vector3.forward;
+            const float half = 0.25f;
+            a.transform.SetPositionAndRotation(_framedHome - right * half, Quaternion.LookRotation(Vector3.RotateTowards(front, right, Turn * Mathf.Deg2Rad, 0f)));
+            nb.transform.SetPositionAndRotation(_framedHome + right * half, Quaternion.LookRotation(Vector3.RotateTowards(front, -right, Turn * Mathf.Deg2Rad, 0f)));
+            CampusLifePlugin.Log.LogInfo("Duo framed: " + half.ToString("0.00") + " m each side of her spot");
+        }
+
+        /// <summary>
+        /// Every frame after the game's Update, while Frame() holds them apart. The game's talk camera follows the first girl,
+        /// so moving her alone left her in the middle and the other at the edge (user, 2026-10-31). The camera slides sideways
+        /// until the middle of the two is on the middle of the screen, measured each frame: the game sets the camera at
+        /// different times (each frame in the talk, once for its ADV), and this gives the same pose whichever it was.
+        /// </summary>
+        public static void FrameTick()
+        {
+            if (_framed == null || On) return;
+            if (G.TalkScene == null || G.TalkScene != _framedTalk || _framedCam == null || _framedB == null) { _framed = null; return; }
+            var t = _framedCam.transform;
+            var side = t.right;
+            var slide = side * Vector3.Dot((_framed.transform.position + _framedB.transform.position) * 0.5f - t.position, side);
+            t.position += slide;
+            if (_framedMap != null) _framedMap.transform.SetPositionAndRotation(t.position, t.rotation);
+            if (++_framedTicks != 240 || _framedB.chaCtrl == null) return;
+            var ha = Bone(_framed, "cf_j_head");
+            var hb = Bone(_framedB.chaCtrl, "cf_j_head");
+            if (ha != null && hb != null)
+                CampusLifePlugin.Log.LogInfo("Duo on screen: heads at " + _framedCam.WorldToViewportPoint(ha.position).x.ToString("0.00") + " and " + _framedCam.WorldToViewportPoint(hb.position).x.ToString("0.00") + " of the width");
+        }
+
+        /// <summary>The scene with two is over and no talk with both follows: the first girl goes back to her spot.</summary>
+        public static void Unframe()
+        {
+            if (_framed != null) _framed.transform.SetPositionAndRotation(_framedHome, _framedRot);
+            _framed = null;
         }
 
         private static Transform Bone(ChaControl c, string name)
@@ -213,6 +295,7 @@ namespace Joojkk.CampusLife
         {
             if (!On || _bGone) return;
             _bGone = true;
+            Duo.KeepStill(null);
             try
             {
                 RestoreB();
@@ -240,6 +323,7 @@ namespace Joojkk.CampusLife
         {
             if (On)
             {
+                Duo.KeepStill(null);
                 try
                 {
                     RestoreB();

@@ -595,7 +595,8 @@ namespace Joojkk.CampusLife
         {
             if (x.NeedsFact != null && !Knows(h, x.NeedsFact)) return false;
             if (x.When != null && !x.When(h)) return false;
-            if (x.Teacher != Teachers.IsTeacherVoice(h)) return false;
+            // A freed teacher has every normal subject and keeps her own; one still on her event has only hers.
+            if (x.Teacher ? !Teachers.IsTeacherVoice(h) : h.isTeacher) return false;
             return true;
         }
 

@@ -292,7 +292,7 @@ namespace Joojkk.CampusLife
                 u += trust < 40 ? 0.15f : trust >= 70 ? -0.1f : 0f;
                 if (!h.isGirlfriend && OtherGirlfriend(h)) u += 0.2f;
                 if (gs.Guilt > 0) u += 0.2f;
-                if (gs.TalkDays.Distinct().Count() < 5) u += 0.1f;
+                if (gs.TalkDays.Distinct().Count() < (pace == Pace.Open ? 4 : 5)) u += 0.1f;
                 if (mood == Mood.Flirty) u -= 0.15f;
                 else if (mood == Mood.Stressed || mood == Mood.Upset) u += 0.1f;
                 if (h.isGirlfriend && gs.Chapter < 1 && pace == Pace.Reserved) u += 0.3f;
@@ -519,6 +519,15 @@ namespace Joojkk.CampusLife
             return answer;
         }
 
+        /// <summary>The unease of a friend you met days ago: an open one says a wary yes on day 3 and a plain yes on day 4.</summary>
+        private static float Soon(SaveData.Heroine h, GirlState gs, Pace pace)
+        {
+            if (h.isGirlfriend) return 0f;
+            var days = gs.TalkDays.Distinct().Count();
+            // 0.4: an open friend who trusts you said a plain yes on day 3. User: "sim receoso no 3 e sim no 4".
+            return pace == Pace.Open ? (days < 4 ? 0.4f : 0f) : days < 5 ? 0.1f : 0f;
+        }
+
         /// <summary>
         /// The kiss answer once the dice said yes or no: "yes", "wary" (a wary yes: she lets it happen), "wary_no" (16th
         /// are to her, her pace, trust, who is watching, her mood and guilt; wanting reads her bars, a flirty or lonely
@@ -534,7 +543,7 @@ namespace Joojkk.CampusLife
             {
                 var u = h.isGirlfriend ? 0f : 0.4f;
                 u += pace == Pace.Reserved ? 0.2f : pace == Pace.Normal ? 0.1f : -0.2f;
-                if (!h.isGirlfriend && gs.TalkDays.Distinct().Count() < 5) u += 0.1f;   // a girl met days ago lets it happen warily first
+                u += Soon(h, gs, pace);   // a girl met days ago lets it happen warily first
                 u += trust < 40 ? 0.15f : trust >= 70 ? -0.1f : 0f;
                 if (crowd >= 2) u += 0.1f;
                 if (mood == Mood.Flirty) u -= 0.15f;
@@ -567,7 +576,7 @@ namespace Joojkk.CampusLife
             var mult = Multiplier(h);
             var favor = h.favor * mult;
             var lewd = h.lewdness * mult;
-            var interest = favor > 45 && lewd > 45;
+            var interest = pace == Pace.Open ? favor > 40 && lewd > 30 : favor > 45 && lewd > 45;
             float c;
             if (h.isGirlfriend) { c = Mathf.Max(0.92f, 0.75f + (favor - 50) / 200f + (lewd - 50) / 200f); r.Add("girlfriend"); }
             else if (h.relation >= 1 && interest) { c = 0.55f + (favor - 50) / 200f + (lewd - 50) / 200f; r.Add("friend, interested"); }
@@ -977,7 +986,7 @@ namespace Joojkk.CampusLife
             {
                 var butt = part == "butt" ? 0.08f : 0f;   // a little less personal than the chest
                 if (h.isGirlfriend) c = 0.55f + lewd / 150f + butt;
-                else if (h.relation >= 1) c = (lewd - 40f) / 50f + (favor - 50f) / 150f + butt + (pace == Pace.Open ? 0.15f : 0f);
+                else if (h.relation >= 1) c = (lewd - (pace == Pace.Open ? 25f : pace == Pace.Normal ? 32f : 40f)) / 50f + (favor - 50f) / 150f + butt + (pace == Pace.Open ? 0.15f : 0f);
                 else if (h.relation == 0) c = (pace == Pace.Open ? lewd / 200f - 0.15f : -0.35f) + butt;
                 else c = -0.5f;
             }
@@ -1021,7 +1030,7 @@ namespace Joojkk.CampusLife
             {
                 var u = h.isGirlfriend ? 0f : intimate ? 0.45f : 0.2f;
                 u += pace == Pace.Reserved ? 0.2f : pace == Pace.Normal ? 0.05f : -0.2f;
-                if (intimate && !h.isGirlfriend && gs.TalkDays.Distinct().Count() < 5) u += 0.1f;
+                if (intimate) u += Soon(h, gs, pace);
                 u += trust < 40 ? 0.15f : trust >= 70 ? -0.1f : 0f;
                 if (crowd >= 3) u += 0.15f;
                 if (n > comfort) u += 0.15f;

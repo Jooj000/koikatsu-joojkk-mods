@@ -12,11 +12,16 @@ feel smile
 - [That's sweet of you.|Mm. I like talking with you.|You get me, huh?]
 - [See, this is why I like talking to you.|Okay, you just made my day a little better.|Heh. Yeah. Exactly that.]
 - [I didn't expect that from you. In a good way.|You're easy to talk to, you know?|Hehe. Good answer.]
+- [Not many people get what I mean about {like}.|I knew you'd understand about {like}.] [You do, though.|That's why I told you.]
+- [I should tell {who} what you just said.|{Who} wouldn't have put it like that.] [Hehe.|You're better at this.]
+
+@rule react.good.onday
+on react
+when fit=good kind=day
+feel smile
 - [Talking about {mything} with you is easy.|I wasn't planning to talk about {mything} today.] [I'm glad I did.|It helps, somehow.]
 - [Most people would've changed the subject from {mything} by now.|Nobody else wants to hear about {mything}.] [You actually listen.|So, thanks.]
 - [Funny, {mything} doesn't feel so heavy now.|You make {mything} sound better than it is.] [Hehe.|Keep talking.]
-- [Not many people get what I mean about {like}.|I knew you'd understand about {like}.] [You do, though.|That's why I told you.]
-- [I should tell {who} what you just said.|{Who} wouldn't have put it like that.] [Hehe.|You're better at this.]
 
 @rule react.neutral
 on react
@@ -25,11 +30,15 @@ when fit=neutral
 - [If you say so.|Hm, fair enough.|Huh. I hadn't thought of it like that.]
 - [I don't know. Maybe you're right.|That's one way to see it.|Mm... I'll take your word for it.]
 - [Heh. Okay, sure.|Hm, I'll think about that.|Yeah, maybe.] [Anyway.|Where was I?|]
+- [Not sure {who} would agree.|Hm, {who} would have a different answer.] [But okay.|Maybe.]
+- [I'm not sure that's how it works with {like}.|Hm, {like} isn't for everyone.] [But okay.|Fair enough.]
+
+@rule react.neutral.onday
+on react
+when fit=neutral kind=day
 - [Hm, I hadn't looked at {mything} that way.|That's one way to look at {mything}.] [I guess.|Maybe.]
 - [I don't know what to think about {mything}.|Mm, {mything}...] [Ask me another day.|We'll see.]
 - [Well, {mything} is what it is.|{Mything} won't change either way.] [Right?|So, yeah.]
-- [Not sure {who} would agree.|Hm, {who} would have a different answer.] [But okay.|Maybe.]
-- [I'm not sure that's how it works with {like}.|Hm, {like} isn't for everyone.] [But okay.|Fair enough.]
 
 @rule react.bad
 on react
@@ -39,26 +48,37 @@ feel pout
 - [Seriously?|Was that supposed to help?|Um. No.]
 - [You really don't get it, huh.|...Never mind.|Forget I said anything.]
 - [That's not funny.|Not the time.|Ugh, you sound like my brother.] [Let's just drop it.|Whatever.|]
-- [I wanted to talk about {mything}, not that.|That has nothing to do with {mything}.] [Forget it.|Never mind.]
-- [You weren't really listening about {mything}, were you?|Did you hear anything I said about {mything}?] [Great.|Wow.]
-- [That's the last time I bring up {mything} with you.|I knew I shouldn't have mentioned {mything}.]
 - [Don't talk about {who} like you know everything.|You'd better not say that in front of {who}.]
 - [If you don't care about {like}, just say so.|You don't have to fake an interest in {like}.]
 
 # ================= ask =================
+
+@rule react.bad.onday
+on react
+when fit=bad kind=day
+feel pout
+- [I wanted to talk about {mything}, not that.|That has nothing to do with {mything}.] [Forget it.|Never mind.]
+- [You weren't really listening about {mything}, were you?|Did you hear anything I said about {mything}?] [Great.|Wow.]
+- [That's the last time I bring up {mything} with you.|I knew I shouldn't have mentioned {mything}.]
+
 @rule react.ask.good.go
 on react
-when move=ask fit=good step<=2
+when kind=confide hurt=yes move=ask fit=good step<=2
 opens comfort,share,invite
 - [Well... since you asked.|Okay, so here's the thing.|You really want to know?] [It's been building up for a while.|I haven't told anyone this.|It's kind of a long story.]
 - [Honestly?|Promise you won't laugh?|Okay, but this stays between us.] [It's been on my mind all day.|I keep going back and forth about it.]
 - [You're actually curious? Huh.|Nobody ever asks me that.] [So... it's like this.|Okay, here goes.]
 - [Ah, where do I start...|Hmm. Let me think how to put it.] [It's more complicated than it looks.|It's silly, but it matters to me.]
-- [Okay, {mything}.|So, about {mything}...] [It started small and then it got out of hand.|There's a part I didn't tell you.|It's not what it looks like from outside.]
-- [You want the real answer about {mything}?|Since you asked about {mything}...] [I've been thinking about it more than I should.|It matters more than I let on.]
 - [Well, {who} was part of it.|It has to do with {who}, actually.] [I don't know if I should say.|You know how that goes.]
 - [With {like}, it's a whole thing.|Nobody ever asks me about {like}.] [There's a story behind it.|I'll tell you how it started.]
 - [The {club} has a lot to do with it.|It all goes back to the {club}.] [Okay, so...|You really want the whole story?]
+
+@rule react.ask.good.go.onday
+on react
+when kind=confide hurt=yes move=ask fit=good step<=2 kind=day
+opens comfort,share,invite
+- [Okay, {mything}.|So, about {mything}...] [It started small and then it got out of hand.|There's a part I didn't tell you.|It's not what it looks like from outside.]
+- [You want the real answer about {mything}?|Since you asked about {mything}...] [I've been thinking about it more than I should.|It matters more than I let on.]
 
 @rule react.ask.good
 on react
@@ -68,11 +88,16 @@ feel smile
 - [I didn't think anyone noticed.|You're sweet for asking.|Talking about it helps, actually.]
 - [Okay, that's the whole story.|And that's it! Thanks for listening.|Phew. Glad I got that out.]
 - [You really pay attention, huh?|Not many people care enough to ask.|Mm. I'm glad it was you who asked.]
+- [Now you know what I see in {like}.|That's why I can't stop with {like}.] [Thanks for asking.|Don't laugh.]
+- [Don't tell {who} I said all that.|Ask {who} and you'd get a different story.] [Thanks for listening.|But that's my side.]
+
+@rule react.ask.good.onday
+on react
+when move=ask fit=good kind=day
+feel smile
 - [That's all there is to {mything}, really.|So that's {mything}.] [Thanks for hearing me out.|You didn't even yawn.]
 - [I've never told anyone that much about {mything}.|You got more out of me about {mything} than most people do.] [You're good at this.|Hehe.]
 - [You remember stuff like {mything}, don't you?|You really do pay attention to {mything}.] [I like that.|Nobody else does.]
-- [Now you know what I see in {like}.|That's why I can't stop with {like}.] [Thanks for asking.|Don't laugh.]
-- [Don't tell {who} I said all that.|Ask {who} and you'd get a different story.] [Thanks for listening.|But that's my side.]
 
 @rule react.ask.neutral
 on react
@@ -81,11 +106,15 @@ when move=ask fit=neutral
 - [It's not that interesting.|Eh, it's nothing special.|You're not missing much.]
 - [I'd rather not get into it.|Maybe another time.|It's a long story. Some other day.]
 - [Hm. Hard to explain.|You had to be there.|It is what it is.]
+- [You should ask {who} instead.|{Who} would tell it better.] [I only know my side.|I wasn't paying attention.]
+- [There's not much to say about {like}.|I can't really explain {like}.] [I just like what I like.|You either get it or you don't.]
+
+@rule react.ask.neutral.onday
+on react
+when move=ask fit=neutral kind=day
 - [Honestly, there isn't much to {mything}.|{Mything} isn't as interesting as it sounds.] [Sorry.|That's all I've got.]
 - [What else do you want to know about {mything}?|I already said what I think about {mything}.]
 - [I'd have to think about {mything} a bit more.|I can't really explain {mything}.] [Maybe later.|You know?]
-- [You should ask {who} instead.|{Who} would tell it better.] [I only know my side.|I wasn't paying attention.]
-- [There's not much to say about {like}.|I can't really explain {like}.] [I just like what I like.|You either get it or you don't.]
 
 @rule react.ask.bad
 on react
@@ -95,11 +124,16 @@ feel pout
 - [You're nosy today.|Do I ask about your business?|That's none of your concern.]
 - [I don't really want to talk about it.|Can we not?|Drop it, please.]
 - [Who are you, the school paper?|Are you writing a report on me?|Interrogation over.]
+- [Did {who} send you to ask?|Go ask {who} if you're that curious.]
+- [Do you even care about {like}, or are you just being nosy?|Why are you so interested in {like} all of a sudden?]
+
+@rule react.ask.bad.onday
+on react
+when move=ask fit=bad kind=day
+feel pout
 - [Why are you digging into {mything}?|What's it to you, {mything}?] [Drop it.|Seriously.]
 - [I said what I wanted to say about {mything}.|{Mything} is my business.] [That's enough.|Leave it.]
 - [Stop asking about {mything}.|Enough about {mything}.] [You're making it worse.|Please.]
-- [Did {who} send you to ask?|Go ask {who} if you're that curious.]
-- [Do you even care about {like}, or are you just being nosy?|Why are you so interested in {like} all of a sudden?]
 
 @rule react.ask.day.low
 on react
@@ -155,9 +189,15 @@ feel worried
 - [I won't pretend I didn't see it.|It surprised me, that's all.] [Is that who you are?|I'm still processing.]
 - [Honestly? It was a lot.|I wasn't expecting that.] [I just want to understand.|Why there, of all places?]
 - [I saw it {when}.|It was {when}, and I was right there.] [You didn't notice me.|I couldn't look away in time.]
+- [I don't know how to look at you after that.|It changed how I see you, a little.] [Say something.|I'm not sure if that's bad.]
+
+@rule react.ask.you.saw.onday
+on react
+when move=ask kind=you how=witness step<=1 kind=day
+opens admit,hush,comfort
+feel worried
 - [I keep thinking about {mything}.|I know what I saw, about {mything}.] [I can't just forget it.|Tell me what that was.]
 - [I wasn't spying.|Don't think I went looking for it.] [You weren't exactly hiding {mything}.|It was right in front of me.]
-- [I don't know how to look at you after that.|It changed how I see you, a little.] [Say something.|I'm not sure if that's bad.]
 - [I haven't told anyone about {mything}.|So far I've kept {mything} to myself.] [Yet.|But I want to know why.]
 
 @rule react.ask.you.heard
@@ -183,6 +223,17 @@ feel shy
 - [I keep thinking about it.|I smile every time I remember.] [Is that weird?|Don't laugh.]
 - [It was nice. Really nice.|It felt... right, you know?] [I hope you felt it too.|We should do it again.]
 - [D-don't make me say it.|You know how I felt.] [...Good. Very good.|It was the best part of my week.]
+- [It happened {when}, and I still get nervous.|That was only {when}?] [It feels longer.|My face gets hot.]
+
+@rule react.ask.us.onday
+on react
+when move=ask kind=us fit=good step<=1 kind=day
+opens share,tease,invite
+feel shy
+- [{Mything}? I think about it more than I'd admit.|How did {mything} feel?] [Warm.|Like I could stop being careful.]
+- [I went home and thought about {mything} all night.|I replayed {mything} in class.] [The teacher had to call me twice.|Don't tell anyone.]
+- [The best part of {mything}?|What I liked most about {mything}?] [That it was you.|You don't know?]
+- [I was scared you didn't feel the same about {mything}.|Tell me {mything} meant something to you too.] [So I'm glad you asked.|Please.]
 
 @rule react.ask.like
 on react
@@ -208,11 +259,16 @@ feel smile
 - [Okay. Yeah. You're right.|I'll be fine. Thanks to you.|Mm. I think I can breathe again.]
 - [You always know what to say.|I didn't think talking would help, but it did.|Sorry for being gloomy.]
 - [Can you stay a bit longer?|You're a good friend.|I'll remember this.]
+- [I'll stop worrying about {who} for now.|Maybe {who} and I will be okay.] [Because you said so.|Thanks.]
+- [I can go back to the {club} now.|I think I can face the {club}.] [I needed that first.|Thank you.]
+
+@rule react.comfort.good.onday
+on react
+when move=comfort fit=good kind=day
+feel smile
 - [I needed someone to say that about {mything}.|{Mything} felt so big until you said that.] [Thanks.|I can breathe now.]
 - [I've been carrying {mything} around all day.|Nobody's said anything about {mything} until you.] [It's lighter now.|Thanks for noticing.]
 - [You didn't even try to fix {mything}.|You didn't tell me {mything} was silly.] [That's why it helped.|That means a lot.]
-- [I'll stop worrying about {who} for now.|Maybe {who} and I will be okay.] [Because you said so.|Thanks.]
-- [I can go back to the {club} now.|I think I can face the {club}.] [I needed that first.|Thank you.]
 
 @rule react.comfort.good.go
 on react
@@ -223,11 +279,17 @@ feel smile
 - [Thanks. Really.|I feel lighter already.] [Tell me something fun?|Talk about something else with me?]
 - [Mm... I needed to hear that.|You're good at this.] [What about you? How's your day?|Stay with me a bit?]
 - [I think I'll survive.|It's not the end of the world, right?] [Got any plans later?|Cheer me up some more?]
+- [Maybe I'll talk to {who} later.|{Who} can wait till tomorrow.] [What are you doing after this?|Keep me company till then?]
+- [I don't feel like going to the {club} yet.|The {club} can manage without me for a minute.] [Talk to me a bit more?|Stay?]
+
+@rule react.comfort.good.go.onday
+on react
+when move=comfort fit=good step<=1 low=yes kind=day
+opens invite,share,tease
+feel smile
 - [Okay, enough about {mything}.|{Mything} can wait a little.] [Tell me something nice?|What about you?]
 - [I think I needed to stop thinking about {mything}.|You got me out of my head about {mything}.] [Stay a bit?|Now what?]
 - [I won't let {mything} ruin the whole day.|{Mything} isn't the end of the world, is it?] [Got any ideas?|Help me forget it?]
-- [Maybe I'll talk to {who} later.|{Who} can wait till tomorrow.] [What are you doing after this?|Keep me company till then?]
-- [I don't feel like going to the {club} yet.|The {club} can manage without me for a minute.] [Talk to me a bit more?|Stay?]
 
 @rule react.comfort.neutral
 on react
@@ -236,11 +298,15 @@ when move=comfort fit=neutral
 - [I'll be okay.|It'll pass.|Don't worry about me.]
 - [You don't have to say that.|I know you mean well.|That's nice of you.]
 - [Hm. Maybe you're right.|We'll see how it goes.|I'll try not to think about it.]
+- [{Who} is the one who should be saying that.|I wish {who} would say that.] [But okay.|Thanks, though.]
+- [I'll sleep on it.|I'm fine, I just need to not think about it.] [Don't worry so much.|Really.]
+
+@rule react.comfort.neutral.onday
+on react
+when move=comfort fit=neutral kind=day
 - [I know you mean well about {mything}.|It's kind of you, but {mything} won't go away that easily.] [Thanks anyway.|I'll deal with it.]
 - [Maybe {mything} will sort itself out.|{Mything} just needs time.] [I hope.|Probably.]
 - [It's not as simple as you make {mything} sound.|If only {mything} were that easy.] [But thanks.|I'll be okay.]
-- [{Who} is the one who should be saying that.|I wish {who} would say that.] [But okay.|Thanks, though.]
-- [I'll sleep on it.|I'm fine, I just need to not think about it.] [Don't worry so much.|Really.]
 
 @rule react.comfort.bad
 on react
@@ -249,11 +315,15 @@ when move=comfort fit=bad
 - [Why are you looking at me like that?|I'm not fragile.|Save the pep talk.]
 - [Okay, that's a bit much.|You're making it weird.|Just... don't.]
 - [I didn't ask for help.|I can handle it myself.|Leave it.]
+- [I don't need saving from {who}.|What makes you think I can't handle {who}?]
+- [Did I look that pathetic just now?|Do I look like I'm about to cry?] [I'm just talking.|Stop.]
+
+@rule react.comfort.bad.onday
+on react
+when move=comfort fit=bad kind=day
 - [I never said {mything} was a problem.|{Mything} is fine. I'm fine.] [Why that look?|Stop that.]
 - [I was just talking about {mything}, not asking for a hug.|Don't make {mything} into a drama.]
 - [You're blowing {mything} out of proportion.|Nobody's upset about {mything}.] [Relax.|Calm down.]
-- [I don't need saving from {who}.|What makes you think I can't handle {who}?]
-- [Did I look that pathetic just now?|Do I look like I'm about to cry?] [I'm just talking.|Stop.]
 
 @rule react.comfort.cool
 on react
@@ -262,13 +332,18 @@ when move=comfort voice=cool|tsundere|tough
 - [Don't get the wrong idea. I'm fine.|...You're annoying. Thanks.]
 - [Tch. Fine. It helped. A little.|...Don't tell anyone I let you say that.]
 - [I wasn't sad. I was thinking.|...Okay. Maybe I needed that.]
-- [...I wasn't worried about {mything}.|{Mything} is under control.] [But I heard you.|...Thanks.]
-- [Don't go around telling people I was upset about {mything}.|If you mention {mything} to anyone, you're dead.] [...Okay?|...But thanks.]
-- [Tch. You noticed {mything}.|So you saw through it.] [...Annoying.|...Fine.]
 - [I'd have handled {who} on my own.|{Who} doesn't get to me.] [...But it's nice to hear.|...Mostly.]
 - [...You're the only one who'd dare say that to me.|...Nobody else says that to my face.] [Don't get cocky.|Hmph.]
 
 # ================= share =================
+
+@rule react.comfort.cool.onday
+on react
+when move=comfort voice=cool|tsundere|tough kind=day
+- [...I wasn't worried about {mything}.|{Mything} is under control.] [But I heard you.|...Thanks.]
+- [Don't go around telling people I was upset about {mything}.|If you mention {mything} to anyone, you're dead.] [...Okay?|...But thanks.]
+- [Tch. You noticed {mything}.|So you saw through it.] [...Annoying.|...Fine.]
+
 @rule react.share.good
 on react
 when move=share fit=good
@@ -277,26 +352,37 @@ feel smile
 - [That's actually really cool.|Huh, I like that.|You should talk about yourself more.]
 - [I didn't expect that from you!|We'd get along great, huh?|I knew there was something about you.]
 - [I'm glad you told me.|That makes me like you more.|Okay, that's interesting.]
+- [Wait, you like {like} too?|You know about {like}?] [We've been wasting time!|Why didn't you say so?]
+- [You sound like {who}, you know.|{Who} says almost the same thing.] [You'd get along.|Funny.]
+
+@rule react.share.good.onday
+on react
+when move=share fit=good kind=day
+feel smile
 - [Oh, you've been through {mything} too?|So it's like that for you with {mything} too?] [I thought it was only me.|That's a relief.]
 - [I like how you talk about {mything}.|I never thought about {mything} that way.] [It sounds better from you.|Huh!]
 - [So that's your side of {mything}.|Now I know what you think of {mything}.] [I'm glad you said it.|I like it.]
-- [Wait, you like {like} too?|You know about {like}?] [We've been wasting time!|Why didn't you say so?]
-- [You sound like {who}, you know.|{Who} says almost the same thing.] [You'd get along.|Funny.]
 
 @rule react.share.good.go
 on react
 when move=share fit=good step<=1
-opens ask,tease,invite
+opens share,tease,invite
 feel smile
 - [Wait, really? Tell me more.|Huh, I never would have guessed.] [So what happened next?|You're full of surprises.]
 - [No way. You too?|Seriously?] [We have to talk about this more.|Okay, now I'm curious.]
 - [Ha! I like that.|Oh, that's so you.] [What else don't I know?|Go on, go on.]
 - [Huh, that changes things.|I didn't think you'd say that.] [Is that why you're like this?|Explain!]
+- [How long have you been into {like}?|Since when do you know about {like}?] [Tell me everything.|You've been hiding this.]
+- [Does {who} know that about you?|Have you told {who} that?] [Just curious.|You should.]
+
+@rule react.share.good.go.onday
+on react
+when move=share fit=good step<=1 kind=day
+opens share,tease,invite
+feel smile
 - [You too, with {mything}?|Wait, what happened with you and {mything}?] [Tell me!|Now I have to know.]
 - [I would've never guessed that about you and {mything}.|That's not what I expected you to say about {mything}.] [What else?|Go on.]
 - [So what did you do about {mything}?|And then? How did {mything} end?] [Don't leave me hanging.|Well?]
-- [How long have you been into {like}?|Since when do you know about {like}?] [Tell me everything.|You've been hiding this.]
-- [Does {who} know that about you?|Have you told {who} that?] [Just curious.|You should.]
 
 @rule react.share.neutral
 on react
@@ -305,11 +391,15 @@ when move=share fit=neutral
 - [Is that so.|Huh, didn't know that.|Okay, good to know.]
 - [Mm. I see where you're coming from.|Fair enough.|I'll take your word for it.]
 - [Hm. Not really my thing, but okay.|That's... a take.|Well, everyone's different.]
+- [Hm, {who} wouldn't agree with you.|I can imagine what {who} would say to that.]
+- [You and {like}, huh. I wouldn't have guessed.|I don't know enough about {like} to argue.] [Okay.|Maybe.]
+
+@rule react.share.neutral.onday
+on react
+when move=share fit=neutral kind=day
 - [So that's how you see {mything}.|Everyone has their own version of {mything}.] [Okay.|Fair.]
 - [I don't think we feel the same about {mything}.|I see {mything} a bit differently.] [But okay.|That's fine.]
 - [I'll keep that in mind about {mything}.|Noted, about {mything}.] [I guess.|Mm.]
-- [Hm, {who} wouldn't agree with you.|I can imagine what {who} would say to that.]
-- [You and {like}, huh. I wouldn't have guessed.|I don't know enough about {like} to argue.] [Okay.|Maybe.]
 
 @rule react.share.us
 on react
@@ -321,6 +411,17 @@ feel shy
 - [Me too. A lot.|I think about it too.|...Yeah. It was special.]
 
 # ================= tease =================
+
+@rule react.share.us.onday
+on react
+when move=share kind=us fit=good|neutral kind=day
+feel shy
+- [So you remember {mything} like that too.|You still think about {mything}?] [I'm so glad.|My heart...]
+- [I thought I was the only one who cared about {mything}.|I was scared {mything} was nothing to you.] [Thank you.|Don't say that so lightly.]
+- [{Mything} was only {when}, and I already miss it.|{When} feels so far away.] [Is that silly?|Hehe.]
+- [If you keep saying things like that about {mything}, I'll get used to it.|Keep talking about {mything} like that, and I'll start hoping.] [Careful.|I mean it.]
+- [I'm writing this down. {Mything}, best thing this month.|That's going in my diary.] [Don't you dare laugh.|Hehe.]
+
 @rule react.tease.good
 on react
 when move=tease fit=good
@@ -329,11 +430,16 @@ feel laugh
 - [Watch it, or I'll get you back.|Ha! You're asking for it.|Rude! ...Funny, but rude.]
 - [{laugh} Okay, you got me.|Fine, fine, I deserve that.|Hmph! I'll remember this.]
 - [You're lucky you're cute.|I'll let it slide. Once.|Oh, you think you're so funny.]
+- [Hey, nobody makes fun of {like} and walks away!|You dare tease me about {like}?] [{laugh}|Say that again!]
+- [I'm telling {who} you said that.|Wait until {who} hears this.] [{laugh}|You're dead.]
+
+@rule react.tease.good.onday
+on react
+when move=tease fit=good kind=day
+feel laugh
 - [Oh, you're making fun of {mything} now?|Laugh at {mything} all you want.] [You'll pay for this.|{laugh}]
 - [I tell you about {mything} and that's what I get?|That's what you do with {mything}?] [You're terrible.|{laugh}]
 - [Okay, that was a good one about {mything}.|I walked right into that one with {mything}.] [{laugh}|Don't get used to it.]
-- [Hey, nobody makes fun of {like} and walks away!|You dare tease me about {like}?] [{laugh}|Say that again!]
-- [I'm telling {who} you said that.|Wait until {who} hears this.] [{laugh}|You're dead.]
 
 @rule react.tease.good.go
 on react
@@ -344,11 +450,17 @@ feel laugh
 - [Ha! Bold of you.|Careful now.] [My turn next.|I'll get you back, you know.]
 - [{laugh} Okay, okay.|You're in a mood today.] [What's gotten into you?|Keep going, I dare you.]
 - [Wow, picking on me now?|Is that how it is?] [Then I won't go easy either.|You're on.]
-- [Oh, we're making jokes about {mything} now?|You think {mything} is funny?] [Fine. What about your grades?|Let's talk about you, then.]
 - [Keep it up, and I'll tell everyone what I know about you.|I've got stories about you too.] [{laugh}|Try me.]
-- [You're enjoying this way too much.|Why are you grinning like that about {mything}?] [Stop it!|My turn.]
 - [You're as bad as {who}!|Did {who} teach you that?] [{laugh}|Unbelievable.]
 - [Mock {like} one more time, I dare you.|If you say one more thing about {like}...] [{laugh}|You'll see.]
+
+@rule react.tease.good.go.onday
+on react
+when move=tease fit=good step<=2 kind=day
+opens tease,praise,invite
+feel laugh
+- [Oh, we're making jokes about {mything} now?|You think {mything} is funny?] [Fine. What about your grades?|Let's talk about you, then.]
+- [You're enjoying this way too much.|Why are you grinning like that about {mything}?] [Stop it!|My turn.]
 
 @rule react.tease.neutral
 on react
@@ -357,11 +469,15 @@ when move=tease fit=neutral
 - [Was that a joke?|I'll pretend I didn't hear that.|Mm-hm.]
 - [Hmph. Whatever.|You're weird.|Real mature.]
 - [I'll laugh later.|Close, but no.|Nice try.]
+- [{Who} makes that joke every day.|You and {who} have the same sense of humor.] [Sadly.|Not a compliment.]
+- [You're not the first to joke about me and {like}.|Everyone has a joke about {like}.] [Try again.|Mm-hm.]
+
+@rule react.tease.neutral.onday
+on react
+when move=tease fit=neutral kind=day
 - [Yes, yes, very funny, {mything}.|Ha. {Mything}. Good one.] [Are you done?|Mm-hm.]
 - [I knew you'd joke about {mything}.|I should've seen that coming.] [Sigh.|Of course.]
 - [I've heard better jokes about {mything}.|You'll have to do better than that with {mything}.]
-- [{Who} makes that joke every day.|You and {who} have the same sense of humor.] [Sadly.|Not a compliment.]
-- [You're not the first to joke about me and {like}.|Everyone has a joke about {like}.] [Try again.|Mm-hm.]
 
 @rule react.tease.bad
 on react
@@ -371,11 +487,16 @@ feel pout
 - [I'm not laughing.|Really? Now?|Not cool.]
 - [Was that supposed to be a joke?|That kind of hurt, you know.|Wow. Thanks.]
 - [Keep that up and I'm leaving.|You're on thin ice.|Stop it.]
+- [Leave {who} out of your jokes.|That's not funny when it's about {who}.]
+- [Don't make fun of {like}.|You can joke about me, not {like}.] [I mean it.|Stop.]
+
+@rule react.tease.bad.onday
+on react
+when move=tease fit=bad kind=day
+feel pout
 - [I was serious about {mything}.|{Mything} isn't a joke to me.] [Thanks a lot.|Wow.]
 - [I tell you about {mything} and you make fun of it?|Do you think {mything} is funny?] [Great.|Not cool.]
 - [I don't feel like laughing about {mything}.|Pick something other than {mything} to joke about.]
-- [Leave {who} out of your jokes.|That's not funny when it's about {who}.]
-- [Don't make fun of {like}.|You can joke about me, not {like}.] [I mean it.|Stop.]
 
 @rule react.tease.bad.low
 on react
@@ -385,11 +506,16 @@ feel sad
 - [Not today, okay?|Please don't.]
 - [I thought you'd be nicer about it.|That's not helping.]
 - [...Forget it.|I shouldn't have said anything.]
+- [{Who} did the same thing, you know.|You sound just like {who} right now.] [I hated it then, too.|Please stop.]
+
+@rule react.tease.bad.low.onday
+on react
+when move=tease fit=bad low=yes kind=day
+feel sad
 - [I told you about {mything} because it hurts.|{Mything} really is getting to me.] [And you joke?|Please stop.]
 - [I don't have the energy for that today.|Today's not the day for jokes about {mything}.]
 - [I thought you'd at least take {mything} seriously.|Everyone else laughs at {mything} too.] [Not you too.|...Forget it.]
 - [You don't know how I feel about {mything}.|You wouldn't joke if you knew about {mything}.]
-- [{Who} did the same thing, you know.|You sound just like {who} right now.] [I hated it then, too.|Please stop.]
 
 @rule react.tease.shy
 on react
@@ -399,13 +525,19 @@ feel shy
 - [W-why would you say that?!|That's embarrassing!|S-stop looking at me like that!]
 - [I-I'm not blushing!|You're so mean...|Ugh, my face is hot.]
 - [P-please, not here...|Someone might hear!|I'm going to hide now.]
-- [W-why would you joke about {mything}?|D-don't tease me about {mything}...] [I'm going to turn red.|It's embarrassing.]
-- [Y-you remembered {mything} just to tease me?|{Mything} wasn't meant to be funny!] [You're so mean...|M-mou...]
-- [N-not so loud about {mything}!|S-someone will hear about {mything}!] [Please!|I'll die.]
 - [Eh?! I-I do like {like}, but...|W-what's wrong with {like}?] [Don't say it like that!|I-it's not strange!]
 - [Please don't tell {who} I got flustered.|{Who} would laugh if she saw my face now.] [P-please...|Ugh.]
 
 # ================= praise =================
+
+@rule react.tease.shy.onday
+on react
+when move=tease voice=shy|bookish|proper kind=day
+feel shy
+- [W-why would you joke about {mything}?|D-don't tease me about {mything}...] [I'm going to turn red.|It's embarrassing.]
+- [Y-you remembered {mything} just to tease me?|{Mything} wasn't meant to be funny!] [You're so mean...|M-mou...]
+- [N-not so loud about {mything}!|S-someone will hear about {mything}!] [Please!|I'll die.]
+
 @rule react.praise.good
 on react
 when move=praise fit=good
@@ -414,11 +546,16 @@ feel shy
 - [You really mean that?|Nobody's said that to me before.|That's... nice to hear.]
 - [Hehe, flattery works on me, you know.|Okay, now I'm smiling like an idiot.|You're making me blush.]
 - [I'll remember you said that.|That made my day.|...You're sweet.]
+- [The {club} never says that to me.|I wish the {club} heard you.] [Thank you.|I'm blushing.]
+- [Not even {who} says that kind of thing to me.|{Who} never told me that.] [So... thanks.|You're strange.]
+
+@rule react.praise.good.onday
+on react
+when move=praise fit=good kind=day
+feel shy
 - [Nobody's ever praised me for {mything}.|You're the first to say something nice about {mything}.] [I don't know where to look.|...Thanks.]
 - [You noticed that, with {mything}?|Was I really okay, with {mything}?] [Hehe...|You mean it?]
 - [Stop it, I'll start thinking {mything} was a big deal.|You make me sound so good at {mything}.] [...Say it again.|Hehe.]
-- [The {club} never says that to me.|I wish the {club} heard you.] [Thank you.|I'm blushing.]
-- [Not even {who} says that kind of thing to me.|{Who} never told me that.] [So... thanks.|You're strange.]
 
 @rule react.praise.neutral
 on react
@@ -427,11 +564,15 @@ when move=praise fit=neutral
 - [Where's that coming from?|You're in a good mood.|Huh. Thanks.]
 - [I'll take it.|Sure, sure.|If you say so.]
 - [Mm. Appreciated.|Okay...?|Heh. Thanks.]
+- [You should say that to {who}.|{Who} deserves that more than me.] [But thanks.|Really.]
+- [Thanks. I'm not that great at {like}, though.|I'm not sure I'm any good at {like}.] [But okay.|Heh.]
+
+@rule react.praise.neutral.onday
+on react
+when move=praise fit=neutral kind=day
 - [What does that have to do with {mything}?|We were talking about {mything}.] [But thanks.|Okay.]
 - [I didn't do anything special with {mything}.|{Mything} was nothing to praise.] [But sure.|Thanks, I guess.]
 - [You're nice today. Is it because of {mything}?|Are you only saying that because of {mything}?]
-- [You should say that to {who}.|{Who} deserves that more than me.] [But thanks.|Really.]
-- [Thanks. I'm not that great at {like}, though.|I'm not sure I'm any good at {like}.] [But okay.|Heh.]
 
 @rule react.praise.bad
 on react
@@ -440,13 +581,18 @@ when move=praise fit=bad
 - [What do you want?|That sounded rehearsed.|Smooth. Too smooth.]
 - [I don't buy it.|You say that to everyone.|Nice try.]
 - [Weird thing to say right now.|Um. Thanks? I guess?|Are you okay?]
-- [Don't butter me up over {mything}.|Compliments won't change anything about {mything}.]
-- [We're talking about {mything} and you suddenly say that?|That has nothing to do with {mything}.] [What are you after?|Weird.]
-- [You don't mean that. You don't even know about {mything}.|What do you know about {mything}?]
 - [Save that for {who}.|Did you say the same thing to {who}?]
 - [I can tell when someone's reading from a script.|If you want something, say it.] [Hmph.|Well?]
 
 # ================= invite =================
+
+@rule react.praise.bad.onday
+on react
+when move=praise fit=bad kind=day
+- [Don't butter me up over {mything}.|Compliments won't change anything about {mything}.]
+- [We're talking about {mything} and you suddenly say that?|That has nothing to do with {mything}.] [What are you after?|Weird.]
+- [You don't mean that. You don't even know about {mything}.|What do you know about {mything}?]
+
 @rule react.invite.good
 on react
 when move=invite fit=good
@@ -455,11 +601,16 @@ feel smile
 - [Yes! When?|Okay! I'm in.|I was hoping you'd ask.]
 - [Sounds fun. Count me in.|Sure. Just the two of us?|I'll clear my schedule.]
 - [Really? With me?|Hehe, okay. It's a promise.|Let's do it. No backing out.]
-- [After all this talk about {mything}, I could use that.|Yes. Let's get away from {mything} for a while.] [Thanks.|Okay!]
-- [If it's with you, sure.|You, me, and no talk of {mything}?] [Deal.|I'm in.]
 - [Let's {favdo}!|We could {favdo}, if you want.] [I've been wanting to.|I'd love that.]
 - [The {club} ends soon. Wait for me?|I'll come right after the {club}.] [Promise.|Don't leave without me.]
 - [I'll tell {who} I'm busy that day.|I was supposed to see {who}, but this sounds better.] [Hehe.|Don't tell.]
+
+@rule react.invite.good.onday
+on react
+when move=invite fit=good kind=day
+feel smile
+- [After all this talk about {mything}, I could use that.|Yes. Let's get away from {mything} for a while.] [Thanks.|Okay!]
+- [If it's with you, sure.|You, me, and no talk of {mything}?] [Deal.|I'm in.]
 
 @rule react.invite.good.go
 on react
@@ -470,11 +621,17 @@ feel smile
 - [Yay! Okay!|I'd love to.] [I'll look forward to it.|What should I wear?]
 - [Sure. Pick me up after class?|Deal.] [You're paying, though.|Don't be late.]
 - [Is that an invitation? ...Okay.|Fine, you convinced me.] [It better be fun.|I'll make time.]
-- [Okay, you can tell me more about you on the way.|It'll be good to stop thinking about {mything}.] [Where to?|I'm looking forward to it.]
-- [So you were listening when I told you about {mything}.|This is because of {mything}, isn't it?] [You're kind of sweet.|Thanks.]
 - [Should I bring something?|Wait, is it just us?] [Tell me!|I need to know what to wear.]
 - [We could {favdo} first.|Can we {favdo}? I've got this idea.] [Then food.|You'll like it.]
 - [Not a word to {who}, okay?|If {who} finds out, I'll never hear the end of it.] [Hehe.|Shh.]
+
+@rule react.invite.good.go.onday
+on react
+when move=invite fit=good step<=2 kind=day
+opens tease,praise,share
+feel smile
+- [Okay, you can tell me more about you on the way.|It'll be good to stop thinking about {mything}.] [Where to?|I'm looking forward to it.]
+- [So you were listening when I told you about {mything}.|This is because of {mything}, isn't it?] [You're kind of sweet.|Thanks.]
 
 @rule react.invite.neutral
 on react
@@ -484,11 +641,15 @@ when move=invite fit=neutral
 - [Hmm... depends on the day.|Maybe another time?|I'd have to see.]
 - [Not this week, maybe next?|Ask me again tomorrow.|Could be fun. No promises.]
 - [I'll keep it in mind.|Hm, tempting.|Let me sleep on it.]
+- [I'd have to ask {who}.|I think I promised {who} something.] [Let me check.|Maybe after that.]
+- [If we can {favdo}, maybe.|Depends. Would we {favdo}?] [I'd consider it.|Hm.]
+
+@rule react.invite.neutral.onday
+on react
+when move=invite fit=neutral kind=day
 - [Let me get through {mything} first.|With {mything} going on, I can't say.] [Then maybe.|Ask me later.]
 - [I'm not sure that's what I need, with {mything}.|It's a nice thought, but {mything}...] [We'll see.|Hm.]
 - [Is this about {mything}, or do you actually want to go?|You're not asking just to be nice, are you?] [I'll think about it.|Hm.]
-- [I'd have to ask {who}.|I think I promised {who} something.] [Let me check.|Maybe after that.]
-- [If we can {favdo}, maybe.|Depends. Would we {favdo}?] [I'd consider it.|Hm.]
 
 @rule react.invite.neutral.busy
 on react
@@ -510,11 +671,15 @@ when move=invite fit=neutral mood=sleepy|stressed|upset
 - [I'm too tired right now. Ask again?|Maybe later... I'm not myself today.]
 - [Can I take a rain check?|Today's not great. Soon, okay?]
 - [I'd be bad company right now.|Give me a day or two.]
-- [With my head full of {mything}, I wouldn't be any fun.|{Mything} has me all out of sorts.] [Soon, okay?|Let me rest first.]
 - [It's nice of you to ask, today of all days.|I wish I had the energy.] [Maybe tomorrow.|Ask again soon.]
 - [I'd just fall apart on you.|I'd only spoil it.] [Give me a little time.|Another day?]
-- [Once {mything} is over, yes.|After {mything}, okay?] [Remind me.|I'd like that, then.]
 - [Don't take it personally.|It's not you, it's today.] [Ask me when I'm better.|Thanks, though.]
+
+@rule react.invite.neutral.mood.onday
+on react
+when move=invite fit=neutral mood=sleepy|stressed|upset kind=day
+- [With my head full of {mything}, I wouldn't be any fun.|{Mything} has me all out of sorts.] [Soon, okay?|Let me rest first.]
+- [Once {mything} is over, yes.|After {mything}, okay?] [Remind me.|I'd like that, then.]
 
 @rule react.invite.good.mood
 on react
@@ -524,11 +689,16 @@ feel smile
 - [Oh thank goodness. Yes.|I was hoping someone would ask!]
 - [Yes, please. Anything's better than this.|You're a lifesaver.]
 - [I'm in. Right now?|Let's go before I change my mind.]
-- [Yes! You just saved me from {mything}.|I was about to give up on today.] [Let's go!|Thank you!]
 - [This is exactly what I needed.|You came at just the right time.] [Where to?|Right now?]
 - [You could tell, huh?|Was it that obvious?] [Yes, yes, let's go.|I won't say no.]
 - [If we go now, we can {favdo}!|Could we {favdo} on the way?] [Please?|It'd make my day.]
 - [I've been waiting all day for someone to say that.|Finally, somebody with a good idea.] [You're the best.|Let's go.]
+
+@rule react.invite.good.mood.onday
+on react
+when move=invite fit=good mood=hungry|bored|lonely kind=day
+feel smile
+- [Yes! You just saved me from {mything}.|I was about to give up on today.] [Let's go!|Thank you!]
 
 @rule react.invite.bad
 on react
@@ -537,11 +707,15 @@ when move=invite fit=bad
 - [We barely know each other.|Why would I do that?|I'll pass.]
 - [Not with you, sorry.|No thanks.|I already have plans.]
 - [That's... no.|Let's not.|Maybe ask someone else?]
-- [I was telling you about {mything}, not asking you out.|What does {mything} have to do with going out?]
 - [We've only just started talking.|You don't know me that well.] [Slow down.|I don't think so.]
-- [That's not what I need right now, with {mything}.|I'm not in the mood, with {mything} going on.]
 - [I'm already seeing {who} that day.|I promised {who} I'd keep that day open.] [Sorry.|So no.]
 - [Don't take this the wrong way, but no.|I don't go places with people I hardly know.] [Sorry.|Thanks anyway.]
+
+@rule react.invite.bad.onday
+on react
+when move=invite fit=bad kind=day
+- [I was telling you about {mything}, not asking you out.|What does {mything} have to do with going out?]
+- [That's not what I need right now, with {mything}.|I'm not in the mood, with {mything} going on.]
 
 @rule react.invite.bad.mood
 on react
@@ -551,13 +725,19 @@ feel pout
 - [I'm not in the mood.|Not today. Seriously.]
 - [Do I look like I want to go anywhere?|No.]
 - [Leave me alone for a bit.|Ask me some other day.]
-- [I'm upset about {mything} and you want to go out?|Did you hear what I said about {mything}?]
 - [I just told you how today went.|I don't want to do anything today.] [No.|Please.]
 - [If you want to help, give me some space.|Let me be for now.] [Okay?|Really.]
-- [Don't pretend {mything} can be fixed with a walk.|A trip won't fix {mything}.]
 - [Not while I'm like this.|You'd regret it. I'm awful company today.] [No.|Another time.]
 
 # ================= correct / deny / admit / hush =================
+
+@rule react.invite.bad.mood.onday
+on react
+when move=invite fit=bad mood=upset kind=day
+feel pout
+- [I'm upset about {mything} and you want to go out?|Did you hear what I said about {mything}?]
+- [Don't pretend {mything} can be fixed with a walk.|A trip won't fix {mything}.]
+
 @rule react.correct.good
 on react
 when move=correct fit=good
@@ -566,11 +746,16 @@ feel surprised
 - [Seriously? Wow, people exaggerate.|That makes way more sense.] [I'll tell the others.|Good to know.]
 - [I knew something was off.|Huh, so that's what happened.] [Thanks for clearing it up.|I feel dumb now.]
 - [Then the rumor is wrong?|Oh, that's a relief.] [I won't repeat it.|I'll correct anyone who says it.]
+- [I'll tell {src} it's not like that.|Wait until I tell {src}.] [Don't worry.|Leave it to me.]
+- [I'm glad I heard it from you and not the hallway.|Better to hear it from you.] [Thanks.|Really.]
+
+@rule react.correct.good.onday
+on react
+when move=correct fit=good kind=day
+feel surprised
 - [So what they said about {mything} isn't true?|Then I had {mything} all wrong.] [Thanks for telling me.|I'm sorry.]
 - [Now that you've explained {mything}, it makes sense.|{Mything} sounded strange to me from the start.] [I'm glad.|That's better.]
-- [I'll tell {src} it's not like that.|Wait until I tell {src}.] [Don't worry.|Leave it to me.]
 - [People love twisting things like {mything}.|Who started that version of {mything}?] [I should've asked you first.|Sorry.]
-- [I'm glad I heard it from you and not the hallway.|Better to hear it from you.] [Thanks.|Really.]
 
 @rule react.correct.neutral
 on react
@@ -580,10 +765,14 @@ when move=correct fit=neutral
 - [People say a lot of things.|I'll keep an open mind.|Could be.]
 - [If you say so.|Hm. We'll see.|I'm not sure.]
 - [That's not how {src} told it.|{Src} tells it differently.] [I don't know who to believe.|Hm.]
+- [So you say.|It's possible.] [I wasn't there, so...|What can I say?]
+
+@rule react.correct.neutral.onday
+on react
+when move=correct fit=neutral kind=day
 - [Maybe that's what happened with {mything}.|I can't check {mything} either way.] [I'll keep it in mind.|Hm.]
 - [There are a lot of versions of {mything} going around.|Yours is the third version of {mything} I've heard.]
 - [I want to believe you about {mything}.|You sound sure about {mything}.] [But still.|Let me think.]
-- [So you say.|It's possible.] [I wasn't there, so...|What can I say?]
 
 @rule react.correct.bad
 on react
@@ -592,10 +781,14 @@ when move=correct fit=bad
 - [Nice try.|You'd say that either way.|Right, and I'm the principal.]
 - [Everyone's wrong except you, huh?|That's convenient.|Uh-huh.]
 - [I'm not stupid.|Save it.|I don't believe you.]
-- [I know what I know about {mything}.|You won't talk your way out of {mything}.]
 - [{Src} told me everything, and that's not it.|Are you calling {src} a liar?]
-- [Sure, {mything} just happened to look like that.|Of course {mything} was a misunderstanding.] [Uh-huh.|Right.]
 - [If it's not true, why do you look so nervous?|Then why is everyone saying it?] [Well?|Hm?]
+
+@rule react.correct.bad.onday
+on react
+when move=correct fit=bad kind=day
+- [I know what I know about {mything}.|You won't talk your way out of {mything}.]
+- [Sure, {mything} just happened to look like that.|Of course {mything} was a misunderstanding.] [Uh-huh.|Right.]
 - [Don't make excuses about {mything}.|You always have an explanation.] [Enough.|I'm tired of it.]
 
 @rule react.deny.good
@@ -605,11 +798,15 @@ when move=deny fit=good
 - [Yeah, that didn't sound like you.|Phew. Okay.|Good. I didn't want it to be true.]
 - [Then I'll stop listening to rumors.|I trust you.|People are so dumb sometimes.]
 - [Alright. I'll take your word for it.|That's a relief.|Okay, forget I asked.]
-- [I didn't think you'd do something like {mything}.|{Mything} didn't sound like you.] [I'm relieved.|Good.]
-- [Then I won't believe any more of that about {mything}.|If you say {mything} isn't true, it isn't.] [Okay.|Good enough.]
 - [I'll tell {src} to stop spreading it.|{Src} should check things first.] [Sorry.|Don't worry.]
 - [Sorry for bringing it up.|I shouldn't have asked.] [I'm glad it's nothing.|Forget it.]
 - [I knew there was something off about that story.|That story never made sense.] [Good.|Right?]
+
+@rule react.deny.good.onday
+on react
+when move=deny fit=good kind=day
+- [I didn't think you'd do something like {mything}.|{Mything} didn't sound like you.] [I'm relieved.|Good.]
+- [Then I won't believe any more of that about {mything}.|If you say {mything} isn't true, it isn't.] [Okay.|Good enough.]
 
 @rule react.deny.neutral
 on react
@@ -618,11 +815,15 @@ when move=deny fit=neutral
 - [I'll pretend I believe you.|Sure.|Alright.]
 - [I'm not convinced, but okay.|Whatever you say.|Hm.]
 - [We'll see.|That's what they all say.|Okay, okay.]
+- [{Src} seemed awfully certain.|That's not what {src} said.] [But okay.|Hm.]
+- [I won't call you a liar.|I'm not accusing you.] [I'm just saying.|Yet.]
+
+@rule react.deny.neutral.onday
+on react
+when move=deny fit=neutral kind=day
 - [You don't sound very sure about {mything}.|If you say {mything} isn't true...] [Okay.|Fine.]
 - [Everyone denies things like {mything}.|That's what anyone would say about {mything}.]
-- [{Src} seemed awfully certain.|That's not what {src} said.] [But okay.|Hm.]
 - [I'll stop asking about {mything}.|Let's leave {mything} there.] [For now.|Mm.]
-- [I won't call you a liar.|I'm not accusing you.] [I'm just saying.|Yet.]
 
 @rule react.deny.bad
 on react
@@ -632,11 +833,16 @@ feel pout
 - [You're a terrible liar.|Wow. Okay. Lie to my face.|Do you think I'm blind?]
 - [That's worse than just admitting it.|Unbelievable.|Don't insult me.]
 - [I know what I saw.|Stop it.|You're digging yourself deeper.]
+- [It was {when}. I remember exactly.|{When}. Don't tell me it wasn't you.]
+- [Keep lying and see what I tell people.|Say that again and I'll stop being quiet about it.] [I'm serious.|Try me.]
+
+@rule react.deny.bad.onday
+on react
+when move=deny fit=bad kind=day
+feel pout
 - [I saw {mything} with my own eyes.|How can you deny {mything} to me?] [Stop it.|Unbelievable.]
 - [Do you think I invented {mything}?|So I just imagined {mything}?] [Really?|Wow.]
 - [I gave you a chance to be honest about {mything}.|I'd have respected the truth about {mything}.]
-- [It was {when}. I remember exactly.|{When}. Don't tell me it wasn't you.]
-- [Keep lying and see what I tell people.|Say that again and I'll stop being quiet about it.] [I'm serious.|Try me.]
 
 @rule react.admit.good
 on react
@@ -645,11 +851,15 @@ when move=admit fit=good
 - [I respect that.|Honesty's rare. Thanks.|Okay. That's fair.]
 - [Well, I can't be mad at honesty.|Better than lying, I guess.|Okay. I won't judge.]
 - [Thanks for being straight with me.|Hm. Okay. At least I know.|That took guts.]
+- [So {deed}. Okay.|Then it's true that {deed}.] [Thanks for saying it.|At least you said it.]
+- [I won't spread it.|You trusted me with that.] [I won't forget it.|Thanks.]
+
+@rule react.admit.good.onday
+on react
+when move=admit fit=good kind=day
 - [Most people would've lied about {mything}.|I expected you to deny {mything}.] [That says something.|Thanks.]
 - [You could have kept {mything} to yourself.|You didn't have to tell me about {mything}.] [I appreciate it.|So thanks.]
 - [I can deal with {mything} if you're honest.|Honest about {mything}. Okay.] [Good.|I can work with that.]
-- [So {deed}. Okay.|Then it's true that {deed}.] [Thanks for saying it.|At least you said it.]
-- [I won't spread it.|You trusted me with that.] [I won't forget it.|Thanks.]
 
 @rule react.admit.neutral
 on react
@@ -658,11 +868,15 @@ when move=admit fit=neutral
 - [I don't know what to say.|Well. Okay then.|Huh.]
 - [I'll need a moment.|That's a lot.|Mm.]
 - [Alright. Noted.|Okay... I guess I knew.|I see.]
+- [So {deed}.|I guess {deed}, then.] [Well.|Okay then.]
+- [I'll need to think about that.|That doesn't change much, or maybe it does.] [Mm.|I don't know.]
+
+@rule react.admit.neutral.onday
+on react
+when move=admit fit=neutral kind=day
 - [So {mything} really happened.|So it's true about {mything}.] [Okay.|I see.]
 - [I don't know how I feel about {mything}.|I'm not sure what to do with {mything}.] [Give me a bit.|Hm.]
 - [I thought you'd have some excuse for {mything}.|No excuse for {mything}?] [Huh.|Okay.]
-- [So {deed}.|I guess {deed}, then.] [Well.|Okay then.]
-- [I'll need to think about that.|That doesn't change much, or maybe it does.] [Mm.|I don't know.]
 
 @rule react.admit.good.go
 on react
@@ -672,11 +886,16 @@ opens comfort,hush,ask
 - [Okay. Honest is good.|Thanks for not hiding it.] [But I have questions.|Can I ask you something?]
 - [I'm not angry. Just surprised.|Huh. So it was you.] [What were you thinking?|Was it serious?]
 - [Okay. I needed to hear it from you.|Alright.] [Where does that leave us?|What now?]
+- [Did {who} mean anything to you?|Is it serious, with {who}?] [Be honest.|I can take it.]
+- [Will you be okay if people find out?|What if this gets around?] [I'm worried.|Have you thought about that?]
+
+@rule react.admit.good.go.onday
+on react
+when move=admit fit=good step<=1 kind=you kind=day
+opens comfort,hush,ask
 - [Now that you've said it, what was {mything} about?|So tell me, why {mything}?] [I want to understand.|I'm listening.]
 - [Who else knows about {mything}?|Does anyone else know about {mything}?] [Should I be careful?|I'm asking seriously.]
 - [I'm not mad about {mything}.|You're not in trouble over {mything}.] [I just need the real story.|Not with me.]
-- [Did {who} mean anything to you?|Is it serious, with {who}?] [Be honest.|I can take it.]
-- [Will you be okay if people find out?|What if this gets around?] [I'm worried.|Have you thought about that?]
 
 @rule react.admit.close
 on react
@@ -686,11 +905,16 @@ feel sad
 - [I thought we were... never mind.|That hurts, you know.] [Give me some space.|I'm not okay right now.]
 - [I'm glad you didn't lie.|At least you said it.] [But it still hurts.|I need to think.]
 - [...Okay.|I see.] [Just don't do it again.|I'll forgive you. Eventually.]
+- [Is that everything? Tell me there's nothing else.|Is there anything else I should know?] [Please.|I'm asking once.]
+- [Hold on to that honesty.|At least we don't lie to each other.] [That's what I'll hang on to.|I guess.]
+
+@rule react.admit.close.onday
+on react
+when move=admit kind=you rel=girlfriend|lover kind=day
+feel sad
 - [So {mything} is real.|I was hoping you'd tell me {mything} wasn't true.] [It hurts.|I need a moment.]
 - [You could've told me about {mything} before I heard it.|Why did I have to find out about {mything} this way?]
 - [I still love you. That's what makes {mything} hard.|Because I care, {mything} hurts this much.] [...I'll be okay.|Give me time.]
-- [Is that everything? Tell me there's nothing else.|Is there anything else I should know?] [Please.|I'm asking once.]
-- [Hold on to that honesty.|At least we don't lie to each other.] [That's what I'll hang on to.|I guess.]
 
 @rule react.admit.open
 on react
@@ -700,6 +924,16 @@ feel smile
 - [Heh, at least you own it.|No shame, huh? Nice.]
 - [Bold. I like bold.|Ha, I knew it.]
 - [You're shameless. I kind of like it.|Okay, that's honest at least.]
+- [Next time, don't get caught.|You could at least be more careful.] [Heh.|Amateur.]
+- [Everyone's so uptight about stuff like this.|What's the big deal, anyway?] [Good on you.|You and me both.]
+- [Now I want the details.|Okay, was it any good?] [Don't be shy.|Heh.]
+
+@rule react.admit.open.onday
+on react
+when move=admit profile=open kind=day
+feel smile
+- [So {mything} was really you.|Ha, {mything}! I knew you had it in you.] [Nice.|Good for you.]
+- [You don't even blush about {mything}.|Saying that with a straight face? {Mything}?] [I like it.|Ha.]
 
 @rule react.hush.good
 on react
@@ -708,9 +942,13 @@ when move=hush fit=good
 - [Who would I even tell?|Of course. I'm not like that.|Okay. Nobody hears it from me.]
 - [I can keep a secret.|Fine, it never happened.|Secret's safe.]
 - [You owe me one, though.|Okay, but only for you.|Zip. Done.]
+- [Not even {who} will hear it.|I won't even tell {who}.] [Promise.|And I tell {who} everything.]
+
+@rule react.hush.good.onday
+on react
+when move=hush fit=good kind=day
 - [Nobody will hear about {mything} from me.|{Mything} stays with me.] [Promise.|Relax.]
 - [I'd never tell anyone about {mything}.|Don't worry about {mything}.] [Who do you take me for?|I've got you.]
-- [Not even {who} will hear it.|I won't even tell {who}.] [Promise.|And I tell {who} everything.]
 - [I'm good at forgetting things like {mything}.|What {mything}? I don't know what you're talking about.] [Hehe.|See?]
 - [You owe me a drink for this.|Buy me something from the store and {mything} is gone.] [Deal?|Hehe.]
 
@@ -721,11 +959,15 @@ when move=hush fit=neutral
 - [I mean, people already know.|Sure, I guess.|Okay. Mostly.]
 - [I won't bring it up.|If nobody asks.|Hm. Fine.]
 - [I'll keep it quiet. For now.|Okay, okay.|Alright.]
+- [{Src} is the one you should worry about.|Tell {src} that, not me.] [I'll try.|Okay?]
+- [Fine, but this is a favor.|Okay, but only because you asked.] [Don't push it.|Mostly.]
+
+@rule react.hush.neutral.onday
+on react
+when move=hush fit=neutral kind=day
 - [I won't go around telling people about {mything}.|I won't bring up {mything} myself.] [That's all I can say.|Okay?]
 - [If someone asks about {mything}, I won't lie, though.|I can't help it if {mything} gets out some other way.]
 - [People already talk about {mything}.|It's not just me who knows about {mything}.] [But I'll stay quiet.|So don't count on it.]
-- [{Src} is the one you should worry about.|Tell {src} that, not me.] [I'll try.|Okay?]
-- [Fine, but this is a favor.|Okay, but only because you asked.] [Don't push it.|Mostly.]
 
 @rule react.hush.bad
 on react
@@ -735,13 +977,19 @@ feel pout
 - [Why should I protect you?|Not my problem.|Too late for that.]
 - [You can't just ask me that.|That's not fair to me.|No.]
 - [I don't keep secrets like that.|Ask someone else.|Should've been more careful.]
-- [Why should I hide {mything} for you?|You want me to cover up {mything}?] [No.|I won't.]
-- [You should've thought about {mything} before.|You did {mything}, and I'm supposed to stay quiet?]
-- [I'm not lying to my friends about {mything}.|If someone asks me about {mything}, I'll tell them.]
 - [What would I say to {who}?|{Who} has a right to know.] [No.|Sorry.]
 - [So that's all you care about? Who knows?|You're only worried about your reputation.] [Unbelievable.|Hmph.]
 
 # ================= gossip =================
+
+@rule react.hush.bad.onday
+on react
+when move=hush fit=bad kind=day
+feel pout
+- [Why should I hide {mything} for you?|You want me to cover up {mything}?] [No.|I won't.]
+- [You should've thought about {mything} before.|You did {mything}, and I'm supposed to stay quiet?]
+- [I'm not lying to my friends about {mything}.|If someone asks me about {mything}, I'll tell them.]
+
 @rule react.agree
 on react
 when move=agree fit=good|neutral
@@ -749,11 +997,15 @@ when move=agree fit=good|neutral
 - [Thank you! Finally someone agrees.|I know, right?|Yes! That's what I said!]
 - [Glad I'm not the only one.|Right?! So weird.|You see it too.]
 - [Mm-hm. Exactly.|That's what everyone says.|Yeah, it's a whole thing.]
+- [Right? {Who} of all people!|I know, {who} of all people.] [Who would've thought?|I still can't believe it.]
+- [I knew you'd take it the same way.|Good, we're on the same page.] [I'm telling everyone.|Mm-hm.]
+
+@rule react.agree.onday
+on react
+when move=agree fit=good|neutral kind=day
 - [You think so too, about {mything}?|So it's not just me, with {mything}.] [Thank you!|Finally.]
 - [See? That's what's strange about {mything}.|That's what I told everyone about {mything}.] [Nobody listened.|Right?]
-- [Right? {Who} of all people!|I know, {who} of all people.] [Who would've thought?|I still can't believe it.]
 - [If even you think so, {mything} must be real.|You don't usually agree with me.] [Huh.|This is new.]
-- [I knew you'd take it the same way.|Good, we're on the same page.] [I'm telling everyone.|Mm-hm.]
 
 @rule react.agree.bad
 on react
@@ -763,11 +1015,16 @@ feel worried
 - [Whoa, that's a bit mean.|I didn't say it like that.]
 - [I mean... {who} isn't that bad.|Let's not pile on.]
 - [Careful. {who} might hear.|That's not what I meant.]
-- [Don't just agree with me about {mything}.|You didn't have to go that far about {mything}.]
 - [I can complain about {who}. You can't.|You barely know {who}.] [Careful.|Hey.]
 - [{Who} has been good to me, you know.|{Who} isn't a bad person.] [Don't be cruel.|Watch it.]
-- [Now I feel bad for bringing up {mything}.|I wish I hadn't said anything about {mything}.]
 - [That sounded nastier from you.|When you say it, it sounds so mean.] [Let's stop.|Hm.]
+
+@rule react.agree.bad.onday
+on react
+when move=agree fit=bad kind=day
+feel worried
+- [Don't just agree with me about {mything}.|You didn't have to go that far about {mything}.]
+- [Now I feel bad for bringing up {mything}.|I wish I hadn't said anything about {mything}.]
 
 @rule react.defend.good
 on react
@@ -793,8 +1050,12 @@ when move=defend fit=neutral
 - [I'm not attacking {who}.|I've got nothing against {who}.] [I'm only saying.|Relax.]
 - [You know {who} better than I do, then?|Have you talked to {who} about it?] [Just asking.|Hm.]
 - [Maybe {who} has a reason.|I guess only {who} knows.] [I wouldn't know.|Who can say?]
-- [People will say what they say about {mything}.|Defending {who} won't stop the talk about {mything}.]
 - [Fair enough, I won't push it.|You could be right.] [Let's leave it.|Okay.]
+
+@rule react.defend.neutral.onday
+on react
+when move=defend fit=neutral kind=day
+- [People will say what they say about {mything}.|Defending {who} won't stop the talk about {mything}.]
 
 @rule react.defend.bad
 on react
@@ -803,11 +1064,15 @@ when move=defend fit=bad
 - [Oh, so you like {who} now?|Whose friend are you, anyway?]
 - [You weren't there.|Don't defend {who} to me.]
 - [Wow. Okay.|Fine, believe what you want.]
-- [You weren't there for {mything}.|You don't know the first thing about {mything}.]
 - [What's {who} to you?|Since when are you so close to {who}?] [Hm?|Tell me.]
 - [I tell you about {who} and you turn on me?|So you believe {who} over me.]
 - [Then go comfort {who}.|Go on, go be with {who}.] [Hmph.|I don't care.]
 - [I thought you were on my side.|I expected better from you.] [Forget it.|Wow.]
+
+@rule react.defend.bad.onday
+on react
+when move=defend fit=bad kind=day
+- [You weren't there for {mything}.|You don't know the first thing about {mything}.]
 
 @rule react.laugh.good
 on react
@@ -817,11 +1082,16 @@ feel laugh
 - [Ahaha, stop!|You're ridiculous.|Okay, that got me.]
 - [I needed that laugh.|You always lighten the mood.|{laugh} You're the worst.]
 - [Ha! Fine, fine.|Okay, I'm laughing.|Pfft. Unbelievable.]
+- [Imagine {who}'s face if {who} saw us.|If {who} heard us laughing...] [{laugh}|Stop, stop!]
+- [Okay, I needed to laugh today.|That's the first time I've laughed today.] [Thanks.|{laugh}]
+
+@rule react.laugh.good.onday
+on react
+when move=laugh fit=good kind=day
+feel laugh
 - [Okay, {mything} is a little ridiculous.|Now that you laugh, {mything} does sound silly.] [{laugh}|You're right!]
 - [I can't take {mything} seriously anymore.|Thanks, now I'll laugh every time I think of {mything}.] [{laugh}|Ugh!]
 - [{laugh} Only you could laugh at {mything}.|{laugh} What is wrong with us?] [Stop!|My stomach hurts.]
-- [Imagine {who}'s face if {who} saw us.|If {who} heard us laughing...] [{laugh}|Stop, stop!]
-- [Okay, I needed to laugh today.|That's the first time I've laughed today.] [Thanks.|{laugh}]
 
 @rule react.laugh.neutral
 on react
@@ -830,11 +1100,15 @@ when move=laugh fit=neutral
 - [It's not THAT funny.|Ha. Ha.|Okay, a little.]
 - [You think so?|Eh. Maybe.|Heh.]
 - [Glad one of us is laughing.|Mm.|Okay then.]
-- [I guess {mything} has a funny side.|You can laugh at {mything}, I suppose.] [If you say so.|Heh.]
-- [I don't see what's so funny about {mything}.|What part of {mything} is funny, exactly?]
 - [You laugh at everything, don't you?|Do you ever take anything seriously?] [Heh.|Hm.]
 - [{Who} wouldn't laugh.|Don't let {who} see you laughing.] [Just saying.|Heh.]
 - [Fine. A little funny.|Okay, I smiled. That's all you get.] [Don't push it.|Moving on.]
+
+@rule react.laugh.neutral.onday
+on react
+when move=laugh fit=neutral kind=day
+- [I guess {mything} has a funny side.|You can laugh at {mything}, I suppose.] [If you say so.|Heh.]
+- [I don't see what's so funny about {mything}.|What part of {mything} is funny, exactly?]
 
 @rule react.laugh.bad
 on react
@@ -844,11 +1118,16 @@ feel pout
 - [Stop laughing.|This isn't a joke to me.|Seriously?]
 - [I'm being serious here.|Wow. Nice.|Forget it.]
 - [Laugh all you want.|You're mean.|Not cool.]
-- [You're laughing at {mything}? Really?|{Mything} isn't funny to me.] [I thought I could tell you.|Wow.]
-- [I open up about {mything} and you laugh.|So {mything} is a joke to you?] [Thanks.|Great.]
-- [Would you laugh if it were you?|Imagine {mything} happening to you.] [Not so funny.|Hm?]
 - [{Who} wouldn't find that funny.|Try laughing in front of {who}.]
 - [I don't feel like laughing.|Is that all you've got to say?] [Stop.|Seriously.]
+
+@rule react.laugh.bad.onday
+on react
+when move=laugh fit=bad kind=day
+feel pout
+- [You're laughing at {mything}? Really?|{Mything} isn't funny to me.] [I thought I could tell you.|Wow.]
+- [You think {mything} is a joke?|So {mything} is funny to you?] [Thanks.|Great.]
+- [Would you laugh if it were you?|Imagine {mything} happening to you.] [Not so funny.|Hm?]
 
 @rule react.thank
 on react
@@ -858,8 +1137,300 @@ feel smile
 - [Don't mention it.|It was nothing, really.|I'm glad I could help.]
 - [You'd do the same for me.|That's what friends are for.|Sure thing.]
 - [Aw, you're making me blush.|Hehe. I'll take that.|Mm. Anytime you need.]
-- [It was nothing, really, {mything}.|Don't thank me for {mything}.] [I wanted to.|Hehe.]
-- [If it's about {mything}, I'm glad I could help.|You're thanking me for {mything}?] [Anytime.|You're so polite.]
 - [You don't have to keep thanking me.|Say that one more time and I'll start charging.] [Hehe.|Ha!]
 - [Thank {who} too, while you're at it.|{Who} helped too, you know.] [I'll tell you later.|Hehe.]
 - [Now you owe me something from the store.|Thanks are nice, but a juice is better.] [Just kidding.|Well, half kidding.]
+
+@rule react.thank.onday
+on react
+when move=thank kind=day
+feel smile
+- [It was nothing, really, {mything}.|Don't thank me for {mything}.] [I wanted to.|Hehe.]
+- [If it's about {mything}, I'm glad I could help.|You're thanking me for {mything}?] [Anytime.|You're so polite.]
+
+@rule react.ask.day.sleepy
+on react
+when move=ask kind=day mood=sleepy fit=good|neutral step<=1
+opens tease,comfort,invite
+- [I started one video at midnight.|I told myself one more chapter.|I couldn't fall asleep, so I gave up.] [Then the birds started singing.|You know how that goes.]
+- [My neighbor's dog.|My little brother's game.|The rain on the window.] [All night.|I'd like a word with it.]
+- [I kept thinking about stupid things.|I remembered something embarrassing at two in the morning.] [Then I couldn't sleep.|From three years ago.]
+- [Homework. I started it at eleven.|I crammed for the quiz.] [Don't look at me like that.|I'm not smart about this.]
+- [I honestly don't know.|My bed and I had a fight.] [Went to bed on time and everything.|It won.]
+
+@rule react.ask.day.hungry
+on react
+when move=ask kind=day mood=hungry fit=good|neutral step<=1
+opens invite,tease,share
+- [I woke up late, so no breakfast.|I missed the train and my breakfast with it.] [I regret everything.|Rookie mistake.]
+- [Curry. No, ramen. No, both.|I'd eat anything with rice.] [Is that so wrong?|I've thought about it a lot.]
+- [I'm on a diet. It's going terribly.|I gave my bento to someone who forgot theirs.] [Don't laugh.|Being nice is hard.]
+- [I had a piece of toast at six.|A cereal bar. That's all.] [That's it.|Tragic.]
+- [I keep thinking about the bread at the store.|Don't get me started on melon bread.] [I can smell it in my mind.|I'm begging.]
+
+@rule react.ask.day.bored
+on react
+when move=ask kind=day mood=bored fit=good|neutral step<=1
+opens invite,tease,share
+- [Anything else. Literally anything.|I'd rather be outside.] [Even running laps.|It's so nice out.]
+- [Everyone's busy, and I've got nothing to do.|Nothing's going on, and it's not even over yet.] [Maybe you can fix that.|Rescue me.]
+- [The teacher read straight from the book.|We got a free period and nobody did anything.] [For an hour.|That's the worst part.]
+- [I want to go somewhere.|I want something to happen.] [Anywhere new.|Good or bad.]
+- [Do you ever feel like every day's the same?|I think I've seen everything this school has.] [I'm serious.|Surprise me.]
+
+@rule react.ask.day.lonely
+on react
+when move=ask kind=day mood=lonely fit=good|neutral step<=1
+opens comfort,invite,share
+feel sad
+- [They all have their own things today.|My friends went off together, I think.] [It's not their fault.|Nobody asked me.]
+- [I usually sit with someone, but not today.|I'm not sure why, it just turned out that way.] [It happens.|I'm fine.]
+- [I'm just bad at joining in.|It's hard to walk up to people.] [You make it look easy.|I always wait to be asked.]
+- [You're the first one who asked.|Thanks for noticing.] [That helps.|Really.]
+- [A little company wouldn't hurt.|I wouldn't say no to some company.] [If you're free.|Only if you want.]
+
+@rule react.ask.day.fight
+on react
+when move=ask kind=day fight=yes fit=good|neutral step<=1
+opens comfort,defend,share
+feel sad
+- [It started with something so small.|{Fightwho} said one thing and I said another.] [Now look at us.|I don't even remember the first thing.]
+- [I don't know if we'll fix it.|I want to fix it, but I'm still mad at {fightwho}.] [I need time.|Is that bad?]
+- [{Fightwho} isn't a bad person.|I know {fightwho} didn't mean it.] [That makes it worse.|Probably.]
+- [It's the kind of fight that gets worse the longer you wait.|Each day we don't talk, it gets harder.] [I know that.|Stupid, huh?]
+- [You really want to hear all of it?|I've been telling this to my pillow.] [It's long.|You're better than a pillow.]
+
+# ---------------- 2026-10-31: answers that belong to the topic ----------------
+@rule react.ask.small
+on react
+when kind=small|school move=ask fit=good
+feel smile
+- [That's about all I've got on {thing}.|That's my take, anyway.|Well, that's how I see it.] [What about you?|You're easy to talk to.|Thanks for asking.]
+- [I could go on, but I'll spare you.|Sorry, I got carried away.|You actually listened to all that.] [You're nice.|Hehe.]
+- [Now you know.|You're the first to ask me that.|Not many people ask.] [I don't mind telling you.|It's nice to be asked.]
+
+@rule react.ask.small.neutral
+on react
+when kind=small|school move=ask fit=neutral
+- [I don't know. It's nothing special.|I never really thought about it.|Not much to tell, really.] [Sorry.|Is that okay?|That's all.]
+- [Hm. Good question.|You ask funny things.|I'd have to think about it.] [Ask me another time.|I'm not sure.]
+
+@rule react.defend.tell
+on react
+when kind=tell move=defend fit=good|neutral
+- [Okay. If you're really worried, that's different.|Hm. Maybe I was too harsh.|Fine. I believe you.] [Just be careful who you tell.|Don't let it spread.|{Who} deserves better than rumors.]
+- [I know you didn't mean it badly.|You're not the worst, I guess.] [Let's leave it there.|Thanks for saying that.]
+
+# ================= small talk: the answer to what you did with a statement, a question or an offer (2026-10-31) =================
+@rule react.shape.ask.state
+on react
+when move=ask fit=good|neutral shape=state
+- That's really all there is to it.
+- Nothing deep. It's just on my mind.
+- Mm, it's just how I feel about it.
+- Not much more to say, honestly.
+
+@rule react.shape.share.state
+on react
+when move=share fit=good shape=state likes!=yes
+feel smile
+- I thought you'd say that.
+- That's a fair way to see it.
+- Huh. I hadn't thought of it like that.
+- I like how you put that.
+- You might be right.
+
+@rule react.shape.share.state.meh
+on react
+when move=share fit=neutral shape=state likes!=yes
+- Hm. If you say so.
+- I guess that's one way to see it.
+- Maybe.
+
+@rule react.shape.share.like
+on react
+when move=share fit=good|neutral shape=state likes=yes
+feel smile
+- Wait, you like {like} too?! Why didn't you say so?
+- We should talk about {like} more.
+- I knew I liked you for a reason.
+
+@rule react.shape.tease.state
+on react
+when move=tease fit=good shape=state
+feel smile
+- Hey! Don't make fun of me.
+- Ha! You're terrible.
+- Okay, that one was funny.
+- You're lucky I like talking to you.
+
+@rule react.shape.tease.state.meh
+on react
+when move=tease fit=neutral shape=state|q|offer|show|tell|give
+- Very funny.
+- Ha ha.
+- Okay, okay.
+
+@rule react.shape.praise.state
+on react
+when move=praise fit=good shape=state
+feel smile
+- Thanks. That's nice to hear.
+- You're making me blush.
+- Aw. You're sweet.
+
+@rule react.shape.praise.state.meh
+on react
+when move=praise fit=neutral shape=state
+- Um, thanks, I guess.
+- Oh. Okay.
+
+@rule react.shape.comfort.state
+on react
+when move=comfort fit=good|neutral shape=state
+- Thanks. I needed that.
+- You're kind.
+- That helps a little.
+
+@rule react.shape.invite.state
+on react
+when move=invite fit=good shape=state
+feel smile
+- I'd like that!
+- Sure, let's do it.
+- You'd better not forget.
+- Okay! I'm in.
+
+@rule react.shape.invite.state.meh
+on react
+when move=invite fit=neutral shape=state
+- Maybe some other time.
+- Let me think about it.
+- We'll see.
+
+@rule react.shape.share.q
+on react
+when move=share fit=good shape=q
+feel smile
+- Good to know.
+- Ha, I thought you'd say that.
+- Okay, that makes sense.
+- I'll remember that.
+- Same here, honestly.
+
+@rule react.shape.share.q.meh
+on react
+when move=share fit=neutral shape=q
+- Hm, okay.
+- I see.
+- If you say so.
+
+@rule react.shape.ask.q
+on react
+when move=ask fit=good|neutral shape=q
+- I asked you first.
+- You first, then I'll tell you.
+- Hey, don't dodge the question.
+
+@rule react.shape.tease.q
+on react
+when move=tease fit=good shape=q
+feel smile
+- Hey, I was being serious!
+- Ha! Fine, don't answer.
+- You're impossible.
+- That's not an answer.
+
+@rule react.shape.invite.offer
+on react
+when move=invite shape=offer
+feel smile
+- Great, it's a plan.
+- Good! Don't forget.
+- Then it's settled.
+- Okay! I'll hold you to that.
+
+@rule react.shape.ask.offer
+on react
+when move=ask fit=good|neutral shape=offer
+- I haven't thought that far.
+- We can figure it out together.
+- Just go with it.
+
+@rule react.shape.tease.offer
+on react
+when move=tease fit=good shape=offer
+feel smile
+- Hey, I'm being serious!
+- Ha! You wish.
+- Fine, forget I offered.
+- You're the worst.
+
+@rule react.shape.invite.show
+on react
+when move=invite shape=show
+feel smile
+- Hehe, okay. Next time I'll bring it.
+- Later, I promise. It's worth the wait.
+- You asked for it, then.
+
+@rule react.shape.ask.show
+on react
+when move=ask fit=good|neutral shape=show
+- You'll just have to see for yourself.
+- It's hard to explain. You'd have to see it.
+- Nothing special. I just like it.
+
+@rule react.shape.tease.show
+on react
+when move=tease fit=good shape=show
+feel smile
+- Hey! It's better than you think.
+- Ha! Now you don't get to see it.
+- You're the worst.
+
+@rule react.shape.invite.tell
+on react
+when move=invite shape=tell
+feel smile
+- Later, when nobody's around.
+- Hehe, not here. Someone might hear.
+- Okay, but later. It's a long one.
+
+@rule react.shape.ask.tell
+on react
+when move=ask fit=good|neutral shape=tell
+- You'll have to wait and see.
+- I'll tell you when I know more.
+- Not here. Later.
+
+@rule react.shape.tease.tell
+on react
+when move=tease fit=good shape=tell
+feel smile
+- Your loss.
+- Fine, I won't tell you.
+- Ha! You'll beg me later.
+
+@rule react.shape.invite.give
+on react
+when move=invite shape=give
+feel smile
+- Hehe, good.
+- You're the best.
+- See? This is nice.
+
+@rule react.shape.ask.give
+on react
+when move=ask fit=good|neutral shape=give
+- It's fine, really.
+- Trust me.
+- Would I lie to you?
+
+@rule react.shape.tease.give
+on react
+when move=tease fit=good shape=give
+feel smile
+- Hey! It's perfectly fine.
+- Rude.
+- Ha! You'll regret that.

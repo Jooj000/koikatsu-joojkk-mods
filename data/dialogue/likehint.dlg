@@ -5,6 +5,11 @@ on likehint
 - [Oh, and|By the way,] [I've been really into {newlike} lately.|{newlike} always cheers me up.|I'd do anything for some {newlike} right now.]
 - [You know what would make today better? {Newlike}.|If you ever want to make me happy... {newlike}. Just saying.]
 - [Random fact about me:|Not that you asked, but] [{newlike} is my weak spot.|I could talk about {newlike} for hours.|nothing beats {newlike}.]
+- [Speaking of which,|That reminds me,] [I had {newlike} on my mind all morning.|I've been craving {newlike} all week.]
+- [Anyway, the real news is|The best part of my day?] [I found out more about {newlike}.|Thinking about {newlike}.]
+- [Can I tell you something?|Don't laugh, but] [{newlike} is what gets me through the week.|I'm kind of a {newlike} person.]
+- [If you ask anyone, they'll tell you:|Everyone knows it by now:] [I'm hopeless about {newlike}.|{newlike} is my thing.]
+- [I should mention,|Oh, before I forget,] [{newlike} is the way to my good side.|I'd never say no to {newlike}.]
 
 @rule likehint.shy
 on likehint
@@ -12,6 +17,11 @@ when voice=shy|bookish|proper
 - [U-um... I like {newlike}. In case you wanted to know.|{Newlike}... is kind of my secret weakness.]
 - [I-if you ever see {newlike} somewhere...|Um, {newlike}...] [I wouldn't say no.|it makes me really happy. Just so you know.]
 - [S-sorry, that was random...|I don't tell many people this, but] [{newlike} makes me smile.|I really love {newlike}.]
+- [Um, I was thinking...|E-excuse me for changing the subject...] [{newlike} is nice, isn't it?|I've always liked {newlike}.]
+- [I-I've never told anyone...|It's embarrassing, but...] [{newlike} is my favorite.|I think about {newlike} a lot.]
+- [If it's not a bother...|Maybe it's silly, but...] [I'd love to talk about {newlike} sometime.|{newlike} makes me feel better.]
+- [Y-you don't have to remember this...|Please forget I said this...] [I really like {newlike}.|{newlike} is a small joy of mine.]
+- [O-oh, and...|One more thing, if I may...] [I like {newlike}. V-very much.|{newlike} would make me happy.]
 
 @rule likehint.gyaru
 on likehint
@@ -19,3 +29,17 @@ when voice=gyaru|open|vamp|teasing
 - [Also, {newlike}? Total obsession. Remember that.|Write this down: {newlike}. You're welcome.]
 - [Fun fact: I'm crazy about {newlike}.|{Newlike}. That's the way to my heart, babe.] [Use it wisely.|Don't forget it.]
 - [Oh, and between us? {Newlike}.|Real talk: {newlike} is life.] [Remember that.|Take notes.]
+- [Pop quiz: what do I love? {Newlike}.|Guess what I'm obsessed with this week. {Newlike}.] [You passed.|Duh.]
+- [Wanna score points with me? {Newlike}.|Want a hint? {Newlike}.] [That's free.|You're welcome.]
+- [Listen up, this is important: {newlike}.|Don't tell anyone, but {newlike}.] [That's the whole list.|Hehe.]
+- [Everyone's doing whatever, but me? {Newlike}.|Forget everything else. {Newlike}.] [Always.|End of story.]
+- [If you show up with {newlike}, I'm yours.|Bring {newlike} and we'll talk.] [Maybe.|Just saying~]
+
+@rule likehint.low
+on likehint
+when low=yes
+- [...You know what would help right now? {Newlike}.|Sorry, I'm a mess. {Newlike} would fix this.] [Just thinking out loud.|Never mind.]
+- [At times like this I think about {newlike}.|Only {newlike} could save this day.] [Is that dumb?|Hah.]
+- [I should've brought some {newlike}.|If I had {newlike} right now...] [I'd feel better.|Anyway.]
+- [Some people have therapy. I have {newlike}.|{Newlike} always gets me through days like this.] [Don't laugh.|It works.]
+- [...Oh, I like {newlike}, by the way.|If you ever see me like this, {newlike} helps.] [Sorry, that came out of nowhere.|Remember that.]

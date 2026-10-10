@@ -1,0 +1,155 @@
+# What the two of them say to each other in a talk with both (2026-10-31: "as conversas entre elas na ociosidade não tem sentido nem contexto").
+# Line and answer are written together: "first >> answer", or "first >> gentle >> energetic >> cool >> teasing" for the voice of
+# the one who answers. Drawn apart they didn't answer each other. Only what is really true right now: the two of them, who they
+# are, the hour, the weather, the exams, what they share. {first} and {other} are the names, {sharedlike} what both like,
+# {club} their club, {topic} what they argue about. othermood is the mood of the one who answers.
+
+# ================= they disagree =================
+@rule duo3.talk.argue
+on duo3.talk
+when argue=yes
+feel annoyed
+- About {topic}... I still think I'm right. >> ...I don't think so. >> No way! You're totally wrong! >> ...No. >> Keep telling yourself that.
+- We're not done talking about {topic}. >> I don't want to fight about it. >> Oh, we're done! You lost! >> We are. >> Are we? I thought you gave up.
+- I've been thinking about {topic}. You were wrong. >> I really don't think I was. >> Ha! Not a chance! >> I wasn't. >> Cute.
+- Can we settle {topic} already? >> I'd like that, but... >> Sure! Admit I won! >> It's settled. I'm right. >> Only if I win.
+
+# ================= who they are =================
+@rule duo3.talk.students
+on duo3.talk
+when myrole=student otherrole=student
+- Did you finish the homework for tomorrow? >> Almost. One page left. >> Mostly! Don't ask how! >> Yesterday. >> Define "finish."
+- Which class do you have after this? >> Math, I think. >> P.E.! Finally! >> Math. >> Whichever one I sleep through.
+- Has this week felt long to you? >> It really has. >> So long! I want the weekend! >> It's a normal week. >> You say that every week.
+- Did you take notes today? I missed some. >> I did. You can borrow them. >> Some! The rest are doodles! >> Yes. >> What's it worth to you?
+- Is that a new hair clip? >> Oh, yes. Thank you for noticing. >> Yep! Just got it! >> It's old. >> Took you long enough.
+
+@rule duo3.talk.student.teacher
+on duo3.talk
+when myrole=student otherrole=teacher
+- {other}, will the next test cover chapter five? >> It will, so read it twice. >> Yes! All of it! >> Yes. Read it. >> Would I tell you?
+- {other}, you look tired today. >> A little. Thank you for asking. >> Me? Never! Okay, maybe a bit! >> I'm fine. >> Grading your essays will do that.
+- {other}, can I hand in my report on Monday? >> All right, but only this once. >> Monday, not a minute later! >> Friday, as I said. >> What do I get in return?
+- {other}, is it true you're a strict grader? >> I try to be fair. >> Only when I have to be! >> Yes. >> Who told you that? Good.
+
+@rule duo3.talk.teacher.student
+on duo3.talk
+when myrole=teacher otherrole=student
+- Did you hand in your report, {other}? >> Y-yes, this morning. >> Yep! First one in! >> It's on your desk. >> Hm, which report?
+- Don't stay too late today, {other}. >> I won't. >> No promises! >> I'll leave at six. >> Are you checking up on me?
+- How are your classes going, {other}? >> Well enough, thank you. >> Great! Except math! >> Fine. >> Should I worry that you're asking?
+- Your last test was much better, {other}. >> Thank you. I studied hard. >> Yes! I knew it! >> I know. >> You sound surprised.
+
+@rule duo3.talk.teachers
+on duo3.talk
+when myrole=teacher otherrole=teacher
+- The staff meeting ran long again. >> It did. My tea went cold. >> Two hours! I nearly fell asleep! >> It always does. >> I counted the ceiling tiles.
+- Have you finished your grading? >> Half of it. The rest is for tonight. >> Almost! Three more stacks! >> Yes. >> Have you? I won't tell.
+- Who has hall duty on Friday? >> I think that's me. >> Me! I traded for it! >> Check the board. >> Not me, and I'd like to keep it that way.
+- The second-years are restless this week. >> They are. It's the season, I think. >> They're just full of energy! >> I've noticed. >> I wonder who they get it from.
+
+@rule duo3.talk.bff
+on duo3.talk
+when pair=bff myrole=student otherrole=student
+feel smile
+- Sit with me at lunch tomorrow? >> Of course. >> You don't even have to ask! >> I always do. >> Only if you bring dessert.
+- You always know what I'm about to say. >> We've known each other a while. >> It's a gift! >> You're easy to read. >> You're not that hard to read.
+- I'm glad you're here. >> Me too. >> Me too! Always! >> ...Same. >> Careful, people will talk.
+
+@rule duo3.talk.rival
+on duo3.talk
+when pair=rival myrole=student otherrole=student
+feel annoyed
+- Oh. You're still here. >> So are you. >> And I'm staying! >> Clearly. >> Disappointed?
+- I thought you'd have something better to do. >> I could say the same. >> Nope! Not moving! >> I don't. >> I do. This is it.
+- Don't you have somewhere to be? >> Not right now. >> Right here, actually! >> No. >> Trying to get rid of me?
+
+@rule duo3.talk.trisal
+on duo3.talk
+when trisal=yes myrole=student otherrole=student
+feel smile
+- Whose turn is it to walk home together today? >> Yours, I think. >> Mine! Definitely mine! >> We agreed on yours. >> We could both go.
+- We should tell each other when plans change. >> You're right. I'll write it down. >> Yes! Group chat! >> Agreed. >> Scared I'll get ahead of you?
+
+# ================= the hour, the weather, the week =================
+@rule duo3.talk.lunch
+on duo3.talk
+when period=lunch
+- What did you bring today? >> Just some rice balls. >> Curry bread! Two of them! >> The usual. >> Why, are you hungry?
+- The cafeteria line is so long today. >> We can wait a little. >> Let's run for it! >> I brought mine. >> Send someone else.
+- I can't believe lunch is half over already. >> It goes by so fast. >> Eat faster! >> It's the same as always. >> You talk too much, that's why.
+
+@rule duo3.talk.after
+on duo3.talk
+when period=after
+- Are you heading home after this? >> Soon, yes. >> Not yet! >> In a while. >> Depends on who's asking.
+- It's getting dark earlier, isn't it? >> It is. We should go soon. >> Already?! >> It's the season. >> Afraid of the dark?
+
+@rule duo3.talk.wet
+on duo3.talk
+when wet=yes
+- Did you bring an umbrella? >> I have a small one. We can share. >> Nope! I'll just run! >> Yes. >> Maybe. What's it worth to you?
+- This rain isn't stopping, is it? >> I don't think so. >> It's kind of fun! >> Not today. >> Then you're stuck here with me.
+
+@rule duo3.talk.exam
+on duo3.talk
+when exam=yes myrole=student otherrole=student
+- Have you started studying for the exams? >> A little every night. >> Tomorrow! For sure! >> I finished the review. >> Why, do you want my notes?
+- Which subject scares you the most? >> Math, I think. >> All of them! >> None. >> Whichever one you're good at.
+
+@rule duo3.talk.exam.teachers
+on duo3.talk
+when exam=yes myrole=student|teacher otherrole=teacher
+- Are the exam papers ready? >> Almost. I'm checking them once more. >> Printed and hidden! >> Yes. >> Wouldn't you like to know.
+
+# ================= what they share =================
+@rule duo3.talk.club
+on duo3.talk
+when sameclub=yes
+- Are you going to the {club} today? >> Yes, I'll be there. >> Obviously! Wouldn't miss it! >> I have to. >> Only if you are.
+- Who's locking up the {club} room today? >> I can do it. >> Not it! >> You are. >> We should draw straws.
+- The {club} was noisy yesterday, wasn't it? >> A little, yes. >> That was me! Sorry! >> It was. >> Nobody complained.
+
+@rule duo3.talk.shared
+on duo3.talk
+when shared=yes myrole=student otherrole=student
+- You're into {sharedlike} too, aren't you? >> I am, a little. >> Totally! >> I am. >> Took you long enough to notice.
+- Been thinking about {sharedlike} lately? >> A little. You too? >> All the time! >> No. >> Why, do you need tips?
+
+# ================= how the other one looks =================
+@rule duo3.talk.sleepy
+on duo3.talk
+when othermood=sleepy otherrole=student
+- You look half asleep. >> I stayed up too late. >> I'm awake! I'm fine! >> I didn't sleep. >> Thanks for noticing.
+
+@rule duo3.talk.hungry
+on duo3.talk
+when othermood=hungry otherrole=student
+- I can hear your stomach from here. >> S-sorry. I skipped breakfast. >> I'm starving! >> It's nothing. >> Then feed me.
+
+@rule duo3.talk.stressed
+on duo3.talk
+when othermood=stressed otherrole=student
+- You seem tense today. Are you okay? >> I just have a lot going on. >> Too much to do! I'll manage! >> It's fine. >> Tense? Me? Never.
+
+@rule duo3.talk.upset
+on duo3.talk
+when othermood=upset otherrole=student
+feel worried
+- Did something happen? You've been quiet. >> It's nothing. Thank you, though. >> I'm just annoyed, that's all! >> I don't want to talk about it. >> You'd only laugh.
+
+@rule duo3.talk.lonely
+on duo3.talk
+when othermood=lonely otherrole=student
+- You went home alone yesterday, didn't you? >> Yes. Everyone was busy. >> Yeah, nobody was around! >> I don't mind. >> Why, did you miss me?
+
+@rule duo3.talk.cheerful
+on duo3.talk
+when othermood=cheerful otherrole=student
+feel smile
+- You're in a good mood today. >> Am I? I suppose so. >> Yeah! Great day! >> It's not bad. >> Jealous?
+
+@rule duo3.talk.bored
+on duo3.talk
+when othermood=bored otherrole=student
+- You've looked at the clock five times. >> Have I? Sorry. >> This day won't end! >> It's slow today. >> Someone has to keep an eye on it.

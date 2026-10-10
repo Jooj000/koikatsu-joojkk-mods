@@ -120,11 +120,11 @@ when role=teacher
 - [Ahem.|Oh, it's you.|Well, well, a student.]
 - [Shouldn't you be studying?|Mm-hm.]
 
-@rule open.exteacher
+@rule open.teacher.free
 on @open
-when role=exteacher
-- [Ah, old habits... I almost said "class".|Hey. Not your teacher anymore, remember?]
-- [Funny, sitting on this side of the desk now.|You can drop the "sensei" now.]
+when role=teacher free=yes
+- [Ah, you again. Should I be worried?|Mm, my favorite troublemaker.]
+- [Off the record, then.|You always find me, don't you? Even out of class.]
 
 @rule open.story
 on @open
@@ -416,11 +416,11 @@ when role=teacher
 - [Anyway, don't forget your homework.|And don't be late to class tomorrow.]
 - [I have a stack of papers to grade, sadly.|Teachers have lives too, you know.]
 
-@rule tail.role.exteacher
+@rule tail.role.teacher.free
 on @tail
-when role=exteacher
-- [I still catch myself grading things in my head.|Being on this side is freeing.]
-- [No more red pens for me.|Don't tell anyone I miss teaching a little.]
+when role=teacher free=yes
+- [Still, I am your teacher.|Don't make me regret talking to you like this.]
+- [I'll deny all of this in class.|Back to being "sensei" tomorrow.]
 
 @rule tail.role.exstory
 on @tail
@@ -489,11 +489,11 @@ when role=teacher
 - [Sensei.|Excuse me, sensei.]
 - [Um, sensei?|Sensei, got a minute?]
 
-@rule meopen.exteacher
+@rule meopen.teacher.free
 on @meopen
-when role=exteacher
-- [Hey, {name}. Not sensei anymore, right?|So, {name}.]
-- [Hey, ex-sensei.|{Name}.]
+when role=teacher free=yes
+- [Hey, sensei.|Sensei, it's me.]
+- [Do you have a minute, sensei?|Nobody's around, sensei.]
 
 
 # Tails and openers with the weather.

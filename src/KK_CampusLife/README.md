@@ -9,7 +9,7 @@
 | | |
 |---|---|
 | GUID | `joojkk.campuslife` |
-| Version | 3.2.0 |
+| Version | 3.3.0 |
 | Game | Koikatu / Koikatsu Party, main game (story mode), HF Patch recommended |
 | Menu | **F7** |
 | Language | English (the XUnity AutoTranslator does not touch it) |
@@ -95,7 +95,7 @@ Well-played days (three talks a day, good answers), averaged over two girls of e
 - **Weekly report** and journal in the menu.
 
 ### Male cards (new in 3.2)
-- A card saved as male is detected on its own; a femboy card saved as a girl can be listed under **Boys in the class** (first names, comma separated).
+- A card saved as male is detected on its own, and the **male** folder shows next to **female** when you pick the class. He uses the boys' toilet, loses reputation in the girls' areas and catches girls who walk into the boys' toilet.
 - Lines **about him** say he/him/his and boyfriend; **his own** lines call himself a boyfriend or a guy; his voice and personality stay the same. His card says "Boyfriend".
 
 ## Installation

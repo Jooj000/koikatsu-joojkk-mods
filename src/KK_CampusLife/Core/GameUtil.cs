@@ -323,8 +323,9 @@ namespace Joojkk.CampusLife
         public static string FirstName(SaveData.Heroine h)
         {
             if (h == null) return "?";
+            // Some cards hold a blank first name (Ozen: a lone space), which printed "Greyrat + : close friends" in the director's log.
             var n = Translate(h.parameter.firstname);
-            return string.IsNullOrEmpty(n) ? Translate(h.parameter.lastname) : n;
+            return string.IsNullOrEmpty(n) || n.Trim().Length == 0 ? (Translate(h.parameter.lastname) ?? "").Trim() : n;
         }
 
         public static string FullName(SaveData.Heroine h)

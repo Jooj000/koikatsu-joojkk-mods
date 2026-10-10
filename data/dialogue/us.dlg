@@ -200,9 +200,9 @@ on us
 when realverb=shared
 opens share,tease,ask
 feel smile
-- [That time? {Note}|Oh, I remember. {Note}] [I think about it sometimes.|It was a good day.]
-- [Of course I remember. {Note}|How could I forget? {Note}] [It's one of my favorite memories.|We should do that again.]
-- [{Note} That was us.|Oh, that time. {Note}] [Good times.|I still laugh about it.]
+- [That time? {Note}.|Oh, I remember. {Note}.] [I think about it sometimes.|It was a good day.]
+- [Of course I remember. {Note}.|How could I forget? {Note}.] [It's one of my favorite memories.|We should do that again.]
+- [{Note}. That was us.|Oh, that time. {Note}.] [Good times.|I still laugh about it.]
 
 # ---------------- H, by how fast it went and who she is ----------------
 @rule us.h

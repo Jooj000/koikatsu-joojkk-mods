@@ -49,7 +49,7 @@
 
 ## Configuration
 
-`BepInEx\config\joojkk.schooloptimizer.cfg`, or ConfigurationManager (F1), in six groups: students, crowding, rendering, other mods (shown only for the mods you have), loading, and the missing zipmods list. Defaults are safe; the experimental options start off.
+`BepInEx\config\joojkk.schooloptimizer.cfg`, or ConfigurationManager (F1), in six groups: students, crowding, rendering, other mods (shown only for the mods you have), loading, and the missing zipmods list. A new install starts at the maximum optimization, the values used on the author's own game; values already in your config are kept.
 
 ## Compatibility
 

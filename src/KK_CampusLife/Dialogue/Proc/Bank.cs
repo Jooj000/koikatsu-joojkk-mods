@@ -43,6 +43,9 @@ namespace Joojkk.CampusLife
         public string[] Opens = new string[0];
         public readonly Dictionary<string, string> Fit = new Dictionary<string, string>();
         public string Feel = "";
+        /// <summary>The subject of her line: the options and reactions "when hook=..." belong to it and to nothing else.</summary>
+        public string Hook = "";
+        public string Shape = "";
         public readonly List<string> Say = new List<string>();
         /// <summary>How well the rule fits: the weight of each condition for this kind of interaction (weights.dlg).</summary>
         public float Score = 0f;
@@ -163,6 +166,8 @@ namespace Joojkk.CampusLife
                     case "on": rule.On = rest; break;
                     case "opens": rule.Opens = rest.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries); break;
                     case "feel": rule.Feel = rest; break;
+                    case "hook": rule.Hook = rest; break;
+                    case "shape": rule.Shape = rest; break;
                     case "when":
                         foreach (var c in rest.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)) { var d = Cond(c); if (d != null) rule.When.Add(d); }
                         break;
@@ -448,7 +453,7 @@ namespace Joojkk.CampusLife
                 int n;
                 seen[line] = seen.TryGetValue(line, out n) ? n + 1 : 1;
             }
-            return on + ": " + seen.Count + " distinct of " + tries + " (" + Matching(on, ctx).Count() + " rules fit)";
+            return on + ": " + seen.Count + " distinct of " + tries + " (" + Matching(on, ctx).Count() + " rules fit: " + string.Join(", ", Matching(on, ctx).Select(r => r.Id).Take(4).ToArray()) + ") e.g. " + string.Join(" / ", seen.Keys.Take(3).ToArray());
         }
     }
 }

@@ -1,5 +1,8 @@
 # School Optimizer changelog
 
+## 1.7.0 (2026-10-09)
+- A new install starts at the maximum optimization: the defaults are the values used on the author's own game, compressed Skin Overlay Mod textures included. Values already in your config are kept.
+
 ## 1.6.1 (2026-10-03)
 - An option about another mod shows in the settings only when that mod is installed.
 

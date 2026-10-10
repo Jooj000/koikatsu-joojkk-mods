@@ -622,6 +622,9 @@ namespace Joojkk.CampusLife
                     Step("talk scene " + (Ready(ts) ? "open" : "did not open (event " + (G.Act != null && G.Act.isEventNow) + ")"));
                     if (Ready(ts))
                     {
+                        // Side by side from the start; again after her greeting, in case the game put them back.
+                        try { if (nb != null) StandBeside(nb, na); }
+                        catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo beside: " + e.Message); }
                         yield return Wait(() => MenuShown(ts), 25f); // her greeting first
                         try { if (nb != null) StandBeside(nb, na); }
                         catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo beside: " + e.Message); }
@@ -649,6 +652,8 @@ namespace Joojkk.CampusLife
                         }
                         if (!trioOn)
                         {
+                            TrioStage.Unframe();
+                            KeepStill(null);
                             try { intoH = talked && show.IntoH != null && G.TalkScene == ts && show.IntoH() && IntoH(ts); }
                             catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
                             try { if (!intoH && G.TalkScene == ts) Traverse.Create(ts).Method("CommandFunc", new object[] { -1 }).GetValue(); }
@@ -819,19 +824,61 @@ namespace Joojkk.CampusLife
         private static void StandBeside(NPC nb, NPC na)
         {
             var her = na.heroine.chaCtrl; // the talk scene's copy of the first girl
-            var cam = Camera.main;
+            var cam = (G.TalkScene != null ? Traverse.Create(G.TalkScene).Field("nowCamera").GetValue<Camera>() : null) ?? Camera.main;
             if (her == null || cam == null || nb.chaCtrl == null) return;
             nb.SetActive(true);
             if (nb.move != null) nb.move.animParamSpeed = 0f;
             if (nb.isArrival) nb.SetWaitPoint(null);
             if (nb.agent != null && nb.agent.enabled) { nb.agent.enabled = false; _besideAgentOff = nb; }
-            var pos = her.transform.position + her.transform.right * 0.62f - her.transform.forward * 0.08f;
-            var look = cam.transform.position - pos;
-            look.y = 0f;
-            nb.transform.position = pos;
-            if (look.sqrMagnitude > 0.01f) nb.transform.rotation = Quaternion.LookRotation(look);
+            // Both around the spot the camera looks at, as in the talk with both (user, 2026-10-31: one stood in the middle and
+            // the other at the edge of the screen until that talk began).
+            TrioStage.Frame(her, nb, cam);
+            KeepStill(nb);
             nb.chaCtrl.ChangeLookEyesTarget(0, cam.transform, 0.5f, 0f, 1f, 2f);
             nb.chaCtrl.ChangeLookNeckTarget(0, cam.transform, 0.5f, 0f, 1f, 0.8f);
+            KeepStill(nb);
+        }
+
+        // The second girl of a talk stays where we put her. The game pauses everyone for the talk, but her map body is shown
+        // and NPC._isPlayerAction starts her AI again when the player's notice list changes: she left in her talk pose
+        // (user, 2026-10-31: Asuka sliding off with her arms crossed in the middle of the talk).
+        private static NPC _held;
+        private static Vector3 _heldPos;
+        private static Quaternion _heldRot;
+        private static bool _heldSaid;
+
+        /// <summary>Keeps her where she stands now until the talk closes; null lets go.</summary>
+        internal static void KeepStill(NPC n)
+        {
+            _held = n;
+            _heldSaid = false;
+            if (n == null) return;
+            _heldPos = n.transform.position;
+            _heldRot = n.transform.rotation;
+        }
+
+        /// <summary>Every frame, after the game's Update (plugin LateUpdate).</summary>
+        internal static void LateTick()
+        {
+            var n = _held;
+            if (n == null) return;
+            try
+            {
+                if (!G.TalkSceneOpen) { _held = null; return; }
+                var woke = n.AI != null && n.AI.isRunning && !n.AI.isPaused;
+                var moved = (n.transform.position - _heldPos).sqrMagnitude > 0.0001f;
+                var agentOn = n.agent != null && n.agent.enabled;
+                if ((woke || moved || agentOn) && !_heldSaid)
+                {
+                    _heldSaid = true;
+                    Step("holding " + GirlInfo.FirstName(n.heroine) + " (AI awake " + woke + ", moved " + (n.transform.position - _heldPos).magnitude.ToString("0.00") + " m, agent on " + agentOn + ", action " + (n.AI != null ? n.AI.actionNo : -1) + ")");
+                }
+                if (woke) n.Pause(true);
+                if (agentOn) n.agent.enabled = false;
+                if (n.move != null && n.move.animParamSpeed != 0f) n.move.animParamSpeed = 0f;
+                n.transform.SetPositionAndRotation(_heldPos, _heldRot);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo hold: " + e.Message); }
         }
 
         // ---------------- getting there ----------------
@@ -843,18 +890,22 @@ namespace Joojkk.CampusLife
         private static Vector3[] FindSpots()
         {
             var p = G.Act.Player.transform;
-            var fwd = p.forward;
+            // Around the middle of the player's view, not around him: after a talk he may face the camera, and with the two
+            // measured from him one of them came up against the lens (user, 2026-10-31: one in the middle, the other at the edge).
+            var cam = Camera.main;
+            var from = cam != null ? new Vector3(cam.transform.position.x, p.position.y, cam.transform.position.z) : p.position;
+            var fwd = cam != null ? cam.transform.forward : p.forward;
             fwd.y = 0f;
             if (fwd.sqrMagnitude < 0.01f) fwd = Vector3.forward;
             fwd.Normalize();
-            foreach (var angle in new[] { 0f, -35f, 35f, -70f, 70f, -110f, 110f, -145f, 145f, 180f })
-                foreach (var dist in new[] { 1.4f, 1.15f, 1.8f, 2.3f })
+            foreach (var angle in new[] { 0f, -15f, 15f, -35f, 35f, -70f, 70f, -110f, 110f, -145f, 145f, 180f })
+                foreach (var dist in new[] { 2.2f, 1.8f, 2.6f, 3.2f })
                 {
                     var dir = Quaternion.Euler(0f, angle, 0f) * fwd;
                     var side = Vector3.Cross(Vector3.up, dir);
-                    var c = p.position + dir * dist;
+                    var c = from + dir * dist;
                     Vector3 s1, s2;
-                    if (Clear(p.position, c - side * 0.45f, out s1) && Clear(p.position, c + side * 0.45f, out s2) && (s1 - s2).sqrMagnitude > 0.5f * 0.5f)
+                    if ((c - p.position).sqrMagnitude > 0.8f * 0.8f && Clear(p.position, c - side * 0.45f, out s1) && Clear(p.position, c + side * 0.45f, out s2) && (s1 - s2).sqrMagnitude > 0.5f * 0.5f)
                         return new[] { s1, s2 };
                 }
             return null;

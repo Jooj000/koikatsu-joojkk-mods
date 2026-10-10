@@ -53,7 +53,7 @@ namespace Joojkk.CampusLife
                 switch (like)
                 {
                     case "food": case "sweets": l.Add(new[] { "A new sweet from the store every Friday", "a new sweet every Friday" }); break;
-                    case "cooking": l.Add(new[] { "She makes lunch on Mondays, you rate it", "her Monday lunches" }); break;
+                    case "cooking": l.Add(new[] { "She makes lunch on Mondays, you rate it", "the Monday lunches" }); break;
                     case "study": l.Add(new[] { "Study together in the library on Wednesdays", "Wednesday study dates" }); break;
                     case "exercise": l.Add(new[] { "A run around the track before class", "morning runs" }); break;
                     case "animals": l.Add(new[] { "Visit the cat behind the gym", "visiting the gym cat" }); break;

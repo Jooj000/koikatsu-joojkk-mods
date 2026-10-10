@@ -400,7 +400,7 @@ namespace Joojkk.CampusLife
                 var bd = BirthdayOf(h);
                 if (bd != "no") subjects["birthday"] = 1.5f;
                 subjects["horoscope"] = 0.4f;
-                if (h.isTeacher) subjects["teaching"] = 1f;
+                if (Teachers.IsTeacherVoice(h)) subjects["teaching"] = 1f;
                 if (h.relation >= 1) subjects["future"] = 0.4f;
             }
             var open = subjects.Where(x => !TopicDone(key, "st:" + x.Key)).ToList();
@@ -410,7 +410,7 @@ namespace Joojkk.CampusLife
 
         private static string StrangerLabel(string subject)
         {
-            if (subject.StartsWith("place:", StringComparison.Ordinal)) return "Say something about " + PlaceThing();
+            if (subject.StartsWith("place:", StringComparison.Ordinal)) return "Say something about this place";
             if (subject == "weather") return Weather.Raining ? "Say something about the rain" : "Make small talk about the weather";
             if (subject == "lunch") return "Ask if she's had lunch";
             return "Make small talk";
@@ -420,7 +420,7 @@ namespace Joojkk.CampusLife
         {
             if (subject.StartsWith("like:", StringComparison.Ordinal)) return "Chat about " + GirlInfo.LikeLabel(subject.Substring(5));
             if (subject.StartsWith("pet:", StringComparison.Ordinal)) return "Chat about " + subject.Substring(4);
-            if (subject.StartsWith("place:", StringComparison.Ordinal)) return "Comment on " + PlaceThing();
+            if (subject.StartsWith("place:", StringComparison.Ordinal)) return "Chat about this place";
             switch (subject)
             {
                 case "lunch": return "Chat about lunch";
@@ -500,7 +500,7 @@ namespace Joojkk.CampusLife
                     c["likedo"] = Do(like);
                 }
                 else if (t.Subject.StartsWith("pet:", StringComparison.Ordinal)) c["thing"] = v.Pet;
-                else if (t.Subject.StartsWith("place:", StringComparison.Ordinal)) c["thing"] = PlaceThing();
+                else if (t.Subject.StartsWith("place:", StringComparison.Ordinal)) c["thing"] = "this place"; // her line may be about anything here
                 else c["thing"] = SubjectThing(h, t.Subject);
             }
             if (t.School != null) { c["event"] = t.School.Label; c["eventline"] = t.School.Line; c["school"] = t.School.Id.StartsWith("ev:", StringComparison.Ordinal) ? "event" : t.School.Id; c["thing"] = t.School.Label; }
@@ -510,6 +510,9 @@ namespace Joojkk.CampusLife
                              : mood == CampusLife.Mood.Lonely ? "her friends" : !GirlInfo.InNoClub(h) && (G.CurrentMask == PeriodMask.Club || G.CurrentMask == PeriodMask.After) ? "the " + GirlInfo.ClubName(h) : "her day";
                 c["already"] = gs.MoodKnownDay == S.Day ? "yes" : "no";
             }
+            // A teacher's mood comes from her job: the same reason all day, in the lines and in {mything}.
+            var cause = Teachers.Cause(h, mood);
+            if (cause != null) { c["tcause"] = cause; if (t.Kind == "day") c["thing"] = Teachers.CauseThing(cause); }
             var f = t.Fact;
             if (f != null)
             {
@@ -531,12 +534,12 @@ namespace Joojkk.CampusLife
                 c["obj"] = f.Obj == Lore.Player ? "player" : f.Obj == key ? "her" : string.IsNullOrEmpty(f.Obj) ? "none" : "other";
                 c["aboutplayer"] = f.Involves(Lore.Player) ? "yes" : "no";
                 var other = new[] { f.Subject, f.Obj, f.About }.FirstOrDefault(x => !string.IsNullOrEmpty(x) && x != key && x != Lore.Player);
-                if (other != null) { c["who"] = GirlInfo.FirstName(other); c["whobond"] = Social.Bond(h, GirlInfo.Find(other)).ToString(); WhoCtx(h, GirlInfo.Find(other), c); }
-                var second = new[] { f.Subject, f.Obj }.Where(x => !string.IsNullOrEmpty(x) && x != key && x != Lore.Player && x != other).Select(GirlInfo.FirstName).FirstOrDefault();
+                if (other != null) { c["who"] = Teachers.Called(other); c["whobond"] = Social.Bond(h, GirlInfo.Find(other)).ToString(); WhoCtx(h, GirlInfo.Find(other), c); }
+                var second = new[] { f.Subject, f.Obj }.Where(x => !string.IsNullOrEmpty(x) && x != key && x != Lore.Player && x != other).Select(Teachers.Called).FirstOrDefault();
                 if (second != null) c["who2"] = second;
-                if (k != null && !string.IsNullOrEmpty(k.From)) c["src"] = k.From == Lore.Player ? "you" : GirlInfo.FirstName(k.From);
+                if (k != null && !string.IsNullOrEmpty(k.From)) c["src"] = k.From == Lore.Player ? "you" : Teachers.Called(k.From);
                 if (!string.IsNullOrEmpty(t.ToldFit)) c["told"] = t.ToldFit;
-                if (!string.IsNullOrEmpty(f.Note)) c["note"] = f.Note;
+                if (!string.IsNullOrEmpty(f.Note)) c["note"] = f.Note.Replace("her Monday lunches", "the Monday lunches"); // saved like that before 2026-10-31
                 if (f.Since >= 0) { c["since"] = f.Since.ToString(); c["speed"] = f.Since == 0 ? "same_day" : f.Since <= 2 ? "fast" : "normal"; }
                 c["thing"] = Thing(f, key);
                 c["tags"] = f.Tags;
@@ -629,8 +632,17 @@ namespace Joojkk.CampusLife
 
             DlgRule rule;
             var me = t.Opening ? null : ComposeMe(Bank.Pick("me." + t.Kind, ctx, "player", out rule), ctx);
-            var her = Compose(Bank.Pick(t.Kind, ctx, key, out rule) ?? Fallback(h, t), ctx);
-            var hint = newLike != null ? Bank.Pick("likehint", ctx, key, out _ignored) ?? Lines.LikeHint(GirlInfo.ToneOf(h), GirlInfo.LikeLabel(newLike), Lines.Closeness(h)) : null;
+            var her = Bank.Pick(t.Kind, ctx, key, out rule) ?? Fallback(h, t);
+            // A line with a hook has one subject, so nothing is glued to it (2026-10-31, the fifth complaint: a tail on another
+            // subject and a like after it left the options answering neither).
+            if (rule != null && rule.Hook != "") ctx["hook"] = rule.Hook;
+            else her = Compose(her, ctx);
+            // The like she lets slip waits for the end of the exchange (OnMove): said here, it stood between her line and your options.
+            if (newLike != null)
+            {
+                ctx["closing"] = Bank.Pick("likehint", ctx, key, out _ignored) ?? Lines.LikeHint(GirlInfo.ToneOf(h), GirlInfo.LikeLabel(newLike), Lines.Closeness(h));
+                ctx["closinglike"] = newLike;
+            }
             CampusLifePlugin.Log.LogInfo("Talk topic: " + GirlInfo.FirstName(h) + " " + t.Kind + " '" + t.Label + "' rule " + (rule != null ? rule.Id : "(fallback)"));
 
             if (t.Kind == "day" && gs.MoodKnownDay != S.Day)
@@ -639,17 +651,22 @@ namespace Joojkk.CampusLife
                 var tip = Lines.MoodTip(gs.Mood);
                 Toasts.Show(GirlInfo.FirstName(h) + ": " + Lines.MoodName(gs.Mood) + (tip == "" ? "" : ". " + tip));
             }
-            if (newLike != null)
-            {
-                gs.KnownLikes |= 1 << Array.IndexOf(GirlInfo.LikeIds, newLike);
-                Toasts.Show("Learned: " + GirlInfo.FirstName(h) + " likes " + GirlInfo.LikeLabel(newLike) + ".");
-            }
             if (t.Kind == "small" && ctx.ContainsKey("like") && ctx["likes"] == "yes")
             {
                 var bit = 1 << Array.IndexOf(GirlInfo.LikeIds, t.Subject.Substring(5));
                 if ((gs.KnownLikes & bit) == 0) { gs.KnownLikes |= bit; Toasts.Show("Learned: " + GirlInfo.FirstName(h) + " likes " + ctx["like"] + "."); }
             }
-            Step(h, t, ctx, 1, me, her, hint, rule);
+            Step(h, t, ctx, 1, me, her, rule);
+        }
+
+        /// <summary>The like she kept for the end of the exchange: she says it now and you learn it now.</summary>
+        private static void SayClosing(SceneBuilder b, SaveData.Heroine h, Dictionary<string, string> ctx)
+        {
+            string closing, like;
+            if (!ctx.TryGetValue("closing", out closing) || !ctx.TryGetValue("closinglike", out like)) return;
+            b.Her_(closing);
+            S.Girl(GirlInfo.Key(h)).KnownLikes |= 1 << Array.IndexOf(GirlInfo.LikeIds, like);
+            Toasts.Show("Learned: " + GirlInfo.FirstName(h) + " likes " + GirlInfo.LikeLabel(like) + ".");
         }
 
         private static DlgRule _ignored;
@@ -668,21 +685,32 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>One step: her line (your line first on step 1), then your moves on what she said.</summary>
-        private static void Step(SaveData.Heroine h, PTopic t, Dictionary<string, string> ctx, int step, string me, string her, string extra, DlgRule rule)
+        private static void Step(SaveData.Heroine h, PTopic t, Dictionary<string, string> ctx, int step, string me, string her, DlgRule rule)
         {
             var s = Sess;
             if (s == null) return;
+            Said(ctx, rule);
             var moves = Moves(h, t, ctx, rule, step);
+            CampusLifePlugin.Log.LogInfo("Talk moves: " + GirlInfo.FirstName(h) + " '" + her + "' => " + string.Join(" | ", moves.Select(m => m.Label).ToArray()));
             var b = new SceneBuilder(h, true);
             if (me != null) b.Me(me);
             b.Face(h, FeelOf(rule, ctx)).Her_(her);
-            if (extra != null) b.Her_(extra);
             var args = new List<string>();
             foreach (var m in moves) { args.Add(m.Label); args.Add(m.Tag); }
             b.Choice(args.ToArray());
             foreach (var m in moves) { b.Branch(m.Tag); b.End(); }
             Hide();
             if (!Scenes.PlayInTalk(b, c => OnMove(h, t, ctx, step, moves.FirstOrDefault(m => m.Tag == c)), false)) Finish(s, t);
+        }
+
+        /// <summary>The rule of the line she just said: the labels of your options can answer that line ("when said=...").</summary>
+        private static void Said(Dictionary<string, string> ctx, DlgRule rule)
+        {
+            if (rule != null) ctx["said"] = rule.Id.Split('~')[0];
+            else ctx.Remove("said");
+            // What kind of line it was (small talk): a statement, a question or something she offers. The options answer that.
+            if (rule != null && rule.Shape != "") ctx["shape"] = rule.Shape;
+            else ctx.Remove("shape");
         }
 
         private static void OnMove(SaveData.Heroine h, PTopic t, Dictionary<string, string> ctx, int step, PMove m)
@@ -702,11 +730,13 @@ namespace Joojkk.CampusLife
                 MoveEffect(h, t, m);
                 DlgRule rr;
                 var react = Bank.Pick("react", ctx, key, out rr);
-                react = react != null ? Compose(react, ctx) : Stock(m.Q)[(int)GirlInfo.ToneOf(h)];
-                CampusLifePlugin.Log.LogInfo("Talk move: " + GirlInfo.FirstName(h) + " step " + step + " " + m.Id + " -> " + m.Q + ", rule " + (rr != null ? rr.Id : "(stock)"));
-                if (step < 3 && m.Q != Q.Bad && rr != null && rr.Opens.Length > 0) { Step(h, t, ctx, step + 1, null, react, null, rr); return; }
+                var goesOn = step < 3 && m.Q != Q.Bad && rr != null && rr.Opens.Length > 0;
+                react = react == null ? Stock(m.Q)[(int)GirlInfo.ToneOf(h)] : !goesOn && m.Q == Q.Good && !ctx.ContainsKey("hook") ? Close(react, ctx) : react;
+                CampusLifePlugin.Log.LogInfo("Talk move: " + GirlInfo.FirstName(h) + " step " + step + " " + m.Id + " '" + m.Label + "' -> " + m.Q + ", rule " + (rr != null ? rr.Id : "(stock)") + ": '" + react + "'");
+                if (goesOn) { Step(h, t, ctx, step + 1, null, react, rr); return; }
                 var b = new SceneBuilder(h, true);
                 b.Face(h, rr != null && rr.Feel != "" ? FeelOf(rr, ctx) : FaceFor(m.Q)).Her_(react);
+                if (m.Q != Q.Bad) SayClosing(b, h, ctx);
                 Hide();
                 if (!Scenes.PlayInTalk(b, _ => Finish(s, t), false)) Finish(s, t);
             }
@@ -740,16 +770,14 @@ namespace Joojkk.CampusLife
 
         // ================= moves =================
 
-        private static readonly string[] AllMoves = { "ask", "comfort", "share", "tease", "praise", "invite", "correct", "agree", "defend", "laugh", "admit", "hush", "deny", "thank", "noted" };
+        private static readonly string[] AllMoves = { "ask", "comfort", "share", "tease", "praise", "invite", "correct", "agree", "defend", "laugh", "admit", "hush", "deny", "thank" };
 
-        /// <summary>Three moves on what she said (from what her line opened, then the topic's usual ones), and "change the subject".</summary>
+        /// <summary>Three moves on what she said (from what her line opened, then the topic's usual ones; a line with a hook has only its own), and "change the subject".</summary>
         private static List<PMove> Moves(SaveData.Heroine h, PTopic t, Dictionary<string, string> ctx, DlgRule rule, int step)
         {
             var ids = new List<string>();
             if (rule != null) ids.AddRange(rule.Opens.Where(o => AllMoves.Contains(o)));
-            foreach (var d in DefaultMoves(t, ctx)) if (!ids.Contains(d)) ids.Add(d);
-            // Her last words were a like she let slip.
-            if (step == 1 && ctx.ContainsKey("newlike")) ids.Insert(0, "noted");
+            if (!ctx.ContainsKey("hook")) foreach (var d in DefaultMoves(t, ctx)) if (!ids.Contains(d)) ids.Add(d);
             // "correct" only where there is something wrong to correct, "comfort" where it hurts.
             if (!(ctx.ContainsKey("distorted") && ctx["distorted"] == "yes") && !(ctx.ContainsKey("subj") && ctx["subj"] == "player" && ctx.ContainsKey("valence") && Num(ctx, "valence") < 0)) ids.Remove("correct");
             var picked = ids.Take(3).ToList();
@@ -801,7 +829,6 @@ namespace Joojkk.CampusLife
                 case "hush": return "Ask her to keep it quiet";
                 case "deny": return "Deny everything";
                 case "thank": return "Thank her";
-                case "noted": return "Say you'll remember that";
                 default: return "Nod along";
             }
         }
@@ -826,13 +853,17 @@ namespace Joojkk.CampusLife
             var low = c.ContainsKey("low") && c["low"] == "yes" || op < 0;
             var close = h.relation >= 1 || h.isGirlfriend;
             var score = 0f;
+            // What her line opened lands (2026-10-31): praise on anything but her day always came back as "Flattery won't
+            // get you anywhere", comfort on a line that asked for it as "I didn't say I was sad".
+            var opened = rule != null && rule.Opens.Contains(move);
+            if (move == "invite" && rule != null && (rule.Shape == "offer" || rule.Shape == "show" || rule.Shape == "tell" || rule.Shape == "give")) return Q.Good; // she offered it herself
             switch (move)
             {
                 case "ask": score = 0.6f + (v.Verbose - 0.4f) + (Mathf.Abs(op) >= 1 ? 0.4f : 0f) - (v.Shy > 0.75f && !close ? 0.6f : 0f); break;
-                case "comfort": score = low ? 1f + v.Warm * 0.5f : -0.2f - (v.Blunt > 0.65f ? 0.4f : 0f); break;
+                case "comfort": score = low || opened ? 1f + v.Warm * 0.5f : -0.2f - (v.Blunt > 0.65f ? 0.4f : 0f); break;
                 case "share": score = 0.3f + v.Warm * 0.6f + (c.ContainsKey("likes") && c["likes"] == "yes" ? 0.6f : 0f); break;
                 case "tease": score = (v.Tease - 0.45f) * 2.2f + (v.Energy - 0.5f) * 0.6f - (low ? 1f : 0f) - (v.Shy > 0.6f ? 0.5f : 0f) + (close ? 0.3f : -0.3f); break;
-                case "praise": score = op > 0 || c["kind"] == "day" && !low ? 0.6f + v.Warm * 0.5f - (v.Blunt > 0.7f && !close ? 0.6f : 0f) : -0.1f; break;
+                case "praise": score = op > 0 || opened || c["kind"] == "day" && !low ? 0.6f + v.Warm * 0.5f - (v.Blunt > 0.7f && !close ? 0.6f : 0f) : -0.1f; break;
                 case "invite": score = (close ? 0.6f : -0.3f) + (h.favor >= 40 ? 0.4f : 0f) + (c.ContainsKey("likes") && c["likes"] == "yes" ? 0.4f : 0f) - (op < -1 ? 0.8f : 0f); break;
                 case "correct": score = c.ContainsKey("distorted") && c["distorted"] == "yes" ? 1.2f : (Social.Trust(h) >= 50 ? 0.3f : -0.5f); break;
                 case "agree": score = op != 0 ? 0.8f : 0.2f; if (v.Warm > 0.7f && op < 0 && c.ContainsKey("whobond") && Num(c, "whobond") >= 30) score -= 1f; break;
@@ -842,7 +873,6 @@ namespace Joojkk.CampusLife
                 case "hush": score = 0.2f + (v.Shy * 0.6f) + (Social.Trust(h) >= 50 ? 0.4f : -0.2f) - (v.Blunt > 0.75f ? 0.4f : 0f); break;
                 case "deny": score = c.ContainsKey("how") && c["how"] == "witness" ? -1f : c.ContainsKey("distorted") && c["distorted"] == "yes" ? 0.8f : -0.2f; break;
                 case "thank": score = 0.7f + v.Warm * 0.4f; break;
-                case "noted": score = 0.9f + v.Warm * 0.3f - (v.Blunt > 0.8f && !close ? 0.3f : 0f); break;
             }
             return score >= 0.8f ? Q.Good : score >= 0f ? Q.Neutral : Q.Bad;
         }
@@ -854,6 +884,41 @@ namespace Joojkk.CampusLife
             if (h == null) return "no girl";
             TalkTopics(h, S.Girl(GirlInfo.Key(h)));
             return GirlInfo.FirstName(h) + ": " + (LastTopics.Count == 0 ? "(none)" : string.Join(" | ", LastTopics.ToArray()));
+        }
+
+        /// offers and every small talk subject, without playing them (tell and confide need their effects, so they stay out).</summary>
+        internal static string AuditTopics(SaveData.Heroine h)
+        {
+            if (h == null) return "no girl";
+            var key = GirlInfo.Key(h);
+            var gs = S.Girl(key);
+            var topics = TalkTopics(h, gs).Where(t => t.Kind != "tell" && t.Kind != "confide" && t.Kind != "small").ToList();
+            var v = Voice.Of(h);
+            var subjects = GirlInfo.LikeIds.Select(l => "like:" + l).Concat(new[] { "place:" + (Places.CurrentId ?? ""), "lunch", "exams", "weather", "school", "weekend", "club", "friend", "birthday", "horoscope", "future" }).ToList();
+            if (v.Pet != "") subjects.Add("pet:" + v.Pet);
+            if (Teachers.IsTeacherVoice(h)) subjects.Add("teaching");
+            topics.AddRange(subjects.Select(p => new PTopic { Id = "st:" + p, Kind = "small", Subject = p, Label = SmallLabel(p), Score = 0.5f }));
+            var sb = new System.Text.StringBuilder();
+            foreach (var t in topics)
+            {
+                var ctx = Ctx(h, gs, t);
+                DlgRule rule;
+                var her = Bank.Pick(t.Kind, ctx, key, out rule) ?? Fallback(h, t);
+                if (rule != null && rule.Hook != "") ctx["hook"] = rule.Hook;
+                Said(ctx, rule);
+                sb.Append("\n  [").Append(t.Kind).Append(" ").Append(rule != null ? rule.Id : "fallback").Append("] ").Append(t.Label).Append(": ").Append(her);
+                foreach (var m in Moves(h, t, ctx, rule, 1))
+                {
+                    if (m.Id == "change") continue;
+                    ctx["move"] = m.Id;
+                    ctx["fit"] = m.Q.ToString().ToLowerInvariant();
+                    ctx["step"] = "1";
+                    DlgRule rr;
+                    var react = Bank.Pick("react", ctx, key, out rr);
+                    sb.Append("\n      ").Append(m.Label).Append(" (").Append(m.Q).Append(") -> ").Append(react ?? "(stock)").Append(" [").Append(rr != null ? rr.Id : "stock").Append(rr != null && rr.Opens.Length > 0 ? ", then " + string.Join(",", rr.Opens) : "").Append("]");
+                }
+            }
+            return GirlInfo.FirstName(h) + " (" + gs.Mood + "):" + sb;
         }
 
         /// <summary>The girl in the open talk, or null.</summary>

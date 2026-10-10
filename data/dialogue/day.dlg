@@ -7,6 +7,11 @@ on me.day
 - [How's your day going|How's today treating you|How has your day been], {name}?
 - [So|Hey], how's [the day|everything] going?
 - You doing okay today?
+- [How was class today?|Did today go okay?|Anything happen in class?]
+- [You look like you have a story.|You seem to be in a mood.] [What happened?|How's today treating you?]
+- [Got a minute?|Are you busy?] [How's your day so far?|I wanted to see how you're doing.]
+- [I haven't seen you all day.|Long time no see, huh?] [How's it going?|What have you been up to?]
+- [So, tell me about your day.|Tell me something about today.|What's new with you?]
 
 @rule me.day.who
 on me.day
@@ -14,6 +19,11 @@ when verb=ate_with kind=day
 - How was lunch with {who}?
 - [Did you|So you] have lunch with {who}? How was it?
 - [I saw you eating with {who}.|You and {who} at lunch, huh?] What did you two talk about?
+- [Everything okay with {who}?|Is {who} around today?] [Just asking.|How are things?]
+- [I saw you with {who} earlier.|You and {who} looked busy.] [How's your day?|What was that about?]
+- [Did you and {who} get lunch?|Were you with {who} all morning?]
+- [{Who} mentioned you.|I ran into {who}.] [How's your day been?|So, how are you?]
+- [How's {who} doing?|Is {who} treating you well?] [And you?|And how are you?]
 
 @rule me.day.fight
 on me.day
@@ -21,6 +31,11 @@ when verb=fought|insulted kind=day
 - I heard something happened with {who}. You okay?
 - Is everything alright between you and {who}?
 - [People are saying you and {who} argued.|I heard you and {who} fell out.] Want to talk about it?
+- [Are you okay after that thing with {who}?|I heard about you and {who}.] [Want to talk?|How are you holding up?]
+- [You and {who} still not talking?|Still fighting with {who}?]
+- [I noticed you avoiding {who}.|It's tense between you and {who}, huh?] [How's your day?|You all right?]
+- [Is it true you had it out with {who}?|Heard you and {who} went at it.]
+- [I won't ask about {who} if you don't want me to.|Forget {who} for a minute.] [How are you?|How's the rest of your day?]
 
 @rule me.day.madeup
 on me.day
@@ -28,6 +43,11 @@ when verb=made_up kind=day
 - So you and {who} are good again?
 - [I saw you and {who} talking again.|Heard you patched things up with {who}.] Glad?
 - [You and {who} made up, right?|Peace with {who} at last?] That's good to hear.
+- [So you and {who} are good now?|All fixed with {who}?]
+- [You look better since you talked to {who}.|Glad it worked out with {who}.] [How's your day?|You okay?]
+- [Who apologized first, you or {who}?|Did {who} say sorry?]
+- [I saw you laughing with {who} again.|You and {who} are back to normal?] [That's nice.|That's a relief.]
+- [I knew you and {who} would be fine.|Told you it would blow over with {who}.]
 
 @rule me.day.dating
 on me.day
@@ -35,6 +55,11 @@ when verb=started_dating kind=day
 - So... you and {who}, huh?
 - [Word is you're going out with {who} now.|You and {who}? Since when?]
 - [So it's true about you and {who}?|Congratulations, I think? You and {who}.]
+- [So when did you and {who} happen?|You kept that quiet. You and {who}?]
+- [People won't stop talking about you and {who}.|The whole class knows about you and {who}.]
+- [Are you happy with {who}?|Is {who} good to you?]
+- [You and {who}, huh? I didn't see that coming.|Wait, {who}? Really?]
+- [Should I congratulate you for {who}?|So I hear you're taken. By {who}?]
 
 @rule me.day.close
 on me.day
@@ -42,296 +67,9 @@ when rel=girlfriend|lover
 - Hey, you. How's [my favorite person|your day] [doing|going]?
 - [There you are.|Hey.] How's your day been?
 - [Hi, beautiful.|Hey, you.] [Did you miss me today?|Tell me about your day.]
+- [Was today okay?|How was your day, really?] [You can tell me.|I'm all yours.]
+- [I thought about you in class.|I've been waiting to see you.] [How's your day?|Tell me everything.]
+- [Come here. How are you?|Good to see you. Rough day?]
+- [Did you eat?|Did you sleep okay?] [I worry, you know.|How are you feeling?]
+- [Anything I should know about today?|So, what's my girl been up to?]
 
-# ---------------- her answer, by mood ----------------
-@rule day.fine
-on day
-when mood=none
-opens ask,share,tease
-- [It's been pretty normal.|Nothing special, really.|Same as always.] [Classes, friends, the usual.|Just a regular day.]
-- [Normal, I guess.|Pretty okay.] [Nothing's happened yet.|Nothing worth telling... yet.]
-- [Hm, it's fine.|Not bad.] [How about yours?|What about you?]
-
-@rule day.cheerful
-on day
-when mood=cheerful
-opens ask,tease,share
-feel smile
-- [Really good, actually!|Great!|It's been a good one!] [Everything's going my way today.|I don't even know why, I'm just in a good mood.|Even the teachers were nice today.]
-- [I'm in such a good mood today.|Today's one of those days where everything clicks.] [Can you tell?|It shows, huh?]
-- [It's been lovely.|Honestly? Great.] [I hope it stays like this.|I could get used to days like this.]
-
-@rule day.hungry
-on day
-when mood=hungry
-opens invite,tease,share
-- [Honestly? I'm starving.|I'm so hungry I can't think.|My stomach has been growling all class.] [I skipped breakfast.|Lunch can't come soon enough.|I'd kill for some bread right now.]
-- [Ugh, all I can think about is food.|Is it lunch yet? Please say yes.]
-- [Food. I need food.|My stomach is louder than the teacher.] [Do you have anything?|Is the cafeteria still open?]
-
-@rule day.hungry.lunch
-on day
-when mood=hungry period=lunch
-opens invite,tease
-- [Perfect timing, I'm starving.|Finally, lunch.] [I could eat a whole bento by myself. Two, maybe.|I've been waiting for this all morning.]
-- [Lunchtime at last!|Don't get between me and lunch.] [I'm not sharing. Okay, maybe a little.|I'm running to the store.]
-- [Lunch!|Thank god, lunch.] [I'm going to eat so much.|Want to eat together?]
-
-@rule day.bored
-on day
-when mood=bored
-opens invite,tease,ask
-- [Boring.|So boring.|Slow. So slow.] [Nothing's happening.|Every class felt three hours long.|I've been staring at the clock all day.]
-- [I'm bored out of my mind.|Today is dragging.] [Entertain me?|Got anything fun?|Save me, please.]
-- [Today's been dull.|Nothing interesting ever happens.] [Do something crazy.|Even the clouds are boring.]
-
-@rule day.stressed
-on day
-when mood=stressed
-opens comfort,ask,invite
-feel worried
-- [Kind of rough.|Not great, honestly.|Stressful.] [I can't stop worrying about {mything}.|I've got so much to do.|I feel like I'm falling behind.]
-- [Honestly? I'm a bit overwhelmed.|Don't ask...] [It's {mything}. It's all too much right now.|There's too much going on.]
-- [Stressed, honestly.|Too much, too fast.] [My to-do list keeps growing.|I can't catch a break.]
-
-@rule day.stressed.exam
-on day
-when mood=stressed exam=yes
-opens comfort,invite,ask
-feel worried
-- [The exams.|It's the exams.] [I studied all night and I still feel like I know nothing.|My head is full of formulas.|If I fail, my parents will...]
-- [Exam week is killing me.|I can't stop thinking about the exams.] [How are you so calm?|Are you ready?]
-- [Exams are breathing down my neck.|I keep blanking on everything.] [Quiz me?|I'm doomed.]
-
-@rule day.lonely
-on day
-when mood=lonely
-opens comfort,invite,ask
-feel sad
-- [Kind of lonely, actually.|Quiet. Too quiet.|Eh... a bit lonely.] [My friends were all busy today.|I ate by myself.|Nobody's really been around.]
-- [It's been a long day by myself.|I haven't really talked to anyone today.] [...Until now, I guess.|So, thanks for stopping.]
-- [Kind of empty, today.|Lonely, if I'm honest.] [Everyone had somewhere to be.|It's nice that you came.]
-
-@rule day.flirty
-on day
-when mood=flirty
-opens tease,praise,invite
-feel smile
-- [Better now that you're here.|Mm, it just got better.|Pretty good... and getting better.]
-- [I've been in a strange mood all day.|I don't know, I feel kind of... restless today.] [Is that weird?|Don't look at me like that.]
-- [Good. Very good.|My day? Mm, interesting.] [Thinking about someone.|Getting more interesting.]
-
-@rule day.sleepy
-on day
-when mood=sleepy
-opens tease,comfort,ask
-- [Sleepy...|So sleepy.|Mmh... tired.] [I stayed up way too late last night.|I almost fell asleep in class.|The teacher caught me nodding off.]
-- [*yawn* Sorry.|Don't mind me, I'm half asleep.] [Last night was a mistake.|I need a nap. Badly.]
-- [My eyes keep closing.|Is it bedtime yet?] [Talk slowly.|I'm running on empty.]
-
-@rule day.upset
-on day
-when mood=upset
-opens comfort,ask
-feel pout
-- [Don't ask.|Bad.|Honestly? Awful.] [I don't want to talk about it.|Everything's going wrong.|Just one of those days.]
-- [I'm... not in a good mood today.|Today can just end already.] [Sorry. It's not you.|Just... don't take it personally.]
-- [Terrible, okay?|Not good.] [Can we not?|I'd rather not get into it.]
-
-# ---------------- something that happened to her today ----------------
-@rule day.lunch.with
-on day
-when realverb=ate_with kind=day how=participant
-opens ask,tease,share
-feel smile
-- [It was nice!|Lunch with {who} was fun.] [We talked the whole time.|{Who} shared her side dish with me.|We ended up laughing about something stupid.]
-- [Oh, you saw?|Yeah, we ate together.] [{Who}'s easy to talk to.|I like eating with {who}.]
-- [Lunch was the best part of the day.|{Who} and I ate on the roof.] [{Who} is so funny.|The view was great.]
-
-@rule day.fight.with
-on day
-when realverb=fought|insulted kind=day how=participant
-opens comfort,ask,defend
-feel sad
-- [...You heard about that?|It was nothing.|We had words.] [{Who} said something and I snapped.|I don't even know how it started.|I'm still mad, honestly.]
-- [Don't get me started on {who}.|Me and {who}... it's complicated right now.]
-- [{Who} and I aren't talking.|Ugh, {who}.] [She knows what she did.|I don't want to talk about it.]
-
-@rule day.madeup.with
-on day
-when realverb=made_up kind=day how=participant
-opens praise,ask,share
-feel smile
-- [Yeah, we're okay now.|We talked it out.] [I'm glad, honestly. I missed {who}.|It was stupid of us to fight.]
-- [{Who} and I made up.|We're fine now, {who} and me.] [I said sorry first.|It feels good.]
-- [Yeah, me and {who} are back to normal.|It's over. We're friends again.] [What a relief.|We laughed about it after.]
-
-@rule day.dating.with
-on day
-when realverb=started_dating kind=day how=participant
-opens tease,ask,praise
-feel shy
-- [Ah... so people are talking already?|Y-yeah. Me and {who}.] [It just sort of happened.|Don't make a big deal out of it.|I'm still not used to saying it.]
-- [Um... yes. {Who} and I are going out.|So, it's official. Me and {who}.] [I'm still pinching myself.|Please don't tease me.]
-- [You found out about {who}?|Hehe... yeah.] [It's real.|Be happy for me?]
-
-# ---------------- voices: the same moods, the way some girls say them ----------------
-@rule day.cheerful.genki
-on day
-when mood=cheerful voice=genki|energetic
-opens ask,tease,invite
-feel laugh
-- [AMAZING!|The best!|Super good!] [I ran all the way here!|I got a perfect score on the quiz!|I feel like I could do anything today!]
-- [GREAT!|Awesome!] [Today's my lucky day!|Everything's going my way!]
-- [Fantastic!|Couldn't be better!] [I won at rock-paper-scissors five times!|The sun's out and I'm full of energy!]
-
-@rule day.fine.cool
-on day
-when mood=none voice=cool|serious|proper
-opens ask,share
-- [Uneventful.|Productive enough.|Nothing to report.] [Classes went as planned.|I finished my assignments.]
-- [It's a day.|It's fine.] [Why do you ask?|Is there a reason you want to know?]
-- [Ordinary.|Fine.] [Nothing worth mentioning.|I have no complaints.]
-
-@rule day.fine.tsundere
-on day
-when mood=none voice=tsundere
-opens tease,ask
-feel pout
-- [W-why do you care?|What's it to you?] [It was fine. Totally fine.|...It was okay, if you must know.]
-- [Not that it matters to you, but fine.|My day? Hmph.] [Don't think I was waiting for you.|It was... fine.]
-- [Stop asking like you care.|It was average, okay?] [...Thanks for asking, I guess.|Whatever.]
-
-@rule day.fine.gyaru
-on day
-when mood=none voice=gyaru|open
-opens tease,share,invite
-- [Ugh, so-so.|Meh.|Kinda chill.] [Class was dead, but whatever.|I spent half of it doing my nails under the desk.|Nothing cute happened yet.]
-- [Same old, same old.|Eh, chill.] [Need something fun to happen.|Whatcha got for me?]
-- [Lowkey boring, ngl.|Mid, honestly.] [Teacher confiscated my phone.|Spice it up for me?]
-
-@rule day.fine.shy
-on day
-when mood=none voice=shy|bookish
-opens ask,share
-feel shy
-- [Ah... it's been okay.|N-nothing special.] [I read during break.|I just... sat in my seat, mostly.]
-- [It was quiet.|U-um, it was fine.] [Like usual.|Thank you for asking.]
-- [Nothing happened, really.|Okay, I think.] [I like quiet days.|Is that boring?]
-
-@rule day.sleepy.lazy
-on day
-when mood=sleepy voice=lazy|airhead
-opens tease,invite
-- [Mmh... what day is it?|Was I asleep just now?] [School should start at noon.|I dreamed about pudding.]
-- [Zzz... huh? Oh, hi.|Five more minutes...] [I wasn't sleeping.|Sleep is the best class.]
-- [Tired. So tired.|Mmmh.] [My bed is calling me.|Carry me home?]
-
-@rule day.lonely.close
-on day
-when mood=lonely rel=girlfriend|lover
-opens comfort,invite
-feel sad
-- [I missed you today.|Where were you all morning?] [I kept looking for you between classes.|It's lonely when you're not around.]
-- [I kept thinking of you all day.|It's better now that you're here.] [Stay with me a bit?|Don't leave yet.]
-- [I waited for you at the gate.|The day felt so long without you.] [Silly, right?|Hug?]
-
-@rule day.stressed.club
-on day
-when mood=stressed period=after|club
-opens comfort,ask,invite
-feel worried
-- [The {club} is a mess right now.|Club stuff.] [Everyone's counting on me.|We're behind on everything.]
-- [The {club} is driving me crazy.|We've got a deadline at the {club}.] [I need a break.|Tell me something nice.]
-- [I'm exhausted from the {club}.|Club drama again.] [I just want to sleep.|Don't ask.]
-
-
-# Her day, where the place and the weather change what she says (the rain, the library, a fight on her mind).
-
-@rule day.rain.library.books.fight
-on day
-when kind=day placeid=library l_study=yes wet=yes fight=yes
-opens comfort,ask
-feel shy
-- [I came to the library to read with the rain on the windows.|Rain, a book, and a quiet corner. That's my day.|I've been reading here since lunch, listening to the rain.] [It helps me forget about {fightwho}. A little.|I needed it, after the fight with {fightwho}.|Better than thinking about {fightwho}.]
-- [Honestly? The rain is the best part of today.|My day's been... quiet. On purpose.] [{Fightwho} and I had a fight, so I hid in here with a book.|After {fightwho}, I just wanted rain and pages.]
-- [It's the kind of day you read through.|I'm on my second book already.] [The rain helps. So does not seeing {fightwho}.|Don't ask about {fightwho}. Ask about the book.]
-
-@rule day.rain.library.books
-on day
-when kind=day placeid=library l_study=yes wet=yes
-opens share,invite
-feel smile
-- [Perfect, actually. Rain outside, a book in here.|I've been reading all afternoon. The rain makes it better.|Rainy days are library days.] [I didn't even notice the time.|I'm halfway through a mystery.|Want to sit with me?]
-- [Quiet. Rainy. Wonderful.|I found the best seat by the window.] [Exactly how I like it.|You can hear every drop.]
-- [The rain chased everyone else away from my corner.|The library smells like rain and paper today.] [Lucky me.|I love it.]
-
-@rule day.rain.outside.lover
-on day
-when kind=day wet=yes rainlover=yes
-opens share,invite,tease
-feel smile
-- [Great! It's raining!|Best day this week. Look at it pour!|I went out in the rain at lunch. Don't tell.] [Everyone else is grumpy. I'm not.|I love days like this.|I'm still a little damp.]
-- [Rainy days make me happy. I can't explain it.|I walked here the long way, in the rain.] [Weird, right?|On purpose.]
-- [I wish it rained every day.|The rain's the only thing I like about today's schedule.] [Sorry, sunshine people.|Well, and you.]
-
-@rule day.rain.energetic
-on day
-when kind=day wet=yes tone=energetic
-opens tease,invite
-feel pout
-- [Terrible! It's raining!|Ugh, the rain ruined everything.|Practice got moved inside, so now we're all squashed in the gym.] [I wanted to run!|I'm going stir crazy.|Thanks, sky.]
-- [I got splashed by a car this morning.|My umbrella flipped inside out.] [Full splash. Head to toe.|Everyone saw!]
-- [I'm SO bored. Rain means no going outside.|Indoor lunch again.] [Entertain me!|Save me.]
-
-@rule day.rain.gentle
-on day
-when kind=day wet=yes tone=gentle
-opens share,comfort
-feel smile
-- [It's been a slow day... the rain makes everything soft.|Quiet. I like rainy days, a little.|I've been watching the rain from the window.] [I could fall asleep.|It's peaceful.|I hope it doesn't stop yet.]
-- [My socks got wet this morning, but it's fine.|I lent my umbrella to someone and got rained on.] [Hehe.|It was worth it.]
-- [Rainy days make me want to drink tea.|I'm a little sleepy. It's the rain.] [And talk.|Sorry.]
-
-@rule day.rain.cool
-on day
-when kind=day wet=yes tone=cool
-opens share,ask
-- [Fine. Fewer people outside. Good.|It's raining. The halls are packed. Not ideal.|Quiet, until everyone crammed inside.] [Tolerable.|I'm managing.|I'd rather be home.]
-- [I brought an umbrella. Some people didn't.|Wet shoes everywhere.] [They suffer.|Annoying.]
-- [Rain suits my mood.|It's a good day to say nothing.] [Don't read into it.|Mostly.]
-
-@rule day.rain.teasing
-on day
-when kind=day wet=yes tone=teasing
-opens tease,invite
-feel smile
-- [Rainy and boring. Until now~|Wet. Dull. But you showed up.|Rain all day. I was hoping someone would rescue me.] [Lucky me.|Things are looking up.|Was it you?]
-- [I got caught in the rain. See-through shirts are a hazard, you know.|My hair's a disaster today.] [Don't stare.|Say it's cute.]
-- [Rainy days are made for cuddling indoors. Just saying.|The rain made everyone gloomy. Not me.] [Hint.|I'm too cute to be gloomy.]
-
-@rule day.storm
-on day
-when kind=day weather=storm
-opens comfort,share
-feel worried
-- [The storm's freaking me out.|Did you hear that thunder?|I jumped so high at the last one.] [I can't concentrate.|It's so loud.|Don't laugh.]
-- [I hope the trains run home.|They might cancel club activities.] [I'm worried.|Probably.]
-- [The lights flickered during class.|The wind broke someone's umbrella.] [Everyone screamed.|Poor thing.]
-
-@rule day.rainlater
-on day
-when kind=day rainlater=yes
-opens share,invite
-- [Fine, but it looks like rain.|Okay so far. The sky's getting dark, though.|Good! I just hope the rain holds off.] [I forgot my umbrella.|I have practice later.|Fingers crossed.]
-- [Everyone's talking about the rain later.|The forecast said heavy rain this afternoon.] [Should I leave early?|Great.]
-- [I can smell it coming.|It's that heavy, quiet air before the rain.] [It's going to pour.|I kind of like it.]
-
-@rule day.fight.place
-on day
-when kind=day fight=yes
-opens comfort,ask
-feel sad
-- [Not great. {Fightwho} and I had a fight.|Honestly? Bad. Me and {fightwho} aren't talking.|I've been avoiding {fightwho} all day.] [It's stupid.|I don't want to make it bigger.|I'm tired.]
-- [I keep replaying the fight with {fightwho}.|Everything reminds me of {fightwho} today.] [Ugh.|I hate it.]
-- [Let's not talk about {fightwho}.|My day's... fine. Except {fightwho}.] [Distract me?|Ask me something else.]

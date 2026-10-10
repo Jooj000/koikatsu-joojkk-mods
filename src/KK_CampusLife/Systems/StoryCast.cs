@@ -320,6 +320,8 @@ namespace Joojkk.CampusLife
                 }
                 var card = new ChaFileControl();
                 ChaFile.CopyChaFile(card, h.charFile);
+                card.pngData = h.charFile.pngData;
+                card.facePngData = h.charFile.facePngData; // left out by CopyChaFile
                 card.parameter.personality = EverydayPersonality(h);
                 seat.SetCharFile(card);
                 seat.charFileInitialized = true;
@@ -402,6 +404,27 @@ namespace Joojkk.CampusLife
             return true;
         }
 
+        /// <summary>
+        /// The game fills the desires when the Action scene starts, so a seat taken after that (graduate, freed teacher) has
+        /// none, and the Refresh of a loaded save drops those of the story heroines already walking. KK_SkinEffects reads
+        /// them without checking: the throw kills NPC.Start, "initialized" never comes and NPCLoadAll waits forever
+        /// ("Going to: Classroom 2-1"). It needs a result pending, so it only happened on some days.
+        /// </summary>
+        private static void NoOneWithoutDesires(ActionScene act)
+        {
+            var ctrl = act != null ? act.actCtrl : null;
+            var targets = DicTarget != null && ctrl != null ? DicTarget.GetValue(ctrl) as IDictionary : null;
+            if (targets == null) return;
+            var who = Singleton<Manager.Game>.Instance.HeroineList.Where(h => h != null && h.fixCharaID == 0)
+                .Concat(act.npcList.Where(n => n != null && n.heroine != null).Select(n => n.heroine)).Distinct()
+                .Where(h => !targets.Contains(h)).ToList();
+            foreach (var h in who)
+            {
+                var ok = GiveDesires(act, h);
+                CampusLifePlugin.Log.LogInfo("Desires for " + GirlInfo.FullName(h) + (ok ? ": entry added before loading" : ": could not be added"));
+            }
+        }
+
         /// <summary>Wraps NPCLoadAll: after the game's own loading, the other story heroines join as normal students.</summary>
         public static IEnumerator Wrap(ActionScene act, IEnumerator original)
         {
@@ -409,7 +432,9 @@ namespace Joojkk.CampusLife
             {
                 try { GraduateFinished(); }
                 catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
-                try { Teachers.FreeFinished(); }
+                try { Teachers.FreeFinished(); Teachers.MendPortraits(); }
+                catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+                try { NoOneWithoutDesires(act); }
                 catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
             }
             while (true)

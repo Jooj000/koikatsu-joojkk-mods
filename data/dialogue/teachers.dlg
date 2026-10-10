@@ -1,0 +1,432 @@
+# Teachers: "as professoras só ficam como alunas no código, mas continuam como professoras".
+# A freed teacher sits in a student seat only in the code: {role} is still teacher, {free} yes once her event is over.
+# {tcause} why she is in this mood today, from her job (Teachers.Cause): raise | results | praise | grading | lessons |
+# staffparty | parents | principal | complaint | ignored | meeting | staffroom | nolunch. {whorole} and {otherrole}:
+# teacher | student, for the person the fact is about and the other girl in the talk with both. Names of teachers come
+# with -sensei in {who}, {who2}, {src} and {other}.
+
+# ================= the player's own lines =================
+@rule me.day.teacher
+on me.day
+when role=teacher
+- [Good morning, sensei.|Hello, sensei.|Sensei, hi.] [How's your day going?|Busy day?|How are the classes today?]
+- [You look busy, sensei.|Got a minute, sensei?] [How have you been?|Is it a good day?]
+- [Sensei, how's the staff room today?|How's teaching treating you today, sensei?]
+
+@rule me.day.teacher.close
+on me.day
+when role=teacher rel=girlfriend|lover
+- [Hey... nobody's around, so: how's your day?|Sensei. How's my favorite teacher?]
+- [Hard day at work?|How's your day, really?] [You can tell me.|I'm listening.]
+- [Did you get any rest, sensei?|You look like you need a break.]
+
+@rule me.small.future.teacher
+on me.small
+when subject=future role=teacher
+- [Did you always want to be a teacher?|Do you see yourself here in five years?|Will you stay at this school?]
+- [What would you do if you weren't teaching?|Any plans beyond this school, sensei?]
+- [Do you ever think about doing something else?|What was your dream at my age?]
+
+@rule me.gossip.teacher
+on me.gossip
+when role=teacher
+- [Sensei, what's the talk in the staff room?|Heard anything interesting from the other teachers?]
+- [You must hear everything, sensei.|Teachers talk too, right?] [Any news?|What's going around?]
+- [Anything happen that students aren't supposed to know?|Come on, sensei, one little secret?]
+
+# ================= how her day is, from her job =================
+# ================= your options when she tells you about her day =================
+@rule move.comfort.teacher
+on move.comfort
+when kind=day role=teacher
+- [Tell her she's a good teacher|Say the class is lucky to have her|Tell her she works too hard|Offer to help with something]
+
+@rule move.tease.teacher
+on move.tease
+when kind=day role=teacher
+- [Joke about teachers' lives|Ask for easier homework|Tease her, sensei or not|Ask if that means no test]
+
+# ================= when you ask her why =================
+@rule react.comfort.teacher
+on react
+when move=comfort role=teacher fit=good
+feel smile
+- [Now the student is comforting the teacher.|Look at you, taking care of your teacher.] [I should be embarrassed.|Thank you. Really.]
+- [That helped more than you'd think.|I'll get through {mything} now.] [Don't let it go to your head.|Back to work, then.]
+- [You're a good kid.|You're kinder than I expected.] [I'll go easier on you in class.|That wasn't a bribe, was it?]
+
+@rule react.praise.teacher
+on react
+when move=praise role=teacher fit=good
+feel shy
+- [Flattery won't change your grade.|You know I can't give you points for that.] [...But thank you.|...Say it again.]
+- [Students don't usually say that to me.|Oh my.] [I'm supposed to be the one handing out praise.|I don't know where to look.]
+- [Ahem. Thank you.|That's very sweet.] [Now, back to your studies.|I'll remember that at report time. Kidding.]
+
+@rule react.tease.teacher
+on react
+when move=tease role=teacher fit=good|neutral
+feel laugh
+- [Are you teasing your teacher?|Bold, for someone with a test on Monday.] [{laugh}|I'm writing that down.]
+- [I can give you extra homework, you know.|Do you want to clean the classroom?] [{laugh}|Just a reminder.]
+- [You wouldn't talk like that in class.|Say that in front of everyone.] [Coward.|{laugh}]
+
+@rule react.invite.teacher.free
+on react
+when move=invite role=teacher free=yes fit=good|neutral
+feel smile
+- [Going out with a student...|If anyone at school found out...] [Somewhere far from here, then.|Fine, but I never said yes.]
+- [I'd have to pretend I ran into you by accident.|If anyone asks, it's extra tutoring.] [Understood?|Don't smile like that.]
+- [I still have papers to grade.|That's a terrible idea.] [They can wait.|Which is why I'm saying yes.]
+
+@rule react.invite.teacher.gf
+on react
+when move=invite role=teacher rel=girlfriend|lover fit=good
+feel love
+- [Far from school, like always.|Not near the station, someone might see.] [I'll be there.|I've been looking forward to it.]
+- [Out of uniform, please.|Call me by my name when we're there.] [Just for the day.|You know the rules.]
+- [I'll bring the car around the corner.|Wait for me two stops down.] [Don't be late.|Hehe.]
+
+# ================= the two of you: she has a job to lose =================
+@rule us.teacher
+on us
+when role=teacher
+opens share,tease,ask
+feel smile
+- [About {mything}... you know you're my student, right?|I keep thinking about {mything}.] [I shouldn't.|That's what worries me.]
+- [Don't bring up {mything} near the staff room.|Keep {mything} between us.] [Please.|I mean it.]
+- [Other teachers have normal problems.|I've been a teacher for years, and then {mything}.] [What are you doing to me?|Hm.]
+
+@rule us.teacher.dating
+on us
+when role=teacher rel=girlfriend|lover
+opens share,tease,invite
+feel love
+- [In class I call you by your last name, and then {mything}.|Every time I take attendance I think of {mything}.] [It's torture.|Don't you dare smile back.]
+- [I could lose my job, you know.|If the principal knew...] [And I still don't regret {mything}.|I'd do {mything} again.]
+- [After you graduate, nobody can say anything.|We only have to hide until you graduate.] [I'm counting the days.|Be patient with me.]
+
+@rule us.teacher.h
+on us
+when role=teacher realverb=had_h
+opens share,tease,invite
+feel shy
+- [We can't talk about that here.|Lower your voice.] [There's a class next door.|I'm still your teacher.]
+- [I stood in front of the class the next morning.|I couldn't look at your desk.] [After what we did.|I lost my place in the textbook.]
+- [I've never done anything like that with a student.|I told myself it would be once.] [...It wasn't, was it?|You're a bad influence.]
+
+# ================= what they say about you and a teacher =================
+@rule you.h.teacher.saw
+on you
+when realverb=had_h how=witness whorole=teacher role=student
+opens admit,hush,tease,deny
+feel worried
+- [You did it with the teacher?!|With {who}?! Your own teacher?!|I saw you and {who}. {who}!] [In the {fplace}!|I'll never sit through that class again.|How am I supposed to look at either of you?]
+- [I know what I saw {when}.|{When}, in the {fplace}...] [You and a teacher.|That was {who}, wasn't it?] [Do you know what happens if the school finds out?|She could lose her job!]
+- [Of all the people...|I thought I'd seen everything.] [A teacher?!|{who}?!] [What is wrong with you?|Tell me I imagined it.]
+
+@rule you.h.teacher.heard
+on you
+when realverb=had_h how=heard|rumor whorole=teacher role=student
+opens deny,admit,hush,tease
+feel worried
+- [Is it true you did it with the teacher?!|People are saying you and {who}...] [With a teacher?!|That can't be real.]
+- [The whole class is whispering about you and {who}.|I heard something crazy.] [You didn't, right?|Tell me you didn't.]
+- [Please say it's a rumor.|Someone says you've been staying after school with {who}.] [Because of the "extra lessons".|And not for homework.]
+
+@rule you.h.teacher.gf
+on you
+when realverb=had_h whorole=teacher role=student rel=girlfriend|lover
+opens admit,deny,comfort
+feel pout
+- [You cheated on me with a teacher?!|With {who}! Our teacher!] [How do I sit in that class now?|Was I not grown up enough for you?]
+- [I have to look at her at the blackboard!|She takes attendance and says my name!] [After what you did with her!|Do you have any idea how that feels?]
+- [{who}, of all people.|A teacher. You chose a teacher.] [Explain. Now.|I can't even tell anyone.]
+
+@rule you.h.teacher.open
+on you
+when realverb=had_h whorole=teacher role=student profile=open
+opens tease,admit,hush
+feel laugh
+- [Wait, wait. You and the teacher?!|{who}?! Seriously?!] [Legend.|I need every detail.]
+- [So that's why your grades went up!|Extra lessons, huh?] [Ha!|What's next, the principal?]
+- [Okay, I'm impressed.|I didn't think you had it in you.] [A teacher!|Is she different after class?]
+
+@rule you.romance.teacher
+on you
+when realverb=started_dating|dated|kissed|flirted|held_hands whorole=teacher role=student
+opens deny,admit,tease
+feel worried
+- [You and the teacher?!|What's going on with you and {who}?] [She's a teacher!|You know that's not allowed, right?]
+- [I heard about you and {who}.|People saw you with {who}.] [A teacher, really?|Are you trying to get expelled?]
+- [Is that why you stay after class?|So {who} is why you've been so eager in class?] [I have questions.|Unbelievable.]
+
+@rule you.h.student.teacher
+on you
+when realverb=had_h role=teacher whorole=student
+opens admit,hush,deny
+feel serious
+- [With one of my students.|I teach her, you know.|{who} sits in my class.] [I saw enough {when}.|Do I need to call your parents?]
+- [As a teacher I should report this.|We need to talk, you and I.] [Sit down.|Close the door.]
+- [I can't pretend I didn't see that.|Do you know what the rules say?] [{who} is my responsibility.|Give me one reason not to go to the principal.]
+
+@rule you.h.student.teacher.jealous
+on you
+when realverb=had_h role=teacher whorole=student rel=girlfriend|lover
+opens admit,deny,comfort
+feel sad
+- [With {who}.|A girl from my own class.] [Someone your age.|I suppose that makes sense. I suppose.]
+- [I have to teach her tomorrow.|I can't exactly complain to anyone, can I?] [Who would I tell?|That's the worst part.]
+- [I knew this could happen.|I'm older than you, I know how this goes.] [I still hate it.|Say something.]
+
+@rule you.h.colleague
+on you
+when realverb=had_h role=teacher whorole=teacher
+opens admit,hush,tease
+feel serious
+- [{who} told me.|I share a staff room with {who}, you know.] [We need to have a talk, young man.|Do you think teachers don't talk?]
+- [With my colleague.|With {who}, of all the teachers.] [I'll be sitting next to her at the meeting.|How bold.]
+- [I can't decide who to scold first.|Two teachers. You have some nerve.] [You or her.|Sit down.]
+
+@rule you.romance.student.teacher
+on you
+when realverb=started_dating|dated|kissed|flirted|held_hands role=teacher whorole=student
+opens admit,tease,deny
+feel smile
+- [So you and {who}.|I notice who passes notes in my class.] [Young love.|Don't let it hurt your grades.]
+- [I saw you with {who}.|Teachers see everything, you know.] [Be good to her.|Keep it out of the classroom.]
+- [{who} has been staring at the door all day.|I wonder why {who} is so distracted.] [I think I know why.|Hm?]
+
+@rule you.peep.teacher
+on you
+when realverb=seen_girls_room|seen_lockers role=teacher
+opens deny,admit,hush
+feel serious
+- [I should give you detention until graduation.|A teacher can't ignore that.] [What were you doing in there?|Explain yourself.]
+- [The girls' side is off limits, as you know.|I heard where you were.] [I'll have to tell your homeroom teacher.|That was a warning. The only one.]
+- [Do you want me to call your parents?|That's a matter for the guidance office.] [Think carefully before you answer.|Well?]
+
+# ================= gossip about a teacher, and gossip from a teacher =================
+@rule gossip.teacher.couple
+on gossip
+when realverb=started_dating|engaged|dated|had_h|seen_together whorole=teacher role=student
+opens ask,agree,defend
+feel shy
+- [Did you hear about {who}?!|This is about a teacher!] [{Deed}!|Word is that {deed}.] [The whole class is losing it.|I can't look at her in class.]
+- [Nobody's supposed to know this.|Promise you won't tell.] [{Who}! Our teacher!|It's {who}.] [Apparently {deed}.|{Src} told me.]
+- [Teachers are people too, I guess.|I never thought of a teacher like that.] [But {deed}?|Still, {who}...]
+
+@rule gossip.teacher.fight
+on gossip
+when realverb=fought|insulted whorole=teacher role=student
+opens ask,agree,defend
+feel worried
+- [{Who} got into it with someone.|There was a scene with {who}.] [{Deed}.|Nobody dared to breathe.]
+- [You should've seen {who}.|I've never seen {who} like that.] [The whole hallway went quiet.|{Deed}, can you believe it?]
+- [Don't tell anyone I told you.|It's all over the school.] [{Deed}.|A teacher, of all people.]
+
+@rule gossip.asteacher.student
+on gossip
+when role=teacher whorole=student
+opens ask,agree,defend
+feel serious
+- [I shouldn't repeat this about a student.|A teacher hears things.] [{Deed}.|{Who}, from my class...] [Keep an eye on her for me.|I worry about that girl.]
+- [Students think we don't notice.|We notice everything.] [{Deed}.|I know about {who}.] [I'll have a word with her.|Hm.]
+- [{Who} is a good kid.|{Who} has more going on than her grades show.] [Still, {deed}.|I wish she'd come to me.]
+
+@rule gossip.asteacher.colleague
+on gossip
+when role=teacher whorole=teacher
+opens ask,agree,defend
+feel smile
+- [This doesn't leave the staff room.|You didn't hear it from me.] [{Deed}.|It's about {who}.] [Teachers gossip worse than you lot.|Don't quote me.]
+- [{Who} and I share a desk, so I'd know.|The staff room has been buzzing.] [{Deed}.|Apparently {deed}.]
+- [I respect {who}, of course.|{Who} is a fine colleague.] [But {deed}.|Even so.]
+
+# ================= small talk that a student would answer differently =================
+@rule small.exams.teacher
+on small
+when subject=exams role=teacher
+opens ask,tease,comfort
+- [Don't ask me what's on the test.|I wrote the exam last night.] [Nice try.|It's fair. Mostly.]
+- [You think exams are hard for you?|Who do you think has to grade all of that?] [I do.|Forty papers, per class.]
+- [Study the chapters I told you to.|If you listened in class, you'll be fine.] [Hint, hint.|That's all you get.]
+
+@rule small.school.teacher
+on small
+when subject=school role=teacher
+opens ask,share,tease
+- [School looks different from the front of the room.|The staff room is another world.] [You'd be surprised.|Students have no idea.]
+- [Your year is a lively one.|I've seen a lot of classes pass through.] [I'll miss you lot.|That's not a compliment.]
+- [The building's old, the budget's small.|We do what we can here.] [I wouldn't trade it, though.|Mostly.]
+
+@rule small.future.teacher
+on small
+when subject=future role=teacher
+opens ask,share,comfort
+- [I wanted to be a teacher since I was your age.|I had a teacher who changed my life.] [I'm trying to be that for someone.|That's why I'm here.]
+- [I'll probably stay here until they carry me out.|Some days I think about a smaller school.] [Who knows?|Don't tell the principal.]
+- [More important is your future.|I've seen where I'm going. What about you?] [Have you thought about it?|Your plans are on my desk, you know.]
+
+@rule small.weekend.teacher
+on small
+when subject=weekend role=teacher
+opens ask,invite,share
+- [My weekend? Grading, laundry, and sleeping.|Teachers don't vanish on Friday, you know.] [Very glamorous.|I may buy groceries.]
+- [You'd be shocked how boring I am on a Sunday.|I keep my weekends far from the school.] [I don't even own a red pen at home. I lie.|Don't look for me.]
+- [I'll go somewhere no student can find me.|If you see me in town, you didn't.] [Understood?|Hehe.]
+
+@rule small.lunch.teacher
+on small
+when subject=lunch role=teacher
+opens ask,invite,tease
+- [Lunch at my desk, again.|I eat with a stack of papers.] [That's teaching.|The cafeteria's better than the staff room.]
+- [The staff room smells like instant coffee.|Bento from the convenience store, the teacher's friend.] [Every day.|Don't judge.]
+- [Students get a whole hour for lunch.|My lunch break is twelve minutes between meetings.] [Enjoy it now.|I envy you.]
+
+@rule school.teacher
+on school
+when role=teacher
+opens ask,invite,share
+- [{Event}? I'm on the committee, of course.|Teachers do most of the work for {event}, you know.] [Nobody asked me.|Don't ask about the budget.]
+- [Ah, {event}. More forms to fill in.|{Event} means extra duty for me.] [I'll enjoy it from the sidelines.|You'd better behave.]
+- [I remember when {event} was fun.|{Event} is a good break from lessons.] [For you, at least.|Even teachers look forward to it.]
+
+@rule school.teacher.exam
+on school
+when role=teacher exam=yes
+opens ask,comfort,tease
+feel worried
+- [Exams first, {event} later.|With the exams on, I can't even think about {event}.] [Study.|I have papers to write.]
+- [{Event} can wait until the grades are in.|Ask me about {event} after I've slept.] [Please.|Mm.]
+- [Are you asking about {event} to avoid studying?|Shouldn't you be revising?] [I know that trick.|Go on.]
+
+# ================= being touched and being quiet with a girlfriend who is your teacher =================
+@rule touch.teacher.gf
+on touch
+when role=teacher rel=girlfriend|lover level=welcome
+feel love
+- [Not during school hours...|Mm... someone could come in.] [But I won't stop you.|Lock the door next time.]
+- [You're still my student here.|Ah... I told you, not at school.] [...A little longer.|You never listen in class either.]
+- [I'm supposed to be setting an example.|This isn't what they mean by private tutoring.] [Hehe.|Mm.]
+
+@rule idle.teacher.gf
+on idle
+when role=teacher rel=girlfriend|lover
+- [I like that you stay after class.|Nobody needs to know why you're here.] [Sit with me.|I'll grade, you stay.]
+- [It's nice, not having to be "sensei" for a minute.|You can stop calling me sensei when it's just us.] [Mm.|Quietly, though.]
+- [I should be working.|This pile of papers can wait.] [Stay.|A little.]
+
+# ================= the talk with both: teacher and student =================
+@rule duo3.open.a.teacher.student
+on duo3.open.a
+when role=teacher otherrole=student
+- [Ah, you too. I was just talking to {other}.|Well, two of my students at once.|Oh, you're here. {other} was asking me something.]
+- [Good timing. I was telling {other} to study.|Hm? Don't mind us, it's just school business.]
+- [Here's another one who should be studying.|You two know each other, then.]
+
+@rule duo3.open.b.student.teacher
+on duo3.open.b
+when role=student otherrole=teacher
+- [S-sensei was just helping me.|We were only talking, I swear.|Hi... {other} caught me in the hallway.]
+- [I'm not in trouble, am I?|{other} was asking about my homework.]
+- [Hey. Careful, {other} is in a teacher mood.|Thank goodness, you can save me from {other}.]
+
+@rule duo3.open.a.student.teacher
+on duo3.open.a
+when role=student otherrole=teacher
+- [Oh! Sensei's here too.|Ah... {other} is with me.|Stand up straight, it's {other}.]
+- [I was asking {other} about the test.|Good timing, {other} is telling me off.]
+- [Um, you know {other}, right?|Say hello to {other}.]
+
+@rule duo3.open.b.teacher.student
+on duo3.open.b
+when role=teacher otherrole=student
+- [Good day. Don't let me interrupt.|Mm. I hope you two are behaving.|Are you in the same class as {other}?]
+- [Don't mind me. I'm off duty, in theory.|I can see you, you know.]
+- [Hello. Keep {other} out of trouble.|I was just leaving. Probably.]
+
+@rule duo3.banter.a.teacher.student
+on duo3.banter.a
+when argue=no role=teacher otherrole=student
+- [{other}, have you handed in your report?|You were yawning in my class, {other}.|How's your studying going, {other}?]
+- [{other}, your last test was better. Keep it up.|I expect more from you, {other}.|Are you eating properly, {other}?]
+- [Don't think I didn't see that note, {other}.|Is everything fine at home, {other}?]
+
+@rule duo3.banter.b.student.teacher
+on duo3.banter.b
+when argue=no role=student otherrole=teacher
+- [Y-yes, sensei!|Almost, sensei. I swear.|Sorry, sensei.]
+- [I'll do better, sensei.|Thank you, sensei.|It's going okay, I think.]
+- [Ahaha... you noticed that?|Please don't tell my parents.]
+
+@rule duo3.banter.a.student.teacher
+on duo3.banter.a
+when argue=no role=student otherrole=teacher
+- [Sensei, is the test going to be hard?|{other}, do you ever get a day off?|Sensei, what do teachers do after school?]
+- [Is it true the teachers have a secret snack drawer?|Sensei, did you go to this school too?]
+- [Sensei, can I ask you something?|{other}, were you a good student?]
+
+@rule duo3.banter.b.teacher.student
+on duo3.banter.b
+when argue=no role=teacher otherrole=student
+- [Study and you won't need to ask.|Nice try.|That's classified.]
+- [Teachers don't sleep. We just recharge in the storage room.|If you have time to ask that, you have time to revise.]
+- [Hm. I'll tell you when you're older.|Ask me after the exams.]
+
+@rule duo3.end.a.teacher.student
+on duo3.end.a
+when role=teacher otherrole=student
+- [I have papers to grade. Don't stay out too late, you two.|Well, back to work for me.]
+- [Go home on time, both of you.|Class starts early tomorrow.]
+- [That's enough for today. Study.|Don't forget your homework.]
+
+@rule duo3.end.b.student.teacher
+on duo3.end.b
+when role=student otherrole=teacher
+- [Thank you, sensei.|See you in class, sensei.|Yes, sensei. Good night.]
+- [I'll go before I get more homework.|Bye, sensei!]
+- [Phew. Bye.|We'll behave. Probably.]
+
+# ================= the talk with both: two teachers =================
+@rule duo3.open.a.colleagues
+on duo3.open.a
+when role=teacher otherrole=teacher
+- [Oh, a student. We were just complaining about the budget.|Ah, one of yours, {other}?|Don't mind us. It's a teachers' meeting, of a kind.]
+- [{other} and I were comparing grades. Don't look.|Here comes trouble, {other}.]
+- [We were talking about you, actually.|{other} says you're quite a handful.]
+
+@rule duo3.open.b.colleagues
+on duo3.open.b
+when role=teacher otherrole=teacher
+- [Good day. Is this about homework?|Hello. {other} was just telling me about your class.|Hm, this one? Yes, I know this one.]
+- [Don't look so nervous. Yet.|We don't bite. {other} might.]
+- [Two teachers at once. Unlucky.|You picked the wrong moment.]
+
+@rule duo3.banter.a.colleagues
+on duo3.banter.a
+when argue=no role=teacher otherrole=teacher
+- [{other}, did you read the principal's memo?|Your class was loud today, {other}.|Do you still have my red pen, {other}?]
+- [{other}, how many papers do you have left?|Did you finish your report for the office, {other}?]
+- [We should go for a drink after work, {other}.|Is it just me, or is the coffee getting worse?]
+
+@rule duo3.banter.b.colleagues
+on duo3.banter.b
+when argue=no role=teacher otherrole=teacher
+- [Don't remind me.|I'm pretending that memo doesn't exist.|Forty left. Pray for me.]
+- [Mine are worse, believe me.|That pen was never yours.]
+- [Friday, then. I'm buying.|Not in front of the students.]
+
+@rule duo3.end.a.colleagues
+on duo3.end.a
+when role=teacher otherrole=teacher
+- [Well, the papers won't grade themselves.|Back to the staff room, {other}?]
+- [We've taken enough of your time. Go study.|Shall we, {other}?]
+- [The bell's going to ring. Off you go.|Coffee, {other}?]
+
+@rule duo3.end.b.colleagues
+on duo3.end.b
+when role=teacher otherrole=teacher
+- [Right behind you.|Behave, young man.|See you in class.]
+- [Please, I need the caffeine.|Let's go before the principal finds us.]
+- [Not a word about what you heard.|Staff room secrets stay there.]

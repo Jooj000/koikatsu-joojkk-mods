@@ -37,6 +37,42 @@ namespace Joojkk.CampusLife
         /// <summary>A regular seat made from a teacher whose event is over: her lines in conversation are a teacher's.</summary>
         public static bool IsTeacherVoice(SaveData.Heroine h) { return h != null && (h.isTeacher || S != null && S.Buffs.ContainsKey(CopyKey(h))); }
 
+        /// <summary>The seat of a teacher whose event is over: a student only in the code (user, 2026-10-31), a teacher to everyone at school.</summary>
+        public static bool Freed(SaveData.Heroine h) { return h != null && !h.isTeacher && IsTeacherVoice(h); }
+
+        /// <summary>Her name as the school says it: students and colleagues alike call a teacher sensei.</summary>
+        public static string Called(SaveData.Heroine h) { return IsTeacherVoice(h) ? GirlInfo.FirstName(h) + "-sensei" : GirlInfo.FirstName(h); }
+
+        public static string Called(string key) { return Called(GirlInfo.Find(key)); }
+
+        private static readonly Dictionary<string, string> Causes = new Dictionary<string, string>
+        {
+            { "raise", "her raise" }, { "results", "her class's results" }, { "praise", "what the principal said" }, { "grading", "her grading" },
+            { "lessons", "her lesson plans" }, { "staffparty", "last night's staff party" }, { "parents", "the parents" }, { "principal", "the principal" },
+            { "complaint", "a parent's complaint" }, { "ignored", "her class" }, { "meeting", "the staff meeting" }, { "staffroom", "the staff room" }, { "nolunch", "lunch" },
+        };
+
+        /// <summary>Why a teacher is in this mood today, from her job ({tcause} in the dialogue), or null: grading in an exam week, else the same reason all day.</summary>
+        public static string Cause(SaveData.Heroine h, CampusLife.Mood mood)
+        {
+            if (!IsTeacherVoice(h)) return null;
+            string[] l;
+            switch (mood)
+            {
+                case CampusLife.Mood.Cheerful: l = new[] { "raise", "results", "praise" }; break;
+                case CampusLife.Mood.Sleepy: l = Calendar.IsExamWeek ? new[] { "grading" } : new[] { "grading", "lessons", "staffparty" }; break;
+                case CampusLife.Mood.Stressed: l = Calendar.IsExamWeek ? new[] { "grading" } : new[] { "grading", "parents", "principal" }; break;
+                case CampusLife.Mood.Upset: l = new[] { "complaint", "ignored", "principal" }; break;
+                case CampusLife.Mood.Bored: l = new[] { "meeting" }; break;
+                case CampusLife.Mood.Lonely: l = new[] { "staffroom" }; break;
+                case CampusLife.Mood.Hungry: l = new[] { "nolunch" }; break;
+                default: return null;
+            }
+            return l[Math.Abs((GirlInfo.Key(h) + S.Day).GetHashCode()) % l.Length];
+        }
+
+        public static string CauseThing(string cause) { string t; return Causes.TryGetValue(cause, out t) ? t : "her day"; }
+
         public static bool EventOver(SaveData.Heroine h) { return h != null && S.Buffs.ContainsKey(DoneKey(h)); }
 
         public static bool Met(SaveData.Heroine h) { return h.talkEvent.Contains(0); }
@@ -351,6 +387,19 @@ namespace Joojkk.CampusLife
         /// Before the students of a period are loaded: a teacher whose event is over takes a free seat (a copy of her card,
         /// an everyday personality so every normal conversation works), keeping favor and H. Her lines stay a teacher's.
         /// </summary>
+        /// <summary>Copies made before the portrait fix: the picture comes back from the girl they were copied from.</summary>
+        public static void MendPortraits()
+        {
+            foreach (var h in G.Heroines.Where(x => x != null && x.charFile != null && (x.charFile.facePngData == null || x.charFile.facePngData.Length == 0)).ToList())
+            {
+                var from = G.Heroines.FirstOrDefault(x => x != null && x != h && x.charFile != null && x.charFile.facePngData != null && x.charFile.facePngData.Length > 0 && x.charFile.parameter.fullname == h.charFile.parameter.fullname);
+                if (from == null) continue;
+                h.charFile.pngData = from.charFile.pngData;
+                h.charFile.facePngData = from.charFile.facePngData;
+                Log(TeacherName(h) + ": portrait mended");
+            }
+        }
+
         public static void FreeFinished()
         {
             if (!Singleton<Manager.Game>.IsInstance()) return;
@@ -362,6 +411,8 @@ namespace Joojkk.CampusLife
                 if (seat == null) { Toasts.Show(TeacherName(h) + " wants to join school life freely, but every class seat is taken. Free a seat in the class roster."); return; }
                 var card = new ChaFileControl();
                 ChaFile.CopyChaFile(card, h.charFile);
+                card.pngData = h.charFile.pngData;
+                card.facePngData = h.charFile.facePngData; // CopyChaFile leaves the pictures out: the portrait came up as "?"
                 card.parameter.personality = StoryCast.EverydayPersonalityFor(h);
                 seat.SetCharFile(card);
                 seat.charFileInitialized = true;
@@ -380,6 +431,8 @@ namespace Joojkk.CampusLife
                 Log(TeacherName(h) + " joined school life as a free character (seat in class " + seat.schoolClass + ")");
             }
         }
+
+        internal static void FinishNow(SaveData.Heroine h) { S.Buffs[DoneKey(h)] = S.Day; FreeFinished(); }
 
         /// <summary>Teachers walking around as NPCs (her Fix of the period and teachers already free are left out).</summary>
         public static bool Walks(SaveData.Heroine h) { return h != null && h.isTeacher && Cfg.TeachersWalk.Value && !S.Buffs.ContainsKey("teacherfree:" + GirlInfo.Key(h)); }
