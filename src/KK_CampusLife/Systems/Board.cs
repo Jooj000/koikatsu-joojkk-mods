@@ -15,7 +15,7 @@ namespace Joojkk.CampusLife
         {
             new[] { "library", "Return her overdue library books." },
             new[] { "cafeteria", "Buy her a melon bread before they sell out." },
-            new[] { "staffroom", "Turn in her homework at the staff room." },
+            new[] { "staffroom", "Turn in her assignments at the faculty room." },
             new[] { "clubroom", "Fetch the notebook she forgot in the club room." },
             new[] { "gym", "Find the towel she left in the gym." },
             new[] { "pool", "Get her goggles back from the pool." },
@@ -59,7 +59,7 @@ namespace Joojkk.CampusLife
             switch (r.Kind)
             {
                 case RequestKind.Lunch: return Lines.T(t, "I, um... forgot my lunch today. And I don't really like eating alone... || I left my bento at home... and eating by myself feels so lonely. || Um, I forgot my lunch... would anyone share a table with me? || No lunch today... and no one to sit with. Ehe...", "I forgot my bento! And nobody to eat with! Tragic! || No bento AND no lunch buddy?! Worst day! || My lunch is at home and I'm starving! Someone save me! || Forgot my food! Who's eating with me?!", "I forgot my lunch. Eating alone is fine. ...Mostly. || No lunch today. Company would be... acceptable. || I forgot my bento. I wouldn't mind a lunch partner. || Lunch alone again. I'd tolerate company.", "Lunch alone again today. How sad for me~ || Forgot my lunch. Someone could feed me~ || Lunch for one again. Pity me~ || No bento, no buddy. Someone fix that.");
-                case RequestKind.Study: return Lines.T(t, "I don't understand today's lesson at all... I'm scared about the test. || Today's lesson went right over my head... the test scares me. || I'm so behind... would someone study with me? || I don't get any of it... I'm worried about the exam.", "I'm SO lost in class! Help me study?! || Class today?! Total mystery! Study buddy wanted! || I'm drowning in homework! Throw me a rope! || Test incoming and I know NOTHING! Help!", "I'm behind in class. I'd study better with someone. || I fell behind. A study partner would help. || I need to review. Preferably not alone. || The material is dense. I'd study better with someone.", "The test is going to destroy me. Unless someone helps. || The exam will crush me. Unless a hero appears~ || I need a tutor. A cute one. || If I fail, it's everyone's fault. Help me~");
+                case RequestKind.Study: return Lines.T(t, "I don't understand today's lesson at all... I'm scared about the test. || Today's lesson went right over my head... the test scares me. || I'm so behind... would someone study with me? || I don't get any of it... I'm worried about the exam.", "I'm SO lost in class! Help me study?! || Class today?! Total mystery! Study buddy wanted! || I'm drowning in assignments! Throw me a rope! || Test incoming and I know NOTHING! Help!", "I'm behind in class. I'd study better with someone. || I fell behind. A study partner would help. || I need to review. Preferably not alone. || The material is dense. I'd study better with someone.", "The test is going to destroy me. Unless someone helps. || The exam will crush me. Unless a hero appears~ || I need a tutor. A cute one. || If I fail, it's everyone's fault. Help me~");
                 case RequestKind.Exercise: return Lines.T(t, "I want to get a little stronger... but working out alone is hard. || I want to get stronger... but exercising alone is hard. || I'd like to train a little... if someone came with me. || Working out by myself is lonely... and hard.", "I've got too much energy! I need to move! || I'm bursting with energy! Someone run with me! || I need to MOVE! Training partner, anyone?! || Let's work out! Somebody! Anybody!", "I want to train, but alone it's boring. || I want to train. Alone, it's tedious. || I need a sparring partner. || Training is better with a rival.", "I need a training partner. One who can keep up. || I need someone to train with. Someone who won't cry. || Training partner wanted. Must keep up. || Who's brave enough to train with me?");
                 case RequestKind.Club: return Lines.T(t, "I'd like to do something with the club... if that's okay. || I'd love to do something for the club... if someone helps. || Could we do a little club activity? I'd be happy. || I have a small idea for the club... if that's okay.", "Let's do club stuff! I'm bored of waiting! || Club time! I'm tired of waiting around! || Let's do club stuff! Right now! || The club needs action! Let's go!", "I have an idea for the club. I need a hand. || I have a plan for the club. I need help. || A club task needs doing. Volunteers? || The club needs attention. I'll need a hand.", "The club's been quiet. Let's change that. || The club's gotten boring. Let's spice it up. || Let's shake the club up a bit. || Club's too quiet. I have ideas~");
                 case RequestKind.WalkHome: return Lines.T(t, "The way home gets dark early... I don't like walking it alone. || It gets dark so early... I don't want to walk home alone. || The road home is scary at night... || Walking home alone makes me nervous...", "Walking home alone is so boring! || Walking home solo is SO boring! Company?! || Someone walk with me! I'll talk the whole way! || Who's going my way? Let's walk!", "I'd rather not walk home alone today. || I'd prefer company on the way home. || Walking home alone isn't ideal today. || Company for the walk home would be welcome.", "If someone walked me home, I wouldn't complain. || A gentleman would walk me home. Hint. || Someone could escort me home. Just saying~ || Walking me home earns points. Big ones.");
@@ -141,7 +141,7 @@ namespace Joojkk.CampusLife
             {
                 r.DeadlineDay = S.Day + 1;
                 var who = !string.IsNullOrEmpty(r.Girl) && !Truth.AtSchool(r.Girl) ? r.Girl : r.Other;
-                CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " waits for tomorrow (" + GirlInfo.FirstName(who) + " is not at school)");
+                CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " waits for tomorrow (" + GirlInfo.FirstName(who) + " is not on campus)");
             }
         }
 
@@ -252,7 +252,7 @@ namespace Joojkk.CampusLife
                 case RequestKind.Club:
                     return Make(kind, h, "Club time with " + name, name + " wants to do something with the Koikatsu Club. Invite her to club activities.", 8, PeriodMask.Club, club: 2);
                 case RequestKind.WalkHome:
-                    return Make(kind, h, "Walk " + name + " home", name + " doesn't want to walk home alone today. Ask her to go home together after school.", 10, PeriodMask.After);
+                    return Make(kind, h, "Walk " + name + " home", name + " doesn't want to walk home alone today. Ask her to go home together after class.", 10, PeriodMask.After);
                 case RequestKind.Talk:
                     return Make(kind, h, "Check on " + name, name + (gs.Mood == Mood.Lonely ? " seems lonely today." : gs.Mood == Mood.Sleepy ? " is half asleep at her desk." : " wants to tell you something.") + " Talk to her today.", 5);
                 case RequestKind.Gift:
@@ -262,7 +262,7 @@ namespace Joojkk.CampusLife
                     if (like == "" && likes.Count > 0 && Random.value < 0.5f) like = likes[Random.Range(0, likes.Count)];
                     var what = like == "" ? "a little present" : "something (" + GirlInfo.LikeLabel(like) + ")";
                     var why = gs.Mood == Mood.Upset ? " is in a bad mood. Cheer her up:" : " could use a treat:";
-                    var r = Make(kind, h, "A gift for " + name, name + why + " give her " + what + ". The school store is in the cafeteria.", 6);
+                    var r = Make(kind, h, "A gift for " + name, name + why + " give her " + what + ". The university store is in the cafeteria.", 6);
                     r.Item = like;
                     return r;
                 }
@@ -654,7 +654,7 @@ namespace Joojkk.CampusLife
                 case RequestKind.Study: return "Invite her: study together.";
                 case RequestKind.Exercise: return "Invite her: exercise together.";
                 case RequestKind.Club: return "Invite her: club activities (club time).";
-                case RequestKind.WalkHome: return "Invite her: go home together (after school).";
+                case RequestKind.WalkHome: return "Invite her: go home together (after class).";
                 case RequestKind.Gift: return "Talk to her and pick 'Give a gift'" + (string.IsNullOrEmpty(r.Item) ? "." : " (" + GirlInfo.LikeLabel(r.Item) + ").");
                 case RequestKind.Intimate: return "H with her (not Free H).";
                 case RequestKind.MeetAt: return "Talk to her at the " + Places.Name(r.Place) + (r.Source == "arc" ? " and pick '" + ButtonLabel(r) + "'." : ".");
@@ -670,7 +670,7 @@ namespace Joojkk.CampusLife
             var parts = new List<string>();
             if ((p & PeriodMask.Lunch) != 0) parts.Add("lunch");
             if ((p & PeriodMask.Club) != 0) parts.Add("club time");
-            if ((p & PeriodMask.After) != 0) parts.Add("after school");
+            if ((p & PeriodMask.After) != 0) parts.Add("after class");
             return string.Join(" / ", parts.ToArray());
         }
     }

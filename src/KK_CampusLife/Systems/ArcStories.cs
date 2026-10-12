@@ -66,8 +66,8 @@ namespace Joojkk.CampusLife
             b.Me("So? How did the make-up exam go?");
             if (pass)
                 b.Her_(Lines.T(t, "I passed! I really passed! It's all thanks to you... thank you so much! || I passed! Thank you so much! || I really passed... it's all because of you! || I did it! Thank you!",
-                    "I PASSED! Eighty-two points! You're the best teacher ever! || PASSED! You're the best teacher! || I passed! Treat time! || Yes! Passed! You rock!",
-                    "I passed. With a decent score, even. ...Your explanations were good. || Passed. Good score. Your explanations helped. || A pass. Thanks to you. || Passed. You're a competent teacher.",
+                    "I PASSED! Eighty-two points! You're the best professor ever! || PASSED! You're the best professor! || I passed! Treat time! || Yes! Passed! You rock!",
+                    "I passed. With a decent score, even. ...Your explanations were good. || Passed. Good score. Your explanations helped. || A pass. Thanks to you. || Passed. You're a competent professor.",
                     "Passed~ Guess you're good for something after all. I owe you one... a big one. || Passed~ You're useful after all. I owe you. || Passed. I'll repay you. Generously. || Passed! You earned a reward."));
             else
                 b.Her_(Lines.T(t, "I barely passed... but I passed. Thank you for staying with me. || I barely made it... thank you for staying with me. || Just barely... but I passed. Thanks. || Close, but I passed. Thank you.",
@@ -291,7 +291,7 @@ namespace Joojkk.CampusLife
         {
             switch (like)
             {
-                case "animals": return "feeding the stray cats behind the school";
+                case "animals": return "feeding the stray cats behind the university";
                 case "study": return "reading a thick novel, totally absorbed";
                 case "exercise": return "practicing moves alone in an empty gym";
                 case "fashion": return "sketching outfit designs in a notebook";
@@ -584,7 +584,7 @@ namespace Joojkk.CampusLife
                 case 0: return Talk(c, c.H, c.Name + " has a strange request", c.Name + " asked to talk to you about something 'for a friend'.", 3).Btn("Hear her request");
                 case 1:
                 {
-                    var r = Board.Make(RequestKind.MeetAt, c.H, "Rooftop, after school", c.Name + " wants to 'practice' on the rooftop after school.", 5, PeriodMask.After);
+                    var r = Board.Make(RequestKind.MeetAt, c.H, "Rooftop, after class", c.Name + " wants to 'practice' on the rooftop after class.", 5, PeriodMask.After);
                     r.Place = "rooftop";
                     r.DeadlineDay = Campus.S.Day + 3;
                     return r.Btn("Start the practice");
@@ -603,7 +603,7 @@ namespace Joojkk.CampusLife
                     "A friend needs help with a confession. I need a practice partner. You'll do. || A friend's confession. You're my practice partner. || I need a target for practice. You. || Practice partner required. You'll do.",
                     "I need to practice a confession. For a friend, obviously. You're the dummy~ || Practice confession. For a friend. Obviously. || You're my practice dummy. For a friend~ || Rehearsal time. Totally for a friend."));
                 b.Me("Uh... sure. Where?");
-                b.Her_(Lines.T(t, "The rooftop... after school. Please don't be late. || The rooftop, after school. Don't be late. || Meet me on the roof after school... please. || After school... the rooftop.", "Rooftop, after school! It's the classic spot! || Rooftop! After school! Classic! || Roof! After class! || Rooftop time! Be there!", "Rooftop. After school. || Rooftop. After school. || The roof. Later. || After school. Rooftop.", "The rooftop after school. Very cliché. Perfect. || Rooftop after school. Cliché. Perfect. || The roof. Very dramatic. || Rooftop. Don't be late."));
+                b.Her_(Lines.T(t, "The rooftop... after class. Please don't be late. || The rooftop, after class. Don't be late. || Meet me on the roof after class... please. || After class... the rooftop.", "Rooftop, after class! It's the classic spot! || Rooftop! After class! Classic! || Roof! After class! || Rooftop time! Be there!", "Rooftop. After class. || Rooftop. After class. || The roof. Later. || After class. Rooftop.", "The rooftop after class. Very cliché. Perfect. || Rooftop after class. Cliché. Perfect. || The roof. Very dramatic. || Rooftop. Don't be late."));
                 return;
             }
             b.Narr("The wind is gentle on the rooftop. " + c.Name + " takes a deep breath.");
@@ -715,7 +715,7 @@ namespace Joojkk.CampusLife
         {
             var t = c.Tone;
             b.Me("Hey... are you okay?");
-            b.Her_(Lines.T(t, "N-no... everything went wrong today. I forgot my homework, I tripped in the hallway, and... || Everything went wrong today... || I forgot everything and tripped... it's awful... || Today's been terrible...",
+            b.Her_(Lines.T(t, "N-no... everything went wrong today. I forgot my assignments, I tripped in the hallway, and... || Everything went wrong today... || I forgot everything and tripped... it's awful... || Today's been terrible...",
                 "NO! Today is the WORST! Everything is going wrong! || WORST day! Everything's broken! || Nothing's going right! || Today hates me!",
                 "...Not now. || ...Not now. || ...Leave it. || ...Bad day.",
                 "Do I LOOK okay? || Do I look okay? || Does it look like it? || Obviously not."));

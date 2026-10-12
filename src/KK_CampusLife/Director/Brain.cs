@@ -74,6 +74,7 @@ namespace Joojkk.CampusLife
         public static bool Decide(ActionControl ac, SaveData.Heroine h, int[] not, ref ActionControl.ResultInfo r, bool first = false)
         {
             if (!On || ac == null || h == null) return false;
+            if (StaffLife.Decide(ac, h, not, ref r, first)) { Decided++; return true; }
             var weights = Weigh(h, not);
             var tried = false;
             // Draw without putting back: an action with no spot for her falls to the next one.

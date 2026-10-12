@@ -50,7 +50,7 @@ namespace Joojkk.CampusLife
             {
                 if (h == null || !Known) return "";
                 var n = NpcOf(h);
-                if (n == null || n.mapNo < 0) return "not at school today";
+                if (n == null || n.mapNo < 0) return "not on campus today";
                 var ts = G.TalkScene;
                 if (ts != null && ts.targetHeroine == h) return "talking with you";
                 if (n.isLesH) return "slipped away with someone";

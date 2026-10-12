@@ -54,8 +54,8 @@ namespace Joojkk.CampusLife
 
         private static readonly string[] NewsTogether =
         {
-            "{0} and {1} were seen shopping together after school.",
-            "{0} helped {1} with homework during lunch.",
+            "{0} and {1} were seen shopping together after class.",
+            "{0} helped {1} with assignments during lunch.",
             "{0} and {1} shared a parfait at the cafe near the station.",
             "{0} and {1} stayed late practicing for something.",
             "{0} lent {1} a manga. They talked about it all day.",

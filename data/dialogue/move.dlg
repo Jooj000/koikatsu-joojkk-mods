@@ -144,7 +144,7 @@ on move.tease
 @rule move.tease.sleepy
 on move.tease
 when kind=day mood=sleepy
-- [Tease her about dozing off|Call her a sleepyhead|Ask if she slept in class|Offer her a pillow, grinning]
+- {student}[Tease her about dozing off|Call her a sleepyhead|Ask if she slept in class|Offer her a pillow, grinning]
 
 @rule move.tease.hungry
 on move.tease
@@ -199,7 +199,7 @@ when kind=day mood=bored
 @rule move.invite.study
 on move.invite
 when kind=day exam=yes
-- [Offer to study together|Suggest a study session|Offer to quiz each other|Suggest the library after class]
+- {student}[Offer to study together|Suggest a study session|Offer to quiz each other|Suggest the library after class]
 
 @rule move.invite.event
 on move.invite
@@ -214,12 +214,12 @@ when kind=us
 @rule move.invite.like
 on move.invite
 when likes=yes
-- [Invite her to {likedo}|Suggest you {likedo} after school|Ask if she wants to {likedo} with you|Offer to {likedo} together]
+- {student}[Invite her to {likedo}|Suggest you {likedo} after class|Ask if she wants to {likedo} with you|Offer to {likedo} together]
 
 @rule move.invite.subject
 on move.invite
 when kind=small subject=club|friend|birthday|horoscope|future|teaching
-- [Ask if she wants to {favdo} sometime|Suggest you hang out after school|Ask if she's free this weekend|Offer to walk her home later]
+- {student}[Ask if she wants to {favdo} sometime|Suggest you hang out after class|Ask if she's free this weekend|Offer to walk her home later]
 
 @rule move.invite.birthday
 on move.invite
@@ -396,7 +396,7 @@ when said=school.exam|school.teacher.exam|small.exams|small.exams.teacher|small.
 @rule move.invite.exams
 on move.invite
 when said=school.exam|school.teacher.exam|small.exams|small.exams.teacher|small.place.classroom.exam|small.place.library.books.exam
-- [Offer to study together|Suggest a study session|Offer to quiz each other|Suggest the library after class]
+- {student}[Offer to study together|Suggest a study session|Offer to quiz each other|Suggest the library after class]
 
 @rule move.share.exams
 on move.share
@@ -411,17 +411,17 @@ when said=small.place.classroom.exam|small.place.library.books.exam|small.exams.
 @rule move.share.school
 on move.share
 when kind=small subject=school
-- [Complain about the homework|Say you feel the same|Say which class you can't stand|Say you can't wait for the break]
+- {student}[Complain about the assignments|Say you feel the same|Say which class you can't stand|Say you can't wait for the break]
 
 @rule move.ask.subject.school
 on move.ask
 when kind=small subject=school
-- [Ask which class she likes|Ask which teacher is the worst|Ask how her classes are going|Ask what she'd change]
+- {student}[Ask which class she likes|Ask which professor is the worst|Ask how her classes are going|Ask what she'd change]
 
 @rule move.tease.school
 on move.tease
 when kind=small subject=school
-- [Joke about her grades|Ask if she was awake in class|Say she sounds like a teacher|Bet she forgot the homework]
+- {student}[Joke about her grades|Ask if she was awake in class|Say she sounds like a professor|Bet she forgot the assignments]
 
 @rule move.ask.pet
 on move.ask
@@ -516,12 +516,12 @@ when kind=small subject=future
 @rule move.ask.teaching
 on move.ask
 when kind=small subject=teaching
-- [Ask what the hard part is|Ask why she became a teacher|Ask about her worst class|Ask if she'd do it again]
+- [Ask what the hard part is|Ask why she became a professor|Ask about her worst class|Ask if she'd do it again]
 
 @rule move.praise.teaching
 on move.praise
 when kind=small subject=teaching
-- [Say she's a good teacher|Say her class is your favorite|Say the students like her|Say you learn a lot from her]
+- [Say she's a good professor|Say her class is your favorite|Say the students like her|Say you learn a lot from her]
 
 @rule move.comfort.teaching
 on move.comfort
@@ -557,7 +557,7 @@ when said=small.place.rivalnear
 @rule move.tease.said.sleepy
 on move.tease
 when said=small.place.infirmary.sleepy
-- [Tease her about napping here|Call her a sleepyhead|Ask if she's really sick|Say you'll tell the nurse]
+- {student}[Tease her about napping here|Call her a sleepyhead|Ask if she's really sick|Say you'll tell the nurse]
 
 @rule move.comfort.said.sleepy
 on move.comfort
@@ -583,17 +583,17 @@ when said=small.weather.rain.gentle|small.place.rooftop.rain
 @rule move.share.kind.school
 on move.share
 when kind=school
-- [Say what you're planning|Say you're looking forward to it|Tell her what you think of {event}|Say you haven't thought about it]
+- [Tell her what you think of {event}|Say you haven't thought about it]
 
 @rule move.tease.kind.school
 on move.tease
 when kind=school
-- [Joke about {event}|Say she's way too excited|Bet she'll be first in line|Ask if she's even ready]
+- [Joke about {event}|Ask if she's even ready]
 
 @rule move.comfort.kind.school
 on move.comfort
 when kind=school
-- [Say it'll be fun once it starts|Say you'll go with her|Tell her not to worry about {event}|Say she doesn't have to go alone]
+- [Tell her not to worry about {event}|Say it'll work out]
 
 # ---------------- gossip ----------------
 @rule move.tease.gossip
@@ -711,7 +711,7 @@ when said=us.walk
 @rule move.invite.said.walk
 on move.invite
 when said=us.walk
-- [Suggest the long way next time|Offer to walk her home again|Suggest stopping somewhere on the way|Say you'll wait for her after class]
+- {student}[Suggest the long way next time|Offer to walk her home again|Suggest stopping somewhere on the way|Say you'll wait for her after class]
 
 # ---------------- what you told her ----------------
 @rule move.ask.tell
@@ -809,7 +809,7 @@ when said=react.tease.good.go
 @rule move.invite.said.spar
 on move.invite
 when said=react.tease.good.go
-- [Offer to make it up to her|Offer to buy her something|Suggest settling it after class|Offer a truce over a snack]
+- {student}[Offer to make it up to her|Offer to buy her something|Suggest settling it after class|Offer a truce over a snack]
 
 # ---------------- small talk, by what kind of line hers was (2026-10-31) ----------------
 # A statement, a question or something she offers: the options answer that. These win over the rules by subject.

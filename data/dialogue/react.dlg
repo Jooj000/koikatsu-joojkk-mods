@@ -75,7 +75,7 @@ opens comfort,share,invite
 
 @rule react.ask.good.go.onday
 on react
-when kind=confide hurt=yes move=ask fit=good step<=2 kind=day
+when kind=confide hurt=yes move=ask fit=good step<=2
 opens comfort,share,invite
 - [Okay, {mything}.|So, about {mything}...] [It started small and then it got out of hand.|There's a part I didn't tell you.|It's not what it looks like from outside.]
 - [You want the real answer about {mything}?|Since you asked about {mything}...] [I've been thinking about it more than I should.|It matters more than I let on.]
@@ -123,7 +123,7 @@ feel pout
 - [Why do you want to know so badly?|That's kind of personal.|Let's not.]
 - [You're nosy today.|Do I ask about your business?|That's none of your concern.]
 - [I don't really want to talk about it.|Can we not?|Drop it, please.]
-- [Who are you, the school paper?|Are you writing a report on me?|Interrogation over.]
+- [Who are you, the university paper?|Are you writing a report on me?|Interrogation over.]
 - [Did {who} send you to ask?|Go ask {who} if you're that curious.]
 - [Do you even care about {like}, or are you just being nosy?|Why are you so interested in {like} all of a sudden?]
 
@@ -146,7 +146,7 @@ feel sad
 - [Can I be honest?|Promise not to laugh.] [I feel kind of alone lately.|I'm worried about {mything}.|I'm just tired.]
 - [I keep telling everyone it's nothing.|I didn't want to say it.] [But {mything} has been on me all day.|It's {mything}, and I can't shake it.]
 - [Since this morning, it's been {mything}.|It started with {mything}.] [One thing after another.|And nobody noticed.]
-- [I smile in class, and all the while it's {mything}.|You're the first to ask about {mything}.] [I'm tired.|Thanks.]
+- {student}[I smile in class, and all the while it's {mything}.|You're the first to ask about {mything}.] [I'm tired.|Thanks.]
 - [{Who} has a lot to do with it.|Part of it is {who}.] [I don't want to make it a big thing.|It's complicated.]
 - [The {club} isn't helping either.|Even at the {club} I couldn't stop thinking about it.] [I just need a break.|Sorry.]
 
@@ -155,12 +155,12 @@ on react
 when move=ask kind=day mood=cheerful fit=good|neutral step<=1
 opens tease,praise,invite
 feel laugh
-- [Nothing big! I just woke up happy.|Okay, okay. I got a letter from an old friend.|The teacher praised my homework in front of everyone!]
+- {student}[Nothing big! I just woke up happy.|Okay, okay. I got a letter from an old friend.|The professor praised my assignments in front of everyone!]
 - [I found money in my old coat!|My favorite song came on right when I woke up.|The bakery had my favorite bread!]
 - [Secret~ ...Okay, fine, I slept really well.|I finally finished something I've been working on!]
 - [It's just a good day, you know?|Everything's going my way today.|I got a message that made me smile.]
 - [You really want to know why I'm in such a good mood?|Why am I smiling?] [Everything just clicked this morning.|Because nothing went wrong all day.]
-- [Even the walk to school was nice.|The first class flew by.] [Days like this are rare!|I can't explain it!]
+- [Even the walk to campus was nice.|The first class flew by.] [Days like this are rare!|I can't explain it!]
 - [Good things come in threes, and I've had two.|I've been lucky all day.] [I'm waiting for the third.|Maybe you're next.]
 - [The {club} went great.|Everything went right at the {club}.] [Can you tell?|I'm still on a high.]
 - [I had some {fav} and that was enough.|You know what did it? {Fav}.] [I'm easy to please.|Don't laugh.]
@@ -193,7 +193,7 @@ feel worried
 
 @rule react.ask.you.saw.onday
 on react
-when move=ask kind=you how=witness step<=1 kind=day
+when move=ask kind=you how=witness step<=1
 opens admit,hush,comfort
 feel worried
 - [I keep thinking about {mything}.|I know what I saw, about {mything}.] [I can't just forget it.|Tell me what that was.]
@@ -206,7 +206,7 @@ when move=ask kind=you how=heard|rumor
 opens correct,deny,admit
 - [{Src} told me.|I heard it from {src}.|Everyone, honestly.] [Half the class knows by now.|I didn't go looking for it.]
 - [It's going around.|You can't keep things quiet here.] [I heard it twice today.|Even the first years know.]
-- [Someone in my class was talking about it.|I overheard it.] [I didn't want to believe it.|Is it true?]
+- {student}[Someone in my class was talking about it.|I overheard it.] [I didn't want to believe it.|Is it true?]
 - [Does it matter who?|Let's just say a few people.] [What matters is if it's true.|So, is it?]
 - [What I heard is that {deed}.|The story going around is that {deed}.] [So?|Is that right?]
 - [{Src} heard it first, I think.|I got it from {src}, who got it from somewhere else.] [It's all over the class.|You know how it is.]
@@ -227,11 +227,11 @@ feel shy
 
 @rule react.ask.us.onday
 on react
-when move=ask kind=us fit=good step<=1 kind=day
+when move=ask kind=us fit=good step<=1
 opens share,tease,invite
 feel shy
 - [{Mything}? I think about it more than I'd admit.|How did {mything} feel?] [Warm.|Like I could stop being careful.]
-- [I went home and thought about {mything} all night.|I replayed {mything} in class.] [The teacher had to call me twice.|Don't tell anyone.]
+- {student}[I went home and thought about {mything} all night.|I replayed {mything} in class.] [The professor had to call me twice.|Don't tell anyone.]
 - [The best part of {mything}?|What I liked most about {mything}?] [That it was you.|You don't know?]
 - [I was scared you didn't feel the same about {mything}.|Tell me {mything} meant something to you too.] [So I'm glad you asked.|Please.]
 
@@ -414,7 +414,7 @@ feel shy
 
 @rule react.share.us.onday
 on react
-when move=share kind=us fit=good|neutral kind=day
+when move=share kind=us fit=good|neutral
 feel shy
 - [So you remember {mything} like that too.|You still think about {mything}?] [I'm so glad.|My heart...]
 - [I thought I was the only one who cared about {mything}.|I was scared {mything} was nothing to you.] [Thank you.|Don't say that so lightly.]
@@ -619,7 +619,7 @@ opens tease,praise,share
 feel smile
 - [Really? Then I'll hold you to it.|Okay! When?] [I'll be waiting.|Don't stand me up.]
 - [Yay! Okay!|I'd love to.] [I'll look forward to it.|What should I wear?]
-- [Sure. Pick me up after class?|Deal.] [You're paying, though.|Don't be late.]
+- {student}[Sure. Pick me up after class?|Deal.] [You're paying, though.|Don't be late.]
 - [Is that an invitation? ...Okay.|Fine, you convinced me.] [It better be fun.|I'll make time.]
 - [Should I bring something?|Wait, is it just us?] [Tell me!|I need to know what to wear.]
 - [We could {favdo} first.|Can we {favdo}? I've got this idea.] [Then food.|You'll like it.]
@@ -778,7 +778,7 @@ when move=correct fit=neutral kind=day
 on react
 when move=correct fit=bad
 - [That's not what everyone says.|I know what I saw.|Sure. Of course.]
-- [Nice try.|You'd say that either way.|Right, and I'm the principal.]
+- [Nice try.|You'd say that either way.|Right, and I'm the dean.]
 - [Everyone's wrong except you, huh?|That's convenient.|Uh-huh.]
 - [I'm not stupid.|Save it.|I don't believe you.]
 - [{Src} told me everything, and that's not it.|Are you calling {src} a liar?]
@@ -891,7 +891,7 @@ opens comfort,hush,ask
 
 @rule react.admit.good.go.onday
 on react
-when move=admit fit=good step<=1 kind=you kind=day
+when move=admit fit=good step<=1 kind=you
 opens comfort,hush,ask
 - [Now that you've said it, what was {mything} about?|So tell me, why {mything}?] [I want to understand.|I'm listening.]
 - [Who else knows about {mything}?|Does anyone else know about {mything}?] [Should I be careful?|I'm asking seriously.]
@@ -910,7 +910,7 @@ feel sad
 
 @rule react.admit.close.onday
 on react
-when move=admit kind=you rel=girlfriend|lover kind=day
+when move=admit kind=you rel=girlfriend|lover
 feel sad
 - [So {mything} is real.|I was hoping you'd tell me {mything} wasn't true.] [It hurts.|I need a moment.]
 - [You could've told me about {mything} before I heard it.|Why did I have to find out about {mything} this way?]
@@ -1155,7 +1155,7 @@ opens tease,comfort,invite
 - [I started one video at midnight.|I told myself one more chapter.|I couldn't fall asleep, so I gave up.] [Then the birds started singing.|You know how that goes.]
 - [My neighbor's dog.|My little brother's game.|The rain on the window.] [All night.|I'd like a word with it.]
 - [I kept thinking about stupid things.|I remembered something embarrassing at two in the morning.] [Then I couldn't sleep.|From three years ago.]
-- [Homework. I started it at eleven.|I crammed for the quiz.] [Don't look at me like that.|I'm not smart about this.]
+- {student}[Assignments. I started it at eleven.|I crammed for the quiz.] [Don't look at me like that.|I'm not smart about this.]
 - [I honestly don't know.|My bed and I had a fight.] [Went to bed on time and everything.|It won.]
 
 @rule react.ask.day.hungry
@@ -1174,9 +1174,9 @@ when move=ask kind=day mood=bored fit=good|neutral step<=1
 opens invite,tease,share
 - [Anything else. Literally anything.|I'd rather be outside.] [Even running laps.|It's so nice out.]
 - [Everyone's busy, and I've got nothing to do.|Nothing's going on, and it's not even over yet.] [Maybe you can fix that.|Rescue me.]
-- [The teacher read straight from the book.|We got a free period and nobody did anything.] [For an hour.|That's the worst part.]
+- {student}[The professor read straight from the book.|We got a free period and nobody did anything.] [For an hour.|That's the worst part.]
 - [I want to go somewhere.|I want something to happen.] [Anywhere new.|Good or bad.]
-- [Do you ever feel like every day's the same?|I think I've seen everything this school has.] [I'm serious.|Surprise me.]
+- [Do you ever feel like every day's the same?|I think I've seen everything this university has.] [I'm serious.|Surprise me.]
 
 @rule react.ask.day.lonely
 on react

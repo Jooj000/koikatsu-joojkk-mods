@@ -139,7 +139,7 @@ namespace Joojkk.CampusLife
                 St(1, "Plus One", "Talk with two girls at once until they have to go."),
                 St(3, "Party of Three", "Talk with two girls at once until they have to go, 3 times."),
                 St(10, "Social Hub", "Talk with two girls at once until they have to go, 10 times.") } },
-            new Def { Id = "all_friends", Cat = "Friendship", Tier = 3, Name = "Whole School", Goal = "Become friends with every student at school.", Roster = true, Goal2 = () => Students(h => true), Progress = () => Students(h => h.relation >= 1 || h.isGirlfriend) },
+            new Def { Id = "all_friends", Cat = "Friendship", Tier = 3, Name = "Whole University", Goal = "Become friends with every student on campus.", Roster = true, Goal2 = () => Students(h => true), Progress = () => Students(h => h.relation >= 1 || h.isGirlfriend) },
 
             // ---- Romance ----
             new Def { Id = "held_hands", Cat = "Romance", Tier = 1, Name = "Hand in Hand", Progress = () => LoreCount("held_hands"), Stages = new[] {
@@ -159,17 +159,17 @@ namespace Joojkk.CampusLife
                 St(2, "Turning Pages", "Finish two chapters with one girlfriend."),
                 St(3, "Happily Ever After", "Finish all three chapters with one girlfriend.") } },
             new Def { Id = "harem", Cat = "Romance", Tier = 3, Name = "Shared Heart", Goal = "Have two girlfriends who agreed to share you.", Target = 2, Progress = () => S.Harem.Count },
-            new Def { Id = "all_dates", Cat = "Romance", Tier = 3, Name = "Everyone's Sweetheart", Goal = "Date every student at school.", Roster = true, Goal2 = () => Students(h => true), Progress = () => Students(h => h.isGirlfriend) },
+            new Def { Id = "all_dates", Cat = "Romance", Tier = 3, Name = "Everyone's Sweetheart", Goal = "Date every student on campus.", Roster = true, Goal2 = () => Students(h => true), Progress = () => Students(h => h.isGirlfriend) },
 
             // ---- Campus ----
-            new Def { Id = "school_days", Cat = "Campus", Tier = 1, Name = "School Days", Progress = () => S.Day, Stages = new[] {
-                St(7, "First Week", "Spend 7 days at school."),
-                St(30, "Regular", "Spend 30 days at school."),
-                St(60, "Old Hand", "Spend 60 days at school."),
-                St(100, "Senpai", "Spend 100 days at school.") } },
-            new Def { Id = "festival", Cat = "Campus", Tier = 2, Name = "School Events", Progress = SchoolEvents, Stages = new[] {
-                St(1, "Festival Goer", "Live through a school event (exams, sports festival, culture festival or field trip)."),
-                St(2, "Event Regular", "Live through 2 different school events."),
+            new Def { Id = "school_days", Cat = "Campus", Tier = 1, Name = "College Days", Progress = () => S.Day, Stages = new[] {
+                St(7, "First Week", "Spend 7 days on campus."),
+                St(30, "Regular", "Spend 30 days on campus."),
+                St(60, "Old Hand", "Spend 60 days on campus."),
+                St(100, "Senpai", "Spend 100 days on campus.") } },
+            new Def { Id = "festival", Cat = "Campus", Tier = 2, Name = "Campus Events", Progress = SchoolEvents, Stages = new[] {
+                St(1, "Festival Goer", "Live through a college event (exams, sports festival, culture festival or field trip)."),
+                St(2, "Event Regular", "Live through 2 different campus events."),
                 St(4, "Season Pass", "Live through the exams, sports festival, culture festival and field trip.") } },
             new Def { Id = "honor", Cat = "Campus", Tier = 2, Name = "Honor Roll", Goal = "Score 80 or more on an exam.", Progress = () => S.ExamScores.Any(x => x >= 80) ? 1 : 0 },
             new Def { Id = "routine", Cat = "Campus", Tier = 2, Name = "Everyday Life", Progress = () => C("duo:lunch") + C("duo:study") + C("duo:club") + C("duo:season"), Stages = new[] {
@@ -198,20 +198,20 @@ namespace Joojkk.CampusLife
 
             // ---- Stories (the game's heroines and teachers; each one also has her own climb, see Dynamic) ----
             new Def { Id = "story_met", Cat = "Stories", Tier = 1, Name = "Main Cast", Goal = "Meet one of the story heroines.", Progress = () => Stories(h => S.MetDay.ContainsKey(GirlInfo.Key(h)) || h.talkEvent.Contains(0)) },
-            new Def { Id = "teacher_met", Cat = "Stories", Tier = 1, Name = "Office Hours", Goal = "Talk with a teacher.", Progress = () => TeacherCount(Teachers.Met) },
+            new Def { Id = "teacher_met", Cat = "Stories", Tier = 1, Name = "Office Hours", Goal = "Talk with a professor.", Progress = () => TeacherCount(Teachers.Met) },
             new Def { Id = "route_one", Cat = "Stories", Tier = 2, Name = "Story Routes", Goal2 = () => Stories(h => true), Progress = () => Stories(StoryCast.StoryOver), Stages = new[] {
                 St(1, "The End?", "Finish a story heroine's route."),
                 St(0, "Completionist", "Finish every story heroine's route.") } },
             new Def { Id = "teacher_done", Cat = "Stories", Tier = 2, Name = "Faculty", Goal2 = () => TeacherCount(h => true), Progress = () => TeacherCount(Teachers.EventOver), Stages = new[] {
-                St(1, "Teacher's Pet", "See a teacher's story to its end."),
-                St(0, "Faculty Favorite", "See every teacher's story to its end.") } },
-            new Def { Id = "teacher_h", Cat = "Stories", Tier = 2, Name = "Extra Lessons", Goal = "Go all the way with a teacher.", Progress = () => TeacherCount(h => h.hCount > 0) },
+                St(1, "Professor's Pet", "See a professor's story to its end."),
+                St(0, "Faculty Favorite", "See every professor's story to its end.") } },
+            new Def { Id = "teacher_h", Cat = "Stories", Tier = 2, Name = "Extra Lessons", Goal = "Go all the way with a professor.", Progress = () => TeacherCount(h => h.hCount > 0) },
 
             // ---- Trouble (they only record; nothing is taken from you) ----
             new Def { Id = "seen", Cat = "Trouble", Tier = 1, Name = "Gossip", Progress = () => S.Incidents.Count, Stages = new[] {
                 St(1, "Seen", "Get seen doing something you shouldn't."),
-                St(5, "Rumor Mill", "Be part of 5 things the school talks about."),
-                St(10, "Talk of the School", "Be part of 10 things the school talks about.") } },
+                St(5, "Rumor Mill", "Be part of 5 things the university talks about."),
+                St(10, "Talk of the university", "Be part of 10 things the university talks about.") } },
             new Def { Id = "duo:caught", Cat = "Trouble", Tier = 2, Name = "Caught Out", Goal = "Get confronted by your girlfriend about another girl." },
             new Def { Id = "walked_off", Cat = "Trouble", Tier = 2, Name = "Third Wheel", Progress = () => C("trio:aleft") + C("trio:bleft"), Stages = new[] {
                 St(1, "Third Wheel", "Make a girl walk off while you talk with her and a friend."),
@@ -229,8 +229,8 @@ namespace Joojkk.CampusLife
                 St(1, "A Fairy's Favor", "Meet the Panty Fairy."),
                 St(2, "Fairy Tale Ending", "Finish the Panty Fairy's story.") } },
             new Def { Id = "crest_one", Cat = "Extras", Tier = 2, Mod = Mods.LewdCrestX, Name = "Crests", Progress = () => Students(h => Mods.Crest(h) != ""), Stages = new[] {
-                St(1, "Marked", "A girl at school wears a crest."),
-                St(5, "Crest Collector", "Five girls at school wear a crest.") } },
+                St(1, "Marked", "A girl on campus wears a crest."),
+                St(5, "Crest Collector", "Five girls on campus wear a crest.") } },
             new Def { Id = "pregnant", Cat = "Extras", Tier = 2, Mod = Mods.Pregnancy, Name = "Family Way", Goal = "A girl gets pregnant.", Progress = () => Students(Mods.EverPregnant) },
             new Def { Id = "fairy_pairs", Cat = "Extras", Tier = 3, Mod = Mods.PantyFairy, Name = "The Fairy's Collection", Progress = Mods.FairyHaul, Stages = new[] {
                 St(5, "Pickpocket", "Take 5 pairs for the fairy."),
@@ -253,7 +253,7 @@ namespace Joojkk.CampusLife
             { -5, new[] { "Idol Conqueror", "The Idol Next Door", "Autograph", "Off Stage", "Rehearsal", "Behind the Curtain", "Encore", "Duet", "Her Biggest Fan" } },
             { -8, new[] { "Senpai Material", "The New Girl", "Lost in the Halls", "Bento for Two", "Study Buddy", "A Little Courage", "Brave Words", "Hand in Hand", "Her Senpai" } },
             { -9, new[] { "Rebel Heart", "Trouble on the Rooftop", "Skipping Class", "The Fight", "Bandages", "Soft Side", "Leaning on You", "No More Fights", "Her Knight" } },
-            { -10, new[] { "Classic Romance", "The Girl on the Rooftop", "Class Rep's Request", "After School", "The Walk Home", "Letters", "Confession", "A Promise", "Ever After" } },
+            { -10, new[] { "Classic Romance", "The Girl on the Rooftop", "Class Rep's Request", "After Class", "The Walk Home", "Letters", "Confession", "A Promise", "Ever After" } },
         };
 
         private static readonly string[] AnyStory = { "", "First Meeting", "Getting Closer", "Her Secret", "Just Us", "A Hard Day", "Opening Up", "Confession", "Her Ending" };
@@ -263,8 +263,8 @@ namespace Joojkk.CampusLife
             St(1, "Office Hours", "Meet her."),
             St(2, "After Class", "Become her friend."),
             St(3, "Forbidden Lesson", "Become more than her student."),
-            St(4, "Teacher's Favorite", "Get truly close to her."),
-            St(5, "Off the Clock", "See her story to its end: she joins the school as herself."),
+            St(4, "Professor's Favorite", "Get truly close to her."),
+            St(5, "Off the Clock", "See her story to its end: she joins the university as herself."),
         };
 
         private static readonly Dictionary<string, Def> DynDefs = new Dictionary<string, Def>();

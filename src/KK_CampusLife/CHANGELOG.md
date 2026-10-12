@@ -2,6 +2,30 @@
 
 Until 2.5 the plugin's own version (`CampusLifePlugin.Version`) stayed at 2.0.0 and the numbers were the milestones of the combined repository. From 3.0.0 on the plugin carries the version itself; the cycles between 2.5 and 3.0 are numbered 2.6 to 2.9 below.
 
+## 3.5.0
+- Professors and the nurse act like staff. They sit at the faculty desks, work in the infirmary and walk the halls, and never take a student's desk.
+- Talking to a professor at her spot opens the mod's procedural conversation in place of the game's repeating one. Students, professors and the nurse each have their own options and first lines.
+- Each professor speaks by her own personality, with an opening line of her own.
+- Calendar events keep their nature: Chocolate Day is a day for giving chocolate, an exam is an exam, a trip is a trip. None of them is called a party anymore.
+- A dialogue review fixed lines and options that did not follow what was said before them.
+- The uniform is back: the "College clothes" option from 3.4.0 is gone, so the outfits of the card show as the game places them.
+- With a class over the daily limit, the director brings fewer professors and story heroines to campus. Only those with an event that day are sure to come; once they are regular students they join the normal selection.
+- The girl you are courting comes back the next day: anyone you talked to in the last three days now has priority in the daily selection.
+
+## 3.4.0
+- The setting is a college. Every line, option, label, tip and option description now talks about a university, professors, the dean and the campus; the game's own staff titles follow through `data\translation\zzz_JoojkkCampus.txt`. The game's own story text is not rewritten.
+- College clothes (option, on by default): on campus everyone wears the Casual outfit of their card instead of the School outfits.
+- Professors have spicier lines in a flirty mood, in place of the old playful ones.
+- The nurse's flirt scene happens in the infirmary, and lines about desks and class belong to students.
+- "Invite her to H" with a wary no now says what held her back, like "Sneak off together".
+- Every option now belongs to the line it answers. Each like, each subject and each thing she brings up (club, weather, a place, a rumor, a fight with a friend, an exam, a professor's or the nurse's job) has its own options and its own answers, written together, and what you say first leads to what she says.
+
+## 3.3.1
+- The school nurse has her own job. Her moods come from the infirmary (quiet days, supplies, records, checkups, students faking a fever), her lines and options talk about it, and the Actions list offers "Say you don't feel well", "Ask for a bandage" and "Offer to help restock". Class teachers get "Ask about today's lesson" and "Offer to carry her papers".
+- Every line now knows who may say it: a teacher no longer says a student's line, and the nurse no longer talks about classes, grades or lesson plans. Introductions and first meetings follow her job too.
+- "Admit about the others" only shows for a girl who is already interested in you.
+- A girl the director brings to your map now really appears there, instead of staying out of sight.
+
 ## 3.3.0
 - Boys in the class: the male folder shows next to female in the class roster and a male card takes a seat. He uses the boys' toilet, loses reputation in the girls' areas and catches girls who walk into the boys' toilet. "Likes girls" counts the same for everyone.
 - Teachers stay teachers. A teacher whose event is over only takes a student seat in the code: she walks and talks freely, keeps a teacher's lines and is "-sensei" to everyone. Her mood comes from her job (a raise, her class's results, praise from the principal, grading all night, lesson plans, the staff party, parents, a complaint, a staff meeting), the same reason all day, and you can ask about it. Students react to you and a teacher ("You did it with the teacher?!"), teachers scold, gossip from the staff room, and in a talk with both a teacher and a student, or two colleagues, speak to each other as what they are.

@@ -1,53 +1,14 @@
-# School topics: {event} the label ("the sports festival"), {eventline} with the day, {school} event/council/project.
+# School topics: {event} the label ("the Sports Festival", "Chocolate Day"), {eventline} with the day, {school} event/council/project/rumors, {evkind} what kind of event it is.
 
 @rule me.school
 on me.school
-- [What do you think about {event}?|Are you ready for {event}?|So, {event}...]
-- [How do you feel about {event}?|{Event} is coming, huh?] [Any thoughts?|Got plans?]
-- [Heard anything about {event}?|You doing anything for {event}?]
-
-@rule me.school.event
-on me.school
-when school=event
-- [Are you going to {event}?|{Event} is coming up, huh?|Got plans for {event}?]
-- [Will you be at {event}?|What are you doing for {event}?|Excited about {event}?]
-- [Who are you going to {event} with?|Is {event} worth going to?]
-
-@rule school.plain
-on school
-opens ask,invite,share
-- [{Event}? I haven't thought about it much.|Oh, {event}.] [Should be interesting.|Everyone's talking about it.]
-- [{Event}, huh?|Ah, right, {event}.] [I'll go if my friends do.|Could be fun.|It sneaks up every year.]
-- [Hmm, {event}.|{Event}? Already?] [I should probably prepare something.|Time flies.]
-
-@rule school.event.cheer
-on school
-when school=event mood=cheerful|flirty|none
-opens invite,ask,tease
-feel smile
-- [I can't wait for {event}!|{Event}? I've been looking forward to it.] [It's {eventline}, right?|We should go together.|I'm already planning what to wear.]
-- [{Event} is the best part of the term!|Yes! {Event}!] [Promise you'll come?|I've got a whole plan.]
-- [Only a little longer till {event}.|I've been counting the days to {event}.] [I'm so excited.|Let's make it memorable.]
-
-@rule school.event.low
-on school
-when school=event low=yes
-opens comfort,invite,ask
-- [{Event}...|Ugh, is that soon?] [I'm not really in the mood.|I don't know if I'll go.|Maybe if someone came with me...]
-- [{Event} again...|I forgot about {event}.] [I don't really feel like it.|Maybe I'll stay home.]
-- [Everyone's so excited about {event}.|{Event}, huh.] [I just can't get into it.|Wake me up when it's over.]
-
-@rule school.event.club
-on school
-when school=event hasclub=yes
-opens ask,praise,invite
-- [The {club} is doing something for {event}.|We've been preparing for {event} at the {club}.] [Come see us?|It's a lot of work.|I'm kind of nervous.]
-- [The {club} has a booth at {event}.|We're putting on a show at {event}.] [Stop by!|Wish us luck.]
-- [{Event} means double practice at the {club}.|I'm in charge of something for the {club} at {event}.] [I'm exhausted.|Don't laugh if I mess up.]
+- [What do you think about {event}?|So, {event}...]
+- [Heard anything about {event}?|How do you feel about {event}?]
 
 @rule school.council
 on school
 when school=council
+hook f_school_council
 opens ask,agree,tease
 - [The council race? {Eventline}.|Everyone's picking sides for the council.] [Who are you voting for?|It's getting intense.|I just want it to be over.]
 - [Posters everywhere for the council race.|The council debate was something.] [Who are you backing?|Pretty heated.]
@@ -56,33 +17,355 @@ opens ask,agree,tease
 @rule school.project
 on school
 when school=project
+hook f_school_project
 opens ask,praise,invite
 - [The club project? {Eventline}.|We're still working on the project.] [It's coming along.|We could use a hand, honestly.|I think it'll turn out well.]
 - [The project is almost done.|The project's eating all our free time.] [Fingers crossed.|But it's worth it.]
 - [We had a breakthrough on the project.|The project needs one more push.] [Finally.|Want to help?]
 
+@rule school.plain
+on school
+hook f_school_plain
+opens ask,share,tease
+- [{Event}? I haven't thought about it much.|Oh, {event}.] [Should be interesting.|Everyone's talking about it.]
+- [{Event}, huh?|Ah, right, {event}.] [Time flies.|People won't stop mentioning it.]
+
+# ================= each calendar event for what it is (2026-11-01: "chocolate day [...] não é uma festa") =================
+# {evkind}: gift (Chocolate Day), exam, sports, fair (Culture Festival), trip, wish (Tanabata), costume (Halloween), eve
+# (Christmas Eve). A line under plain "school=event" must be true of all of them. Nobody "goes to" Chocolate Day.
+
+@rule me.school.gift
+on me.school
+when evkind=gift
+- [{Event} is coming, huh?|So, {event}...] [Are you making anything?|Homemade or store-bought?]
+- [Is anyone getting chocolate from you?|Do you give chocolate on {event}?|Is your chocolate for everyone, or for one person?]
+
+@rule me.school.exam
+on me.school
+when evkind=exam
+- [Are you ready for {event}?|How's the studying going?|{Event} are close, huh?]
+- [Have you started revising?|Which subject worries you most?]
+
+@rule me.school.sports
+on me.school
+when evkind=sports
+- [Are you ready for {event}?|{Event} is coming up, huh?] [Which events are you in?|Are you running in the relay?]
+- [Which team are you on for {event}?|Have you been training for {event}?]
+
+@rule me.school.fair
+on me.school
+when evkind=fair
+- [Are you helping out at {event}?|Have you seen the stalls going up for {event}?]
+- [{Event} is coming up, huh?] [Are you running a stall?|What shouldn't I miss?]
+
+@rule me.school.trip
+on me.school
+when evkind=trip
+- [Are you packed for {event}?|Looking forward to {event}?|Who are you sitting with on the bus?]
+- [{Event} is coming up, huh?] [What are you bringing?|Is there anywhere you want to see?]
+
+@rule me.school.wish
+on me.school
+when evkind=wish
+- [Have you written your wish for {event}?|What are you wishing for at {event}?]
+- [{Event} is coming up, huh?] [Do you still hang up a wish?|Are you going to see the bamboo?]
+
+@rule me.school.costume
+on me.school
+when evkind=costume
+- [What are you going as for {event}?|Got a costume for {event}?]
+- [{Event} is coming up, huh?] [Are you dressing up?|Do you do the whole costume thing?]
+
+@rule me.school.eve
+on me.school
+when evkind=eve
+- [Any plans for {event}?|Who are you spending {event} with?]
+- [{Event} is coming up, huh?] [Got plans?|Are you staying in?]
+
+# ---------------- Chocolate Day ----------------
+@rule school.gift.up
+on school
+when school=event evkind=gift mood=cheerful|flirty|none role!=teacher
+feel smile
+hook f_school_gift_up
+opens ask,invite,tease
+- [I've been melting chocolate all week.|My kitchen smells like cocoa.] [The first batch went in the bin.|It's harder than it looks.]
+- [{Event}'s nearly here.|Only a few days till {event}.] [I still haven't decided who gets what.|I need more ribbon.]
+- [Homemade or store-bought, that's the question.|I bought the good chocolate this year.] [I hope it turns out.|No pressure.]
+
+@rule school.gift.low
+on school
+when school=event evkind=gift low=yes role!=teacher
+hook f_school_gift_low
+opens comfort,ask,share
+- [{Event}...|Ugh, {event}.] [I don't even know who I'd give any to.|Everyone keeps comparing who got what.]
+- [I burned the chocolate again.|Every shop's sold out of the good stuff.] [I may just skip it this year.|Maybe a store-bought box will do.]
+
+@rule school.gift.cool
+on school
+when school=event evkind=gift voice=cool|serious|proper role!=teacher
+hook f_school_gift_cool
+opens ask,agree,tease
+- [{Event}. I've made a list.|I've got the courtesy chocolates sorted.] [Everyone gets the same box.|It's only polite.]
+- [{Event} is mostly confectioners' marketing.|A whole day decided by a chocolate company.] [I'll still give some.|Don't read anything into it.]
+
+@rule school.gift.staff
+on school
+when school=event evkind=gift role=teacher
+hook f_school_gift_staff
+opens ask,share,tease
+- {classes}[My desk fills up with chocolate on {event}.|Every {event} a few students leave chocolate in the faculty room.] [The staff eat it by Friday.|I'm grateful, and heavier.]
+- [{Event}? I buy one big box for the whole staff.|{Event} at my age is a shared box.] [Nobody gets their hopes up.|It's a very safe tradition.]
+
+@rule school.gift.nurse
+on school
+when school=event evkind=gift job=nurse
+hook f_school_gift_nurse
+opens ask,tease,share
+- [{Event} means stomach aches.|After {event} I see a lot of stomach aches.] [Too much chocolate, too fast.|Pace yourself, please.]
+- [Every {event}, someone comes in with a burned finger.|Melted chocolate is hotter than it looks.] [Usually from the kitchen, not from love.|Run it under cold water.]
+
+# ---------------- exams ----------------
 @rule school.exam
 on school
-when exam=yes
-opens comfort,invite,ask
+when school=event evkind=exam role!=teacher
 feel worried
-- [Don't remind me about the exams.|Exams, exams, exams.] [Want to study together?|I'm so behind.|If I fail one more test...]
-- [Exams are coming and my brain is empty.|I keep dreaming about the exams.] [Save me.|Bad dreams.]
-- [Did you start studying for the exams?|Only a few days till the exams.] [Please say no.|I'm panicking.]
+hook f_school_exam
+opens comfort,invite,ask
+- [Don't remind me about {event}.|Exams, exams, exams.] [Want to study together?|I'm so behind.|If I fail one more test...]
+- [{Event} are coming and my brain is empty.|I keep dreaming about {event}.] [Save me.|Bad dreams.]
+- [Did you start studying for {event}?|Only a few days till {event}.] [Please say no.|I'm panicking.]
 
-@rule school.cool
+@rule school.exam.ready
 on school
-when voice=cool|serious|proper
+when school=event evkind=exam voice=cool|serious|proper role!=teacher
+hook f_school_exam_ready
+opens ask,invite,agree
+- [{Event}. I've made a revision schedule.|I've been through my notes for {event} twice.] [It should be fine.|Only two chapters left.]
+- [{Event} are only a matter of preparation.|I started revising last week.] [Are you behind?|It's calmer that way.]
+
+@rule school.teacher.exam
+on school
+when evkind=exam role=teacher
+hook f_school_teacher_exam
+opens ask,comfort,tease
+- {classes}[I finished writing the exam last night.|The exam papers are locked in the faculty room.] [Don't ask.|I've said all I'm going to say.]
+- {classes}[I've got a long week of grading ahead.|After {event}, I grade until my eyes close.] [Please write clearly.|Pity me.]
+- [Are you asking about {event} to get out of studying?|Shouldn't you be revising?] [I know that trick.|Go on.]
+
+@rule school.exam.nurse
+on school
+when evkind=exam job=nurse
+hook f_school_exam_nurse
+opens ask,share,comfort
+- [Before {event}, half my visitors just haven't slept.|{Event} fill my beds.] [Nobody's sick. Everyone's tired.|Sleep is a study method too.]
+- [Skip the energy drinks before {event}.|I've seen what all-nighters do.] [I'm serious.|Eat a real breakfast.]
+
+# ---------------- sports festival ----------------
+@rule school.sports.up
+on school
+when school=event evkind=sports mood=cheerful|flirty|none role!=teacher
+feel smile
+hook f_school_sports_up
+opens invite,ask,tease
+- [I signed up for the relay.|Our team's practicing every evening.] [We can't lose to the other department.|My legs hate me.]
+- [{Event} is only a few days away.|Only a little longer till {event}.] [I hope the weather holds.|Are you cheering for my team?]
+
+@rule school.sports.genki
+on school
+when school=event evkind=sports voice=genki|energetic|boyish|tough role!=teacher
+feel laugh
+hook f_school_sports_genki
+opens invite,tease,ask
+- [{Event}! I'm totally going to win!|{Event} is gonna be awesome!] [You'd better cheer for me!|Bet I beat you!]
+- [I've been training for {event} all week!|{Event}! Finally!] [Watch me!|Let's goooo!]
+
+@rule school.sports.low
+on school
+when school=event evkind=sports low=yes role!=teacher
+hook f_school_sports_low
+opens comfort,invite,ask
+- [They put me in the relay.|I got signed up for the three-legged race.] [I didn't even ask.|I'll fall. I know I'll fall.]
+- [{Event}...|Ugh, {event}.] [I'm no good at sports.|Can I just hold the water bottles?]
+
+@rule school.sports.club
+on school
+when school=event evkind=sports clubkind=sports role!=teacher
+hook f_school_sports_club
+opens ask,praise,invite
+- [The {club} is expected to win at {event}.|The whole {club} is entered at {event}.] [No pressure at all.|We've doubled practice.]
+
+@rule school.sports.staff
+on school
+when school=event evkind=sports role=teacher
+hook f_school_sports_staff
+opens ask,share,tease
+- {classes}[I'm timing the races at {event}.|They've given me the whistle for {event}.] [Don't cheat. I can see you.|I've been told to look enthusiastic.]
+- [{Event} means a day out in the sun for the staff too.|At {event} even the professors run.] [There's a teachers' relay. Don't watch.|Don't laugh at my form.]
+
+@rule school.nurse
+on school
+when evkind=sports job=nurse
+hook f_school_nurse
+opens ask,invite,share
+- [{Event}? I'll be in the first aid tent.|{Event} means more bandages for me.] [Somebody has to be.|Try not to visit me.]
+- [I look forward to {event}.|Everyone loves {event}.] [I just count the sprains.|Drink water, please.]
+
+# ---------------- culture festival ----------------
+@rule school.fair.up
+on school
+when school=event evkind=fair mood=cheerful|flirty|none role!=teacher
+feel smile
+hook f_school_fair_up
+opens invite,ask,tease
+- [{Event} is the best part of the term!|Yes! {Event}!] [I want to try every stall.|I've got a whole plan.]
+- [Only a little longer till {event}.|I've been counting the days to {event}.] [We should walk around together.|Let's make it memorable.]
+
+@rule school.fair.low
+on school
+when school=event evkind=fair low=yes role!=teacher
+hook f_school_fair_low
+opens comfort,invite,ask
+- [Everyone's so excited about {event}.|{Event}, huh.] [I just can't get into it.|Wake me up when it's over.]
+- [{Event} again...|I forgot about {event}.] [I don't really feel like it.|Maybe I'll stay home.]
+
+@rule school.fair.cool
+on school
+when school=event evkind=fair voice=cool|serious|proper role!=teacher
+hook f_school_fair_cool
 opens ask,agree
 - [{Event}. It's well organized this year.|I've read the schedule for {event}.] [It should go smoothly.|Do you need the details?]
-- [{Event}. I've planned accordingly.|I'm helping organize {event}.] [It won't be a problem.|Some of it, anyway.]
-- [{Event} comes every year.|I'll attend {event}, of course.] [Nothing to get excited about.|It's expected.]
+- [I'm helping organize {event}.|I'll attend {event}, of course.] [It won't be a problem.|It's expected.]
 
-@rule school.genki
+@rule school.event.club
 on school
-when voice=genki|energetic|boyish|tough
-opens invite,tease,ask
-feel laugh
-- [{Event}! I'm totally going to win!|{Event} is gonna be awesome!] [You'd better cheer for me!|Bet I beat you!]
-- [{Event}! I can't sit still!|Let's go all out at {event}!] [It's gonna be epic!|You and me, team!]
-- [I've been training for {event} all week!|{Event}! Finally!] [Watch me!|Let's goooo!]
+when school=event evkind=fair hasclub=yes role!=teacher
+hook f_school_event_club
+opens ask,praise,invite
+- [The {club} is doing something for {event}.|We've been preparing for {event} at the {club}.] [Come see us?|It's a lot of work.|I'm kind of nervous.]
+- [The {club} has a booth at {event}.|We're putting on a show at {event}.] [Stop by!|Wish us luck.]
+
+@rule school.fair.staff
+on school
+when school=event evkind=fair role=teacher
+hook f_school_fair_staff
+opens ask,invite,share
+- {classes}[{Event}? I'm on the committee, of course.|Professors do most of the work for {event}, you know.] [Nobody asked me.|Don't ask about the budget.]
+- [Ah, {event}. More forms to fill in.|{Event} means extra duty for me.] [I'll enjoy it from the sidelines.|You'd better behave.]
+
+@rule school.fair.nurse
+on school
+when school=event evkind=fair job=nurse
+hook f_school_fair_nurse
+opens ask,tease,share
+- [At {event} I treat burns from the takoyaki stall.|{Event} is all cuts from cardboard and hot oil.] [Every year.|Be careful with the stall tools.]
+
+# ---------------- field trip ----------------
+@rule school.trip.up
+on school
+when school=event evkind=trip mood=cheerful|flirty|none role!=teacher
+feel smile
+hook f_school_trip_up
+opens ask,invite,tease
+- [I've been packing for {event} for days.|My bag for {event} is already too heavy.] [Do I really need three books?|Better too much than too little.]
+- [{Event} is close!|Only a few days till {event}.] [Who are you sitting with on the bus?|I want to see the old town.]
+
+@rule school.trip.low
+on school
+when school=event evkind=trip low=yes role!=teacher
+hook f_school_trip_low
+opens comfort,invite,ask
+- [{Event}...|Ugh, {event}.] [I get sick on buses.|Hours on a bus with everyone.]
+- [I still haven't paid the deposit for {event}.|I don't know who I'd room with on {event}.] [I may stay behind.|I'd rather not think about it.]
+
+@rule school.trip.staff
+on school
+when school=event evkind=trip role=teacher
+hook f_school_trip_staff
+opens ask,share,tease
+- {classes}[I'm a chaperone on {event}.|Guess who's counting heads on {event}.] [Don't get lost.|Please be on time for the bus.]
+- [{Event} is a lot of paperwork for one bus ride.|I've booked every room for {event} myself.] [Be grateful.|Nobody thanks the planner.]
+
+@rule school.trip.nurse
+on school
+when school=event evkind=trip job=nurse
+hook f_school_trip_nurse
+opens ask,share,tease
+- [I'm packing the first aid bag for {event}.|If you get bus-sick on {event}, sit at the front.] [Tell me before it happens.|I've got pills.]
+
+# ---------------- Tanabata ----------------
+@rule school.wish.up
+on school
+when school=event evkind=wish mood=cheerful|flirty|none role!=teacher
+feel smile
+hook f_school_wish_up
+opens ask,invite,tease
+- [They've put up the bamboo for {event}.|I saw the bamboo out for {event}.] [I still have to write my wish.|It's already covered in paper strips.]
+- [I've been thinking about my wish for {event}.|{Event}'s nearly here.] [I won't tell you what it is.|I hope it's a clear night.]
+
+@rule school.wish.low
+on school
+when school=event evkind=wish low=yes role!=teacher
+hook f_school_wish_low
+opens comfort,ask,share
+- [I don't know what to wish for at {event}.|{Event}...] [Nothing I write ever comes true.|It's just paper on a stick.]
+
+@rule school.wish.staff
+on school
+when school=event evkind=wish role=teacher
+hook f_school_wish_staff
+opens ask,tease,share
+- {classes}[I read the wishes on the bamboo for {event}.|Half the wishes for {event} are about passing my class.] [Paper won't help you.|Study instead.]
+- [Even the faculty room has a bamboo for {event}.|I hung up a wish for {event} too.] [Don't ask what I wrote.|It involves a long holiday.]
+
+# ---------------- Halloween ----------------
+@rule school.costume.up
+on school
+when school=event evkind=costume mood=cheerful|flirty|none role!=teacher
+feel smile
+hook f_school_costume_up
+opens ask,invite,tease
+- [I've got my costume for {event}!|I'm still sewing my {event} costume.] [You won't recognize me.|Don't peek.]
+- [{Event} is so close.|Only a little longer till {event}.] [I bought far too much candy.|You'd better dress up too.]
+
+@rule school.costume.low
+on school
+when school=event evkind=costume low=yes role!=teacher
+hook f_school_costume_low
+opens comfort,invite,tease
+- [I don't have a costume for {event}.|{Event}, huh.] [I'll go as a tired person.|Everyone else looks so good.]
+
+@rule school.costume.staff
+on school
+when school=event evkind=costume role=teacher
+hook f_school_costume_staff
+opens ask,tease,share
+- {classes}Please don't wear your {event} costume to my class. I can't grade a vampire. Candy?
+- {classes}I'm told a professor must dress up for {event}. [Have a candy while I think.|Take a candy. I'm still deciding.]
+- [Someone left a bag of {event} candy on my desk.|{Event}, and the faculty room is full of candy.] [Have one. I've still got a costume to find.|Take some. I've got to find a costume.]
+
+# ---------------- Christmas Eve ----------------
+@rule school.eve.up
+on school
+when school=event evkind=eve mood=cheerful|flirty|none role!=teacher
+feel smile
+hook f_school_eve_up
+opens ask,invite,tease
+- [{Event} is nearly here.|Only a few days till {event}.] [I've ordered a cake.|I still need to buy presents.]
+- [Everyone's making plans for {event}.|Have you seen the lights in town?] [It really feels like winter now.|I hope it snows.]
+
+@rule school.eve.low
+on school
+when school=event evkind=eve low=yes role!=teacher
+hook f_school_eve_low
+opens comfort,invite,share
+- [{Event}...|Ugh, {event}.] [I'll probably spend it alone.|All those couples in town.]
+- [I've got no plans for {event}.|Everyone's got someone for {event}.] [It's fine.|It's just another night.]
+
+@rule school.eve.staff
+on school
+when school=event evkind=eve role=teacher
+hook f_school_eve_staff
+opens ask,share,tease
+- {classes}[I'm spending {event} with a stack of papers.|My plans for {event} involve grading.] [Very romantic.|Don't look at me like that.]
+- [The staff always go out for {event}.|{Event}, and I still have work.] [Nobody talks about it the next day.|Such is the life.]

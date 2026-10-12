@@ -384,7 +384,7 @@ namespace Joojkk.CampusLife
             r.Add("favor " + h.favor);
             r.Add("trust " + trust);
             if (OtherGirlfriend(h)) { stay -= 0.4f; r.Add("you have a girlfriend"); }
-            if (gs.Rep >= 70) { stay -= 0.15f; r.Add("her name at school"); }
+            if (gs.Rep >= 70) { stay -= 0.15f; r.Add("her name on campus"); }
             if (gs.TalkDays.Distinct().Count() < 5) { stay -= 0.2f; r.Add("barely know each other"); }
             if (Profile(h) == Pace.Reserved) { stay += 0.1f; r.Add("reserved: it meant a lot"); }
             if (gs.Moments.Any(m => m.Kind == "feelings" && m.Tone > 0)) { stay += 0.2f; r.Add("you talked feelings"); }

@@ -17,6 +17,7 @@ when rel=girlfriend|lover|friend
 # ---------------- the facts ----------------
 @rule gossip.plain
 on gossip
+hook f_gossip_plain
 opens ask,agree,tease
 - [Did you hear? {Deed}.|Guess what. {Deed}.|So apparently {deed}.] [{When}, too.|Can you believe it?|Nobody saw that coming.]
 - [You won't believe it: {deed}.|Big news. {Deed}.] [{When}.|The whole class knows already.|I'm still processing it.]
@@ -25,8 +26,9 @@ opens ask,agree,tease
 @rule gossip.couple
 on gossip
 when realverb=started_dating|engaged
-opens ask,agree,tease
 feel smile
+hook f_gossip_couple
+opens ask,agree,tease
 - [{Who} and {who2} are going out now!|Did you hear? {Who} and {who2}!] [I knew it!|They're so cute together.|I give it a month.]
 - [So, {who} and {who2}...|You won't believe who's dating.] [It's official.|{Who} told me herself.]
 - [Guess who's holding hands in the hallway now? {Who} and {who2}.|{Who} said yes to {who2}!] [So sweet.|About time.]
@@ -34,8 +36,9 @@ feel smile
 @rule gossip.breakup
 on gossip
 when realverb=broke_up
-opens ask,defend,agree
 feel worried
+hook f_gossip_breakup
+opens ask,defend,agree
 - [{Who} and {who2} broke up.|It's over between {who} and {who2}.] [{Who} cried all through lunch.|I feel bad for them.|I saw it coming, honestly.]
 - [{Who} and {who2} split up {when}.|Did you hear? {Who} dumped {who2}.] [Brutal.|Nobody's sure who ended it.]
 - [So... {who} is single again.|Bad news about {who} and {who2}.] [Be nice to her for a while.|They didn't even last a month.]
@@ -43,17 +46,19 @@ feel worried
 @rule gossip.fight
 on gossip
 when realverb=fought|insulted
-opens ask,defend,agree
 feel worried
-- [{Who} and {who2} had a huge fight {when}.|Things are tense between {who} and {who2}.] [Nobody knows why.|Everyone in class went quiet.|I'm staying out of it.]
-- [Did you see {who} glaring at {who2}?|{Who} and {who2} aren't speaking.] [Something happened {when}.|The air in class is so heavy.]
+hook f_gossip_fight
+opens ask,defend,agree
+- {student}[{Who} and {who2} had a huge fight {when}.|Things are tense between {who} and {who2}.] [Nobody knows why.|Everyone in class went quiet.|I'm staying out of it.]
+- {student}[Did you see {who} glaring at {who2}?|{Who} and {who2} aren't speaking.] [Something happened {when}.|The air in class is so heavy.]
 - [{Who} yelled at {who2} {when}.|I've never seen {who} so mad.] [Over something stupid, probably.|{Who2} looked like she wanted to cry.]
 
 @rule gossip.madeup
 on gossip
 when realverb=made_up
-opens agree,ask
 feel smile
+hook f_gossip_madeup
+opens agree,ask,tease
 - [{Who} and {who2} made up!|Good news: {who} and {who2} are talking again.] [Finally.|It was getting awkward for everyone.]
 - [{Who} and {who2} were laughing together {when}.|The war between {who} and {who2} is over.] [Like nothing happened.|Peace at last.]
 - [{Who} apologized to {who2}.|They hugged it out, {who} and {who2}.] [I was so relieved.|Cute, right?]
@@ -61,8 +66,9 @@ feel smile
 @rule gossip.crush
 on gossip
 when realverb=crush
-opens ask,tease,hush
 feel smile
+hook f_gossip_crush
+opens ask,tease,hush
 - [Don't tell anyone, but... {deed}.|Promise you won't say anything? {Deed}.] [It's so obvious.|She turns red every time.|I'm sworn to secrecy, so you didn't hear it from me.]
 - [Between us... {deed}.|I wasn't supposed to notice, but {deed}.] [Isn't that adorable?|Keep it secret, okay?]
 - [You'll never guess. {Deed}.|Okay, swear on your life. {Deed}.] [Act surprised if she tells you.|She'd die if she knew I said.]
@@ -70,16 +76,18 @@ feel smile
 @rule gossip.together
 on gossip
 when realverb=seen_together
+hook f_gossip_together
 opens ask,laugh,defend
 - [{Who} and {who2} were seen behind the gym.|Someone saw {who} and {who2} sneaking off together.] [What do you think they were doing?|Scandalous, right?]
-- [{Who} and {who2} left school together {when}.|I keep seeing {who} and {who2} side by side.] [Coincidence? I don't think so.|Something's going on.]
+- [{Who} and {who2} left campus together {when}.|I keep seeing {who} and {who2} side by side.] [Coincidence? I don't think so.|Something's going on.]
 - [{Who} and {who2} were sharing a bento.|Have you noticed {who} and {who2} lately?] [Very suspicious.|Always together.]
 
 @rule gossip.drama
 on gossip
 when realverb=left_for|cheated
-opens ask,defend,agree
 feel worried
+hook f_gossip_drama
+opens ask,defend,agree
 - [Have you heard the drama? {Deed}.|It's all anyone talks about: {deed}.] [It's a total mess.|I don't know whose side to take.]
 - [Okay, so the latest disaster: {deed}.|Everyone's whispering. {Deed}.] [I can't believe it.|Someone's going to get hurt.]
 - [You've heard, right? {Deed}.|The hallway's on fire. {Deed}.] [What a mess.|I feel bad for everyone involved.]
@@ -97,6 +105,7 @@ feel smile
 @rule gossip.heard
 on gossip
 when how=heard
+hook f_gossip_heard
 opens ask,agree,defend
 - [{Src} told me {deed}.|According to {src}, {deed}.|I heard from {src} that {deed}.] [Don't say I told you.|{Src} never gets these things wrong.]
 - [{Src} mentioned that {deed}.|Word from {src}: {deed}.] [She seemed sure.|Interesting, right?]
@@ -105,6 +114,7 @@ opens ask,agree,defend
 @rule gossip.rumor
 on gossip
 when how=rumor
+hook f_gossip_rumor
 opens ask,defend,laugh
 - [People are saying {deed}.|There's a rumor that {deed}.] [I don't know if it's true.|You know how people talk.|Take it with a grain of salt.]
 - [Rumor has it {deed}.|Somebody said {deed}.] [Could be nonsense.|I'm just repeating what I heard.]
@@ -113,6 +123,7 @@ opens ask,defend,laugh
 @rule gossip.saw
 on gossip
 when how=witness
+hook f_gossip_saw
 opens ask,agree,tease
 - [I saw it myself: {deed}.|I was right there when {deed}.] [{When}.|Seriously, with my own eyes.]
 - [Swear on my life, {deed}.|I watched it happen: {deed}.] [I couldn't look away.|Nobody believes me.]
@@ -122,8 +133,9 @@ opens ask,agree,tease
 @rule gossip.friend.worried
 on gossip
 when whobond>=50 valence<=-1
-opens comfort,defend,ask
 feel sad
+hook f_gossip_friend_worried
+opens comfort,defend,ask
 - [I'm worried about {who}.|{Who}'s my friend, so...] [{Deed}.|She's taking it hard.|I don't know how to help her.]
 - [{Who} won't talk about it.|It's about {who}.] [{Deed}.|I wish I could do more.]
 - [Have you seen {who} today?|{Who} hasn't been herself.] [{Deed}.|I'm scared she's hiding how bad it is.]
@@ -131,8 +143,9 @@ feel sad
 @rule gossip.friend.happy
 on gossip
 when whobond>=50 valence>=1
-opens agree,praise,ask
 feel smile
+hook f_gossip_friend_happy
+opens agree,praise,ask
 - [I'm so happy for {who}!|{Who} finally did it!] [{Deed}.|She deserves it.]
 - [Big news for {who}!|You have to congratulate {who}.] [{Deed}.|I almost cried.]
 - [{Who} is so happy right now.|I'm proud of {who}.] [{Deed}.|She's been glowing all day.]
@@ -141,6 +154,7 @@ feel smile
 @rule gossip.cool
 on gossip
 when voice=cool|serious|proper
+hook f_gossip_cool
 opens ask,agree
 - [I don't usually spread rumors, but {deed}.|For what it's worth, {deed}.] [Do what you want with that.|I thought you should know.]
 - [I'll say it once: {deed}.|Fact, not rumor: {deed}.] [Don't repeat it.|That's all.]
@@ -149,8 +163,9 @@ opens ask,agree
 @rule gossip.gyaru
 on gossip
 when voice=gyaru|open|vamp
-opens tease,ask,laugh
 feel smile
+hook f_gossip_gyaru
+opens ask,tease,laugh
 - [Okay okay okay, so get this: {deed}.|You did NOT hear this from me, but {deed}.] [Like, wow.|I'm dying.|Isn't that wild?]
 - [Babe, you won't believe this: {deed}.|Hot news: {deed}.] [Like, literally!|Spread it. Or don't.]
 - [Oh my god, okay, so {deed}.|Listen listen: {deed}.] [I'm screaming.|The group chat exploded.]

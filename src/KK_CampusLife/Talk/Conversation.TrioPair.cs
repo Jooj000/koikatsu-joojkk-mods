@@ -64,9 +64,9 @@ namespace Joojkk.CampusLife
                     q = rival ? Q.Good : Funny(to);
                     b.Me(Lines.Pick("Tell me something embarrassing about " + on + ".", "Got any good stories about " + on + "?", "What's the dumbest thing " + on + " ever did?"));
                     Say2(b, to, other, "duo3.pair.story", T(to,
-                        "Um... once " + on + " fell asleep in class and answered the teacher in her sleep..." + " || " + on + " once sneezed so loud the whole library jumped..." + " || " + on + " once waved back at someone who wasn't waving at her..." + " || " + on + " talks to the school cat. In full sentences.",
+                        "Um... once " + on + " fell asleep in class and answered the professor in her sleep..." + " || " + on + " once sneezed so loud the whole library jumped..." + " || " + on + " once waved back at someone who wasn't waving at her..." + " || " + on + " talks to the university cat. In full sentences.",
                         "Oh! Oh! " + on + " walked into the wrong locker room once! In front of EVERYONE!" + " || " + on + " tripped on the stage at assembly! Twice!" + " || " + on + " once ate my lunch thinking it was hers!" + " || " + on + " sang in the shower and the whole floor heard!",
-                        on + " cried at a cartoon last week. A cartoon about a lost umbrella." + " || " + on + " got lost in the school. In second year." + " || " + on + " apologized to a door she walked into." + " || " + on + " named her plants. All of them.",
+                        on + " cried at a cartoon last week. A cartoon about a lost umbrella." + " || " + on + " got lost in the university. In second year." + " || " + on + " apologized to a door she walked into." + " || " + on + " named her plants. All of them.",
                         "She practices her confessions in the mirror. I've seen it~" + " || " + on + " writes his name in her notebook. Hearts too~ || She sleeps with a plushie. Named it after you~" + " || " + on + " rehearses talking to you. Out loud~"), x);
                     Say2(b, other, to, "duo3.pair.story.other", T(other, "Wh-why would you tell him that?! || Why did you tell him that?! || N-no! That's a secret! || Please stop!", "THAT WAS ONE TIME! || ONE TIME! It was ONE TIME! || HEY! You swore! || That's slander!", "...You promised. || ...We had a deal. || ...Traitor. || ...Unforgivable.", "Oh, you are so dead later~ || Oh, you're going to regret that~ || Payback's coming, sweetie. || You're so dead later~"), x, Feel.Surprised);
                     more = () => Arcs.AddBond(GirlInfo.Key(to), GirlInfo.Key(other), rival ? -1 : 1);
@@ -99,7 +99,7 @@ namespace Joojkk.CampusLife
                     break;
                 case "invite":
                     q = QFromFavor(to, 40, 15);
-                    b.Me(Lines.Pick("Want to go out after school sometime, " + tn + "? " + on + " can come too.", "Let's all hang out this weekend. You and " + on + ".", "There's a place I want to take you. " + on + " too, if she wants."));
+                    b.Me(Lines.Pick("Want to go out after class sometime, " + tn + "? " + on + " can come too.", "Let's all hang out this weekend. You and " + on + ".", "There's a place I want to take you. " + on + " too, if she wants."));
                     Reply(b, to, other, "invite", q, q == Q.Bad ? Tn("Um... maybe...", "Eh? I'll think about it!", "...We'll see.", "Hmm. Earn it~") : Tn("I'd like that...", "Yes! The three of us!", "...Sure.", "A group date? Bold~"));
                     Say2(b, other, to, "duo3.pair.invite.other", rival
                         ? T(other, "...I'll pass, thanks. || ...No, thank you. || ...I'll skip it. || ...Maybe not.", "With HER? No way. || With her?! Nope! || No way! || Ew, no!", "...Pass. || ...No. || ...Pass. || ...Decline.", "Hmm, I'll think about it. No. || Let me think... no. || Tempting. No. || Hmm. Nah.")
@@ -115,7 +115,7 @@ namespace Joojkk.CampusLife
                 case "praise":
                     lvl = Lvl.Romance;
                     q = QFromFavor(to, 55, 25);
-                    b.Me(Lines.Pick("Honestly, " + tn + ", you're the cutest girl in school.", tn + " always looks amazing. Right, " + on + "?", "I could listen to " + tn + " talk all day."));
+                    b.Me(Lines.Pick("Honestly, " + tn + ", you're the cutest girl on campus.", tn + " always looks amazing. Right, " + on + "?", "I could listen to " + tn + " talk all day."));
                     Reply(b, to, other, "praise", q, q == Q.Bad
                         ? Tn("D-don't say that in front of her...", "Whoa, awkward much?!", "...Not here.", "Laying it on thick~")
                         : Tn("E-eh?! With " + on + " right here...", "Ehehe! Say it louder!", "...You're embarrassing me.", "I know~ but thanks."));

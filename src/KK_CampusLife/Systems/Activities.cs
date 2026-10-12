@@ -41,7 +41,7 @@ namespace Joojkk.CampusLife
         {
             // classroom
             new ActivityDef { Id = "review_notes", Name = "Review lecture notes", Place = "classroom", Energy = 1, Gain = "INT 3-5", Desc = "Quiet, steady progress." },
-            new ActivityDef { Id = "class_duty", Name = "Classroom cleaning duty", Place = "classroom", Periods = PeriodMask.After, Energy = 1, OncePerDay = true, Gain = "REP 2, STR 2", Desc = "Teachers notice." },
+            new ActivityDef { Id = "class_duty", Name = "Set up the lecture hall", Place = "classroom", Periods = PeriodMask.After, Energy = 1, OncePerDay = true, Gain = "REP 2, STR 2", Desc = "Professors notice." },
             // library
             new ActivityDef { Id = "study", Name = "Study session", Place = "library", Energy = 1, Gain = "INT 4-6", Desc = "Double with a study guide. Exams use INT." },
             new ActivityDef { Id = "romance_novel", Name = "Read a romance novel", Place = "library", Energy = 1, Gain = "SEN 3, INT 2", Desc = "Learn how hearts work." },
@@ -56,7 +56,7 @@ namespace Joojkk.CampusLife
             new ActivityDef { Id = "lifeguard", Name = "Lifeguard shift", Place = "pool", Periods = PeriodMask.After | PeriodMask.Club, Energy = 2, OncePerDay = true, IsJob = true, MinStr = 30, Gain = "PAY 1100+10/STR, STR 2", Desc = "Part-time job (STR 30+). Good pay." },
             // field / courtyard / park
             new ActivityDef { Id = "run", Name = "Go for a run", Place = "field", Energy = 1, Gain = "STR 3", Desc = "Fresh air and a clear head." },
-            new ActivityDef { Id = "garden", Name = "Help the gardening committee", Place = "courtyard", Energy = 1, OncePerDay = true, Gain = "REP 2, PAY 300", Desc = "The school likes a helping hand." },
+            new ActivityDef { Id = "garden", Name = "Help the gardening committee", Place = "courtyard", Energy = 1, OncePerDay = true, Gain = "REP 2, PAY 300", Desc = "The university likes a helping hand." },
             new ActivityDef { Id = "feed_cats", Name = "Feed the stray cats", Place = "courtyard", Energy = 0, OncePerDay = true, Gain = "REP 1", Desc = "Needs cat food. Animal lovers will hear about it." },
             new ActivityDef { Id = "park_walk", Name = "Walk around the park", Place = "park", Energy = 0, OncePerDay = true, Gain = "EN 1", Desc = "Clear your head." },
             // cafeteria
@@ -73,10 +73,10 @@ namespace Joojkk.CampusLife
             new ActivityDef { Id = "stargaze", Name = "Watch the sunset", Place = "rooftop", Periods = PeriodMask.After, Energy = 1, Gain = "SEN 2, INT 2", Desc = "Romantic spot." },
             // infirmary
             new ActivityDef { Id = "rest", Name = "Rest in bed", Place = "infirmary", Energy = 0, OncePerDay = true, Gain = "EN 2", Desc = "Lie down on an infirmary bed (the game's sleep icon). Clean sheets and silence.", GameSleep = true },
-            new ActivityDef { Id = "nurse_job", Name = "Help the school nurse", Place = "infirmary", Periods = PeriodMask.After | PeriodMask.Club, Energy = 2, OncePerDay = true, IsJob = true, MinInt = 20, Gain = "PAY 600+8/INT, INT 2", Desc = "Part-time job (INT 20+)." },
+            new ActivityDef { Id = "nurse_job", Name = "Help the campus nurse", Place = "infirmary", Periods = PeriodMask.After | PeriodMask.Club, Energy = 2, OncePerDay = true, IsJob = true, MinInt = 20, Gain = "PAY 600+8/INT, INT 2", Desc = "Part-time job (INT 20+)." },
             // staff room
-            new ActivityDef { Id = "tutoring", Name = "Ask for extra tutoring", Place = "staffroom", Energy = 1, MoneyCost = 1500, OncePerDay = true, Gain = "INT 16-20, REP 1", Desc = "One-on-one with a teacher. Worth four study sessions." },
-            new ActivityDef { Id = "teacher_errands", Name = "Run errands for teachers", Place = "staffroom", Energy = 1, OncePerDay = true, Gain = "REP 2, PAY 400", Desc = "The school likes a helping hand." },
+            new ActivityDef { Id = "tutoring", Name = "Ask for extra tutoring", Place = "staffroom", Energy = 1, MoneyCost = 1500, OncePerDay = true, Gain = "INT 16-20, REP 1", Desc = "One-on-one with a professor. Worth four study sessions." },
+            new ActivityDef { Id = "teacher_errands", Name = "Run errands for professors", Place = "staffroom", Energy = 1, OncePerDay = true, Gain = "REP 2, PAY 400", Desc = "The university likes a helping hand." },
         };
 
         public static ActivityDef Get(string id) { return All.FirstOrDefault(a => a.Id == id); }
@@ -97,7 +97,7 @@ namespace Joojkk.CampusLife
         /// <summary>Why the activity can't be done right now, or null if it can.</summary>
         public static string Blocker(CampusState s, ActivityDef a)
         {
-            if (!G.InRoamingPeriod) return "Only during lunch, club time or after school.";
+            if (!G.InRoamingPeriod) return "Only during lunch, club time or after class.";
             if (ActivitySpots.BlocksOthers) return "You're in the middle of something.";
             // The period first: it shows even from far away.
             if ((a.Periods & G.CurrentMask) == 0) return "Not available in this period (" + PeriodText(a) + ").";
@@ -108,7 +108,7 @@ namespace Joojkk.CampusLife
             if (G.Str < a.MinStr) return "Needs STR " + a.MinStr + ".";
             if (G.Int < a.MinInt) return "Needs INT " + a.MinInt + ".";
             if (G.Sens < a.MinSens) return "Needs SEN " + a.MinSens + ".";
-            if (a.Id == "feed_cats" && s.Count("cat_food") <= 0) return "You need cat food (school store).";
+            if (a.Id == "feed_cats" && s.Count("cat_food") <= 0) return "You need cat food (campus store).";
             if (G.PeriodSecondsLeft < 15f) return "The period is almost over.";
             return null;
         }
@@ -120,7 +120,7 @@ namespace Joojkk.CampusLife
             var l = new List<string>();
             if ((a.Periods & PeriodMask.Lunch) != 0) l.Add("lunch");
             if ((a.Periods & PeriodMask.Club) != 0) l.Add("club time");
-            if ((a.Periods & PeriodMask.After) != 0) l.Add("after school");
+            if ((a.Periods & PeriodMask.After) != 0) l.Add("after class");
             return string.Join(", ", l.ToArray());
         }
 
@@ -236,7 +236,7 @@ namespace Joojkk.CampusLife
                     r.Text = "You go over today's lessons until they finally make sense.";
                     break;
                 case "class_duty":
-                    r.Text = "You sweep the floor and wipe the blackboard. The homeroom teacher gives you a nod.";
+                    r.Text = "You set out the chairs and wipe the blackboard before the next lecture. The academic advisor gives you a nod.";
                     break;
                 case "study":
                     if (s.Count("study_guide") > 0) { s.AddItem("study_guide", -1); g.Int *= 2; r.Text = "With the study guide, everything clicks. "; }
@@ -302,7 +302,7 @@ namespace Joojkk.CampusLife
                     r.Text = "You plan next week's Koikatsu Club 'activities' on the whiteboard.";
                     break;
                 case "club_report":
-                    r.Text = "You write a very official, very boring club report. The student council approves.";
+                    r.Text = "You write a very official, very boring club report. The student union approves.";
                     break;
                 case "research_material":
                     r.Text = "You study the club's 'reference library'. Purely academic.";
@@ -330,11 +330,11 @@ namespace Joojkk.CampusLife
                     break;
                 case "tutoring":
                     s.Money -= a.MoneyCost;
-                    r.Text = "A teacher walks you through last month's material one-on-one.";
+                    r.Text = "A professor walks you through last month's material one-on-one.";
                     s.Stat("study");
                     break;
                 case "teacher_errands":
-                    r.Text = "Copies, coffee, a box of handouts. The staff room likes you.";
+                    r.Text = "Copies, coffee, a box of handouts. The faculty room likes you.";
                     break;
             }
             return r;

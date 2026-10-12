@@ -7,7 +7,7 @@ namespace Joojkk.CampusLife
         {
             "Tip: F7 opens the Campus Life menu: requests, calendar, activities and your week.",
             "Tip: Activities cost energy, not time. The clock only runs while the animation plays.",
-            "Tip: Something happens at school at least every ten days. The Calendar tab shows what comes next.",
+            "Tip: Something happens on campus at least every ten days. The Calendar tab shows what comes next.",
             "Tip: A good conversation is worth as much as the game's best answers. Talk about what she likes.",
             "Tip: Gifts don't use talk time. One a day per girl, and some gifts mean more than others.",
             "Tip: A hungry girl who likes you will hardly say no to lunch together.",
@@ -27,7 +27,7 @@ namespace Joojkk.CampusLife
         public static readonly string[] Jokes =
         {
             "Your classmates are fixing their hair. Give them a second.",
-            "Ironing two hundred school uniforms...",
+            "Ironing two hundred shirts...",
             "Counting the steps to the rooftop. Still fifty-two.",
             "The rooftop is off-limits. Technically.",
             "Rumor has it the vending machine accepts compliments. It does not.",
@@ -35,12 +35,12 @@ namespace Joojkk.CampusLife
             "Somebody left a bento in the club room. Finders keepers.",
             "The pool is closed for maintenance. Again.",
             "Teaching each strand of hair to fall gracefully...",
-            "Hiding the love letters from the teachers...",
-            "Nobody has ever finished the summer homework. Nobody.",
+            "Hiding the love letters from the professors...",
+            "Nobody has ever finished the summer assignments. Nobody.",
             "Waiting for the cherry blossoms to fall at the right angle...",
-            "The teacher noticed you sleeping in class. She just didn't care.",
+            "The professor noticed you sleeping in class. She just didn't care.",
             "Polishing the shoe lockers for tomorrow's love letters...",
-            "Reminding the sun to set dramatically after school...",
+            "Reminding the sun to set dramatically after class...",
             "Somewhere, a girl is rehearsing how to say hi to you.",
         };
     }

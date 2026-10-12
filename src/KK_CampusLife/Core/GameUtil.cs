@@ -109,7 +109,7 @@ namespace Joojkk.CampusLife
             {
                 var act = Act;
                 if (act == null || !act.isActiveAndEnabled) return "no action scene";
-                if (!InRoamingPeriod) why.Add("not a roaming period (mask " + CurrentMask + ", school day " + IsSchoolDay + ")");
+                if (!InRoamingPeriod) why.Add("not a roaming period (mask " + CurrentMask + ", college days " + IsSchoolDay + ")");
                 if (GameAPI.InsideHScene) why.Add("inside an H scene");
                 if (act.isEventNow) why.Add("isEventNow");
                 var cy = Cycle;

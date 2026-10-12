@@ -1,10 +1,10 @@
 # Campus Life — apresentação
 
-**Um mod de vida escolar para o modo história do Koikatsu.** As garotas da escola ganham humor, memória, amizades e mágoas próprias; um diretor planeja o dia de cada uma; a conversa vira uma conversa de verdade; e tudo o que você faz com elas vira parte de uma história que a escola inteira comenta.
+**Um mod de vida universitária para o modo história do Koikatsu.** As garotas da faculdade ganham humor, memória, amizades e mágoas próprias; um diretor planeja o dia de cada uma; a conversa vira uma conversa de verdade; e tudo o que você faz com elas vira parte de uma história que a escola inteira comenta.
 
 Feito por **Joojkk** · versão **3.3.0** · BepInEx 5 / KKAPI · Koikatu (HF Patch) · menu **F7** · interface e falas em inglês.
 
-Junto vêm dois mods irmãos: **School Optimizer** (escola cheia sem travar) e **H Male Wardrobe** (roupa do protagonista no H, F10).
+Junto vêm dois mods irmãos: **School Optimizer** (faculdade cheia sem travar) e **H Male Wardrobe** (roupa do protagonista no H, F10).
 
 ---
 
@@ -22,7 +22,7 @@ Junto vêm dois mods irmãos: **School Optimizer** (escola cheia sem travar) e *
 ## 1. A conversa
 
 - **Tela nova de conversa** com cinco categorias em ícones: **Talk**, **Actions**, **Together**, **Romance** e **Spicy**. As opções saem do que ela sabe, do que ela gosta, de onde vocês estão e do que aconteceu no dia, não de uma lista fixa.
-- **Conversa procedural**: tópicos com pontuação (o dia dela, vocês dois, você, fofoca, escola, papo leve), fatos que ela sabe e de quem soube, opinião e versões distorcidas. Ela lembra o que você contou e puxa o assunto dias depois.
+- **Conversa procedural**: tópicos com pontuação (o dia dela, vocês dois, você, fofoca, faculdade, papo leve), fatos que ela sabe e de quem soube, opinião e versões distorcidas. Ela lembra o que você contou e puxa o assunto dias depois.
 - **A voz dela**: cada fala é escrita nos 4 tons, com a personalidade, o humor e a relação; respostas curtas variadas; o jogo toca um clipe da própria voz gravada dela que combina com a fala.
 - **Toques com resposta**: cabeça, bochecha, mãos, peito, além de lugares nossos (bunda, lábios). Ela responde com palavras próprias, conforme a parte, quantas vezes você insistiu, o quanto vocês são próximos e o que o cartão dela aceita. O beijo pode ser sim, sim receoso ou não.
 - **Conversa a três**: fale com uma, com a outra ou com as duas. Elas reagem uma à outra, provocam, sentem ciúme, ajudam ou vão embora. Opções que só existem em dupla: perguntar de uma para a outra, uma história constrangedora, bilhete, convite para as duas, elogio na frente da outra, toque escondido.
@@ -61,7 +61,7 @@ Dias bem jogados (3 conversas por dia, respostas boas), média de duas garotas d
 - **Humor**: flertando adianta tudo cerca de 1 dia (mão, flerte e bunda já no dia 1; a aberta aceita H no dia 1); alegre adianta meio dia; sozinha quase não muda (o quase sim vem um dia antes); chateada atrasa a mão para o dia 5 e o H em 1–2 dias.
 - **Ordem das respostas**: nas 60 simulações (6 garotas × 5 humores × namorando ou não) a resposta do H nunca voltou atrás: sempre não → não receoso → sim receoso → sim (pulando degraus, nunca descendo).
 
-## 3. Uma escola que vive
+## 3. Uma faculdade que vive
 
 - **Amizades, rivalidades e namoros entre elas** (paixão, conversando, casal, crise, término e volta), com confiança, ciúme e intimidade.
 - **Fofoca e boatos** que passam de garota em garota pelas amizades e se distorcem no caminho.
@@ -74,15 +74,15 @@ Dias bem jogados (3 conversas por dia, respostas boas), média de duas garotas d
 - **Humores e necessidades** (alegre, com fome, entediada, estressada, sozinha, flertando, com sono, chateada).
 - **Chuva**: muda falas, movimento e eventos, com o método mais leve possível.
 - **Heroínas da história como alunas** todos os dias, e o diretor escolhe uma cuja história abre hoje.
-- **Professoras** que andam pela escola, com eventos próprios por conversa.
+- **Professoras** que andam pelo campus, com eventos próprios por conversa.
 - **Destaque semanal**: em turmas grandes, algumas garotas ficam em foco; ninguém fica de fora mais de 3 semanas.
 - **Garota dormindo na enfermaria**: dá para provocá-la acordando; meio dormindo ela cede mais fácil.
 
-## 4. Vida escolar
+## 4. Vida universitária
 
 - **Mural do clube** com pedidos que as garotas contam para você, com marcadores (estrela, losango, coração) no minimapa, no cartão dela e no menu.
 - **"Me encontra em..."**: chegue no lugar e período certos e ela vem de verdade.
-- **Atividades e bicos** em lugares reais da escola, com as animações do próprio jogo (INT, STR, reputação, dinheiro).
+- **Atividades e bicos** em lugares reais do campus, com as animações do próprio jogo (INT, STR, reputação, dinheiro).
 - **Lojinha na cantina**, presentes do que ela gosta e pedidos de presente do dia.
 - **Devoção**: depois de 100 de afeto, a devoção continua subindo e cada nível dá um bônus.
 - **Teleporte sem gastar tempo** pelo menu e caminhada com seta dourada para a porta certa.

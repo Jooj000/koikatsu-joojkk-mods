@@ -269,7 +269,7 @@ on touch
 when watchers=crowd level=welcome|uneasy
 feel shy
 - [E-everyone's looking!|Not here! People are watching!|Ahh, they're staring at us!] [Are you trying to start rumors?|I'm going to die of embarrassment.]
-- [Can't you see the crowd?!|Shh! Stop!] [The whole school's going to know by lunch.|Wait until we're alone, okay?]
+- [Can't you see the crowd?!|Shh! Stop!] [The whole university's going to know by lunch.|Wait until we're alone, okay?]
 - [Not in front of everyone!|Eek!] [They're all going to talk!|Can you at least wait for a corner?]
 
 @rule touch.watch.crowd.lewd
@@ -357,17 +357,17 @@ feel shy
 on touch
 when placeid=classroom period=day level=welcome|uneasy
 feel shy
-- [Here? In class?|Sensei could walk in any second!|Everyone's going to see!] [Wait until after school.|You're impossible.]
-- [My desk is right there...|Ah, not in the classroom.] [Later. Promise.|Behave!]
-- [Not in the classroom!|Wait...] [Everyone sits here tomorrow.|What if someone comes back for their bag?]
+- {student}[Here? In class?|Sensei could walk in any second!|Everyone's going to see!] [Wait until after class.|You're impossible.]
+- {student}[My desk is right there...|Ah, not in the lecture hall.] [Later. Promise.|Behave!]
+- {student}[Not in the lecture hall!|Wait...] [Everyone sits here tomorrow.|What if someone comes back for their bag?]
 
 # ================= roles =================
 @rule touch.teacher
 on touch
 when role=teacher level=welcome|uneasy rel!=girlfriend rel!=lover
 feel serious
-- [Ahem. I'm your teacher.|That's inappropriate.|Hands to yourself, please.] [Do you want detention?|We'll pretend that didn't happen.]
-- [Not at school.|...I'll let that slide.] [Once.|Don't make it a habit.]
+- [Ahem. I'm your professor.|That's inappropriate.|Hands to yourself, please.] [Do you want a formal warning?|We'll pretend that didn't happen.]
+- [Not on campus.|...I'll let that slide.] [Once.|Don't make it a habit.]
 - [Young man.|...] [I'll forget that, this once.|Let's keep a respectful distance.]
 
 @rule touch.teacher.lewd
@@ -376,7 +376,7 @@ when role=teacher level=welcome lewd>=60
 feel love
 - [...You know I could get fired for this.|Mm... not here.|Oh, you bad student.] [Come see me after class.|Extra lessons, then?]
 - [Behave... where people can see.|Ah...] [My office. Later.|I'm grading you for this.]
-- [Oh dear...|Mm.] [That's not on the curriculum.|Stay after school and we'll discuss it.]
+- [Oh dear...|Mm.] [That's not on the curriculum.|Stay after class and we'll discuss it.]
 
 # ================= the butt and the lips =================
 # {part} butt (touched or, with look=yes, stared at) | mouth (touch only: a kiss). {kiss} yes | no.
@@ -395,7 +395,7 @@ when part=butt look=no level=welcome rel=girlfriend|lover
 feel love
 - [Mm... can't keep your hands off me?|Hehe... hi there.|Ahh~] [I don't mind. It's yours anyway.|Later you can do more.]
 - [You're so obvious.|Mm~] [Keep it there.|Did you miss me that much?]
-- [Hey, behave...|Ehehe.] [...Okay, don't behave. Just a little.|We're still at school, you know.]
+- [Hey, behave...|Ehehe.] [...Okay, don't behave. Just a little.|We're still on campus, you know.]
 
 @rule touch.butt.welcome.lewd
 on touch
@@ -419,7 +419,7 @@ when part=butt look=no level=stop
 feel pout
 - [I said no!|Stop it!|Seriously?!] [Last warning.|Keep your hands to yourself!]
 - [Again?!|Ugh!] [Do you want me to slap you?|What is wrong with you?]
-- [That's enough!|Hands off!] [One more and I'm telling a teacher.|You're really pushing it.]
+- [That's enough!|Hands off!] [One more and I'm telling a professor.|You're really pushing it.]
 
 @rule touch.butt.angry
 on touch
@@ -458,7 +458,7 @@ on touch
 when part=butt look=no watchers=crowd level=welcome|uneasy
 feel surprised
 - [In front of everyone?!|Everyone saw that!|Ahh!] [I'm going to die!|Are you insane?]
-- [People are staring!|Hey!] [Now the whole school thinks we're...|Not here, idiot!]
+- [People are staring!|Hey!] [Now the whole university thinks we're...|Not here, idiot!]
 - [Did they see?|Oh no.] [They definitely saw.|Rumors by lunch. Great.]
 
 @rule touch.butt.watch.yourgf

@@ -174,9 +174,9 @@ feel love
 on idle
 when mood=stressed
 feel worried
-- [Sorry, my head's full of homework.|I keep thinking about tests...|Ugh...] [Distract me, please.|Tell me something nice.]
+- {student}[Sorry, my head's full of assignments.|I keep thinking about tests...|Ugh...] [Distract me, please.|Tell me something nice.]
 - [I should be studying...|...] [But this is nicer.|Five minutes, then I go.]
-- [Sigh...|Ugh.] [Exams are eating my brain.|Say something that isn't about school.]
+- [Sigh...|Ugh.] [Exams are eating my brain.|Say something that isn't about class.]
 
 # ================= place and period =================
 @rule idle.place.rooftop
@@ -196,7 +196,7 @@ when placeid=library
 @rule idle.place.pool
 on idle
 when placeid=pool
-- [The water looks nice...|It smells like chlorine here.|...] [Want to jump in?|I'm not swimming in my uniform.]
+- {student}[The water looks nice...|It smells like chlorine here.|...] [Want to jump in?|I'm not swimming in my uniform.]
 - [Splash!|Hehe...] [Gotcha. Wake up!|Too quiet. Had to.]
 - [*dips a toe in the water*|...] [Still cold. Nope.|Want to sit by the edge?]
 
@@ -204,7 +204,7 @@ when placeid=pool
 on idle
 when placeid=infirmary
 feel shy
-- [It's so quiet in here...|The nurse isn't here.|...] [Just us and the beds.|Kind of makes you sleepy.]
+- {student}[It's so quiet in here...|The nurse isn't here.|...] [Just us and the beds.|Kind of makes you sleepy.]
 - [Are you sick, or just hiding?|Mm.] [I won't tell.|Me too, honestly.]
 - [...Smells like medicine.|Hm.] [I always end up here somehow.|Want to sit on the bed? Just to sit.]
 
@@ -219,7 +219,7 @@ when period=lunch
 on idle
 when period=after
 - [It's getting late...|Everyone's going home.|The sun's going down.] [Walk me home?|We should head out soon.]
-- [School's so quiet after hours.|...] [I like it like this.|Kind of romantic, huh?]
+- [Campus is so quiet after hours.|...] [I like it like this.|Kind of romantic, huh?]
 - [The sky's turning orange.|...] [It's pretty, isn't it?|I don't really want to go home yet.]
 
 @rule idle.club
@@ -288,9 +288,9 @@ feel love
 @rule idle.teacher
 on idle
 when role=teacher
-- [If you have a question, ask.|I have papers to grade.|Hm?] [Don't just stand there.|I'm a busy woman.]
+- {classes}[If you have a question, ask.|I have papers to grade.|Hm?] [Don't just stand there.|I'm a busy woman.]
 - [Is something troubling you?|Hm.] [My door's always open.|Speak up.]
-- [Mm? Waiting for something?|Hm.] [Office hours are after school.|You can stay, if you're quiet.]
+- {classes}[Mm? Waiting for something?|Hm.] [Office hours are after class.|You can stay, if you're quiet.]
 
 
 # Silence in the rain: the sound fills it.

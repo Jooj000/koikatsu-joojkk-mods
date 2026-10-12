@@ -58,51 +58,72 @@ when rel=stranger
 - [Hi. We keep passing each other, so...|Hey, I'm in your grade. Thought I'd say hi.|Hello! I don't bite, promise.]
 - [Sorry to bother you.|Excuse me.] [I just wanted to say hi.|Can I talk to you for a second?]
 - [I don't know many people here yet.|I've been meaning to introduce myself.]
-- [You're in the {club}, right?|I've seen you around school.] [Thought I'd finally say something.|Nice to meet you.]
+- [You're in the {club}, right?|I've seen you around campus.] [Thought I'd finally say something.|Nice to meet you.]
 - [Hi. I'm the one who sits near the back.|I'm trying to meet more people.] [So, hello.|So... hi.]
 - [This is awkward, but hi.|I'm bad at this, but hi.]
 
-@rule small.plain~state
+@rule small.plain.any~state
 on small
-opens ask,share,tease
 shape state
+hook plain_any
+opens ask,share,tease
 - Hm, {thing}? I guess so. It's alright.
 - {Thing}... sure. I don't think about it much.
+- Ahh, {thing}... It reminds me of something.
+- Mm, {thing}. I had a dream about that, weirdly.
+- Ahh, {thing}... It's okay.
+- {Thing}. Sure. Next question. Just kidding.
+
+@rule small.plain.unsure~state
+on small
+shape state
+hook plain_unsure
+opens ask,share,tease
 - {Thing}? Funny you ask. I have mixed feelings.
 - Oh, {thing}. It depends on the day.
 - Honestly? No idea. Never really thought about it.
 - Hmm, {thing}... Ask me something harder.
 - Honestly? No idea. I'd have to think about that.
-- Oh, that's random. But sure, {thing}.
-- Where'd that come from? I don't mind talking about it.
 - Not much to say about {thing}. You seem more into it than me.
-- Ahh, {thing}... It reminds me of something.
-- Mm, {thing}. I had a dream about that, weirdly.
-- Ahh, {thing}... It's okay.
 - {Thing}... I had an opinion on that once. It's gone now.
 - I don't have much to add on {thing}. Sorry.
 - People have strong feelings about {thing}. I'm not one of them.
 - Not everyone gets {thing}. I'm in the middle.
 - You know, nobody's asked me that before. Give me a second.
-- {Thing}. Sure. Next question. Just kidding.
 
-@rule small.plain~q
+@rule small.plain.surprised~state
 on small
-opens share,ask,tease
+shape state
+hook plain_surprised
+opens ask,share,tease
+- Oh, that's random. But sure, {thing}.
+- Where'd that come from? I don't mind talking about it.
+
+@rule small.plain.surprised~q
+on small
 shape q
+hook plain_surprised
+opens ask,share,tease
 - {Thing}? Funny you ask. Why, do you like it?
 - {Thing} is fine, I suppose. What about you?
 - You came all the way here to ask about {thing}? Okay.
 - So that's what you want to talk about? Fine by me.
 - That's a new one. I guess it's okay?
+
+@rule small.plain.unsure~q
+on small
+shape q
+hook plain_unsure
+opens ask,share,tease
 - Can I get back to you on {thing}? My brain's slow right now.
 
-@rule small.like.yes~state
+@rule small.like.yes.fan~state
 on small
 when likes=yes
-opens ask,share,praise
 feel smile
 shape state
+hook like_yes_fan
+opens ask,share,tease
 - {Like}? I love {like}! I could talk about it all day.
 - Oh, {like}! Don't get me started. It's kind of my thing.
 - Oh my gosh, {like}! You just made my day.
@@ -111,16 +132,25 @@ shape state
 - Ooh, now you're talking. {Like}, every day if I could.
 - You know the way to my heart. Let me tell you about my favorite part.
 - I was just thinking about {like} this morning. Seriously.
-- If I could skip class for {like}, I would. No regrets.
+- {student}If I could skip class for {like}, I would. No regrets.
 - My room is basically a shrine to {like}. Don't laugh.
-- You need the full {like} experience. I'll show you.
 
-@rule small.like.yes~q
+@rule small.like.yes.invite~state
 on small
 when likes=yes
-opens share,ask,tease
+feel smile
+shape state
+hook like_yes_invite
+opens ask,invite,tease
+- You need the full {like} experience. I'll show you.
+
+@rule small.like.yes.fan~q
+on small
+when likes=yes
 feel smile
 shape q
+hook like_yes_fan
+opens ask,share,tease
 - You like {like} too? Finally someone asks!
 - Wait, are you into {like}? We have to talk about this.
 - How long have you got? Because {like} is my favorite subject.
@@ -129,23 +159,23 @@ shape q
 - Who told you I like {like}? I'm impressed.
 - You remembered about {like}? Thanks for asking.
 
-@rule small.like.yes~offer
+@rule small.like.yes.invite~offer
 on small
 when likes=yes
-opens invite,ask,tease
 feel smile
 shape offer
+hook like_yes_invite
+opens ask,invite,tease
 - We should do something with {like} sometime. I'm serious.
 
-@rule small.like.no~state
+@rule small.like.no.pass~state
 on small
 when likes=no
-opens ask,share,tease
 shape state
+hook like_no_pass
+opens ask,agree,tease
 - {Like}? Not really my thing. But I don't mind it.
 - {Like}? Not really my thing. I've never really gotten into it.
-- I don't get the appeal of {like}. Convince me.
-- {Like}? Hmm. Maybe I just haven't tried it right.
 - I'm kind of neutral on {like}. It's fine, I guess.
 - Ha, {like}? Me? No. It didn't stick.
 - I tried {like} once. Wasn't for me.
@@ -155,25 +185,43 @@ shape state
 - Please don't tell me you love {like}. We can still be friends.
 - I'll pass on {like}. Thanks, though.
 - Give me anything but {like}. Hehe.
-- Maybe I'd change my mind if someone showed me. Maybe.
 
-@rule small.like.no~q
+@rule small.like.no.convince~state
 on small
 when likes=no
-opens share,ask,tease
+shape state
+hook like_no_convince
+opens ask,share,invite
+- I don't get the appeal of {like}. Convince me.
+- {Like}? Hmm. Maybe I just haven't tried it right.
+- Maybe I'd change my mind if someone showed me. Maybe.
+
+@rule small.like.no.pass~q
+on small
+when likes=no
 shape q
+hook like_no_pass
+opens ask,agree,tease
 - Eh, {like}... Do you like it?
 - Not a big {like} person, sorry. What do you like about it?
 - {Like} and I don't really click. Sorry, are you a fan?
 - Why, are you into {like}? Oh no.
+
+@rule small.like.no.convince~q
+on small
+when likes=no
+shape q
+hook like_no_convince
+opens ask,share,invite
 - I've only heard bad things about {like}. Prove them wrong?
 
-@rule small.pet~state
+@rule small.pet.pet~state
 on small
 when subject=pet
-opens ask,share,tease
 feel smile
 shape state
+hook pet_pet
+opens ask,praise,tease
 - {Pet}? Oh, you have no idea. I'm kind of obsessed.
 - {Pet}? Oh, you have no idea. Okay, so...
 - Ahh, {pet}! I could go all day.
@@ -187,12 +235,13 @@ shape state
 - You've got that look. You want to hear about {pet}. Fine, I'll tell you.
 - Ask me anything about {pet}. Go on.
 
-@rule small.pet~q
+@rule small.pet.pet~q
 on small
 when subject=pet
-opens share,ask,tease
 feel smile
 shape q
+hook pet_pet
+opens ask,praise,tease
 - You want to talk about {pet}? Really? Everyone says I talk about {pet} too much.
 - How did you know I like {pet}? I'm flattered.
 - You've been paying attention, huh? Okay, I'll tell you everything.
@@ -200,228 +249,356 @@ shape q
 - People think {pet} is weird, but it isn't. Right?
 - You don't think {pet} is weird? Promise?
 
-@rule small.pet~show
+@rule small.pet.pet~show
 on small
 when subject=pet
-opens invite,ask,tease
 feel smile
 shape show
+hook pet_pet
+opens ask,praise,tease
 - I was just reading about {pet} last night. Want to see?
 
-@rule small.weather~state
+@rule small.weather.nice~state
 on small
 when subject=weather
-opens ask,share,tease
 shape state
+hook weather_nice
+opens ask,share,invite
 - It's nice out, isn't it? Perfect for a walk.
 - I like this kind of weather. I almost fell asleep by the window.
 - It's a bit [chilly|warm|gloomy] today. I hope it stays like this.
 - The sky's so pretty today. Makes me want to go outside.
+- They said it'd be sunny all week. They lied.
+- It's a good day to do nothing. Too bad there's class.
+- My lecture hall seat gets all the sun. I'm not complaining.
+- Weather like this makes me want to go somewhere. Anywhere.
+- Good day for ice cream, or hot tea, depending. Depends on the hour.
+
+@rule small.weather.annoyed~state
+on small
+when subject=weather
+shape state
+hook weather_annoyed
+opens ask,comfort,tease
 - Ugh, my hair hates this humidity. I'd rather be at home.
 - I heard it'll rain later. I forgot my umbrella, of course.
-- They said it'd be sunny all week. Let's hope they're right.
+- It changes every five minutes lately. I gave up.
+- I never know what to wear this week. So annoying.
+- I walked here and I've already had enough of it. Don't ask.
+- My commute was terrible in this. Ugh.
+
+@rule small.weather.mock~state
+on small
+when subject=weather
+shape state
+hook weather_mock
+opens ask,share,tease
 - Weather talk? Really? Fine. It's nice.
 - Ha, the classic. It's okay, I guess.
 - Are we really talking about the weather? Fine.
 - You can do better than the weather. Try again.
-- It changes every five minutes lately. I gave up.
-- I never know what to wear this week. So annoying.
-- It's a good day to do nothing. Too bad there's school.
-- My classroom seat gets all the sun. I'm not complaining.
-- I walked here and I've already had enough of it. Don't ask.
-- My commute was terrible in this. Ugh.
-- Weather like this makes me want to go somewhere. Anywhere.
-- Good day for ice cream, or hot tea, depending. Depends on the hour.
 
-@rule small.weather~q
+@rule small.weather.mock~q
 on small
 when subject=weather
-opens share,ask,tease
 shape q
+hook weather_mock
+opens ask,share,tease
 - Weather talk? Really? You're bad at small talk, huh?
 
-@rule small.lunch~state
+@rule small.lunch.plan~state
 on small
 when subject=lunch
-opens ask,share,tease
 shape state
+hook lunch_plan
+opens ask,share,tease
 - I'm thinking bread from the store today. The cafeteria line is too long.
+- I made my own lunch today. It's not great, but it's mine.
+- Lunch is the best part of campus. Obviously.
+
+@rule small.lunch.hungry~state
+on small
+when subject=lunch
+shape state
+hook lunch_hungry
+opens ask,comfort,tease
 - Lunch? I brought a bento. I'm already hungry again.
 - I skipped breakfast, so lunch is everything. I can't wait.
-- I made my own lunch today. It's not great, but it's mine.
 - I'm on a diet. Kind of. Don't tempt me.
-- Lunch is the best part of school. Obviously.
 - Mine's leftovers again. I'm tired of it.
 - I never know what to get at the store. It's a daily tragedy.
 - By the time I get there, the good bread's gone. Every single day.
-- Eating alone is the worst. Just saying.
 - I already ate my lunch during second period. Don't tell.
 - I had a snack and it wasn't enough. Still hungry.
 
-@rule small.lunch~q
+@rule small.lunch.alone~state
 on small
 when subject=lunch
-opens share,ask,tease
+shape state
+hook lunch_alone
+opens ask,share,invite
+- Eating alone is the worst. Just saying.
+
+@rule small.lunch.alone~q
+on small
+when subject=lunch
 shape q
+hook lunch_alone
+opens ask,share,invite
 - Lunch is better with someone. Don't you think?
 - What about you? What did you bring? I'm curious.
 - Are you the bento type, or the store type? You can tell a lot from that.
 
-@rule small.lunch~offer
+@rule small.lunch.invite~offer
 on small
 when subject=lunch
-opens invite,ask,tease
 shape offer
+hook lunch_invite
+opens ask,invite,thank
 - The cafeteria has curry today! Want to go together?
 
-@rule small.lunch~show
+@rule small.lunch.invite~show
 on small
 when subject=lunch
-opens invite,ask,tease
 shape show
+hook lunch_invite
+opens ask,invite,thank
 - I'd trade my lunch for almost anything. Want to see?
 
-@rule small.lunch~give
+@rule small.lunch.invite~give
 on small
 when subject=lunch
-opens invite,ask,tease
 shape give
+hook lunch_invite
+opens ask,invite,thank
 - Lunch? I brought a bento. Want some?
-- My mom packed way too much. Help me eat it?
+- {student}My mom packed way too much. Help me eat it?
 
-@rule small.weekend~state
+@rule small.weekend.rest~state
 on small
 when subject=weekend
-opens ask,share,tease
 shape state
+hook weekend_rest
+opens ask,share,tease
 - I want to sleep all weekend. Unless something fun comes up.
-- I might go to the station mall. Maybe.
-- My friends wanted to go to karaoke. I haven't decided.
 - Weekends go by way too fast. Plans? Not yet.
 - Is it the weekend yet? Please say yes.
-- My family's dragging me somewhere. No escape.
-- I have to help out at home. Fun.
 - Last weekend I did absolutely nothing. It was great.
 - I slept until noon last Sunday. No regrets.
-- I want to see that new movie. If someone goes with me.
 
-@rule small.weekend~q
+@rule small.weekend.open~state
 on small
 when subject=weekend
-opens share,ask,tease
+shape state
+hook weekend_open
+opens ask,invite,share
+- I might go to the station mall. Maybe.
+- My friends wanted to go to karaoke. I haven't decided.
+- I want to see that new movie. If someone goes with me.
+
+@rule small.weekend.stuck~state
+on small
+when subject=weekend
+shape state
+hook weekend_stuck
+opens ask,comfort,tease
+- My family's dragging me somewhere. No escape.
+- I have to help out at home. Fun.
+
+@rule small.weekend.open~q
+on small
+when subject=weekend
 shape q
+hook weekend_open
+opens ask,invite,share
 - The weekend? I'll probably just stay home. Why, did you have something in mind?
 - I've got nothing planned yet. What about you?
 - Maybe I'll go shopping. Why, did you have something in mind?
-- I have a ton of homework, sadly. Got any better ideas?
+- {student}I have a ton of assignments, sadly. Got any better ideas?
 - I'm already counting the days. Want to fix that?
+
+@rule small.weekend.rest~q
+on small
+when subject=weekend
+shape q
+hook weekend_rest
+opens ask,share,tease
 - I've been looking forward to it since Monday. Sad, right?
 - Do you ever go out on weekends? I can't picture it.
 - What do you usually do on a Sunday? Tell me.
 
-@rule small.weekend~offer
+@rule small.weekend.open~offer
 on small
 when subject=weekend
-opens invite,ask,tease
 shape offer
+hook weekend_open
+opens ask,invite,share
 - There's a sale at the station mall. Interested?
 
-@rule small.place~state
+@rule small.place.secret~state
 on small
 when subject=place
-opens ask,share,tease
 shape state
+hook place_secret
+opens ask,share,invite
 - I like coming to {thing}. It's nice to get away from class.
 - {Thing} is one of my favorite spots. I come here when I need to think.
 - It's quiet here. It's nice to get away from class.
 - I found this spot in my first year. Don't tell anyone.
 - Not many people come here. It's kind of my secret place.
+- I like it best when nobody's here. Like now.
+- I needed some air. That's why I'm here.
+- I needed a break from everyone. Present company excluded.
+
+@rule small.place.crowded~state
+on small
+when subject=place
+shape state
+hook place_crowded
+opens ask,share,tease
 - {Thing}? It's alright. I usually prefer the roof.
 - It's a bit crowded today. It's better in the morning.
 - I always end up here. I don't know why.
 - I've spent too much of my life in {thing}. Hehe.
 - Everybody ends up at {thing} sooner or later. It's that kind of place.
-- I like it best when nobody's here. Like now.
-- {Thing} is different after class. You should see it.
-- Something funny happened here last week. Don't ask.
-- I once fell asleep right here. No one woke me.
-- I needed some air. That's why I'm here.
-- I needed a break from everyone. Present company excluded.
 
-@rule small.place~q
+@rule small.place.story~state
 on small
 when subject=place
-opens share,ask,tease
+shape state
+hook place_story
+opens ask,share,tease
+- {student}{Thing} is different after class. You should see it.
+- Something funny happened here last week. Don't ask.
+- I once fell asleep right here. No one woke me.
+
+@rule small.place.story~q
+on small
+when subject=place
 shape q
+hook place_story
+opens ask,share,tease
 - This place has a nice feeling. Weird, right?
+
+@rule small.place.crowded~q
+on small
+when subject=place
+shape q
+hook place_crowded
+opens ask,share,tease
 - You come here a lot too? I've seen you.
 - What do you think of {thing}? Be honest.
 
-@rule small.exams
+@rule small.exams.avoid
 on small
 when subject=exams
-opens comfort,invite,share
+hook exams_avoid
+opens ask,comfort,share
 - The exams? Please, let's talk about anything else. Okay, maybe a little.
 - I'm trying not to think about the exams. How are you doing with studying?
+- At least they end eventually. Then it's vacation.
+- I think I'll be okay. Probably.
+- What did you get on the last one? Don't tell me.
+
+@rule small.exams.stuck
+on small
+when subject=exams
+hook exams_stuck
+opens ask,comfort,share
 - I've been studying until midnight. I'm going to fail math.
 - I haven't even started. Don't judge me.
 - Exams are a scam. Right?
-- At least they end eventually. Then it's vacation.
-- I think I'll be okay. Probably.
-- I'm scared of the history one. Wanna quiz me?
 - Every time I open the book, I fall asleep. Help.
 - I made a study plan and ignored it. Classic me.
-- What did you get on the last one? Don't tell me.
 - Have you started reviewing? I'm scared to ask.
-- My parents will kill me if I fail. I'm not joking.
+- {student}My parents will kill me if I fail. I'm not joking.
 - If I pass, I'm buying myself something. That's the only motivation.
 - I've forgotten everything I knew about math. Everything.
 - Who invented exams, anyway? I have words for them.
+
+@rule small.exams.invite
+on small
+when subject=exams
+hook exams_invite
+opens ask,invite,tease
+- {student}I'm scared of the history one. Wanna quiz me?
 - Want to study together? I might learn something.
-- We could cram at the library. Or get distracted.
+- {student}We could cram at the library. Or get distracted.
 
-@rule small.school~state
+@rule small.school.staff~state
 on small
 when subject=school
-opens ask,share,tease
 shape state
-- School's school. The teachers are piling on homework.
-- Same as always. I can't wait for summer.
-- Classes are classes. The teachers are piling on homework.
-- Our teacher was in a mood today. I almost laughed.
-- I kind of like school, honestly. Don't tell anyone.
-- School's fine when friends are around. Better than being home alone.
-- I fell asleep in class again. Don't laugh.
-- I forgot my homework. Again. It's a talent.
-- The principal gave another long speech. Nobody listened.
-- Someone set off the fire alarm again. Typical.
-- I think the seating chart hates me. I'm serious.
-- My desk wobbles and nobody cares. Tragic, I know.
-- I can't believe it's only the middle of the week. Save me.
-- I like the walk home more than the classes. Don't tell the teachers.
-- The best part of school is when it ends. Obviously.
+hook school_staff
+opens ask,share,tease
+- {student}Campus is campus. One professor's phone rang in the middle of his own lecture.
+- {student}Our professor was in a mood today. I almost laughed.
+- {student}The dean gave another long speech. Nobody listened.
+- The professor made the seating chart, and it hates me.
+- {student}My desk wobbles, and the professor calls it character-building.
+- {student}I like the walk home more than the classes. Don't tell the professors.
 
-@rule small.school~q
+@rule small.school.slack~state
 on small
 when subject=school
-opens share,ask,tease
+shape state
+hook school_slack
+opens ask,share,tease
+- Same as always. Up all night, and I can't wait for summer.
+- {student}I fell asleep in class again. Don't laugh.
+- {student}I forgot my assignments. Again. It's a talent.
+- I can't believe it's only the middle of the week. Save me.
+- The best part of campus is when it ends. Obviously.
+
+@rule small.school.news~state
+on small
+when subject=school
+shape state
+hook school_news
+opens ask,share,tease
+- {student}Classes are classes. You should've seen what happened with the professor today.
+- Someone set off the fire alarm again. Typical.
+
+@rule small.school.fine~state
+on small
+when subject=school
+shape state
+hook school_fine
+opens ask,share,tease
+- I kind of like class, honestly. Don't tell anyone.
+- Campus is fine when friends are around. Better than being home alone.
+
+@rule small.school.news~q
+on small
+when subject=school
 shape q
-- Did you see what happened in class today? It was so awkward.
-- This week's taking forever. Right?
+hook school_news
+opens ask,share,tease
+- {student}Did you see what happened in class today? It was so awkward.
 - Everyone's talking about the festival. You heard?
 
-@rule small.school~tell
+@rule small.school.slack~q
 on small
 when subject=school
-opens invite,ask,tease
+shape q
+hook school_slack
+opens ask,share,tease
+- I was up all night, and this week's taking forever. Right?
+
+@rule small.school.news~tell
+on small
+when subject=school
 shape tell
+hook school_news
+opens ask,share,tease
 - There's a rumor going around class. Want to hear it?
 
-@rule small.stranger~state
+@rule small.stranger.wary~state
 on small
 when rel=stranger
-opens ask,share,tease
 shape state
+hook stranger_wary
+opens ask,praise,share
 - Oh. Hi. Yeah, it's... nice, I guess.
 - Um, hello? Sure.
 - Hello. Nice to meet you, I guess.
@@ -433,11 +610,12 @@ shape state
 - Well. Hi, I guess. Most people don't.
 - Nice of you to say something. Thanks.
 
-@rule small.stranger~q
+@rule small.stranger.who~q
 on small
 when rel=stranger
-opens share,ask,tease
 shape q
+hook stranger_who
+opens ask,share,tease
 - Do I know you? Yeah, it's... nice, I guess.
 - Hey. You're one of the new boys, right? I've seen you around.
 - Oh, hi there. Can I help you?
@@ -448,42 +626,52 @@ shape q
 - Are you always this friendly? Okay.
 - Do you say hi to everyone? Good to know.
 
-@rule small.cool~state
+@rule small.cool.flat~state
 on small
 when voice=cool|serious|proper
-opens ask,share,tease
 shape state
+hook cool_flat
+opens ask,agree,tease
 - {Thing}. Hm. It's fine.
 - If you insist. I have no strong opinion.
-- I suppose we can talk about {thing}. Go on.
 - Hm. {Thing}. I don't think about it much.
 - That's a topic. It has its merits.
 - Fine. I could take it or leave it.
 - There are worse subjects than {thing}. Barely.
 - I've read about {thing}. It was brief.
 - I'd rather not waste words on {thing}. Yours may be different.
-- Most opinions on {thing} are noise. Prove me wrong.
 - I don't dislike it. That's the most I'll say.
 - It serves its purpose. Next.
+
+@rule small.cool.test~state
+on small
+when voice=cool|serious|proper
+shape state
+hook cool_test
+opens ask,share,tease
+- I suppose we can talk about {thing}. Go on.
+- Most opinions on {thing} are noise. Prove me wrong.
 - You're persistent, I'll give you that. Continue.
 - Hm. You might know more than I do. I doubt it, though.
 
-@rule small.cool~q
+@rule small.cool.test~q
 on small
 when voice=cool|serious|proper
-opens share,ask,tease
 shape q
+hook cool_test
+opens ask,share,tease
 - {Thing}? Unusual choice. What about it?
 - You want my opinion on {thing}? It's adequate.
 - Is this how you start every conversation? Interesting.
 - You came here for {thing}? I see.
 
-@rule small.shy~state
+@rule small.shy.quiet~state
 on small
 when voice=shy|bookish
-opens ask,share,tease
 feel shy
 shape state
+hook shy_quiet
+opens ask,praise,comfort
 - Ah, {thing}... I... I like it, I think.
 - U-um, {thing}? Sorry, I'm not good at this.
 - Um... {thing}... I-I'll try.
@@ -497,18 +685,27 @@ shape state
 - I don't know much, but {thing} seems nice. Sorry.
 - You're really nice to talk to me about {thing}. Thanks.
 
-@rule small.shy~q
+@rule small.shy.ask~q
 on small
 when voice=shy|bookish
-opens share,ask,tease
 feel shy
 shape q
+hook shy_ask
+opens ask,share,praise
 - O-oh, you want to talk to me? I don't know what to say.
 - Sorry, I get nervous. Is that a weird answer?
-- Ah... yes, {thing}. Do you?
 - Y-you're asking me? I'm not sure I'm the right person.
 - I-I'd have to think... Can you wait?
 - I-is it okay if I ask you too? What do you think?
+
+@rule small.shy.quiet~q
+on small
+when voice=shy|bookish
+feel shy
+shape q
+hook shy_quiet
+opens ask,praise,comfort
+- Ah... yes, {thing}. Do you?
 
 # Pesos de implementação: em cada lugar, primeiro os valores que mudam o sentido da fala. Biblioteca: livros
 # (l_study), silêncio, prova, depois chuva (wet), depois a briga na cabeça dela (fight/{fightwho}); as falas compostas
@@ -520,7 +717,7 @@ shape q
 on me.small
 when subject=weather wet=yes
 - [Some rain, huh?|It's really coming down.|Did you bring an umbrella?]
-- [I love the sound of rain on the windows.|Guess nobody's going outside today.|The whole school smells like rain.]
+- [I love the sound of rain on the windows.|Guess nobody's going outside today.|The whole university smells like rain.]
 - [My shoes are still wet from this morning.|Think it'll stop before we go home?|Rainy days make everything slower, huh?]
 - [Did you walk here in that?|How wet did you get this morning?]
 - [I hope it stops soon.|I kind of hope it keeps going.] [You?|It's nice.]
@@ -559,193 +756,299 @@ when subject=weather weather=clear
 - [Great day to be outside, huh?|It's warm today.|The sun's out for real.]
 - [It's so nice out.|Feels like a day off, doesn't it?|Look at that blue sky.]
 - [You should eat outside today.|The roof must be great right now.]
-- [I couldn't focus in class with that sun.|Nobody wanted to be inside today.] [You too?|Right?]
+- {student}[I couldn't focus in class with that sun.|Nobody wanted to be inside today.] [You too?|Right?]
 - [I hope it stays like this for the weekend.|It's almost too nice.]
 - [Good day for a walk home.|Want to take the long way later?]
 - [Look how clear it is.|You can see the mountains today.] [Nice, right?|Look.]
 
 # ---- her answer: rain, by who she is
-@rule small.weather.rain.gentle
+@rule small.weather.rain.gentle.quiet
 on small
 when subject=weather wet=yes tone=gentle
-opens share,invite,comfort
 feel smile
-- I like the rain, a little. It feels like the whole school is whispering.
-- The rain makes everything so quiet. I could listen to it all day.
+hook weather_rain_gentle_quiet
+opens ask,share,comfort
+- I like the rain, a little. I catch myself humming along. It feels like the whole university is whispering.
+- The rain makes everything so quiet. I could hum along all day.
 - It's nice, isn't it? The sound. It makes me sleepy, though...
-- I forgot my umbrella... Hehe, I'll survive.
-- My socks got a little wet this morning. I'm hoping it stops before we go home.
-- I forgot my umbrella... Maybe someone will share theirs...
-- Rainy days are good for staying in. With a book, maybe.
-- I always want tea when it rains. And a blanket.
-- Rainy days are good for staying in. Don't you think?
 - I watched the drops race down the window. Don't laugh.
 - My favorite one lost. Silly, I know.
 - Everything's a little softer when it rains. Don't you think?
 - The hallway lights look warmer today. I like it.
-- I hope the cats near the gate found somewhere dry. I left them a box.
-- I worry about the strays on days like this. Is that silly?
-- We could wait it out together. If you'd like.
-- There's no hurry to go home in this. It's cozy in here.
 - I hummed something to the sound of it. Quietly.
 - It's a nice rhythm, isn't it? I won't sing, don't worry.
 
-@rule small.weather.rain.energetic~state
+@rule small.weather.rain.gentle.strays
+on small
+when subject=weather wet=yes tone=gentle
+feel smile
+hook weather_rain_gentle_strays
+opens ask,share,comfort
+- My umbrella's over the strays' box by the gate... Hehe, I'll survive.
+- My socks got wet this morning, checking on the strays. I left them a box.
+- I left my umbrella with the strays... Maybe someone will share theirs...
+- I hope the cats near the gate found somewhere dry. I left them a box.
+- I worry about the strays on days like this. Is that silly?
+
+@rule small.weather.rain.gentle.staying
+on small
+when subject=weather wet=yes tone=gentle
+feel smile
+hook weather_rain_gentle_staying
+opens share,invite,comfort
+- Rainy days are good for staying in. With a book, maybe.
+- I always want tea when it rains. And a blanket.
+- Rainy days are good for staying in. Don't you think?
+- We could wait it out together. If you'd like.
+- There's no hurry to go home in this. It's cozy in here.
+
+@rule small.weather.rain.energetic.bored~state
 on small
 when subject=weather wet=yes tone=energetic
-opens ask,share,tease
 feel pout
 shape state
+hook weather_rain_energetic_bored
+opens ask,comfort,tease
 - Ugh, rain! Practice got cancelled because of it!
 - Rain, rain, rain! I wanted to go out at lunch!
 - Boo, rain! I'm bored out of my mind!
 - Somebody slipped in the hallway, it was hilarious! Okay, that part was fun.
-- I'm gonna jump in every puddle on the way home. Don't judge me!
 - We had to do indoor training! Worst day ever!
 - They moved everything to the gym! So cramped!
 - If I sit still any longer, I'll explode! Help!
-- Bet I can reach the store without an umbrella! Watch me!
-- My shoes went squish all the way to school! Squish, squish!
-- My bag's soaked! My homework's fine. Probably!
+- My shoes went squish all the way to campus! Squish, squish!
+- {student}My bag's soaked! My assignments are fine. Probably!
 - It better be sunny tomorrow! I mean it!
 - This rain owes me a practice! Hmph!
 
-@rule small.weather.rain.energetic~q
+@rule small.weather.rain.energetic.dare~state
 on small
 when subject=weather wet=yes tone=energetic
-opens share,ask,tease
+feel pout
+shape state
+hook weather_rain_energetic_dare
+opens ask,invite,tease
+- Bet I can jump in every puddle on the way home! Loser buys juice!
+- Bet I can reach the store without an umbrella! Loser buys juice!
+
+@rule small.weather.rain.energetic.bored~q
+on small
+when subject=weather wet=yes tone=energetic
 feel pout
 shape q
+hook weather_rain_energetic_bored
+opens ask,comfort,tease
 - Did you see people running for the doors? Rain makes everyone crazy!
 
-@rule small.weather.rain.energetic~offer
+@rule small.weather.rain.energetic.dare~offer
 on small
 when subject=weather wet=yes tone=energetic
-opens invite,ask,tease
 feel pout
 shape offer
+hook weather_rain_energetic_dare
+opens ask,invite,tease
 - Wanna race to the gate in it? Loser buys juice!
-- I'm gonna jump in every puddle on the way home. Come on, it's just water!
-- I've got too much energy for a rainy day! Let's do something!
+- Race you through every puddle on the way home! Loser buys juice!
+- I've got too much energy for a rainy day! Let's do something! Loser buys juice!
 - Rock paper scissors, loser goes to the store! You in?
 
-@rule small.weather.rain.cool~state
+@rule small.weather.rain.cool.quiet~state
 on small
 when subject=weather wet=yes tone=cool
-opens ask,share,tease
 shape state
+hook weather_rain_cool_quiet
+opens ask,agree,share
 - Rain. Yes. I don't mind it.
 - It's raining. I noticed. Fewer people outside. Good.
 - ...It's raining. It's quieter.
 - The rain keeps people indoors. The halls are crowded now.
 - Rain is honest weather. No pretending to be cheerful.
-- I checked the forecast. Unlike some people.
-- Everyone's complaining. It's only water. Unnecessary.
-- I got here before it started. Planning.
-- I timed it. As usual.
 - The sound helps me concentrate. Don't interrupt it.
 - I read better on days like this. Go on, then.
 - I prefer it to the sun. Less glare.
 - Rain over noise, any day. Simple.
+
+@rule small.weather.rain.cool.prepared~state
+on small
+when subject=weather wet=yes tone=cool
+shape state
+hook weather_rain_cool_prepared
+opens ask,praise,tease
+- I checked the forecast. Unlike some people.
+- Everyone's complaining. It's only water. Unnecessary.
+- I got here before it started. Planning.
+- I timed it. As usual.
+
+@rule small.weather.rain.cool.you~state
+on small
+when subject=weather wet=yes tone=cool
+shape state
+hook weather_rain_cool_you
+opens ask,thank,tease
 - You're dripping on the floor. Just an observation.
 - You should dry off. You'll catch a cold.
 
-@rule small.weather.rain.cool~q
+@rule small.weather.rain.cool.prepared~q
 on small
 when subject=weather wet=yes tone=cool
-opens share,ask,tease
 shape q
+hook weather_rain_cool_prepared
+opens ask,praise,tease
 - I brought an umbrella. Obviously. You didn't?
 - People overreact to rain. Don't you agree?
 
-@rule small.weather.rain.teasing~state
+@rule small.weather.rain.teasing.you~state
 on small
 when subject=weather wet=yes tone=teasing
-opens ask,share,tease
 feel smile
 shape state
+hook weather_rain_teasing_you
+opens ask,tease,comfort
 - Look at you, all damp. Hair's a mess. Cute, though.
+- Your shirt's a little see-through, you know. Hehe.
+- You should dry off. Or don't~ I'm not complaining.
+- Rain suits you. Don't let it go to your head.
+
+@rule small.weather.rain.teasing.umbrella~state
+on small
+when subject=weather wet=yes tone=teasing
+feel smile
+shape state
+hook weather_rain_teasing_umbrella
+opens ask,invite,tease
 - So, no umbrella? Fine, I'll rescue you.
+- Who's the lucky one who gets to share my umbrella? Guess.
+
+@rule small.weather.rain.teasing.blame~state
+on small
+when subject=weather wet=yes tone=teasing
+feel smile
+shape state
+hook weather_rain_teasing_blame
+opens ask,share,tease
 - Rainy days are perfect for staying in with someone. Just saying~
 - If I get wet, it's your fault. Don't ask me how.
 - I'm blaming you for this weather. You look like the type.
-- Your shirt's a little see-through, you know. Hehe.
-- You should dry off. Or don't~ I'm not complaining.
-- Who's the lucky one who gets to share my umbrella? Guess.
 - Don't catch a cold. I'd have to take care of you. So annoying~
 - If you get sick, I'm not visiting. Unless you ask nicely. Hehe.
 - What do people do on rainy days, hmm? You tell me.
-- Rain suits you. Don't let it go to your head.
 
-@rule small.weather.rain.teasing~q
+@rule small.weather.rain.teasing.blame~q
 on small
 when subject=weather wet=yes tone=teasing
-opens share,ask,tease
 feel smile
 shape q
+hook weather_rain_teasing_blame
+opens ask,share,tease
 - Rain's romantic, don't you think? Or am I the only one?
-- Are you going to walk me home in this? A gentleman would.
 - Nothing to do but stay in and get into trouble. Ideas?
-- You look good wet. Did I say that out loud?
 
-@rule small.weather.rain.teasing~offer
+@rule small.weather.rain.teasing.umbrella~q
 on small
 when subject=weather wet=yes tone=teasing
-opens invite,ask,tease
+feel smile
+shape q
+hook weather_rain_teasing_umbrella
+opens ask,invite,tease
+- Are you going to walk me home in this? A gentleman would.
+
+@rule small.weather.rain.teasing.you~q
+on small
+when subject=weather wet=yes tone=teasing
+feel smile
+shape q
+hook weather_rain_teasing_you
+opens ask,tease,comfort
+- You look good wet. Did I say that out loud?
+
+@rule small.weather.rain.teasing.umbrella~offer
+on small
+when subject=weather wet=yes tone=teasing
 feel smile
 shape offer
+hook weather_rain_teasing_umbrella
+opens ask,invite,tease
 - Rain, huh? Want to share mine? It's small, we'd have to stand close~
 
-@rule small.weather.rain.lover~state
+@rule small.weather.rain.lover.outside~state
 on small
 when subject=weather wet=yes rainlover=yes
-opens ask,share,tease
 feel smile
 shape state
+hook weather_rain_lover_outside
+opens ask,invite,share
 - I love the rain. Really love it. I went out in it at lunch.
-- Rain is my favorite weather. It washes everything clean.
-- Don't tell anyone, but I was hoping for rain. Everything smells new.
 - Sometimes I just stand outside and let it fall. People think I'm weird.
 - I took the long way so I'd walk in it. Worth it.
+
+@rule small.weather.rain.lover.love~state
+on small
+when subject=weather wet=yes rainlover=yes
+feel smile
+shape state
+hook weather_rain_lover_love
+opens ask,agree,tease
+- Rain is my favorite weather. It washes everything clean.
+- Don't tell anyone, but I was hoping for rain. Everything smells new.
 - Everyone else looks so miserable. I'm having a great day.
 - All those sad faces under umbrellas. I don't get it.
 - I like falling asleep to it. Best sleep ever.
 - I checked: it's going to rain all week. Yay.
 
-@rule small.weather.rain.lover~q
+@rule small.weather.rain.lover.love~q
 on small
 when subject=weather wet=yes rainlover=yes
-opens share,ask,tease
 feel smile
 shape q
+hook weather_rain_lover_love
+opens ask,agree,tease
 - Rain sounds like the world is breathing. Is that strange?
-- I leave my umbrella in my bag on purpose. Who needs it?
 - The first drops are the best part. Did you notice?
 - I love the smell right before it starts. Isn't it great?
 - I hope it never stops. Is that bad?
 
-@rule small.weather.rain.lover~offer
+@rule small.weather.rain.lover.outside~q
 on small
 when subject=weather wet=yes rainlover=yes
-opens invite,ask,tease
+feel smile
+shape q
+hook weather_rain_lover_outside
+opens ask,invite,share
+- I leave my umbrella in my bag on purpose. Who needs it?
+
+@rule small.weather.rain.lover.outside~offer
+on small
+when subject=weather wet=yes rainlover=yes
 feel smile
 shape offer
+hook weather_rain_lover_outside
+opens ask,invite,share
 - Want to go out in it with me? Just for a minute!
-- Have you ever walked in the rain on purpose? You should try it.
 
-@rule small.weather.rain.lover~tell
+@rule small.weather.rain.lover.love~offer
 on small
 when subject=weather wet=yes rainlover=yes
-opens invite,ask,tease
+feel smile
+shape offer
+hook weather_rain_lover_love
+opens ask,agree,tease
+- Have you ever walked in the rain on purpose? You should try it.
+
+@rule small.weather.rain.lover.love~tell
+on small
+when subject=weather wet=yes rainlover=yes
 feel smile
 shape tell
-- I've got a whole playlist for days like this. Want to hear it?
+hook weather_rain_lover_love
+opens ask,agree,tease
+- I've got a whole playlist for days like this. The rain's the best track.
 
-@rule small.weather.rain.outside
+@rule small.weather.rain.outside.run
 on small
 when subject=weather wet=yes outside=yes
-opens invite,tease
 feel surprised
+hook weather_rain_outside_run
+opens tease,invite,ask
 - Why are we even out here? Let's get inside!
 - We're getting soaked! My hair is ruined.
 - Talking about the rain while standing in it? This is so dumb. I love it.
@@ -764,77 +1067,114 @@ feel surprised
 - Quick, that tree! Hurry!
 - Over by the wall, it's drier! Come on!
 
-@rule small.weather.storm~state
+@rule small.weather.storm.thrill~state
 on small
 when subject=weather weather=storm
-opens comfort,ask,share
 feel worried
 shape state
+hook weather_storm_thrill
+opens ask,share,tease
 - This storm is scary. I'm fine. Totally fine.
-- They might send everyone home. I hope so.
-- The wind's so loud. I jumped!
-- I counted the seconds. It's getting closer. Oh no.
-- That was only three seconds after the flash. I don't like this.
-- My phone says there's a warning. Great.
 - The trees are bending over. Look!
-- I'm not scared. You're scared. Quiet.
-- I wasn't holding your sleeve. You saw nothing.
 - It's almost exciting, in a scary way. Almost.
 - I've never seen the sky that color. It's kind of amazing.
 
-@rule small.weather.storm~q
+@rule small.weather.storm.home~state
 on small
 when subject=weather weather=storm
-opens share,ask,tease
+feel worried
+shape state
+hook weather_storm_home
+opens ask,comfort,share
+- They might send everyone home. I hope so.
+- My phone says there's a warning. Great.
+
+@rule small.weather.storm.scared~state
+on small
+when subject=weather weather=storm
+feel worried
+shape state
+hook weather_storm_scared
+opens ask,comfort,tease
+- The wind's so loud. I jumped!
+- I counted the seconds. It's getting closer. Oh no.
+- That was only three seconds after the flash. I don't like this.
+- I'm not scared. You're scared. Quiet.
+- I wasn't holding your sleeve. You saw nothing.
+
+@rule small.weather.storm.scared~q
+on small
+when subject=weather weather=storm
 feel worried
 shape q
+hook weather_storm_scared
+opens ask,comfort,tease
 - Did you hear that thunder? I hate thunder...
 - The lights flickered just now! Stay close for a bit?
-- The trains might stop if this keeps up. How would I even get home?
 - Lightning hit somewhere close. Did you see the flash?
-- My mom keeps texting me. Should I worry?
+
+@rule small.weather.storm.home~q
+on small
+when subject=weather weather=storm
+feel worried
+shape q
+hook weather_storm_home
+opens ask,comfort,share
+- The trains might stop if this keeps up. How would I even get home?
+- {student}My mom keeps texting me. Should I worry?
 - Something just blew across the yard. Was that a sign?
 
-@rule small.weather.later~state
+@rule small.weather.later.race~state
 on small
 when subject=weather rainlater=yes
-opens ask,share,tease
 shape state
+hook weather_later_race
+opens ask,comfort,tease
 - It's going to pour later. I hope I make it home first.
-- They said rain this afternoon. I brought an umbrella, just in case.
 - The sky's so dark. Ugh, and I have practice.
 - My knee always knows when it's going to rain. Grandma says the same thing.
-- Let's hope it holds until after school. Fingers crossed.
+- Let's hope it holds until after class. Fingers crossed.
 - Clouds like that mean business. We'll see.
 - I should've brought a jacket. Great.
 - I left my laundry out, too. Mom's going to be mad.
-- If I leave right after class, I might make it. Maybe.
+- {student}If I leave right after class, I might make it. Maybe.
 - I'm running as soon as the bell rings. Watch me.
 - It's gotten so still. Weird.
 - The club might cancel if it starts. Not that I mind.
 - There goes my plan to walk home. Oh well.
 
-@rule small.weather.later~q
+@rule small.weather.later.umbrella~state
 on small
 when subject=weather rainlater=yes
-opens share,ask,tease
+shape state
+hook weather_later_umbrella
+opens ask,share,invite
+- They said rain this afternoon. I brought an umbrella, just in case.
+
+@rule small.weather.later.umbrella~q
+on small
+when subject=weather rainlater=yes
 shape q
-- Smells like rain. Weird, right?
-- The birds are flying low. That means rain, right?
+hook weather_later_umbrella
+opens ask,share,invite
+- Smells like rain. Did you bring an umbrella?
+- The birds are flying low. That means rain. Got an umbrella?
 - Do you have one? It's big enough.
 
-@rule small.weather.later~offer
+@rule small.weather.later.umbrella~offer
 on small
 when subject=weather rainlater=yes
-opens invite,ask,tease
 shape offer
+hook weather_later_umbrella
+opens ask,share,invite
 - Want to share my umbrella later? I'm just asking.
 
-@rule small.weather.cloudy~state
+@rule small.weather.cloudy.grey~state
 on small
 when subject=weather weather=cloudy
-opens ask,share,tease
 shape state
+hook weather_cloudy_grey
+opens ask,share,tease
 - It's gray today. Easier on the eyes.
 - Cloudy days are kind of nice. Makes me lazy.
 - The sun's hiding. I don't mind it.
@@ -852,58 +1192,63 @@ shape state
 - My hair's behaving, at least. Small wins.
 - Not too hot, not too cold. I'll take it.
 
-@rule small.weather.cloudy~q
+@rule small.weather.cloudy.grey~q
 on small
 when subject=weather weather=cloudy
-opens share,ask,tease
 shape q
+hook weather_cloudy_grey
+opens ask,share,tease
 - Weather for naps. Agreed?
 
-@rule small.weather.clear~state
+@rule small.weather.clear.window~state
 on small
 when subject=weather weather=clear
-opens ask,share,tease
 feel smile
 shape state
-- Perfect weather. I almost skipped class to enjoy it.
+hook weather_clear_window
+opens ask,share,tease
+- {student}Perfect weather. I almost skipped class to enjoy it.
 - The sun feels great. Days like this are rare.
-- Even the teachers look happy today. It's that kind of day.
+- {student}Even the professors look happy today. It's that kind of day.
 - I sat by the window all morning. Totally worth it.
 - I can't look at the blackboard with all that sun. Unfair.
 - Whoever sits by the window has it good. I want that seat.
 - Why are we in here? Good question.
 - The laundry at home will dry in an hour. Exciting.
-- My mom's going to make me air the futons. It's that kind of sun.
+- {student}My mom's going to make me air the futons. It's that kind of sun.
 - Don't forget sunscreen. Seriously.
 - I'm going to get a tan line from sitting here. Oh well.
 - Tonight there'll be stars. Watch.
 - The sunset's going to be amazing. You'll see.
 
-@rule small.weather.clear~q
+@rule small.weather.clear.outside~q
 on small
 when subject=weather weather=clear
-opens share,ask,tease
 feel smile
 shape q
+hook weather_clear_outside
+opens ask,invite,tease
 - Sunny days make me want to do something fun. Got any ideas?
 
-@rule small.weather.clear~offer
+@rule small.weather.clear.outside~offer
 on small
 when subject=weather weather=clear
-opens invite,ask,tease
 feel smile
 shape offer
+hook weather_clear_outside
+opens ask,invite,tease
 - It's so nice out! We should go outside.
 - Not a single cloud. Let's eat outside!
 - Let's skip the indoor stuff today. Come on.
 
 # ---- the library: books first, then the quiet and the exams, then the rain, then a fight on her mind
 
-@rule small.place.library.books.rain.fight
+@rule small.place.library.books.rain.fight.rain
 on small
 when subject=place placeid=library l_study=yes wet=yes fight=yes
-opens comfort,ask,share
 feel shy
+hook place_library_books_rain_fight_rain
+opens ask,comfort,share
 - I came here to read with the rain on the windows... It helps me stop thinking about {fightwho}.
 - The library sounds different when it rains. Then I forget about the thing with {fightwho}. Almost.
 - I like reading while it rains. It's the only place I don't think about the fight with {fightwho}.
@@ -922,12 +1267,13 @@ feel shy
 - I read the same line ten times. Thinking of {fightwho}.
 - The rain's the only thing I can follow. Stupid {fightwho}.
 
-@rule small.place.library.books.rain~state
+@rule small.place.library.books.rain.cozy~state
 on small
 when subject=place placeid=library l_study=yes wet=yes
-opens ask,share,tease
 feel smile
 shape state
+hook place_library_books_rain_cozy
+opens ask,share,tease
 - Rain outside, a book in here. Perfect afternoon.
 - Reading while it rains is the best. I could stay until they lock the doors.
 - I always come to the library on rainy days. It's tradition.
@@ -936,35 +1282,46 @@ shape state
 - Rainy days are reading days. That's the rule.
 - I've got a blanket in my bag for this. Don't tell the librarian.
 - If they served tea, I'd never leave. Seriously.
-- I've been saving a mystery for a rainy day. Finally.
 - Sit down, you're letting the rain in. Hehe.
 - You're dripping on the books. Careful!
 - The rain gives you an excuse not to leave. I love that.
 - Nobody asks why you're here on a day like this. Perfect.
+
+@rule small.place.library.books.rain.read~state
+on small
+when subject=place placeid=library l_study=yes wet=yes
+feel smile
+shape state
+hook place_library_books_rain_read
+opens ask,share,tease
+- I've been saving a mystery for a rainy day. Finally.
 - I can recommend something for this weather. Here.
 - Want something good to read till it stops? It's short.
 
-@rule small.place.library.books.rain~q
+@rule small.place.library.books.rain.cozy~q
 on small
 when subject=place placeid=library l_study=yes wet=yes
-opens share,ask,tease
 feel smile
 shape q
+hook place_library_books_rain_cozy
+opens ask,share,tease
 - Do you hear the rain on the windows? It's like a soundtrack.
 
-@rule small.place.library.books.rain~offer
+@rule small.place.library.books.rain.read~offer
 on small
 when subject=place placeid=library l_study=yes wet=yes
-opens invite,ask,tease
 feel smile
 shape offer
+hook place_library_books_rain_read
+opens ask,share,tease
 - This is the kind of day for long books. You should try one.
 
-@rule small.place.library.books.fight
+@rule small.place.library.books.fight.corner
 on small
 when subject=place placeid=library l_study=yes fight=yes
-opens comfort,ask
 feel sad
+hook place_library_books_fight_corner
+opens ask,comfort,share
 - I came here to hide in a book. After what happened with {fightwho}...
 - Books don't argue with you. {Fightwho} and I aren't talking right now.
 - Reading helps when people are... complicated. After what happened with {fightwho}...
@@ -983,12 +1340,13 @@ feel sad
 - I'm fine, I just needed a corner. Really.
 - This is my corner when things are bad. You found it.
 
-@rule small.place.library.books.exam
+@rule small.place.library.books.exam.prepared
 on small
 when subject=place placeid=library l_study=yes exam=yes
-opens ask,share
 feel serious
-- Exams are coming. I'm prepared. Mostly. Want to quiz me?
+hook place_library_books_exam_prepared
+opens ask,share,praise
+- {student}Exams are coming. I'm prepared. Mostly. Want to quiz me?
 - I've read everything twice. You should study too.
 - Studying here is the only way I focus. Don't distract me. ...Okay, a little.
 - The library's full of panicking people this week. I came early to get this one.
@@ -997,7 +1355,7 @@ feel serious
 - I'm on chapter seven. How far are you?
 - I've got notes on my notes. It's fine.
 - My highlighter's almost dead. I've used three.
-- I read that it's better to sleep than cram. I'm not doing it.
+- {student}I read that it's better to sleep than cram. I'm not doing it.
 - I keep telling myself to rest. It's not working.
 - You look like you haven't opened a book yet. Hm?
 - Have you studied at all? Be honest.
@@ -1006,15 +1364,15 @@ feel serious
 - I know which questions will come up. Probably.
 - I found last year's exam. Want to look?
 
-@rule small.place.library.books~state
+@rule small.place.library.books.reader~state
 on small
 when subject=place placeid=library l_study=yes
-opens ask,share,tease
 feel smile
 shape state
-- The library is my favorite place in school. I'm here every day.
+hook place_library_books_reader
+opens ask,praise,tease
+- The library is my favorite place on campus. I'm here every day.
 - Books, quiet, nobody yelling. I come here every chance I get.
-- They got some new books this week. I already borrowed three.
 - The smell of old books is the best. Don't laugh!
 - I could live in this library. Seriously.
 - I'm halfway through a really good novel. I can't put it down.
@@ -1022,63 +1380,99 @@ shape state
 - That's my usual seat, by the way. You can have it today.
 - Sometimes I read a whole book in one go. Oops.
 - I forgot lunch again because of a book. It happens.
-- I judge people by their reading lists. A little.
-- Your taste in books says a lot. Careful.
 - One more chapter, then I'll talk. Just kidding.
 - I was at the good part. It's okay, I'll stop.
 
-@rule small.place.library.books~q
+@rule small.place.library.books.shelf~state
 on small
 when subject=place placeid=library l_study=yes
-opens share,ask,tease
+feel smile
+shape state
+hook place_library_books_shelf
+opens ask,share,invite
+- They got some new books this week. I already borrowed three.
+- I judge people by their reading lists. A little.
+- Your taste in books says a lot. Careful.
+
+@rule small.place.library.books.reader~q
+on small
+when subject=place placeid=library l_study=yes
 feel smile
 shape q
+hook place_library_books_reader
+opens ask,praise,tease
 - I love it here. What more do you need?
+
+@rule small.place.library.books.shelf~q
+on small
+when subject=place placeid=library l_study=yes
+feel smile
+shape q
+hook place_library_books_shelf
+opens ask,share,invite
 - Have you read anything good lately? I'll lend you one.
 - Do you want a recommendation? I've got one for you.
 - What's the last thing you read? Be honest.
 
-@rule small.place.library.books~show
+@rule small.place.library.books.shelf~show
 on small
 when subject=place placeid=library l_study=yes
-opens invite,ask,tease
 feel smile
 shape show
+hook place_library_books_shelf
+opens ask,share,invite
 - I've got a favorite shelf. Want to see it?
 
-@rule small.place.library.nobooks~state
+@rule small.place.library.nobooks.bored~state
 on small
 when subject=place placeid=library l_study!=yes
-opens ask,share,tease
 shape state
+hook place_library_nobooks_bored
+opens ask,comfort,tease
 - I don't really come here to read. Don't tell the librarian.
 - The library's... quiet. Too quiet, maybe.
-- Honestly? It's a good place to nap. It's warm, at least.
 - Books aren't really my thing. Shh, don't judge.
-- I'm hiding from my homework. In the library. Ironic, huh? Don't laugh.
-- I got dragged here. By a friend.
 - I've been on page one for an hour. Don't check.
-- There's air conditioning. That's why I'm here.
-- The chairs are comfortable. That's all it has going for it.
 - Everyone whispers here. It's creepy. Hehe.
 - It's so quiet that I can hear myself chew. Sorry.
 - Can we go? I'm dying. Please.
 - If I stay any longer, I'll turn into dust. Save me.
 - What do people even do in here? Seriously.
 
-@rule small.place.library.nobooks~q
+@rule small.place.library.nobooks.hide~state
 on small
 when subject=place placeid=library l_study!=yes
-opens share,ask,tease
+shape state
+hook place_library_nobooks_hide
+opens ask,share,tease
+- Honestly? It's a good place for hiding. It's warm, at least.
+- {student}I'm hiding from my assignments. In the library. Ironic, huh? Don't laugh.
+- I got dragged here. By a friend.
+- There's air conditioning. That's why I'm here.
+- The chairs are comfortable. That's all it has going for it.
+
+@rule small.place.library.nobooks.hide~q
+on small
+when subject=place placeid=library l_study!=yes
 shape q
+hook place_library_nobooks_hide
+opens ask,share,tease
 - I only came because it's the one quiet place. Is that bad?
+
+@rule small.place.library.nobooks.bored~q
+on small
+when subject=place placeid=library l_study!=yes
+shape q
+hook place_library_nobooks_bored
+opens ask,comfort,tease
 - I opened this book so I'd look smart. Does it work?
 - Do you actually read all this? Wow.
 
-@rule small.place.library.rain
+@rule small.place.library.rain.full
 on small
 when subject=place placeid=library wet=yes
-opens share,invite
+hook place_library_rain_full
+opens ask,invite,share
 - Everyone's in the library because of the rain. It's never this full.
 - The rain sounds nice from in here. At least it's dry.
 - It's so crowded today. Too many people.
@@ -1096,36 +1490,39 @@ opens share,invite
 - It's so quiet, you can hear every drop. Listen.
 - I took a picture book to pass the time. Don't laugh.
 - I'm pretending to read. Shh.
+
 # ---- the classroom: the time of day and the exams, then the rain at the windows
 
-@rule small.place.classroom.rain
+@rule small.place.classroom.rain.window
 on small
 when subject=place placeid=classroom wet=yes
-opens share,tease
+hook place_classroom_rain_window
+opens ask,share,tease
 - Watching the rain from class is my hobby. Better than the lesson.
 - The windows are all fogged up. Someone drew a heart on it.
 - Listen to it hit the glass. Kind of relaxing.
 - Nobody wants to go outside. So loud in here.
-- The classroom's packed because of the rain. Everyone eats inside now.
-- I'm staring out the window again. Don't tell the teacher.
-- Rainy classroom, sleepy classroom. I almost dozed off.
+- The lecture hall's packed because of the rain. Everyone eats inside now.
+- {student}I'm staring out the window again. Don't tell the professor.
+- Rainy lecture hall, sleepy lecture hall. I almost dozed off.
 - Class felt endless today. My eyelids...
-- The teacher's voice and the rain are a deadly mix. Zzz.
+- {student}The professor's voice and the rain are a deadly mix. Zzz.
 - Somebody left a window open. Who did that?
-- My desk's a little wet. Thanks, whoever.
+- {student}My desk's a little wet. Thanks, whoever.
 - The room's so gray. It's depressing.
 - They turned on all the lights at noon. Weird, right?
 - I can't see the field anymore. Just rain.
-- All I can see from my seat is gray. Pretty, though.
+- {student}All I can see from my seat is gray. Pretty, though.
 - Everyone's stuck here until it stops. We could talk.
 - Nobody's leaving anytime soon. Got anything to do?
 
-@rule small.place.classroom.exam
+@rule small.place.classroom.exam.tense
 on small
 when subject=place placeid=classroom exam=yes
-opens ask,comfort
 feel worried
-- The classroom feels like a prison during exams. I can't breathe.
+hook place_classroom_exam_tense
+opens ask,comfort,share
+- The lecture hall feels like a prison during exams. I can't breathe.
 - Everyone's so tense in here. Even the class clown is quiet.
 - Exam week. In this room. Again. Ugh.
 - Do you think we'll pass? Tell me we'll pass.
@@ -1143,90 +1540,126 @@ feel worried
 - Say something normal. Anything. Please.
 - Distract me for a second. I need it.
 
-@rule small.place.classroom.lunch~state
+@rule small.place.classroom.lunch.crowd~state
 on small
 when subject=place placeid=classroom period=lunch
-opens ask,share,tease
 shape state
-- Eating in the classroom is cozier. No lines, either.
+hook place_classroom_lunch_crowd
+opens ask,share,tease
+- Eating in the lecture hall is cozier. No lines, either.
 - Everyone pushes their desks together at lunch. It's the best part.
-- The classroom smells like everyone's bento. I'm so hungry now.
+- The lecture hall smells like everyone's bento. I'm so hungry now.
 - Somebody brought curry again. The whole room smells like it.
 - I always eat too fast. Then I'm hungry again by fifth period.
 - I traded my egg for someone's sausage. Good deal.
 - The desks are a mess at lunch. Not my crumbs.
 - There are crumbs all over my notebook. Ugh.
 - The class is nicer at lunch. Nobody's stressed.
+
+@rule small.place.classroom.lunch.invite~state
+on small
+when subject=place placeid=classroom period=lunch
+shape state
+hook place_classroom_lunch_invite
+opens ask,invite,thank
 - Pull up a chair. I don't bite.
 
-@rule small.place.classroom.lunch~q
+@rule small.place.classroom.lunch.crowd~q
 on small
 when subject=place placeid=classroom period=lunch
-opens share,ask,tease
 shape q
+hook place_classroom_lunch_crowd
+opens ask,share,tease
 - Lunch break is too short. Why is it so short?
-- Do you want the rest of mine? I'm full.
 - It's the only time this room feels alive. Isn't it?
+
+@rule small.place.classroom.lunch.invite~q
+on small
+when subject=place placeid=classroom period=lunch
+shape q
+hook place_classroom_lunch_invite
+opens ask,invite,thank
+- Do you want the rest of mine? I'm full.
 - Who's got tea? Anyone?
 
-@rule small.place.classroom.lunch~offer
+@rule small.place.classroom.lunch.invite~offer
 on small
 when subject=place placeid=classroom period=lunch
-opens invite,ask,tease
 shape offer
+hook place_classroom_lunch_invite
+opens ask,invite,thank
 - Lunch at your desk is underrated. Want to join us?
 - Sit here, there's room. Come on.
 
-@rule small.place.classroom.lunch~give
+@rule small.place.classroom.lunch.invite~give
 on small
 when subject=place placeid=classroom period=lunch
-opens invite,ask,tease
 shape give
+hook place_classroom_lunch_invite
+opens ask,invite,thank
 - I forgot my drink again. Share yours?
 
 # ---- the cafeteria: food first
 
-@rule small.place.cafeteria.food~state
+@rule small.place.cafeteria.food.eater~state
 on small
 when subject=place placeid=cafeteria l_food=yes
-opens ask,share,tease
 feel smile
 shape state
+hook place_cafeteria_food_eater
+opens ask,praise,tease
 - The cafeteria is my happy place. Don't judge me.
-- I already know today's menu. The katsu curry is calling.
 - I'd come here even if I wasn't hungry. Food is life.
-- The new set meal is so good. I had it twice this week.
 - I eat first and think later. That's my motto.
 - Second helpings are a right. Fight me.
 - I can tell it's Thursday by the smell. It's a gift.
 - I know the lunch ladies by name. They give me extra.
-- Ask me anything about this menu. Go on.
-- I've ranked every dish here. Top three, right now.
 - If you're not going to finish that... I'm serious.
 - I've been thinking about this meal since first period. No shame.
 - I planned my whole day around lunch. Worth it.
+
+@rule small.place.cafeteria.food.order~state
+on small
+when subject=place placeid=cafeteria l_food=yes
+feel smile
+shape state
+hook place_cafeteria_food_order
+opens ask,share,invite
+- I already know today's menu. The katsu curry is calling.
+- The new set meal is so good. I had it twice this week.
+- Ask me anything about this menu. Go on.
+- I've ranked every dish here. Top three, right now.
 - You've got to try it with extra sauce. Trust me.
 - Pro tip: the end of the line gets more rice. You're welcome.
 
-@rule small.place.cafeteria.food~q
+@rule small.place.cafeteria.food.order~q
 on small
 when subject=place placeid=cafeteria l_food=yes
-opens share,ask,tease
 feel smile
 shape q
+hook place_cafeteria_food_order
+opens ask,share,invite
 - Have you tried the special? Get it. Trust me.
+
+@rule small.place.cafeteria.food.eater~q
+on small
+when subject=place placeid=cafeteria l_food=yes
+feel smile
+shape q
+hook place_cafeteria_food_eater
+opens ask,praise,tease
 - Are you going to eat that? Just asking.
 
-@rule small.place.cafeteria.sweets~state
+@rule small.place.cafeteria.sweets.sweets~state
 on small
 when subject=place placeid=cafeteria l_sweets=yes
-opens ask,share,tease
 feel smile
 shape state
+hook place_cafeteria_sweets_sweets
+opens ask,share,tease
 - They have pudding today! I almost cried.
 - Dessert first. Always. Life's short.
 - I came for the melon bread, honestly. It sells out so fast.
-- Want to split a parfait? Half for you, half for me. Mostly me.
 - The store has new sweets. I'm buying all of them.
 - Sweets fix everything. Science.
 - I've got a sixth sense for cream puffs. It's real.
@@ -1235,37 +1668,50 @@ shape state
 - That's my third, not that I'm counting. Okay, fourth.
 - There's always room for dessert. Always.
 - I've got a second stomach for sweets. It's science.
-- If you get me a pudding, I'll owe you. Think about it.
 
-@rule small.place.cafeteria.sweets~q
+@rule small.place.cafeteria.sweets.deal~state
 on small
 when subject=place placeid=cafeteria l_sweets=yes
-opens share,ask,tease
+feel smile
+shape state
+hook place_cafeteria_sweets_deal
+opens ask,invite,tease
+- Want to split a parfait? Half for you, half for me. Mostly me.
+- If you get me a pudding, I'll owe you. Think about it.
+
+@rule small.place.cafeteria.sweets.deal~q
+on small
+when subject=place placeid=cafeteria l_sweets=yes
 feel smile
 shape q
+hook place_cafeteria_sweets_deal
+opens ask,invite,tease
 - Just one more can't hurt. Right?
 - Buy me something sweet and I'll be your friend forever. Deal?
 
-@rule small.place.cafeteria.sweets~offer
+@rule small.place.cafeteria.sweets.sweets~offer
 on small
 when subject=place placeid=cafeteria l_sweets=yes
-opens invite,ask,tease
 feel smile
 shape offer
+hook place_cafeteria_sweets_sweets
+opens ask,share,tease
 - I can smell the new batch. Come on.
 
-@rule small.place.cafeteria.sweets~give
+@rule small.place.cafeteria.sweets.deal~give
 on small
 when subject=place placeid=cafeteria l_sweets=yes
-opens invite,ask,tease
 feel smile
 shape give
+hook place_cafeteria_sweets_deal
+opens ask,invite,tease
 - My bag is half snacks. Want one?
 
-@rule small.place.cafeteria.rain
+@rule small.place.cafeteria.rain.crowd
 on small
 when subject=place placeid=cafeteria wet=yes
-opens share,tease
+hook place_cafeteria_rain_crowd
+opens ask,share,tease
 - Everybody's eating in here because of the rain. It's like a festival.
 - It's so packed today. We could squeeze in.
 - No seats left, thanks to the rain. Ugh.
@@ -1283,13 +1729,15 @@ opens share,tease
 - This was supposed to be a picnic day. Oh well.
 - Nobody's in a hurry to leave. Fine by me.
 - We can sit here until it stops. Want to?
+
 # ---- the rooftop and the courtyard: outside, so the weather weighs a lot
 
-@rule small.place.rooftop.rain
+@rule small.place.rooftop.rain.soaked
 on small
 when subject=place placeid=rooftop wet=yes
-opens invite,tease,comfort
 feel surprised
+hook place_rooftop_rain_soaked
+opens ask,invite,tease,comfort
 - Why are we up here in the rain? Hehe.
 - The rooftop's all ours. Nobody else is crazy enough. Kinda nice, though.
 - We're getting soaked! I don't even care anymore.
@@ -1303,16 +1751,17 @@ feel surprised
 - My glasses would be useless up here. Good thing I don't wear any.
 - The door's going to lock if we're not careful. Oops.
 - Hope nobody saw us come up. Shh.
-- The school looks so empty from here. Nice, huh?
+- The university looks so empty from here. Nice, huh?
 - Everyone's inside, and we're out here. Us two idiots.
 - I've got one towel, and it's small. Share it?
 - You're shivering. Come closer.
 
-@rule small.place.rooftop.lover
+@rule small.place.rooftop.lover.city
 on small
 when subject=place placeid=rooftop wet=yes rainlover=yes
-opens invite,share
 feel smile
+hook place_rooftop_lover_city
+opens ask,invite,share
 - I come up here when it rains. On purpose. Don't tell anyone.
 - Rain on the rooftop is the best. Close your eyes. Listen.
 - Nobody comes up here when it rains. It's mine. Well, ours now.
@@ -1331,41 +1780,60 @@ feel smile
 - Look at how it moves across the city. So pretty.
 - You can watch it cross the river from here. There!
 
-@rule small.place.rooftop.clear~state
+@rule small.place.rooftop.clear.invite~state
 on small
 when subject=place placeid=rooftop weather=clear
-opens ask,share,tease
 feel smile
 shape state
+hook place_rooftop_clear_invite
+opens ask,invite,tease
 - What a view. I come here to think.
 - You can see the whole town from here. Look, there's the station.
+- Lie down, the concrete's warm. Try it.
+- You should see the clouds from this angle. Come here.
+
+@rule small.place.rooftop.clear.view~state
+on small
+when subject=place placeid=rooftop weather=clear
+feel smile
+shape state
+hook place_rooftop_clear_view
+opens ask,share,tease
 - The sky's so blue today. I could nap right here.
 - This is my secret spot. Well, not so secret now. Don't tell anyone.
 - I can see my house from here. Almost. I think.
 - That dot over there might be my house. Maybe.
-- Lie down, the concrete's warm. Try it.
-- You should see the clouds from this angle. Come here.
 - I get the best phone signal up here. True story.
-- If they moved the classrooms up here, I'd never be late. Promise.
+- If they moved the lecture halls up here, I'd never be late. Promise.
 - It's a little windy for a skirt. Don't look.
 - Hold on to your lunch, the wind's strong. Whoa.
 
-@rule small.place.rooftop.clear~q
+@rule small.place.rooftop.clear.view~q
 on small
 when subject=place placeid=rooftop weather=clear
-opens share,ask,tease
 feel smile
 shape q
+hook place_rooftop_clear_view
+opens ask,share,tease
 - The wind feels so nice up here. Don't you love it?
-- Perfect day for the rooftop. Lunch up here tomorrow?
 - The breeze is the best part. Feel that?
-- Best place in school to do nothing. Agreed?
+- Best place on campus to do nothing. Agreed?
 - Sometimes I wish class were up here. Right?
 
-@rule small.place.courtyard.rain
+@rule small.place.rooftop.clear.invite~q
+on small
+when subject=place placeid=rooftop weather=clear
+feel smile
+shape q
+hook place_rooftop_clear_invite
+opens ask,invite,tease
+- Perfect day for the rooftop. Lunch up here tomorrow?
+
+@rule small.place.courtyard.rain.empty
 on small
 when subject=place placeid=courtyard wet=yes
-opens invite,tease
+hook place_courtyard_rain_empty
+opens ask,invite,tease
 - The courtyard's empty in the rain. Kind of peaceful.
 - All the benches are soaked. No sitting today.
 - Nobody out here but us. Lucky us?
@@ -1384,76 +1852,97 @@ opens invite,tease
 - Nobody's watching us from the windows, I hope. Hehe.
 - Everyone's probably staring at us from class. Wave.
 
-@rule small.place.courtyard.animals~state
+@rule small.place.courtyard.animals.cat~state
 on small
 when subject=place placeid=courtyard l_animals=yes
-opens ask,share,tease
 feel smile
 shape state
+hook place_courtyard_animals_cat
+opens ask,share,praise
 - There's a cat that sleeps under that bench. I call her Mochi.
 - I saw the stray cat again this morning. She let me pet her!
-- The birds come down when it's quiet. Look, there.
-- I sneak bread out for the sparrows. Don't tell the teachers.
 - The courtyard cat has a boyfriend now. A big orange one.
 - I bring treats for the cat on Fridays. She waits for me.
-- I named the sparrows too. All of them.
-- That one's Tofu, and that one's Rice. Don't laugh.
 - Mochi's getting fat. I can tell.
-- Someone else is feeding her. I'm jealous.
 - Shh, don't scare her. There.
 - Move slowly. She doesn't know you. Let her come to you.
 - I've got scratches on both hands. Worth it. Totally.
 - She bit me once. It was love. Hehe.
-- I want to take her home, but we can't have pets. It's so unfair.
-- My mom says no to cats. For now.
+- {student}My mom says no to cats. For now.
 
-@rule small.place.courtyard.animals~q
+@rule small.place.courtyard.animals.birds~state
 on small
 when subject=place placeid=courtyard l_animals=yes
-opens share,ask,tease
+feel smile
+shape state
+hook place_courtyard_animals_birds
+opens ask,share,tease
+- The birds come down when it's quiet. Look, there.
+- {student}I sneak bread out for the sparrows. Don't tell the professors.
+- I named the sparrows too. All of them.
+- That one's Tofu, and that one's Rice. Don't laugh.
+- Someone else is feeding them. I'm jealous.
+- I want to take one home, but we can't have pets. It's so unfair.
+
+@rule small.place.courtyard.animals.cat~q
+on small
+when subject=place placeid=courtyard l_animals=yes
 feel smile
 shape q
+hook place_courtyard_animals_cat
+opens ask,share,praise
 - Have you met the courtyard cat? She's so fluffy.
 
 # ---- the field, the gym and the pool: sports first, then the weather
 
-@rule small.place.field.sports~state
+@rule small.place.field.sports.track~state
 on small
 when subject=place placeid=field clubkind=sports
-opens ask,share,tease
 feel smile
 shape state
+hook place_field_sports_track
+opens ask,praise,tease
 - I practically live on this field. Smell that grass!
 - Practice is my favorite part of the day. No class can beat it.
-- Want to run a lap with me? Bet you can't keep up!
 - Coach is making us run extra this week. My legs are dead.
-- We have a match coming up. Come cheer for us!
 - Some days I'm out here before anyone else. Just me and the track.
 - The field at sunset is the best. Trust me.
 - I beat my best time this morning. Finally!
-- I'm this close to a new record. Watch me!
-- You'd be fast, with some practice. I could train you.
 - I've got grass stains on everything. Worth it.
-- My uniform will never be clean again. Sorry, mom.
+- {student}My uniform will never be clean again. Sorry, mom.
 - Warm-ups are the worst part. Boring.
 - Don't walk across the track! Kidding.
 - Watch out, ball! Hehe.
 
-@rule small.place.field.sports~offer
+@rule small.place.field.sports.dare~state
 on small
 when subject=place placeid=field clubkind=sports
-opens invite,ask,tease
+feel smile
+shape state
+hook place_field_sports_dare
+opens ask,invite,tease
+- Want to run a lap with me? Bet you can't keep up!
+- We have a match coming up. Come cheer for us!
+- I'm this close to a new record. Watch me!
+- You'd be fast, with some practice. I could train you.
+
+@rule small.place.field.sports.dare~offer
+on small
+when subject=place placeid=field clubkind=sports
 feel smile
 shape offer
+hook place_field_sports_dare
+opens ask,invite,tease
 - You should join us sometime. Maybe.
 - Stretch with me. Come on!
 
-@rule small.place.field.rain
+@rule small.place.field.rain.mud
 on small
 when subject=place placeid=field wet=yes
-opens tease,invite
-- The field is all mud now. My cleats are ruined.
-- Practice is cancelled. Thanks, rain. I'm so bored!
+hook place_field_rain_mud
+opens ask,invite,tease
+- The field is all mud now. We warmed up in it. My cleats are ruined.
+- Practice is cancelled. We found out after the warm-up. Thanks, rain.
 - Look at those puddles. Wanna jump in one?
 - We're running drills in the hallway instead. Everyone keeps slipping.
 - The track's flooded. Ridiculous.
@@ -1470,11 +1959,12 @@ opens tease,invite
 - The goal nets are dripping. Sad.
 - The lines have washed away. We'll have to redraw them.
 
-@rule small.place.gym.rain
+@rule small.place.gym.rain.chaos
 on small
 when subject=place placeid=gym wet=yes
-opens invite,tease
-- Every club's crammed in the gym because of the rain. We had to share half a court.
+hook place_gym_rain_chaos
+opens ask,invite,tease
+- {student}Every club's crammed in the gym because of the rain. We had to share half a court.
 - The gym's chaos today. Balls flying everywhere.
 - Three teams, one gym. Watch your head.
 - The roof's so loud when it rains. You can't hear the coach.
@@ -1492,17 +1982,15 @@ opens invite,tease
 - I like it, it's like a festival. Kind of.
 - It's fun seeing all the clubs in one place. Sort of.
 
-@rule small.place.gym.exercise~state
+@rule small.place.gym.exercise.gym~state
 on small
 when subject=place placeid=gym l_exercise=yes
-opens ask,share,tease
 feel smile
 shape state
+hook place_gym_exercise_gym
+opens ask,praise,tease
 - I love the gym. Sweat is just weakness leaving.
 - The gym's where I feel most like me. No thinking, just moving.
-- Want to shoot some hoops? I'll go easy on you.
-- Race you to the wall! Loser buys drinks!
-- Let's see how many push-ups you can do. Bet I can do more.
 - I've been working on my serve. It's getting good.
 - If you don't feel it tomorrow, you didn't try. That's the rule.
 - My legs will hate me tomorrow. Worth it.
@@ -1510,37 +1998,52 @@ shape state
 - You've got decent arms, you know. For a beginner.
 - I feel weird on days I don't move. It's true.
 - If I skip a day, I get cranky. Ask anyone.
-- Hold my feet for sit-ups? Just for a minute.
 
-@rule small.place.gym.exercise~q
+@rule small.place.gym.exercise.dare~state
 on small
 when subject=place placeid=gym l_exercise=yes
-opens share,ask,tease
+feel smile
+shape state
+hook place_gym_exercise_dare
+opens ask,invite,tease
+- Want to shoot some hoops? I'll go easy on you.
+- Race you to the wall! Loser buys drinks!
+- Let's see how many push-ups you can do. Bet I can do more.
+- Hold my feet for sit-ups? Just for a minute.
+
+@rule small.place.gym.exercise.gym~q
+on small
+when subject=place placeid=gym l_exercise=yes
 feel smile
 shape q
+hook place_gym_exercise_gym
+opens ask,praise,tease
 - I come here even on off days. Is that weird?
 - Free throws relax me. Weird, right?
 
-@rule small.place.gym.exercise~offer
+@rule small.place.gym.exercise.dare~offer
 on small
 when subject=place placeid=gym l_exercise=yes
-opens invite,ask,tease
 feel smile
 shape offer
+hook place_gym_exercise_dare
+opens ask,invite,tease
 - Spot me? Come on.
 
-@rule small.place.gym.exercise~show
+@rule small.place.gym.exercise.dare~show
 on small
 when subject=place placeid=gym l_exercise=yes
-opens invite,ask,tease
 feel smile
 shape show
+hook place_gym_exercise_dare
+opens ask,invite,tease
 - Wanna see my jump? Watch.
 
-@rule small.place.pool.rain
+@rule small.place.pool.rain.water
 on small
 when subject=place placeid=pool wet=yes
-opens tease,invite
+hook place_pool_rain_water
+opens ask,invite,tease
 - Swimming in the rain is weird. You're wet either way. Hehe.
 - Pool's closed when it thunders. Rules are rules.
 - The rain makes little circles on the water. Pretty, right?
@@ -1559,55 +2062,67 @@ opens tease,invite
 - Practice will end if the thunder starts. Fingers crossed.
 - If it gets worse, they'll clear the pool. We'll see.
 
-@rule small.place.pool.clear~state
+@rule small.place.pool.clear.swim~state
 on small
 when subject=place placeid=pool weather=clear
-opens ask,share,tease
 feel smile
 shape state
+hook place_pool_clear_swim
+opens ask,share,tease
 - Perfect pool weather. I wish I could jump in right now.
-- The water's so blue today. Sparkly.
 - Want to swim? I'm kidding. Mostly. You're blushing.
-- The sun on the water is so pretty. Look.
 - I could float here all day. Lucky swimmers.
-- The pool smells like summer. Chlorine and sunscreen.
-- My shoulders are going to burn. Oops.
 - I'd give anything for a cannonball right now. One day.
 - Bet you can't make a bigger splash. Try me.
+- Everyone wants to be in the swim club today. Funny.
+
+@rule small.place.pool.clear.summer~state
+on small
+when subject=place placeid=pool weather=clear
+feel smile
+shape state
+hook place_pool_clear_summer
+opens ask,share,comfort
+- The water's so blue today. Sparkly.
+- The sun on the water is so pretty. Look.
+- The pool smells like summer. Chlorine and sunscreen.
+- My shoulders are going to burn. Oops.
 - The tiles are hot enough to cook on. Ow, ow.
 - Careful, the concrete's burning. Ouch!
-- Everyone wants to be in the swim club today. Funny.
 - There's a crowd at the fence today. I wonder why.
 - The water looks unreal. Pretty.
 
-@rule small.place.pool.clear~q
+@rule small.place.pool.clear.summer~q
 on small
 when subject=place placeid=pool weather=clear
-opens share,ask,tease
 feel smile
 shape q
+hook place_pool_clear_summer
+opens ask,share,comfort
 - Summer's the best because of the pool. Don't you think?
 - It's so clear you can see the bottom. See?
 
-@rule small.place.pool.clear~show
+@rule small.place.pool.clear.summer~show
 on small
 when subject=place placeid=pool weather=clear
-opens invite,ask,tease
 feel smile
 shape show
+hook place_pool_clear_summer
+opens ask,share,comfort
 - I got a tan line already. Want to see? Kidding.
 
 # ---- the infirmary: how she feels, and what she's hiding from
 
-@rule small.place.infirmary.fight
+@rule small.place.infirmary.fight.hiding
 on small
 when subject=place placeid=infirmary fight=yes
-opens comfort,ask
 feel sad
+hook place_infirmary_fight_hiding
+opens ask,comfort,share
 - I said I had a headache. I don't. I just needed a break.
 - I'm not sick. I just didn't want to see {fightwho}. Please don't tell anyone.
 - It's quiet here. Nobody asks questions. Except you, apparently.
-- The nurse let me lie down for a while. I didn't want to go back to class.
+- {student}The nurse let me lie down for a while. I didn't want to go back to class.
 - I've been staring at the ceiling. Thinking about {fightwho}.
 - Hiding in the infirmary is pathetic, right? Don't answer that.
 - It's easier than facing {fightwho}. For now.
@@ -1622,19 +2137,20 @@ feel sad
 - Thanks for coming to check. Nobody else did.
 - You came all the way here? You're nice.
 
-@rule small.place.infirmary.sleepy
+@rule small.place.infirmary.sleepy.nap
 on small
 when subject=place placeid=infirmary mood=sleepy
-opens tease,comfort
 feel shy
+hook place_infirmary_sleepy_nap
+opens comfort,tease,ask
 - The infirmary beds are so comfy... Shh.
 - I'm just resting my eyes. Don't tell.
 - Five more minutes. Please?
 - I didn't sleep at all last night. Zombie mode.
-- The nurse took pity on me. Lucky.
+- {student}The nurse took pity on me. Lucky.
 - This pillow is better than mine at home. Seriously.
 - Can you wake me before the bell? Thanks.
-- I told the nurse I had a fever. Don't look at me.
+- {student}I told the nurse I had a fever. Don't look at me.
 - I may have exaggerated my symptoms. A little.
 - Why are you here? I was almost asleep. Mmm.
 - Who let you in? Let me sleep. Go away. Or stay.
@@ -1644,19 +2160,19 @@ feel shy
 - What period is it? Tell me later.
 - Just lie there and be quiet with me. Shh.
 - You can sit there if you're quiet. Thanks.
+
 # ---- the club room: her club first
 
-@rule small.place.clubroom.club~state
+@rule small.place.clubroom.club.home~state
 on small
 when subject=place placeid=clubroom hasclub=yes
-opens ask,share,tease
 feel smile
 shape state
-- Welcome to our club room. It's a mess. Don't look at the corner.
-- This room's like a second home. I have a drawer of snacks here.
+hook place_clubroom_club_home
+opens ask,share,tease
+- {student}Welcome to our club room. It's a mess. Don't look at the corner.
+- This room's like a second home. I have a drawer of snacks in that corner.
 - We spend so much time in here. Too much, maybe.
-- The {club} needs new members, you know. Hint, hint.
-- We're planning something for the festival. It's a secret.
 - Everyone left their stuff everywhere again. Typical.
 - I'm the only one who cleans in here. Not fair.
 - We've got a bet on who'll be president next. It's serious.
@@ -1665,31 +2181,44 @@ shape state
 - I found a three-year-old sandwich in here. True story.
 - This wall has every member's name on it. Mine's here.
 - There's a photo of us over there. Look.
+
+@rule small.place.clubroom.club.join~state
+on small
+when subject=place placeid=clubroom hasclub=yes
+feel smile
+shape state
+hook place_clubroom_club_join
+opens ask,invite,praise
+- The {club} needs new members, you know. Hint, hint.
+- We're planning something for the festival. It's a secret.
 - The {club} is more fun than it looks. I swear.
 - People think the {club} is boring. It isn't.
 
-@rule small.place.clubroom.club~offer
+@rule small.place.clubroom.club.join~offer
 on small
 when subject=place placeid=clubroom hasclub=yes
-opens invite,ask,tease
 feel smile
 shape offer
+hook place_clubroom_club_join
+opens ask,invite,praise
 - You can hang out with us, if you want. We don't bite.
 
-@rule small.place.clubroom.club~show
+@rule small.place.clubroom.club.join~show
 on small
 when subject=place placeid=clubroom hasclub=yes
-opens invite,ask,tease
 feel smile
 shape show
+hook place_clubroom_club_join
+opens ask,invite,praise
 - Want to see what we've been working on? Don't touch anything.
 
-@rule small.place.clubroom.rain
+@rule small.place.clubroom.rain.tea
 on small
 when subject=place placeid=clubroom wet=yes
-opens share,invite
-- Rainy days are club room days. Cozy, right?
-- Everyone's in here because of the rain. It's packed.
+hook place_clubroom_rain_tea
+opens ask,invite,share
+- Rainy days are tea days in the club room. Cozy, right?
+- Everyone's in here because of the rain. It's packed, and the pot's still going.
 - We made tea because of the rain. Want some?
 - The windows are rattling. I'm keeping the door shut.
 - Somebody's umbrella is dripping on my bag. Ugh.
@@ -1705,13 +2234,15 @@ opens share,invite
 - Nobody's getting anything done today. Oh well.
 - We may be stuck here for a while. You too?
 - Might as well stay until it stops. Sit.
+
 # ---- anywhere: a fight on her mind, and the girl she can't stand nearby
 
-@rule small.place.fight
+@rule small.place.fight.fight
 on small
 when subject=place fight=yes
-opens comfort,ask
 feel sad
+hook place_fight_fight
+opens ask,comfort,share
 - Sorry, I'm not great company today. It's stupid.
 - I had a fight with {fightwho}. We're not talking.
 - My head's somewhere else. You noticed?
@@ -1730,11 +2261,12 @@ feel sad
 - I keep checking my phone, like an idiot. Stupid.
 - {Fightwho} hasn't texted. Neither have I.
 
-@rule small.place.rivalnear
+@rule small.place.rivalnear.rival
 on small
 when subject=place rivalnear=*
-opens tease,ask
 feel pout
+hook place_rivalnear_rival
+opens ask,tease,comfort
 - Ugh, {rivalnear} is here. Let's go somewhere else.
 - Of all the people... {rivalnear}. Just ignore her.
 - Don't look now, but {rivalnear} is staring. Great.

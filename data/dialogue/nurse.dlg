@@ -1,0 +1,1219 @@
+# The school nurse.
+# Lina Roberts is the game's teacher -1: {role} is teacher and {job} is nurse, the freed copy too. She has no class of her own, so her
+# day comes from the infirmary ({tcause} n_*, Teachers.Cause) and lines marked {classes} are skipped for her.
+
+# ================= the player's own lines =================
+@rule me.day.nurse
+on me.day
+when job=nurse
+- [Good morning, sensei.|Hello, sensei.|Sensei, hi.] [Many patients today?|How's the infirmary?|Busy in here?]
+- [Got a minute, sensei?|Am I in the way?] [How has your day been?|Quiet day?]
+
+@rule me.gossip.nurse
+on me.gossip
+when job=nurse
+- [Sensei, you must hear everything in here.|What are people saying, sensei?]
+- [Everyone talks to the nurse.|People tell you things, right?] [Any news?|What's going around?]
+
+@rule me.small.future.nurse
+on me.small
+when subject=future job=nurse
+- [Did you always want to be a nurse?|Will you stay at this university?]
+- [What would you do if you weren't a nurse?|Have you ever worked at a hospital?]
+
+@rule me.small.nursing
+on me.small
+when subject=nursing job=nurse
+- [What's the strangest thing you've treated here?|How did you end up as a campus nurse?]
+- [Do you ever get sick yourself?|Is it hard, seeing people hurt?]
+- [Can you always tell when someone's faking?|Do you remember everyone who comes in?]
+
+# ================= what she talks about =================
+@rule small.nursing~state
+on small
+when subject=nursing job=nurse
+shape state
+hook f_small_nursing_state
+opens ask,share,praise
+- Most of the job is listening. The bandage is the easy part.
+- People tell a nurse what they won't tell anyone else. I keep it to myself.
+- I worked at a hospital before this. The hours here are kinder. The stories are stranger.
+- A student once came in with a pencil stuck in her hair and no idea how. That was a good day.
+- Sports day is my exam week.
+- I remember everyone who comes in. Even the ones who wish I didn't.
+
+@rule small.nursing~q
+on small
+when subject=nursing job=nurse
+shape q
+hook f_small_nursing_q
+opens ask,share
+- Are you asking because you want to be a nurse? It's a good job. Bring good shoes.
+- Are you sleeping enough? You look it, but I always ask.
+
+@rule small.exams.nurse~state
+on small
+when subject=exams job=nurse
+shape state
+hook f_small_exams_nurse_state
+opens ask,comfort,tease
+- Exam week is headache week. I keep extra cold packs ready.
+- Nobody sleeps, nobody eats, then they all come to me. Every term.
+- Sleep beats one more hour of cramming. Nobody listens to me.
+
+@rule small.school.nurse~state
+on small
+when subject=school job=nurse
+shape state
+hook f_small_school_nurse_state
+opens ask,share,tease
+- You see a different campus from the infirmary. Everyone's honest when they have a fever.
+- The building's old. The stairs keep me in business.
+- I don't teach anyone anything, and I still know every name.
+
+@rule small.future.nurse~state
+on small
+when subject=future job=nurse
+shape state
+hook f_small_future_nurse_state
+opens ask,share,praise
+- I wanted to work in a hospital. Then I found out I like knowing how the story ends.
+- I'll stay as long as they need someone to hold the bandages.
+- More important: are you taking care of yourself?
+
+@rule small.weekend.nurse~state
+on small
+when subject=weekend job=nurse
+shape state
+hook f_small_weekend_nurse_state
+opens ask,share,tease
+- My weekend? Sleep, then a long walk. Doctor's orders.
+- I keep my phone on, in case of a club match. Otherwise I'm nobody's nurse.
+- I'll be at home with a book and no thermometers.
+
+@rule small.lunch.nurse~state
+on small
+when subject=lunch job=nurse
+shape state
+hook f_small_lunch_nurse_state
+opens ask,invite,tease
+- I eat at my desk, in case someone comes in.
+- Eat something green, please. I see what you all buy.
+- Lunch is my busiest hour. Students run. Stairs win.
+
+@rule idle.nurse
+on idle
+when job=nurse
+- [Is something hurting, or are you just visiting?|Did you need something?|Hm?] [I've got forms to finish.|Sit, if you like.]
+- [Don't lean on the cabinet.|You look a little pale. Are you eating?]
+
+@rule tail.role.nurse
+on @tail
+when job=nurse
+- [Anyway, get some sleep tonight.|And drink some water.]
+- [Come back if it gets worse.|Try not to need me this week.]
+
+# ================= your options, when she says something =================
+@rule move.ask.state.nurse
+on move.ask
+when kind=small shape=state job=nurse
+- [Ask her to tell you more, sensei|Ask what she means, sensei|Ask why she says that]
+
+@rule move.share.state.nurse
+on move.share
+when kind=small shape=state job=nurse
+- [Tell her what you think, sensei|Give her your take|Say you'd never thought of that]
+
+@rule move.tease.state.nurse
+on move.tease
+when kind=small shape=state job=nurse
+- [Ask if that's her medical opinion|Joke about it, carefully|Tease her a little, sensei]
+
+@rule move.praise.state.nurse
+on move.praise
+when kind=small shape=state job=nurse
+- [Say that suits her, sensei|Say you like that about her]
+
+@rule move.comfort.state.nurse
+on move.comfort
+when kind=small shape=state job=nurse
+- [Say it'll be okay, sensei|Tell her not to worry, sensei]
+
+@rule move.share.q.nurse
+on move.share
+when kind=small shape=q job=nurse
+- [Answer like a good patient|Give her an honest answer|Tell her the truth, sensei]
+
+@rule move.ask.q.nurse
+on move.ask
+when kind=small shape=q job=nurse
+- [Ask why she wants to know|Ask if it's for your health record]
+
+@rule move.tease.q.nurse
+on move.tease
+when kind=small shape=q job=nurse
+- [Say you'd need a second opinion|Dodge with a joke]
+
+@rule move.invite.offer.nurse
+on move.invite
+when kind=small shape=offer job=nurse
+- [Say yes, sensei|Accept gratefully]
+
+@rule move.ask.offer.nurse
+on move.ask
+when kind=small shape=offer job=nurse
+- [Ask what she has in mind|Ask if it's doctor's orders]
+
+@rule move.tease.offer.nurse
+on move.tease
+when kind=small shape=offer job=nurse
+- [Ask if it will hurt|Ask if there's a catch, sensei]
+
+@rule move.invite.show.nurse
+on move.invite
+when kind=small shape=show job=nurse
+- [Ask to see it, sensei|Say you'd like to see]
+
+@rule move.ask.show.nurse
+on move.ask
+when kind=small shape=show job=nurse
+- [Ask what it's for|Ask if it's from the infirmary]
+
+@rule move.tease.show.nurse
+on move.tease
+when kind=small shape=show job=nurse
+- [Ask if it's sterile|Joke that it looks painful]
+
+@rule move.invite.tell.nurse
+on move.invite
+when kind=small shape=tell job=nurse
+- [Say you're listening, sensei|Ask her to tell you]
+
+@rule move.ask.tell.nurse
+on move.ask
+when kind=small shape=tell job=nurse
+- [Ask if that really happened|Ask who it was]
+
+@rule move.tease.tell.nurse
+on move.tease
+when kind=small shape=tell job=nurse
+- [Ask if that's patient confidential|Say you'll get a headache]
+
+@rule move.invite.give.nurse
+on move.invite
+when kind=small shape=give job=nurse
+- [Accept with a bow|Say thank you, sensei]
+
+@rule move.ask.give.nurse
+on move.ask
+when kind=small shape=give job=nurse
+- [Ask if she's sure|Ask if she needs it herself]
+
+@rule move.tease.give.nurse
+on move.tease
+when kind=small shape=give job=nurse
+- [Ask if it's medicine|Ask how many to take]
+
+@rule move.share.state.like.nurse
+on move.share
+when kind=small shape=state likes=yes job=nurse
+- [Say you like {like} too, sensei|Tell her you've been getting into {like}|Say you like {like} as well]
+
+@rule move.invite.state.nurse
+on move.invite
+when kind=small shape=state likes=yes job=nurse
+- [Ask what she'd recommend|Say you'd like to try it|Ask where to start]
+
+@rule move.ask.state.teacher
+on move.ask
+when kind=small shape=state role=teacher
+- [Ask her what she means, sensei|Ask why she says that, sensei|Ask her to tell you more]
+
+@rule move.share.state.teacher
+on move.share
+when kind=small shape=state role=teacher
+- [Give her your view, politely|Tell her what you think, sensei|Say what you think, sensei or not]
+
+@rule move.tease.state.teacher
+on move.tease
+when kind=small shape=state role=teacher
+- [Risk a small joke|Tease her, sensei or not|Joke about it, carefully]
+
+@rule move.praise.state.teacher
+on move.praise
+when kind=small shape=state role=teacher
+- [Say that suits her, sensei|Say that sounds like her|Say you like that about her]
+
+@rule move.comfort.state.teacher
+on move.comfort
+when kind=small shape=state role=teacher
+- [Say it'll be okay, sensei|Tell her not to worry, sensei]
+
+@rule move.share.q.teacher
+on move.share
+when kind=small shape=q role=teacher
+- [Answer her properly|Answer like a good student|Give her an honest answer, sensei]
+
+@rule move.ask.q.teacher
+on move.ask
+when kind=small shape=q role=teacher
+- [Ask what she thinks, sensei|Ask why a professor wants to know]
+
+@rule move.tease.q.teacher
+on move.tease
+when kind=small shape=q role=teacher
+- [Say that's a trick question|Answer with a joke|Ask if it's on the test]
+
+@rule move.invite.offer.teacher
+on move.invite
+when kind=small shape=offer role=teacher
+- [Accept, sensei|Say thank you and accept]
+
+@rule move.ask.offer.teacher
+on move.ask
+when kind=small shape=offer role=teacher
+- [Ask what she has in mind, sensei|Ask if it's allowed]
+
+@rule move.tease.offer.teacher
+on move.tease
+when kind=small shape=offer role=teacher
+- [Ask if this counts toward your grade|Ask if there's a catch, sensei]
+
+@rule move.invite.show.teacher
+on move.invite
+when kind=small shape=show role=teacher
+- [Ask to see it, sensei|Say you'd like to see]
+
+@rule move.ask.show.teacher
+on move.ask
+when kind=small shape=show role=teacher
+- [Ask what it's for|Ask why she's showing a student]
+
+@rule move.tease.show.teacher
+on move.tease
+when kind=small shape=show role=teacher
+- [Ask if it's on the test|Say you've seen better, sensei]
+
+@rule move.invite.tell.teacher
+on move.invite
+when kind=small shape=tell role=teacher
+- [Say you're listening, sensei|Ask her to tell you]
+
+@rule move.ask.tell.teacher
+on move.ask
+when kind=small shape=tell role=teacher
+- [Ask who told her|Ask if that really happened, sensei]
+
+@rule move.tease.tell.teacher
+on move.tease
+when kind=small shape=tell role=teacher
+- [Ask if students should hear this|Ask if this is a lecture]
+
+@rule move.invite.give.teacher
+on move.invite
+when kind=small shape=give role=teacher
+- [Accept with a bow|Say thank you, sensei]
+
+@rule move.ask.give.teacher
+on move.ask
+when kind=small shape=give role=teacher
+- [Ask if a professor is allowed to|Ask if she's sure, sensei]
+
+@rule move.tease.give.teacher
+on move.tease
+when kind=small shape=give role=teacher
+- [Ask if it's a bribe|Ask what you owe her]
+
+@rule move.share.state.like.teacher
+on move.share
+when kind=small shape=state likes=yes role=teacher
+- [Say you like {like} too, sensei|Tell her you've been getting into {like}|Say you like {like} as well]
+
+@rule move.invite.state.teacher
+on move.invite
+when kind=small shape=state likes=yes role=teacher
+- [Ask what she'd recommend|Say you'd like to try it|Ask where to start]
+
+@rule move.ask.state.job.nurse
+on move.ask
+when kind=small shape=state subject=nursing|exams|school|future job=nurse
+- [Ask if that happens a lot here|Ask what a campus nurse sees|Ask how she deals with it]
+
+@rule move.share.state.job.nurse
+on move.share
+when kind=small shape=state subject=nursing|exams|school|future job=nurse
+- [Say how it looks from a student's side|Tell her what students say]
+
+@rule move.tease.state.job.nurse
+on move.tease
+when kind=small shape=state subject=nursing|exams|school|future job=nurse
+- [Joke about the infirmary|Ask for a sick note]
+
+@rule move.praise.state.job.nurse
+on move.praise
+when kind=small shape=state subject=nursing|exams|school|future job=nurse
+- [Say the university is lucky to have her|Say students trust her|Say she's good at this]
+
+@rule move.comfort.state.job.nurse
+on move.comfort
+when kind=small shape=state subject=nursing|exams|school|future job=nurse
+- [Say she should rest too|Ask who looks after the nurse|Tell her she does enough]
+
+@rule move.ask.state.job.teacher
+on move.ask
+when kind=small shape=state subject=teaching|exams|school|future role=teacher
+- [Ask if professors all feel that way|Ask how long that takes her]
+
+@rule move.share.state.job.teacher
+on move.share
+when kind=small shape=state subject=teaching|exams|school|future role=teacher
+- [Tell her how students see it|Say what the class thinks]
+
+@rule move.tease.state.job.teacher
+on move.tease
+when kind=small shape=state subject=teaching|exams|school|future role=teacher
+- [Joke about professors' lives|Ask for less assignments]
+
+@rule move.praise.state.job.teacher
+on move.praise
+when kind=small shape=state subject=teaching|exams|school|future role=teacher
+- [Say that's why students like her|Say she's a good professor]
+
+@rule move.comfort.state.job.teacher
+on move.comfort
+when kind=small shape=state subject=teaching|exams|school|future role=teacher
+- [Tell her the class appreciates her|Say she works too hard]
+
+@rule move.ask.school.nurse
+on move.ask
+when kind=school job=nurse
+- [Ask if {event} keeps her busy]
+
+@rule move.share.school.nurse
+on move.share
+when kind=school job=nurse
+- [Say you'll try not to visit her]
+
+@rule move.tease.school.nurse
+on move.tease
+when kind=school job=nurse
+- [Ask how many patients she expects]
+
+@rule move.ask.gossip.nurse
+on move.ask
+when kind=gossip job=nurse
+- [Ask who told her|Ask if that's why people come in|Ask what she makes of it, sensei]
+
+@rule move.ask.school.teacher
+on move.ask
+when kind=school role=teacher
+- [Ask what the staff think of {event}|Ask how much work {event} is for her]
+
+@rule move.share.school.teacher
+on move.share
+when kind=school role=teacher
+- [Tell her what your class is planning|Say what you think of {event}]
+
+@rule move.tease.school.teacher
+on move.tease
+when kind=school role=teacher
+- [Ask if {event} gets you out of assignments]
+
+@rule move.ask.gossip.teacher
+on move.ask
+when kind=gossip role=teacher
+- [Ask if the adults know|Ask what she makes of it, sensei|Ask who told her]
+
+@rule move.ask.nursing
+on move.ask
+when subject=nursing
+- [Ask what the hardest part is|Ask how she started|Ask about the hospital]
+
+@rule move.praise.nursing
+on move.praise
+when subject=nursing
+- [Say students are lucky to have her|Say she's good at this]
+
+@rule move.comfort.nursing
+on move.comfort
+when subject=nursing
+- [Say that sounds hard|Say she should rest too]
+
+@rule move.comfort.nurse
+on move.comfort
+when kind=day job=nurse
+- [Say the university needs her|Tell her to rest a little|Offer to help with something]
+
+@rule move.tease.nurse
+on move.tease
+when kind=day job=nurse
+- [Joke about the infirmary|Ask for a sick note|Ask if she's prescribing naps]
+
+# ================= her answer =================
+@rule react.shape.ask.neutral.nurse
+on react
+when move=ask fit=good|neutral shape=state|q|offer|show|tell|give job=nurse
+feel smile
+- You ask more than most patients.
+- Hm. There's not much more to it.
+- Ask me on a quieter day and I'll tell you more.
+- You're a curious one.
+
+@rule react.shape.share.good.nurse
+on react
+when move=share fit=good shape=state|q|offer|show|tell|give job=nurse
+feel smile
+- Is that so? Good to know.
+- Good. I like a patient who talks.
+- Hm, I wouldn't have guessed that.
+
+@rule react.shape.share.neutral.nurse
+on react
+when move=share fit=neutral shape=state|q|offer|show|tell|give job=nurse
+feel smile
+- Hm. I'll write that down in my head.
+- All right. If you say so.
+- I'll take your word for it, for now.
+
+@rule react.shape.tease.good.nurse
+on react
+when move=tease fit=good shape=state|q|offer|show|tell|give job=nurse
+feel laugh
+- Careful. I know where the big needles are.
+- {laugh} That's the second opinion I needed.
+- You're feeling better, I see. Back to class.
+
+@rule react.shape.praise.neutral.nurse
+on react
+when move=praise fit=good|neutral shape=state|q|offer|show|tell|give job=nurse
+feel shy
+- Oh. Thank you. I don't hear that much.
+- Flattery doesn't get you out of P.E., you know.
+- That's kind. Drink some water anyway.
+
+@rule react.shape.comfort.neutral.nurse
+on react
+when move=comfort fit=good|neutral shape=state|q|offer|show|tell|give job=nurse
+feel smile
+- Usually I'm the one who says that. Thank you.
+- A student looking after the nurse. I'll allow it.
+- That helped more than the tea did.
+
+@rule react.shape.invite.neutral.nurse
+on react
+when move=invite fit=good|neutral shape=state|q|offer|show|tell|give job=nurse
+feel smile
+- All right. As long as you're not skipping anything.
+- Good. Then that's settled.
+- Hm. I'll hold you to that.
+
+@rule react.shape.ask.neutral.teacher
+on react
+when move=ask fit=good|neutral shape=state|q|offer|show|tell|give role=teacher
+feel smile
+- {classes}Good question. I don't get enough of those.
+- {classes}If you asked that in class, I'd be delighted.
+- {classes}There's more to it, but that's for another day.
+- {classes}You really want to know? All right, another time.
+
+@rule react.shape.share.good.teacher
+on react
+when move=share fit=good shape=state|q|offer|show|tell|give role=teacher
+feel smile
+- {classes}That's a fair answer.
+- {classes}Good. I can work with that.
+- {classes}Hm, I didn't expect that from you.
+
+@rule react.shape.share.neutral.teacher
+on react
+when move=share fit=neutral shape=state|q|offer|show|tell|give role=teacher
+feel smile
+- {classes}I see. I'll think about that.
+- {classes}Hm. That's one way to look at it.
+- {classes}All right. Noted.
+
+@rule react.shape.tease.good.teacher
+on react
+when move=tease fit=good shape=state|q|offer|show|tell|give role=teacher
+feel laugh
+- {classes}Bold, for someone with a test coming.
+- {classes}{laugh} I'm writing that down.
+- {classes}Say that in front of the class next time.
+
+@rule react.shape.praise.neutral.teacher
+on react
+when move=praise fit=good|neutral shape=state|q|offer|show|tell|give role=teacher
+feel shy
+- {classes}That won't change your grade. ...Thank you, though.
+- {classes}Students don't often say that. Thank you.
+- {classes}Ahem. Back to your studies.
+
+@rule react.shape.comfort.neutral.teacher
+on react
+when move=comfort fit=good|neutral shape=state|q|offer|show|tell|give role=teacher
+feel smile
+- {classes}Now the student is looking after the professor.
+- {classes}Thank you. That helped more than you'd think.
+- {classes}You're a good kid. Don't let it go to your head.
+
+@rule react.shape.invite.neutral.teacher
+on react
+when move=invite fit=good|neutral shape=state|q|offer|show|tell|give role=teacher
+feel smile
+- {classes}All right, as long as your work is done.
+- {classes}Good. Then that's settled.
+- {classes}Very well. I'll hold you to that.
+
+@rule react.ask.neutral.nurse
+on react
+when move=ask fit=good|neutral job=nurse
+feel smile
+- You ask more than most patients.
+- Hm. There's not much more to it.
+- Ask me on a quieter day and I'll tell you more.
+- You're a curious one.
+
+@rule react.share.good.nurse
+on react
+when move=share fit=good job=nurse
+feel smile
+- Is that so? Good to know.
+- Good. I like a patient who talks.
+- Hm, I wouldn't have guessed that.
+
+@rule react.share.neutral.nurse
+on react
+when move=share fit=neutral job=nurse
+feel smile
+- Hm. I'll write that down in my head.
+- All right. If you say so.
+- I'll take your word for it, for now.
+
+@rule react.tease.good.nurse
+on react
+when move=tease fit=good job=nurse
+feel laugh
+- Careful. I know where the big needles are.
+- {laugh} That's the second opinion I needed.
+- You're feeling better, I see. Back to class.
+
+@rule react.praise.neutral.nurse
+on react
+when move=praise fit=good|neutral job=nurse
+feel shy
+- Oh. Thank you. I don't hear that much.
+- Flattery doesn't get you out of P.E., you know.
+- That's kind. Drink some water anyway.
+
+@rule react.comfort.neutral.nurse
+on react
+when move=comfort fit=good|neutral job=nurse
+feel smile
+- Usually I'm the one who says that. Thank you.
+- A student looking after the nurse. I'll allow it.
+- That helped more than the tea did.
+
+@rule react.invite.neutral.nurse
+on react
+when move=invite fit=good|neutral job=nurse
+feel smile
+- All right. As long as you're not skipping anything.
+- Good. Then that's settled.
+- Hm. I'll hold you to that.
+
+@rule react.shape.ask.job.nurse
+on react
+when move=ask fit=good|neutral shape=state subject=nursing|exams|school|future job=nurse
+feel smile
+- That's the job, really. You learn it by doing it.
+- Hm. Nobody ever asks the nurse that.
+- More than you'd think. Ask anyone who's been on that bed.
+
+@rule react.shape.share.job.nurse
+on react
+when move=share fit=good|neutral shape=state subject=nursing|exams|school|future job=nurse
+feel smile
+- I don't often hear the student side of it.
+- That's worth knowing. Thank you.
+- Honest answers make my job easier.
+
+# ================= how her day is, from the infirmary =================
+@rule day.h.n_fine
+on day
+when job=nurse mood=none
+opens ask,share,tease
+hook n_fine
+feel smile
+- Normal so far. Two scraped knees and a headache.
+- Quiet enough. I finally drank a whole cup of tea.
+- Nobody has fainted yet. I call that a good day.
+
+@rule move.h.n_fine.ask
+on move.ask
+when hook=n_fine
+- Ask what a normal day looks like here
+
+@rule react.h.n_fine.ask
+on react
+when hook=n_fine move=ask fit=good|neutral
+- Bandages, forms, and someone who ate too fast.
+- Mostly listening. Half of what comes in here is not really a fever.
+- Ask me in June, when the heat starts.
+
+@rule move.h.n_fine.share
+on move.share
+when hook=n_fine
+- Say the university feels calm today
+
+@rule react.h.n_fine.share
+on react
+when hook=n_fine move=share fit=good|neutral
+- Then I hope it stays that way until the bell.
+- You just jinxed it. I heard someone running.
+- Good. Calm means my bandages last.
+
+@rule move.h.n_fine.tease
+on move.tease
+when hook=n_fine
+- Ask if the tea is medicinal
+
+@rule react.h.n_fine.tease
+on react
+when hook=n_fine move=tease fit=good|neutral
+- For me, yes.
+- Doctor's orders. I am the doctor here. Sort of.
+- Careful, or I'll prescribe you a very long lecture.
+
+@rule day.h.n_quiet
+on day
+when job=nurse tcause=n_quiet
+opens ask,praise,tease
+hook n_quiet
+feel smile
+- Not one patient all morning. The beds are made and everything.
+- It's peaceful in here today. Nobody hurt, nobody sick.
+- An empty infirmary is the best news a nurse can get.
+
+@rule move.h.n_quiet.ask
+on move.ask
+when hook=n_quiet
+- Ask if she ever gets used to the quiet
+
+@rule react.h.n_quiet.ask
+on react
+when hook=n_quiet move=ask fit=good|neutral
+- I enjoy it while it lasts. It never lasts.
+- I catch up on reading. Then someone falls down the stairs.
+- Quiet means everyone is well. I can get used to that.
+
+@rule move.h.n_quiet.praise
+on move.praise
+when hook=n_quiet
+- Say that must be thanks to her
+
+@rule react.h.n_quiet.praise
+on react
+when hook=n_quiet move=praise fit=good|neutral
+- Hm, you say nice things. Keep washing your hands.
+- I just hand out the bandages. But thank you.
+- I'll take the credit, since nobody is here to argue.
+
+@rule move.h.n_quiet.tease
+on move.tease
+when hook=n_quiet
+- Offer to get hurt so she isn't bored
+
+@rule react.h.n_quiet.tease
+on react
+when hook=n_quiet move=tease fit=good|neutral
+- Don't you dare.
+- Please don't. I just made that bed.
+- Very funny. The forms are three pages long.
+
+@rule day.h.n_thanks
+on day
+when job=nurse tcause=n_thanks
+opens ask,praise,share
+hook n_thanks
+feel smile
+- A first-year left me a thank-you note. I'm keeping it.
+- Someone I looked after last month wrote to me. It made my day.
+- I found a little note on my desk. "You helped." That's all it said.
+
+@rule move.h.n_thanks.ask
+on move.ask
+when hook=n_thanks
+- Ask what the note said
+
+@rule react.h.n_thanks.ask
+on react
+when hook=n_thanks move=ask fit=good|neutral
+- That she wasn't scared of the infirmary anymore.
+- Just thank you. It's enough.
+- That's between a nurse and her patient.
+
+@rule move.h.n_thanks.praise
+on move.praise
+when hook=n_thanks
+- Say she deserves it
+
+@rule react.h.n_thanks.praise
+on react
+when hook=n_thanks move=praise fit=good|neutral
+- That's kind. I only did my job.
+- Two nice things in one day. I may faint myself.
+- Thank you. It really is the best part of this work.
+
+@rule move.h.n_thanks.share
+on move.share
+when hook=n_thanks
+- Say she helped you too
+
+@rule react.h.n_thanks.share
+on react
+when hook=n_thanks move=share fit=good|neutral
+- Did I? Then I'm glad.
+- That's what I'm here for.
+- Come by before it gets bad next time, all right?
+
+@rule day.h.n_supplies
+on day
+when job=nurse tcause=n_supplies
+opens ask,invite,tease
+hook n_supplies
+feel smile
+- The new supplies finally came. So many bandages.
+- I have a full cabinet for the first time this term.
+- They approved the order! New thermometers and everything.
+
+@rule move.h.n_supplies.ask
+on move.ask
+when hook=n_supplies
+- Ask what she ordered
+
+@rule react.h.n_supplies.ask
+on react
+when hook=n_supplies move=ask fit=good|neutral
+- Gauze, tape, cold packs. Thrilling, I know.
+- Thermometers that actually work.
+- Enough cold packs for the whole track team.
+
+@rule move.h.n_supplies.invite
+on move.invite
+when hook=n_supplies
+- Offer to help put it away
+
+@rule react.h.n_supplies.invite
+on react
+when hook=n_supplies move=invite fit=good|neutral
+- Really? The top shelf is yours, then.
+- I'll accept. Those boxes are heavier than they look.
+- A volunteer. I should write this down.
+
+@rule move.h.n_supplies.tease
+on move.tease
+when hook=n_supplies
+- Say only a nurse gets excited about gauze
+
+@rule react.h.n_supplies.tease
+on react
+when hook=n_supplies move=tease fit=good|neutral
+- You'll understand when you need some.
+- Everyone has their hobbies.
+- Laugh now. You'll thank me after P.E.
+
+@rule day.h.n_records
+on day
+when job=nurse tcause=n_records
+opens comfort,ask,tease
+hook n_records
+feel worried
+- I stayed up filing health records. All of them.
+- Hundreds of little forms. My eyes are done.
+- I fell asleep on the height and weight charts.
+
+@rule move.h.n_records.comfort
+on move.comfort
+when hook=n_records
+- Tell her to rest in her own bed
+
+@rule react.h.n_records.comfort
+on react
+when hook=n_records move=comfort fit=good|neutral
+- Good advice. I give it all day. I never take it.
+- If I lie down, someone will come in.
+- Hm. You sound just like me.
+
+@rule move.h.n_records.ask
+on move.ask
+when hook=n_records
+- Ask why it took all night
+
+@rule react.h.n_records.ask
+on react
+when hook=n_records move=ask fit=good|neutral
+- Because I put it off for two weeks. Don't copy me.
+- Half the handwriting belongs to doctors.
+- One missing form. It took hours to find.
+
+@rule move.h.n_records.tease
+on move.tease
+when hook=n_records
+- Prescribe her a nap
+
+@rule react.h.n_records.tease
+on react
+when hook=n_records move=tease fit=good|neutral
+- Is that so, doctor?
+- I'll consider your opinion. Now go.
+- Twenty minutes, then. On your orders.
+
+@rule day.h.n_checkups
+on day
+when job=nurse tcause=n_checkups
+opens comfort,ask,invite
+hook n_checkups
+feel worried
+- The health checks are coming, and the schedule is a mess.
+- Three classes a day, every day, until the checks are done.
+- I've been organizing the health checks since morning.
+
+@rule move.h.n_checkups.comfort
+on move.comfort
+when hook=n_checkups
+- Say she'll get it done
+
+@rule react.h.n_checkups.comfort
+on react
+when hook=n_checkups move=comfort fit=good|neutral
+- I will. I always do. Slowly.
+- Thank you. I needed someone to say so.
+- If I lose count, you'll hear me from the hallway.
+
+@rule move.h.n_checkups.ask
+on move.ask
+when hook=n_checkups
+- Ask what's so hard about them
+
+@rule react.h.n_checkups.ask
+on react
+when hook=n_checkups move=ask fit=good|neutral
+- Getting a whole university through one room on time.
+- The schedule changes every time a professor sneezes.
+- The forms. It's always the forms.
+
+@rule move.h.n_checkups.invite
+on move.invite
+when hook=n_checkups
+- Offer to carry the forms
+
+@rule react.h.n_checkups.invite
+on react
+when hook=n_checkups move=invite fit=good|neutral
+- That would actually help. Thank you.
+- You're a good kid. The boxes are over there.
+- Careful, I might say yes every time.
+
+@rule day.h.n_cold
+on day
+when job=nurse tcause=n_cold
+opens comfort,ask,share
+hook n_cold
+feel worried
+- A cold is going around. I've seen eleven students since morning.
+- Half the second-years are coughing. Wash your hands.
+- Every bed was full before lunch. It's that cold again.
+
+@rule move.h.n_cold.comfort
+on move.comfort
+when hook=n_cold
+- Tell her not to catch it herself
+
+@rule react.h.n_cold.comfort
+on react
+when hook=n_cold move=comfort fit=good|neutral
+- I never do. Knock on wood.
+- Then who would take care of everyone?
+- Thank you. I'm drinking a lot of tea.
+
+@rule move.h.n_cold.ask
+on move.ask
+when hook=n_cold
+- Ask how bad it is
+
+@rule react.h.n_cold.ask
+on react
+when hook=n_cold move=ask fit=good|neutral
+- Nothing serious. Fever, sore throat, a lot of complaining.
+- Two days of rest and they're fine, if they actually rest.
+- It goes around every year. This one's just early.
+
+@rule move.h.n_cold.share
+on move.share
+when hook=n_cold
+- Say your class is coughing too
+
+@rule react.h.n_cold.share
+on react
+when hook=n_cold move=share fit=good|neutral
+- Then sit near a window, and sleep tonight.
+- I thought so. Tell them to come early, not late.
+- If you get a fever, stay home. I mean it.
+
+@rule day.h.n_fakers
+on day
+when job=nurse tcause=n_fakers
+opens comfort,ask,share
+hook n_fakers
+feel pout
+- Four fake fevers before second period. Four.
+- Someone held a thermometer against a hot drink again.
+- I can tell when a test is coming. The fevers start the night before.
+
+@rule move.h.n_fakers.comfort
+on move.comfort
+when hook=n_fakers
+- Say that sounds tiring
+
+@rule react.h.n_fakers.comfort
+on react
+when hook=n_fakers move=comfort fit=good|neutral
+- It is. Real patients have to wait for this.
+- Thanks. I'm not angry, just tired of it.
+- They think I can't tell. I can always tell.
+
+@rule move.h.n_fakers.ask
+on move.ask
+when hook=n_fakers
+- Ask how she can tell
+
+@rule react.h.n_fakers.ask
+on react
+when hook=n_fakers move=ask fit=good|neutral
+- Sick people don't check the clock.
+- Trade secret. Don't try it.
+- A real fever doesn't get better right after the bell.
+
+@rule move.h.n_fakers.share
+on move.share
+when hook=n_fakers
+- Swear you'd never do that
+
+@rule react.h.n_fakers.share
+on react
+when hook=n_fakers move=share fit=good|neutral
+- Hm. Your face says otherwise.
+- That's what they all say.
+- Good. Then I won't have to check.
+
+@rule day.h.n_budget
+on day
+when job=nurse tcause=n_budget
+opens comfort,ask,share
+hook n_budget
+feel pout
+- They cut the infirmary budget again. I asked for gauze, not gold.
+- I've been told to make the bandages last. Last how?
+- Apparently the infirmary is a "low priority". I'd like to see them say that at sports day.
+
+@rule move.h.n_budget.comfort
+on move.comfort
+when hook=n_budget
+- Say the students need her
+
+@rule react.h.n_budget.comfort
+on react
+when hook=n_budget move=comfort fit=good|neutral
+- I know. I wish the office did.
+- Thank you. That helps a little.
+- I'll manage. I always find a way.
+
+@rule move.h.n_budget.ask
+on move.ask
+when hook=n_budget
+- Ask what she'll do
+
+@rule react.h.n_budget.ask
+on react
+when hook=n_budget move=ask fit=good|neutral
+- Write a very polite, very angry letter.
+- Buy some of it myself, probably.
+- Count every bandage twice.
+
+@rule move.h.n_budget.share
+on move.share
+when hook=n_budget
+- Say someone should complain
+
+@rule react.h.n_budget.share
+on react
+when hook=n_budget move=share fit=good|neutral
+- Someone did. Me. Twice.
+- If the student union asks, that would help.
+- Careful, you sound like me.
+
+@rule day.h.n_empty
+on day
+when job=nurse tcause=n_empty
+opens ask,share,tease
+hook n_empty
+feel worried
+- Nobody has come in all day. I've read the same page four times.
+- I reorganized the cabinet. Twice. Alphabetically, then by size.
+- It's good news, but it's dull news.
+
+@rule move.h.n_empty.ask
+on move.ask
+when hook=n_empty
+- Ask what she does when it's slow
+
+@rule react.h.n_empty.ask
+on react
+when hook=n_empty move=ask fit=good|neutral
+- Read, sort things, watch the field from the window.
+- I count the cotton balls. Not really. A little.
+- Paperwork, if I'm being good.
+
+@rule move.h.n_empty.share
+on move.share
+when hook=n_empty
+- Tell her something from class
+
+@rule react.h.n_empty.share
+on react
+when hook=n_empty move=share fit=good|neutral
+- Go on. I could use the news.
+- Ha. Now that's the first interesting thing today.
+- You see, this is why I like visitors who aren't sick.
+
+@rule move.h.n_empty.tease
+on move.tease
+when hook=n_empty
+- Ask if the cotton balls are in order
+
+@rule react.h.n_empty.tease
+on react
+when hook=n_empty move=tease fit=good|neutral
+- They are. Don't touch them.
+- Largest to smallest. Don't laugh.
+- You're not sick at all, are you? Out.
+
+@rule day.h.n_alone
+on day
+when job=nurse tcause=n_alone
+opens comfort,ask,praise
+hook n_alone
+feel sad
+- It's a little lonely down here, away from the faculty room.
+- Everyone comes in when they're hurting and leaves when they're not. That's the job.
+- Nobody really visits the infirmary just to say hello.
+
+@rule move.h.n_alone.comfort
+on move.comfort
+when hook=n_alone
+- Say you'll stop by to say hello
+
+@rule react.h.n_alone.comfort
+on react
+when hook=n_alone move=comfort fit=good|neutral
+- That would be nice. Healthy, I hope.
+- Thank you. I'd like that.
+- You don't have to, but... the door's open.
+
+@rule move.h.n_alone.ask
+on move.ask
+when hook=n_alone
+- Ask if she eats with the other staff
+
+@rule react.h.n_alone.ask
+on react
+when hook=n_alone move=ask fit=good|neutral
+- Sometimes. Someone usually comes in halfway through.
+- When I can. The infirmary can't lock for lunch.
+- I eat at my desk, in case.
+
+@rule move.h.n_alone.praise
+on move.praise
+when hook=n_alone
+- Say people are glad she's here
+
+@rule react.h.n_alone.praise
+on react
+when hook=n_alone move=praise fit=good|neutral
+- That's good to hear.
+- They only remember when they need me. But thank you.
+- You're sweet. Now go, before you're late.
+
+@rule day.h.n_lunch
+on day
+when job=nurse tcause=n_lunch
+opens comfort,ask,tease
+hook n_lunch
+feel pout
+- I missed lunch. Someone sprained an ankle at noon.
+- My bento has been waiting since twelve.
+- I tell everyone not to skip meals, and here I am.
+
+@rule move.h.n_lunch.comfort
+on move.comfort
+when hook=n_lunch
+- Tell her to eat now
+
+@rule react.h.n_lunch.comfort
+on react
+when hook=n_lunch move=comfort fit=good|neutral
+- In a minute. As soon as this form is done.
+- You're right. Don't tell anyone I forgot.
+- Thank you. I was about to.
+
+@rule move.h.n_lunch.ask
+on move.ask
+when hook=n_lunch
+- Ask who got hurt
+
+@rule react.h.n_lunch.ask
+on react
+when hook=n_lunch move=ask fit=good|neutral
+- A second-year, in the gym. Nothing serious.
+- I can't say. But tell your friends not to run on wet floors.
+- Someone who thought the stairs had one more step.
+
+@rule move.h.n_lunch.tease
+on move.tease
+when hook=n_lunch
+- Say a nurse should follow her own advice
+
+@rule react.h.n_lunch.tease
+on react
+when hook=n_lunch move=tease fit=good|neutral
+- Everyone says that.
+- Do as I say, not as I do.
+- Touche. I'll eat.
+
+# ================= the two girls =================
+@rule duo3.talk.nurse.student
+on duo3.talk
+when myjob=nurse otherrole=student
+- You look pale, {other}. Are you eating? >> Y-yes, I had breakfast. >> Tons! I swear! >> I'm fine. >> Is that a professional opinion?
+- Is your ankle better, {other}? >> Much better, thank you. >> Good as new! >> It's fine. >> You remembered?
+- Don't run on the stairs, {other}. >> I'll be careful. >> I walk! Quickly! >> I wasn't. >> You saw that?
+
+@rule duo3.talk.student.nurse
+on duo3.talk
+when myrole=student otherjob=nurse
+- {other}, do you have anything for a headache? >> Water, and a nap. >> Yes! Tea and sleep! >> Sleep. >> Have you tried not staying up?
+- {other}, thanks for last week. >> You're welcome. How is it now? >> Anytime! All better? >> It's my job. >> Then stop falling down.
+- {other}, is the infirmary open at lunch? >> It always is. >> Always! Come by! >> Yes. >> Depends who's asking.
+
+@rule duo3.talk.nurse.teacher
+on duo3.talk
+when myjob=nurse otherrole=teacher
+- Your class has a cough going around. >> I noticed. I'll open a window. >> Ah, is that why it's so quiet?! >> I'll tell them. >> Blame the second row.
+- Did you eat lunch today? >> A little, between lessons. >> Crackers count! >> Yes. >> Did you?
+
+@rule duo3.talk.teacher.nurse
+on duo3.talk
+when myrole=teacher otherjob=nurse
+- Is one of my students still with you? >> She's resting. Give her ten minutes. >> Sleeping like a log! >> Yes. >> Why, does she have a test?
+- You look tired. Busy day? >> A few sprains. Nothing serious. >> Bandages everywhere! >> The usual. >> Your second-years are a menace.
+

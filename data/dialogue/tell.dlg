@@ -17,8 +17,9 @@ on me.tell
 @rule tell.good
 on tell
 when told=good
-opens ask,laugh,agree
 feel surprised
+hook f_tell_good
+opens ask,laugh,agree
 - [No way! Really?!|Seriously? {Who}?!|Wait, wait. {Who}?] [I had no idea!|I need to know everything.|You always know the good stuff.]
 - [Oh my gosh.|Huh! Who would've thought.] [Thanks for telling me!|That's huge.|I'm so glad I heard it from you.]
 - [Ooh, juicy!|Wow, okay!] [Tell me more later.|I won't say who told me.|You're my favorite source now.]
@@ -32,8 +33,9 @@ feel surprised
 @rule tell.good.couple
 on tell
 when told=good realverb=started_dating|crush|seen_together|kissed|dated|confessed
-opens ask,tease,agree
 feel laugh
+hook f_tell_good_couple
+opens ask,tease,agree
 - [Kyaa! {Who}?! Finally!|No way, {who} and...?!] [I knew something was going on!|They'd be so cute together!]
 - [Oh, that's so sweet.|Ehh?! Since when?] [I'm a little jealous, honestly.|I have to see it with my own eyes.]
 - [Stop, really?|Oh my gosh, {who}!] [I'm screaming inside.|That explains so much.]
@@ -47,6 +49,7 @@ feel laugh
 @rule tell.neutral
 on tell
 when told=neutral
+hook f_tell_neutral
 opens ask,laugh,share
 - [Huh. Okay.|Oh, really?|Interesting.] [I didn't know.|Good to know, I guess.]
 - [Hm. Is that so.|Huh.] [Not my business, but okay.|I'll keep it in mind.]
@@ -61,6 +64,7 @@ opens ask,laugh,share
 @rule tell.neutral.cool
 on tell
 when told=neutral voice=cool|serious|proper
+hook f_tell_neutral_cool
 opens ask,share
 - [I see.|Hm.] [I don't usually follow gossip.|That's their business.]
 - [Is that so.|Noted.] [I'll not repeat it.|Why tell me, though?]
@@ -75,8 +79,9 @@ opens ask,share
 @rule tell.bad
 on tell
 when told=bad
-opens hush,defend,laugh
 feel pout
+hook f_tell_bad
+opens hush,defend,laugh
 - [Why are you telling me this?|That's not something you spread around.|That's mean, you know.] [{Who} wouldn't want people knowing.|I didn't need to hear that.]
 - [Wow. Talking behind {who}'s back?|Is that how you talk about people?] [What do you say about me, then?|I don't like this.]
 - [{Who}'s my friend.|Hey, careful.] [I'm not passing that on.|Don't tell anyone else.]
@@ -90,8 +95,9 @@ feel pout
 @rule tell.bad.friend
 on tell
 when told=bad whobond>=40
-opens hush,defend
 feel sad
+hook f_tell_bad_friend
+opens hush,defend
 - [{Who}...? Oh no.|Poor {who}.] [I should go check on her.|Why didn't she tell me?]
 - [You're telling me this about {who}? My friend?|That's my friend you're talking about.] [Not cool.|I'll hear it from her, thanks.]
 - [I don't believe it.|That can't be right.] [{Who} would never.|You'd better not spread that.]

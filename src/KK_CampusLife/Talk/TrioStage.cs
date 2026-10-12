@@ -135,7 +135,8 @@ namespace Joojkk.CampusLife
         /// <summary>Half the gap between them: apart enough not to overlap, close enough to both fit the game's own framing.</summary>
         private static float HalfGap(float depth, Camera cam)
         {
-            return Mathf.Clamp(0.3f * depth * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * cam.aspect, 0.24f, 0.36f);
+            // 0.24 m put the right girl's shoulder on the option list (1185 px, list at 1180 of 1600); still clear of each other.
+            return Mathf.Clamp(0.26f * depth * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * cam.aspect, 0.21f, 0.32f);
         }
 
         private static ChaControl _framed;
@@ -165,7 +166,7 @@ namespace Joojkk.CampusLife
             right.y = 0f;
             right.Normalize();
             var front = _framedRot * Vector3.forward;
-            const float half = 0.25f;
+            const float half = 0.21f;
             a.transform.SetPositionAndRotation(_framedHome - right * half, Quaternion.LookRotation(Vector3.RotateTowards(front, right, Turn * Mathf.Deg2Rad, 0f)));
             nb.transform.SetPositionAndRotation(_framedHome + right * half, Quaternion.LookRotation(Vector3.RotateTowards(front, -right, Turn * Mathf.Deg2Rad, 0f)));
             CampusLifePlugin.Log.LogInfo("Duo framed: " + half.ToString("0.00") + " m each side of her spot");

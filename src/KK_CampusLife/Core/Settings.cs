@@ -126,9 +126,15 @@ namespace Joojkk.CampusLife
 
         private static int _order = 10000;
 
+        /// <summary>The name in the options menu: the key in the .cfg stays, so a saved value is not lost.</summary>
+        private static string Shown(string name)
+        {
+            return name.Replace("School", "Campus").Replace("school", "campus").Replace("Teacher", "Professor").Replace("teacher", "professor");
+        }
+
         private static ConfigEntry<T> B<T>(ConfigFile c, string section, string key, T def, string desc, AcceptableValueBase range = null, bool advanced = false)
         {
-            var attrs = new ConfigurationManagerAttributes { Order = _order--, IsAdvanced = advanced ? (bool?)true : null };
+            var attrs = new ConfigurationManagerAttributes { Order = _order--, IsAdvanced = advanced ? (bool?)true : null, DispName = Shown(key), Category = Shown(section) };
             var entry = c.Bind(section, key, def, new ConfigDescription(desc, range, attrs));
             Migrate(c, entry, section, key);
             return entry;
@@ -160,7 +166,7 @@ namespace Joojkk.CampusLife
         public static void Init(ConfigFile c)
         {
             const string g = "01. General";
-            Enabled = B(c, g, "Enable Campus Life", true, "Master switch. When off, the school plays like vanilla (your mod data stays in the save).");
+            Enabled = B(c, g, "Enable Campus Life", true, "Master switch. When off, the university plays like vanilla (your mod data stays in the save).");
             PlannerKey = B(c, g, "Menu hotkey", new KeyboardShortcut(KeyCode.F7), "Opens the Campus Life menu inside the clipboard (Character Status). The same menu is in the clipboard (middle mouse button / F4) as the Campus Life card. Time is paused while it is open, like the clipboard itself. Do not use F8: in the game F8 ends the current period.");
             ShowToasts = B(c, g, "Show notifications", true, "Pop-up notes like 'Request completed' or 'New rumor on the board'.");
             LoadingScreen = B(c, g, "Loading screen", true, "Replaces the game's white loading fade with a gray screen: a heart, where you are going (with a faint picture of the place) and a tip or a little joke. Story flashes are left alone.");
@@ -197,7 +203,7 @@ namespace Joojkk.CampusLife
             EaseNormal = B(c, gi, "Ease: normal girls", 1f, "The same for girls of normal pace.", new AcceptableValueRange<float>(0.25f, 3f));
             EaseOpen = B(c, gi, "Ease: open girls", 1f, "The same for open girls (they already start at x1.4).", new AcceptableValueRange<float>(0.25f, 3f));
             GiftsEnabled = B(c, gi, "Enable gifts", true, "Adds 'Give a gift' to conversations. Gifts matching her profile (sweets, coffee, sports...) work best.");
-            AskAboutDayButton = B(c, gi, "Enable How are you today button", true, "The game's talk button \"How are you today?\" (reveals her mood and a hint about what she likes), for the talks Campus Life leaves to the game: story heroines, teachers, or with \"New conversation system\" off. In Campus Life's own talk the same question is under Talk.");
+            AskAboutDayButton = B(c, gi, "Enable How are you today button", true, "The game's talk button \"How are you today?\" (reveals her mood and a hint about what she likes), for the talks Campus Life leaves to the game: story heroines, professors, or with \"New conversation system\" off. In Campus Life's own talk the same question is under Talk.");
             NewConversation = B(c, gi, "New conversation system", true, "The talk screen's buttons open Campus Life's conversation: the speech bubble for talking (topics, let her talk, ask about friends, jokes, compliments, the game's small talk and listen), the heart for romance and H, the question mark for invitations, gifts and \"come with me\". Game options only show when the game allows them. Off = the game's buttons as they were.");
             SingleConversation = B(c, gi, "Single conversation list", true, "One list for the whole talk, under Talk, Actions, Do together, Romance and Spicy: every action straight on it when it can happen now (no sub-pages). Off = the three pages of the speech bubble, heart and question mark.");
             TurnTalkTime = B(c, gi, "Talk time per turn", 0.5f, "How much of the game's talk time (the blue bar, 4 points a day) each Campus Life conversation turn uses. The game's own topics and invitations use 1 point, as in vanilla.", new AcceptableValueRange<float>(0f, 1f));
@@ -206,7 +212,7 @@ namespace Joojkk.CampusLife
             DuoInTalk = B(c, gi, "Two-girl scenes in the talk screen", true, "The two girls walk over and call you on the map, then the scene plays in the talk screen with both of them, and they say goodbye on the map. Off: everything plays on the map.");
             TrioTalk = B(c, gi, "Talk with both girls", true, "After a two-girl scene the talk goes on with both of them side by side: pick who you talk to (one, the other, or both), the other girl reacts to what you do, they talk to each other, and sometimes they disagree and look to you to settle it.");
             EpisodesEnabled = B(c, gi, "Spotlight episodes", true, "The girls in the spotlight (or the ones you see most, in a small class) invite you to an outing played like the story mode: she stands in front of a painted background, with choices built from how close you are, your reputation, what you did for her, what she remembers and what you carry. Friendship stories (food, mysteries, festivals, heart-to-hearts); alone with her, the last choice can turn romantic: her hand, a kiss, a confession, or somewhere private (H).");
-            EpisodeEveryDays = B(c, gi, "Days between spotlight episodes", 1, "At most one episode every N school days.", new AcceptableValueRange<int>(1, 7));
+            EpisodeEveryDays = B(c, gi, "Days between spotlight episodes", 1, "At most one episode every N college days.", new AcceptableValueRange<int>(1, 7));
             TalkFatigue = B(c, gi, "Repeated questions count less", true, "The game's own questions give the same favor every time. From the 3rd conversation of the day with the same girl, only half (then a quarter) of that favor counts.");
             DevotionEnabled = B(c, gi, "Enable devotion", true, "Long-term bond that keeps growing after favor reaches 100. Every level unlocks a perk (more pay, energy, daily presents, stat bonuses, double rewards).");
 
@@ -222,17 +228,17 @@ namespace Joojkk.CampusLife
             MaxActiveArcs = B(c, a, "Max active stories", 0, "0 = automatic (1 for tiny classes, up to 3 for big ones).", new AcceptableValueRange<int>(0, 8));
             ArcChancePerDay = B(c, a, "Chance of a new story per day", 0.4f, "", new AcceptableValueRange<float>(0f, 1f));
             DramaEnabled = B(c, a, "Enable drama", true, "Rivalry and jealousy stories where two girls want you on the same day and you must choose.");
-            StoryGirlsWalk = B(c, a, "Story heroines attend school daily", true, "The game's story heroines walk around the school every day like the other students. They have no everyday conversations until their story is over (see the next setting).");
+            StoryGirlsWalk = B(c, a, "Story heroines attend school daily", true, "The game's story heroines walk around the university every day like the other students. They have no everyday conversations until their story is over (see the next setting).");
             StoryDirector = B(c, a, "Daily story heroine", true, "Each school day one story heroine is chosen; her next story event opens when you interact with her that day, whatever the game's weekly schedule says. Off = vanilla schedule.");
             StoryInPerson = B(c, a, "Story heroine waits in person", true, "Today's story heroine stands at her event spot, even for events that normally only show a star on the map.");
-            TeachersWalk = B(c, a, "Teachers walk around the school", true, "The teachers walk around the school like the students and the story heroines, instead of only standing at their event spot.");
-            TeacherTalks = B(c, a, "Teacher conversations with choices", true, "A teacher's event is a conversation with choices that moves her favor and H, instead of the game's string of short talks. Before you are friends she only talks at her event spot; from friend on, anywhere; when the friendship is complete she joins school life as a free character.");
+            TeachersWalk = B(c, a, "Teachers walk around the school", true, "The professors walk around the university like the students and the story heroines, instead of only standing at their event spot.");
+            TeacherTalks = B(c, a, "Teacher conversations with choices", true, "A professor's event is a conversation with choices that moves her favor and H, instead of the game's string of short talks. Before you are friends she only talks at her event spot; from friend on, anywhere; when the friendship is complete she joins campus life as a free character.");
             StoryGraduates = B(c, a, "Story heroines join a class when their story ends", true, "When a story heroine's story is complete she takes a free seat in a class as a regular student and all everyday conversations work with her. Her story self stays in the save for the game's own scenes.");
 
             const string ca = "07. School calendar";
             CalendarEnabled = B(c, ca, "Enable school events", true, "Exams, sports festival, culture festival, field trips and seasonal days.");
             AutoPlaySchoolEvents = B(c, ca, "Start school events automatically", true, "When off, events wait for you to press 'Attend' in the planner.");
-            HappeningsEnabled = B(c, ca, "Enable everyday happenings", true, "Small random events during the day: lost items, pop quizzes, love letters, notes asking for help, helping teachers...");
+            HappeningsEnabled = B(c, ca, "Enable everyday happenings", true, "Small random events during the day: lost items, pop quizzes, love letters, notes asking for help, helping professors...");
             HappeningChance = B(c, ca, "Happening chance per period", 0.35f, "", new AcceptableValueRange<float>(0f, 1f));
             AutoPlayHappenings = B(c, ca, "Play happenings automatically", true, "When off, happenings wait in the planner until you open them.");
 
@@ -252,7 +258,7 @@ namespace Joojkk.CampusLife
             const string pt = "11. Position tools";
             PositionReadout = B(c, pt, "Show position readout", false, "Shows the map number and your position and facing at the top left while walking around, to place things. The keys below only work while it is shown; each also copies the position to the clipboard and the log.");
             SaveWarpSpotKey = B(c, pt, "Set warp spot key", new KeyboardShortcut(KeyCode.F7, KeyCode.LeftControl), "Makes the current spot the place where the menu's \"Go there\" buttons put you on this map. Saved in BepInEx/config/joojkk.campuslife.spots.txt.");
-            MoveStoreKey = B(c, pt, "Move store key", new KeyboardShortcut(KeyCode.F7, KeyCode.LeftControl, KeyCode.LeftShift), "Moves the school store icon to just in front of you (any map). Saved in the same spots file.");
+            MoveStoreKey = B(c, pt, "Move store key", new KeyboardShortcut(KeyCode.F7, KeyCode.LeftControl, KeyCode.LeftShift), "Moves the university store icon to just in front of you (any map). Saved in the same spots file.");
 
             const string d = "12. School life director";
             ConversationForms = B(c, d, "Conversation by scene", true, "Talks open with a scene when she has something on her mind (a worry, a friend, something you did together), with concrete things to say built from her mood, the place and what you share. Also needed for the moments girls start on the map (next setting).");
@@ -269,9 +275,9 @@ namespace Joojkk.CampusLife
             StealAndHarem = B(c, d, "Love triangles with you", true, "A girl in a couple who falls for you is torn; you may win her over (her ex is hurt for a while and can forgive you) or, with girlfriends who get along, agree on sharing.");
             SundayStories = B(c, d, "Sunday stories", true, "On Sunday dates and Sunday mornings a short story plays from your week together.");
             RelationshipSeasons = B(c, d, "Relationship seasons", true, "Each girlfriend goes through chapters (the first weeks, settling in, a test, a promise) with little traditions you build together.");
-            RumorChains = B(c, d, "Rumor chains", true, "What happens at school spreads from girl to girl and changes on the way; you can confirm, deny or ignore it.");
+            RumorChains = B(c, d, "Rumor chains", true, "What happens on campus spreads from girl to girl and changes on the way; you can confirm, deny or ignore it.");
             ClubProjects = B(c, d, "Club projects", true, "Each week the club takes on a project (a stand, a contest, a show); members' choices shape the club's identity.");
-            CouncilRace = B(c, d, "Student council race", true, "Once every 9-week loop two girls run for president; you can support one. The winner's platform changes school life for a while.");
+            CouncilRace = B(c, d, "Student council race", true, "Once every 9-week loop two girls run for president; you can support one. The winner's platform changes campus life for a while.");
             Anthology = B(c, d, "Class anthology", true, "The big moments are written down; at the end of each loop a ceremony shows the best ones and every girl gets an epilogue.");
             if (_migrated) c.Save();
         }

@@ -10,3 +10,7 @@ bin/
 tools/extract_commands.py
 tools/last_run_*.txt
 tools/iconpreview/iconpreview.png
+
+# Python bytecode
+__pycache__/
+*.pyc

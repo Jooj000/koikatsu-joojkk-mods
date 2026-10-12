@@ -32,6 +32,35 @@ namespace Joojkk.CampusLife
             }
         }
 
+        /// <summary>The event as a sentence names it: "the exams", "Chocolate Day".</summary>
+        public static string EventRef(string id)
+        {
+            switch (id)
+            {
+                case "exam": return "the exams";
+                case "sports": case "culture": return "the " + EventName(id);
+                case "trip": return "the field trip";
+                default: return EventName(id);
+            }
+        }
+
+        /// <summary>What kind of day it is, for the lines: nobody "goes to" Chocolate Day (user, 2026-11-01).</summary>
+        public static string EventKind(string id)
+        {
+            switch (id)
+            {
+                case "choco": return "gift";
+                case "exam": return "exam";
+                case "sports": return "sports";
+                case "culture": return "fair";
+                case "trip": return "trip";
+                case "tanabata": return "wish";
+                case "halloween": return "costume";
+                case "xmas": return "eve";
+                default: return "";
+            }
+        }
+
         private struct Slot
         {
             public int Week;
@@ -147,7 +176,7 @@ namespace Joojkk.CampusLife
             if (!string.IsNullOrEmpty(S.PendingEvent) && Cfg.AutoPlaySchoolEvents.Value)
             {
                 var ev = S.PendingEvent;
-                if (PlayEvent()) Agenda.Took("school event " + ev, BeatKind.Fixed);
+                if (PlayEvent()) Agenda.Took("campus event " + ev, BeatKind.Fixed);
                 return;
             }
             if (!string.IsNullOrEmpty(S.PendingHappening) && Cfg.AutoPlayHappenings.Value
@@ -194,9 +223,9 @@ namespace Joojkk.CampusLife
             {
                 var score = ExamScore(false);
                 RecordExam(score);
-                S.Log("You skipped the exam room... the teacher made you take it after class: " + score + " points.");
+                S.Log("You skipped the exam room... the professor made you take it after class: " + score + " points.");
             }
-            else S.Log("You missed the " + EventName(id) + ".");
+            else S.Log("You missed " + EventRef(id) + ".");
         }
 
         // ---------------- helpers ----------------
@@ -250,7 +279,7 @@ namespace Joojkk.CampusLife
             if (score >= 85) { r = new Rewards { Money = 3000, Rep = 5, Int = 2 }; verdict = "Top of the class! Your parents send a reward."; }
             else if (score >= 65) { r = new Rewards { Money = 1000, Rep = 2, Int = 1 }; verdict = "A solid result."; }
             else if (score >= 40) { r = new Rewards { Int = 1 }; verdict = "Passing. Nothing to brag about."; }
-            else { r = new Rewards { Rep = -3 }; verdict = "Failed. The teachers are worried."; }
+            else { r = new Rewards { Rep = -3 }; verdict = "Failed. The professors are worried."; }
             Pay(r, null, "Exam score " + score + "/100. " + verdict);
         }
 

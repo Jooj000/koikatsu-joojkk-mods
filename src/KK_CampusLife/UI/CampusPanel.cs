@@ -99,7 +99,7 @@ namespace Joojkk.CampusLife
                 if (_title != null) { _savedTitle = _title.text; }
                 _lastResult = "";
             }
-            if (_title != null) _title.text = tab == PanelTab.Shop ? "School Store" : "Campus Life";
+            if (_title != null) _title.text = tab == PanelTab.Shop ? "Campus Store" : "Campus Life";
             // The store is its own screen: no tabs.
             _tabs.gameObject.SetActive(tab != PanelTab.Shop);
             foreach (var kv in TabButtons)
@@ -156,7 +156,7 @@ namespace Joojkk.CampusLife
             {
                 case Cycle.Type.LunchTime: return "Lunch break";
                 case Cycle.Type.StaffTime: return "Club time";
-                case Cycle.Type.AfterSchool: return "After school";
+                case Cycle.Type.AfterSchool: return "After class";
                 case Cycle.Type.Morning: return "Morning";
                 case Cycle.Type.MyHouse: return "Night";
                 default: return p.Value.ToString();
@@ -234,7 +234,7 @@ namespace Joojkk.CampusLife
                 if (!string.IsNullOrEmpty(s.PendingEvent))
                 {
                     var row = GameUi.Row(e, "row", 44f);
-                    RowText(row, "School event: " + Calendar.EventName(s.PendingEvent), 22f, GameUi.Gold);
+                    RowText(row, "Campus event: " + Calendar.EventName(s.PendingEvent), 22f, GameUi.Gold);
                     SmallButton(row, "Attend", () => { StatusUi.Close(); Calendar.PlayEvent(); }, 160f);
                 }
                 if (!string.IsNullOrEmpty(s.PendingHappening))
@@ -280,7 +280,7 @@ namespace Joojkk.CampusLife
             var items = Items.All.Where(i => s.Count(i.Id) > 0).ToList();
             var bag = GameUi.Block(list, "bag");
             Header(bag, "Bag");
-            if (items.Count == 0) { Line(bag, "Empty. The school store is in the cafeteria.", 19f, GameUi.Dim); return; }
+            if (items.Count == 0) { Line(bag, "Empty. The university store is in the cafeteria.", 19f, GameUi.Dim); return; }
             foreach (var i in items)
             {
                 var row = GameUi.Row(bag, "row", 42f);
@@ -307,7 +307,7 @@ namespace Joojkk.CampusLife
             var head = GameUi.Block(_right, "requests", false);
             Header(head, "Requests (" + active.Count + ")");
             if (!Cfg.BoardEnabled.Value) Line(head, "The club board is turned off in the settings.", 20f, GameUi.Warn);
-            else if (active.Count == 0) Line(head, G.IsSchoolDay ? "Nobody needs you right now. Walk around, talk, or check back tomorrow." : "No school today.", 20f, GameUi.Dim);
+            else if (active.Count == 0) Line(head, G.IsSchoolDay ? "Nobody needs you right now. Walk around, talk, or check back tomorrow." : "No class today.", 20f, GameUi.Dim);
 
 
             StoryBlock();
@@ -338,7 +338,7 @@ namespace Joojkk.CampusLife
                 if (map >= 0)
                     Line(b, "She is waiting at the " + Places.MapLabel(map) + " right now. Talk to her to play her story event.", 19f);
                 else
-                    Line(b, "She was chosen for today. Her event can start in a free period (break, lunch or after school): look for her and talk to her.", 19f);
+                    Line(b, "She was chosen for today. Her event can start in a free period (break, lunch or after class): look for her and talk to her.", 19f);
             }
         }
 
@@ -374,7 +374,7 @@ namespace Joojkk.CampusLife
             if (h != null)
             {
                 var map = GirlInfo.CurrentMap(h);
-                where = GirlInfo.IsSpawned(h) && map >= 0 ? "She is at: " + Places.MapLabel(map) : "She isn't at school right now.";
+                where = GirlInfo.IsSpawned(h) && map >= 0 ? "She is at: " + Places.MapLabel(map) : "She isn't on campus right now.";
             }
             // One line of facts under the text; "How" only when it is more than talking to her.
             var dim = "<color=" + Hex(GameUi.Dim) + ">";
@@ -394,7 +394,7 @@ namespace Joojkk.CampusLife
             var b = GameUi.Block(_left, "coming");
             Header(b, "Coming up");
             var list = Calendar.UpcomingEvents();
-            if (list.Count == 0) Line(b, "School events are turned off in the settings.", 20f, GameUi.Dim);
+            if (list.Count == 0) Line(b, "Campus events are turned off in the settings.", 20f, GameUi.Dim);
             foreach (var u in list)
             {
                 var row = GameUi.Row(b, "row", 38f);
@@ -499,7 +499,7 @@ namespace Joojkk.CampusLife
             RowText(row, Places.Name(placeId), 28f, GameUi.Gold);
             var mapNo = Places.MapFor(placeId);
             if (!here && mapNo >= 0) SmallButton(row, "Go there", () => StatusUi.Warp(mapNo), 200f);
-            if (placeId == "cafeteria" && here) SmallButton(row, "School store", () => Show(PanelTab.Shop), 200f);
+            if (placeId == "cafeteria" && here) SmallButton(row, "Campus store", () => Show(PanelTab.Shop), 200f);
             var events = StatusUi.PlaceEvents(placeId);
             foreach (var e in events) Line(head, "Event here: " + e, 20f, GameUi.Gold);
             if (!here) Line(head, "Go there to do these. Time only passes while you walk around, not in this menu.", 18f, GameUi.Dim);
@@ -591,7 +591,7 @@ namespace Joojkk.CampusLife
         {
             var c = GameUi.Block(_right, "talk");
             Header(c, "Conversations");
-            Para(c, "Speech bubble", "talking: topics (a star marks what she likes when you can read her mood), let her talk (problems, gossip, what her friends need), ask about her day, her friends or the school, jokes, compliments, clearing the air, and the game's small talk and listen.");
+            Para(c, "Speech bubble", "talking: topics (a star marks what she likes when you can read her mood), let her talk (problems, gossip, what her friends need), ask about her day, her friends or the university, jokes, compliments, clearing the air, and the game's small talk and listen.");
             Para(c, "Heart", "romance and H: sweet talk, her hand, how she feels about you, teasing, whispers, talking about last time and sneaking off together, plus the game's confession, date, H and break up when the game allows them.");
             Para(c, "Question mark", "invitations (lunch, study, exercise, club, going home, the Koikatsu Club), \"come with me\", gifts, and buttons other mods add. Only what the game allows right now is shown.");
             Para(c, "Bars", "every turn moves her favor and H bars at once and uses " + Cfg.TurnTalkTime.Value.ToString("0.##") + " of the blue talk-time bar (the game's own options use 1). Her mood and trust change how invitations go: a hungry girl who likes you comes to lunch, a sleepy one won't exercise.");
@@ -608,8 +608,8 @@ namespace Joojkk.CampusLife
             var r = GameUi.Block(_right, "requests");
             Header(r, "Requests and stories");
             Para(r, "Board", "requests show once you learn of them (she or a friend tells you, or you see it). Its shape is the mark on her minimap icon.");
-            Para(r, "Stories", "one story heroine with a pending event is chosen each school day.");
-            Para(r, "Outings", "a girl in the spotlight may invite you out (lunch, club time or after school). Alone with her, the last choice can turn romantic: her hand, a kiss, a confession, or somewhere private, which ends in H.");
+            Para(r, "Stories", "one story heroine with a pending event is chosen each college days.");
+            Para(r, "Outings", "a girl in the spotlight may invite you out (lunch, club time or after class). Alone with her, the last choice can turn romantic: her hand, a kiss, a confession, or somewhere private, which ends in H.");
             Para(r, "Gifts", "a liked gift beats any chat and adds devotion. Learn likes by asking about her day or from library magazines.");
 
             var a = GameUi.Block(_right, "activities");
@@ -624,7 +624,7 @@ namespace Joojkk.CampusLife
         {
             var s = Campus.S;
             var b = GameUi.Block(_left, "wallet");
-            Header(b, "School store");
+            Header(b, "Campus store");
             Line(b, "Money: <color=" + Hex(GameUi.Gold) + ">" + s.Money.ToString("N0") + " yen</color>", 24f);
             Line(b, "<size=18><color=" + Hex(GameUi.Dim) + ">A gift she likes beats any chat. How to learn her likes: Details tab.</color></size>");
             var row = GameUi.Row(b, "row", 44f);

@@ -82,6 +82,9 @@ namespace Joojkk.SchoolOptimizer
         /// with open requests, ongoing stories and the weekly spotlight. Kept as plain delegates so no hard dependency
         /// is needed (add through reflection).
         /// </summary>
+        /// <summary>Seats another plugin left free today (Campus Life keeps professors and story heroines home on a full day): they go to the students.</summary>
+        public static Func<int> SeatBonus;
+
         public static readonly List<Func<SaveData.Heroine, float>> PriorityProviders = new List<Func<SaveData.Heroine, float>>();
 
         private void Awake()
@@ -398,7 +401,10 @@ namespace Joojkk.SchoolOptimizer
 
         public static IEnumerator Wrap(ActionScene act, bool isShuffle, IEnumerator original)
         {
-            var cap = SchoolOptimizerPlugin.MaxStudents.Value <= 0 ? GameMax : Mathf.Min(GameMax, SchoolOptimizerPlugin.MaxStudents.Value);
+            var bonus = 0;
+            try { if (SchoolOptimizerPlugin.SeatBonus != null) bonus = SchoolOptimizerPlugin.SeatBonus(); }
+            catch (Exception e) { SchoolOptimizerPlugin.Log.LogDebug("Seat bonus: " + e.Message); }
+            var cap = SchoolOptimizerPlugin.MaxStudents.Value <= 0 ? GameMax : Mathf.Min(GameMax, SchoolOptimizerPlugin.MaxStudents.Value + bonus);
             cap = MemoryGuard.Adjust(cap);
             if (!isShuffle) Trim(act, cap);
             List<SaveData.Heroine> vip = null;

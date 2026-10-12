@@ -57,7 +57,7 @@ namespace Joojkk.CampusLife
             {
                 case CampusLife.Mood.Hungry: l.Add(C("c:hungry", "Food", "Ask what she's craving for lunch", 3f, () => RunSubject(Find("m_hungry")))); break;
                 case CampusLife.Mood.Sleepy: l.Add(C("c:sleepy", "AboutHer", "Ask if she stayed up late again", 3f, () => RunSubject(Find("m_sleepy")))); break;
-                case CampusLife.Mood.Stressed: l.Add(C("c:stressed", "Listen", "Ask what's weighing on her", 3f, () => LetHerTalk("You look like you're carrying the whole school. What's weighing on you?"))); break;
+                case CampusLife.Mood.Stressed: l.Add(C("c:stressed", "Listen", "Ask what's weighing on her", 3f, () => LetHerTalk("You look like you're carrying the whole university. What's weighing on you?"))); break;
                 case CampusLife.Mood.Bored: l.Add(C("c:bored", "Weekend", "Suggest something fun for after class", 3f, () => RunSubject(Find("m_bored")))); break;
                 case CampusLife.Mood.Lonely: l.Add(C("c:lonely", "AboutHer", "Say you were hoping to see her", 3f, () => RunSubject(Find("m_lonely")))); break;
                 case CampusLife.Mood.Flirty: l.Add(C("c:flirty", "Compliment", "Tell her she looks great today", 3f, () => Compliment("looks", "Is it just me, or do you look really great today?"))); break;
@@ -89,8 +89,8 @@ namespace Joojkk.CampusLife
                     case "animals": l.Add(C("c:l_animals", "Hobbies", "Tell her about the stray cat by the gate", 2.2f, () => RunSubject(Find("like_animals")))); break;
                     case "sweets": l.Add(C("c:l_sweets", "Food", "Ask if she's tried the new parfait place", 2.2f, () => RunSubject(Find("like_sweets")))); break;
                     case "food": case "cooking": l.Add(C("c:l_food", "Food", "Ask for her best bento recipe", 2.2f, () => RunSubject(Find("like_food")))); break;
-                    case "exercise": l.Add(C("c:l_ex", "Sports", "Challenge her to a run after school", 2.2f, () => RunSubject(Find("like_exercise")))); break;
-                    case "study": l.Add(C("c:l_study", "Classes", "Ask her to explain the homework", 2.2f, () => RunSubject(Find("like_study")))); break;
+                    case "exercise": l.Add(C("c:l_ex", "Sports", "Challenge her to a run after class", 2.2f, () => RunSubject(Find("like_exercise")))); break;
+                    case "study": l.Add(C("c:l_study", "Classes", "Ask her to explain the assignments", 2.2f, () => RunSubject(Find("like_study")))); break;
                     case "fashion": l.Add(C("c:l_fashion", "Hobbies", "Ask where she got her hair clip", 2.2f, () => RunSubject(Find("like_fashion")))); break;
                     case "coffee": l.Add(C("c:l_coffee", "Food", "Ask her which canned coffee is best", 2f, () => RunSubject(Find("like_coffee")))); break;
                     case "spicy": l.Add(C("c:l_spicy", "Food", "Dare her to try the extra-hot curry", 2f, () => RunSubject(Find("like_spicy")))); break;
@@ -113,8 +113,8 @@ namespace Joojkk.CampusLife
             if (partner != null) l.Add(C("c:partner", "Friend", "Ask how things are with " + GirlInfo.FirstName(partner), 2.4f, () => AskFriend(partner, "So... how are things with " + GirlInfo.FirstName(partner) + "? You two seem close.")));
             if (Social.Gossip(h) != null) l.Add(C("c:rumor", "Rumor", "Ask what everyone's whispering about", 1.8f, () => AskSchool()));
             if (!s.Did.Contains("joke"))
-                l.Add(C("c:joke", "Joke", Lines.Pick("Tell her about the teacher's tie with ducks", "Tell her the vending machine ate your coins again", "Tell her you saw the principal trip on the stairs") + JokeOdds(s), 1.2f,
-                    () => Joke(Lines.Pick("Did you see the teacher's tie today? It had ducks on it. DUCKS.", "The vending machine ate my coins again. I think it hates me personally.", "I saw the principal miss a step this morning. He pretended it was a dance move."))));
+                l.Add(C("c:joke", "Joke", Lines.Pick("Tell her about the professor's tie with ducks", "Tell her the vending machine ate your coins again", "Tell her you saw the dean trip on the stairs") + JokeOdds(s), 1.2f,
+                    () => Joke(Lines.Pick("Did you see the professor's tie today? It had ducks on it. DUCKS.", "The vending machine ate my coins again. I think it hates me personally.", "I saw the dean miss a step this morning. He pretended it was a dance move."))));
             if (!GirlInfo.InNoClub(h)) l.Add(C("c:effort", "Compliment", "Tell her her hard work shows", 1f, () => Compliment("effort", "You've been working really hard lately. It shows.")));
 
             return Three(l, gs);
@@ -187,7 +187,7 @@ namespace Joojkk.CampusLife
             if (friend != null && !AskedToday(h, "word")) l.Add(Opt("Put in a good word with " + GirlInfo.FirstName(friend), () => AskGoodWord(h, friend)));
             var tip = Social.FriendsOf(h, 30).FirstOrDefault(f => GirlInfo.LikesOf(f).Any(x => (S.Girl(GirlInfo.Key(f)).KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, x))) == 0));
             if (tip != null && !AskedToday(h, "tip")) l.Add(Opt("Ask what " + GirlInfo.FirstName(tip) + " likes", () => AskTip(h, tip)));
-            if (!AskedToday(h, "cover") && l.Count < 4) l.Add(Opt("Cover for me with the class rep", () => AskCover(h)));
+            if (!AskedToday(h, "cover") && l.Count < 4) l.Add(Opt("Cover for me with the course rep", () => AskCover(h)));
             return l;
         }
 
@@ -227,7 +227,7 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(h, true);
             b.Me("What does " + fn + " like? Asking for... reasons.");
             b.Her_(ok ? Lines.T(tone, fn + "? She loves " + GirlInfo.LikeLabel(like) + ". Don't tell her I told you!" + " || " + fn + " really likes " + GirlInfo.LikeLabel(like) + "... Keep it secret that I told you! || I think " + fn + " would love " + GirlInfo.LikeLabel(like) + ". Shh!" + " || " + GirlInfo.LikeLabel(like) + "! That's her favorite. Don't say it was me...", "Easy! " + GirlInfo.LikeLabel(like) + "! She can't resist! || Oh, that's easy! " + GirlInfo.LikeLabel(like) + "!" + " || " + GirlInfo.LikeLabel(like) + "! She goes crazy for it! || Psst! " + GirlInfo.LikeLabel(like) + "! Trust me!", "..." + GirlInfo.LikeLabel(like) + ". You didn't hear it from me. || ..." + GirlInfo.LikeLabel(like) + ". Don't quote me. || ...She likes " + GirlInfo.LikeLabel(like) + ". That's all. || ..." + GirlInfo.LikeLabel(like) + ". Keep my name out of it.", "Hm. " + GirlInfo.LikeLabel(like) + ". Use it wisely." + " || " + GirlInfo.LikeLabel(like) + ". Now you owe me. || Hmm~ " + GirlInfo.LikeLabel(like) + ". Don't waste it. || Fine, a hint: " + GirlInfo.LikeLabel(like) + ".")
-                      : Lines.T(tone, "Hmm... I'm not sure. Ask her yourself? || Hmm... I don't really know. Maybe ask her? || Sorry, I'm not sure... ask her directly? || I don't know... she might tell you herself.", "No idea! Ask her! || No clue! Just ask her! || Beats me! Go ask! || Huh, no idea! Ask her yourself!", "...Ask her. || ...No idea. Ask her. || ...I don't know. || ...Ask her directly.", "Do your own research. || Do your own homework. || Why would I know? Ask her. || Figure it out yourself~"));
+                      : Lines.T(tone, "Hmm... I'm not sure. Ask her yourself? || Hmm... I don't really know. Maybe ask her? || Sorry, I'm not sure... ask her directly? || I don't know... she might tell you herself.", "No idea! Ask her! || No clue! Just ask her! || Beats me! Go ask! || Huh, no idea! Ask her yourself!", "...Ask her. || ...No idea. Ask her. || ...I don't know. || ...Ask her directly.", "Do your own research. || Do your own assignments. || Why would I know? Ask her. || Figure it out yourself~"));
             Play(b, 0, ok ? "Learned: " + fn + " likes " + GirlInfo.LikeLabel(like) + "." : null, ok ? (Action)(() => fs.KnownLikes |= 1 << Array.IndexOf(GirlInfo.LikeIds, like)) : null);
         }
 
@@ -237,9 +237,9 @@ namespace Joojkk.CampusLife
             var tone = GirlInfo.ToneOf(h);
             var ok = Social.Trust(h) >= 50;
             var b = new SceneBuilder(h, true);
-            b.Me("If the class rep asks where I was during cleaning... could you cover for me?");
+            b.Me("If the course rep asks where I was during the seminar... could you cover for me?");
             b.Her_(ok ? Lines.T(tone, "Ehh... just this once, okay? || Um... okay, but only this one time. || Just this once... please don't tell anyone. || Okay... but it's our secret.", "Hehe, partners in crime! || Ehehe! Partners in crime! || Okay! Our little secret! || Deal! I'll cover for you!", "...You owe me. || ...Fine. You owe me. || ...Once. Remember it. || ...Alright. Don't make it a habit.", "Fine. But now you owe me a favor. || Fine. But I'm collecting on this later. || Okay~ That's one favor you owe me. || Sure. You'll pay me back, of course.")
-                      : Lines.T(tone, "I-I can't lie to the class rep... || I can't lie to the class rep... sorry... || I-I'm too scared to lie to her... || No... I'd get in so much trouble...", "No way! She's scary! || No way! She'd kill me! || Nope! The class rep is terrifying! || Not happening! She sees through everything!", "...No. || ...No. || ...I won't lie for you. || ...Not doing that.", "And what do I get? Nothing? Then no. || What's in it for me? Nothing? Then no. || Lie for free? I don't think so. || No reward, no lie."));
+                      : Lines.T(tone, "I-I can't lie to the course rep... || I can't lie to the course rep... sorry... || I-I'm too scared to lie to her... || No... I'd get in so much trouble...", "No way! She's scary! || No way! She'd kill me! || Nope! The course rep is terrifying! || Not happening! She sees through everything!", "...No. || ...No. || ...I won't lie for you. || ...Not doing that.", "And what do I get? Nothing? Then no. || What's in it for me? Nothing? Then no. || Lie for free? I don't think so. || No reward, no lie."));
             Play(b, 0, ok ? "She covered for you. (+1 reputation, you owe her one)" : null, ok ? (Action)(() =>
             {
                 S.Reputation = Mathf.Clamp(S.Reputation + 1, 0, 100);

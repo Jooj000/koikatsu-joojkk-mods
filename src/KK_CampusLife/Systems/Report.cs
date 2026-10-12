@@ -62,7 +62,7 @@ namespace Joojkk.CampusLife
                 var school = SchoolLife().ToList();
                 if (school.Count > 0)
                 {
-                    t.Add("School life:");
+                    t.Add("Campus life:");
                     t.AddRange(school.Select(a => "  - " + a));
                 }
             }
@@ -99,7 +99,7 @@ namespace Joojkk.CampusLife
         {
             if (done == 0 && talks == 0) return "A quiet week. The club board is waiting for you.";
             if (missed > done) return "A rough week. Some girls waited for you in vain.";
-            if (done >= 10) return "What a week! The whole school is talking about the Koikatsu Club.";
+            if (done >= 10) return "What a week! The whole university is talking about the Koikatsu Club.";
             return "A good week. Keep it up.";
         }
     }

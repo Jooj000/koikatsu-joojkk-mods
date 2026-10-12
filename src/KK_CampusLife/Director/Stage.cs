@@ -149,9 +149,31 @@ namespace Joojkk.CampusLife
                     n.position = g2.pos;
                 }
                 Note(GirlInfo.FirstName(n.heroine) + " brought to the door of map " + map + " (from " + from + ", now " + n.mapNo + ")");
+                OutOfSwimsuit(act, n, map);
                 return true;
             }
             catch (Exception e) { CampusLifePlugin.Log.LogWarning("Stage bring: " + e.Message); return false; }
+        }
+
+        /// <summary>
+        /// The game keeps a girl in a swimsuit off most maps (<c>swimsuitBanArea</c>); one brought here from the pool skipped
+        /// that check and stayed dressed for the pool.
+        /// </summary>
+        private static void OutOfSwimsuit(ActionScene act, NPC n, int map)
+        {
+            try
+            {
+                var c = n.chaCtrl;
+                if (c == null || c.fileStatus == null) return;
+                var type = (ChaFileDefine.CoordinateType)c.fileStatus.coordinateType;
+                var swim = c.GetNowClothesType() == 2 && (type == ChaFileDefine.CoordinateType.Swim || type == ChaFileDefine.CoordinateType.Club && n.heroine.clubActivities == 1);
+                if (!swim) return;
+                var ban = Traverse.Create(act.actCtrl).Property("swimsuitBanArea").GetValue<HashSet<int>>();
+                if (ban == null || !ban.Contains(map)) return;
+                c.ChangeCoordinateTypeAndReload(ChaFileDefine.CoordinateType.School01);
+                Note(GirlInfo.FirstName(n.heroine) + " changed out of her swimsuit for map " + map);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Stage swimsuit: " + e.Message); }
         }
 
         /// <summary>
@@ -195,7 +217,9 @@ namespace Joojkk.CampusLife
             if (WalkTalk.Active && WalkTalk.Her == h) return "walk-and-talk";
             if (n.isOnanism || n.isLesbian) return "in H";
             var cur = n.AI.result;
-            if (cur != null && Array.IndexOf(OnPurpose, cur.actionNo) >= 0) return "busy on purpose (action " + cur.actionNo + ")";
+            // At maximum weight a held girl does not leave for an errand on another map.
+            var leaving = Max && cur != null && cur.actionNo == 0 && cur.point != null && cur.point.MapNo != map;
+            if (cur != null && !leaving && Array.IndexOf(OnPurpose, cur.actionNo) >= 0) return "busy on purpose (action " + cur.actionNo + ")";
             if (cur != null && IsCalmHere(cur, map)) return "calm here (action " + cur.actionNo + ")";
             if (cur != null && cur.actionNo == 8 && n.mapNo != map) return "on her way over (map " + n.mapNo + ")";
             return null;
@@ -238,6 +262,9 @@ namespace Joojkk.CampusLife
                 foreach (var h in _held.ToList())
                 {
                     var n = act.npcList.FirstOrDefault(x => x != null && x.heroine == h);
+                    // The game only switches bodies on when the map changes (ActionMap, IsPop): one we put through a door
+                    // has the right map number and stays off, unseen and out of the scenes.
+                    if (n != null && !n.isActive && act.Map.IsPop(n)) n.SetActive(true);
                     var skip = Skip(act, h, n, map);
                     if (skip != null) { Why(h, skip); continue; }
                     float last;

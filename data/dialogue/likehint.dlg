@@ -29,7 +29,7 @@ when voice=gyaru|open|vamp|teasing
 - [Also, {newlike}? Total obsession. Remember that.|Write this down: {newlike}. You're welcome.]
 - [Fun fact: I'm crazy about {newlike}.|{Newlike}. That's the way to my heart, babe.] [Use it wisely.|Don't forget it.]
 - [Oh, and between us? {Newlike}.|Real talk: {newlike} is life.] [Remember that.|Take notes.]
-- [Pop quiz: what do I love? {Newlike}.|Guess what I'm obsessed with this week. {Newlike}.] [You passed.|Duh.]
+- {student}[Pop quiz: what do I love? {Newlike}.|Guess what I'm obsessed with this week. {Newlike}.] [You passed.|Duh.]
 - [Wanna score points with me? {Newlike}.|Want a hint? {Newlike}.] [That's free.|You're welcome.]
 - [Listen up, this is important: {newlike}.|Don't tell anyone, but {newlike}.] [That's the whole list.|Hehe.]
 - [Everyone's doing whatever, but me? {Newlike}.|Forget everything else. {Newlike}.] [Always.|End of story.]

@@ -90,7 +90,7 @@ namespace Joojkk.CampusLife
                     else Resolve(p, p.Together >= 2 || p.Trust >= 65);
                     break;
                 case PairArc.Rivals:
-                    if (p.ArcStep == 1) line = "The teacher paired " + A(p) + " and " + B(p) + " for a project. Neither looked happy.";
+                    if (p.ArcStep == 1) line = "The professor paired " + A(p) + " and " + B(p) + " for a project. Neither looked happy.";
                     else if (p.ArcStep == 2) { line = A(p) + " and " + B(p) + " argued about the project for the whole period... but it's getting done."; p.Trust = PairState.Clamp(p.Trust + 5); }
                     else if (p.ArcStep == 3) line = A(p) + " admitted " + B(p) + "'s idea was good. Out loud.";
                     else Resolve(p, p.Trust >= 45);
@@ -128,7 +128,7 @@ namespace Joojkk.CampusLife
                 case PairArc.Hobby:
                     Arcs.AddBond(p.A, p.B, 12);
                     if (Pairs.GirlsOk(Social.Get(p.A)) && Pairs.GirlsOk(Social.Get(p.B))) { p.AddRomance(p.A, 6); p.AddRomance(p.B, 6); }
-                    line = A(p) + " and " + B(p) + " started a two-person club after school. It has a secret handshake.";
+                    line = A(p) + " and " + B(p) + " started a two-person club after class. It has a secret handshake.";
                     break;
                 default:
                     if (good) { Arcs.AddBond(p.A, p.B, 20); p.Trust = PairState.Clamp(p.Trust + 15); line = A(p) + " and " + B(p) + " made up. Properly."; }

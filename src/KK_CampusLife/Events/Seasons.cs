@@ -228,7 +228,7 @@ namespace Joojkk.CampusLife
                 case Tone.Energetic: return "travel all over the world";
                 case Tone.Cool: return "become a researcher";
                 case Tone.Teasing: return "become famous";
-                default: return "become a teacher";
+                default: return "become a professor";
             }
         }
 

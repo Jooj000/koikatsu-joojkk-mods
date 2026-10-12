@@ -69,11 +69,12 @@ on me.us
 when realverb=started_dating speed=same_day|fast
 - We started going out [really fast|pretty much right away], huh?
 - [We said yes really quickly, huh?|We didn't exactly take it slow.] [No regrets, though.|I'm glad we didn't wait.]
-- [Fastest couple in school, maybe?|We went from hello to dating in no time.] [Hehe.|Is that weird?]
+- [Fastest couple on campus, maybe?|We went from hello to dating in no time.] [Hehe.|Is that weird?]
 
 # ---------------- her side ----------------
 @rule us.plain
 on us
+hook f_us_plain
 opens share,tease,ask
 - [Oh, {thing}?|{Thing}...] [Yeah, I remember.|I was just thinking about it.|That was nice.]
 - [Ha, you remember that?|You still think about {thing}?] [Me too, a little.|That's kind of sweet.]
@@ -82,15 +83,17 @@ opens share,tease,ask
 @rule us.gift.liked
 on us
 when realverb=gave_gift opinion>=1
-opens share,tease,invite
 feel smile
-- [I love it!|It's really cute.|I keep it on my desk.] [Thank you, really.|Nobody's given me something like that in a long time.|I look at it every night.]
+hook f_us_gift_liked
+opens share,tease,invite
+- {student}[I love it!|It's really cute.|I keep it on my desk.] [Thank you, really.|Nobody's given me something like that in a long time.|I look at it every night.]
 - [{Thing}? Of course I liked it!|I'm using it right now, actually.] [You've got good taste.|How did you know?]
 - [I treasure {thing}, you know.|{Thing} is on my bag now.] [It's my favorite thing.|Everyone asks where I got it.]
 
 @rule us.gift.meh
 on us
 when realverb=gave_gift opinion<=0
+hook f_us_gift_meh
 opens ask,share,thank
 - [Ah, {thing}...|Yeah, {thing}.] [It was... nice of you.|It's the thought that counts, right?|I put it somewhere safe.]
 - [{Thing}... thanks again.|Oh, {thing}! Right.] [I'm still figuring out what to do with it.|It's... unique.]
@@ -99,8 +102,9 @@ opens ask,share,thank
 @rule us.helped
 on us
 when realverb=helped
-opens share,tease,praise
 feel smile
+hook f_us_helped
+opens share,tease,praise
 - [I never really thanked you for {when}.|You really saved me {when}.] [I owe you one.|So... thanks.|I won't forget it.]
 - [Ah, that?|You helping me out?] [It meant more than you think.|I was kind of lost before you showed up.]
 - [You came through for me {when}.|I still think about how you helped {when}.] [Let me return the favor.|You're dependable, you know.]
@@ -108,8 +112,9 @@ feel smile
 @rule us.defended
 on us
 when realverb=stood_up_for
-opens share,praise,tease
 feel shy
+hook f_us_defended
+opens share,praise,tease
 - [You didn't have to stand up for me like that.|Nobody's ever done that for me.] [But... I'm glad you did.|I was really happy.|My heart was pounding.]
 - [When you stood up for me...|What you did {when}...] [I felt safe.|Nobody does that for me.]
 - [You were so cool {when}.|You stepped in for me.] [Don't make it a habit, though.|Thank you. Really.]
@@ -117,8 +122,9 @@ feel shy
 @rule us.promise
 on us
 when realverb=kept_promise
-opens praise,share,thank
 feel smile
+hook f_us_promise
+opens praise,share,thank
 - [You kept your word.|You actually did it.] [Most people don't.|I'll remember that.|I knew I could count on you.]
 - [You promised and you followed through.|You did what you said.] [That's rare.|I trust you more now.]
 - [I didn't think you'd really do it.|You kept that promise.] [I'm impressed.|Thank you.]
@@ -126,8 +132,9 @@ feel smile
 @rule us.lunch
 on us
 when realverb=ate_with
-opens invite,tease,share
 feel smile
+hook f_us_lunch
+opens invite,tease,share
 - [Lunch was nice.|That was fun, eating together.] [We should make it a habit.|Next time I'm making the bento.|You eat really fast, by the way.]
 - [Lunch with you was nice.|I liked eating together.] [Same place tomorrow?|You can try my rolled omelet next time.]
 - [Eating together beats eating alone.|Lunch felt shorter with you.] [Let's do it again.|Way better.]
@@ -135,17 +142,19 @@ feel smile
 @rule us.walk
 on us
 when realverb=walked_home
-opens invite,tease,share
 feel shy
-- [The walk home?|Yeah, I got home fine.] [It went by too fast.|We should take the long way next time.|My mom saw us from the window, you know.]
-- [I liked walking home with you.|The walk home was nice.] [Let's do it again.|I didn't want it to end.]
+hook f_us_walk
+opens invite,tease,share
+- {student}[The walk home?|Yeah, I got home fine.] [It went by too fast.|We should take the long way next time.|My mom saw us from the window, you know.]
+- {student}[I liked walking home with you.|The walk home was nice.] [Let's do it again.|I didn't want it to end.]
 - [It was nice not walking alone.|You walk slow for me, I noticed.] [Thanks.|That was sweet.]
 
 @rule us.date
 on us
 when realverb=dated
-opens invite,share,tease
 feel smile
+hook f_us_date
+opens invite,share,tease
 - [I had a really good time.|Our date? It was great.] [Let's go again soon.|I keep replaying it in my head.|Next time I'll pick the place.]
 - [I still have the ticket stub.|I can't stop smiling about our date.] [I'm keeping it.|My friends are sick of hearing about it.]
 - [That date was perfect.|I loved our date.] [Same time next week?|You planned it so well.]
@@ -153,8 +162,9 @@ feel smile
 @rule us.kiss
 on us
 when realverb=kissed
-opens tease,share,invite
 feel shy
+hook f_us_kiss
+opens tease,share,invite
 - [D-don't just bring that up out of nowhere!|The kiss...] [My face is getting hot.|I still can't believe it happened.|...I don't regret it.]
 - [Our kiss? I... think about it a lot.|S-stop bringing up the kiss.] [A lot a lot.|...Unless you want another one.]
 - [The kiss was... nice.|About the kiss...] [Really nice.|I'd do it again.]
@@ -162,8 +172,9 @@ feel shy
 @rule us.confessed
 on us
 when realverb=confessed
-opens share,tease,ask
 feel shy
+hook f_us_confessed
+opens share,tease,ask
 - [The confession...|Ah, that day.] [My heart was going crazy.|I thought I was going to faint.|I'm glad I said it. Or that you did.]
 - [I still remember every word.|That day changed everything.] [I'm glad.|In the best way.]
 - [When you said it... I melted.|I was so nervous that day.] [I didn't show it, though.|Were you?]
@@ -171,8 +182,9 @@ feel shy
 @rule us.dating
 on us
 when realverb=started_dating
-opens share,tease,invite
 feel smile
+hook f_us_dating
+opens share,tease,invite
 - [We're really going out, huh?|It still feels like a dream.] [I like how that sounds.|My friends keep teasing me about it.|Don't make me say it out loud again.]
 - [I'm your girlfriend. Hehe.|Going out with you is fun.] [I like saying it.|Let's keep it up.]
 - [I still blush when people ask.|We're a couple. Wow.] [It's embarrassing.|I can't believe it.]
@@ -180,8 +192,9 @@ feel smile
 @rule us.dating.fast
 on us
 when realverb=started_dating speed=same_day|fast
-opens share,tease,ask
 feel shy
+hook f_us_dating_fast
+opens share,tease,ask
 - [It was fast, wasn't it?|We barely knew each other.] [But it felt right.|My friends think I'm crazy.|Do you think we rushed it?]
 - [Fast, sure, but I'd do it again.|We jumped right in, didn't we?] [No hesitation.|I'm glad we did.]
 - [My friends say we moved too fast.|We skipped the awkward part, at least.] [I don't care.|Silver lining.]
@@ -189,8 +202,9 @@ feel shy
 @rule us.flirt
 on us
 when realverb=flirted|held_hands
-opens tease,share,invite
 feel shy
+hook f_us_flirt
+opens tease,share,invite
 - [Ah... that?|You're bringing that up now?] [You were pretty bold.|I didn't mind. At all.|I wasn't expecting it.]
 - [You've been bold lately.|Was that on purpose?] [I don't hate it.|I could get used to it.]
 - [You held my hand like it was nothing.|Your flirting is getting better.] [My heart was racing.|Hehe.]
@@ -198,8 +212,9 @@ feel shy
 @rule us.shared
 on us
 when realverb=shared
-opens share,tease,ask
 feel smile
+hook f_us_shared
+opens share,tease,ask
 - [That time? {Note}.|Oh, I remember. {Note}.] [I think about it sometimes.|It was a good day.]
 - [Of course I remember. {Note}.|How could I forget? {Note}.] [It's one of my favorite memories.|We should do that again.]
 - [{Note}. That was us.|Oh, that time. {Note}.] [Good times.|I still laugh about it.]

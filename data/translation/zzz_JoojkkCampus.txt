@@ -1,0 +1,3 @@
+養護教諭=Campus Nurse
+数学教師=Math Professor
+語学教師(担任)=Language Professor (Advisor)

@@ -38,7 +38,7 @@ namespace Joojkk.CampusLife
             { "haunt", "the haunted house" }, { "snow", "the walk in the snow" }, { "gym", "the gym" },
             { "track", "the time trial" }, { "study", "the make-up test" }, { "trip", "the temple town" },
             { "tea", "the tea room" }, { "wishes", "the wishing street" }, { "decor", "the pumpkin disaster" },
-            { "sunset", "that evening in the classroom" },
+            { "sunset", "that evening in the lecture hall" },
         };
 
         /// <summary>What she remembers, right at the start: your last outing, something you did, or how little you know each other.</summary>
@@ -236,7 +236,7 @@ namespace Joojkk.CampusLife
         private static readonly string[] HowWeMet =
         {
             "We sat next to each other on the first day and both forgot our pencil cases.",
-            "We got lost on the same school trip and found our way back together. Mostly by accident.",
+            "We got lost on the same field trip and found our way back together. Mostly by accident.",
             "We fought over the last melon bread at the cafeteria. Then we split it.",
             "We were partners for cleaning duty and talked so much we forgot to clean.",
             "She lent me an umbrella in the rain and then we both got wet anyway.",
@@ -277,9 +277,9 @@ namespace Joojkk.CampusLife
         private static readonly string[] Jokes =
         {
             "You tell her the one about the penguin who walks into a convenience store.",
-            "You do your best impression of the vice principal's morning speech.",
+            "You do your best impression of the vice dean's morning speech.",
             "You explain, very seriously, your theory that pigeons are government spies.",
-            "You tell her about the time you got your head stuck in the school gate.",
+            "You tell her about the time you got your head stuck in the campus gate.",
         };
 
         private static void Laugh(Ctx c, SceneBuilder b, Tally t)
@@ -306,9 +306,9 @@ namespace Joojkk.CampusLife
         {
             if (c.Cooking) return c.T("I want to open a little cafe one day. With a cat sleeping in the window. || A little cafe someday... with a sleepy cat in the window. || I'd love a tiny cafe... and a cat. || A cozy cafe... that's my dream.", "I want my own restaurant! A huge one! With a neon sign! || My own restaurant! Huge! Neon! || A giant restaurant! Lights everywhere! || Restaurant! The biggest one!", "I'd like to be a chef. A real one, with a real kitchen. || A chef. A real one. || Professional chef. That's the goal. || I want to cook professionally.", "A cafe of my own, where I decide the menu and everybody loves it. || My cafe. My menu. Everyone loves it. || A cafe where I'm the boss. || My own place. Adored by all.");
             if (c.Sporty) return c.T("I want to run at the nationals. Just once. Even if I come last. || Nationals... just once. Even last place. || I want to run at nationals... just once. || Nationals... it's my dream.", "Nationals! I'm going to the nationals and I'm going to WIN! || Nationals! And WINNING! || I'm winning nationals! || Nationals! Gold!", "I want to compete at a national level. I'm not joking. || National level. Seriously. || Nationals. I mean it. || I'm aiming for nationals.", "Nationals. Then a medal. Then my face on a cereal box. || Nationals, medal, cereal box. || Medal, then fame. || Nationals. Then my face everywhere.");
-            if (c.Bookish) return c.T("I want to study abroad... somewhere far, where nobody knows me. || Study abroad... somewhere nobody knows me. || I want to go far away to study... || Somewhere distant... a fresh start.", "I want to go to a university in another country! Like, really far! || University abroad! Far away! || Another country! Big adventure! || Overseas university!", "I'm aiming for a top university. Medicine, maybe. || A top university. Medicine, perhaps. || Top school. Medicine. || Medical school. Top tier.", "A top university, a fancy degree, and everyone who doubted me can watch. || Top school, fancy degree, doubters watching. || A big degree. Everyone eats their words. || Prove everyone wrong. Top university.");
+            if (c.Bookish) return c.T("I want to study abroad... somewhere far, where nobody knows me. || Study abroad... somewhere nobody knows me. || I want to go far away to study... || Somewhere distant... a fresh start.", "I want to go to a university in another country! Like, really far! || University abroad! Far away! || Another country! Big adventure! || Overseas university!", "I'm aiming for a top university. Medicine, maybe. || A top university. Medicine, perhaps. || Top campus. Medicine. || Medical campus. Top tier.", "A top university, a fancy degree, and everyone who doubted me can watch. || Top campus, fancy degree, doubters watching. || A big degree. Everyone eats their words. || Prove everyone wrong. Top university.");
             if (c.Animals) return c.T("I want to be a vet. I can't stand seeing animals hurt. || A vet... I hate seeing animals hurt. || I want to help animals... a vet. || Being a vet... that's my dream.", "Vet! I'm gonna be a vet and pet every animal in the world! || Vet! Pet all the animals! || A vet! Puppies! Kittens! || Vet! Every animal!", "Veterinarian. Animals are more honest than people. || Vet. Animals are honest. || Veterinarian. Simpler than people. || Animals. Not people. Vet.", "A vet. Animals like me more than people do. Mostly. || Vet. Animals like me more. || A vet. Animals adore me. || Vet. Better company than humans.");
-            if (c.Fashion) return c.T("I'd like to design clothes. Even just one dress that someone loves. || Design clothes... one dress someone loves. || I'd like to make clothes people love... || Fashion... even one dress.", "Fashion designer! My own brand! You'll wear my stuff! || My own brand! You'll wear it! || Fashion empire! || Designer! My label!", "Design. I already have three notebooks of sketches. || Design. Three notebooks already. || Fashion design. I sketch daily. || Design. Plenty of sketches.", "My own fashion brand. Everyone at school will wear my stuff. || My brand. The whole school wearing it. || Everyone in my designs. || My label. Everywhere.");
+            if (c.Fashion) return c.T("I'd like to design clothes. Even just one dress that someone loves. || Design clothes... one dress someone loves. || I'd like to make clothes people love... || Fashion... even one dress.", "Fashion designer! My own brand! You'll wear my stuff! || My own brand! You'll wear it! || Fashion empire! || Designer! My label!", "Design. I already have three notebooks of sketches. || Design. Three notebooks already. || Fashion design. I sketch daily. || Design. Plenty of sketches.", "My own fashion brand. Everyone on campus will wear my stuff. || My brand. The whole university wearing it. || Everyone in my designs. || My label. Everywhere.");
             return c.T("I don't really know yet... I just want to find something that's mine. || I don't know yet... something that's mine. || I'm still searching... || Not sure yet... something meaningful.", "I don't know yet! Something BIG! I'll figure it out! || Don't know! Something BIG! || No idea! Huge though! || Something epic! Soon!", "I don't know. That's what bothers me. || I don't know. That bothers me. || Undecided. Irritating. || Unknown. Frustrating.", "Haven't decided. I want something nobody expects from me. || Undecided. Something unexpected. || Something no one expects. || Surprise everyone. That's the plan.");
         }
 
@@ -477,7 +477,7 @@ namespace Joojkk.CampusLife
                     }, 1.5f);
                     o2.Add("Just wait in line and talk", "st_wait", () =>
                     {
-                        b.Narr("The line moves slowly. You talk about everything: teachers, songs, the worst bento you ever ate.");
+                        b.Narr("The line moves slowly. You talk about everything: professors, songs, the worst bento you ever ate.");
                         Her(c, b, Feel.Smile, c.T("This is nice... Just talking like this. || This is nice... talking like this. || I like this... just us talking. || Peaceful... just chatting.", "Waiting is fun when you're here! Weird! || Waiting's fun with you! || Lines are fun with you! || Weird! Waiting's not boring!", "...I don't mind the wait. || ...The wait is fine. || ...I don't mind. || ...Acceptable wait.", "Twenty minutes and you didn't bore me once. Impressive. || Twenty minutes, no boredom. Impressive. || You kept me entertained. Nice. || Not boring once. Wow."));
                         t.On("st_wait", () => t.Her(c.Her, 3, 4));
                     });
@@ -565,7 +565,7 @@ namespace Joojkk.CampusLife
                     var popular = Roll(G.Sens, 50);
                     o2.Add("Ask her about your own future", "ft_mine", () =>
                     {
-                        b.Narr(popular ? "\"Many people will come to you for help. You will not turn them away.\"" : "\"I see... a lot of homework. A truly frightening amount.\"");
+                        b.Narr(popular ? "\"Many people will come to you for help. You will not turn them away.\"" : "\"I see... a lot of assignments. A truly frightening amount.\"");
                         Her(c, b, Feel.Laugh, c.T("That sounds just like you. || So like you. || That's you exactly. || That sounds right.", "Ahaha! That's SO you! || SO you! || Ahaha! Perfect! || That's totally you!", "Accurate. || Accurate. || Correct. || Precise.", "Ha. She's got your number. || She read you. || Nailed it. || Ha. Spot on."));
                         t.On("ft_mine", () => { if (popular) t.Rep += 1; t.Her(c.Her, 2); });
                     });
@@ -591,11 +591,11 @@ namespace Joojkk.CampusLife
             {
                 Id = "wonder", Title = "The seventh wonder", Bg = "dark_hallway", PalOk = true,
                 Weight = c => 1f + (c.Tone == Tone.Energetic || c.Tone == Tone.Teasing ? 0.5f : 0f),
-                Invite = (c, i) => i.Say(c.Her, c.T("Have you heard? The piano in the old music room plays by itself after dark... Would you check it with me? || The old music room piano plays itself at night... check with me? || A ghost piano... would you come look with me? || They say the piano plays alone... come with me?", "The seventh wonder of the school! A ghost piano! We're investigating tonight! || Ghost piano! We're investigating tonight! || School wonder number seven! Tonight! || Ghost hunt! Piano! Tonight!",
+                Invite = (c, i) => i.Say(c.Her, c.T("Have you heard? The piano in the old music room plays by itself after dark... Would you check it with me? || The old music room piano plays itself at night... check with me? || A ghost piano... would you come look with me? || They say the piano plays alone... come with me?", "The seventh wonder of the university! A ghost piano! We're investigating tonight! || Ghost piano! We're investigating tonight! || Campus wonder number seven! Tonight! || Ghost hunt! Piano! Tonight!",
                     "There's a rumor about a ghost piano. I intend to prove it's nonsense. You're my witness. || Ghost piano rumor. I'll disprove it. Witness. || I'll debunk the piano rumor. Come. || Nonsense rumor. Help me prove it.", "Want to go ghost hunting? The old music room. After dark. Unless you're scared. || Ghost hunting? Unless you're scared. || Music room. Night. Scared? || Ghosts. Tonight. Chicken?")),
                 Write = (c, b, t) =>
                 {
-                    b.Narr("After club hours. The school is empty, and the old wing is darker than it has any right to be.");
+                    b.Narr("After club hours. The university is empty, and the old wing is darker than it has any right to be.");
                     b.Narr("Somewhere upstairs, very faintly: a piano. Three notes. Then nothing.");
                     Callback(c, b);
                     Her(c, b, Feel.Surprised, c.T("D-did you hear that...? || D-did you hear...? || What was that...? || Eek... a sound...", "THERE IT IS! The ghost! Come on! || THERE! Ghost! || That's it! Come on! || It's here!", "...There's a logical explanation. || ...Logical explanation incoming. || ...Something mundane. || ...There's a reason.", "Oh, this is going to be good. || Oh, fun. || This'll be good. || Here we go."));
@@ -661,7 +661,7 @@ namespace Joojkk.CampusLife
                     o2.Play(b, "wd_2");
                     b.Narr("You close the window on the way out. Somewhere in the courtyard, a cat meows goodnight.");
                     Finale(c, b, t, "wonder");
-                    b.Narr("The seventh wonder is solved. The school will never know.");
+                    b.Narr("The seventh wonder is solved. The university will never know.");
                 }
             };
         }
@@ -815,7 +815,7 @@ namespace Joojkk.CampusLife
                 Id = "gym", Title = "After hours in the gym", Bg = "gym",
                 Weight = c => c.Sporty ? 2.5f : 0.7f,
                 Invite = (c, i) => i.Say(c.Her, c.Sporty
-                    ? c.T("Could you help me practice after school? I need someone to play against. || Practice with me after school? I need a partner. || Could you play against me after class? || Would you help me practice later?", "One-on-one! After school! I need a rival! || One-on-one! Rival needed! || After school! Face me! || Rival time! After class!", "I need a practice partner. You'll do. || Practice partner needed. You qualify. || I need someone to practice with. You. || You'll be my practice partner.", "Practice with me after school. I'll go easy on you. || Practice later. I'll go easy. || After school. I'll be gentle. || Play me. I'll hold back.")
+                    ? c.T("Could you help me practice after class? I need someone to play against. || Practice with me after class? I need a partner. || Could you play against me after class? || Would you help me practice later?", "One-on-one! After class! I need a rival! || One-on-one! Rival needed! || After class! Face me! || Rival time! After class!", "I need a practice partner. You'll do. || Practice partner needed. You qualify. || I need someone to practice with. You. || You'll be my practice partner.", "Practice with me after class. I'll go easy on you. || Practice later. I'll go easy. || After class. I'll be gentle. || Play me. I'll hold back.")
                     : c.T("Um... could you teach me to shoot a basket? Please don't laugh. || Teach me to shoot? Don't laugh... || Could you show me basketball? Please... || I want to learn baskets... help?", "Teach me basketball! I've never made a single basket in my life! || Teach me! Zero baskets ever! || Basketball lessons! I'm hopeless! || Teach me! I've never scored!", "I want to learn to shoot a basket. Don't make it weird. || Teach me shooting. Not weird. || Basketball. Teach me. Normally. || I want to learn. Keep it simple.", "Teach me basketball. If I'm bad, you're not allowed to laugh. || Teach me. No laughing. || Basketball. Laugh and die. || Show me. Mock me and regret it.")),
                 Write = (c, b, t) =>
                 {
@@ -837,7 +837,7 @@ namespace Joojkk.CampusLife
                     {
                         b.Me("Elbow under the ball. Push with your legs, not your arms. Follow through, like you're reaching into a cookie jar.");
                         b.Narr(form ? "She tries it. Swish. Again. Swish. Five in a row. She stares at her hands." : "She tries it. The ball hits the bottom of the rim and bounces off her head. She laughs anyway.");
-                        Her(c, b, Feel.Laugh, form ? c.T("It works...! You're a good teacher! || It works! You're a great teacher! || I scored! Thank you! || You're such a good teacher!", "FIVE IN A ROW! Coach! You're my coach now! || Five straight! Coach! || FIVE! You're my coach! || Streak! Coach!", "...That's actually correct. Thanks. || ...Correct. Thanks. || ...It works. Thank you. || ...Effective.", "A cookie jar. Ridiculous. ...It works. || Cookie jar. Silly. Works. || Ridiculous trick. Effective. || Absurd. Works.")
+                        Her(c, b, Feel.Laugh, form ? c.T("It works...! You're a good professor! || It works! You're a great professor! || I scored! Thank you! || You're such a good professor!", "FIVE IN A ROW! Coach! You're my coach now! || Five straight! Coach! || FIVE! You're my coach! || Streak! Coach!", "...That's actually correct. Thanks. || ...Correct. Thanks. || ...It works. Thank you. || ...Effective.", "A cookie jar. Ridiculous. ...It works. || Cookie jar. Silly. Works. || Ridiculous trick. Effective. || Absurd. Works.")
                                                    : c.T("Ow... ahaha... the ball hates me. || Ow... the ball hates me. || Ouch... hehe... unlucky. || Ow... it bounced at me...", "It attacked me! The ball is evil! || The ball attacked! || Evil ball! || The ball's out to get me!", "...The physics were sound. The ball was not. || ...Sound physics. Rogue ball. || ...The ball misbehaved. || ...Theory correct. Ball wrong.", "Okay, that one was my fault. || My fault. That one. || Okay, mine. || I'll own that."));
                         t.On("gy_form", () => { t.Her(c.Her, form ? 5 : 3, 2); t.Int += 1; });
                     }, c.Sporty ? 1f : 1.8f);
@@ -896,8 +896,8 @@ namespace Joojkk.CampusLife
             {
                 Id = "track", Title = "The time trial", Bg = "sports_track", PalOk = true,
                 Weight = c => c.Sporty ? 2f : 0.6f,
-                Invite = (c, i) => i.Say(c.Her, c.T("The club time trial is tomorrow... Could you time me after school? || Time trial tomorrow... time me after school? || Could you hold the stopwatch for me later? || Would you time my run after class?", "Time trial tomorrow! Time me! I'm gonna break my record! || Time trial! Time me! Record time! || Stopwatch duty! Record breaker! || Time me! New record!",
-                    "I need someone with a stopwatch and no opinions. After school. || Stopwatch. No opinions. After school. || Time me. Silently. Later. || A timer. You. After class.", "Time me after school. If I break my record, you buy me a drink. || Time me. Record means you buy drinks. || Beat my record, you pay. Deal? || Record = your treat.")),
+                Invite = (c, i) => i.Say(c.Her, c.T("The club time trial is tomorrow... Could you time me after class? || Time trial tomorrow... time me after class? || Could you hold the stopwatch for me later? || Would you time my run after class?", "Time trial tomorrow! Time me! I'm gonna break my record! || Time trial! Time me! Record time! || Stopwatch duty! Record breaker! || Time me! New record!",
+                    "I need someone with a stopwatch and no opinions. After class. || Stopwatch. No opinions. After class. || Time me. Silently. Later. || A timer. You. After class.", "Time me after class. If I break my record, you buy me a drink. || Time me. Record means you buy drinks. || Beat my record, you pay. Deal? || Record = your treat.")),
                 Write = (c, b, t) =>
                 {
                     b.Narr("The track at sunset. The tents from the last meet are still up, flapping in the wind.");
@@ -980,7 +980,7 @@ namespace Joojkk.CampusLife
                     "Make-up test tomorrow. I need help. Don't make me say it twice. || Make-up test. Need help. Once. || Tomorrow. Test. Assist. || I need help. Saying it once.", "I need a tutor. You're the least boring option. Congratulations. || Tutor wanted. You're least boring. || You're my tutor. Congrats. || Least boring option: you.")),
                 Write = (c, b, t) =>
                 {
-                    b.Narr("An empty classroom, desks still in exam rows from this morning. Her textbook is open to a page covered in red marks.");
+                    b.Narr("An empty lecture hall, desks still in exam rows from this morning. Her textbook is open to a page covered in red marks.");
                     Callback(c, b);
                     Her(c, b, Feel.Worried, c.T("I read it ten times... it just doesn't go in. || Ten times... it won't stick. || I keep reading... nothing. || It won't go into my head...", "I don't get ANY of it! The letters are dancing! || None of it! Letters dancing! || Can't read! Swirly words! || Zero understanding!", "I understand the words. Not the math. || Words fine. Math no. || I read it. Don't get it. || The math escapes me.", "This page is my enemy. || This page is my enemy. || I hate this page. || Nemesis: page 34."));
                     var o = new Opts();
@@ -1014,20 +1014,20 @@ namespace Joojkk.CampusLife
                     });
                     o.Play(b, "sd_1");
 
-                    b.Narr("The door slides open. The math teacher, holding a stack of papers: \"Oh, good. Volunteers for a practice quiz.\"");
+                    b.Narr("The door slides open. The math professor, holding a stack of papers: \"Oh, good. Volunteers for a practice quiz.\"");
                     var o2 = new Opts();
                     var quiz = Roll(G.Int, 50);
                     o2.Keep("Take the quiz together", "sd_quiz", () =>
                     {
-                        b.Narr(quiz ? "Ten questions. She gets eight right. The teacher raises an eyebrow and writes something in his notebook." : "Ten questions. She gets five. \"Better than last time,\" the teacher says. Coming from him, that's a compliment.");
+                        b.Narr(quiz ? "Ten questions. She gets eight right. The professor raises an eyebrow and writes something in his notebook." : "Ten questions. She gets five. \"Better than last time,\" the professor says. Coming from him, that's a compliment.");
                         Her(c, b, quiz ? Feel.Laugh : Feel.Smile, quiz ? c.T("Eight...! I've never gotten eight! || Eight! I've never gotten eight! || An eight...! First time! || Eight out of ten...!", "EIGHT! EIGHT OUT OF TEN! || EIGHT! || EIGHT! WOO! || Eight! Amazing!", "...Eight. Acceptable. || ...Eight. Acceptable. || ...Good. Eight. || ...Satisfactory.", "Eight. I'm a genius, apparently. || Genius, apparently. || Eight. I'm brilliant. || Eight. Naturally.")
                                                                        : c.T("Five... that's better than before, right? || Five... better than before, right? || Five... it's progress? || Five... I improved...", "Five! Halfway there! That counts! || Five! Halfway! || Half! Counts! || Five! Getting there!", "...Progress. || ...Progress. || ...Improvement. || ...Better.", "Five. Baby steps. || Baby steps. || Small wins. || Progress. Tiny."));
                         t.On("sd_quiz", () => { t.Her(c.Her, quiz ? 5 : 3, 2); if (quiz) t.Rep += 1; });
                     });
                     var bluff = Roll(G.Sens, 55);
-                    o2.If(G.Sens >= 35, "Claim you're the class rep on official business [SEN]", "sd_bluff", () =>
+                    o2.If(G.Sens >= 35, "Claim you're the course rep on official business [SEN]", "sd_bluff", () =>
                     {
-                        b.Narr(bluff ? "\"Ah, of course. Carry on.\" The teacher leaves. She stares at you in awe." : "\"The class rep is my niece.\" A long silence. You both take the quiz.");
+                        b.Narr(bluff ? "\"Ah, of course. Carry on.\" The professor leaves. She stares at you in awe." : "\"The course rep is my niece.\" A long silence. You both take the quiz.");
                         Her(c, b, Feel.Laugh, bluff ? c.T("How did that work...? || How did that work...? || It worked...? || Wow... how?", "You're a criminal mastermind! || Criminal mastermind! || Genius plan! || Evil genius!", "...Dangerous. I respect it. || ...Dangerous. Respect. || ...Cunning. || ...Clever.", "Smooth. Very smooth. || Smooth. || Slick. || Very smooth.")
                                                     : c.T("His niece... ahaha... || His niece... hehe... || Ahaha... niece... || A niece... oh no...", "HIS NIECE! AHAHA! || NIECE! HAHA! || His NIECE?! || Niece! Lol!", "...We're doomed. || ...Doomed. || ...We're finished. || ...Hopeless.", "Worst bluff in history. || Worst bluff ever. || Historic failure. || Terrible lie."));
                         t.On("sd_bluff", () => t.Her(c.Her, 4));
@@ -1035,7 +1035,7 @@ namespace Joojkk.CampusLife
                     o2.Add("Run for it", "sd_run", () =>
                     {
                         b.Narr("You grab her bag and your bag and bolt out the back door. You hear him shouting your names down the hall.");
-                        Her(c, b, Feel.Laugh, c.T("We ran away from a teacher...! I've never done that! || We ran from a teacher! First time! || I've never run from a teacher...! || That was so scary... and fun!", "WE'RE OUTLAWS NOW! || OUTLAWS! || We're fugitives! || Rebels!", "...That was stupid. Let's do it again sometime. || ...Stupid. Again sometime. || ...Foolish. Fun. Repeat. || ...Reckless. Let's do it again.", "My first crime. With you. Memorable. || My first crime. Memorable. || Partners in crime. || First offense. With you."));
+                        Her(c, b, Feel.Laugh, c.T("We ran away from a professor...! I've never done that! || We ran from a professor! First time! || I've never run from a professor...! || That was so scary... and fun!", "WE'RE OUTLAWS NOW! || OUTLAWS! || We're fugitives! || Rebels!", "...That was stupid. Let's do it again sometime. || ...Stupid. Again sometime. || ...Foolish. Fun. Repeat. || ...Reckless. Let's do it again.", "My first crime. With you. Memorable. || My first crime. Memorable. || Partners in crime. || First offense. With you."));
                         t.On("sd_run", () => { t.Her(c.Her, 4); t.Rep -= 1; });
                     });
                     o2.Play(b, "sd_2");
@@ -1286,9 +1286,9 @@ namespace Joojkk.CampusLife
                     "I'm in charge of decorations. Nobody else showed up. You're drafted. || Decorations. Nobody came. You're drafted. || I'm on decor. Alone. Help. || You're conscripted. Decorations.", "Decorating duty. You and me. Bring your artistic soul. || Decorating. You and me. Artistic soul required. || Decor duty. Bring your talent. || Help me decorate. Be creative.")),
                 Write = (c, b, t) =>
                 {
-                    b.Narr("The classroom after school, buried in orange paper, plastic spiders, pumpkins and a box labeled SPOOKY (DO NOT DROP).");
+                    b.Narr("The lecture hall after class, buried in orange paper, plastic spiders, pumpkins and a box labeled SPOOKY (DO NOT DROP).");
                     Callback(c, b);
-                    Her(c, b, Feel.Laugh, c.T("Where do we even start...? || Where do we start...? || Um... where first? || So much to do...", "Okay! Pumpkins first! Then spiders! Then EVERYTHING! || Pumpkins! Spiders! EVERYTHING! || Go go go! || Decorate all of it!", "We have two hours. Move. || Two hours. Move. || Clock's ticking. || Begin. Now.", "Let's make it so scary the teacher refuses to come in. || So scary the teacher won't enter. || Terrifying. That's the goal. || Make it horrifying."));
+                    Her(c, b, Feel.Laugh, c.T("Where do we even start...? || Where do we start...? || Um... where first? || So much to do...", "Okay! Pumpkins first! Then spiders! Then EVERYTHING! || Pumpkins! Spiders! EVERYTHING! || Go go go! || Decorate all of it!", "We have two hours. Move. || Two hours. Move. || Clock's ticking. || Begin. Now.", "Let's make it so scary the professor refuses to come in. || So scary the professor won't enter. || Terrifying. That's the goal. || Make it horrifying."));
                     var o = new Opts();
                     var art = Roll(G.Sens, 50);
                     o.Keep("Carve the pumpkins [SEN]", "dc_carve", () =>
@@ -1308,7 +1308,7 @@ namespace Joojkk.CampusLife
                     var design = Roll(G.Int, 50);
                     o.If(G.Int >= 30, "Design the whole layout [INT]", "dc_plan", () =>
                     {
-                        b.Narr(design ? "A haunted path from the door, a 'graveyard' of desks, cobwebs in the corners. The class rep will cry tears of joy." : "Your layout has a slight problem: nobody can reach the door.");
+                        b.Narr(design ? "A haunted path from the door, a 'graveyard' of desks, cobwebs in the corners. The course rep will cry tears of joy." : "Your layout has a slight problem: nobody can reach the door.");
                         t.On("dc_plan", () => { t.Her(c.Her, 3); if (design) { t.Rep += 1; t.Int += 1; } });
                     });
                     o.If(c.Pal != null, "Let the two of them handle the paint", "dc_paint", () =>
@@ -1322,16 +1322,16 @@ namespace Joojkk.CampusLife
                     b.Narr("At the bottom of the SPOOKY box: a life-size rubber skeleton with one arm missing.");
                     var o2 = new Opts();
                     var prank = Roll(G.Sens, 50);
-                    o2.Keep("Hide it in the teacher's chair", "dc_prank", () =>
+                    o2.Keep("Hide it in the professor's chair", "dc_prank", () =>
                     {
-                        b.Narr(prank ? "Next morning the homeroom teacher screams so loud the class next door comes to look. It becomes a school legend." : "The teacher finds it, sits it in the corner and gives it a desk. \"Your new classmate. He's smarter than you.\"");
+                        b.Narr(prank ? "Next morning the academic advisor screams so loud the class next door comes to look. It becomes a college legend." : "The professor finds it, sits it in the corner and gives it a desk. \"Your new classmate. He's smarter than you.\"");
                         Her(c, b, Feel.Laugh, c.T("We're going to be in so much trouble... ahaha... || So much trouble... ahaha... || We'll get caught... hehe... || Oh no... hehe...", "THIS IS THE BEST PRANK EVER! || BEST PRANK! || Legendary prank! || Prank of the year!", "...I didn't see anything. || ...Saw nothing. || ...I wasn't here. || ...No comment.", "We're partners in crime now. || Partners in crime. || Accomplices now. || Crime duo."));
                         t.On("dc_prank", () => { t.Her(c.Her, 4); t.Rep += prank ? 1 : -1; });
                     });
                     o2.Add("Make him the class mascot", "dc_mascot", () =>
                     {
                         b.Narr("You give him a party hat and a name tag: MR. BONES, HONORARY STUDENT.");
-                        Her(c, b, Feel.Laugh, c.T("Mr. Bones... he's part of the class now. || Mr. Bones... part of the class. || Mr. Bones belongs here now... || He's one of us now...", "MR. BONES! He needs a seat! || MR. BONES! Seat him! || Desk for Mr. Bones! || Mr. Bones needs a chair!", "...He has better attendance than some people. || ...Better attendance than some. || ...More reliable than half the class. || ...Never absent.", "Mr. Bones for class rep. || Mr. Bones for class rep. || Vote Mr. Bones. || Mr. Bones, president."));
+                        Her(c, b, Feel.Laugh, c.T("Mr. Bones... he's part of the class now. || Mr. Bones... part of the class. || Mr. Bones belongs here now... || He's one of us now...", "MR. BONES! He needs a seat! || MR. BONES! Seat him! || Desk for Mr. Bones! || Mr. Bones needs a chair!", "...He has better attendance than some people. || ...Better attendance than some. || ...More reliable than half the class. || ...Never absent.", "Mr. Bones for dean. || Mr. Bones for dean. || Vote Mr. Bones. || Mr. Bones, president."));
                         t.On("dc_mascot", () => t.Her(c.Her, 4, 2));
                     });
                     o2.If(c.Tone == Tone.Energetic || c.Tone == Tone.Teasing || c.Tier >= 2, "Use it to scare her", "dc_scare", () =>
@@ -1354,13 +1354,13 @@ namespace Joojkk.CampusLife
         {
             return new Ep
             {
-                Id = "sunset", Title = "Evening in the classroom", Bg = "classroom_sunset",
+                Id = "sunset", Title = "Evening in the lecture hall", Bg = "classroom_sunset",
                 Weight = c => (c.Low ? 3f : 0f) + (c.Bad != null ? 1.5f : 0f) + (c.Tier >= 2 ? 0.7f : 0.2f),
-                Invite = (c, i) => i.Say(c.Her, c.T("...Hey. Do you have a minute? Not here... The classroom upstairs is empty. || ...A minute? Not here... upstairs is empty. || ...Can we talk? The upstairs room... || ...Do you have time? Somewhere quiet?", "Hey... can we talk? Somewhere quiet? Upstairs? || Talk? Somewhere quiet? Upstairs? || Hey... chat? Upstairs? || Got a sec? Quiet place?",
+                Invite = (c, i) => i.Say(c.Her, c.T("...Hey. Do you have a minute? Not here... The lecture hall upstairs is empty. || ...A minute? Not here... upstairs is empty. || ...Can we talk? The upstairs room... || ...Do you have time? Somewhere quiet?", "Hey... can we talk? Somewhere quiet? Upstairs? || Talk? Somewhere quiet? Upstairs? || Hey... chat? Upstairs? || Got a sec? Quiet place?",
                     "Do you have a minute? I want to talk. Not here. || A minute? Not here. || I want to talk. Elsewhere. || Talk. Not here.", "Got a minute? I want to talk. Somewhere without an audience. || A minute? No audience. || Somewhere private. Talk. || Without spectators. Talk.")),
                 Write = (c, b, t) =>
                 {
-                    b.Narr("The empty classroom at sunset. Chairs up on the desks, dust floating in the orange light.");
+                    b.Narr("The empty lecture hall at sunset. Chairs up on the desks, dust floating in the orange light.");
                     b.Narr("She sits on the windowsill and doesn't say anything for a long while.");
                     Callback(c, b);
                     var o = new Opts();

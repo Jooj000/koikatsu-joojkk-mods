@@ -148,7 +148,7 @@ namespace Joojkk.CampusLife
         // e o que está fazendo devem ficar seguidos na mesma aba, informações sobre a relação todas juntas"): the game's
         // pages and our two became three, by subject. Gone: "She remembers" (not something to show), Request and When
         // (on the board), Mood and Likes (small icons in the talk, once found out).
-        private static readonly string[] NowLabels = { "Location", "Doing now", "Personality", "At school", "Best friend" };
+        private static readonly string[] NowLabels = { "Location", "Doing now", "Personality", "On campus", "Best friend" };
         private static readonly string[] BondLabels = { "Relation", "Toward you", "Favor", "Devotion", "Trust in you" };
         private static readonly string[] LoveLabels = { "Her heart", "Lewdness", "Experience", "Times together", "Intimacy" };
 
@@ -431,7 +431,7 @@ namespace Joojkk.CampusLife
             y += 50f;
             if (p.Id == "cafeteria" && isHere)
             {
-                var shop = GameUi.Button(card, "btnShop", "School store", () => CampusPanel.Show(PanelTab.Shop));
+                var shop = GameUi.Button(card, "btnShop", "Campus store", () => CampusPanel.Show(PanelTab.Shop));
                 ((RectTransform)shop.transform).Place(424f, y, 176f, 40f);
             }
         }
@@ -477,7 +477,7 @@ namespace Joojkk.CampusLife
             if (act == null || h == null) return;
             Base chara = act.npcList.FirstOrDefault(n => n != null && n.heroine == h);
             if (chara == null && act.fixChara != null && act.fixChara.heroine == h) chara = act.fixChara;
-            if (chara == null) { Toasts.Show(GirlInfo.FirstName(h) + " isn't at school right now."); return; }
+            if (chara == null) { Toasts.Show(GirlInfo.FirstName(h) + " isn't on campus right now."); return; }
             var target = chara;
             if (act.Player.mapNo == target.mapNo) { Close(); return; }
             Sfx.Ok();

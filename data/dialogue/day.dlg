@@ -68,7 +68,7 @@ when rel=girlfriend|lover
 - [There you are.|Hey.] How's your day been?
 - [Hi, beautiful.|Hey, you.] [Did you miss me today?|Tell me about your day.]
 - [Was today okay?|How was your day, really?] [You can tell me.|I'm all yours.]
-- [I thought about you in class.|I've been waiting to see you.] [How's your day?|Tell me everything.]
+- {student}[I thought about you in class.|I've been waiting to see you.] [How's your day?|Tell me everything.]
 - [Come here. How are you?|Good to see you. Rough day?]
 - [Did you eat?|Did you sleep okay?] [I worry, you know.|How are you feeling?]
 - [Anything I should know about today?|So, what's my girl been up to?]

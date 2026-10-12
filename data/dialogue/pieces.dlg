@@ -124,7 +124,7 @@ when role=teacher
 on @open
 when role=teacher free=yes
 - [Ah, you again. Should I be worried?|Mm, my favorite troublemaker.]
-- [Off the record, then.|You always find me, don't you? Even out of class.]
+- {classes}[Off the record, then.|You always find me, don't you? Even out of class.]
 
 @rule open.story
 on @open
@@ -216,7 +216,7 @@ when placeid=rooftop
 on @tail
 when placeid=infirmary
 - [Shh, someone might be sleeping.|It smells like disinfectant in here.]
-- [The beds here are surprisingly comfy.|Don't tell the nurse I was lazing around.]
+- {student}[The beds here are surprisingly comfy.|Don't tell the nurse I was lazing around.]
 
 @rule tail.place.cafeteria
 on @tail
@@ -233,13 +233,13 @@ when placeid=clubroom
 @rule tail.place.staffroom
 on @tail
 when placeid=staffroom
-- [We're in the staff room, so... behave.|The teachers are listening, you know.]
+- {student}[We're in the faculty room, so... behave.|The professors are listening, you know.]
 - [It's so stiff in here.|I always feel like I'm in trouble here.]
 
 @rule tail.place.classroom
 on @tail
 when placeid=classroom
-- [Class feels so far away now.|My desk's right there, by the window.]
+- {student}[Class feels so far away now.|My desk's right there, by the window.]
 - [Someone left their bag again.|The board's still full of formulas.]
 
 @rule tail.place.courtyard
@@ -277,7 +277,7 @@ when period=club hasclub=yes
 on @tail
 when period=after
 - [It's getting late, huh.|The sky's turning orange.]
-- [I should head home soon.|After school is the best time of day.]
+- {student}[I should head home soon.|After class is the best time of day.]
 
 # ================= tails: club =================
 @rule tail.club.sports
@@ -413,19 +413,19 @@ when bust=small lewd>=30
 @rule tail.role.teacher
 on @tail
 when role=teacher
-- [Anyway, don't forget your homework.|And don't be late to class tomorrow.]
-- [I have a stack of papers to grade, sadly.|Teachers have lives too, you know.]
+- {classes}[Anyway, don't forget your assignments.|And don't be late to class tomorrow.]
+- {classes}[I have a stack of papers to grade, sadly.|Professors have lives too, you know.]
 
 @rule tail.role.teacher.free
 on @tail
 when role=teacher free=yes
-- [Still, I am your teacher.|Don't make me regret talking to you like this.]
-- [I'll deny all of this in class.|Back to being "sensei" tomorrow.]
+- {classes}[Still, I am your professor.|Don't make me regret talking to you like this.]
+- {classes}[I'll deny all of this in class.|Back to being "sensei" tomorrow.]
 
 @rule tail.role.exstory
 on @tail
 when role=exstory
-- [A normal school life suits me now.|I'm still getting used to being a regular student.]
+- [A normal campus life suits me now.|I'm still getting used to being a regular student.]
 - [Things are quieter since everything settled.|I like being just another girl in class.]
 
 @rule tail.rel.gf

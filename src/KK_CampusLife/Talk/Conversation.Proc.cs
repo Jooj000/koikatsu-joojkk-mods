@@ -230,6 +230,8 @@ namespace Joojkk.CampusLife
         private static PTopic ConfidePick(SaveData.Heroine h)
         {
             if (S.Lore == null) return null;
+            // uma aleatória por estar pegando outras").
+            if (!Interested(h)) return null;
             var key = GirlInfo.Key(h);
             var best = new Dictionary<string, LoreFact>();
             var times = 0;
@@ -400,7 +402,7 @@ namespace Joojkk.CampusLife
                 var bd = BirthdayOf(h);
                 if (bd != "no") subjects["birthday"] = 1.5f;
                 subjects["horoscope"] = 0.4f;
-                if (Teachers.IsTeacherVoice(h)) subjects["teaching"] = 1f;
+                if (Teachers.IsTeacherVoice(h)) subjects[Teachers.Job(h) == "nurse" ? "nursing" : "teaching"] = 1f;
                 if (h.relation >= 1) subjects["future"] = 0.4f;
             }
             var open = subjects.Where(x => !TopicDone(key, "st:" + x.Key)).ToList();
@@ -432,7 +434,8 @@ namespace Joojkk.CampusLife
                 case "birthday": return "Ask about her birthday";
                 case "horoscope": return "Chat about horoscopes";
                 case "teaching": return "Ask what teaching is like";
-                case "future": return "Ask about her plans after school";
+                case "nursing": return "Ask about the infirmary";
+                case "future": return "Ask about her plans after graduation";
                 default: return "Make small talk";
             }
         }
@@ -503,7 +506,7 @@ namespace Joojkk.CampusLife
                 else if (t.Subject.StartsWith("place:", StringComparison.Ordinal)) c["thing"] = "this place"; // her line may be about anything here
                 else c["thing"] = SubjectThing(h, t.Subject);
             }
-            if (t.School != null) { c["event"] = t.School.Label; c["eventline"] = t.School.Line; c["school"] = t.School.Id.StartsWith("ev:", StringComparison.Ordinal) ? "event" : t.School.Id; c["thing"] = t.School.Label; }
+            if (t.School != null) { if (t.School.Id.StartsWith("ev:", StringComparison.Ordinal)) c["evkind"] = Calendar.EventKind(t.School.Id.Substring(3)); c["event"] = t.School.Label; c["eventline"] = t.School.Line; c["school"] = t.School.Id.StartsWith("ev:", StringComparison.Ordinal) ? "event" : t.School.Id; c["thing"] = t.School.Label; }
             if (t.Kind == "day")
             {
                 c["thing"] = mood == CampusLife.Mood.Stressed ? (Calendar.IsExamWeek ? "the exams" : "her classes") : mood == CampusLife.Mood.Sleepy ? "last night" : mood == CampusLife.Mood.Hungry ? "lunch"
@@ -569,6 +572,7 @@ namespace Joojkk.CampusLife
                 case "birthday": return "her birthday";
                 case "horoscope": return "horoscopes";
                 case "teaching": return "teaching";
+                case "nursing": return "the infirmary";
                 case "future": return "her plans";
                 default: return "school";
             }
@@ -631,12 +635,13 @@ namespace Joojkk.CampusLife
             if (newLike != null) ctx["newlike"] = GirlInfo.LikeLabel(newLike);
 
             DlgRule rule;
-            var me = t.Opening ? null : ComposeMe(Bank.Pick("me." + t.Kind, ctx, "player", out rule), ctx);
             var her = Bank.Pick(t.Kind, ctx, key, out rule) ?? Fallback(h, t);
             // A line with a hook has one subject, so nothing is glued to it (2026-10-31, the fifth complaint: a tail on another
             // subject and a like after it left the options answering neither).
             if (rule != null && rule.Hook != "") ctx["hook"] = rule.Hook;
             else her = Compose(her, ctx);
+            // Your line comes after hers is drawn, though you say it first: with a hook, you ask what she's about to answer.
+            var me = t.Opening ? null : ComposeMe(Bank.Pick("me." + t.Kind, ctx, "player", out _ignored), ctx);
             // The like she lets slip waits for the end of the exchange (OnMove): said here, it stood between her line and your options.
             if (newLike != null)
             {
@@ -801,7 +806,11 @@ namespace Joojkk.CampusLife
             {
                 case "day": return low ? new[] { "comfort", "ask", "share", "invite" } : new[] { "ask", "share", "tease", "praise" };
                 case "us": return new[] { "share", "tease", "invite", "thank", "ask" };
-                case "you": return ctx.ContainsKey("realverb") && (ctx["realverb"] == "had_h" || ctx["realverb"].StartsWith("seen_", StringComparison.Ordinal)) ? new[] { "admit", "hush", "tease", "deny", "correct" } : new[] { "correct", "admit", "ask", "laugh" };
+                case "you":
+                    var interested = ctx.ContainsKey("interest") && ctx["interest"] == "yes";
+                    if (ctx.ContainsKey("realverb") && (ctx["realverb"] == "had_h" || ctx["realverb"].StartsWith("seen_", StringComparison.Ordinal)))
+                        return interested ? new[] { "admit", "hush", "tease", "deny", "correct" } : new[] { "hush", "tease", "deny", "correct" };
+                    return interested ? new[] { "correct", "admit", "ask", "laugh" } : new[] { "correct", "ask", "laugh" };
                 case "gossip": return low ? new[] { "ask", "defend", "agree", "laugh" } : new[] { "ask", "agree", "tease", "defend" };
                 case "school": return new[] { "ask", "invite", "share", "tease" };
                 case "tell": return ctx.ContainsKey("told") && ctx["told"] == "bad" ? new[] { "hush", "defend", "laugh" } : new[] { "ask", "laugh", "agree", "tease" };
@@ -896,7 +905,7 @@ namespace Joojkk.CampusLife
             var v = Voice.Of(h);
             var subjects = GirlInfo.LikeIds.Select(l => "like:" + l).Concat(new[] { "place:" + (Places.CurrentId ?? ""), "lunch", "exams", "weather", "school", "weekend", "club", "friend", "birthday", "horoscope", "future" }).ToList();
             if (v.Pet != "") subjects.Add("pet:" + v.Pet);
-            if (Teachers.IsTeacherVoice(h)) subjects.Add("teaching");
+            if (Teachers.IsTeacherVoice(h)) subjects.Add(Teachers.Job(h) == "nurse" ? "nursing" : "teaching");
             topics.AddRange(subjects.Select(p => new PTopic { Id = "st:" + p, Kind = "small", Subject = p, Label = SmallLabel(p), Score = 0.5f }));
             var sb = new System.Text.StringBuilder();
             foreach (var t in topics)
@@ -905,8 +914,9 @@ namespace Joojkk.CampusLife
                 DlgRule rule;
                 var her = Bank.Pick(t.Kind, ctx, key, out rule) ?? Fallback(h, t);
                 if (rule != null && rule.Hook != "") ctx["hook"] = rule.Hook;
+                var me = ComposeMe(Bank.Pick("me." + t.Kind, ctx, "player", out _ignored), ctx);
                 Said(ctx, rule);
-                sb.Append("\n  [").Append(t.Kind).Append(" ").Append(rule != null ? rule.Id : "fallback").Append("] ").Append(t.Label).Append(": ").Append(her);
+                sb.Append("\n  [").Append(t.Kind).Append(" ").Append(rule != null ? rule.Id : "fallback").Append("] ").Append(t.Label).Append(": YOU: ").Append(me).Append(" HER: ").Append(her);
                 foreach (var m in Moves(h, t, ctx, rule, 1))
                 {
                     if (m.Id == "change") continue;

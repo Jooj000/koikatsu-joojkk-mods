@@ -427,6 +427,52 @@ namespace Joojkk.CampusLife
             if (req != null) l.Add(E("<color=#FFD27A>★</color> " + Board.ButtonLabel(req), () => { var r = Board.CompletableInTalk(h); if (r != null) { Hide(); Board.PlayInTalk(r, h); } }, false));
             var msg = MessageFor(h);
             if (msg != null) l.Add(E("<color=#FFD27A>★</color> " + msg.Button, () => { var r = MessageFor(h); if (r != null) { Hide(); PassMessage(r, h); } }, false));
+            JobActions(s, h, l);
+        }
+
+        /// <summary>What you can only do with her because of her job.</summary>
+        private static void JobActions(Session s, SaveData.Heroine h, List<UEntry> l)
+        {
+            if (h.relation < 0) return;
+            var job = Teachers.Job(h);
+            Action<string, string, string, List<Resp>> add = (label, me, her, rs) =>
+            {
+                var key = "job:" + label;
+                if (!s.Did.Contains(key)) l.Add(E(label, () => { s.Did.Add(key); Beat(h, Lvl.Friend, key, b => { b.Me(me); b.Her_(her); }, rs); }));
+            };
+            if (job == "nurse")
+            {
+                add("Say you don't feel well", "Sensei, I don't feel so good.", T(h, "Sit down, let me see. ...No fever. When did you last sleep? || Sit down. ...You're not warm. Did you sleep?", "Sit, sit! ...No fever! Did you sleep at all?! || Over here! ...Hm, no fever! Sleep?", "Sit. ...No fever. How much sleep? || Sit. Sleep?", "Hm. Let me guess. Sleep, food, or a test? || Sit. Is this a real one, or a test one?"), new List<Resp>
+                {
+                    Rp("Admit you stayed up too late", "jn_sleep", Q.Good, Tn("Thank you for being honest. Lie down for ten minutes.", "Knew it! Ten minutes, on the bed, go!", "Ten minutes. Then bed early tonight.", "Honest patients get the good pillow. Ten minutes.")),
+                    Rp("Say it's just a headache", "jn_head", Q.Neutral, Tn("Then drink this, and rest your eyes for a bit.", "Water! Now! Then we'll see!", "Water. Come back if it stays.", "Mm. Water, then. The cure for everything.")),
+                    Rp("Admit you wanted to skip class", "jn_skip", Q.Bad, Tn("Oh... at least you told me. Back to class, please.", "Nice try! Back you go!", "No. Class.", "I appreciate the honesty. Out.")),
+                });
+                add("Ask for a bandage", "Sensei, could I get a bandage?", T(h, "Of course. Let me see it. ...Just a scrape. Hold still. || Show me. ...It's small. Hold still.", "Sure! Show me! ...Ooh, a scrape! Hold still! || Show me! Don't move!", "Show me. ...Small. Hold still. || Hold still.", "Show me. ...You'll live. Hold still. || You'll live. Don't move."), new List<Resp>
+                {
+                    Rp("Thank her properly", "jn_thanks", Q.Good, Tn("You're welcome. Keep it clean.", "Anytime! Keep it dry!", "Keep it clean.", "No charge. This time.")),
+                    Rp("Say it barely hurts", "jn_tough", Q.Neutral, Tn("Good. Tell me if it swells.", "Tough guy! Tell me if it swells!", "Tell me if it swells.", "So brave. Tell me if it swells.")),
+                });
+                if (h.relation >= 1)
+                    add("Offer to help restock", "Do you need a hand with anything, sensei?", T(h, "Actually, yes. These boxes go on the top shelf. || Yes, please. The top shelf, if you can reach. ", "Yes! Boxes! Top shelf! Go! || Yes! Those boxes, up there!", "The top shelf. Those boxes. || Those. Up there.", "I was hoping someone tall would ask. Top shelf. || Top shelf, please. You volunteered."), new List<Resp>
+                    {
+                        Rp("Put the boxes away", "jn_boxes", Q.Good, Tn("Thank you. That saves me a lot of trouble.", "You're the best! Thanks!", "Thanks. That helps.", "You can come back. Healthy, even.")),
+                        Rp("Ask what everything is for", "jn_what", Q.Good, Tn("You're curious. This one is for sprains, and this one for burns.", "Ooh, a student of medicine! Sprains here, burns there!", "Sprains. Burns. Don't mix them up.", "Want my job? Sprains here, burns there.")),
+                    });
+            }
+            else if (job == "teacher")
+            {
+                add("Ask about today's lesson", "Sensei, could I ask about today's lesson?", T(h, "Of course. Which part was hard? || Of course. Where did you get lost?", "Yes! A question! Which part?! || Finally! Which part?!", "Go ahead. Which part? || Which part?", "You were listening? Which part? || A question? From you? Go on."), new List<Resp>
+                {
+                    Rp("Ask a real question", "jt_real", Q.Good, Tn("That's a good question. Let me show you.", "Yes! That's the stuff! Look here!", "Good. Look at this part again.", "So you were awake. Look here.")),
+                    Rp("Admit you lost track early", "jt_lost", Q.Neutral, Tn("Thank you for telling me. Let's start from the top.", "From the top, then! We'll fix it!", "From the top, then.", "How early? No, don't tell me. From the top.")),
+                });
+                add("Offer to carry her papers", "Can I carry those for you, sensei?", T(h, "Really? Thank you. Just to the faculty room. || Oh, thank you. To the faculty room, please.", "My hero! Faculty room, go! || Yes! Take half!", "...To the faculty room, then. || Fine. Faculty room.", "Are you after something? ...Faculty room, please. || Sucking up? I accept."), new List<Resp>
+                {
+                    Rp("Just carry them", "jt_carry", Q.Good, Tn("Thank you. You're very kind.", "Thanks! You rock!", "Thank you.", "Hm. No catch. I'm impressed.")),
+                    Rp("Ask if your test is in the pile", "jt_test", Q.Neutral, Tn("You'll find out tomorrow, okay?", "No spoilers!", "...Tomorrow.", "So there was a catch.")),
+                });
+            }
         }
 
         private static bool CanGift(SaveData.Heroine h, GirlState gs)
@@ -457,8 +503,18 @@ namespace Joojkk.CampusLife
         {
             var h = Sess != null ? Sess.Her : null;
             var ask = Consent.OfCommand(command);
+            if (h != null && what == "h" && Consent.DecideH(h) == "wary_no") { WaryNoH(h); return; }
             if (h != null && ask.HasValue && Consent.GameHasNoRefusal(h, command) && !Consent.Decide(h, ask.Value)) { NotNow(h, what); return; }
             Game(10 + command);
+        }
+
+        /// <summary>The game's own "Invite her to H" with a wary no: she says what held her back, like "Sneak off together".</summary>
+        private static void WaryNoH(SaveData.Heroine h)
+        {
+            var b = new SceneBuilder(h, true);
+            b.Narr(GirlInfo.FirstName(h) + " hesitates a moment too long before she answers.");
+            b.Face(h, Feel.Shy).Her_(HeldBackLine(h, Consent.HeldBack(h)));
+            Play(b, 0, null);
         }
 
         // ---------------- Romance ----------------
@@ -851,7 +907,7 @@ namespace Joojkk.CampusLife
             }, new List<Resp>
             {
                 Rp("Say it's nice to finally meet her", "in_nice", Q.Good, Tn("...Nice to meet you too.", "Same here! Let's be friends!", "...Likewise.", "Smooth. I'll allow it.")),
-                Rp("Ask what class she's in", "in_class", Q.Good, Tn("Um, I'm in your year... I sit by the window.", "Same year as you! You never noticed?!", "Same year. Window seat.", "Same year. You really never noticed me? Ouch.")),
+                Teachers.IsTeacherVoice(h) ? Rp(Teachers.Job(h) == "nurse" ? "Ask how long she's been the nurse" : "Ask what she teaches", "in_job", Q.Good, Teachers.Job(h) == "nurse" ? Tn("A few years now. I hope you won't need me.", "Years! Try not to visit me!", "A few years.", "Long enough to know a fake fever.") : Tn("I'm happy to tell you. You'll see in class.", "You'll find out in class!", "You'll see.", "Come to class and find out.")) : Rp("Ask what class she's in", "in_class", Q.Good, Tn("Um, I'm in your year... I sit by the window.", "Same year as you! You never noticed?!", "Same year. Window seat.", "Same year. You really never noticed me? Ouch.")),
                 Rp("Joke about " + place, "in_joke", GirlInfo.ToneOf(h) == Tone.Cool ? Q.Neutral : Q.Good, Tn("Hehe... that's true.", "Ahaha! Right?!", "...Hm. Fair.", "Heh. You're funny. A little.")),
             });
         }
@@ -969,7 +1025,7 @@ namespace Joojkk.CampusLife
         private static SchoolTopicInfo SchoolTopic(SaveData.Heroine h)
         {
             var ev = Calendar.UpcomingEvents().FirstOrDefault(u => u.Days <= 7);
-            if (ev != null) return new SchoolTopicInfo { Id = "ev:" + ev.Id, Label = "the " + ev.Name, Line = "the " + ev.Name + " " + ev.Spoken };
+            if (ev != null) return new SchoolTopicInfo { Id = "ev:" + ev.Id, Label = Calendar.EventRef(ev.Id), Line = Calendar.EventRef(ev.Id) + " " + ev.Spoken };
             var c = S.Council;
             if (c != null && c.Week == S.Week && c.Stage < 4) return new SchoolTopicInfo { Id = "council", Label = "the council race", Line = "the council race between " + GirlInfo.FirstName(c.A) + " and " + GirlInfo.FirstName(c.B) };
             var p = S.Project;
@@ -1043,7 +1099,7 @@ namespace Joojkk.CampusLife
                     ? T(h, "I saw it, you know. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". With my own eyes. || I saw " + what + ". I really did. || With my own eyes... " + what + ". || I was there. I saw " + what + ".", "Don't even try! I SAW it! " + char.ToUpperInvariant(what[0]) + what.Substring(1) + "! || I SAW " + what + "! Don't lie!" + " || " + what + "! I was right there! || Caught you! " + what + "!",
                         "I was there. I saw " + what + ". So? || I witnessed " + what + ". Explain." + " || " + what + ". I saw. || I was present for " + what + ".", "Funny thing. I happened to see " + what + ". Front row." + " || " + what + "? I had a great view. || I saw " + what + ". Front row seat. || Guess who saw " + what + "?")
                     : T(h, "I heard about " + what + "... from people talking. Is it true? || People are saying " + what + "... is it true? || I heard about " + what + "... please tell me. || Someone told me " + what + "...", "Okay, so I heard about " + what + "! Is that true?! || I heard " + what + "! True?! || Everyone's saying " + what + "! || Spill! " + what + "?!",
-                        "People are talking about " + what + ". I'd rather hear it from you." + " || " + what + ". I've heard. Your side? || There's talk of " + what + ". Explain. || I'd rather hear " + what + " from you.", "So. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". The whole class knows. Your version?" + " || " + what + "? The whole school knows. || So, " + what + ". Care to explain?" + " || " + what + ". Your version, please."));
+                        "People are talking about " + what + ". I'd rather hear it from you." + " || " + what + ". I've heard. Your side? || There's talk of " + what + ". Explain. || I'd rather hear " + what + " from you.", "So. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". The whole class knows. Your version?" + " || " + what + "? The whole university knows. || So, " + what + ". Care to explain?" + " || " + what + ". Your version, please."));
             }, new List<Resp>
             {
                 Rp("Tell her you understand why " + what + " hurt", "ca_feel", self ? Q.Good : Q.Neutral, Tn("...Thank you for saying that.", "...Okay. That helps. A little.", "...At least you get it.", "...Hm. Fine. That's a start.")),
@@ -1367,7 +1423,7 @@ namespace Joojkk.CampusLife
                     break;
                 case "home":
                     b.Me("Want to walk home together?");
-                    b.Face(h, Feel.Worried).Her_(T(h, "I'm sorry, I have somewhere to be after school... || Sorry, I have somewhere to be. || I'm busy after school... sorry. || I can't today, sorry.", "Can't today! Errands, ugh! || Can't! Errands! || Busy today! || Nope! Stuff to do!", "...I'm going alone today. || ...Alone today. || ...Busy. || ...Not today.", "Not today. I've got plans. || Plans. Sorry. || Busy. || Not today."));
+                    b.Face(h, Feel.Worried).Her_(T(h, "I'm sorry, I have somewhere to be after class... || Sorry, I have somewhere to be. || I'm busy after class... sorry. || I can't today, sorry.", "Can't today! Errands, ugh! || Can't! Errands! || Busy today! || Nope! Stuff to do!", "...I'm going alone today. || ...Alone today. || ...Busy. || ...Not today.", "Not today. I've got plans. || Plans. Sorry. || Busy. || Not today."));
                     break;
                 case "study":
                 case "exercise":
@@ -1553,7 +1609,7 @@ namespace Joojkk.CampusLife
                         "...You've been distant. Fix that, then ask. || ...You've been distant. Fix it. || ...Absent lately. Correct that. || ...Attention first.", "Hm. You remember me only now? Earn it again first. || Only now you remember me? Earn it. || Neglect me, then ask? Earn it back. || You forgot me. Make it up.");
                 case "name":
                     return T(h, "...People already talk about you. I want to, but I'm scared of what they'd say. || ...People talk about you. I'm scared of what they'd say. || ...Your reputation scares me a little. || ...I'm afraid of the rumors.", "Everyone's already gossiping about you! If they found out— no, no! || Everyone gossips about you! If they found out-! || The rumors! No way! || People would talk! No!",
-                        "...With your reputation, I have to be careful. Not now. || ...Your reputation. I must be careful. || ...Too risky, given the talk. || ...Not with those rumors.", "Your name's a little dirty around school. I like mine clean. ...For now. || Your name's a bit dirty. I like mine clean. || Your reputation precedes you. Not yet. || Too much gossip about you.");
+                        "...With your reputation, I have to be careful. Not now. || ...Your reputation. I must be careful. || ...Too risky, given the talk. || ...Not with those rumors.", "Your name's a little dirty around campus. I like mine clean. ...For now. || Your name's a bit dirty. I like mine clean. || Your reputation precedes you. Not yet. || Too much gossip about you.");
                 default:
                     return T(h, "...It's not that I don't want to. Just... not like this. Not here. Not yet. || ...Not like this. Not here. Not yet. || ...It's not that I don't want to... || ...Just... not now.", "Ahh, you're making my heart race! But not here! Not now! ...Ask me again sometime? || Heart racing! But not here! Ask again! || Not here! Not now! Later?! || Ahh! Not now!",
                         "...Not here. Not now. Don't take it the wrong way. || ...Not here. Not now. || ...Don't misunderstand. Not now. || ...Not the right moment.", "Tempting. Really. ...But not here. Keep that look for later. || Tempting. Not here. Later. || Keep that look for later. || Not here, darling.");

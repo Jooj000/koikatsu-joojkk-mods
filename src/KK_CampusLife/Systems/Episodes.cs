@@ -353,8 +353,8 @@ namespace Joojkk.CampusLife
                 {
                     var o = new SceneBuilder(null, false);
                     o.Narr(c.Girlfriend || Scenes.Picks.Contains("fin_close") || Scenes.Picks.Contains("fin_confess")
-                        ? "Back at school, the bell rings somewhere far away. Your hand still feels warm."
-                        : "Back at school, the bell rings somewhere far away. That was a good one.");
+                        ? "Back on campus, the bell rings somewhere far away. Your hand still feels warm."
+                        : "Back on campus, the bell rings somewhere far away. That was a good one.");
                     return o;
                 };
                 var main = show.Main(true);

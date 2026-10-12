@@ -210,7 +210,7 @@ namespace Joojkk.CampusLife
         {
             S.SchoolNews.Add(text);
             if (S.SchoolNews.Count > 30) S.SchoolNews.RemoveAt(0);
-            S.Log("School life: " + text);
+            S.Log("Campus life: " + text);
         }
 
         private static void Milestone(PairState p, string kind, int weight)

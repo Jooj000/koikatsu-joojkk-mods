@@ -25,7 +25,7 @@ namespace Joojkk.CampusLife
             new[] { "club", "more money for the clubs" },
             new[] { "lunch", "a longer lunch break" },
             new[] { "library", "the library open until evening" },
-            new[] { "events", "more school events" },
+            new[] { "events", "more campus events" },
             new[] { "pet", "a class pet for every year" },
         };
 
@@ -71,7 +71,7 @@ namespace Joojkk.CampusLife
                 {
                     var pa = PlatformFor(a, "");
                     S.Council = new CouncilRace { Week = S.Week, A = GirlInfo.Key(a), B = GirlInfo.Key(b), Platform = pa, RivalPlatform = PlatformFor(b, pa), Support = 45 };
-                    Toasts.Show("Student council race this week: " + GirlInfo.FirstName(a) + " vs " + GirlInfo.FirstName(b) + ".");
+                    Toasts.Show("Student union race this week: " + GirlInfo.FirstName(a) + " vs " + GirlInfo.FirstName(b) + ".");
                 }
             }
             // The count happens on Friday whether you were there or not.
@@ -140,9 +140,9 @@ namespace Joojkk.CampusLife
         private static Action<string> Announce(CouncilRace c, SaveData.Heroine a, SaveData.Heroine b, SceneBuilder sb)
         {
             sb.Bg("classroom_sunset");
-            sb.Narr("\"Promises, Posters and Popularity\". The student council election is this Friday.");
+            sb.Narr("\"Promises, Posters and Popularity\". The student union election is this Friday.");
             sb.Say(a, T(a, "I'm running for president... I want " + PlatformText(c.Platform) + ". Will you help me with the campaign? || Um... I decided to run for president. I want " + PlatformText(c.Platform) + ". Would you help me? || I'm going to be a candidate... for " + PlatformText(c.Platform) + ". Could you be on my team? || I signed up for the election. I really want " + PlatformText(c.Platform) + "... will you help?", "I'm running for president!! " + char.ToUpper(PlatformText(c.Platform)[0]) + PlatformText(c.Platform).Substring(1) + "! Help me win! || Guess what! I'm running for president! My promise: " + PlatformText(c.Platform) + "! Join my team! || Election time! I'm in it to win it, for " + PlatformText(c.Platform) + "! You're with me, right?! || I'm gonna be president! " + PlatformText(c.Platform) + ", that's the plan! Help me out!",
-                "I'm a candidate. My platform: " + PlatformText(c.Platform) + ". I could use a campaign manager. || I've registered as a candidate. Platform: " + PlatformText(c.Platform) + ". I need a manager. || I'm running. " + PlatformText(c.Platform) + ". You'd make a decent campaign manager. || Candidacy filed. My aim is " + PlatformText(c.Platform) + ". Will you manage the campaign?", "Guess who's running for president? Me. Be my campaign manager. It's an honor. || I'm running for president, obviously. Want to be my right hand? || The school needs me as president. And I need you as my manager. || Election season. I'm the best candidate. Join the winning side."));
+                "I'm a candidate. My platform: " + PlatformText(c.Platform) + ". I could use a campaign manager. || I've registered as a candidate. Platform: " + PlatformText(c.Platform) + ". I need a manager. || I'm running. " + PlatformText(c.Platform) + ". You'd make a decent campaign manager. || Candidacy filed. My aim is " + PlatformText(c.Platform) + ". Will you manage the campaign?", "Guess who's running for president? Me. Be my campaign manager. It's an honor. || I'm running for president, obviously. Want to be my right hand? || The university needs me as president. And I need you as my manager. || Election season. I'm the best candidate. Join the winning side."));
             sb.Narr(GirlInfo.FirstName(b) + " is running too, promising " + PlatformText(c.RivalPlatform) + ". People seem to like that.");
             sb.Choice("Agree to help " + GirlInfo.FirstName(a), "cn_help", "Help " + GirlInfo.FirstName(b) + " instead", "cn_other", "Stay neutral", "cn_neutral");
             sb.Branch("cn_help"); sb.Say(a, T(a, "Thank you! I knew I could count on you. || Really? Thank you so much... I'll work hard! || You'll help? I'm so relieved... thank you. || Thank you! With you, I think I can do it.", "YES! We're gonna win this! || Woohoo! Team us! We can't lose now! || Awesome! Let's crush the competition! || Yes! Best campaign manager ever!", "Good. We start tomorrow. || Good. Meet me tomorrow, we'll plan. || Then we begin tomorrow. Be on time. || Good choice. We start tomorrow.", "Excellent. Victory is assured. || Wise choice. You're on the winning team. || Of course you said yes. Victory's ours. || Excellent. Together, we're unstoppable.")); sb.End();
@@ -186,8 +186,8 @@ namespace Joojkk.CampusLife
         {
             var sc = Rumors.Open.FirstOrDefault(x => x.Kind == "council" && x.Subject == c.A);
             sb.Bg("gym");
-            sb.Narr("The debate, in the gym. Half the school is here.");
-            sb.Say(b, T(b, "I heard... " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + ". Is that true? || Someone told me " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "... is it true? || I don't want to believe it, but... " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "? || Um... people say " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + ". Is that right?", "Everyone's saying " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "! Explain! || Hey! The whole school says " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "! What's up with that?! || Is it true?! " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "?! || Spill it! Everyone's saying " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "!",
+            sb.Narr("The debate, in the gym. Half the university is here.");
+            sb.Say(b, T(b, "I heard... " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + ". Is that true? || Someone told me " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "... is it true? || I don't want to believe it, but... " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "? || Um... people say " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + ". Is that right?", "Everyone's saying " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "! Explain! || Hey! The whole university says " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "! What's up with that?! || Is it true?! " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "?! || Spill it! Everyone's saying " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "!",
                 "A question. Is it true that " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "? || Answer me. " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + ". True? || I heard " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + ". Explain. || Is it a fact that " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "?", "So, is it true " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "? Hm? || Word is " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + ". Care to comment? || Mm? I hear " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + ". Naughty~ || So~ " + Rumors.What(sc ?? new Scandal { Kind = "council", Subject = c.A }, 1) + "? Do tell."));
             sb.Say(a, T(a, "That's... that's not...! || Th-that's not true...! || No... I would never...! || Wh-why would anyone say that...?", "WHAT?! That's not true! || WHAT?! That's a total lie! || No way! Who said that?! || That's NOT true! At all!", "...That is false. || ...That is a lie. || ...Incorrect. || ...Baseless.", "...Oh, you did NOT just say that. || ...Excuse me? Say that again. || ...Oh, someone's asking for it. || ...How dare you."));
             var opts = new List<string> { "Defend her publicly", "db_defend" };
@@ -237,7 +237,7 @@ namespace Joojkk.CampusLife
             if (lose != null && c.Approach != "neutral") Board.Add(Board.Make(RequestKind.Talk, lose, "Cheer up " + GirlInfo.FirstName(lose), GirlInfo.FirstName(lose) + " lost the council election.", 4));
             if (c.Approach == "cm_deal") Arcs.AddBond(c.A, c.B, 6);
             else Arcs.AddBond(c.A, c.B, -4);
-            var text = GirlInfo.FirstName(c.Winner) + " won the student council election (" + PlatformText(S.CouncilEffect) + ")";
+            var text = GirlInfo.FirstName(c.Winner) + " won the student union election (" + PlatformText(S.CouncilEffect) + ")";
             Pairs.News(text + ".");
             Toasts.Show(text + "!");
             Anthology.Add("council", text, 3, c.A + "," + c.B);

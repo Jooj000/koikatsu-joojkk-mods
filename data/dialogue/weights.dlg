@@ -5,71 +5,71 @@
 # 1-1.5 = colour (place, time, tone), 0.5 = flavour that should never decide alone (sign, body).
 
 @weights default
-- rel=2 mood=2 interest=2 role=2 tone=1 placeid=1 period=1 sign=0.5 height=0.5 bust=0.5 voice=1 hook=30 said=40 shape=30
+- pers=2.5 rel=2 mood=2 interest=2 role=2 job=4 myjob=4 otherjob=4 tone=1 placeid=1 period=1 sign=0.5 height=0.5 bust=0.5 voice=1 hook=100 said=40 shape=30
 
 # Touches: where and how far you went, then who is watching and who she is to you.
 @weights touch
-- part=3 level=3 look=2 kiss=3 answer=6 role=3 wrel=2.5 interrupt=2.5 rel=2.5 interest=2 lewd=2 mood=2 watchers=1.5 group=1.5 again=1 tone=1.5 placeid=1 period=0.5 sign=0.5
+- pers=2.5 part=3 level=3 look=2 kiss=3 answer=6 role=3 wrel=2.5 interrupt=2.5 rel=2.5 interest=2 lewd=2 mood=2 watchers=1.5 group=1.5 again=1 tone=1.5 placeid=1 period=0.5 sign=0.5
 
 # Silence: how long it has lasted and how close you are; the place and the moment colour it.
 @weights idle
-- idle=3 interrupt=3 role=3 rel=2.5 mood=2.5 wrel=2 interest=2 fight=2 weather=2 wet=2 watchers=1.5 tone=1.5 placeid=1.5 outside=1.5 period=1.5 hasclub=1 sign=0.5
+- pers=2.5 idle=3 interrupt=3 role=3 rel=2.5 mood=2.5 wrel=2 interest=2 fight=2 weather=2 wet=2 watchers=1.5 tone=1.5 placeid=1.5 outside=1.5 period=1.5 hasclub=1 sign=0.5
 
 # Small talk ("chat about"): the subject leads, then what she likes and her club; feelings only tint it.
 @weights small
-- subject=3 role=3 free=2 likeid=3 kind=2.5 likes=2.5 birthday=3 exam=2.5 clubkind=2 hasclub=2 placeid=2.5 l_study=2.5 l_food=2.5 l_sweets=2.5 l_animals=2.5 l_exercise=2.5 weather=2 wet=2 rainlater=2 rainlover=2 fight=2 rivalnear=1.5 outside=1.5 period=1.5 rel=1.5 mood=1.5 sign=1.5 tone=1
+- pers=2.5 subject=3 role=3 free=2 likeid=3 kind=2.5 likes=2.5 birthday=3 exam=2.5 clubkind=2 hasclub=2 placeid=2.5 l_study=2.5 l_food=2.5 l_sweets=2.5 l_animals=2.5 l_exercise=2.5 weather=2 wet=2 rainlater=2 rainlover=2 fight=2 rivalnear=1.5 outside=1.5 period=1.5 rel=1.5 mood=1.5 sign=1.5 tone=1
 
 # Her answer to what you just said: the move and how well it fit, then the mood it lands in.
 @weights react
-- move=3 fit=3 role=3 free=2 tcause=3 voice=3 profile=3 fight=2 realverb=2.5 how=2 valence=2 mood=2 rel=2 interest=1.5 tone=1
+- pers=2.5 move=3 fit=3 role=3 free=2 tcause=3 voice=3 profile=3 fight=2 realverb=2.5 how=2 valence=2 mood=2 rel=2 interest=1.5 tone=1
 
 # Your own lines (labels): the move and the subject.
 @weights move
-- move=3 role=3 tcause=2 fight=2 kind=2 subject=2 mood=1.5 rel=1.5 interest=1.5
+- pers=2.5 move=3 role=3 tcause=2 fight=2 kind=2 subject=2 mood=1.5 rel=1.5 interest=1.5
 
 # Gossip: who it is about and what happened, then how she found out.
 @weights gossip
-- verb=3 realverb=3 subject=3 whorel=3 whorole=4 role=2 whobond=2.5 told=2 public=2 rel=1.5 mood=1.5
+- pers=2.5 verb=3 realverb=3 subject=3 whorel=3 whorole=4 role=2 whobond=2.5 told=2 public=2 rel=1.5 mood=1.5
 
 @weights tell
-- told=3 verb=3 subject=2.5 rel=1.5 mood=1.5
+- pers=2.5 told=3 verb=3 subject=2.5 rel=1.5 mood=1.5
 
 # The day: the date itself (exams, birthday, events), then the time of day and the place.
 @weights day
-- role=3 tcause=3 realverb=6 exam=3 birthday=3 school=2.5 period=2.5 days=2 placeid=2 l_study=2 wet=2 weather=2 rainlover=2 fight=2.5 rainlater=1.5 mood=2 rel=1.5 tone=1
+- pers=2.5 role=3 tcause=3 realverb=6 exam=3 birthday=3 school=2.5 period=2.5 days=2 placeid=2 l_study=2 wet=2 weather=2 rainlover=2 fight=2.5 rainlater=1.5 mood=2 rel=1.5 tone=1
 
 # Talk about the two of you: the step you are at.
 @weights us
-- role=3 step=3 dating=3 romance=3 rel=3 interest=2.5 lewd=2 mood=2 speed=1.5 partner=2 distorted=2
+- pers=2.5 role=3 step=3 dating=3 romance=3 rel=3 interest=2.5 lewd=2 mood=2 speed=1.5 partner=2 distorted=2
 
 # Talk about you: her opinion of you and how she sees you.
 @weights you
-- whorole=4 role=3 profile=3 opinion=3 rel=2.5 interest=2 mood=1.5 height=1.5 bust=1.5
+- pers=2.5 whorole=4 role=3 profile=3 opinion=3 rel=2.5 interest=2 mood=1.5 height=1.5 bust=1.5
 
 @weights school
-- role=3 school=3 exam=2.5 clubkind=2.5 hasclub=2 period=1.5 placeid=1.5
+- pers=2.5 role=3 school=3 evkind=3 exam=2.5 clubkind=2.5 hasclub=2 period=1.5 placeid=1.5
 
 @weights likehint
-- likeid=3 likes=2.5 low=3 voice=2
+- pers=2.5 likeid=3 likes=2.5 low=3 voice=2
 
 # Context pieces: who she is to you (girlfriend, teacher, ex) and the day decide the opening.
 @weights @open
-- role=3 free=2 rel=3 birthday=3 mood=2.5 interest=2 placeid=1.5 period=1.5 clubkind=1.5 sign=1 tone=1 height=0.5 bust=0.5
+- pers=2.5 role=3 free=2 rel=3 birthday=3 mood=2.5 interest=2 placeid=1.5 period=1.5 clubkind=1.5 sign=1 tone=1 height=0.5 bust=0.5
 
 @weights @tail
-- role=3 free=2 rel=3 birthday=3 mood=2.5 interest=2 placeid=1.5 period=1.5 clubkind=1.5 sign=1 tone=1 height=0.5 bust=0.5
+- pers=2.5 role=3 free=2 rel=3 birthday=3 mood=2.5 interest=2 placeid=1.5 period=1.5 clubkind=1.5 sign=1 tone=1 height=0.5 bust=0.5
 
 @weights @meopen
-- rel=3 mood=2.5 role=2.5 free=2 placeid=1.5 period=1.5
+- pers=2.5 rel=3 mood=2.5 role=2.5 free=2 placeid=1.5 period=1.5
 
 # The talk with both girls: how the two get along and why they came lead; who she is to you colours it.
 @weights duo3
-- role=4 otherrole=4 pair=3 trisal=3 wrel=3 kiss=3 argue=3 moment=2.5 lvl=2.5 q=2.5 act=2 dating=2.5 othergf=2.5 likes=2 otherlikes=2 tone=1.5 mood=1.5 placeid=1 period=1
+- pers=2.5 role=4 otherrole=4 pair=3 trisal=3 wrel=3 kiss=3 argue=3 moment=2.5 lvl=2.5 q=2.5 act=2 dating=2.5 othergf=2.5 likes=2 otherlikes=2 tone=1.5 mood=1.5 placeid=1 period=1
 
 # What the two of them say to each other (banter.dlg): a fight leads, then who they are, then what is true right now.
 @weights duo3.talk
-- argue=30 myrole=2 otherrole=2 trisal=1 pair=1 othermood=3 wet=4 exam=1 sameclub=4 shared=1 period=4
+- pers=2.5 argue=30 myrole=2 otherrole=2 trisal=1 pair=1 othermood=3 wet=4 exam=1 sameclub=4 shared=1 period=4
 
 # Her refusals before the game's H: which one first, then who she is to you.
 @weights bounds
-- hbound=3 hbound2=1.5 rel=2.5 mood=1.5 tone=1.5
+- pers=2.5 hbound=3 hbound2=1.5 rel=2.5 mood=1.5 tone=1.5

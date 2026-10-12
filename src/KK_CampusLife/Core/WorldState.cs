@@ -255,7 +255,7 @@ namespace Joojkk.CampusLife
         public List<string> Traditions = new List<string>();   // things the two of you do together
         public int Sundays;                                    // Sunday stories with her
         public string LastSunday = "";
-        public string Epilogue = "";                           // her "after school" ending, if the season wrote one
+        public string Epilogue = "";                           // her "after class" ending, if the season wrote one
 
         private void WriteWorld(Dictionary<string, object> d)
         {

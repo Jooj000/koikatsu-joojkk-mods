@@ -371,7 +371,7 @@ namespace Joojkk.CampusLife
             else if (plan.Why == Motive.Quarrel)
             {
                 // A quarrel: you take a side, or calm them both down.
-                var topic = Lines.Pick("the last melon bread", "whose turn it was to clean the classroom", "who gets the window seat", "the club room schedule", "a borrowed manga that came back bent");
+                var topic = Lines.Pick("the last melon bread", "whose turn it was to clean the lecture hall", "who gets the window seat", "the club room schedule", "a borrowed manga that came back bent");
                 intro.Narr(an + " and " + bn + " are arguing about " + topic + ". They turn to you.");
                 sb.Say(a, Lines.T(ta, "You saw it too, right? It was my turn... || It was my turn, right? || You saw it too...? || Tell her it was my turn...", "Tell her I'm right! || Tell her I'm right! || I'm right, right?! || Back me up!", "You're impartial. Settle this. || You're neutral. Decide. || Settle it. || Judge.", "Go on, tell her she's wrong. || Tell her she's wrong. || Go on, choose me. || Say I'm right."));
                 sb.Say(bb, Lines.T(tb, "Please, say something... || Please, say something... || Help us... || Um... what do you think?", "No way, I'm right! Right?! || I'm right! Right?! || Tell her! || Me! Obviously!", "This is ridiculous. Decide. || Ridiculous. Decide. || Pick. || Resolve this.", "Oh, this'll be good. Choose wisely. || Choose wisely. || Careful now. || This'll be fun."));
@@ -459,7 +459,7 @@ namespace Joojkk.CampusLife
                     var name = about != null ? GirlInfo.FirstName(about) : "";
                     intro.Narr(an + " and " + bn + " come over, whispering to each other.");
                     sb.Say(a, ConvoLines.GossipLine(ta, gossip.Kind, name, gossip.What));
-                    sb.Say(bb, Lines.T(tb, "It's true, I heard it too... || I heard it too... || It's true... || Yes, I heard...", "Totally true! Everyone knows! || Totally true! || Everyone knows! || Yep!", "That's what they say. || So they say. || That's the talk. || Reportedly.", "The whole school's talking. || Whole school's talking. || Everyone knows. || The gossip's everywhere."));
+                    sb.Say(bb, Lines.T(tb, "It's true, I heard it too... || I heard it too... || It's true... || Yes, I heard...", "Totally true! Everyone knows! || Totally true! || Everyone knows! || Yep!", "That's what they say. || So they say. || That's the talk. || Reportedly.", "The whole university's talking. || Whole university's talking. || Everyone knows. || The gossip's everywhere."));
                     sb.End();
                     result = c => { Social.Mentioned(a, gossip); Social.Mentioned(bb, gossip); };
                 }
@@ -996,10 +996,15 @@ namespace Joojkk.CampusLife
                 try
                 {
                     if (n == null || n.agent == null) { done[i] = true; continue; }
-                    var was = "agent " + (n.agent.enabled ? "on" : "off") + (n.agent.enabled && !n.agent.isOnNavMesh ? " off navmesh" : "") + ", " + (n.transform.position - spots[i]).magnitude.ToString("0.0") + " m away";
+                    var was = "agent " + (n.agent.enabled ? "on" : "off") + (n.agent.enabled && !n.agent.isOnNavMesh ? " off navmesh" : "") + ", " + (n.transform.position - spots[i]).magnitude.ToString("0.0") + " m away, speed " + n.agent.speed.ToString("0.0") + (n.move != null && n.move.isStop ? ", brake on" : "");
                     n.agent.enabled = true;
                     NavMeshHit hit;
                     if (!n.agent.isOnNavMesh && NavMesh.SamplePosition(n.transform.position, out hit, 3f, NavMesh.AllAreas)) n.agent.Warp(hit.position);
+                    // A girl the stage just put on the map has no AI running: the mover's brake and speed are still as it left
+                    // them, and the agent never moved.
+                    if (n.move != null && n.move.isStop) n.move.isStop = false;
+                    if (n.agent.isOnNavMesh) n.agent.isStopped = false;
+                    if (n.agent.speed < 0.5f) n.agent.speed = 1.5f;
                     var ok = n.agent.isOnNavMesh && n.agent.SetDestination(spots[i]);
                     Step(GirlInfo.FirstName(n.heroine) + " walks over (" + was + (ok ? "" : ", no path") + ")");
                     if (!ok) Arrive(n, spots[i], done, i);

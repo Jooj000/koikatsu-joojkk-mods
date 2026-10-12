@@ -84,7 +84,7 @@ namespace Joojkk.CampusLife
             if (S == null) return;
             S.Buffs[Key] = S.Day * 100 + kind * 10 + from;
             _applied = "";
-            CampusLifePlugin.Log.LogInfo("Weather: day " + S.Day + " " + Name(kind) + (kind >= Rain ? (from == 0 ? " all day" : from == 1 ? " from lunch" : " after school") : "") + " (" + why + ")");
+            CampusLifePlugin.Log.LogInfo("Weather: day " + S.Day + " " + Name(kind) + (kind >= Rain ? (from == 0 ? " all day" : from == 1 ? " from lunch" : " after class") : "") + " (" + why + ")");
         }
 
         public static string Name(int kind) { return kind == Storm ? "storm" : kind == Rain ? "rain" : kind == Cloudy ? "cloudy" : "clear"; }
@@ -99,14 +99,14 @@ namespace Joojkk.CampusLife
         public static void OnDay()
         {
             var k = Kind;
-            if (k >= Rain) Toasts.Show(From == 0 ? "It's raining today." : "The sky is heavy: rain " + (From == 1 ? "from lunch." : "after school."));
+            if (k >= Rain) Toasts.Show(From == 0 ? "It's raining today." : "The sky is heavy: rain " + (From == 1 ? "from lunch." : "after class."));
         }
 
         /// <summary>New period: when the rain starts now, it says so and brings its event.</summary>
         public static void OnPeriod(Cycle.Type period)
         {
             if (S == null || Kind < Rain || From == 0 || Index(G.ToMask(period)) != From) return;
-            Toasts.Show(Kind == Storm ? "A storm breaks over the school." : "It starts to rain.");
+            Toasts.Show(Kind == Storm ? "A storm breaks over the university." : "It starts to rain.");
             if (Cfg.HappeningsEnabled.Value && string.IsNullOrEmpty(S.PendingHappening) && !Calendar.Quiet)
                 S.PendingHappening = G.ToMask(period) == PeriodMask.After ? "rain" : "drenched";
         }

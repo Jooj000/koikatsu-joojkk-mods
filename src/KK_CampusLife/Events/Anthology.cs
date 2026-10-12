@@ -12,7 +12,7 @@ namespace Joojkk.CampusLife
     /// over, forgiveness, club projects, the council race, traditions, Sundays, stories between students). On the last
     /// Saturday of each 9-week loop a short ceremony looks back: the moment of the season, the people who changed, the
     /// stories still open; you choose what to celebrate. Girls whose story with you reached its end get an epilogue
-    /// ("What Comes After School"). The season is archived and the next one begins; it can be read any time from the
+    /// ("What Comes After College"). The season is archived and the next one begins; it can be read any time from the
     /// clipboard.
     /// </summary>
     internal static class Anthology
@@ -108,7 +108,7 @@ namespace Joojkk.CampusLife
             var friend = Social.BestFriend(h);
             var trad = gs.Traditions.Count > 0 ? gs.Traditions[gs.Traditions.Count - 1] : null;
             var name = GirlInfo.FirstName(h);
-            var text = "After school, " + name + " set out to " + dream + ".";
+            var text = "After college, " + name + " set out to " + dream + ".";
             if (friend != null) text += " " + GirlInfo.FirstName(friend) + " still calls her every week.";
             if (trad != null) text += " She never quite gave up " + trad + ".";
             if (h.isGirlfriend) text += " And on the hard days, she knows exactly who to call.";
@@ -144,7 +144,7 @@ namespace Joojkk.CampusLife
             if (epi.Count > 0)
             {
                 b.Bg("classroom_sunset");
-                b.Narr("What Comes After School.");
+                b.Narr("What Comes After College.");
                 foreach (var h in epi) b.Narr(Epilogue(h));
             }
             var ok = Scenes.PlayOnMap(b, c =>

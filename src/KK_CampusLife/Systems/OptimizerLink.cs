@@ -26,6 +26,8 @@ namespace Joojkk.CampusLife
                 var list = f != null ? f.GetValue(null) as List<Func<SaveData.Heroine, float>> : null;
                 if (list == null) return;
                 list.Add(Score);
+                var seats = AccessTools.Field(t, "SeatBonus");
+                if (seats != null) seats.SetValue(null, new Func<int>(Scenery.SeatsSaved));
                 CampusLifePlugin.Log.LogInfo("Linked with School Optimizer: girls with requests and stories are loaded first.");
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("School Optimizer link: " + e.Message); }
@@ -48,6 +50,8 @@ namespace Joojkk.CampusLife
             // The second girl of somebody else's story (rivals, friends) has to be there too.
             if (Campus.S.Girls.Values.Any(g => g != null && g.Arc != null && g.Arc.Other == key)) s += 15f;
             if (Spotlight.InSpotlight(h)) s += 10f;
+            // The girl you are courting comes back tomorrow: with a big cast she was out two days in three.
+            if (Social.TalkDaysRecent(h, 3) > 0) s += 5f + h.favor * 0.1f;
             return s;
         }
     }

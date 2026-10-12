@@ -118,7 +118,7 @@ feel worried
 @rule duo3.open.b.study.gentle
 on duo3.open.b
 when moment=study tone=gentle
-- [I made notes... maybe they'll help.|{Other} says you're good at this.|We could quiz each other?]
+- {student}[I made notes... maybe they'll help.|{Other} says you're good at this.|We could quiz each other?]
 
 @rule duo3.open.b.study.energetic
 on duo3.open.b
@@ -137,46 +137,46 @@ when moment=study tone=teasing
 
 @rule duo3.open.a.season.gentle
 on duo3.open.a
-when moment=season tone=gentle
+when moment=season tone=gentle evkind!=gift
 feel smile
-- [The {event} is this week... have you made plans?|We were talking about the {event}...|Are you going to the {event}?]
+- [{Event} is this week... have you made plans?|We were talking about {event}...|What are you doing for {event}?]
 
 @rule duo3.open.a.season.energetic
 on duo3.open.a
-when moment=season tone=energetic
+when moment=season tone=energetic evkind!=gift
 feel smile
-- [The {event}! The {event}! Are you ready?!|It's almost the {event}! We have SO many plans!|You know what week it is? {Event} week!]
+- [{Event}! {Event}! Are you ready?!|It's almost {event}! We have SO many plans!|You know what week it is? {Event} week!]
 
 @rule duo3.open.a.season.cool
 on duo3.open.a
-when moment=season tone=cool
+when moment=season tone=cool evkind!=gift
 feel smile
-- [The {event} is coming. We need a third.|About the {event}. We have a proposal.|You're free for the {event}, I assume.]
+- [{Event} is coming. We need a third.|About {event}. We have a proposal.|You're free for {event}, I assume.]
 
 @rule duo3.open.a.season.teasing
 on duo3.open.a
-when moment=season tone=teasing
+when moment=season tone=teasing evkind!=gift
 feel smile
-- [The {event} is coming. We need a third.|About the {event}. We have a proposal.|You're free for the {event}, I assume.]
+- [{Event} is coming. We need a third.|About {event}. We have a proposal.|You're free for {event}, I assume.]
 
 @rule duo3.open.b.season.gentle
 on duo3.open.b
-when moment=season tone=gentle
+when moment=season tone=gentle evkind!=gift
 - [It would be more fun with you...|We could go together, the three of us?|I've been looking forward to it all week.]
 
 @rule duo3.open.b.season.energetic
 on duo3.open.b
-when moment=season tone=energetic
+when moment=season tone=energetic evkind!=gift
 - [It's gonna be awesome! You HAVE to come!|We already decided you're coming!|I'm so excited I can't sit still!]
 
 @rule duo3.open.b.season.cool
 on duo3.open.b
-when moment=season tone=cool
+when moment=season tone=cool evkind!=gift
 - [Think about it.|Don't make other plans.|We'll be waiting~]
 
 @rule duo3.open.b.season.teasing
 on duo3.open.b
-when moment=season tone=teasing
+when moment=season tone=teasing evkind!=gift
 - [Think about it.|Don't make other plans.|We'll be waiting~]
 
 @rule duo3.open.a.trisal.gentle
@@ -859,7 +859,7 @@ on duo3.pair.about
 when pair!=rival tone=gentle
 feel smile
 - [{other} always notices when I'm down... she's like that.|{other} is the kindest person I know. Really.|She listens. Even when I ramble.]
-- [She shares her lunch with me every time I forget mine.|{other} waits for me after class. Every day.|When I cried last month, she stayed until I stopped.]
+- {student}[She shares her lunch with me every time I forget mine.|{other} waits for me after class. Every day.|When I cried last month, she stayed until I stopped.]
 - [I like how {other} laughs. It makes me laugh too.|She's brave in ways I'm not.|She always knows what to say.]
 
 @rule duo3.pair.about.energetic
@@ -913,9 +913,9 @@ feel pout
 on duo3.pair.story
 when pair!=rival
 feel laugh
-- [Okay, okay... once {other} fell asleep in class and answered the teacher in her sleep. She said "five more minutes, mom."|Last summer {other} got her head stuck in the pool ladder. We needed the lifeguard.|{other} sent a love letter to the wrong locker. The wrong person READ it out loud.]
+- {student}[Okay, okay... once {other} fell asleep in class and answered the professor in her sleep. She said "five more minutes, mom."|Last summer {other} got her head stuck in the pool ladder. We needed the lifeguard.|{other} sent a love letter to the wrong locker. The wrong person READ it out loud.]
 - [{other} practices her confessions in the mirror. I've heard it. It's very dramatic.|She tried to dye her hair at home once. It came out green.|{other} waved back at someone who was waving at the person behind her. For a whole minute.]
-- [{other} tripped walking up to get an award. Up the stairs. In front of the whole school.|She called the teacher "mom" once. In class. Loud.|{other} still sleeps with a stuffed rabbit named Sir Fluffington.]
+- {student}[{other} tripped walking up to get an award. Up the stairs. In front of the whole university.|She called the professor "mom" once. In class. Loud.|{other} still sleeps with a stuffed rabbit named Sir Fluffington.]
 
 @rule duo3.pair.story.rival
 on duo3.pair.story
@@ -923,7 +923,7 @@ when pair=rival
 feel smile
 - [Oh, gladly. {other} once fell into the koi pond. On purpose, she says.|Where do I start? She cried during the fire drill.|{other} lost to me at everything. Every. Single. Thing.]
 - [She once wore her skirt inside out all day. Nobody told her. Including me.|{other} studied for the wrong test. For a week.|She got stuck in the gym storage. I was the one who heard her.]
-- [Hmm... the time she confessed to a teacher. By accident.|Her singing. Just ask her to sing.|She brought a lunch box with no lunch in it. Twice.]
+- {student}[Hmm... the time she confessed to a professor. By accident.|Her singing. Just ask her to sing.|She brought a lunch box with no lunch in it. Twice.]
 
 @rule duo3.pair.story.other.friend
 on duo3.pair.story.other
@@ -952,7 +952,7 @@ feel smile
 @rule duo3.pair.talks.no
 on duo3.pair.talks
 when otherlikes=no
-- [Not really... why, should she?|Hmm, not that I remember.|Once, maybe? Something about the homework.]
+- {student}[Not really... why, should she?|Hmm, not that I remember.|Once, maybe? Something about the assignments.]
 - [She talks about food, mostly.|Not really. Feeling ignored?|She mentioned you exist. That counts, right?]
 - [...No.|Should she?|You'd have to do something interesting first.]
 
@@ -1017,3 +1017,15 @@ feel love
 - [(She laces her fingers with yours, eyes on the floor.)|(She squeezes back and doesn't look at you.)|(Her thumb strokes the back of your hand.)]
 - [(She leans a little closer, as if by accident.)|(She stifles a smile.)|(She holds on tighter.)]
 - [...(Her hand stays.)|(She traces a slow circle on your palm.)|(She pretends nothing is happening. Her ears are red.)]
+
+# Chocolate Day is not an outing: they come with a box, not a plan.
+@rule duo3.open.a.season.gift
+on duo3.open.a
+when moment=season evkind=gift
+feel smile
+- [We've been making chocolate together.|We were comparing boxes for {event}.|We're doing {event} as a team this year.]
+
+@rule duo3.open.b.season.gift
+on duo3.open.b
+when moment=season evkind=gift
+- [You're our official taster now.|Tell us the truth. Is it too sweet?|Don't tell anyone how many we burned.]

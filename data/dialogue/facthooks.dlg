@@ -1,0 +1,5927 @@
+# Built by tools\dlg_fact_hooks.py from tools\dlg_fact_hooks.txt: edit that one, not this one.
+
+@rule move.h.f_gossip_plain.ask
+on move.ask
+when hook=f_gossip_plain
+- Ask how she found out
+
+@rule react.h.f_gossip_plain.ask
+on react
+when hook=f_gossip_plain move=ask fit=good|neutral
+- Everyone knows by now. You're the last one.
+- I've got my sources. Don't ask.
+
+@rule move.h.f_gossip_plain.agree
+on move.agree
+when hook=f_gossip_plain
+- Say you're not surprised
+
+@rule react.h.f_gossip_plain.agree
+on react
+when hook=f_gossip_plain move=agree fit=good|neutral
+- Right? It was only a matter of time.
+- That's what I said too.
+
+@rule move.h.f_gossip_plain.tease
+on move.tease
+when hook=f_gossip_plain
+- Ask if she does this for a living
+
+@rule react.h.f_gossip_plain.tease
+on react
+when hook=f_gossip_plain move=tease fit=good|neutral
+- Only part-time. The pay's terrible.
+- You keep listening, don't you?
+
+@rule react.h.f_gossip_plain.bad
+on react
+when hook=f_gossip_plain fit=bad
+feel pout
+- Forget I said anything.
+- Then I won't tell you anything else.
+
+@rule move.h.f_gossip_couple.ask
+on move.ask
+when hook=f_gossip_couple
+- Ask how long they've been going out
+
+@rule react.h.f_gossip_couple.ask
+on react
+when hook=f_gossip_couple move=ask fit=good|neutral
+- Longer than they're admitting, I'd bet.
+- A few days, but they've been looking at each other for months.
+
+@rule move.h.f_gossip_couple.agree
+on move.agree
+when hook=f_gossip_couple
+- Say you saw that one coming
+
+@rule react.h.f_gossip_couple.agree
+on react
+when hook=f_gossip_couple move=agree fit=good|neutral
+- Everyone did, except them.
+- You too? It was so obvious.
+
+@rule move.h.f_gossip_couple.tease
+on move.tease
+when hook=f_gossip_couple
+- Ask if she's jealous of {who}
+
+@rule react.h.f_gossip_couple.tease
+on react
+when hook=f_gossip_couple move=tease fit=good|neutral
+- Of {who}? Don't be silly... A little.
+- I'm jealous of anyone who gets a date.
+
+@rule react.h.f_gossip_couple.bad
+on react
+when hook=f_gossip_couple fit=bad
+feel pout
+- Don't be mean about it.
+- You don't have to ruin it.
+
+@rule move.h.f_gossip_breakup.ask
+on move.ask
+when hook=f_gossip_breakup
+- Ask what went wrong between them
+
+@rule react.h.f_gossip_breakup.ask
+on react
+when hook=f_gossip_breakup move=ask fit=good|neutral
+- Nobody knows for sure. It'd been coming a while.
+- One of them stopped trying, I think.
+
+@rule move.h.f_gossip_breakup.defend
+on move.defend
+when hook=f_gossip_breakup
+- Say it's no one's business but theirs
+
+@rule react.h.f_gossip_breakup.defend
+on react
+when hook=f_gossip_breakup move=defend fit=good|neutral
+- You're right. I shouldn't be talking about it.
+- Yeah. It's just hard not to notice.
+
+@rule move.h.f_gossip_breakup.agree
+on move.agree
+when hook=f_gossip_breakup
+- Say that's a shame for both of them
+
+@rule react.h.f_gossip_breakup.agree
+on react
+when hook=f_gossip_breakup move=agree fit=good|neutral
+- It is. They looked happy, once.
+- I know. I feel bad for them.
+
+@rule react.h.f_gossip_breakup.bad
+on react
+when hook=f_gossip_breakup fit=bad
+feel pout
+- I was only worried about them.
+- Don't look at me like that.
+
+@rule move.h.f_gossip_fight.ask
+on move.ask
+when hook=f_gossip_fight
+- Ask what started it
+
+@rule react.h.f_gossip_fight.ask
+on react
+when hook=f_gossip_fight move=ask fit=good|neutral
+- Something small, as always. Then it wasn't small.
+- Nobody will say. That's how you know it's bad.
+
+@rule move.h.f_gossip_fight.defend
+on move.defend
+when hook=f_gossip_fight
+- Say there are two sides to every fight
+
+@rule react.h.f_gossip_fight.defend
+on react
+when hook=f_gossip_fight move=defend fit=good|neutral
+- I know. I'm only saying what I saw.
+- True. I haven't heard {who2}'s yet.
+
+@rule move.h.f_gossip_fight.agree
+on move.agree
+when hook=f_gossip_fight
+- Say things have been tense lately
+
+@rule react.h.f_gossip_fight.agree
+on react
+when hook=f_gossip_fight move=agree fit=good|neutral
+- You've noticed too? I don't want to be around when it blows.
+- Everyone's walking on eggshells.
+
+@rule react.h.f_gossip_fight.bad
+on react
+when hook=f_gossip_fight fit=bad
+feel pout
+- You weren't there.
+- I'm not taking sides.
+
+@rule move.h.f_gossip_madeup.agree
+on move.agree
+when hook=f_gossip_madeup
+- Say you're glad they sorted it out
+
+@rule react.h.f_gossip_madeup.agree
+on react
+when hook=f_gossip_madeup move=agree fit=good|neutral
+- Me too. It was exhausting.
+- Finally. Everyone can breathe again.
+
+@rule move.h.f_gossip_madeup.ask
+on move.ask
+when hook=f_gossip_madeup
+- Ask who said sorry first
+
+@rule react.h.f_gossip_madeup.ask
+on react
+when hook=f_gossip_madeup move=ask fit=good|neutral
+- {Who}, I heard. Don't quote me.
+- I'd pay good money to know that.
+
+@rule move.h.f_gossip_madeup.tease
+on move.tease
+when hook=f_gossip_madeup
+- Bet they'll be fighting again by Friday
+
+@rule react.h.f_gossip_madeup.tease
+on react
+when hook=f_gossip_madeup move=tease fit=good|neutral
+- You're terrible... I give it until Monday.
+- Don't jinx it!
+
+@rule react.h.f_gossip_madeup.bad
+on react
+when hook=f_gossip_madeup fit=bad
+feel pout
+- Can't you be happy for them?
+- That's a mean thing to say.
+
+@rule move.h.f_gossip_crush.ask
+on move.ask
+when hook=f_gossip_crush
+- Ask how she knows
+
+@rule react.h.f_gossip_crush.ask
+on react
+when hook=f_gossip_crush move=ask fit=good|neutral
+- You should see the way she looks at the door.
+- She told me. Well, her face told me.
+
+@rule move.h.f_gossip_crush.tease
+on move.tease
+when hook=f_gossip_crush
+- Ask if {who} knows you know
+
+@rule react.h.f_gossip_crush.tease
+on react
+when hook=f_gossip_crush move=tease fit=good|neutral
+- Not a chance. And she won't, right?
+- You'd better keep it that way.
+
+@rule move.h.f_gossip_crush.hush
+on move.hush
+when hook=f_gossip_crush
+- Promise you won't tell anyone
+
+@rule react.h.f_gossip_crush.hush
+on react
+when hook=f_gossip_crush move=hush fit=good|neutral
+- Good. I knew I could trust you.
+- If it gets out, I'll know it was you.
+
+@rule react.h.f_gossip_crush.bad
+on react
+when hook=f_gossip_crush fit=bad
+feel pout
+- You'd better not laugh about it.
+- I shouldn't have told you.
+
+@rule move.h.f_gossip_together.ask
+on move.ask
+when hook=f_gossip_together
+- Ask who saw them
+
+@rule react.h.f_gossip_together.ask
+on react
+when hook=f_gossip_together move=ask fit=good|neutral
+- Someone from the {club}, I think. Word travels.
+- A friend of a friend. It's always that way.
+
+@rule move.h.f_gossip_together.laugh
+on move.laugh
+when hook=f_gossip_together
+- Laugh at how nothing stays secret here
+
+@rule react.h.f_gossip_together.laugh
+on react
+when hook=f_gossip_together move=laugh fit=good|neutral
+- Right? This place has more eyes than a potato.
+- Nobody can keep anything quiet around here.
+
+@rule move.h.f_gossip_together.defend
+on move.defend
+when hook=f_gossip_together
+- Say two people walking together means nothing
+
+@rule react.h.f_gossip_together.defend
+on react
+when hook=f_gossip_together move=defend fit=good|neutral
+- Maybe. But you didn't see their faces.
+- You're no fun. You're probably right.
+
+@rule react.h.f_gossip_together.bad
+on react
+when hook=f_gossip_together fit=bad
+feel pout
+- Fine, believe what you like.
+- I know what I heard.
+
+@rule move.h.f_gossip_drama.ask
+on move.ask
+when hook=f_gossip_drama
+- Ask who's taking it hardest
+
+@rule react.h.f_gossip_drama.ask
+on react
+when hook=f_gossip_drama move=ask fit=good|neutral
+- {Who}, from what I've seen.
+- Everyone but the one who started it.
+
+@rule move.h.f_gossip_drama.defend
+on move.defend
+when hook=f_gossip_drama
+- Say nobody knows the whole story
+
+@rule react.h.f_gossip_drama.defend
+on react
+when hook=f_gossip_drama move=defend fit=good|neutral
+- You're right. That doesn't stop anyone.
+- Mm. I still think it's a mess.
+
+@rule move.h.f_gossip_drama.agree
+on move.agree
+when hook=f_gossip_drama
+- Say it sounds like a total mess
+
+@rule react.h.f_gossip_drama.agree
+on react
+when hook=f_gossip_drama move=agree fit=good|neutral
+- It's the worst. And it's only Tuesday.
+- I can't look away, though.
+
+@rule react.h.f_gossip_drama.bad
+on react
+when hook=f_gossip_drama fit=bad
+feel pout
+- It's not a joke to the ones involved.
+- You don't know them.
+
+@rule move.h.f_gossip_heard.ask
+on move.ask
+when hook=f_gossip_heard
+- Ask if {src} can be trusted
+
+@rule react.h.f_gossip_heard.ask
+on react
+when hook=f_gossip_heard move=ask fit=good|neutral
+- Usually. That's what worries me.
+- Half of what she says, I'd say.
+
+@rule move.h.f_gossip_heard.agree
+on move.agree
+when hook=f_gossip_heard
+- Say it does sound like {who}
+
+@rule react.h.f_gossip_heard.agree
+on react
+when hook=f_gossip_heard move=agree fit=good|neutral
+- Doesn't it? That's why I believed it.
+- That's what I thought too.
+
+@rule move.h.f_gossip_heard.defend
+on move.defend
+when hook=f_gossip_heard
+- Say it might not be true
+
+@rule react.h.f_gossip_heard.defend
+on react
+when hook=f_gossip_heard move=defend fit=good|neutral
+- Could be. I'm only passing it on.
+- You're right. I should've checked.
+
+@rule react.h.f_gossip_heard.bad
+on react
+when hook=f_gossip_heard fit=bad
+feel pout
+- Don't shoot the messenger.
+- I only said what I heard.
+
+@rule move.h.f_gossip_rumor.ask
+on move.ask
+when hook=f_gossip_rumor
+- Ask where the rumor came from
+
+@rule react.h.f_gossip_rumor.ask
+on react
+when hook=f_gossip_rumor move=ask fit=good|neutral
+- Nobody knows. That's what makes it a rumor.
+- It was on everyone's phone by lunch.
+
+@rule move.h.f_gossip_rumor.defend
+on move.defend
+when hook=f_gossip_rumor
+- Say rumors like that hurt people
+
+@rule react.h.f_gossip_rumor.defend
+on react
+when hook=f_gossip_rumor move=defend fit=good|neutral
+- I know. It's why I'm not repeating it to anyone else.
+- You're right. I shouldn't have said it.
+
+@rule move.h.f_gossip_rumor.laugh
+on move.laugh
+when hook=f_gossip_rumor
+- Laugh at how far it's gone
+
+@rule react.h.f_gossip_rumor.laugh
+on react
+when hook=f_gossip_rumor move=laugh fit=good|neutral
+- Wait till you hear the version with the cat.
+- It gets better every time it's told.
+
+@rule react.h.f_gossip_rumor.bad
+on react
+when hook=f_gossip_rumor fit=bad
+feel pout
+- It's not my rumor.
+- Don't blame me for it.
+
+@rule move.h.f_gossip_saw.ask
+on move.ask
+when hook=f_gossip_saw
+- Ask what she was doing there
+
+@rule react.h.f_gossip_saw.ask
+on react
+when hook=f_gossip_saw move=ask fit=good|neutral
+- Minding my own business. Honestly.
+- That's not the important part.
+
+@rule move.h.f_gossip_saw.agree
+on move.agree
+when hook=f_gossip_saw
+- Say that must've been something to see
+
+@rule react.h.f_gossip_saw.agree
+on react
+when hook=f_gossip_saw move=agree fit=good|neutral
+- You've got no idea. I still can't believe it.
+- I wish I'd had my phone out.
+
+@rule move.h.f_gossip_saw.tease
+on move.tease
+when hook=f_gossip_saw
+- Ask if she was hiding behind something
+
+@rule react.h.f_gossip_saw.tease
+on react
+when hook=f_gossip_saw move=tease fit=good|neutral
+- A little bush, maybe. What of it?
+- You're not as funny as you think.
+
+@rule react.h.f_gossip_saw.bad
+on react
+when hook=f_gossip_saw fit=bad
+feel pout
+- I know what I saw.
+- Then don't believe me.
+
+@rule move.h.f_gossip_friend_worried.comfort
+on move.comfort
+when hook=f_gossip_friend_worried
+- Say {who} is lucky to have her
+
+@rule react.h.f_gossip_friend_worried.comfort
+on react
+when hook=f_gossip_friend_worried move=comfort fit=good|neutral
+- I don't feel like much help right now.
+- Thanks. I just don't know what to say to her.
+
+@rule move.h.f_gossip_friend_worried.defend
+on move.defend
+when hook=f_gossip_friend_worried
+- Say {who} is stronger than people think
+
+@rule react.h.f_gossip_friend_worried.defend
+on react
+when hook=f_gossip_friend_worried move=defend fit=good|neutral
+- I hope so. She's been so quiet.
+- You're right. She'll get through it.
+
+@rule move.h.f_gossip_friend_worried.ask
+on move.ask
+when hook=f_gossip_friend_worried
+- Ask if there's anything you can do
+
+@rule react.h.f_gossip_friend_worried.ask
+on react
+when hook=f_gossip_friend_worried move=ask fit=good|neutral
+- Just be nice to her, if you see her.
+- That's kind. I'll tell you if there is.
+
+@rule react.h.f_gossip_friend_worried.bad
+on react
+when hook=f_gossip_friend_worried fit=bad
+feel pout
+- I shouldn't have brought it up.
+- You don't know her like I do.
+
+@rule move.h.f_gossip_friend_happy.agree
+on move.agree
+when hook=f_gossip_friend_happy
+- Say {who} deserves it
+
+@rule react.h.f_gossip_friend_happy.agree
+on react
+when hook=f_gossip_friend_happy move=agree fit=good|neutral
+- She really does. She worked so hard.
+- I'm so glad you think so too.
+
+@rule move.h.f_gossip_friend_happy.praise
+on move.praise
+when hook=f_gossip_friend_happy
+- Say she's a good friend to be this happy for her
+
+@rule react.h.f_gossip_friend_happy.praise
+on react
+when hook=f_gossip_friend_happy move=praise fit=good|neutral
+- I'm only doing what she'd do for me.
+- Hehe. Don't tell her I got emotional.
+
+@rule move.h.f_gossip_friend_happy.ask
+on move.ask
+when hook=f_gossip_friend_happy
+- Ask how {who} took it
+
+@rule react.h.f_gossip_friend_happy.ask
+on react
+when hook=f_gossip_friend_happy move=ask fit=good|neutral
+- She cried. Then I cried. Then we ate cake.
+- She's still pretending to be calm.
+
+@rule react.h.f_gossip_friend_happy.bad
+on react
+when hook=f_gossip_friend_happy fit=bad
+feel pout
+- Don't spoil it.
+- Why do you have to be like that?
+
+@rule move.h.f_gossip_cool.ask
+on move.ask
+when hook=f_gossip_cool
+- Ask why she's telling you, then
+
+@rule react.h.f_gossip_cool.ask
+on react
+when hook=f_gossip_cool move=ask fit=good|neutral
+- Better you hear it accurately.
+- You seemed like someone who should know.
+
+@rule move.h.f_gossip_cool.agree
+on move.agree
+when hook=f_gossip_cool
+- Say you'll treat it as unconfirmed
+
+@rule react.h.f_gossip_cool.agree
+on react
+when hook=f_gossip_cool move=agree fit=good|neutral
+- Good. That's the right attitude.
+- Sensible.
+
+@rule react.h.f_gossip_cool.bad
+on react
+when hook=f_gossip_cool fit=bad
+feel pout
+- Do what you like with it.
+- I won't repeat myself.
+
+@rule move.h.f_gossip_gyaru.ask
+on move.ask
+when hook=f_gossip_gyaru
+- Ask how she always knows first
+
+@rule react.h.f_gossip_gyaru.ask
+on react
+when hook=f_gossip_gyaru move=ask fit=good|neutral
+- I've got a network, babe.
+- Everyone tells me everything. It's my face.
+
+@rule move.h.f_gossip_gyaru.tease
+on move.tease
+when hook=f_gossip_gyaru
+- Say you hope you're not next on her list
+
+@rule react.h.f_gossip_gyaru.tease
+on react
+when hook=f_gossip_gyaru move=tease fit=good|neutral
+- Oh, you're on it~
+- Behave, and you've got nothing to worry about~
+
+@rule move.h.f_gossip_gyaru.laugh
+on move.laugh
+when hook=f_gossip_gyaru
+- Laugh along
+
+@rule react.h.f_gossip_gyaru.laugh
+on react
+when hook=f_gossip_gyaru move=laugh fit=good|neutral
+- Right?! I can't even!
+- I knew you'd love that one.
+
+@rule react.h.f_gossip_gyaru.bad
+on react
+when hook=f_gossip_gyaru fit=bad
+feel pout
+- Ugh, you're so boring.
+- Fine, be like that.
+
+@rule move.h.f_gossip_teacher_couple.ask
+on move.ask
+when hook=f_gossip_teacher_couple
+- Ask if it's really true
+
+@rule react.h.f_gossip_teacher_couple.ask
+on react
+when hook=f_gossip_teacher_couple move=ask fit=good|neutral
+- Nobody's sure. That's why everyone's whispering.
+- I've heard it from three people.
+
+@rule move.h.f_gossip_teacher_couple.agree
+on move.agree
+when hook=f_gossip_teacher_couple
+- Say you heard something too
+
+@rule react.h.f_gossip_teacher_couple.agree
+on react
+when hook=f_gossip_teacher_couple move=agree fit=good|neutral
+- You did? So it's real!
+- Then it's all over campus.
+
+@rule move.h.f_gossip_teacher_couple.defend
+on move.defend
+when hook=f_gossip_teacher_couple
+- Say a professor's life is her own
+
+@rule react.h.f_gossip_teacher_couple.defend
+on react
+when hook=f_gossip_teacher_couple move=defend fit=good|neutral
+- Maybe, but that doesn't stop people talking.
+- Fair. I'm only saying what I heard.
+
+@rule react.h.f_gossip_teacher_couple.bad
+on react
+when hook=f_gossip_teacher_couple fit=bad
+feel pout
+- Don't say I told you.
+- It's only what people say.
+
+@rule move.h.f_gossip_teacher_fight.ask
+on move.ask
+when hook=f_gossip_teacher_fight
+- Ask what it was about
+
+@rule react.h.f_gossip_teacher_fight.ask
+on react
+when hook=f_gossip_teacher_fight move=ask fit=good|neutral
+- Nobody dared to ask.
+- Something about grades, I think. It got loud.
+
+@rule move.h.f_gossip_teacher_fight.agree
+on move.agree
+when hook=f_gossip_teacher_fight
+- Say {who} has seemed on edge
+
+@rule react.h.f_gossip_teacher_fight.agree
+on react
+when hook=f_gossip_teacher_fight move=agree fit=good|neutral
+- Hasn't she? I don't want to be in her next class.
+- So it isn't just me.
+
+@rule move.h.f_gossip_teacher_fight.defend
+on move.defend
+when hook=f_gossip_teacher_fight
+- Say even professors have bad days
+
+@rule react.h.f_gossip_teacher_fight.defend
+on react
+when hook=f_gossip_teacher_fight move=defend fit=good|neutral
+- True. I wouldn't want her job.
+- You're nicer than I am.
+
+@rule react.h.f_gossip_teacher_fight.bad
+on react
+when hook=f_gossip_teacher_fight fit=bad
+feel pout
+- Don't tell her I said so.
+- Let's not talk about it.
+
+@rule move.h.f_gossip_asteacher_student.ask
+on move.ask
+when hook=f_gossip_asteacher_student
+- Ask if {who} is all right
+
+@rule react.h.f_gossip_asteacher_student.ask
+on react
+when hook=f_gossip_asteacher_student move=ask fit=good|neutral
+- That's what I'm trying to find out.
+- I'm keeping an eye on it. Quietly.
+
+@rule move.h.f_gossip_asteacher_student.agree
+on move.agree
+when hook=f_gossip_asteacher_student
+- Say you'll keep it to yourself
+
+@rule react.h.f_gossip_asteacher_student.agree
+on react
+when hook=f_gossip_asteacher_student move=agree fit=good|neutral
+- Good. I shouldn't have said it.
+- I knew I could count on you.
+
+@rule move.h.f_gossip_asteacher_student.defend
+on move.defend
+when hook=f_gossip_asteacher_student
+- Say {who} is a good student
+
+@rule react.h.f_gossip_asteacher_student.defend
+on react
+when hook=f_gossip_asteacher_student move=defend fit=good|neutral
+- I know. That's why I'm concerned.
+- Yes. I'd like to keep it that way.
+
+@rule react.h.f_gossip_asteacher_student.bad
+on react
+when hook=f_gossip_asteacher_student fit=bad
+feel pout
+- This conversation didn't happen.
+- That's enough on that subject.
+
+@rule move.h.f_gossip_asteacher_colleague.ask
+on move.ask
+when hook=f_gossip_asteacher_colleague
+- Ask what the faculty room thinks about it
+
+@rule react.h.f_gossip_asteacher_colleague.ask
+on react
+when hook=f_gossip_asteacher_colleague move=ask fit=good|neutral
+- Everyone's got an opinion, and no one's saying it to her face.
+- You'd need clearance to know that.
+
+@rule move.h.f_gossip_asteacher_colleague.agree
+on move.agree
+when hook=f_gossip_asteacher_colleague
+- Say your lips are sealed
+
+@rule react.h.f_gossip_asteacher_colleague.agree
+on react
+when hook=f_gossip_asteacher_colleague move=agree fit=good|neutral
+- Good. I've got a pension to think about.
+- I didn't say anything anyway.
+
+@rule move.h.f_gossip_asteacher_colleague.defend
+on move.defend
+when hook=f_gossip_asteacher_colleague
+- Say {who} seems all right to you
+
+@rule react.h.f_gossip_asteacher_colleague.defend
+on react
+when hook=f_gossip_asteacher_colleague move=defend fit=good|neutral
+- She is, in class. You should see her in a meeting.
+- That's what she wants you to think.
+
+@rule react.h.f_gossip_asteacher_colleague.bad
+on react
+when hook=f_gossip_asteacher_colleague fit=bad
+feel pout
+- I'm starting to regret this.
+- Forget it.
+
+@rule move.h.f_school_plain.ask
+on move.ask
+when hook=f_school_plain
+- Ask what she's heard about {event}
+
+@rule react.h.f_school_plain.ask
+on react
+when hook=f_school_plain move=ask fit=good|neutral
+- Not much. Only that everyone's supposed to care.
+- Enough to be tired of it already.
+
+@rule move.h.f_school_plain.share
+on move.share
+when hook=f_school_plain
+- Say you haven't really thought about {event} either
+
+@rule react.h.f_school_plain.share
+on react
+when hook=f_school_plain move=share fit=good|neutral
+- Then we're the only ones.
+- Good. Nobody can say we didn't try.
+
+@rule move.h.f_school_plain.tease
+on move.tease
+when hook=f_school_plain
+- Say she seems to know a lot about it
+
+@rule react.h.f_school_plain.tease
+on react
+when hook=f_school_plain move=tease fit=good|neutral
+- I've got ears, that's all.
+- People talk. I just stand nearby.
+
+@rule react.h.f_school_plain.bad
+on react
+when hook=f_school_plain fit=bad
+feel pout
+- Do what you want.
+- I'm not your calendar.
+
+@rule move.h.f_school_gift_up.ask
+on move.ask
+when hook=f_school_gift_up
+- Ask who she's making them for
+
+@rule react.h.f_school_gift_up.ask
+on react
+when hook=f_school_gift_up move=ask fit=good|neutral
+- That's a secret until the day.
+- A few people. One of them more than the others.
+
+@rule move.h.f_school_gift_up.invite
+on move.invite
+when hook=f_school_gift_up
+- Offer to taste the first batch
+
+@rule react.h.f_school_gift_up.invite
+on react
+when hook=f_school_gift_up move=invite fit=good|neutral
+- You're brave. It's not pretty.
+- Nice try. You'll get yours on the day.
+
+@rule move.h.f_school_gift_up.tease
+on move.tease
+when hook=f_school_gift_up
+- Say you like dark chocolate, just as a hint
+
+@rule react.h.f_school_gift_up.tease
+on react
+when hook=f_school_gift_up move=tease fit=good|neutral
+- Noted. Very subtle of you.
+- I'll write that down. Doesn't mean anything.
+
+@rule react.h.f_school_gift_up.bad
+on react
+when hook=f_school_gift_up fit=bad
+feel pout
+- Then you'll get a store-bought one.
+- So much for sharing any.
+
+@rule move.h.f_school_gift_low.comfort
+on move.comfort
+when hook=f_school_gift_low
+- Say a store-bought box counts just the same
+
+@rule react.h.f_school_gift_low.comfort
+on react
+when hook=f_school_gift_low move=comfort fit=good|neutral
+- You think so? It feels like cheating.
+- That does make it easier.
+
+@rule move.h.f_school_gift_low.ask
+on move.ask
+when hook=f_school_gift_low
+- Ask what's making her feel that way
+
+@rule react.h.f_school_gift_low.ask
+on react
+when hook=f_school_gift_low move=ask fit=good|neutral
+- Everyone turns it into a contest.
+- I keep thinking it'll be wasted.
+
+@rule move.h.f_school_gift_low.share
+on move.share
+when hook=f_school_gift_low
+- Say you never know what to do on the day either
+
+@rule react.h.f_school_gift_low.share
+on react
+when hook=f_school_gift_low move=share fit=good|neutral
+- Then we can both hide in the library.
+- At least I'm not the only one.
+
+@rule react.h.f_school_gift_low.bad
+on react
+when hook=f_school_gift_low fit=bad
+feel pout
+- Forget I said anything.
+- You wouldn't get it.
+
+@rule move.h.f_school_gift_cool.ask
+on move.ask
+when hook=f_school_gift_cool
+- Ask if her list has any exceptions
+
+@rule react.h.f_school_gift_cool.ask
+on react
+when hook=f_school_gift_cool move=ask fit=good|neutral
+- One. That's not your business.
+- Everyone's equal on the list. Almost.
+
+@rule move.h.f_school_gift_cool.agree
+on move.agree
+when hook=f_school_gift_cool
+- Say a whole day of chocolate is a bit silly
+
+@rule react.h.f_school_gift_cool.agree
+on react
+when hook=f_school_gift_cool move=agree fit=good|neutral
+- Exactly. Thank you.
+- Finally, someone sensible.
+
+@rule move.h.f_school_gift_cool.tease
+on move.tease
+when hook=f_school_gift_cool
+- Say she secretly enjoys it
+
+@rule react.h.f_school_gift_cool.tease
+on react
+when hook=f_school_gift_cool move=tease fit=good|neutral
+- I enjoy being thorough.
+- I don't know what you mean.
+
+@rule react.h.f_school_gift_cool.bad
+on react
+when hook=f_school_gift_cool fit=bad
+feel pout
+- I don't need your opinion on it.
+- It's only a courtesy. Leave it.
+
+@rule move.h.f_school_gift_staff.ask
+on move.ask
+when hook=f_school_gift_staff
+- Ask if she'd like some chocolate from you too
+
+@rule react.h.f_school_gift_staff.ask
+on react
+when hook=f_school_gift_staff move=ask fit=good|neutral
+- I'd have to share it with the staff.
+- That's kind. Don't make a habit of it.
+
+@rule move.h.f_school_gift_staff.share
+on move.share
+when hook=f_school_gift_staff
+- Say the whole building smells of cocoa
+
+@rule react.h.f_school_gift_staff.share
+on react
+when hook=f_school_gift_staff move=share fit=good|neutral
+- It gets into the papers. I can smell it on the homework.
+- Every year, yes.
+
+@rule move.h.f_school_gift_staff.tease
+on move.tease
+when hook=f_school_gift_staff
+- Ask if she's eaten all of hers already
+
+@rule react.h.f_school_gift_staff.tease
+on react
+when hook=f_school_gift_staff move=tease fit=good|neutral
+- I'll neither confirm nor deny.
+- It's research.
+
+@rule react.h.f_school_gift_staff.bad
+on react
+when hook=f_school_gift_staff fit=bad
+feel pout
+- Let's change the subject.
+- That'll do.
+
+@rule move.h.f_school_gift_nurse.ask
+on move.ask
+when hook=f_school_gift_nurse
+- Ask what she does for a stomach ache
+
+@rule react.h.f_school_gift_nurse.ask
+on react
+when hook=f_school_gift_nurse move=ask fit=good|neutral
+- Rest, water, and no more chocolate.
+- Warm tea, and a little shame.
+
+@rule move.h.f_school_gift_nurse.tease
+on move.tease
+when hook=f_school_gift_nurse
+- Say you'd come in anyway if there's chocolate
+
+@rule react.h.f_school_gift_nurse.tease
+on react
+when hook=f_school_gift_nurse move=tease fit=good|neutral
+- I'll check you for sugar.
+- The infirmary isn't a snack bar.
+
+@rule move.h.f_school_gift_nurse.share
+on move.share
+when hook=f_school_gift_nurse
+- Say you'll only eat one a day
+
+@rule react.h.f_school_gift_nurse.share
+on react
+when hook=f_school_gift_nurse move=share fit=good|neutral
+- I've heard that before.
+- Good. You'll be my only sensible patient.
+
+@rule react.h.f_school_gift_nurse.bad
+on react
+when hook=f_school_gift_nurse fit=bad
+feel pout
+- I've got enough patients.
+- Then stay out of my way.
+
+@rule move.h.f_school_exam.comfort
+on move.comfort
+when hook=f_school_exam
+- Say she's going to do fine
+
+@rule react.h.f_school_exam.comfort
+on react
+when hook=f_school_exam move=comfort fit=good|neutral
+- Tell that to my practice test.
+- Thanks. I needed to hear it from someone.
+
+@rule move.h.f_school_exam.invite
+on move.invite
+when hook=f_school_exam
+- Suggest studying together
+
+@rule react.h.f_school_exam.invite
+on react
+when hook=f_school_exam move=invite fit=good|neutral
+- Yes. Please. Bring snacks.
+- If we actually study, okay?
+
+@rule move.h.f_school_exam.ask
+on move.ask
+when hook=f_school_exam
+- Ask which one she's most scared of
+
+@rule react.h.f_school_exam.ask
+on react
+when hook=f_school_exam move=ask fit=good|neutral
+- All of them, in order.
+- Math. It knows what it did.
+
+@rule react.h.f_school_exam.bad
+on react
+when hook=f_school_exam fit=bad
+feel pout
+- You don't get it.
+- Don't talk about exams.
+
+@rule move.h.f_school_exam_ready.ask
+on move.ask
+when hook=f_school_exam_ready
+- Ask if you could borrow her schedule
+
+@rule react.h.f_school_exam_ready.ask
+on react
+when hook=f_school_exam_ready move=ask fit=good|neutral
+- Only if you'll actually follow it.
+- I'll copy it for you. Once.
+
+@rule move.h.f_school_exam_ready.invite
+on move.invite
+when hook=f_school_exam_ready
+- Suggest studying together
+
+@rule react.h.f_school_exam_ready.invite
+on react
+when hook=f_school_exam_ready move=invite fit=good|neutral
+- If you can keep up.
+- Fine. The library, after class.
+
+@rule move.h.f_school_exam_ready.agree
+on move.agree
+when hook=f_school_exam_ready
+- Say she's got the right idea
+
+@rule react.h.f_school_exam_ready.agree
+on react
+when hook=f_school_exam_ready move=agree fit=good|neutral
+- It isn't complicated.
+- Good. Most people wait until the last night.
+
+@rule react.h.f_school_exam_ready.bad
+on react
+when hook=f_school_exam_ready fit=bad
+feel pout
+- Then study instead of talking.
+- That's your problem.
+
+@rule move.h.f_school_teacher_exam.ask
+on move.ask
+when hook=f_school_teacher_exam
+- Ask what to focus on for the exams
+
+@rule react.h.f_school_teacher_exam.ask
+on react
+when hook=f_school_teacher_exam move=ask fit=good|neutral
+- The parts I said twice. Were you listening?
+- Nice try. Read everything.
+
+@rule move.h.f_school_teacher_exam.comfort
+on move.comfort
+when hook=f_school_teacher_exam
+- Say she must have a mountain of grading ahead
+
+@rule react.h.f_school_teacher_exam.comfort
+on react
+when hook=f_school_teacher_exam move=comfort fit=good|neutral
+- It's a range, by now.
+- Thank you. It's nice someone thinks of it.
+
+@rule move.h.f_school_teacher_exam.tease
+on move.tease
+when hook=f_school_teacher_exam
+- Ask if there's a curve this time
+
+@rule react.h.f_school_teacher_exam.tease
+on react
+when hook=f_school_teacher_exam move=tease fit=good|neutral
+- The only curve is my patience.
+- Don't get your hopes up.
+
+@rule react.h.f_school_teacher_exam.bad
+on react
+when hook=f_school_teacher_exam fit=bad
+feel pout
+- I'd spend that energy on studying.
+- We'll see how funny that is after the results.
+
+@rule move.h.f_school_exam_nurse.ask
+on move.ask
+when hook=f_school_exam_nurse
+- Ask how much sleep is enough before an exam
+
+@rule react.h.f_school_exam_nurse.ask
+on react
+when hook=f_school_exam_nurse move=ask fit=good|neutral
+- Seven hours. Not seven coffees.
+- More than whatever you got last night.
+
+@rule move.h.f_school_exam_nurse.share
+on move.share
+when hook=f_school_exam_nurse
+- Say you've been up late revising
+
+@rule react.h.f_school_exam_nurse.share
+on react
+when hook=f_school_exam_nurse move=share fit=good|neutral
+- I can see it. Early night, tonight.
+- Your eyes told me before you did.
+
+@rule move.h.f_school_exam_nurse.comfort
+on move.comfort
+when hook=f_school_exam_nurse
+- Say she must be tired of telling people
+
+@rule react.h.f_school_exam_nurse.comfort
+on react
+when hook=f_school_exam_nurse move=comfort fit=good|neutral
+- Every year. It's fine.
+- Someone has to say it.
+
+@rule react.h.f_school_exam_nurse.bad
+on react
+when hook=f_school_exam_nurse fit=bad
+feel pout
+- Then come back when you've fainted.
+- Don't say I didn't warn you.
+
+@rule move.h.f_school_sports_up.invite
+on move.invite
+when hook=f_school_sports_up
+- Say you'll come and cheer for her
+
+@rule react.h.f_school_sports_up.invite
+on react
+when hook=f_school_sports_up move=invite fit=good|neutral
+- You'd better! I'll look for you!
+- Then I can't come last.
+
+@rule move.h.f_school_sports_up.ask
+on move.ask
+when hook=f_school_sports_up
+- Ask which event she's in
+
+@rule react.h.f_school_sports_up.ask
+on react
+when hook=f_school_sports_up move=ask fit=good|neutral
+- The relay. Third leg. Don't watch the baton.
+- Whichever one they let me run.
+
+@rule move.h.f_school_sports_up.tease
+on move.tease
+when hook=f_school_sports_up
+- Say your team is going to beat hers
+
+@rule react.h.f_school_sports_up.tease
+on react
+when hook=f_school_sports_up move=tease fit=good|neutral
+- We'll see about that.
+- Big words. Show up first.
+
+@rule react.h.f_school_sports_up.bad
+on react
+when hook=f_school_sports_up fit=bad
+feel pout
+- Then cheer for someone else.
+- Fine, don't come.
+
+@rule move.h.f_school_sports_genki.invite
+on move.invite
+when hook=f_school_sports_genki
+- Say you'll be there cheering
+
+@rule react.h.f_school_sports_genki.invite
+on react
+when hook=f_school_sports_genki move=invite fit=good|neutral
+- You'd better be loud!
+- Yes! Front row! I'm counting on you!
+
+@rule move.h.f_school_sports_genki.tease
+on move.tease
+when hook=f_school_sports_genki
+- Say you'll be cheering for the other side
+
+@rule react.h.f_school_sports_genki.tease
+on react
+when hook=f_school_sports_genki move=tease fit=good|neutral
+- Traitor! I'll beat you too!
+- You'll change your mind when I win!
+
+@rule move.h.f_school_sports_genki.ask
+on move.ask
+when hook=f_school_sports_genki
+- Ask how she plans to win
+
+@rule react.h.f_school_sports_genki.ask
+on react
+when hook=f_school_sports_genki move=ask fit=good|neutral
+- By going faster than everyone!
+- Simple! Don't stop!
+
+@rule react.h.f_school_sports_genki.bad
+on react
+when hook=f_school_sports_genki fit=bad
+feel pout
+- Then don't come!
+- Fine! I'll win without you!
+
+@rule move.h.f_school_sports_low.comfort
+on move.comfort
+when hook=f_school_sports_low
+- Say nobody's watching that closely
+
+@rule react.h.f_school_sports_low.comfort
+on react
+when hook=f_school_sports_low move=comfort fit=good|neutral
+- You really think so?
+- I hope you're right.
+
+@rule move.h.f_school_sports_low.invite
+on move.invite
+when hook=f_school_sports_low
+- Offer to practice with her
+
+@rule react.h.f_school_sports_low.invite
+on react
+when hook=f_school_sports_low move=invite fit=good|neutral
+- Would you? I'd fall less, maybe.
+- Only if you don't laugh.
+
+@rule move.h.f_school_sports_low.ask
+on move.ask
+when hook=f_school_sports_low
+- Ask who signed her up
+
+@rule react.h.f_school_sports_low.ask
+on react
+when hook=f_school_sports_low move=ask fit=good|neutral
+- My so-called friends.
+- Nobody will admit to it.
+
+@rule react.h.f_school_sports_low.bad
+on react
+when hook=f_school_sports_low fit=bad
+feel pout
+- Easy for you to say.
+- Just drop it.
+
+@rule move.h.f_school_sports_club.ask
+on move.ask
+when hook=f_school_sports_club
+- Ask what the {club} is entering
+
+@rule react.h.f_school_sports_club.ask
+on react
+when hook=f_school_sports_club move=ask fit=good|neutral
+- Nearly everything. Coach is excited.
+- You'll see it on the board.
+
+@rule move.h.f_school_sports_club.praise
+on move.praise
+when hook=f_school_sports_club
+- Say the {club} looks strong this year
+
+@rule react.h.f_school_sports_club.praise
+on react
+when hook=f_school_sports_club move=praise fit=good|neutral
+- We'd better be, after all that practice.
+- Thanks. Tell that to my legs.
+
+@rule move.h.f_school_sports_club.invite
+on move.invite
+when hook=f_school_sports_club
+- Say you'll stop by to cheer
+
+@rule react.h.f_school_sports_club.invite
+on react
+when hook=f_school_sports_club move=invite fit=good|neutral
+- Please do. The stands get lonely.
+- Bring a loud voice.
+
+@rule react.h.f_school_sports_club.bad
+on react
+when hook=f_school_sports_club fit=bad
+feel pout
+- Don't come if you're going to be like that.
+- Don't bother.
+
+@rule move.h.f_school_sports_staff.ask
+on move.ask
+when hook=f_school_sports_staff
+- Ask if she'll be running too
+
+@rule react.h.f_school_sports_staff.ask
+on react
+when hook=f_school_sports_staff move=ask fit=good|neutral
+- If they make me. Don't film it.
+- Only as far as the shade.
+
+@rule move.h.f_school_sports_staff.share
+on move.share
+when hook=f_school_sports_staff
+- Say you'll try to behave on the day
+
+@rule react.h.f_school_sports_staff.share
+on react
+when hook=f_school_sports_staff move=share fit=good|neutral
+- I'll hold you to that.
+- That would be a first.
+
+@rule move.h.f_school_sports_staff.tease
+on move.tease
+when hook=f_school_sports_staff
+- Say you'd pay to see the teachers' relay
+
+@rule react.h.f_school_sports_staff.tease
+on react
+when hook=f_school_sports_staff move=tease fit=good|neutral
+- Tickets are free. Sadly.
+- Careful, I still grade you.
+
+@rule react.h.f_school_sports_staff.bad
+on react
+when hook=f_school_sports_staff fit=bad
+feel pout
+- I've got enough to deal with.
+- Then don't complain about it.
+
+@rule move.h.f_school_nurse.ask
+on move.ask
+when hook=f_school_nurse
+- Ask what the worst injury she's seen at {event} is
+
+@rule react.h.f_school_nurse.ask
+on react
+when hook=f_school_nurse move=ask fit=good|neutral
+- You don't want that with your lunch.
+- Someone's nose, and a very surprised volleyball.
+
+@rule move.h.f_school_nurse.invite
+on move.invite
+when hook=f_school_nurse
+- Offer to help at the first aid tent
+
+@rule react.h.f_school_nurse.invite
+on react
+when hook=f_school_nurse move=invite fit=good|neutral
+- Can you stand the sight of blood?
+- You're hired. Bring your own gloves.
+
+@rule move.h.f_school_nurse.share
+on move.share
+when hook=f_school_nurse
+- Say you'll try not to end up in her tent
+
+@rule react.h.f_school_nurse.share
+on react
+when hook=f_school_nurse move=share fit=good|neutral
+- You say that every year.
+- Good. I'd rather see you upright.
+
+@rule react.h.f_school_nurse.bad
+on react
+when hook=f_school_nurse fit=bad
+feel pout
+- I've got enough to do.
+- Then go away and stay healthy.
+
+@rule move.h.f_school_fair_up.invite
+on move.invite
+when hook=f_school_fair_up
+- Ask if she wants to walk around {event} together
+
+@rule react.h.f_school_fair_up.invite
+on react
+when hook=f_school_fair_up move=invite fit=good|neutral
+- Yes! Don't back out!
+- Are you asking me? Yes!
+
+@rule move.h.f_school_fair_up.ask
+on move.ask
+when hook=f_school_fair_up
+- Ask what she's most looking forward to
+
+@rule react.h.f_school_fair_up.ask
+on react
+when hook=f_school_fair_up move=ask fit=good|neutral
+- The food stalls. Obviously.
+- Everything! I've got a plan and a backup plan.
+
+@rule move.h.f_school_fair_up.tease
+on move.tease
+when hook=f_school_fair_up
+- Say she's more excited than the people organizing it
+
+@rule react.h.f_school_fair_up.tease
+on react
+when hook=f_school_fair_up move=tease fit=good|neutral
+- Someone has to be.
+- You'll thank me when it's great.
+
+@rule react.h.f_school_fair_up.bad
+on react
+when hook=f_school_fair_up fit=bad
+feel pout
+- You'd ruin it anyway.
+- Fine, stay home.
+
+@rule move.h.f_school_fair_low.comfort
+on move.comfort
+when hook=f_school_fair_low
+- Ask if something's wrong
+
+@rule react.h.f_school_fair_low.comfort
+on react
+when hook=f_school_fair_low move=comfort fit=good|neutral
+- No. I'm just not in the mood for crowds.
+- It's nothing. Thanks for asking.
+
+@rule move.h.f_school_fair_low.invite
+on move.invite
+when hook=f_school_fair_low
+- Say it might do her good to go
+
+@rule react.h.f_school_fair_low.invite
+on react
+when hook=f_school_fair_low move=invite fit=good|neutral
+- Maybe. If I've got someone to go with.
+- You think so? I'll see how I feel.
+
+@rule move.h.f_school_fair_low.ask
+on move.ask
+when hook=f_school_fair_low
+- Ask what's put her off {event}
+
+@rule react.h.f_school_fair_low.ask
+on react
+when hook=f_school_fair_low move=ask fit=good|neutral
+- Everybody being so cheerful, mostly.
+- It's a lot of people. I've got no energy for it.
+
+@rule react.h.f_school_fair_low.bad
+on react
+when hook=f_school_fair_low fit=bad
+feel pout
+- Just leave it.
+- I don't want to talk about it.
+
+@rule move.h.f_school_fair_cool.ask
+on move.ask
+when hook=f_school_fair_cool
+- Ask if there's anything in the schedule worth seeing
+
+@rule react.h.f_school_fair_cool.ask
+on react
+when hook=f_school_fair_cool move=ask fit=good|neutral
+- Very little. I've marked it.
+- The second day. Early. Before the noise.
+
+@rule move.h.f_school_fair_cool.agree
+on move.agree
+when hook=f_school_fair_cool
+- Say it does look well organized
+
+@rule react.h.f_school_fair_cool.agree
+on react
+when hook=f_school_fair_cool move=agree fit=good|neutral
+- Someone finally read the feedback.
+- At last, an observant person.
+
+@rule react.h.f_school_fair_cool.bad
+on react
+when hook=f_school_fair_cool fit=bad
+feel pout
+- Attend or don't. It's up to you.
+- I don't need your review.
+
+@rule move.h.f_school_event_club.ask
+on move.ask
+when hook=f_school_event_club
+- Ask what the {club} is planning
+
+@rule react.h.f_school_event_club.ask
+on react
+when hook=f_school_event_club move=ask fit=good|neutral
+- It's a surprise. It's also not finished.
+- Come and see. We need people to come.
+
+@rule move.h.f_school_event_club.praise
+on move.praise
+when hook=f_school_event_club
+- Say the {club} always puts on a good show
+
+@rule react.h.f_school_event_club.praise
+on react
+when hook=f_school_event_club move=praise fit=good|neutral
+- We try. It's mostly panic.
+- Thanks. I'll tell the others.
+
+@rule move.h.f_school_event_club.invite
+on move.invite
+when hook=f_school_event_club
+- Say you'll stop by their stall
+
+@rule react.h.f_school_event_club.invite
+on react
+when hook=f_school_event_club move=invite fit=good|neutral
+- You'd better! Bring friends!
+- I'll save you something good.
+
+@rule react.h.f_school_event_club.bad
+on react
+when hook=f_school_event_club fit=bad
+feel pout
+- Don't come if you're going to be like that.
+- Don't bother.
+
+@rule move.h.f_school_fair_staff.ask
+on move.ask
+when hook=f_school_fair_staff
+- Ask what the committee's really like
+
+@rule react.h.f_school_fair_staff.ask
+on react
+when hook=f_school_fair_staff move=ask fit=good|neutral
+- Long. Very long. There's always one more form.
+- I've got a chair with my name on it. It's not comfortable.
+
+@rule move.h.f_school_fair_staff.invite
+on move.invite
+when hook=f_school_fair_staff
+- Offer to help set things up
+
+@rule react.h.f_school_fair_staff.invite
+on react
+when hook=f_school_fair_staff move=invite fit=good|neutral
+- You're volunteering? I'll remember that.
+- Yes, and I'm writing your name down.
+
+@rule move.h.f_school_fair_staff.share
+on move.share
+when hook=f_school_fair_staff
+- Say you never think about who does all the work
+
+@rule react.h.f_school_fair_staff.share
+on react
+when hook=f_school_fair_staff move=share fit=good|neutral
+- Nobody does. It's fine.
+- It's nice to hear someone say it.
+
+@rule react.h.f_school_fair_staff.bad
+on react
+when hook=f_school_fair_staff fit=bad
+feel pout
+- I've got enough to deal with.
+- Then don't complain about it.
+
+@rule move.h.f_school_fair_nurse.ask
+on move.ask
+when hook=f_school_fair_nurse
+- Ask what the worst stall accident was
+
+@rule react.h.f_school_fair_nurse.ask
+on react
+when hook=f_school_fair_nurse move=ask fit=good|neutral
+- Someone tried to catch a falling takoyaki.
+- A glue gun. Don't ask where.
+
+@rule move.h.f_school_fair_nurse.tease
+on move.tease
+when hook=f_school_fair_nurse
+- Say you'll bring her something from the food stalls
+
+@rule react.h.f_school_fair_nurse.tease
+on react
+when hook=f_school_fair_nurse move=tease fit=good|neutral
+- Bribery. I accept.
+- Nothing fried, thanks. I've seen the fryers.
+
+@rule move.h.f_school_fair_nurse.share
+on move.share
+when hook=f_school_fair_nurse
+- Say you'll be careful with the hot oil
+
+@rule react.h.f_school_fair_nurse.share
+on react
+when hook=f_school_fair_nurse move=share fit=good|neutral
+- See that you are.
+- Good. Keep your sleeves rolled up.
+
+@rule react.h.f_school_fair_nurse.bad
+on react
+when hook=f_school_fair_nurse fit=bad
+feel pout
+- I've got enough to do.
+- Then go away and stay healthy.
+
+@rule move.h.f_school_trip_up.ask
+on move.ask
+when hook=f_school_trip_up
+- Ask what she's bringing
+
+@rule react.h.f_school_trip_up.ask
+on react
+when hook=f_school_trip_up move=ask fit=good|neutral
+- Too much. Ask me again at the bus.
+- A book, a charger, and snacks for an army.
+
+@rule move.h.f_school_trip_up.invite
+on move.invite
+when hook=f_school_trip_up
+- Say you'll save her a seat on the bus
+
+@rule react.h.f_school_trip_up.invite
+on react
+when hook=f_school_trip_up move=invite fit=good|neutral
+- Window side? Then it's a deal.
+- Don't forget, or I'll sit on you.
+
+@rule move.h.f_school_trip_up.tease
+on move.tease
+when hook=f_school_trip_up
+- Say she'll need a second bag
+
+@rule react.h.f_school_trip_up.tease
+on react
+when hook=f_school_trip_up move=tease fit=good|neutral
+- I've already got one.
+- Are you offering to carry it?
+
+@rule react.h.f_school_trip_up.bad
+on react
+when hook=f_school_trip_up fit=bad
+feel pout
+- Sit wherever you like.
+- I'll sit with someone else, then.
+
+@rule move.h.f_school_trip_low.comfort
+on move.comfort
+when hook=f_school_trip_low
+- Say the front seat helps with bus sickness
+
+@rule react.h.f_school_trip_low.comfort
+on react
+when hook=f_school_trip_low move=comfort fit=good|neutral
+- Does it? I'll try anything.
+- Thanks. I'll ask for it.
+
+@rule move.h.f_school_trip_low.invite
+on move.invite
+when hook=f_school_trip_low
+- Say you could sit together
+
+@rule react.h.f_school_trip_low.invite
+on react
+when hook=f_school_trip_low move=invite fit=good|neutral
+- You wouldn't mind?
+- That would help, actually.
+
+@rule move.h.f_school_trip_low.ask
+on move.ask
+when hook=f_school_trip_low
+- Ask what's worrying her about the trip
+
+@rule react.h.f_school_trip_low.ask
+on react
+when hook=f_school_trip_low move=ask fit=good|neutral
+- The bus. And the rooms. And everything.
+- Being stuck with people I barely know.
+
+@rule react.h.f_school_trip_low.bad
+on react
+when hook=f_school_trip_low fit=bad
+feel pout
+- Never mind.
+- I'll deal with it.
+
+@rule move.h.f_school_trip_staff.ask
+on move.ask
+when hook=f_school_trip_staff
+- Ask what the itinerary is like
+
+@rule react.h.f_school_trip_staff.ask
+on react
+when hook=f_school_trip_staff move=ask fit=good|neutral
+- Early. Everything's early.
+- Temples, a museum, and more temples.
+
+@rule move.h.f_school_trip_staff.share
+on move.share
+when hook=f_school_trip_staff
+- Say you'll be on time, for once
+
+@rule react.h.f_school_trip_staff.share
+on react
+when hook=f_school_trip_staff move=share fit=good|neutral
+- I'll believe it when I count you.
+- Then you'll be the first.
+
+@rule move.h.f_school_trip_staff.tease
+on move.tease
+when hook=f_school_trip_staff
+- Ask if chaperones get to have fun too
+
+@rule react.h.f_school_trip_staff.tease
+on react
+when hook=f_school_trip_staff move=tease fit=good|neutral
+- Chaperones get to count.
+- I've got a book hidden in my bag.
+
+@rule react.h.f_school_trip_staff.bad
+on react
+when hook=f_school_trip_staff fit=bad
+feel pout
+- Read the handout.
+- That'll do.
+
+@rule move.h.f_school_trip_nurse.ask
+on move.ask
+when hook=f_school_trip_nurse
+- Ask what she packs in the first aid bag
+
+@rule react.h.f_school_trip_nurse.ask
+on react
+when hook=f_school_trip_nurse move=ask fit=good|neutral
+- Plasters, pills, and paper bags for the bus.
+- More than the bus has room for.
+
+@rule move.h.f_school_trip_nurse.share
+on move.share
+when hook=f_school_trip_nurse
+- Say you usually get bus-sick too
+
+@rule react.h.f_school_trip_nurse.share
+on react
+when hook=f_school_trip_nurse move=share fit=good|neutral
+- Sit by me, then. Near the bags.
+- Eat something light in the morning.
+
+@rule move.h.f_school_trip_nurse.tease
+on move.tease
+when hook=f_school_trip_nurse
+- Ask if she's only going for the hot springs
+
+@rule react.h.f_school_trip_nurse.tease
+on react
+when hook=f_school_trip_nurse move=tease fit=good|neutral
+- I'm there for medical reasons. Very relaxing ones.
+- Who told you about the hot springs?
+
+@rule react.h.f_school_trip_nurse.bad
+on react
+when hook=f_school_trip_nurse fit=bad
+feel pout
+- I've got enough to pack.
+- Then bring your own pills.
+
+@rule move.h.f_school_wish_up.ask
+on move.ask
+when hook=f_school_wish_up
+- Ask what she's wishing for
+
+@rule react.h.f_school_wish_up.ask
+on react
+when hook=f_school_wish_up move=ask fit=good|neutral
+- If I say it, it won't come true.
+- Something small. And something not so small.
+
+@rule move.h.f_school_wish_up.invite
+on move.invite
+when hook=f_school_wish_up
+- Ask if she wants to see the bamboo together
+
+@rule react.h.f_school_wish_up.invite
+on react
+when hook=f_school_wish_up move=invite fit=good|neutral
+- At night? It's prettier then.
+- All right. You can hold my pen.
+
+@rule move.h.f_school_wish_up.tease
+on move.tease
+when hook=f_school_wish_up
+- Say you'll read her strip when she's not looking
+
+@rule react.h.f_school_wish_up.tease
+on react
+when hook=f_school_wish_up move=tease fit=good|neutral
+- Don't you dare.
+- Then I'll hang it up high.
+
+@rule react.h.f_school_wish_up.bad
+on react
+when hook=f_school_wish_up fit=bad
+feel pout
+- Then you won't get a wish.
+- Keep your own wish to yourself.
+
+@rule move.h.f_school_wish_low.comfort
+on move.comfort
+when hook=f_school_wish_low
+- Say a small wish might be easier to grant
+
+@rule react.h.f_school_wish_low.comfort
+on react
+when hook=f_school_wish_low move=comfort fit=good|neutral
+- A small one... maybe.
+- You're nicer than the bamboo.
+
+@rule move.h.f_school_wish_low.ask
+on move.ask
+when hook=f_school_wish_low
+- Ask what she'd wish for if it were guaranteed
+
+@rule react.h.f_school_wish_low.ask
+on react
+when hook=f_school_wish_low move=ask fit=good|neutral
+- That's the problem. I don't know.
+- A week of sleep.
+
+@rule move.h.f_school_wish_low.share
+on move.share
+when hook=f_school_wish_low
+- Say you never know what to write either
+
+@rule react.h.f_school_wish_low.share
+on react
+when hook=f_school_wish_low move=share fit=good|neutral
+- Then write down the same as me.
+- Good. It isn't only me.
+
+@rule react.h.f_school_wish_low.bad
+on react
+when hook=f_school_wish_low fit=bad
+feel pout
+- Forget it.
+- It doesn't matter.
+
+@rule move.h.f_school_wish_staff.ask
+on move.ask
+when hook=f_school_wish_staff
+- Ask what the funniest wish was
+
+@rule react.h.f_school_wish_staff.ask
+on react
+when hook=f_school_wish_staff move=ask fit=good|neutral
+- Someone wished for my retirement. Signed.
+- "Please let Monday be cancelled."
+
+@rule move.h.f_school_wish_staff.tease
+on move.tease
+when hook=f_school_wish_staff
+- Ask what she wished for
+
+@rule react.h.f_school_wish_staff.tease
+on react
+when hook=f_school_wish_staff move=tease fit=good|neutral
+- A long holiday, and nothing to grade.
+- That stays on the bamboo.
+
+@rule move.h.f_school_wish_staff.share
+on move.share
+when hook=f_school_wish_staff
+- Say you wished for good grades too
+
+@rule react.h.f_school_wish_staff.share
+on react
+when hook=f_school_wish_staff move=share fit=good|neutral
+- Then we both know what you should be doing.
+- So did everyone. Read the book.
+
+@rule react.h.f_school_wish_staff.bad
+on react
+when hook=f_school_wish_staff fit=bad
+feel pout
+- Your wish is your business.
+- That'll do.
+
+@rule move.h.f_school_costume_up.ask
+on move.ask
+when hook=f_school_costume_up
+- Ask what she's dressing up as
+
+@rule react.h.f_school_costume_up.ask
+on react
+when hook=f_school_costume_up move=ask fit=good|neutral
+- It's a surprise. A scary one. Sort of.
+- Something with a tail. That's all you get.
+
+@rule move.h.f_school_costume_up.invite
+on move.invite
+when hook=f_school_costume_up
+- Ask if she wants to go around together in costume
+
+@rule react.h.f_school_costume_up.invite
+on react
+when hook=f_school_costume_up move=invite fit=good|neutral
+- Only if yours is good.
+- All right. We'll match, somehow.
+
+@rule move.h.f_school_costume_up.tease
+on move.tease
+when hook=f_school_costume_up
+- Say you'll recognize her anyway
+
+@rule react.h.f_school_costume_up.tease
+on react
+when hook=f_school_costume_up move=tease fit=good|neutral
+- You won't. Put money on it.
+- We'll see about that.
+
+@rule react.h.f_school_costume_up.bad
+on react
+when hook=f_school_costume_up fit=bad
+feel pout
+- Then no candy for you.
+- Go as yourself. Scary enough.
+
+@rule move.h.f_school_costume_low.comfort
+on move.comfort
+when hook=f_school_costume_low
+- Say a simple one can look great
+
+@rule react.h.f_school_costume_low.comfort
+on react
+when hook=f_school_costume_low move=comfort fit=good|neutral
+- You think a sheet would do?
+- Maybe. I'll look around.
+
+@rule move.h.f_school_costume_low.invite
+on move.invite
+when hook=f_school_costume_low
+- Offer to help her put something together
+
+@rule react.h.f_school_costume_low.invite
+on react
+when hook=f_school_costume_low move=invite fit=good|neutral
+- Would you? I've got no ideas.
+- All right. I've got some old fabric.
+
+@rule move.h.f_school_costume_low.tease
+on move.tease
+when hook=f_school_costume_low
+- Say a tired person is a very scary costume
+
+@rule react.h.f_school_costume_low.tease
+on react
+when hook=f_school_costume_low move=tease fit=good|neutral
+- It's the most realistic one.
+- I'm not even acting.
+
+@rule react.h.f_school_costume_low.bad
+on react
+when hook=f_school_costume_low fit=bad
+feel pout
+- Forget I mentioned it.
+- I'll skip it.
+
+@rule move.h.f_school_costume_staff.ask
+on move.ask
+when hook=f_school_costume_staff
+- Ask what her costume will be
+
+@rule react.h.f_school_costume_staff.ask
+on react
+when hook=f_school_costume_staff move=ask fit=good|neutral
+- A professor who has seen too much.
+- You'll have to wait and see.
+
+@rule move.h.f_school_costume_staff.tease
+on move.tease
+when hook=f_school_costume_staff
+- Say you'd come to class as a vampire anyway
+
+@rule react.h.f_school_costume_staff.tease
+on react
+when hook=f_school_costume_staff move=tease fit=good|neutral
+- Then you'd grade yourself.
+- I've failed worse.
+
+@rule move.h.f_school_costume_staff.share
+on move.share
+when hook=f_school_costume_staff
+- Take the candy she offers
+
+@rule react.h.f_school_costume_staff.share
+on react
+when hook=f_school_costume_staff move=share fit=good|neutral
+- Good choice. It's the last of the mint.
+- Take two. Before I eat them.
+
+@rule react.h.f_school_costume_staff.bad
+on react
+when hook=f_school_costume_staff fit=bad
+feel pout
+- Not during office hours.
+- That'll do.
+
+@rule move.h.f_school_eve_up.ask
+on move.ask
+when hook=f_school_eve_up
+- Ask what she's got planned
+
+@rule react.h.f_school_eve_up.ask
+on react
+when hook=f_school_eve_up move=ask fit=good|neutral
+- A cake. Strawberry. Don't argue.
+- Just a cake, the one with too much cream.
+
+@rule move.h.f_school_eve_up.invite
+on move.invite
+when hook=f_school_eve_up
+- Ask if she'd like to see the lights in town together
+
+@rule react.h.f_school_eve_up.invite
+on react
+when hook=f_school_eve_up move=invite fit=good|neutral
+- Are you asking me out? Yes.
+- I'd like that. Wear something warm.
+
+@rule move.h.f_school_eve_up.tease
+on move.tease
+when hook=f_school_eve_up
+- Say you'll only give her socks
+
+@rule react.h.f_school_eve_up.tease
+on react
+when hook=f_school_eve_up move=tease fit=good|neutral
+- I'd wear them, and tell everyone who gave them to me.
+- Then you'll get a lump of coal.
+
+@rule react.h.f_school_eve_up.bad
+on react
+when hook=f_school_eve_up fit=bad
+feel pout
+- Spend it however you like.
+- I've got other plans, then.
+
+@rule move.h.f_school_eve_low.comfort
+on move.comfort
+when hook=f_school_eve_low
+- Say she doesn't have to spend it alone
+
+@rule react.h.f_school_eve_low.comfort
+on react
+when hook=f_school_eve_low move=comfort fit=good|neutral
+- Do you mean that?
+- That's... nice to hear.
+
+@rule move.h.f_school_eve_low.invite
+on move.invite
+when hook=f_school_eve_low
+- Ask if she'd like some company that night
+
+@rule react.h.f_school_eve_low.invite
+on react
+when hook=f_school_eve_low move=invite fit=good|neutral
+- I'd really like that.
+- Only if you mean it.
+
+@rule move.h.f_school_eve_low.share
+on move.share
+when hook=f_school_eve_low
+- Say you've got no plans either
+
+@rule react.h.f_school_eve_low.share
+on react
+when hook=f_school_eve_low move=share fit=good|neutral
+- Then at least there's two of us.
+- Good. I mean, not good. You know.
+
+@rule react.h.f_school_eve_low.bad
+on react
+when hook=f_school_eve_low fit=bad
+feel pout
+- I don't need your pity.
+- It's nothing. Leave it.
+
+@rule move.h.f_school_eve_staff.ask
+on move.ask
+when hook=f_school_eve_staff
+- Ask if she ever takes the night off
+
+@rule react.h.f_school_eve_staff.ask
+on react
+when hook=f_school_eve_staff move=ask fit=good|neutral
+- Once. I regretted the Monday.
+- I'm told it's possible.
+
+@rule move.h.f_school_eve_staff.share
+on move.share
+when hook=f_school_eve_staff
+- Say she should get some rest over the holidays
+
+@rule react.h.f_school_eve_staff.share
+on react
+when hook=f_school_eve_staff move=share fit=good|neutral
+- I'll try. Thank you.
+- That's more than the dean ever said.
+
+@rule move.h.f_school_eve_staff.tease
+on move.tease
+when hook=f_school_eve_staff
+- Say you'll hand your paper in late as a present
+
+@rule react.h.f_school_eve_staff.tease
+on react
+when hook=f_school_eve_staff move=tease fit=good|neutral
+- Then I'll give you a present back. A zero.
+- You really know the way to my heart.
+
+@rule react.h.f_school_eve_staff.bad
+on react
+when hook=f_school_eve_staff fit=bad
+feel pout
+- Mind your own holidays.
+- That'll do.
+
+@rule move.h.f_school_council.ask
+on move.ask
+when hook=f_school_council
+- Ask who she's backing
+
+@rule react.h.f_school_council.ask
+on react
+when hook=f_school_council move=ask fit=good|neutral
+- I've got my reasons. Ask me after the vote.
+- Whoever fixes the vending machine.
+
+@rule move.h.f_school_council.agree
+on move.agree
+when hook=f_school_council
+- Say it's getting a little intense
+
+@rule react.h.f_school_council.agree
+on react
+when hook=f_school_council move=agree fit=good|neutral
+- There are posters on my posters.
+- It's only a student union. You'd think it was a war.
+
+@rule move.h.f_school_council.tease
+on move.tease
+when hook=f_school_council
+- Say she should run herself
+
+@rule react.h.f_school_council.tease
+on react
+when hook=f_school_council move=tease fit=good|neutral
+- Me? I'd win, and I'd hate it.
+- Vote for me. I'll abolish Mondays.
+
+@rule react.h.f_school_council.bad
+on react
+when hook=f_school_council fit=bad
+feel pout
+- You don't have to be so cynical.
+- Then don't vote.
+
+@rule move.h.f_school_project.ask
+on move.ask
+when hook=f_school_project
+- Ask how far along they are
+
+@rule react.h.f_school_project.ask
+on react
+when hook=f_school_project move=ask fit=good|neutral
+- Further than it looks. I hope.
+- It's at the part where you hate it.
+
+@rule move.h.f_school_project.praise
+on move.praise
+when hook=f_school_project
+- Say it sounds like a lot of work
+
+@rule react.h.f_school_project.praise
+on react
+when hook=f_school_project move=praise fit=good|neutral
+- It really is. Thank you for noticing.
+- You've got no idea, but thanks.
+
+@rule move.h.f_school_project.invite
+on move.invite
+when hook=f_school_project
+- Offer to lend a hand
+
+@rule react.h.f_school_project.invite
+on react
+when hook=f_school_project move=invite fit=good|neutral
+- Careful, we'll take you up on that.
+- Really? We could use someone who can count.
+
+@rule react.h.f_school_project.bad
+on react
+when hook=f_school_project fit=bad
+feel pout
+- We've got it covered.
+- We don't need help.
+
+@rule move.h.f_us_plain.share
+on move.share
+when hook=f_us_plain
+- Say you were thinking about that too
+
+@rule react.h.f_us_plain.share
+on react
+when hook=f_us_plain move=share fit=good|neutral
+- You were? Hm. That's nice to know.
+- So it's not just me.
+
+@rule move.h.f_us_plain.tease
+on move.tease
+when hook=f_us_plain
+- Say she brings it up a lot
+
+@rule react.h.f_us_plain.tease
+on react
+when hook=f_us_plain move=tease fit=good|neutral
+- I do not! Do I?
+- Only because you were there.
+
+@rule move.h.f_us_plain.ask
+on move.ask
+when hook=f_us_plain
+- Ask what she remembers about it
+
+@rule react.h.f_us_plain.ask
+on react
+when hook=f_us_plain move=ask fit=good|neutral
+- More than I'll admit.
+- The little things, mostly.
+
+@rule react.h.f_us_plain.bad
+on react
+when hook=f_us_plain fit=bad
+feel pout
+- Forget it, then.
+- I don't know why I brought it up.
+
+@rule move.h.f_us_gift_liked.share
+on move.share
+when hook=f_us_gift_liked
+- Say you weren't sure she'd like it
+
+@rule react.h.f_us_gift_liked.share
+on react
+when hook=f_us_gift_liked move=share fit=good|neutral
+- You worried about that? It's perfect.
+- Now I know how to read you. I think.
+
+@rule move.h.f_us_gift_liked.tease
+on move.tease
+when hook=f_us_gift_liked
+- Say you've got a receipt if she changes her mind
+
+@rule react.h.f_us_gift_liked.tease
+on react
+when hook=f_us_gift_liked move=tease fit=good|neutral
+- Try and take it back.
+- It's mine now.
+
+@rule move.h.f_us_gift_liked.invite
+on move.invite
+when hook=f_us_gift_liked
+- Say you'd like to pick the next one together
+
+@rule react.h.f_us_gift_liked.invite
+on react
+when hook=f_us_gift_liked move=invite fit=good|neutral
+- A next one? I'm listening.
+- Hm! That's a date, you know.
+
+@rule react.h.f_us_gift_liked.bad
+on react
+when hook=f_us_gift_liked fit=bad
+feel pout
+- You don't have to spoil it.
+- I was being nice.
+
+@rule move.h.f_us_gift_meh.ask
+on move.ask
+when hook=f_us_gift_meh
+- Ask what she'd have preferred
+
+@rule react.h.f_us_gift_meh.ask
+on react
+when hook=f_us_gift_meh move=ask fit=good|neutral
+- Oh, no, it's fine! Something smaller, maybe.
+- Don't ask me that. It was nice of you.
+
+@rule move.h.f_us_gift_meh.share
+on move.share
+when hook=f_us_gift_meh
+- Admit you weren't sure what to get
+
+@rule react.h.f_us_gift_meh.share
+on react
+when hook=f_us_gift_meh move=share fit=good|neutral
+- I could tell. It's okay, really.
+- It's the trying that counts.
+
+@rule move.h.f_us_gift_meh.thank
+on move.thank
+when hook=f_us_gift_meh
+- Thank her for being polite about it
+
+@rule react.h.f_us_gift_meh.thank
+on react
+when hook=f_us_gift_meh move=thank fit=good|neutral
+- Was I that obvious? Sorry.
+- You're not hopeless. You've got a sense of humor.
+
+@rule react.h.f_us_gift_meh.bad
+on react
+when hook=f_us_gift_meh fit=bad
+feel pout
+- I said it was fine.
+- Why are you making this awkward?
+
+@rule move.h.f_us_helped.share
+on move.share
+when hook=f_us_helped
+- Say you were happy to do it
+
+@rule react.h.f_us_helped.share
+on react
+when hook=f_us_helped move=share fit=good|neutral
+- You really mean that, don't you?
+- I don't know many people like you.
+
+@rule move.h.f_us_helped.tease
+on move.tease
+when hook=f_us_helped
+- Say she owes you a very big favor
+
+@rule react.h.f_us_helped.tease
+on react
+when hook=f_us_helped move=tease fit=good|neutral
+- I knew there'd be a price.
+- What do you want? Be careful.
+
+@rule move.h.f_us_helped.praise
+on move.praise
+when hook=f_us_helped
+- Say she'd have managed on her own anyway
+
+@rule react.h.f_us_helped.praise
+on react
+when hook=f_us_helped move=praise fit=good|neutral
+- Maybe. It was better not to have to.
+- That's nice of you to say.
+
+@rule react.h.f_us_helped.bad
+on react
+when hook=f_us_helped fit=bad
+feel pout
+- Don't make me regret saying thanks.
+- Fine. Forget I said it.
+
+@rule move.h.f_us_defended.share
+on move.share
+when hook=f_us_defended
+- Say you'd do it again
+
+@rule react.h.f_us_defended.share
+on react
+when hook=f_us_defended move=share fit=good|neutral
+- Don't say that. I'll start counting on it.
+- ...Okay. Thank you.
+
+@rule move.h.f_us_defended.praise
+on move.praise
+when hook=f_us_defended
+- Say she didn't deserve what was said
+
+@rule react.h.f_us_defended.praise
+on react
+when hook=f_us_defended move=praise fit=good|neutral
+- You're going to make me cry. Stop.
+- You really think so?
+
+@rule move.h.f_us_defended.tease
+on move.tease
+when hook=f_us_defended
+- Say you were terrified the whole time
+
+@rule react.h.f_us_defended.tease
+on react
+when hook=f_us_defended move=tease fit=good|neutral
+- You didn't look it.
+- Hehe. That makes it better, actually.
+
+@rule react.h.f_us_defended.bad
+on react
+when hook=f_us_defended fit=bad
+feel pout
+- I didn't ask you to.
+- Don't act like a hero.
+
+@rule move.h.f_us_promise.praise
+on move.praise
+when hook=f_us_promise
+- Say she was the one who trusted you
+
+@rule react.h.f_us_promise.praise
+on react
+when hook=f_us_promise move=praise fit=good|neutral
+- Someone had to. I'm glad it was me.
+- And I was right.
+
+@rule move.h.f_us_promise.share
+on move.share
+when hook=f_us_promise
+- Say you try not to promise what you can't do
+
+@rule react.h.f_us_promise.share
+on react
+when hook=f_us_promise move=share fit=good|neutral
+- That's why it means something.
+- I noticed.
+
+@rule move.h.f_us_promise.thank
+on move.thank
+when hook=f_us_promise
+- Thank her for remembering
+
+@rule react.h.f_us_promise.thank
+on react
+when hook=f_us_promise move=thank fit=good|neutral
+- I always remember. Be warned.
+- You're welcome. Keep it up.
+
+@rule react.h.f_us_promise.bad
+on react
+when hook=f_us_promise fit=bad
+feel pout
+- Don't make a big deal of it.
+- Once doesn't make a habit.
+
+@rule move.h.f_us_lunch.invite
+on move.invite
+when hook=f_us_lunch
+- Say you should do it again tomorrow
+
+@rule react.h.f_us_lunch.invite
+on react
+when hook=f_us_lunch move=invite fit=good|neutral
+- I'd like that. Your turn to bring something.
+- Hm. Same place?
+
+@rule move.h.f_us_lunch.tease
+on move.tease
+when hook=f_us_lunch
+- Say she eats faster than anyone you've ever met
+
+@rule react.h.f_us_lunch.tease
+on react
+when hook=f_us_lunch move=tease fit=good|neutral
+- I was hungry! Don't tell people!
+- That's a skill.
+
+@rule move.h.f_us_lunch.share
+on move.share
+when hook=f_us_lunch
+- Say it's the best lunch you've had in a while
+
+@rule react.h.f_us_lunch.share
+on react
+when hook=f_us_lunch move=share fit=good|neutral
+- From the bread? Oh. You mean the company.
+- Me too. Don't laugh.
+
+@rule react.h.f_us_lunch.bad
+on react
+when hook=f_us_lunch fit=bad
+feel pout
+- It was only lunch.
+- Don't read too much into it.
+
+@rule move.h.f_us_walk.invite
+on move.invite
+when hook=f_us_walk
+- Offer to walk her home again
+
+@rule react.h.f_us_walk.invite
+on react
+when hook=f_us_walk move=invite fit=good|neutral
+- I was hoping you'd offer.
+- Okay. Take the long way this time?
+
+@rule move.h.f_us_walk.tease
+on move.tease
+when hook=f_us_walk
+- Say you noticed she walked slower near her street
+
+@rule react.h.f_us_walk.tease
+on react
+when hook=f_us_walk move=tease fit=good|neutral
+- I did not! Maybe.
+- You weren't supposed to notice.
+
+@rule move.h.f_us_walk.share
+on move.share
+when hook=f_us_walk
+- Say the way back felt longer without her
+
+@rule react.h.f_us_walk.share
+on react
+when hook=f_us_walk move=share fit=good|neutral
+- Stop. You can't just say that.
+- Good. It should.
+
+@rule react.h.f_us_walk.bad
+on react
+when hook=f_us_walk fit=bad
+feel pout
+- It's just a walk home.
+- Don't get ideas.
+
+@rule move.h.f_us_date.invite
+on move.invite
+when hook=f_us_date
+- Ask her where she wants to go next
+
+@rule react.h.f_us_date.invite
+on react
+when hook=f_us_date move=invite fit=good|neutral
+- Somewhere you've never taken anyone.
+- Surprise me. You did all right last time.
+
+@rule move.h.f_us_date.share
+on move.share
+when hook=f_us_date
+- Say you keep thinking about it too
+
+@rule react.h.f_us_date.share
+on react
+when hook=f_us_date move=share fit=good|neutral
+- Yeah? Which part?
+- I hoped you'd say that.
+
+@rule move.h.f_us_date.tease
+on move.tease
+when hook=f_us_date
+- Rate the date out of ten
+
+@rule react.h.f_us_date.tease
+on react
+when hook=f_us_date move=tease fit=good|neutral
+- You're rating me?! Go on, then.
+- I'd better get a nine.
+
+@rule react.h.f_us_date.bad
+on react
+when hook=f_us_date fit=bad
+feel pout
+- Don't make fun of it.
+- Then forget we went.
+
+@rule move.h.f_us_kiss.tease
+on move.tease
+when hook=f_us_kiss
+- Ask if she'd like to review the material
+
+@rule react.h.f_us_kiss.tease
+on react
+when hook=f_us_kiss move=tease fit=good|neutral
+- You're terrible... Later.
+- Stop grinning like that.
+
+@rule move.h.f_us_kiss.share
+on move.share
+when hook=f_us_kiss
+- Say your heart was going like crazy too
+
+@rule react.h.f_us_kiss.share
+on react
+when hook=f_us_kiss move=share fit=good|neutral
+- Yours too? I thought it was only me.
+- You seemed so calm.
+
+@rule move.h.f_us_kiss.invite
+on move.invite
+when hook=f_us_kiss
+- Say you'd like to take her out tonight
+
+@rule react.h.f_us_kiss.invite
+on react
+when hook=f_us_kiss move=invite fit=good|neutral
+- Hm. You'd better.
+- Okay. But I pick the place.
+
+@rule react.h.f_us_kiss.bad
+on react
+when hook=f_us_kiss fit=bad
+feel pout
+- Not here!
+- You can't just bring that up.
+
+@rule move.h.f_us_confessed.share
+on move.share
+when hook=f_us_confessed
+- Say you'd practiced it in the mirror
+
+@rule react.h.f_us_confessed.share
+on react
+when hook=f_us_confessed move=share fit=good|neutral
+- You did? Oh, that's adorable.
+- It didn't sound practiced at all.
+
+@rule move.h.f_us_confessed.tease
+on move.tease
+when hook=f_us_confessed
+- Say she went redder than the sunset
+
+@rule react.h.f_us_confessed.tease
+on react
+when hook=f_us_confessed move=tease fit=good|neutral
+- You were no better!
+- Don't remind me.
+
+@rule move.h.f_us_confessed.ask
+on move.ask
+when hook=f_us_confessed
+- Ask what she was thinking at that moment
+
+@rule react.h.f_us_confessed.ask
+on react
+when hook=f_us_confessed move=ask fit=good|neutral
+- That if I breathed, I'd wake up.
+- Nothing. My head was empty.
+
+@rule react.h.f_us_confessed.bad
+on react
+when hook=f_us_confessed fit=bad
+feel pout
+- Let's not make a joke of it.
+- Forget it.
+
+@rule move.h.f_us_dating.share
+on move.share
+when hook=f_us_dating
+- Say it still feels strange to say it out loud
+
+@rule react.h.f_us_dating.share
+on react
+when hook=f_us_dating move=share fit=good|neutral
+- Say it anyway. I like hearing it.
+- Good strange, right?
+
+@rule move.h.f_us_dating.tease
+on move.tease
+when hook=f_us_dating
+- Say she's been telling everyone
+
+@rule react.h.f_us_dating.tease
+on react
+when hook=f_us_dating move=tease fit=good|neutral
+- Only the people who ask. And some who don't.
+- I'm allowed!
+
+@rule move.h.f_us_dating.invite
+on move.invite
+when hook=f_us_dating
+- Ask what she wants to do this weekend
+
+@rule react.h.f_us_dating.invite
+on react
+when hook=f_us_dating move=invite fit=good|neutral
+- With you? Anything. Nearly.
+- Hm! You're getting good at this.
+
+@rule react.h.f_us_dating.bad
+on react
+when hook=f_us_dating fit=bad
+feel pout
+- Is that a problem?
+- I thought you'd be happy.
+
+@rule move.h.f_us_dating_fast.share
+on move.share
+when hook=f_us_dating_fast
+- Say it felt right to you too
+
+@rule react.h.f_us_dating_fast.share
+on react
+when hook=f_us_dating_fast move=share fit=good|neutral
+- Okay. Then that's what matters.
+- I was hoping you'd say that.
+
+@rule move.h.f_us_dating_fast.tease
+on move.tease
+when hook=f_us_dating_fast
+- Say you'd skip a step or two any day
+
+@rule react.h.f_us_dating_fast.tease
+on react
+when hook=f_us_dating_fast move=tease fit=good|neutral
+- You're impossible.
+- My friends think we're crazy.
+
+@rule move.h.f_us_dating_fast.ask
+on move.ask
+when hook=f_us_dating_fast
+- Ask if her friends have said anything
+
+@rule react.h.f_us_dating_fast.ask
+on react
+when hook=f_us_dating_fast move=ask fit=good|neutral
+- Oh, they've said plenty.
+- They're taking bets on it.
+
+@rule react.h.f_us_dating_fast.bad
+on react
+when hook=f_us_dating_fast fit=bad
+feel pout
+- Maybe we did go too fast.
+- You don't have to laugh.
+
+@rule move.h.f_us_flirt.tease
+on move.tease
+when hook=f_us_flirt
+- Say she didn't exactly pull away
+
+@rule react.h.f_us_flirt.tease
+on react
+when hook=f_us_flirt move=tease fit=good|neutral
+- I was being polite!
+- Hmph. You noticed.
+
+@rule move.h.f_us_flirt.share
+on move.share
+when hook=f_us_flirt
+- Say you were nervous too
+
+@rule react.h.f_us_flirt.share
+on react
+when hook=f_us_flirt move=share fit=good|neutral
+- You? You looked like you did it every day.
+- Good. I'm glad.
+
+@rule move.h.f_us_flirt.invite
+on move.invite
+when hook=f_us_flirt
+- Say you'd like to pick up where you left off
+
+@rule react.h.f_us_flirt.invite
+on react
+when hook=f_us_flirt move=invite fit=good|neutral
+- Bold. Keep going.
+- Maybe. Depends how you ask.
+
+@rule react.h.f_us_flirt.bad
+on react
+when hook=f_us_flirt fit=bad
+feel pout
+- You read too much into that.
+- I think you've got the wrong idea.
+
+@rule move.h.f_us_shared.share
+on move.share
+when hook=f_us_shared
+- Say you think about that too
+
+@rule react.h.f_us_shared.share
+on react
+when hook=f_us_shared move=share fit=good|neutral
+- I'm glad I told you, then.
+- It's nice not being the only one.
+
+@rule move.h.f_us_shared.tease
+on move.tease
+when hook=f_us_shared
+- Say you'll never tell anyone. Mostly
+
+@rule react.h.f_us_shared.tease
+on react
+when hook=f_us_shared move=tease fit=good|neutral
+- You'd better not!
+- I know where you sit.
+
+@rule move.h.f_us_shared.ask
+on move.ask
+when hook=f_us_shared
+- Ask if she's ever told anyone else
+
+@rule react.h.f_us_shared.ask
+on react
+when hook=f_us_shared move=ask fit=good|neutral
+- No. Just you.
+- Not like that.
+
+@rule react.h.f_us_shared.bad
+on react
+when hook=f_us_shared fit=bad
+feel pout
+- I should've kept it to myself.
+- Don't make me regret it.
+
+@rule move.h.f_us_teacher.share
+on move.share
+when hook=f_us_teacher
+- Say you know where the lines are
+
+@rule react.h.f_us_teacher.share
+on react
+when hook=f_us_teacher move=share fit=good|neutral
+- Good. One of us has to.
+- That's what worries me.
+
+@rule move.h.f_us_teacher.tease
+on move.tease
+when hook=f_us_teacher
+- Ask if that's on the exam
+
+@rule react.h.f_us_teacher.tease
+on react
+when hook=f_us_teacher move=tease fit=good|neutral
+- Everything's on the exam.
+- I'm going to pretend you didn't say that.
+
+@rule move.h.f_us_teacher.ask
+on move.ask
+when hook=f_us_teacher
+- Ask what she'd like you to do about it
+
+@rule react.h.f_us_teacher.ask
+on react
+when hook=f_us_teacher move=ask fit=good|neutral
+- Think before you act. I'll try to do the same.
+- I don't know yet. That's the trouble.
+
+@rule react.h.f_us_teacher.bad
+on react
+when hook=f_us_teacher fit=bad
+feel pout
+- Not here.
+- This isn't the place, and you know it.
+
+@rule move.h.f_us_teacher_dating.share
+on move.share
+when hook=f_us_teacher_dating
+- Say you find it hard not to smile in her class
+
+@rule react.h.f_us_teacher_dating.share
+on react
+when hook=f_us_teacher_dating move=share fit=good|neutral
+- Then look at your notes.
+- That's why I don't call on you.
+
+@rule move.h.f_us_teacher_dating.tease
+on move.tease
+when hook=f_us_teacher_dating
+- Say you'll raise your hand a lot today
+
+@rule react.h.f_us_teacher_dating.tease
+on react
+when hook=f_us_teacher_dating move=tease fit=good|neutral
+- Don't you dare.
+- I'll give you the hardest question.
+
+@rule move.h.f_us_teacher_dating.invite
+on move.invite
+when hook=f_us_teacher_dating
+- Say you'll see her after class, off campus
+
+@rule react.h.f_us_teacher_dating.invite
+on react
+when hook=f_us_teacher_dating move=invite fit=good|neutral
+- Quietly. And not at the usual place.
+- Yes. Text me first.
+
+@rule react.h.f_us_teacher_dating.bad
+on react
+when hook=f_us_teacher_dating fit=bad
+feel pout
+- Keep your voice down.
+- You're being careless.
+
+@rule move.h.f_you_romance_other.ask
+on move.ask
+when hook=f_you_romance_other
+- Ask who told her
+
+@rule react.h.f_you_romance_other.ask
+on react
+when hook=f_you_romance_other move=ask fit=good|neutral
+- Does it matter? Everyone's saying it.
+- I have my ways.
+
+@rule move.h.f_you_romance_other.admit
+on move.admit
+when hook=f_you_romance_other
+- Say it's true
+
+@rule react.h.f_you_romance_other.admit
+on react
+when hook=f_you_romance_other move=admit fit=good|neutral
+- Well, at least you're not hiding it.
+- I see. Thanks for telling me straight.
+
+@rule move.h.f_you_romance_other.deny
+on move.deny
+when hook=f_you_romance_other
+- Say there's nothing going on with {who}
+
+@rule react.h.f_you_romance_other.deny
+on react
+when hook=f_you_romance_other move=deny fit=good|neutral
+- Is that so? Your face says something else.
+- If you say so.
+
+@rule move.h.f_you_romance_other.tease
+on move.tease
+when hook=f_you_romance_other
+- Ask if she's keeping a record of who you talk to
+
+@rule react.h.f_you_romance_other.tease
+on react
+when hook=f_you_romance_other move=tease fit=good|neutral
+- Somebody has to.
+- Don't flatter yourself.
+
+@rule react.h.f_you_romance_other.bad
+on react
+when hook=f_you_romance_other fit=bad
+feel pout
+- I'm only asking.
+- Don't get defensive.
+
+@rule move.h.f_you_romance_other_jealous.admit
+on move.admit
+when hook=f_you_romance_other_jealous
+- Say yes, you and {who} are close
+
+@rule react.h.f_you_romance_other_jealous.admit
+on react
+when hook=f_you_romance_other_jealous move=admit fit=good|neutral
+- I see. Thanks for not lying, at least.
+- ...Okay. I'll get used to the idea.
+
+@rule move.h.f_you_romance_other_jealous.comfort
+on move.comfort
+when hook=f_you_romance_other_jealous
+- Say it doesn't change what she means to you
+
+@rule react.h.f_you_romance_other_jealous.comfort
+on react
+when hook=f_you_romance_other_jealous move=comfort fit=good|neutral
+- You say that so easily.
+- I want to believe that.
+
+@rule move.h.f_you_romance_other_jealous.deny
+on move.deny
+when hook=f_you_romance_other_jealous
+- Say it's not what she thinks
+
+@rule react.h.f_you_romance_other_jealous.deny
+on react
+when hook=f_you_romance_other_jealous move=deny fit=good|neutral
+- Then what is it?
+- I'd like to hear you explain that.
+
+@rule move.h.f_you_romance_other_jealous.ask
+on move.ask
+when hook=f_you_romance_other_jealous
+- Ask why it bothers her so much
+
+@rule react.h.f_you_romance_other_jealous.ask
+on react
+when hook=f_you_romance_other_jealous move=ask fit=good|neutral
+- You really don't know?
+- ...Never mind. It's nothing.
+
+@rule react.h.f_you_romance_other_jealous.bad
+on react
+when hook=f_you_romance_other_jealous fit=bad
+feel pout
+- You could have told me yourself.
+- Forget it. Go to her.
+
+@rule move.h.f_you_romance_other_gf.admit
+on move.admit
+when hook=f_you_romance_other_gf
+- Own up to what happened with {who}
+
+@rule react.h.f_you_romance_other_gf.admit
+on react
+when hook=f_you_romance_other_gf move=admit fit=good|neutral
+- I needed to hear it from you. It still hurts.
+- Thank you for that much.
+
+@rule move.h.f_you_romance_other_gf.deny
+on move.deny
+when hook=f_you_romance_other_gf
+- Say it's only talk
+
+@rule react.h.f_you_romance_other_gf.deny
+on react
+when hook=f_you_romance_other_gf move=deny fit=good|neutral
+- Look at me and say that again.
+- Then why is everyone saying it?
+
+@rule move.h.f_you_romance_other_gf.comfort
+on move.comfort
+when hook=f_you_romance_other_gf
+- Say she's the one you want to be with
+
+@rule react.h.f_you_romance_other_gf.comfort
+on react
+when hook=f_you_romance_other_gf move=comfort fit=good|neutral
+- Then act like it.
+- Then why am I hearing this from other people?
+
+@rule react.h.f_you_romance_other_gf.bad
+on react
+when hook=f_you_romance_other_gf fit=bad
+feel pout
+- I'm not stupid.
+- Don't lie to me.
+
+@rule move.h.f_you_romance_other_acq.ask
+on move.ask
+when hook=f_you_romance_other_acq
+- Ask how she heard about it
+
+@rule react.h.f_you_romance_other_acq.ask
+on react
+when hook=f_you_romance_other_acq move=ask fit=good|neutral
+- Everyone's heard. It's a small campus.
+- It came up. It's not a big deal.
+
+@rule move.h.f_you_romance_other_acq.laugh
+on move.laugh
+when hook=f_you_romance_other_acq
+- Laugh off the attention
+
+@rule react.h.f_you_romance_other_acq.laugh
+on react
+when hook=f_you_romance_other_acq move=laugh fit=good|neutral
+- You're popular, huh?
+- Relax. I'm not after you.
+
+@rule move.h.f_you_romance_other_acq.share
+on move.share
+when hook=f_you_romance_other_acq
+- Say it's a bit early to say
+
+@rule react.h.f_you_romance_other_acq.share
+on react
+when hook=f_you_romance_other_acq move=share fit=good|neutral
+- Okay, okay. I won't spread it.
+- Fair enough. Good luck.
+
+@rule react.h.f_you_romance_other_acq.bad
+on react
+when hook=f_you_romance_other_acq fit=bad
+feel pout
+- I was only being polite.
+- Never mind.
+
+@rule move.h.f_you_romance_other_friendship.ask
+on move.ask
+when hook=f_you_romance_other_friendship
+- Ask if things will change between you two
+
+@rule react.h.f_you_romance_other_friendship.ask
+on react
+when hook=f_you_romance_other_friendship move=ask fit=good|neutral
+- I don't know. Will they?
+- Depends on you, doesn't it?
+
+@rule move.h.f_you_romance_other_friendship.comfort
+on move.comfort
+when hook=f_you_romance_other_friendship
+- Say you'd still like to spend time with her
+
+@rule react.h.f_you_romance_other_friendship.comfort
+on react
+when hook=f_you_romance_other_friendship move=comfort fit=good|neutral
+- You mean that? Don't just say it.
+- Then don't disappear on me.
+
+@rule move.h.f_you_romance_other_friendship.invite
+on move.invite
+when hook=f_you_romance_other_friendship
+- Suggest doing something this week, just the two of you
+
+@rule react.h.f_you_romance_other_friendship.invite
+on react
+when hook=f_you_romance_other_friendship move=invite fit=good|neutral
+- You've got time for me? Okay.
+- I'll believe it when I see it.
+
+@rule react.h.f_you_romance_other_friendship.bad
+on react
+when hook=f_you_romance_other_friendship fit=bad
+feel pout
+- You've got your hands full.
+- Don't bother.
+
+@rule move.h.f_you_romance_other_herfriend.ask
+on move.ask
+when hook=f_you_romance_other_herfriend
+- Ask if {who} said anything about you
+
+@rule react.h.f_you_romance_other_herfriend.ask
+on react
+when hook=f_you_romance_other_herfriend move=ask fit=good|neutral
+- A little. She smiles when she does.
+- That's between me and her.
+
+@rule move.h.f_you_romance_other_herfriend.comfort
+on move.comfort
+when hook=f_you_romance_other_herfriend
+- Say you care about {who}
+
+@rule react.h.f_you_romance_other_herfriend.comfort
+on react
+when hook=f_you_romance_other_herfriend move=comfort fit=good|neutral
+- You'd better. I'm watching.
+- Good. Keep it that way.
+
+@rule move.h.f_you_romance_other_herfriend.defend
+on move.defend
+when hook=f_you_romance_other_herfriend
+- Say you'd never hurt {who}
+
+@rule react.h.f_you_romance_other_herfriend.defend
+on react
+when hook=f_you_romance_other_herfriend move=defend fit=good|neutral
+- Nobody plans to. Be careful.
+- I'll hold you to that.
+
+@rule react.h.f_you_romance_other_herfriend.bad
+on react
+when hook=f_you_romance_other_herfriend fit=bad
+feel pout
+- Don't make me come after you.
+- I've warned you.
+
+@rule move.h.f_you_romance_other_hercrush.ask
+on move.ask
+when hook=f_you_romance_other_hercrush
+- Ask if she's all right
+
+@rule react.h.f_you_romance_other_hercrush.ask
+on react
+when hook=f_you_romance_other_hercrush move=ask fit=good|neutral
+- I'm fine. It's fine.
+- Don't ask me that right now.
+
+@rule move.h.f_you_romance_other_hercrush.comfort
+on move.comfort
+when hook=f_you_romance_other_hercrush
+- Say you had no idea how she felt
+
+@rule react.h.f_you_romance_other_hercrush.comfort
+on react
+when hook=f_you_romance_other_hercrush move=comfort fit=good|neutral
+- How could you? I never said.
+- It's not your fault. Thanks.
+
+@rule move.h.f_you_romance_other_hercrush.admit
+on move.admit
+when hook=f_you_romance_other_hercrush
+- Say you're sorry if it hurt
+
+@rule react.h.f_you_romance_other_hercrush.admit
+on react
+when hook=f_you_romance_other_hercrush move=admit fit=good|neutral
+- It's nobody's fault. Just give me a while.
+- I know. I'll be fine.
+
+@rule react.h.f_you_romance_other_hercrush.bad
+on react
+when hook=f_you_romance_other_hercrush fit=bad
+feel pout
+- Don't. Just don't.
+- I don't want your pity.
+
+@rule move.h.f_you_romance_teacher.deny
+on move.deny
+when hook=f_you_romance_teacher
+- Say it's a misunderstanding
+
+@rule react.h.f_you_romance_teacher.deny
+on react
+when hook=f_you_romance_teacher move=deny fit=good|neutral
+- Is it? That's not what it looks like.
+- I hope so, for her sake.
+
+@rule move.h.f_you_romance_teacher.admit
+on move.admit
+when hook=f_you_romance_teacher
+- Say it's true, and you're both adults
+
+@rule react.h.f_you_romance_teacher.admit
+on react
+when hook=f_you_romance_teacher move=admit fit=good|neutral
+- Wow. Okay. Be careful.
+- I can't believe you said that out loud.
+
+@rule move.h.f_you_romance_teacher.tease
+on move.tease
+when hook=f_you_romance_teacher
+- Ask if that gets you better grades
+
+@rule react.h.f_you_romance_teacher.tease
+on react
+when hook=f_you_romance_teacher move=tease fit=good|neutral
+- So that's your secret.
+- I'm telling you, it's going to come out.
+
+@rule react.h.f_you_romance_teacher.bad
+on react
+when hook=f_you_romance_teacher fit=bad
+feel pout
+- This isn't funny.
+- You've got a nerve.
+
+@rule move.h.f_you_romance_student_teacher.admit
+on move.admit
+when hook=f_you_romance_student_teacher
+- Say you and {who} are seeing each other
+
+@rule react.h.f_you_romance_student_teacher.admit
+on react
+when hook=f_you_romance_student_teacher move=admit fit=good|neutral
+- I thought so. Be sensible.
+- Thank you for not insulting me with a lie.
+
+@rule move.h.f_you_romance_student_teacher.tease
+on move.tease
+when hook=f_you_romance_student_teacher
+- Ask how much she notices in class
+
+@rule react.h.f_you_romance_student_teacher.tease
+on react
+when hook=f_you_romance_student_teacher move=tease fit=good|neutral
+- Everything. It's my job.
+- More than you'd like.
+
+@rule move.h.f_you_romance_student_teacher.deny
+on move.deny
+when hook=f_you_romance_student_teacher
+- Say you're only study partners
+
+@rule react.h.f_you_romance_student_teacher.deny
+on react
+when hook=f_you_romance_student_teacher move=deny fit=good|neutral
+- Of course you are.
+- Yes. That's what I'd say too.
+
+@rule react.h.f_you_romance_student_teacher.bad
+on react
+when hook=f_you_romance_student_teacher fit=bad
+feel pout
+- I'm saying this as your professor.
+- Let's not make this a formal matter.
+
+@rule move.h.f_you_kind_other.share
+on move.share
+when hook=f_you_kind_other
+- Say anyone would have done the same
+
+@rule react.h.f_you_kind_other.share
+on react
+when hook=f_you_kind_other move=share fit=good|neutral
+- No, they wouldn't have. That's the point.
+- You don't take compliments, do you?
+
+@rule move.h.f_you_kind_other.laugh
+on move.laugh
+when hook=f_you_kind_other
+- Laugh it off
+
+@rule react.h.f_you_kind_other.laugh
+on react
+when hook=f_you_kind_other move=laugh fit=good|neutral
+- You can't hide it from me. You're nice.
+- Oh, don't be modest.
+
+@rule move.h.f_you_kind_other.tease
+on move.tease
+when hook=f_you_kind_other
+- Say you hope she's not spreading rumors about you being nice
+
+@rule react.h.f_you_kind_other.tease
+on react
+when hook=f_you_kind_other move=tease fit=good|neutral
+- It's too late. The word's out.
+- Your reputation's ruined.
+
+@rule react.h.f_you_kind_other.bad
+on react
+when hook=f_you_kind_other fit=bad
+feel pout
+- You don't have to act tough.
+- Forget it.
+
+@rule move.h.f_you_rude_other.admit
+on move.admit
+when hook=f_you_rude_other
+- Say you were out of line
+
+@rule react.h.f_you_rude_other.admit
+on react
+when hook=f_you_rude_other move=admit fit=good|neutral
+- Then tell her that, not me.
+- At least you know it.
+
+@rule move.h.f_you_rude_other.correct
+on move.correct
+when hook=f_you_rude_other
+- Say that's not how it happened
+
+@rule react.h.f_you_rude_other.correct
+on react
+when hook=f_you_rude_other move=correct fit=good|neutral
+- Then how did it happen?
+- That's not what she told me.
+
+@rule move.h.f_you_rude_other.deny
+on move.deny
+when hook=f_you_rude_other
+- Say you never meant it that way
+
+@rule react.h.f_you_rude_other.deny
+on react
+when hook=f_you_rude_other move=deny fit=good|neutral
+- It's how it landed that counts.
+- Tell that to {who}.
+
+@rule react.h.f_you_rude_other.bad
+on react
+when hook=f_you_rude_other fit=bad
+feel pout
+- You should apologize.
+- I'm not impressed.
+
+@rule move.h.f_you_drama.correct
+on move.correct
+when hook=f_you_drama
+- Say you've got nothing to do with it
+
+@rule react.h.f_you_drama.correct
+on react
+when hook=f_you_drama move=correct fit=good|neutral
+- That's not what I keep hearing.
+- Good. Then stay out of it.
+
+@rule move.h.f_you_drama.deny
+on move.deny
+when hook=f_you_drama
+- Say people should mind their own business
+
+@rule react.h.f_you_drama.deny
+on react
+when hook=f_you_drama move=deny fit=good|neutral
+- Good luck with that.
+- That's not really an answer.
+
+@rule move.h.f_you_drama.admit
+on move.admit
+when hook=f_you_drama
+- Say you may have made things worse
+
+@rule react.h.f_you_drama.admit
+on react
+when hook=f_you_drama move=admit fit=good|neutral
+- Well, that's something.
+- Then fix it.
+
+@rule move.h.f_you_drama.ask
+on move.ask
+when hook=f_you_drama
+- Ask what people are actually saying
+
+@rule react.h.f_you_drama.ask
+on react
+when hook=f_you_drama move=ask fit=good|neutral
+- Do you really want to know?
+- That it's all because of you.
+
+@rule react.h.f_you_drama.bad
+on react
+when hook=f_you_drama fit=bad
+feel pout
+- Don't drag me into it.
+- You've made your bed.
+
+@rule move.h.f_you_distorted.correct
+on move.correct
+when hook=f_you_distorted
+- Tell her what actually happened
+
+@rule react.h.f_you_distorted.correct
+on react
+when hook=f_you_distorted move=correct fit=good|neutral
+- Oh. That's quite different.
+- So that's the real story. Good to know.
+
+@rule move.h.f_you_distorted.laugh
+on move.laugh
+when hook=f_you_distorted
+- Laugh at how it got twisted
+
+@rule react.h.f_you_distorted.laugh
+on react
+when hook=f_you_distorted move=laugh fit=good|neutral
+- It has been getting bigger, hasn't it?
+- You're taking this very well.
+
+@rule move.h.f_you_distorted.deny
+on move.deny
+when hook=f_you_distorted
+- Say it never happened
+
+@rule react.h.f_you_distorted.deny
+on react
+when hook=f_you_distorted move=deny fit=good|neutral
+- Then someone's got a good imagination.
+- Okay. I'll stop asking.
+
+@rule react.h.f_you_distorted.bad
+on react
+when hook=f_you_distorted fit=bad
+feel pout
+- Don't get angry at me.
+- I only said what I heard.
+
+@rule move.h.f_you_generic.ask
+on move.ask
+when hook=f_you_generic
+- Ask who's been saying that
+
+@rule react.h.f_you_generic.ask
+on react
+when hook=f_you_generic move=ask fit=good|neutral
+- A few people. Why, are you worried?
+- I don't remember. It's just going around.
+
+@rule move.h.f_you_generic.correct
+on move.correct
+when hook=f_you_generic
+- Tell her what really happened
+
+@rule react.h.f_you_generic.correct
+on react
+when hook=f_you_generic move=correct fit=good|neutral
+- Oh! That's not how I heard it.
+- I see. Thanks for clearing that up.
+
+@rule move.h.f_you_generic.laugh
+on move.laugh
+when hook=f_you_generic
+- Laugh it off
+
+@rule react.h.f_you_generic.laugh
+on react
+when hook=f_you_generic move=laugh fit=good|neutral
+- So it's nothing? All right.
+- You don't seem too bothered.
+
+@rule react.h.f_you_generic.bad
+on react
+when hook=f_you_generic fit=bad
+feel pout
+- I was only asking.
+- You don't have to bite my head off.
+
+@rule move.h.f_tell_good.ask
+on move.ask
+when hook=f_tell_good
+- Say you'd tell her more if you knew it
+
+@rule react.h.f_tell_good.ask
+on react
+when hook=f_tell_good move=ask fit=good|neutral
+- Find out! I'm counting on you.
+- Keep your ears open.
+
+@rule move.h.f_tell_good.laugh
+on move.laugh
+when hook=f_tell_good
+- Laugh at her reaction
+
+@rule react.h.f_tell_good.laugh
+on react
+when hook=f_tell_good move=laugh fit=good|neutral
+- Don't laugh, this is big news!
+- You knew I'd do this.
+
+@rule move.h.f_tell_good.agree
+on move.agree
+when hook=f_tell_good
+- Say you couldn't believe it either
+
+@rule react.h.f_tell_good.agree
+on react
+when hook=f_tell_good move=agree fit=good|neutral
+- Right? I've got to tell someone.
+- It's unreal.
+
+@rule react.h.f_tell_good.bad
+on react
+when hook=f_tell_good fit=bad
+feel pout
+- You don't have to enjoy it so much.
+- I'm not sure I wanted to know.
+
+@rule move.h.f_tell_good_couple.ask
+on move.ask
+when hook=f_tell_good_couple
+- Ask if she'd guessed already
+
+@rule react.h.f_tell_good_couple.ask
+on react
+when hook=f_tell_good_couple move=ask fit=good|neutral
+- I had my suspicions!
+- Everyone had a feeling.
+
+@rule move.h.f_tell_good_couple.tease
+on move.tease
+when hook=f_tell_good_couple
+- Say someone sounds a little jealous
+
+@rule react.h.f_tell_good_couple.tease
+on react
+when hook=f_tell_good_couple move=tease fit=good|neutral
+- A little! I admitted it!
+- Don't look at me like that.
+
+@rule move.h.f_tell_good_couple.agree
+on move.agree
+when hook=f_tell_good_couple
+- Say they do look good together
+
+@rule react.h.f_tell_good_couple.agree
+on react
+when hook=f_tell_good_couple move=agree fit=good|neutral
+- Don't they? I knew it.
+- So cute. I can't stand it.
+
+@rule react.h.f_tell_good_couple.bad
+on react
+when hook=f_tell_good_couple fit=bad
+feel pout
+- Don't make fun of them.
+- Leave them alone.
+
+@rule move.h.f_tell_neutral.ask
+on move.ask
+when hook=f_tell_neutral
+- Ask what she makes of it
+
+@rule react.h.f_tell_neutral.ask
+on react
+when hook=f_tell_neutral move=ask fit=good|neutral
+- Honestly? Not much.
+- People do what they do.
+
+@rule move.h.f_tell_neutral.laugh
+on move.laugh
+when hook=f_tell_neutral
+- Say you only thought it was funny
+
+@rule react.h.f_tell_neutral.laugh
+on react
+when hook=f_tell_neutral move=laugh fit=good|neutral
+- I suppose it is, a little.
+- If you say so.
+
+@rule move.h.f_tell_neutral.share
+on move.share
+when hook=f_tell_neutral
+- Say you don't know much more
+
+@rule react.h.f_tell_neutral.share
+on react
+when hook=f_tell_neutral move=share fit=good|neutral
+- Then there's not much to say.
+- That's fine. Thanks anyway.
+
+@rule react.h.f_tell_neutral.bad
+on react
+when hook=f_tell_neutral fit=bad
+feel pout
+- Why are you telling me this?
+- I'm not interested.
+
+@rule move.h.f_tell_neutral_cool.ask
+on move.ask
+when hook=f_tell_neutral_cool
+- Ask if she cares at all
+
+@rule react.h.f_tell_neutral_cool.ask
+on react
+when hook=f_tell_neutral_cool move=ask fit=good|neutral
+- Not especially.
+- It doesn't change my day.
+
+@rule move.h.f_tell_neutral_cool.share
+on move.share
+when hook=f_tell_neutral_cool
+- Say you won't bother her with it again
+
+@rule react.h.f_tell_neutral_cool.share
+on react
+when hook=f_tell_neutral_cool move=share fit=good|neutral
+- That would be appreciated.
+- Good.
+
+@rule react.h.f_tell_neutral_cool.bad
+on react
+when hook=f_tell_neutral_cool fit=bad
+feel pout
+- I've no use for this.
+- Stop.
+
+@rule move.h.f_tell_bad.hush
+on move.hush
+when hook=f_tell_bad
+- Ask her not to repeat it
+
+@rule react.h.f_tell_bad.hush
+on react
+when hook=f_tell_bad move=hush fit=good|neutral
+- You should've thought of that before saying it.
+- I wasn't going to.
+
+@rule move.h.f_tell_bad.defend
+on move.defend
+when hook=f_tell_bad
+- Say you weren't trying to be mean to {who}
+
+@rule react.h.f_tell_bad.defend
+on react
+when hook=f_tell_bad move=defend fit=good|neutral
+- It came out that way.
+- Then why say it?
+
+@rule move.h.f_tell_bad.laugh
+on move.laugh
+when hook=f_tell_bad
+- Try to laugh it off
+
+@rule react.h.f_tell_bad.laugh
+on react
+when hook=f_tell_bad move=laugh fit=good|neutral
+- It's not funny.
+- I don't think {who} would laugh.
+
+@rule react.h.f_tell_bad.bad
+on react
+when hook=f_tell_bad fit=bad
+feel pout
+- I don't want to hear any more.
+- Stop talking about people that way.
+
+@rule move.h.f_tell_bad_friend.hush
+on move.hush
+when hook=f_tell_bad_friend
+- Ask her not to say you told her
+
+@rule react.h.f_tell_bad_friend.hush
+on react
+when hook=f_tell_bad_friend move=hush fit=good|neutral
+- I'll say whatever I need to.
+- I'm talking to her either way.
+
+@rule move.h.f_tell_bad_friend.defend
+on move.defend
+when hook=f_tell_bad_friend
+- Say you were worried about {who}
+
+@rule react.h.f_tell_bad_friend.defend
+on react
+when hook=f_tell_bad_friend move=defend fit=good|neutral
+- Were you? It didn't sound that way.
+- Then talk to her, not about her.
+
+@rule react.h.f_tell_bad_friend.bad
+on react
+when hook=f_tell_bad_friend fit=bad
+feel pout
+- That's my friend.
+- You should go now.
+
+@rule move.h.f_confide_knew_saw.share
+on move.share
+when hook=f_confide_knew_saw
+- Say you didn't know how to tell her
+
+@rule react.h.f_confide_knew_saw.share
+on react
+when hook=f_confide_knew_saw move=share fit=good|neutral
+- Well, you've done it now.
+- That part I understand.
+
+@rule move.h.f_confide_knew_saw.admit
+on move.admit
+when hook=f_confide_knew_saw
+- Say you're sorry she found out that way
+
+@rule react.h.f_confide_knew_saw.admit
+on react
+when hook=f_confide_knew_saw move=admit fit=good|neutral
+- It wasn't how I wanted to either.
+- Okay. Thank you.
+
+@rule move.h.f_confide_knew_saw.ask
+on move.ask
+when hook=f_confide_knew_saw
+- Ask why she never said anything
+
+@rule react.h.f_confide_knew_saw.ask
+on react
+when hook=f_confide_knew_saw move=ask fit=good|neutral
+- I was waiting to see if you would.
+- What would I have said?
+
+@rule react.h.f_confide_knew_saw.bad
+on react
+when hook=f_confide_knew_saw fit=bad
+feel pout
+- Don't make excuses.
+- It's a bit late.
+
+@rule move.h.f_confide_knew_heard.share
+on move.share
+when hook=f_confide_knew_heard
+- Say you wanted her to hear it from you
+
+@rule react.h.f_confide_knew_heard.share
+on react
+when hook=f_confide_knew_heard move=share fit=good|neutral
+- A bit late, but I'll take it.
+- That counts for something.
+
+@rule move.h.f_confide_knew_heard.correct
+on move.correct
+when hook=f_confide_knew_heard
+- Say {src} doesn't know the whole story
+
+@rule react.h.f_confide_knew_heard.correct
+on react
+when hook=f_confide_knew_heard move=correct fit=good|neutral
+- Then tell me the whole story.
+- Maybe not. But it's near enough.
+
+@rule move.h.f_confide_knew_heard.ask
+on move.ask
+when hook=f_confide_knew_heard
+- Ask what {src} told her
+
+@rule react.h.f_confide_knew_heard.ask
+on react
+when hook=f_confide_knew_heard move=ask fit=good|neutral
+- Enough. Don't worry about it.
+- More than you'd like, I'd say.
+
+@rule react.h.f_confide_knew_heard.bad
+on react
+when hook=f_confide_knew_heard fit=bad
+feel pout
+- Don't blame {src}.
+- You should've told me first.
+
+@rule move.h.f_confide_knew_some.ask
+on move.ask
+when hook=f_confide_knew_some
+- Ask what she knew already
+
+@rule react.h.f_confide_knew_some.ask
+on react
+when hook=f_confide_knew_some move=ask fit=good|neutral
+- Only about {who1}. The rest is news to me.
+- Less than I thought, clearly.
+
+@rule move.h.f_confide_knew_some.share
+on move.share
+when hook=f_confide_knew_some
+- Say you wanted her to have the full picture
+
+@rule react.h.f_confide_knew_some.share
+on react
+when hook=f_confide_knew_some move=share fit=good|neutral
+- That's quite a picture.
+- I appreciate it. I think.
+
+@rule react.h.f_confide_knew_some.bad
+on react
+when hook=f_confide_knew_some fit=bad
+feel pout
+- How many more surprises do you have?
+- I need some air.
+
+@rule move.h.f_confide_bff.ask
+on move.ask
+when hook=f_confide_bff
+- Ask if {circlewho} really hasn't told her
+
+@rule react.h.f_confide_bff.ask
+on react
+when hook=f_confide_bff move=ask fit=good|neutral
+- Not a word! We're going to talk.
+- She's going to get an earful.
+
+@rule move.h.f_confide_bff.tease
+on move.tease
+when hook=f_confide_bff
+- Ask if she's more upset with you or {circlewho}
+
+@rule react.h.f_confide_bff.tease
+on react
+when hook=f_confide_bff move=tease fit=good|neutral
+- Her. For now. Don't push it.
+- You're both on the list.
+
+@rule move.h.f_confide_bff.thank
+on move.thank
+when hook=f_confide_bff
+- Thank her for taking it so well
+
+@rule react.h.f_confide_bff.thank
+on react
+when hook=f_confide_bff move=thank fit=good|neutral
+- I'm not done taking it.
+- Just be good to her.
+
+@rule react.h.f_confide_bff.bad
+on react
+when hook=f_confide_bff fit=bad
+feel pout
+- I'm not laughing.
+- Don't joke about my friend.
+
+@rule move.h.f_confide_friend.ask
+on move.ask
+when hook=f_confide_friend
+- Ask what {circlewho} is like as a friend
+
+@rule react.h.f_confide_friend.ask
+on react
+when hook=f_confide_friend move=ask fit=good|neutral
+- Loyal. So don't mess this up.
+- She's the real thing. You're lucky.
+
+@rule move.h.f_confide_friend.share
+on move.share
+when hook=f_confide_friend
+- Say you're trying to do right by her
+
+@rule react.h.f_confide_friend.share
+on react
+when hook=f_confide_friend move=share fit=good|neutral
+- Good. Keep trying.
+- That's all anyone can do.
+
+@rule move.h.f_confide_friend.tease
+on move.tease
+when hook=f_confide_friend
+- Ask if you're allowed to know what she said about you
+
+@rule react.h.f_confide_friend.tease
+on react
+when hook=f_confide_friend move=tease fit=good|neutral
+- Not a word, because she didn't!
+- Fish somewhere else.
+
+@rule react.h.f_confide_friend.bad
+on react
+when hook=f_confide_friend fit=bad
+feel pout
+- Don't make things awkward between us.
+- You'd better be nice to her.
+
+@rule move.h.f_confide_rival.ask
+on move.ask
+when hook=f_confide_rival
+- Ask what she's got against {rivalwho}
+
+@rule react.h.f_confide_rival.ask
+on react
+when hook=f_confide_rival move=ask fit=good|neutral
+- How long have you got?
+- It's a long story, and I come out of it well.
+
+@rule move.h.f_confide_rival.defend
+on move.defend
+when hook=f_confide_rival
+- Say {rivalwho} isn't as bad as she thinks
+
+@rule react.h.f_confide_rival.defend
+on react
+when hook=f_confide_rival move=defend fit=good|neutral
+- Oh, she's got you already.
+- You'll find out.
+
+@rule move.h.f_confide_rival.agree
+on move.agree
+when hook=f_confide_rival
+- Admit you see why they don't get along
+
+@rule react.h.f_confide_rival.agree
+on react
+when hook=f_confide_rival move=agree fit=good|neutral
+- At least you've got eyes.
+- You'll see even more soon.
+
+@rule react.h.f_confide_rival.bad
+on react
+when hook=f_confide_rival fit=bad
+feel pout
+- Do what you want.
+- Don't ask me for advice about her.
+
+@rule move.h.f_confide_mixed.ask
+on move.ask
+when hook=f_confide_mixed
+- Ask if she thinks it's going to end badly
+
+@rule react.h.f_confide_mixed.ask
+on react
+when hook=f_confide_mixed move=ask fit=good|neutral
+- Oh, it's going to end. Badly, yes.
+- Do you need me to answer that?
+
+@rule move.h.f_confide_mixed.defend
+on move.defend
+when hook=f_confide_mixed
+- Say it's not as messy as it sounds
+
+@rule react.h.f_confide_mixed.defend
+on react
+when hook=f_confide_mixed move=defend fit=good|neutral
+- It sounds very messy.
+- If you say so.
+
+@rule move.h.f_confide_mixed.share
+on move.share
+when hook=f_confide_mixed
+- Say you're trying to be honest with everyone
+
+@rule react.h.f_confide_mixed.share
+on react
+when hook=f_confide_mixed move=share fit=good|neutral
+- That's a lot of honesty. Good luck.
+- That's something.
+
+@rule react.h.f_confide_mixed.bad
+on react
+when hook=f_confide_mixed fit=bad
+feel pout
+- I'm not getting involved.
+- Don't look at me when it blows up.
+
+@rule move.h.f_confide_crush.comfort
+on move.comfort
+when hook=f_confide_crush
+- Say you had no idea how she felt about {circlewho}
+
+@rule react.h.f_confide_crush.comfort
+on react
+when hook=f_confide_crush move=comfort fit=good|neutral
+- You couldn't have. It's fine.
+- Thanks. It's my own fault for not saying.
+
+@rule move.h.f_confide_crush.ask
+on move.ask
+when hook=f_confide_crush
+- Ask if she's going to be all right
+
+@rule react.h.f_confide_crush.ask
+on react
+when hook=f_confide_crush move=ask fit=good|neutral
+- I'll be fine. Just not today.
+- Yeah. Don't look at me for a bit.
+
+@rule move.h.f_confide_crush.share
+on move.share
+when hook=f_confide_crush
+- Say you wish you'd known
+
+@rule react.h.f_confide_crush.share
+on react
+when hook=f_confide_crush move=share fit=good|neutral
+- Would it have changed anything?
+- ...No. It's okay.
+
+@rule react.h.f_confide_crush.bad
+on react
+when hook=f_confide_crush fit=bad
+feel pout
+- I said I'm fine.
+- Please go.
+
+@rule move.h.f_confide_hurt.comfort
+on move.comfort
+when hook=f_confide_hurt
+- Say you still care about her
+
+@rule react.h.f_confide_hurt.comfort
+on react
+when hook=f_confide_hurt move=comfort fit=good|neutral
+- Not the way I wanted. But thanks.
+- I know. It's okay.
+
+@rule move.h.f_confide_hurt.admit
+on move.admit
+when hook=f_confide_hurt
+- Say you should've noticed sooner
+
+@rule react.h.f_confide_hurt.admit
+on react
+when hook=f_confide_hurt move=admit fit=good|neutral
+- Maybe. Don't worry about it.
+- I didn't exactly make it obvious.
+
+@rule move.h.f_confide_hurt.share
+on move.share
+when hook=f_confide_hurt
+- Say you didn't want to hide it from her
+
+@rule react.h.f_confide_hurt.share
+on react
+when hook=f_confide_hurt move=share fit=good|neutral
+- I know. That's why it stings.
+- Thanks for that.
+
+@rule react.h.f_confide_hurt.bad
+on react
+when hook=f_confide_hurt fit=bad
+feel pout
+- Don't make it worse.
+- I'd rather be alone.
+
+@rule move.h.f_confide_hurt_friend.comfort
+on move.comfort
+when hook=f_confide_hurt_friend
+- Say you'd never want to hurt her
+
+@rule react.h.f_confide_hurt_friend.comfort
+on react
+when hook=f_confide_hurt_friend move=comfort fit=good|neutral
+- I know. That's what makes it hard.
+- Thank you. I'll be all right.
+
+@rule move.h.f_confide_hurt_friend.admit
+on move.admit
+when hook=f_confide_hurt_friend
+- Say you can see this is hard for her
+
+@rule react.h.f_confide_hurt_friend.admit
+on react
+when hook=f_confide_hurt_friend move=admit fit=good|neutral
+- Then you see a lot.
+- Please don't tell her.
+
+@rule react.h.f_confide_hurt_friend.bad
+on react
+when hook=f_confide_hurt_friend fit=bad
+feel pout
+- Don't be nice to me right now.
+- Please just go.
+
+@rule move.h.f_confide_many_hurt.comfort
+on move.comfort
+when hook=f_confide_many_hurt
+- Say she's never been just a name to you
+
+@rule react.h.f_confide_many_hurt.comfort
+on react
+when hook=f_confide_many_hurt move=comfort fit=good|neutral
+- Then what am I?
+- You'll need to show me that.
+
+@rule move.h.f_confide_many_hurt.admit
+on move.admit
+when hook=f_confide_many_hurt
+- Say you know how bad it sounds
+
+@rule react.h.f_confide_many_hurt.admit
+on react
+when hook=f_confide_many_hurt move=admit fit=good|neutral
+- At least you know.
+- It sounds worse than bad.
+
+@rule move.h.f_confide_many_hurt.ask
+on move.ask
+when hook=f_confide_many_hurt
+- Ask what she'd like you to do
+
+@rule react.h.f_confide_many_hurt.ask
+on react
+when hook=f_confide_many_hurt move=ask fit=good|neutral
+- I don't know. I need to think.
+- Give me some space, for now.
+
+@rule react.h.f_confide_many_hurt.bad
+on react
+when hook=f_confide_many_hurt fit=bad
+feel pout
+- Am I supposed to be flattered?
+- I don't want to hear it.
+
+@rule move.h.f_confide_gf_refuses.comfort
+on move.comfort
+when hook=f_confide_gf_refuses
+- Say you don't want to lose her
+
+@rule react.h.f_confide_gf_refuses.comfort
+on react
+when hook=f_confide_gf_refuses move=comfort fit=good|neutral
+- Then you've got a choice to make.
+- That isn't enough.
+
+@rule move.h.f_confide_gf_refuses.admit
+on move.admit
+when hook=f_confide_gf_refuses
+- Say she has every right to be angry
+
+@rule react.h.f_confide_gf_refuses.admit
+on react
+when hook=f_confide_gf_refuses move=admit fit=good|neutral
+- I don't need your permission.
+- Yes, I do.
+
+@rule move.h.f_confide_gf_refuses.share
+on move.share
+when hook=f_confide_gf_refuses
+- Say you didn't want to lie to her anymore
+
+@rule react.h.f_confide_gf_refuses.share
+on react
+when hook=f_confide_gf_refuses move=share fit=good|neutral
+- How long were you lying, then?
+- Honesty doesn't fix it.
+
+@rule react.h.f_confide_gf_refuses.bad
+on react
+when hook=f_confide_gf_refuses fit=bad
+feel pout
+- Don't touch me.
+- We're done talking for today.
+
+@rule move.h.f_confide_gf_separate.comfort
+on move.comfort
+when hook=f_confide_gf_separate
+- Say you'll come back to her, always
+
+@rule react.h.f_confide_gf_separate.comfort
+on react
+when hook=f_confide_gf_separate move=comfort fit=good|neutral
+- You'd better.
+- That's the only thing I want to hear.
+
+@rule move.h.f_confide_gf_separate.thank
+on move.thank
+when hook=f_confide_gf_separate
+- Thank her for understanding
+
+@rule react.h.f_confide_gf_separate.thank
+on react
+when hook=f_confide_gf_separate move=thank fit=good|neutral
+- I didn't say I understood.
+- I'm trying.
+
+@rule move.h.f_confide_gf_separate.ask
+on move.ask
+when hook=f_confide_gf_separate
+- Ask how she'd like to handle it
+
+@rule react.h.f_confide_gf_separate.ask
+on react
+when hook=f_confide_gf_separate move=ask fit=good|neutral
+- Not in front of me, and not in my face.
+- We'll work it out. Later.
+
+@rule react.h.f_confide_gf_separate.bad
+on react
+when hook=f_confide_gf_separate fit=bad
+feel pout
+- Don't push it.
+- You're lucky I'm calm.
+
+@rule move.h.f_confide_gf_friends.tease
+on move.tease
+when hook=f_confide_gf_friends
+- Ask if she's going to interrogate {who}
+
+@rule react.h.f_confide_gf_friends.tease
+on react
+when hook=f_confide_gf_friends move=tease fit=good|neutral
+- A friendly chat. Friendly-ish.
+- I've got questions.
+
+@rule move.h.f_confide_gf_friends.thank
+on move.thank
+when hook=f_confide_gf_friends
+- Thank her for being so cool about it
+
+@rule react.h.f_confide_gf_friends.thank
+on react
+when hook=f_confide_gf_friends move=thank fit=good|neutral
+- Just don't forget who's first.
+- Hehe. I'm a good girlfriend, aren't I?
+
+@rule move.h.f_confide_gf_friends.ask
+on move.ask
+when hook=f_confide_gf_friends
+- Ask if she'd like to hang out with {who} sometime
+
+@rule react.h.f_confide_gf_friends.ask
+on react
+when hook=f_confide_gf_friends move=ask fit=good|neutral
+- Yes. I'd like to get to know her.
+- Sure, as long as I pick the place.
+
+@rule react.h.f_confide_gf_friends.bad
+on react
+when hook=f_confide_gf_friends fit=bad
+feel pout
+- Don't overdo it.
+- I'm okay with it, not thrilled.
+
+@rule move.h.f_confide_plain.ask
+on move.ask
+when hook=f_confide_plain
+- Ask if she's surprised
+
+@rule react.h.f_confide_plain.ask
+on react
+when hook=f_confide_plain move=ask fit=good|neutral
+- A little. I didn't know you two knew each other.
+- Not as much as you'd think.
+
+@rule move.h.f_confide_plain.tease
+on move.tease
+when hook=f_confide_plain
+- Ask if she's going to tell everyone
+
+@rule react.h.f_confide_plain.tease
+on react
+when hook=f_confide_plain move=tease fit=good|neutral
+- Only the ones who ask nicely.
+- Your secret's safe. For now.
+
+@rule move.h.f_confide_plain.share
+on move.share
+when hook=f_confide_plain
+- Say it's still new
+
+@rule react.h.f_confide_plain.share
+on react
+when hook=f_confide_plain move=share fit=good|neutral
+- Then I hope it goes well.
+- That's nice. Good luck.
+
+@rule react.h.f_confide_plain.bad
+on react
+when hook=f_confide_plain fit=bad
+feel pout
+- You don't owe me an explanation.
+- Why are you telling me?
+
+@rule move.h.f_confide_many.ask
+on move.ask
+when hook=f_confide_many
+- Ask if she thinks you're crazy
+
+@rule react.h.f_confide_many.ask
+on react
+when hook=f_confide_many move=ask fit=good|neutral
+- Yes. Next question.
+- A little. It's impressive, though.
+
+@rule move.h.f_confide_many.tease
+on move.tease
+when hook=f_confide_many
+- Offer to send her the schedule
+
+@rule react.h.f_confide_many.tease
+on react
+when hook=f_confide_many move=tease fit=good|neutral
+- You've got a schedule? Oh no.
+- Please do. I've got to see it.
+
+@rule move.h.f_confide_many.laugh
+on move.laugh
+when hook=f_confide_many
+- Laugh it off
+
+@rule react.h.f_confide_many.laugh
+on react
+when hook=f_confide_many move=laugh fit=good|neutral
+- It's going to blow up, you know.
+- I can't tell if you're brave or stupid.
+
+@rule react.h.f_confide_many.bad
+on react
+when hook=f_confide_many fit=bad
+feel pout
+- You should take this more seriously.
+- That's not funny.
+
+@rule move.h.f_confide_flirt.tease
+on move.tease
+when hook=f_confide_flirt
+- Say she's enjoying this far too much
+
+@rule react.h.f_confide_flirt.tease
+on react
+when hook=f_confide_flirt move=tease fit=good|neutral
+- Of course I am!
+- Tell me how it goes.
+
+@rule move.h.f_confide_flirt.ask
+on move.ask
+when hook=f_confide_flirt
+- Ask if she thinks {who} likes you
+
+@rule react.h.f_confide_flirt.ask
+on react
+when hook=f_confide_flirt move=ask fit=good|neutral
+- I think you're the last to know.
+- Go and find out!
+
+@rule move.h.f_confide_flirt.laugh
+on move.laugh
+when hook=f_confide_flirt
+- Laugh at yourself
+
+@rule react.h.f_confide_flirt.laugh
+on react
+when hook=f_confide_flirt move=laugh fit=good|neutral
+- At least you know it.
+- Hehe. Go on, you can do it.
+
+@rule react.h.f_confide_flirt.bad
+on react
+when hook=f_confide_flirt fit=bad
+feel pout
+- You're hopeless.
+- Don't ask me, then.
+
+@rule move.h.f_confide_cool.ask
+on move.ask
+when hook=f_confide_cool
+- Ask what she'd advise
+
+@rule react.h.f_confide_cool.ask
+on react
+when hook=f_confide_cool move=ask fit=good|neutral
+- Decide what you want. Then say it to them.
+- Be careful. That's all.
+
+@rule move.h.f_confide_cool.share
+on move.share
+when hook=f_confide_cool
+- Say you just wanted to be upfront
+
+@rule react.h.f_confide_cool.share
+on react
+when hook=f_confide_cool move=share fit=good|neutral
+- Noted.
+- I respect that.
+
+@rule react.h.f_confide_cool.bad
+on react
+when hook=f_confide_cool fit=bad
+feel pout
+- It doesn't concern me.
+- I've said all I'll say.
+
+@rule move.h.f_confide_stranger.ask
+on move.ask
+when hook=f_confide_stranger
+- Ask if that was too much to tell her
+
+@rule react.h.f_confide_stranger.ask
+on react
+when hook=f_confide_stranger move=ask fit=good|neutral
+- A bit, yes.
+- We've only just met.
+
+@rule move.h.f_confide_stranger.laugh
+on move.laugh
+when hook=f_confide_stranger
+- Laugh at how awkward that was
+
+@rule react.h.f_confide_stranger.laugh
+on react
+when hook=f_confide_stranger move=laugh fit=good|neutral
+- Yes. It was.
+- At least you know.
+
+@rule react.h.f_confide_stranger.bad
+on react
+when hook=f_confide_stranger fit=bad
+feel pout
+- I think I'll go now.
+- That's a strange thing to say to someone you don't know.
+
+@rule me.h.f_small_exams_teacher
+on me.small
+when hook=f_small_exams_teacher
+- How hard is the exam going to be?
+- Is the exam as bad as they say?
+
+@rule move.h.f_small_exams_teacher.ask
+on move.ask
+when hook=f_small_exams_teacher
+- Ask what she'd focus on if she were you
+
+@rule react.h.f_small_exams_teacher.ask
+on react
+when hook=f_small_exams_teacher move=ask fit=good|neutral
+- The chapters I told you to. Yes, all of them.
+- Nice try. I wrote it last night, and I won't tell.
+
+@rule move.h.f_small_exams_teacher.tease
+on move.tease
+when hook=f_small_exams_teacher
+- Offer to grade them for her
+
+@rule react.h.f_small_exams_teacher.tease
+on react
+when hook=f_small_exams_teacher move=tease fit=good|neutral
+- You'd give everyone full marks.
+- Your handwriting's punishment enough.
+
+@rule move.h.f_small_exams_teacher.comfort
+on move.comfort
+when hook=f_small_exams_teacher
+- Say that's a lot of grading for one person
+
+@rule react.h.f_small_exams_teacher.comfort
+on react
+when hook=f_small_exams_teacher move=comfort fit=good|neutral
+- It is. Thank you for noticing.
+- Don't remind me. I've got a whole weekend of it.
+
+@rule react.h.f_small_exams_teacher.bad
+on react
+when hook=f_small_exams_teacher fit=bad
+feel pout
+- Study, please.
+- That's enough out of you.
+
+@rule me.h.f_small_lunch_teacher
+on me.small
+when hook=f_small_lunch_teacher
+- Are you having lunch at your desk again?
+- Do you ever get a real lunch break?
+
+@rule move.h.f_small_lunch_teacher.ask
+on move.ask
+when hook=f_small_lunch_teacher
+- Ask what's for lunch today
+
+@rule react.h.f_small_lunch_teacher.ask
+on react
+when hook=f_small_lunch_teacher move=ask fit=good|neutral
+- Rice and regret.
+- It says "chicken". I've chosen to believe it.
+
+@rule move.h.f_small_lunch_teacher.invite
+on move.invite
+when hook=f_small_lunch_teacher
+- Offer to bring her something from the cafeteria
+
+@rule react.h.f_small_lunch_teacher.invite
+on react
+when hook=f_small_lunch_teacher move=invite fit=good|neutral
+- You'd do that? The curry, if there's any left.
+- Don't tell the others. Thank you.
+
+@rule move.h.f_small_lunch_teacher.tease
+on move.tease
+when hook=f_small_lunch_teacher
+- Say the students eat better than the faculty
+
+@rule react.h.f_small_lunch_teacher.tease
+on react
+when hook=f_small_lunch_teacher move=tease fit=good|neutral
+- I know. I can smell it from my desk.
+- Enjoy it while you can.
+
+@rule react.h.f_small_lunch_teacher.bad
+on react
+when hook=f_small_lunch_teacher fit=bad
+feel pout
+- Eat your own lunch.
+- I've got twelve minutes. Leave me to them.
+
+@rule me.h.f_small_weekend_teacher
+on me.small
+when hook=f_small_weekend_teacher
+- What do professors do on weekends?
+- Do you ever get a day off?
+
+@rule move.h.f_small_weekend_teacher.ask
+on move.ask
+when hook=f_small_weekend_teacher
+- Ask where she goes so no student can find her
+
+@rule react.h.f_small_weekend_teacher.ask
+on react
+when hook=f_small_weekend_teacher move=ask fit=good|neutral
+- If I told you, I'd have to move.
+- Far. Further than you think.
+
+@rule move.h.f_small_weekend_teacher.share
+on move.share
+when hook=f_small_weekend_teacher
+- Say you'll pretend not to see her in town
+
+@rule react.h.f_small_weekend_teacher.share
+on react
+when hook=f_small_weekend_teacher move=share fit=good|neutral
+- Good. That's the correct answer.
+- You're a quick study.
+
+@rule move.h.f_small_weekend_teacher.tease
+on move.tease
+when hook=f_small_weekend_teacher
+- Ask if she owns anything without chalk on it
+
+@rule react.h.f_small_weekend_teacher.tease
+on react
+when hook=f_small_weekend_teacher move=tease fit=good|neutral
+- One sweater. It's for special occasions.
+- You'd be surprised. Don't be.
+
+@rule react.h.f_small_weekend_teacher.bad
+on react
+when hook=f_small_weekend_teacher fit=bad
+feel pout
+- My weekends are mine.
+- That's none of your business.
+
+@rule me.h.f_small_school_teacher
+on me.small
+when hook=f_small_school_teacher
+- How's the teaching going this term?
+- What's it like on your side of the lectern?
+
+@rule move.h.f_small_school_teacher.ask
+on move.ask
+when hook=f_small_school_teacher
+- Ask what campus looks like from the front of the room
+
+@rule react.h.f_small_school_teacher.ask
+on react
+when hook=f_small_school_teacher move=ask fit=good|neutral
+- You can see everything. Everything.
+- Rows of people hoping I won't call on them.
+
+@rule move.h.f_small_school_teacher.share
+on move.share
+when hook=f_small_school_teacher
+- Say you never thought about what it's like for the staff
+
+@rule react.h.f_small_school_teacher.share
+on react
+when hook=f_small_school_teacher move=share fit=good|neutral
+- Nobody does, until the projector dies.
+- That's all right. It's my job to worry.
+
+@rule move.h.f_small_school_teacher.tease
+on move.tease
+when hook=f_small_school_teacher
+- Ask if your year is the worst she's seen
+
+@rule react.h.f_small_school_teacher.tease
+on react
+when hook=f_small_school_teacher move=tease fit=good|neutral
+- I say that to every year.
+- You're certainly memorable.
+
+@rule react.h.f_small_school_teacher.bad
+on react
+when hook=f_small_school_teacher fit=bad
+feel pout
+- Careful how you talk about my class.
+- That'll do.
+
+@rule me.h.f_small_future_teacher
+on me.small
+when hook=f_small_future_teacher
+- Did you always want to teach?
+- Who made you want to be a professor?
+
+@rule move.h.f_small_future_teacher.ask
+on move.ask
+when hook=f_small_future_teacher
+- Ask what made her want to teach
+
+@rule react.h.f_small_future_teacher.ask
+on react
+when hook=f_small_future_teacher move=ask fit=good|neutral
+- One professor told me "You can." Two words. That's all it took.
+- One of mine told me I wasn't finished yet.
+
+@rule move.h.f_small_future_teacher.share
+on move.share
+when hook=f_small_future_teacher
+- Tell her what you've been thinking of doing
+
+@rule react.h.f_small_future_teacher.share
+on react
+when hook=f_small_future_teacher move=share fit=good|neutral
+- That's a real plan. Good. Keep going.
+- Hm. I'd like to see that.
+
+@rule move.h.f_small_future_teacher.praise
+on move.praise
+when hook=f_small_future_teacher
+- Say she's a good professor
+
+@rule react.h.f_small_future_teacher.praise
+on react
+when hook=f_small_future_teacher move=praise fit=good|neutral
+- You can't say that to me in the corridor.
+- Thank you. That means more than you know.
+
+@rule react.h.f_small_future_teacher.bad
+on react
+when hook=f_small_future_teacher fit=bad
+feel pout
+- Think about your own future.
+- I wasn't asking for your opinion.
+
+@rule me.h.f_small_nursing_state
+on me.small
+when hook=f_small_nursing_state
+- Do you remember everyone who comes in?
+- Is it a busy day at the infirmary?
+
+@rule move.h.f_small_nursing_state.ask
+on move.ask
+when hook=f_small_nursing_state
+- Ask what the strangest case she's had was
+
+@rule react.h.f_small_nursing_state.ask
+on react
+when hook=f_small_nursing_state move=ask fit=good|neutral
+- There was a pencil, and no explanation.
+- I can't tell you. But it involved a duck.
+
+@rule move.h.f_small_nursing_state.share
+on move.share
+when hook=f_small_nursing_state
+- Say you'd never be able to do her job
+
+@rule react.h.f_small_nursing_state.share
+on react
+when hook=f_small_nursing_state move=share fit=good|neutral
+- Most people can't. They think it's about bandages.
+- You'd be fine. You listen.
+
+@rule move.h.f_small_nursing_state.praise
+on move.praise
+when hook=f_small_nursing_state
+- Say the campus would fall apart without her
+
+@rule react.h.f_small_nursing_state.praise
+on react
+when hook=f_small_nursing_state move=praise fit=good|neutral
+- It'd limp. I'd be the one bandaging it.
+- Thank you. Now, are you eating properly?
+
+@rule react.h.f_small_nursing_state.bad
+on react
+when hook=f_small_nursing_state fit=bad
+feel pout
+- That's between me and my patients.
+- I can't talk about that.
+
+@rule me.h.f_small_nursing_q
+on me.small
+when hook=f_small_nursing_q
+- Is it a good job, being a nurse?
+- How's your day going, nurse?
+
+@rule move.h.f_small_nursing_q.ask
+on move.ask
+when hook=f_small_nursing_q
+- Ask if it's really a good job
+
+@rule react.h.f_small_nursing_q.ask
+on react
+when hook=f_small_nursing_q move=ask fit=good|neutral
+- Good shoes, a strong stomach, and yes.
+- The best. Some days.
+
+@rule move.h.f_small_nursing_q.share
+on move.share
+when hook=f_small_nursing_q
+- Admit you haven't been sleeping
+
+@rule react.h.f_small_nursing_q.share
+on react
+when hook=f_small_nursing_q move=share fit=good|neutral
+- I can tell. Bed by eleven. That's an order.
+- I'll write it down. Go home early.
+
+@rule react.h.f_small_nursing_q.bad
+on react
+when hook=f_small_nursing_q fit=bad
+feel pout
+- Don't dodge the question.
+- Then don't come crying to me.
+
+@rule me.h.f_small_exams_nurse_state
+on me.small
+when hook=f_small_exams_nurse_state
+- Is the infirmary busy during exams?
+- Do you get a lot of students this time of year?
+
+@rule move.h.f_small_exams_nurse_state.ask
+on move.ask
+when hook=f_small_exams_nurse_state
+- Ask what the most common complaint is
+
+@rule react.h.f_small_exams_nurse_state.ask
+on react
+when hook=f_small_exams_nurse_state move=ask fit=good|neutral
+- Headaches, and fear. In that order.
+- "I haven't slept since Sunday."
+
+@rule move.h.f_small_exams_nurse_state.comfort
+on move.comfort
+when hook=f_small_exams_nurse_state
+- Say she should rest too
+
+@rule react.h.f_small_exams_nurse_state.comfort
+on react
+when hook=f_small_exams_nurse_state move=comfort fit=good|neutral
+- You sound like me. I don't listen either.
+- That's sweet. Exam week doesn't let me.
+
+@rule move.h.f_small_exams_nurse_state.tease
+on move.tease
+when hook=f_small_exams_nurse_state
+- Ask for a sick note
+
+@rule react.h.f_small_exams_nurse_state.tease
+on react
+when hook=f_small_exams_nurse_state move=tease fit=good|neutral
+- Show me your fever first.
+- Nice try. You look healthier than I do.
+
+@rule react.h.f_small_exams_nurse_state.bad
+on react
+when hook=f_small_exams_nurse_state fit=bad
+feel pout
+- Go and sleep. That's the treatment.
+- There's nothing wrong with you.
+
+@rule me.h.f_small_school_nurse_state
+on me.small
+when hook=f_small_school_nurse_state
+- What's the infirmary like from the inside?
+- How's campus treating you?
+
+@rule move.h.f_small_school_nurse_state.ask
+on move.ask
+when hook=f_small_school_nurse_state
+- Ask what she's seen from the infirmary
+
+@rule react.h.f_small_school_nurse_state.ask
+on react
+when hook=f_small_school_nurse_state move=ask fit=good|neutral
+- The truth, mostly. People can't lie with a fever.
+- Who's been running on those stairs again.
+
+@rule move.h.f_small_school_nurse_state.share
+on move.share
+when hook=f_small_school_nurse_state
+- Say everyone seems to know her name
+
+@rule react.h.f_small_school_nurse_state.share
+on react
+when hook=f_small_school_nurse_state move=share fit=good|neutral
+- That's not always a good sign.
+- Then you've all been falling down too much.
+
+@rule move.h.f_small_school_nurse_state.tease
+on move.tease
+when hook=f_small_school_nurse_state
+- Ask if the stairs pay her commission
+
+@rule react.h.f_small_school_nurse_state.tease
+on react
+when hook=f_small_school_nurse_state move=tease fit=good|neutral
+- I wish. I'd have retired.
+- Don't give them ideas.
+
+@rule react.h.f_small_school_nurse_state.bad
+on react
+when hook=f_small_school_nurse_state fit=bad
+feel pout
+- Be careful on your way out.
+- Stay out of my infirmary.
+
+@rule me.h.f_small_future_nurse_state
+on me.small
+when hook=f_small_future_nurse_state
+- Did you always want to be a nurse?
+- Why a campus and not a hospital?
+
+@rule move.h.f_small_future_nurse_state.ask
+on move.ask
+when hook=f_small_future_nurse_state
+- Ask why she left the hospital
+
+@rule react.h.f_small_future_nurse_state.ask
+on react
+when hook=f_small_future_nurse_state move=ask fit=good|neutral
+- There, I never found out how things ended. Here, I do.
+- I wanted to see people before they got that sick.
+
+@rule move.h.f_small_future_nurse_state.share
+on move.share
+when hook=f_small_future_nurse_state
+- Say you'd be a terrible patient
+
+@rule react.h.f_small_future_nurse_state.share
+on react
+when hook=f_small_future_nurse_state move=share fit=good|neutral
+- I know. Stick out your tongue.
+- Hm. I can tell from the color in your face.
+
+@rule move.h.f_small_future_nurse_state.praise
+on move.praise
+when hook=f_small_future_nurse_state
+- Say it sounds like the right choice
+
+@rule react.h.f_small_future_nurse_state.praise
+on react
+when hook=f_small_future_nurse_state move=praise fit=good|neutral
+- Most days. Thank you.
+- I think so too.
+
+@rule react.h.f_small_future_nurse_state.bad
+on react
+when hook=f_small_future_nurse_state fit=bad
+feel pout
+- I asked about you.
+- Don't change the subject.
+
+@rule me.h.f_small_weekend_nurse_state
+on me.small
+when hook=f_small_weekend_nurse_state
+- What does a nurse do on her day off?
+- Any plans for the weekend?
+
+@rule move.h.f_small_weekend_nurse_state.ask
+on move.ask
+when hook=f_small_weekend_nurse_state
+- Ask how she switches off
+
+@rule react.h.f_small_weekend_nurse_state.ask
+on react
+when hook=f_small_weekend_nurse_state move=ask fit=good|neutral
+- A book where nobody gets hurt.
+- A murder mystery. I like to check the injuries.
+
+@rule move.h.f_small_weekend_nurse_state.share
+on move.share
+when hook=f_small_weekend_nurse_state
+- Say a long walk sounds good to you too
+
+@rule react.h.f_small_weekend_nurse_state.share
+on react
+when hook=f_small_weekend_nurse_state move=share fit=good|neutral
+- It's the best medicine. No prescription.
+- Then do it. Doctor's orders.
+
+@rule move.h.f_small_weekend_nurse_state.tease
+on move.tease
+when hook=f_small_weekend_nurse_state
+- Ask if she takes her own temperature on Sundays
+
+@rule react.h.f_small_weekend_nurse_state.tease
+on react
+when hook=f_small_weekend_nurse_state move=tease fit=good|neutral
+- Every hour. Kidding. Twice.
+- I'm off duty. Mostly.
+
+@rule react.h.f_small_weekend_nurse_state.bad
+on react
+when hook=f_small_weekend_nurse_state fit=bad
+feel pout
+- I'm nobody's nurse on Sunday.
+- That's my day off you're talking about.
+
+@rule me.h.f_small_lunch_nurse_state
+on me.small
+when hook=f_small_lunch_nurse_state
+- Do you get to eat lunch in here?
+- What should I be having for lunch?
+
+@rule move.h.f_small_lunch_nurse_state.ask
+on move.ask
+when hook=f_small_lunch_nurse_state
+- Ask what she has for lunch at her desk
+
+@rule react.h.f_small_lunch_nurse_state.ask
+on react
+when hook=f_small_lunch_nurse_state move=ask fit=good|neutral
+- Something green. I have to set an example.
+- A sandwich, and half a cold coffee.
+
+@rule move.h.f_small_lunch_nurse_state.invite
+on move.invite
+when hook=f_small_lunch_nurse_state
+- Offer to eat with her so she gets a break
+
+@rule react.h.f_small_lunch_nurse_state.invite
+on react
+when hook=f_small_lunch_nurse_state move=invite fit=good|neutral
+- Someone would come in. But thank you.
+- Sit down, then. Don't touch the cold packs.
+
+@rule move.h.f_small_lunch_nurse_state.tease
+on move.tease
+when hook=f_small_lunch_nurse_state
+- Hide your bag of chips
+
+@rule react.h.f_small_lunch_nurse_state.tease
+on react
+when hook=f_small_lunch_nurse_state move=tease fit=good|neutral
+- I saw that. It's going in your file.
+- You can't hide that from me.
+
+@rule react.h.f_small_lunch_nurse_state.bad
+on react
+when hook=f_small_lunch_nurse_state fit=bad
+feel pout
+- Eat something green, please.
+- Don't sit there, it's for patients.
+
+@rule move.h.f_day_t_lina_fine.ask
+on move.ask
+when hook=f_day_t_lina_fine
+- Ask what a nurse does on a quiet day
+
+@rule react.h.f_day_t_lina_fine.ask
+on react
+when hook=f_day_t_lina_fine move=ask fit=good|neutral
+- Inventory. Then I count the inventory again.
+- I read health records. Very dull. Mostly.
+
+@rule move.h.f_day_t_lina_fine.tease
+on move.tease
+when hook=f_day_t_lina_fine
+- Say you came to see her, not the beds
+
+@rule react.h.f_day_t_lina_fine.tease
+on react
+when hook=f_day_t_lina_fine move=tease fit=good|neutral
+- Flattery gets you a free check-up.
+- Careful. I take pulses. I'd notice.
+
+@rule move.h.f_day_t_lina_fine.share
+on move.share
+when hook=f_day_t_lina_fine
+- Say you're glad nobody's hurt
+
+@rule react.h.f_day_t_lina_fine.share
+on react
+when hook=f_day_t_lina_fine move=share fit=good|neutral
+- So am I. Don't tell my boss.
+- Sweet. Stay that way.
+
+@rule react.h.f_day_t_lina_fine.bad
+on react
+when hook=f_day_t_lina_fine fit=bad
+feel pout
+- Then go and be healthy somewhere else.
+- Hm. Not your best line.
+
+@rule move.h.f_day_t_lina_up.ask
+on move.ask
+when hook=f_day_t_lina_up
+- Ask what put her in a good mood
+
+@rule react.h.f_day_t_lina_up.ask
+on react
+when hook=f_day_t_lina_up move=ask fit=good|neutral
+- Guess. No, not you. Well, maybe a little.
+- Nobody bled on anything today.
+
+@rule move.h.f_day_t_lina_up.praise
+on move.praise
+when hook=f_day_t_lina_up
+- Say the smile suits her
+
+@rule react.h.f_day_t_lina_up.praise
+on react
+when hook=f_day_t_lina_up move=praise fit=good|neutral
+- I know. But go on.
+- You're learning. Keep going.
+
+@rule move.h.f_day_t_lina_up.tease
+on move.tease
+when hook=f_day_t_lina_up
+- Say you'll catch her like this more often
+
+@rule react.h.f_day_t_lina_up.tease
+on react
+when hook=f_day_t_lina_up move=tease fit=good|neutral
+- You'd need an appointment.
+- Only if you bring the coffee.
+
+@rule react.h.f_day_t_lina_up.bad
+on react
+when hook=f_day_t_lina_up fit=bad
+feel pout
+- And there goes my mood.
+- You had one chance.
+
+@rule move.h.f_day_t_lina_low.comfort
+on move.comfort
+when hook=f_day_t_lina_low
+- Tell her to lie down for ten minutes
+
+@rule react.h.f_day_t_lina_low.comfort
+on react
+when hook=f_day_t_lina_low move=comfort fit=good|neutral
+- Stealing my line? I'm impressed.
+- Ten minutes. Watch the door for me.
+
+@rule move.h.f_day_t_lina_low.ask
+on move.ask
+when hook=f_day_t_lina_low
+- Ask what kept her on her feet
+
+@rule react.h.f_day_t_lina_low.ask
+on react
+when hook=f_day_t_lina_low move=ask fit=good|neutral
+- One sprain, two faints, and a very long form.
+- A student who thought it was the flu. It was love.
+
+@rule move.h.f_day_t_lina_low.share
+on move.share
+when hook=f_day_t_lina_low
+- Offer to get her a coffee
+
+@rule react.h.f_day_t_lina_low.share
+on react
+when hook=f_day_t_lina_low move=share fit=good|neutral
+- You're a good boy. Black, please.
+- Now that's the right medicine.
+
+@rule react.h.f_day_t_lina_low.bad
+on react
+when hook=f_day_t_lina_low fit=bad
+feel pout
+- Not today.
+- Find someone else to bother.
+
+@rule move.h.f_day_t_lina_close.tease
+on move.tease
+when hook=f_day_t_lina_close
+- Say you came for your check-up
+
+@rule react.h.f_day_t_lina_close.tease
+on react
+when hook=f_day_t_lina_close move=tease fit=good|neutral
+- Then close your eyes and hold still.
+- Your heart rate says I'm doing fine.
+
+@rule move.h.f_day_t_lina_close.share
+on move.share
+when hook=f_day_t_lina_close
+- Tell her you've been looking forward to this
+
+@rule react.h.f_day_t_lina_close.share
+on react
+when hook=f_day_t_lina_close move=share fit=good|neutral
+- So have I. Don't let it go to your head.
+- Good. That's the right answer.
+
+@rule move.h.f_day_t_lina_close.ask
+on move.ask
+when hook=f_day_t_lina_close
+- Ask how her day's really been
+
+@rule react.h.f_day_t_lina_close.ask
+on react
+when hook=f_day_t_lina_close move=ask fit=good|neutral
+- Better, now.
+- Long, until you walked in.
+
+@rule react.h.f_day_t_lina_close.bad
+on react
+when hook=f_day_t_lina_close fit=bad
+feel pout
+- You've picked a bad moment, sweetheart.
+- Hm. Try again later.
+
+@rule move.h.f_small_t_lina_school.ask
+on move.ask
+when hook=f_small_t_lina_school
+- Ask what's the best secret she's heard
+
+@rule react.h.f_small_t_lina_school.ask
+on react
+when hook=f_small_t_lina_school move=ask fit=good|neutral
+- A nurse never tells. Ask me again over dinner.
+- Someone in this building cries in the supply closet. Weekly.
+
+@rule move.h.f_small_t_lina_school.tease
+on move.tease
+when hook=f_small_t_lina_school
+- Say you'll tell her everything too, then
+
+@rule react.h.f_small_t_lina_school.tease
+on react
+when hook=f_small_t_lina_school move=tease fit=good|neutral
+- I'll get a longer chart.
+- You already do. You just don't notice.
+
+@rule move.h.f_small_t_lina_school.share
+on move.share
+when hook=f_small_t_lina_school
+- Say it must be heavy, knowing all that
+
+@rule react.h.f_small_t_lina_school.share
+on react
+when hook=f_small_t_lina_school move=share fit=good|neutral
+- Sometimes. That's sweet of you.
+- It's why I smile so much. It keeps them talking.
+
+@rule react.h.f_small_t_lina_school.bad
+on react
+when hook=f_small_t_lina_school fit=bad
+feel pout
+- Don't repeat that.
+- Forget I said it.
+
+@rule move.h.f_small_t_lina_weekend.ask
+on move.ask
+when hook=f_small_t_lina_weekend
+- Ask what she does with a free weekend
+
+@rule react.h.f_small_t_lina_weekend.ask
+on react
+when hook=f_small_t_lina_weekend move=ask fit=good|neutral
+- Dinner somewhere with tablecloths and no students.
+- That's for me to know.
+
+@rule move.h.f_small_t_lina_weekend.tease
+on move.tease
+when hook=f_small_t_lina_weekend
+- Say you'd like to see her out of uniform
+
+@rule react.h.f_small_t_lina_weekend.tease
+on react
+when hook=f_small_t_lina_weekend move=tease fit=good|neutral
+- In a nice dress, you mean? Behave.
+- You'd have to be a much better boy.
+
+@rule move.h.f_small_t_lina_weekend.share
+on move.share
+when hook=f_small_t_lina_weekend
+- Say she's earned the rest
+
+@rule react.h.f_small_t_lina_weekend.share
+on react
+when hook=f_small_t_lina_weekend move=share fit=good|neutral
+- I have, haven't I?
+- Finally, someone who understands.
+
+@rule react.h.f_small_t_lina_weekend.bad
+on react
+when hook=f_small_t_lina_weekend fit=bad
+feel pout
+- None of your business, patient.
+- Mind your own Saturday.
+
+@rule move.h.f_small_t_lina_lunch.tease
+on move.tease
+when hook=f_small_t_lina_lunch
+- Say you'll report her chocolate bar
+
+@rule react.h.f_small_t_lina_lunch.tease
+on react
+when hook=f_small_t_lina_lunch move=tease fit=good|neutral
+- To whom? I'm the authority here.
+- I'll prescribe you silence.
+
+@rule move.h.f_small_t_lina_lunch.invite
+on move.invite
+when hook=f_small_t_lina_lunch
+- Offer to bring her a real lunch
+
+@rule react.h.f_small_t_lina_lunch.invite
+on react
+when hook=f_small_t_lina_lunch move=invite fit=good|neutral
+- You'd feed me? How romantic.
+- I'll take the fish, then.
+
+@rule move.h.f_small_t_lina_lunch.ask
+on move.ask
+when hook=f_small_t_lina_lunch
+- Ask what she'd really like to eat
+
+@rule react.h.f_small_t_lina_lunch.ask
+on react
+when hook=f_small_t_lina_lunch move=ask fit=good|neutral
+- Something I don't eat standing up.
+- Sushi. With a chair.
+
+@rule react.h.f_small_t_lina_lunch.bad
+on react
+when hook=f_small_t_lina_lunch fit=bad
+feel pout
+- Then keep your vegetables to yourself.
+- I don't need a lecture from a patient.
+
+@rule move.h.f_small_t_lina_future.ask
+on move.ask
+when hook=f_small_t_lina_future
+- Ask why she stays here
+
+@rule react.h.f_small_t_lina_future.ask
+on react
+when hook=f_small_t_lina_future move=ask fit=good|neutral
+- The view. Today, for instance.
+- Students heal fast and they say thank you.
+
+@rule move.h.f_small_t_lina_future.praise
+on move.praise
+when hook=f_small_t_lina_future
+- Say the campus would be worse without her
+
+@rule react.h.f_small_t_lina_future.praise
+on react
+when hook=f_small_t_lina_future move=praise fit=good|neutral
+- It would be a lot bloodier.
+- Say that to the dean, please.
+
+@rule move.h.f_small_t_lina_future.tease
+on move.tease
+when hook=f_small_t_lina_future
+- Say you'd follow her to that sea view
+
+@rule react.h.f_small_t_lina_future.tease
+on react
+when hook=f_small_t_lina_future move=tease fit=good|neutral
+- I'd make you carry the bags.
+- Careful, I might hold you to that.
+
+@rule react.h.f_small_t_lina_future.bad
+on react
+when hook=f_small_t_lina_future fit=bad
+feel pout
+- Don't worry about my plans.
+- That's far too personal a question.
+
+@rule move.h.f_day_t_reina_fine.ask
+on move.ask
+when hook=f_day_t_reina_fine
+- Ask what the third goal is
+
+@rule react.h.f_day_t_reina_fine.ask
+on react
+when hook=f_day_t_reina_fine move=ask fit=good|neutral
+- Finish this sentence, and go.
+- To teach one person something today. You'll do.
+
+@rule move.h.f_day_t_reina_fine.praise
+on move.praise
+when hook=f_day_t_reina_fine
+- Say she's more organized than the whole department
+
+@rule react.h.f_day_t_reina_fine.praise
+on react
+when hook=f_day_t_reina_fine move=praise fit=good|neutral
+- That's a low bar. But yes.
+- I'm aware. Thank you.
+
+@rule move.h.f_day_t_reina_fine.share
+on move.share
+when hook=f_day_t_reina_fine
+- Say you've set a goal too
+
+@rule react.h.f_day_t_reina_fine.share
+on react
+when hook=f_day_t_reina_fine move=share fit=good|neutral
+- Write it down. Then we'll talk.
+- Good. How will you measure it?
+
+@rule react.h.f_day_t_reina_fine.bad
+on react
+when hook=f_day_t_reina_fine fit=bad
+feel pout
+- You're wasting your three minutes.
+- Come back when you've got a point.
+
+@rule move.h.f_day_t_reina_up.ask
+on move.ask
+when hook=f_day_t_reina_up
+- Ask which journal
+
+@rule react.h.f_day_t_reina_up.ask
+on react
+when hook=f_day_t_reina_up move=ask fit=good|neutral
+- A good one. I'll send you the reference.
+- You won't have heard of it. You should have.
+
+@rule move.h.f_day_t_reina_up.praise
+on move.praise
+when hook=f_day_t_reina_up
+- Congratulate her
+
+@rule react.h.f_day_t_reina_up.praise
+on react
+when hook=f_day_t_reina_up move=praise fit=good|neutral
+- Thank you. It took two years.
+- I'll accept that. Just this once.
+
+@rule move.h.f_day_t_reina_up.tease
+on move.tease
+when hook=f_day_t_reina_up
+- Say she's almost smiling
+
+@rule react.h.f_day_t_reina_up.tease
+on react
+when hook=f_day_t_reina_up move=tease fit=good|neutral
+- I don't know what you mean.
+- It's a muscle. I exercise it quarterly.
+
+@rule react.h.f_day_t_reina_up.bad
+on react
+when hook=f_day_t_reina_up fit=bad
+feel pout
+- Don't spoil it.
+- Is that all?
+
+@rule move.h.f_day_t_reina_low.comfort
+on move.comfort
+when hook=f_day_t_reina_low
+- Say one bad day won't ruin the plan
+
+@rule react.h.f_day_t_reina_low.comfort
+on react
+when hook=f_day_t_reina_low move=comfort fit=good|neutral
+- You're right. I'd have told you the same.
+- Hm. It's a rounding error, then.
+
+@rule move.h.f_day_t_reina_low.ask
+on move.ask
+when hook=f_day_t_reina_low
+- Ask what threw the schedule off
+
+@rule react.h.f_day_t_reina_low.ask
+on react
+when hook=f_day_t_reina_low move=ask fit=good|neutral
+- People. It's always people.
+- The dean moved a meeting. Without asking.
+
+@rule move.h.f_day_t_reina_low.share
+on move.share
+when hook=f_day_t_reina_low
+- Offer to help with something on her list
+
+@rule react.h.f_day_t_reina_low.share
+on react
+when hook=f_day_t_reina_low move=share fit=good|neutral
+- You'd do that? Fine. Page four.
+- I'll give you the easy part.
+
+@rule react.h.f_day_t_reina_low.bad
+on react
+when hook=f_day_t_reina_low fit=bad
+feel pout
+- I don't need sympathy. I need four more hours.
+- Don't manage me.
+
+@rule move.h.f_day_t_reina_close.tease
+on move.tease
+when hook=f_day_t_reina_close
+- Ask what "personal development" involves
+
+@rule react.h.f_day_t_reina_close.tease
+on react
+when hook=f_day_t_reina_close move=tease fit=good|neutral
+- We'll be reviewing your progress.
+- You'll have to attend to find out.
+
+@rule move.h.f_day_t_reina_close.share
+on move.share
+when hook=f_day_t_reina_close
+- Tell her you look forward to those ten minutes
+
+@rule react.h.f_day_t_reina_close.share
+on react
+when hook=f_day_t_reina_close move=share fit=good|neutral
+- Then I'll make it twelve.
+- So do I. Don't tell anyone.
+
+@rule move.h.f_day_t_reina_close.ask
+on move.ask
+when hook=f_day_t_reina_close
+- Ask when she last took a real break
+
+@rule react.h.f_day_t_reina_close.ask
+on react
+when hook=f_day_t_reina_close move=ask fit=good|neutral
+- You'd have to check the calendar.
+- Now. This is it.
+
+@rule react.h.f_day_t_reina_close.bad
+on react
+when hook=f_day_t_reina_close fit=bad
+feel pout
+- Not now. I've got a deadline.
+- We'll reschedule.
+
+@rule move.h.f_small_t_reina_school.ask
+on move.ask
+when hook=f_small_t_reina_school
+- Ask what the proposal says
+
+@rule react.h.f_small_t_reina_school.ask
+on react
+when hook=f_small_t_reina_school move=ask fit=good|neutral
+- Fewer electives. More proofs.
+- Read it. It's in the library. I put it there.
+
+@rule move.h.f_small_t_reina_school.agree
+on move.agree
+when hook=f_small_t_reina_school
+- Say you could be doing better yourself
+
+@rule react.h.f_small_t_reina_school.agree
+on react
+when hook=f_small_t_reina_school move=agree fit=good|neutral
+- Good. Admitting it is step one.
+- I know. That's why I'm telling you.
+
+@rule move.h.f_small_t_reina_school.tease
+on move.tease
+when hook=f_small_t_reina_school
+- Ask if the dean has run away yet
+
+@rule react.h.f_small_t_reina_school.tease
+on react
+when hook=f_small_t_reina_school move=tease fit=good|neutral
+- He's moved his office hours.
+- I know where he parks.
+
+@rule react.h.f_small_t_reina_school.bad
+on react
+when hook=f_small_t_reina_school fit=bad
+feel pout
+- That attitude is the problem.
+- Then stay average.
+
+@rule move.h.f_small_t_reina_weekend.ask
+on move.ask
+when hook=f_small_t_reina_weekend
+- Ask what's on the plan for this Saturday
+
+@rule react.h.f_small_t_reina_weekend.ask
+on react
+when hook=f_small_t_reina_weekend move=ask fit=good|neutral
+- Run, seminar, review. In that order.
+- You're asking for the short version?
+
+@rule move.h.f_small_t_reina_weekend.tease
+on move.tease
+when hook=f_small_t_reina_weekend
+- Ask if fun has a slot on the plan
+
+@rule react.h.f_small_t_reina_weekend.tease
+on react
+when hook=f_small_t_reina_weekend move=tease fit=good|neutral
+- Between seven and seven-twenty.
+- I'll consider adding one.
+
+@rule move.h.f_small_t_reina_weekend.share
+on move.share
+when hook=f_small_t_reina_weekend
+- Say you'd only sleep all weekend
+
+@rule react.h.f_small_t_reina_weekend.share
+on react
+when hook=f_small_t_reina_weekend move=share fit=good|neutral
+- Then you'll wake up exactly where you are.
+- Sleep is fine. Eight hours, not fourteen.
+
+@rule react.h.f_small_t_reina_weekend.bad
+on react
+when hook=f_small_t_reina_weekend fit=bad
+feel pout
+- Don't call it wasted if you've never tried it.
+- My Saturdays aren't a joke.
+
+@rule move.h.f_small_t_reina_lunch.ask
+on move.ask
+when hook=f_small_t_reina_lunch
+- Ask why she doesn't use the cafeteria
+
+@rule react.h.f_small_t_reina_lunch.ask
+on react
+when hook=f_small_t_reina_lunch move=ask fit=good|neutral
+- The line. It needs arrows and a second till. It's not difficult.
+- The line. I've drawn them a diagram. It's laminated.
+
+@rule move.h.f_small_t_reina_lunch.tease
+on move.tease
+when hook=f_small_t_reina_lunch
+- Say even the salad must be bored by now
+
+@rule react.h.f_small_t_reina_lunch.tease
+on react
+when hook=f_small_t_reina_lunch move=tease fit=good|neutral
+- The salad does as it's told.
+- You've eaten worse, and slower.
+
+@rule move.h.f_small_t_reina_lunch.invite
+on move.invite
+when hook=f_small_t_reina_lunch
+- Ask if she'd like company for those twelve minutes
+
+@rule react.h.f_small_t_reina_lunch.invite
+on react
+when hook=f_small_t_reina_lunch move=invite fit=good|neutral
+- You may sit. Eat quickly.
+- Thirteen, if you've got something to say.
+
+@rule react.h.f_small_t_reina_lunch.bad
+on react
+when hook=f_small_t_reina_lunch fit=bad
+feel pout
+- How I eat is not a topic.
+- Don't you have somewhere to be?
+
+@rule move.h.f_small_t_reina_future.ask
+on move.ask
+when hook=f_small_t_reina_future
+- Ask how she'll get there
+
+@rule react.h.f_small_t_reina_future.ask
+on react
+when hook=f_small_t_reina_future move=ask fit=good|neutral
+- One year at a time, in writing.
+- By being better prepared than everyone in the room.
+
+@rule move.h.f_small_t_reina_future.share
+on move.share
+when hook=f_small_t_reina_future
+- Say you don't have a plan yet
+
+@rule react.h.f_small_t_reina_future.share
+on react
+when hook=f_small_t_reina_future move=share fit=good|neutral
+- Then that's your homework. One page.
+- Honest, at least. Start tonight.
+
+@rule move.h.f_small_t_reina_future.praise
+on move.praise
+when hook=f_small_t_reina_future
+- Say you'd bet on her
+
+@rule react.h.f_small_t_reina_future.praise
+on react
+when hook=f_small_t_reina_future move=praise fit=good|neutral
+- Good. You'd win.
+- Sensible of you.
+
+@rule react.h.f_small_t_reina_future.bad
+on react
+when hook=f_small_t_reina_future fit=bad
+feel pout
+- Then don't complain in ten years.
+- That's exactly the problem.
+
+@rule move.h.f_day_t_nonoka_fine.share
+on move.share
+when hook=f_day_t_nonoka_fine
+- Admit you skipped breakfast
+
+@rule react.h.f_day_t_nonoka_fine.share
+on react
+when hook=f_day_t_nonoka_fine move=share fit=good|neutral
+- I knew it! Here, take this.
+- Oh, dear. Not again. Eat, please.
+
+@rule move.h.f_day_t_nonoka_fine.comfort
+on move.comfort
+when hook=f_day_t_nonoka_fine
+- Say she worries too much
+
+@rule react.h.f_day_t_nonoka_fine.comfort
+on react
+when hook=f_day_t_nonoka_fine move=comfort fit=good|neutral
+- Someone has to, dear.
+- I know. It's only because I care.
+
+@rule move.h.f_day_t_nonoka_fine.ask
+on move.ask
+when hook=f_day_t_nonoka_fine
+- Ask how she keeps track of everyone
+
+@rule react.h.f_day_t_nonoka_fine.ask
+on react
+when hook=f_day_t_nonoka_fine move=ask fit=good|neutral
+- I have a notebook. And I watch who's yawning.
+- You all think I don't notice. I do.
+
+@rule react.h.f_day_t_nonoka_fine.bad
+on react
+when hook=f_day_t_nonoka_fine fit=bad
+feel pout
+- Oh... I'm sorry. I didn't mean to pry.
+- All right, dear. I'll let you go.
+
+@rule move.h.f_day_t_nonoka_up.ask
+on move.ask
+when hook=f_day_t_nonoka_up
+- Ask about the student
+
+@rule react.h.f_day_t_nonoka_up.ask
+on react
+when hook=f_day_t_nonoka_up move=ask fit=good|neutral
+- She's a teacher now! Can you imagine?
+- She remembered what I packed for her lunch.
+
+@rule move.h.f_day_t_nonoka_up.praise
+on move.praise
+when hook=f_day_t_nonoka_up
+- Say her students are lucky to have her
+
+@rule react.h.f_day_t_nonoka_up.praise
+on react
+when hook=f_day_t_nonoka_up move=praise fit=good|neutral
+- Oh, stop it, you'll make me cry again.
+- You're such a sweet one.
+
+@rule move.h.f_day_t_nonoka_up.share
+on move.share
+when hook=f_day_t_nonoka_up
+- Take what she offers
+
+@rule react.h.f_day_t_nonoka_up.share
+on react
+when hook=f_day_t_nonoka_up move=share fit=good|neutral
+- Good. Eat it all, now.
+- That's right. Tell me if it needs salt.
+
+@rule react.h.f_day_t_nonoka_up.bad
+on react
+when hook=f_day_t_nonoka_up fit=bad
+feel pout
+- Oh. Well, I'm happy anyway.
+- Never mind, dear.
+
+@rule move.h.f_day_t_nonoka_low.comfort
+on move.comfort
+when hook=f_day_t_nonoka_low
+- Tell her she's doing everything she can
+
+@rule react.h.f_day_t_nonoka_low.comfort
+on react
+when hook=f_day_t_nonoka_low move=comfort fit=good|neutral
+- Thank you, dear. I needed that.
+- You're kind. I'll try to believe you.
+
+@rule move.h.f_day_t_nonoka_low.ask
+on move.ask
+when hook=f_day_t_nonoka_low
+- Ask if there's anything you can do
+
+@rule react.h.f_day_t_nonoka_low.ask
+on react
+when hook=f_day_t_nonoka_low move=ask fit=good|neutral
+- Just keep an eye on your friends for me.
+- Eat your lunch. That would help.
+
+@rule move.h.f_day_t_nonoka_low.share
+on move.share
+when hook=f_day_t_nonoka_low
+- Say you'll say hello to that student if you see her
+
+@rule react.h.f_day_t_nonoka_low.share
+on react
+when hook=f_day_t_nonoka_low move=share fit=good|neutral
+- Would you? That would mean a lot.
+- You're a good one.
+
+@rule react.h.f_day_t_nonoka_low.bad
+on react
+when hook=f_day_t_nonoka_low fit=bad
+feel pout
+- You're right, it isn't your worry.
+- I'm sorry. I shouldn't have said anything.
+
+@rule move.h.f_day_t_nonoka_close.share
+on move.share
+when hook=f_day_t_nonoka_close
+- Say it tastes better than anything else you've had
+
+@rule react.h.f_day_t_nonoka_close.share
+on react
+when hook=f_day_t_nonoka_close move=share fit=good|neutral
+- You're just saying that. Have some more.
+- I'll make it again tomorrow, then.
+
+@rule move.h.f_day_t_nonoka_close.tease
+on move.tease
+when hook=f_day_t_nonoka_close
+- Say you'll get spoiled like this
+
+@rule react.h.f_day_t_nonoka_close.tease
+on react
+when hook=f_day_t_nonoka_close move=tease fit=good|neutral
+- That's the plan, dear.
+- You're allowed. Just by me.
+
+@rule move.h.f_day_t_nonoka_close.comfort
+on move.comfort
+when hook=f_day_t_nonoka_close
+- Say you'd like to look after her for a change
+
+@rule react.h.f_day_t_nonoka_close.comfort
+on react
+when hook=f_day_t_nonoka_close move=comfort fit=good|neutral
+- Oh... that's new. All right.
+- I don't know how to let you. But I'd like to.
+
+@rule react.h.f_day_t_nonoka_close.bad
+on react
+when hook=f_day_t_nonoka_close fit=bad
+feel pout
+- Oh. Not hungry?
+- That's all right. I'll wrap it up for later.
+
+@rule move.h.f_small_t_nonoka_school.ask
+on move.ask
+when hook=f_small_t_nonoka_school
+- Ask how she keeps track of everyone
+
+@rule react.h.f_small_t_nonoka_school.ask
+on react
+when hook=f_small_t_nonoka_school move=ask fit=good|neutral
+- In a notebook. Who's tired. Who's in love. Who's forgotten to eat.
+- A notebook. Only nice things. Mostly.
+
+@rule move.h.f_small_t_nonoka_school.praise
+on move.praise
+when hook=f_small_t_nonoka_school
+- Say nobody else would bother
+
+@rule react.h.f_small_t_nonoka_school.praise
+on react
+when hook=f_small_t_nonoka_school move=praise fit=good|neutral
+- Oh, I'm sure they would. But thank you.
+- It's no trouble, dear.
+
+@rule move.h.f_small_t_nonoka_school.share
+on move.share
+when hook=f_small_t_nonoka_school
+- Say you've sat alone at lunch too
+
+@rule react.h.f_small_t_nonoka_school.share
+on react
+when hook=f_small_t_nonoka_school move=share fit=good|neutral
+- Then you'll sit with me next time.
+- Oh, dear. Why didn't you tell me?
+
+@rule react.h.f_small_t_nonoka_school.bad
+on react
+when hook=f_small_t_nonoka_school fit=bad
+feel pout
+- I'm sorry, I'll keep it to myself.
+- It's all right if you don't understand.
+
+@rule move.h.f_small_t_nonoka_weekend.ask
+on move.ask
+when hook=f_small_t_nonoka_weekend
+- Ask what she's cooking
+
+@rule react.h.f_small_t_nonoka_weekend.ask
+on react
+when hook=f_small_t_nonoka_weekend move=ask fit=good|neutral
+- Stew. Enough for a small village.
+- Whatever's cheap and warm.
+
+@rule move.h.f_small_t_nonoka_weekend.invite
+on move.invite
+when hook=f_small_t_nonoka_weekend
+- Say you'd like to try her cooking
+
+@rule react.h.f_small_t_nonoka_weekend.invite
+on react
+when hook=f_small_t_nonoka_weekend move=invite fit=good|neutral
+- Would you? I'll bring a box on Monday.
+- I'd love that. Tell me what you don't eat.
+
+@rule move.h.f_small_t_nonoka_weekend.tease
+on move.tease
+when hook=f_small_t_nonoka_weekend
+- Ask if she's knitting something for you
+
+@rule react.h.f_small_t_nonoka_weekend.tease
+on react
+when hook=f_small_t_nonoka_weekend move=tease fit=good|neutral
+- I've been measuring you with my eyes, dear.
+- It's a little long. You'll grow into it.
+
+@rule react.h.f_small_t_nonoka_weekend.bad
+on react
+when hook=f_small_t_nonoka_weekend fit=bad
+feel pout
+- Oh. Never mind, then.
+- It's nothing exciting, I know.
+
+@rule move.h.f_small_t_nonoka_lunch.share
+on move.share
+when hook=f_small_t_nonoka_lunch
+- Admit it's bread again today
+
+@rule react.h.f_small_t_nonoka_lunch.share
+on react
+when hook=f_small_t_nonoka_lunch move=share fit=good|neutral
+- I knew it. Take the spare.
+- Oh, you. What am I going to do with you?
+
+@rule move.h.f_small_t_nonoka_lunch.ask
+on move.ask
+when hook=f_small_t_nonoka_lunch
+- Ask what's in the spare rice ball
+
+@rule react.h.f_small_t_nonoka_lunch.ask
+on react
+when hook=f_small_t_nonoka_lunch move=ask fit=good|neutral
+- Salmon today. You're in luck.
+- Pickled plum. It's good for you.
+
+@rule move.h.f_small_t_nonoka_lunch.agree
+on move.agree
+when hook=f_small_t_nonoka_lunch
+- Promise to eat better
+
+@rule react.h.f_small_t_nonoka_lunch.agree
+on react
+when hook=f_small_t_nonoka_lunch move=agree fit=good|neutral
+- That's all I ask, dear.
+- I'll hold you to it. I've got a notebook.
+
+@rule react.h.f_small_t_nonoka_lunch.bad
+on react
+when hook=f_small_t_nonoka_lunch fit=bad
+feel pout
+- All right, I'll stop nagging.
+- You're an adult. I know.
+
+@rule move.h.f_small_t_nonoka_future.ask
+on move.ask
+when hook=f_small_t_nonoka_future
+- Ask what she'd grow in the garden
+
+@rule react.h.f_small_t_nonoka_future.ask
+on react
+when hook=f_small_t_nonoka_future move=ask fit=good|neutral
+- Tomatoes, herbs, a little of everything.
+- Whatever my visitors like to eat.
+
+@rule move.h.f_small_t_nonoka_future.share
+on move.share
+when hook=f_small_t_nonoka_future
+- Say you still don't know what you want
+
+@rule react.h.f_small_t_nonoka_future.share
+on react
+when hook=f_small_t_nonoka_future move=share fit=good|neutral
+- That's perfectly all right, dear.
+- Nobody does at your age. I certainly didn't.
+
+@rule move.h.f_small_t_nonoka_future.praise
+on move.praise
+when hook=f_small_t_nonoka_future
+- Say any student would be glad to visit
+
+@rule react.h.f_small_t_nonoka_future.praise
+on react
+when hook=f_small_t_nonoka_future move=praise fit=good|neutral
+- You'd come? I'd cook for days.
+- Oh, you're going to make me cry.
+
+@rule react.h.f_small_t_nonoka_future.bad
+on react
+when hook=f_small_t_nonoka_future fit=bad
+feel pout
+- Oh, I'm sorry. Too serious, wasn't it?
+- We can talk about something else, dear.

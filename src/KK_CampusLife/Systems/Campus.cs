@@ -67,7 +67,7 @@ namespace Joojkk.CampusLife
             S.Money = Cfg.StartingMoney.Value;
             S.Energy = Activities.MaxEnergy;
             S.Reputation = 20;
-            S.Log("Campus Life begins. The Koikatsu Club has a board now, and the school feels a little bigger.");
+            S.Log("Campus Life begins. The Koikatsu Club has a board now, and the university feels a little bigger.");
             Moods.RollAll();
             try { Lore.Prune(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
             Spotlight.Rotate();

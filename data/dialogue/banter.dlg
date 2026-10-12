@@ -18,7 +18,7 @@ feel annoyed
 @rule duo3.talk.students
 on duo3.talk
 when myrole=student otherrole=student
-- Did you finish the homework for tomorrow? >> Almost. One page left. >> Mostly! Don't ask how! >> Yesterday. >> Define "finish."
+- {student}Did you finish the assignments for tomorrow? >> Almost. One page left. >> Mostly! Don't ask how! >> Yesterday. >> Define "finish."
 - Which class do you have after this? >> Math, I think. >> P.E.! Finally! >> Math. >> Whichever one I sleep through.
 - Has this week felt long to you? >> It really has. >> So long! I want the weekend! >> It's a normal week. >> You say that every week.
 - Did you take notes today? I missed some. >> I did. You can borrow them. >> Some! The rest are doodles! >> Yes. >> What's it worth to you?
@@ -27,25 +27,25 @@ when myrole=student otherrole=student
 @rule duo3.talk.student.teacher
 on duo3.talk
 when myrole=student otherrole=teacher
-- {other}, will the next test cover chapter five? >> It will, so read it twice. >> Yes! All of it! >> Yes. Read it. >> Would I tell you?
-- {other}, you look tired today. >> A little. Thank you for asking. >> Me? Never! Okay, maybe a bit! >> I'm fine. >> Grading your essays will do that.
-- {other}, can I hand in my report on Monday? >> All right, but only this once. >> Monday, not a minute later! >> Friday, as I said. >> What do I get in return?
+- {classes}{other}, will the next test cover chapter five? >> It will, so read it twice. >> Yes! All of it! >> Yes. Read it. >> Would I tell you?
+- {classes}{other}, you look tired today. >> A little. Thank you for asking. >> Me? Never! Okay, maybe a bit! >> I'm fine. >> Grading your essays will do that.
+- {classes}{other}, can I hand in my report on Monday? >> All right, but only this once. >> Monday, not a minute later! >> Friday, as I said. >> What do I get in return?
 - {other}, is it true you're a strict grader? >> I try to be fair. >> Only when I have to be! >> Yes. >> Who told you that? Good.
 
 @rule duo3.talk.teacher.student
 on duo3.talk
 when myrole=teacher otherrole=student
-- Did you hand in your report, {other}? >> Y-yes, this morning. >> Yep! First one in! >> It's on your desk. >> Hm, which report?
+- {classes}Did you hand in your report, {other}? >> Y-yes, this morning. >> Yep! First one in! >> It's on your desk. >> Hm, which report?
 - Don't stay too late today, {other}. >> I won't. >> No promises! >> I'll leave at six. >> Are you checking up on me?
-- How are your classes going, {other}? >> Well enough, thank you. >> Great! Except math! >> Fine. >> Should I worry that you're asking?
-- Your last test was much better, {other}. >> Thank you. I studied hard. >> Yes! I knew it! >> I know. >> You sound surprised.
+- {classes}How are your classes going, {other}? >> Well enough, thank you. >> Great! Except math! >> Fine. >> Should I worry that you're asking?
+- {classes}Your last test was much better, {other}. >> Thank you. I studied hard. >> Yes! I knew it! >> I know. >> You sound surprised.
 
 @rule duo3.talk.teachers
 on duo3.talk
 when myrole=teacher otherrole=teacher
-- The staff meeting ran long again. >> It did. My tea went cold. >> Two hours! I nearly fell asleep! >> It always does. >> I counted the ceiling tiles.
-- Have you finished your grading? >> Half of it. The rest is for tonight. >> Almost! Three more stacks! >> Yes. >> Have you? I won't tell.
-- Who has hall duty on Friday? >> I think that's me. >> Me! I traded for it! >> Check the board. >> Not me, and I'd like to keep it that way.
+- The faculty meeting ran long again. >> It did. My tea went cold. >> Two hours! I nearly fell asleep! >> It always does. >> I counted the ceiling tiles.
+- {classes}Have you finished your grading? >> Half of it. The rest is for tonight. >> Almost! Three more stacks! >> Yes. >> Have you? I won't tell.
+- {classes}Who has hall duty on Friday? >> I think that's me. >> Me! I traded for it! >> Check the board. >> Not me, and I'd like to keep it that way.
 - The second-years are restless this week. >> They are. It's the season, I think. >> They're just full of energy! >> I've noticed. >> I wonder who they get it from.
 
 @rule duo3.talk.bff
@@ -94,13 +94,13 @@ when wet=yes
 @rule duo3.talk.exam
 on duo3.talk
 when exam=yes myrole=student otherrole=student
-- Have you started studying for the exams? >> A little every night. >> Tomorrow! For sure! >> I finished the review. >> Why, do you want my notes?
+- {student}Have you started studying for the exams? >> A little every night. >> Tomorrow! For sure! >> I finished the review. >> Why, do you want my notes?
 - Which subject scares you the most? >> Math, I think. >> All of them! >> None. >> Whichever one you're good at.
 
 @rule duo3.talk.exam.teachers
 on duo3.talk
 when exam=yes myrole=student|teacher otherrole=teacher
-- Are the exam papers ready? >> Almost. I'm checking them once more. >> Printed and hidden! >> Yes. >> Wouldn't you like to know.
+- {classes}Are the exam papers ready? >> Almost. I'm checking them once more. >> Printed and hidden! >> Yes. >> Wouldn't you like to know.
 
 # ================= what they share =================
 @rule duo3.talk.club
@@ -141,7 +141,7 @@ feel worried
 @rule duo3.talk.lonely
 on duo3.talk
 when othermood=lonely otherrole=student
-- You went home alone yesterday, didn't you? >> Yes. Everyone was busy. >> Yeah, nobody was around! >> I don't mind. >> Why, did you miss me?
+- {student}You went home alone yesterday, didn't you? >> Yes. Everyone was busy. >> Yeah, nobody was around! >> I don't mind. >> Why, did you miss me?
 
 @rule duo3.talk.cheerful
 on duo3.talk

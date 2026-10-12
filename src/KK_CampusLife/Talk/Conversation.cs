@@ -135,7 +135,7 @@ namespace Joojkk.CampusLife
             _scene = ts;
             var h = ts.targetHeroine;
             _decided = h != null;
-            if (!Cfg.NewConversation.Value || h == null || !GirlInfo.IsRegular(h) || Duo.TalkHer == h) return; // story girls and teachers: as the game made them
+            if (!Cfg.NewConversation.Value || h == null || !GirlInfo.IsRegular(h) && TeacherTalk.Speaking != h || Duo.TalkHer == h) return; // story girls: as the game made them
             try
             {
                 var tr = Traverse.Create(ts);
@@ -886,7 +886,7 @@ namespace Joojkk.CampusLife
             }
             var rival = Social.Students.Where(o => o != s.Her && Social.Bond(s.Her, o) <= -30).OrderBy(_ => Random.value).FirstOrDefault();
             if (rival != null && Random.value < 0.5f && Created.Count < 4) Add("About " + GirlInfo.FirstName(rival), () => AskFriend(rival));
-            Add("About the school", AskSchool);
+            Add("About the university", AskSchool);
             Add("Back", Back);
         }
 
@@ -1543,7 +1543,7 @@ namespace Joojkk.CampusLife
                 case Topic.Food: return "Food";
                 case Topic.Sports: return "Sports";
                 case Topic.Hobbies: return "Hobbies";
-                case Topic.Rumors: return "School rumors";
+                case Topic.Rumors: return "Campus rumors";
                 case Topic.Weekend: return "Weekend plans";
                 case Topic.Love: return "<color=#ff8ad8>Love life</color>";
                 default: return "Ask about her";
@@ -1554,12 +1554,12 @@ namespace Joojkk.CampusLife
         {
             switch (t)
             {
-                case Topic.Classes: return Lines.Pick("How are classes going for you?", "Did you get today's homework?");
+                case Topic.Classes: return Lines.Pick("How are classes going for you?", "Did you get today's assignments?");
                 case Topic.Club: return Lines.Pick("How's your club doing lately?", "Anything new at your club?");
                 case Topic.Food: return Lines.Pick("Had anything good to eat today?", "What's your favorite thing at the cafeteria?");
                 case Topic.Sports: return Lines.Pick("Do you follow any sports?", "Do you work out at all?");
                 case Topic.Hobbies: return Lines.Pick("What do you do in your free time?", "Into anything fun lately?");
-                case Topic.Rumors: return Lines.Pick("Heard any interesting rumors around school?", "Do you know what everyone's whispering about?");
+                case Topic.Rumors: return Lines.Pick("Heard any interesting rumors around campus?", "Do you know what everyone's whispering about?");
                 case Topic.Weekend: return Lines.Pick("Got any plans for the weekend?", "Did you do anything fun last weekend?");
                 case Topic.Love: return Lines.Pick("So... is there anyone you like?", "Have you ever had a crush on someone?", "What's your idea of a perfect date?");
                 default: return Lines.Pick("Tell me a bit about yourself.", "What's been on your mind lately?");
@@ -1571,8 +1571,8 @@ namespace Joojkk.CampusLife
             switch (t)
             {
                 case Topic.Classes:
-                    return Lines.T(tone, "Classes are going well! I finally understood today's math lesson. || Classes are fine! I even understood math today. || I've been keeping up in class. The teacher was really kind today. || School's going well, I think! I got a good grade on a quiz.", "Classes? Ugh. But okay, history was actually kinda cool today! || Ugh, classes! But PE was awesome today! || Class is class, but history had a cool story today! || Honestly? Science was fun! We blew something up! Kinda!",
-                        "Fine. I like it when a teacher actually explains things properly. || Classes are tolerable. Today's lecture was well structured. || Good. I appreciate a teacher who prepares. || Productive. I understood everything.", "I aced the quiz. Go on, be impressed. || Top of the class, as usual. You may applaud. || I answered every question today. Jealous? || Classes? Easy. Next question.");
+                    return Lines.T(tone, "Classes are going well! I finally understood today's math lesson. || Classes are fine! I even understood math today. || I've been keeping up in class. The professor was really kind today. || Campus is going well, I think! I got a good grade on a quiz.", "Classes? Ugh. But okay, history was actually kinda cool today! || Ugh, classes! But PE was awesome today! || Class is class, but history had a cool story today! || Honestly? Science was fun! We blew something up! Kinda!",
+                        "Fine. I like it when a professor actually explains things properly. || Classes are tolerable. Today's lecture was well structured. || Good. I appreciate a professor who prepares. || Productive. I understood everything.", "I aced the quiz. Go on, be impressed. || Top of the class, as usual. You may applaud. || I answered every question today. Jealous? || Classes? Easy. Next question.");
                 case Topic.Club:
                     return Lines.T(tone, "The club is so much fun lately. Everyone has been really kind to me. || The club makes me happy lately. Everyone's so nice. || I really like the club these days... I feel welcome. || Club activities are fun! I'm getting better, little by little.", "The club's on fire! We're practicing like crazy! || Club's amazing! We're totally fired up! || We've been practicing nonstop! It's great! || The club's the best! You should come see!",
                         "We've been productive. I like that. || The club has been efficient. I approve. || We're making progress. Good. || The club is in good shape.", "My club? Of course it's going great. I'm in it. || My club's thriving. Naturally, I'm the reason. || Of course it's going well. I'm there. || Club's great. Thanks to me, mostly.");
@@ -1586,7 +1586,7 @@ namespace Joojkk.CampusLife
                     return Lines.T(tone, "I've been reading a really good novel... I can't put it down. || I'm reading a novel... I stayed up too late with it. || I've been knitting a little. It's relaxing. || There's a book I love right now... I could lend it to you.", "I got into a new game and I'm SO hooked! || I'm obsessed with a new game! Can't stop! || I started a new anime! It's SO good! || New hobby: skateboarding! I fell a lot!",
                         "I've been sketching. I'm not showing you. Yet. || Sketching. You can't see them. Not yet. || I've been reading philosophy. Slowly. || Calligraphy. It requires patience.", "My hobbies? Collecting interesting people. You might qualify. || My hobby? People-watching. You're interesting. || I collect secrets. Want to give me one? || Hobbies? Teasing you might count.");
                 case Topic.Rumors:
-                    return Lines.T(tone, "Um, I heard the library is getting new books... does that count as a rumor? || Um, I heard the library got new books... that's a rumor, right? || Someone said there's a stray cat behind the gym... is it true? || I heard the festival might be bigger this year...", "Oh oh oh! Did you hear about the class rep and the vending machine?! || Okay, did you hear what happened at the vending machine?! || Oh! Someone confessed on the roof yesterday! || Big news! The teacher wore mismatched socks!",
+                    return Lines.T(tone, "Um, I heard the library is getting new books... does that count as a rumor? || Um, I heard the library got new books... that's a rumor, right? || Someone said there's a stray cat behind the gym... is it true? || I heard the festival might be bigger this year...", "Oh oh oh! Did you hear about the course rep and the vending machine?! || Okay, did you hear what happened at the vending machine?! || Oh! Someone confessed on the roof yesterday! || Big news! The professor wore mismatched socks!",
                         "...I heard something. Fine, I'll tell you. Quietly. || ...I heard something. Keep it to yourself. || ...There's a rumor. I'll tell you once. || ...Quietly. I heard something interesting.", "Rumors are my specialty. Lean in. || Rumors? Oh, I have the good ones. Come closer. || I know everything. Want a sample? || Gossip is my art. Lean in.");
                 case Topic.Weekend:
                     return Lines.T(tone, "I might bake something this weekend. Maybe cookies? || I might try baking cookies this weekend... || Maybe I'll visit the flower shop this weekend. || I'd like to rest and read this weekend.", "Karaoke! I'm going to sing until my voice gives out! || Karaoke all weekend! Want to come?! || I'm going to the arcade! All day! || Beach trip! Or the mall! Or both!",

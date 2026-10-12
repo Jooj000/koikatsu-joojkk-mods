@@ -181,7 +181,7 @@ namespace Joojkk.CampusLife
             // (shiro + Elma)" waited all lunch with both absent). Once the school knows, a plan with an absent girl goes.
             if (_pending != null && !Present(_pending))
             {
-                CampusLifePlugin.Log.LogInfo("Director: " + _pending + " dropped (a girl in it is not at school today)");
+                CampusLifePlugin.Log.LogInfo("Director: " + _pending + " dropped (a girl in it is not on campus today)");
                 _pending = Pick(false);
                 if (_pending != null && !Present(_pending)) _pending = null;
                 if (_pending != null) CampusLifePlugin.Log.LogInfo("Director: waiting to happen this period: " + _pending);

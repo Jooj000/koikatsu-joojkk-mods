@@ -116,6 +116,31 @@ namespace Joojkk.CampusLife
             catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
         }
 
+        /// <summary>The talk scene's tables are by personality: a teacher in it answers with hers (TeacherTalk).</summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(SaveData.Heroine), nameof(SaveData.Heroine.FixCharaIDOrPersonality), MethodType.Getter)]
+        private static void FixCharaIDOrPersonalityPostfix(SaveData.Heroine __instance, ref int __result)
+        {
+            if (TeacherTalk.Speaking == __instance) __result = __instance.personality;
+        }
+
+        /// <summary>Her greeting comes from the dialogue bank.</summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ActionGame.Communication.Info), nameof(ActionGame.Communication.Info.GetIntroductionADV))]
+        private static void GetIntroductionPostfix(ActionGame.Communication.Info __instance, bool _isEnd, int _eventNo, List<ADV.Program.Transfer> __result)
+        {
+            try { Conversation.Greeting(Traverse.Create(__instance).Property("heroine").GetValue<SaveData.Heroine>(), _isEnd, _eventNo, __result); }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Greeting: " + e.Message); }
+        }
+
+        /// <summary>A teacher stays at her desk (StaffLife).</summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ActionGame.ActionControl), nameof(ActionGame.ActionControl.GetActionTime))]
+        private static void GetActionTimePostfix(int _id, ref float __result)
+        {
+            StaffLife.DeskTime(_id, ref __result);
+        }
+
         /// <summary>After the students of a period are loaded, the story heroines join them.</summary>
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ActionScene), nameof(ActionScene.NPCLoadAll))]

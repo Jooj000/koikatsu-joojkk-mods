@@ -79,7 +79,7 @@ namespace Joojkk.CampusLife
             var lines = new List<string>
             {
                 "# Campus Life spots (Joojkk). One per line: <kind> <map> <x> <y> <z> [yaw]",
-                "#   store: where the school store icon stands.   warp: where \"Go there\" puts you on that map.",
+                "#   store: where the university store icon stands.   warp: where \"Go there\" puts you on that map.",
                 "#   act:<activity>: where that activity is done on that map. Optional 7th number: the game's action animation (0 read, 2 loosen up, 3 squats, 4 stretch, 5 shadow boxing, 6 'research' magazine).",
                 "# Easiest way to change them: turn on \"11. Position tools > Show position readout\" and use its keys in game.",
             };
@@ -122,7 +122,7 @@ namespace Joojkk.CampusLife
                 Spots.Set("store", map, p.position + p.rotation * Vector3.forward * 0.6f, 0f);
                 CafeteriaStore.Replace();
                 Copy();
-                Toasts.Show("School store moved here (" + Places.MapLabel(map) + ").");
+                Toasts.Show("Campus store moved here (" + Places.MapLabel(map) + ").");
             }
         }
 

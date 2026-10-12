@@ -51,8 +51,8 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(null, false);
 
             b.Narr("February 14th. Chocolate Day.");
-            b.Narr("The whole school smells of cocoa. Every boy is pretending not to care, and every boy is failing.");
-            b.Narr("Your shoe locker is right in front of you. It might be empty. It might not be.");
+            b.Narr("The whole university smells of cocoa. Every boy is pretending not to care, and every boy is failing.");
+            b.Narr("Your locker is right in front of you. It might be empty. It might not be.");
             b.Choice("Open it calmly", "ch_calm", "Open it with your eyes closed", "ch_pray", "Walk past it like a cool guy", "ch_cool");
             b.Branch("ch_calm");
             b.Narr(givers.Count > 0 ? "A small box wrapped in red paper slides out. No name on it. Your heart does a little jump." : "Shoes. Just your shoes. Totally expected. Totally fine.");
@@ -108,13 +108,13 @@ namespace Joojkk.CampusLife
             }
 
             b.Bg("snow_street_night");
-            b.Narr("After school. Snow falls softly on the way home, and the streetlights come on one by one.");
+            b.Narr("After class. Snow falls softly on the way home, and the streetlights come on one by one.");
             var honmei = top != null && (top.isGirlfriend || top.favor >= 70);
             if (honmei)
             {
                 b.Narr("Footsteps run up behind you. " + N(top) + ", out of breath, cheeks red from the cold.");
                 b.Say(top, T(top, "Wait! The one this morning was... not the real one. This is the real one. || Wait! That one was... this is the real one. || The real one is this... please take it. || This morning's wasn't true. This one is.", "Hah... hah... I forgot to give you the SPECIAL one! || Forgot the SPECIAL one! Here! || Wait! The real one! || Hah... this one's the real deal!",
-                    "...That one at school was for show. This one is honmei. Don't make me say it twice. || ...This is honmei. Once only. || ...The real one. Don't make me repeat. || ...That was decoy. This is real.", "The one at school was obligation. This one's... not. Got it? || That was obligation. This isn't. Got it? || The real one. Treasure it. || School's was fake. This is real."));
+                    "...That one on campus was for show. This one is honmei. Don't make me say it twice. || ...This is honmei. Once only. || ...The real one. Don't make me repeat. || ...That was decoy. This is real.", "The one on campus was obligation. This one's... not. Got it? || That was obligation. This isn't. Got it? || The real one. Treasure it. || Campus is was fake. This is real."));
                 b.Choice("Promise to return it on White Day", "ch_white", "Take her cold hand", "ch_hand", "Just say thank you", "ch_thanks");
                 b.Branch("ch_white");
                 b.Me("I'll give you something back on White Day. Something good.");
@@ -166,8 +166,8 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(null, false);
 
             b.Bg("sports_tents");
-            b.Narr("The Sports Festival! Flags snap in the wind and the whole school is out on the field.");
-            b.Narr("Tents, tables, a mountain of traffic cones and a teacher with a megaphone who is already hoarse.");
+            b.Narr("The Sports Festival! Flags snap in the wind and the whole university is out on the field.");
+            b.Narr("Tents, tables, a mountain of traffic cones and a professor with a megaphone who is already hoarse.");
             if (rep != null)
                 b.Say(rep, T(rep, "Here's your class headband... Tie it tight, okay? Good luck today. || Your headband... tie it tight. Good luck. || Here, for you. Do your best today. || Our class headband... I'll be cheering.", "HEADBANDS! Everybody gets one! Our class is winning this! || HEADBANDS! We're winning! || Put it on! Victory! || Class colors! Let's go!",
                     "Headband. Put it on properly. We're not losing to the other classes. || Wear it properly. We won't lose. || Headband. Tight. || Properly. We win today.", "Headband~ Let me tie it for you. ...There. Now you look like you mean it. || Let me tie it. ...There. Serious face. || I'll tie it. Look heroic. || Headband on. Now you look the part."));
@@ -194,7 +194,7 @@ namespace Joojkk.CampusLife
             b.Branch("sp_cheer");
             b.Bg("sports_track");
             b.Narr("You grab the megaphone and lead the cheering section with all your heart.");
-            b.Narr(cheerHit ? "By the third song even the teachers are clapping along. Your voice carries across the whole field." : "Your voice cracks on the big note. Half the stand laughs. The other half cheers louder for your courage.");
+            b.Narr(cheerHit ? "By the third song even the professors are clapping along. Your voice carries across the whole field." : "Your voice cracks on the big note. Half the stand laughs. The other half cheers louder for your courage.");
             b.Goto("sp_girls");
             if (partner != null)
             {
@@ -231,7 +231,7 @@ namespace Joojkk.CampusLife
             else b.Narr("You cheer from the tent until your throat hurts.");
 
             b.Bg("gym");
-            b.Narr("Closing ceremony in the gym. The scoreboard is covered with a cloth while the principal talks... and talks.");
+            b.Narr("Closing ceremony in the gym. The scoreboard is covered with a cloth while the dean talks... and talks.");
             b.Narr(teamWin ? "The cloth comes off. YOUR TEAM WON! The whole class jumps at once and the floor shakes." : "The cloth comes off. Second place. Close. Next year, the trophy is yours.");
             if (partner != null)
             {
@@ -242,7 +242,7 @@ namespace Joojkk.CampusLife
                 b.Narr("The two of you walk home in the orange evening, sore and sunburned and very happy.");
                 b.Goto("sp_end");
                 b.Branch("sp_clean");
-                b.Narr("You fold tents and carry cones until dark. The teachers notice. So does she: she stays to help.");
+                b.Narr("You fold tents and carry cones until dark. The professors notice. So does she: she stays to help.");
                 b.Goto("sp_end");
                 b.Label("sp_end");
             }
@@ -255,7 +255,7 @@ namespace Joojkk.CampusLife
                 if (p.Contains("sp_tug")) Pay(tugWin ? new Rewards { Rep = 4, Str = 1, Club = 2 } : new Rewards { Rep = 1, Str = 1 }, null, tugWin ? "Your team won the tug of war!" : "Your team lost the tug of war");
                 else if (p.Contains("sp_cheer"))
                 {
-                    Pay(cheerHit ? new Rewards { Rep = 5, Sens = 1 } : new Rewards { Rep = 1 }, null, cheerHit ? "Your cheering became the talk of the school!" : "Your cheering was... enthusiastic");
+                    Pay(cheerHit ? new Rewards { Rep = 5, Sens = 1 } : new Rewards { Rep = 1 }, null, cheerHit ? "Your cheering became the talk of the university!" : "Your cheering was... enthusiastic");
                     foreach (var g in TopGirls(3)) G.AddFavor(g, 2, 0);
                 }
                 else if (p.Contains("sp_three") && partner != null)
@@ -308,9 +308,9 @@ namespace Joojkk.CampusLife
                 b.Goto("ex_start");
             }
             b.Label("ex_start");
-            b.Narr("The teacher hands out the papers face down. \"Begin.\"");
+            b.Narr("The professor hands out the papers face down. \"Begin.\"");
             var opts = new List<string> { "Stay calm and start from the top", "ex_calm", "Write the formulas in the margin first", "ex_cram" };
-            if (G.Sens >= 60) { opts.Add("Peek at the answer key on the teacher's desk [SEN]"); opts.Add("ex_peek"); }
+            if (G.Sens >= 60) { opts.Add("Peek at the answer key on the professor's desk [SEN]"); opts.Add("ex_peek"); }
             b.Choice(opts.ToArray());
             b.Branch("ex_calm");
             b.Narr("Deep breath. Question one. You know this. Question two. You know this too.");
@@ -319,8 +319,8 @@ namespace Joojkk.CampusLife
             b.Narr("You scribble every formula you crammed into the margin before they leak out of your head.");
             b.Goto("ex_mid");
             b.Branch("ex_peek");
-            b.Narr("The teacher steps out to answer the phone. The answer key is right there, on the desk...");
-            b.Narr(peekOk ? "You lean back, glance, memorize three answers. Nobody saw. Your heart is pounding." : "\"What are you doing?\" The teacher is back. The whole class turns around. Your paper is taken away.");
+            b.Narr("The professor steps out to answer the phone. The answer key is right there, on the desk...");
+            b.Narr(peekOk ? "You lean back, glance, memorize three answers. Nobody saw. Your heart is pounding." : "\"What are you doing?\" The professor is back. The whole class turns around. Your paper is taken away.");
             b.Goto("ex_mid");
 
             b.Label("ex_mid");
@@ -357,7 +357,7 @@ namespace Joojkk.CampusLife
                     {
                         score -= 25;
                         S.Reputation = Mathf.Clamp(S.Reputation - 10, 0, 100);
-                        Toasts.Show("Caught! The teacher confiscates your test. (-10 reputation)");
+                        Toasts.Show("Caught! The professor confiscates your test. (-10 reputation)");
                     }
                 }
                 RecordExam(Mathf.Clamp(score, 0, 100));
@@ -381,8 +381,8 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(null, false);
 
             b.Bg("classroom_sunset");
-            b.Narr("Two weeks before the Culture Festival. The class meeting has been going in circles for an hour.");
-            b.Narr("Three ideas are left on the board. The class rep looks at you: you get the deciding vote.");
+            b.Narr("Two weeks before the Culture Festival. The department meeting has been going in circles for an hour.");
+            b.Narr("Three ideas are left on the board. The course rep looks at you: you get the deciding vote.");
             b.Choice("Maid cafe [SEN]", "cf_maid", "Haunted house [STR]", "cf_haunt", "Science exhibit [INT]", "cf_science");
             foreach (var booth in new[] { "maid", "haunt", "science" })
             {
@@ -404,7 +404,7 @@ namespace Joojkk.CampusLife
                 b.Narr("Visitors pour in. Your class's booth opens its doors, and all morning you work without a break.");
                 if (booth == "maid") b.Narr(hit[booth] ? "\"Welcome home!\" By noon the line goes around the corner, and you've learned to carry four parfaits at once." : "The cafe is cozy and half empty. The cake is good, at least. You eat a lot of it.");
                 else if (booth == "haunt") b.Narr(hit[booth] ? "The screams can be heard from the gate. A group of third-years comes out pale and immediately gets back in line." : "A little kid laughs at your monster costume. Then another. It's that kind of haunted house.");
-                else b.Narr(hit[booth] ? "The volcano erupts on schedule every half hour, and a crowd waits for each one. A teacher asks for your notes." : "The volcano fizzles. You explain why, very scientifically, to a very bored grandpa.");
+                else b.Narr(hit[booth] ? "The volcano erupts on schedule every half hour, and a crowd waits for each one. A professor asks for your notes." : "The volcano fizzles. You explain why, very scientifically, to a very bored grandpa.");
                 b.Goto("cf_free");
             }
 
@@ -447,7 +447,7 @@ namespace Joojkk.CampusLife
 
                 b.Label(k + "_close");
                 b.Bg("festival_stalls_night");
-                b.Narr("Evening. The stalls glow red and orange. In the schoolyard, the bonfire for the closing dance is lit.");
+                b.Narr("Evening. The stalls glow red and orange. In the campus grounds, the bonfire for the closing dance is lit.");
                 b.Say(g, T(g, "The folk dance is starting... um... || The dance is starting... um... || Would you... dance? || The folk dance... um...", "Bonfire! Dance! Come on, come on! || Dance! Come on! || Bonfire dance! Go! || Let's dance!", "Are you going to dance? ...Just asking. || Dancing? ...Asking. || ...Will you dance? || ...Are you going?", "Everyone's pairing up. Don't keep a girl waiting~ || Don't keep me waiting. || Ask me already. || Everyone's paired. Hurry."));
                 b.Choice("Ask her to dance", k + "_dance", "Watch the fire together", k + "_watch");
                 b.Branch(k + "_dance");
@@ -460,7 +460,7 @@ namespace Joojkk.CampusLife
             }
             b.Branch("cf_help");
             b.Narr("You spend the afternoon backstage: fixing lights, carrying boxes, saving a play from a broken curtain.");
-            b.Narr("By evening, the teachers know your name. In a good way, for once.");
+            b.Narr("By evening, the professors know your name. In a good way, for once.");
             b.Goto("cf_end");
 
             b.Label("cf_end");
@@ -501,7 +501,7 @@ namespace Joojkk.CampusLife
             b.Narr("July 7th. Tanabata.");
             b.Narr("Once a year, the weaver princess Orihime and the cowherd Hikoboshi cross the river of stars to meet.");
             b.Narr("On earth, people write their wishes on strips of paper and tie them to bamboo, hoping the stars will read them.");
-            b.Narr("The old street near school is full of bamboo branches heavy with colored paper. Lanterns sway overhead.");
+            b.Narr("The old street near campus is full of bamboo branches heavy with colored paper. Lanterns sway overhead.");
             if (g != null)
             {
                 b.Narr("Someone tugs your sleeve. " + N(g) + ", in a summer yukata.");
@@ -580,8 +580,8 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(null, false);
 
             b.Bg("classroom_halloween");
-            b.Narr("Halloween. The classroom is covered in paper bats, jack-o'-lanterns and orange streamers.");
-            b.Narr("There's a costume contest after school, and the class rep says nobody leaves without a costume.");
+            b.Narr("Halloween. The lecture hall is covered in paper bats, jack-o'-lanterns and orange streamers.");
+            b.Narr("There's a costume contest after class, and the course rep says nobody leaves without a costume.");
             b.Choice("Vampire, cape and all [SEN]", "hw_vamp", "A bedsheet ghost", "hw_ghost", "No costume. You're too cool.", "hw_none");
             b.Branch("hw_vamp");
             b.Narr("Fake fangs, a red-lined cape, hair slicked back. In the mirror, you look... surprisingly good?");
@@ -592,7 +592,7 @@ namespace Joojkk.CampusLife
             b.Narr("At the contest the whole class laughs when your ghost walks into the door. Special prize: most dedicated ghost.");
             b.Goto("hw_trick");
             b.Branch("hw_none");
-            b.Narr("The class rep sighs and sticks cat ears on your head. They stay there all day.");
+            b.Narr("The course rep sighs and sticks cat ears on your head. They stay there all day.");
             b.Narr("At the contest you're not even entered. The cat ears get three votes anyway.");
             b.Goto("hw_trick");
 
@@ -632,7 +632,7 @@ namespace Joojkk.CampusLife
 
             b.Label("hw_party");
             b.Bg("classroom_halloween");
-            b.Narr("Back in the classroom, the jack-o'-lanterns are lit for the party.");
+            b.Narr("Back in the lecture hall, the jack-o'-lanterns are lit for the party.");
             b.Narr("Pumpkin cake, orange juice and the bad horror movie somebody brought. Happy Halloween.");
 
             return Scenes.PlayOnMap(b, _ =>
@@ -672,7 +672,7 @@ namespace Joojkk.CampusLife
 
             b.Bg("train");
             b.Narr("Field trip day! The whole class boards the bullet train to " + (kyoto ? "Kyoto" : "a hot spring town in the mountains") + ".");
-            b.Narr("Rice fields fly past the window. Somebody already opened the snacks. The teacher has given up.");
+            b.Narr("Rice fields fly past the window. Somebody already opened the snacks. The professor has given up.");
             b.Narr("There's a free seat next to you.");
             var opts = new List<string>();
             for (var i = 0; i < tops.Count; i++) { opts.Add("Wave " + N(tops[i]) + " over"); opts.Add("tr_g" + i); }
@@ -720,10 +720,10 @@ namespace Joojkk.CampusLife
 
                 b.Label(k + "_inn");
                 b.Bg("inn_room_night");
-                b.Narr("Night at the inn. Lights out at ten, the teacher said. It's eleven-thirty and nobody is asleep.");
+                b.Narr("Night at the inn. Lights out at ten, the professor said. It's eleven-thirty and nobody is asleep.");
                 b.Narr("A soft knock on the sliding door. It's " + N(g) + ", in her yukata, whispering.");
                 b.Say(g, T(g, "I couldn't sleep... Can I stay for a bit? || I couldn't sleep... can I stay? || Sleepless... may I sit here? || I wanted to see you...", "Psst! The girls are having a pillow fight, I escaped! Hide me! || Pillow fight! I escaped! Hide me! || Shh! Hide me! || Escaped! Cover me!", "My roommates snore. I'm staying here for ten minutes. || Roommates snore. Ten minutes. || Too noisy there. Ten minutes. || I'll stay briefly.", "Sneaking into the boys' room~ If we get caught, it's your fault. || If we're caught, your fault. || Sneaking in. Exciting. || Boys' room. Risky."));
-                b.Narr("Footsteps in the corridor. The teacher's flashlight sweeps under the door.");
+                b.Narr("Footsteps in the corridor. The professor's flashlight sweeps under the door.");
                 b.Choice("Hide her in the closet", k + "_closet", "Talk quietly until it passes", k + "_talk", "Send her back before you're caught", k + "_back");
                 b.Branch(k + "_closet");
                 b.Narr("You both squeeze into the futon closet. It's very dark and very small. You can hear her heartbeat. Or yours.");
@@ -733,7 +733,7 @@ namespace Joojkk.CampusLife
                 b.Narr("The footsteps pass. You talk in whispers until two in the morning: families, dreams, the stupid things you did as kids.");
                 b.Goto("tr_home");
                 b.Branch(k + "_back");
-                b.Narr("You slide the door open just in time. She tiptoes back. The teacher only sees you, waving awkwardly.");
+                b.Narr("You slide the door open just in time. She tiptoes back. The professor only sees you, waving awkwardly.");
                 b.Goto("tr_home");
             }
 
@@ -846,7 +846,7 @@ namespace Joojkk.CampusLife
                         b.Narr("You sit together until the cocoa goes cold, watching the snow.");
                         b.Goto("xm_end");
                         b.Branch("xm_reply");
-                        b.Me("Merry Christmas to you too. See you at school.");
+                        b.Me("Merry Christmas to you too. See you on campus.");
                         b.Goto("xm_end");
                         b.Label("xm_end");
                     }

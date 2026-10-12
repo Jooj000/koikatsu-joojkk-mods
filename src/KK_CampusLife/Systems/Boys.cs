@@ -171,8 +171,11 @@ namespace Joojkk.CampusLife
             if (!Is(h) || r == null || r.point == null || !GirlsArea(r.point.MapNo)) return;
             var act = G.Act;
             if (act == null || act.PosSet == null) return;
+            // Only a spot made for what he came to do: the game's one boys' restroom spot has no Wait or Toilet layer, and
+            // falling back to its first layer played the wrong action there.
+            var layer = r.layerName;
             var free = act.PosSet.waitPointDic.Where(kv => BoysRoom(kv.Key)).SelectMany(kv => kv.Value)
-                .Where(p => p != null && !p.isReserved && p.parameterList != null && p.parameterList.Count > 0).ToList();
+                .Where(p => p != null && !p.isReserved && p.parameterList != null && p.parameterList.Any(q => q.layer == layer)).ToList();
             var npc = act.npcList.FirstOrDefault(n => n != null && n.heroine == h);
             if (free.Count == 0)
             {
@@ -185,7 +188,6 @@ namespace Joojkk.CampusLife
             }
             var wp = free[Random.Range(0, free.Count)];
             if (di != null) Traverse.Create(di).Method("SetWaitPoint", new[] { typeof(WaitPoint), typeof(NPC) }).GetValue(wp, npc);
-            var layer = r.layerName;
             var idx = Math.Max(0, wp.parameterList.FindIndex(p => p.layer == layer));
             r.point = wp;
             r.pointIndex = idx;

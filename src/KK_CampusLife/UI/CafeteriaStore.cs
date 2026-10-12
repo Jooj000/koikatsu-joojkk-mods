@@ -40,12 +40,12 @@ namespace Joojkk.CampusLife
                 var pos = hasCustom ? custom.Pos : Position;
                 _icon = GameAPI.AddActionIcon(map, pos, on, off, Open, null, true, true);
                 _registeredMap = map;
-                CampusLifePlugin.Log.LogInfo("School store placed on map " + map + " at " + pos + ".");
+                CampusLifePlugin.Log.LogInfo("Campus store placed on map " + map + " at " + pos + ".");
             }
             catch (Exception e)
             {
                 _registeredMap = map;
-                CampusLifePlugin.Log.LogError("Could not place the school store: " + e);
+                CampusLifePlugin.Log.LogError("Could not place the university store: " + e);
             }
         }
 

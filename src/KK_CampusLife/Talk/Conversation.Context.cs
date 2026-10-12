@@ -16,10 +16,10 @@ namespace Joojkk.CampusLife
         private static readonly Dictionary<string, string[]> LikeDo = new Dictionary<string, string[]>
         {
             { "animals", new[] { "visit the cat café", "feed the stray cats behind the gym", "go to the pet shop" } },
-            { "food", new[] { "grab something to eat", "try the new crepe stand", "eat out after school" } },
-            { "cooking", new[] { "cook something together", "bake something in the home ec room", "trade bento recipes" } },
+            { "food", new[] { "grab something to eat", "try the new crepe stand", "eat out after class" } },
+            { "cooking", new[] { "cook something together", "bake something in the club kitchen", "trade bento recipes" } },
             { "exercise", new[] { "go for a run", "shoot some hoops", "jog around the field" } },
-            { "study", new[] { "study at the library", "do homework together", "quiz each other" } },
+            { "study", new[] { "study at the library", "do assignments together", "quiz each other" } },
             { "fashion", new[] { "go clothes shopping", "look at the new shop by the station", "browse some fashion magazines" } },
             { "coffee", new[] { "get coffee", "try the café by the station", "grab a black coffee" } },
             { "spicy", new[] { "try the spicy ramen place", "do the hot curry challenge", "get extra-spicy takoyaki" } },
@@ -87,6 +87,7 @@ namespace Joojkk.CampusLife
                 var grad = StoryCast.Graduated(h);
                 c["role"] = Teachers.IsTeacherVoice(h) ? "teacher" : story ? (grad ? "exstory" : "story") : "student";
                 c["free"] = Teachers.Freed(h) ? "yes" : "no";
+                c["job"] = Teachers.Job(h);
                 var p = h.charFile.parameter;
                 var sign = SignOf(p.birthMonth, p.birthDay);
                 if (sign != "") c["sign"] = sign;
@@ -98,6 +99,8 @@ namespace Joojkk.CampusLife
                 c["bust"] = bust >= 0.7f ? "big" : bust <= 0.3f ? "small" : "average";
             }
             catch { if (!c.ContainsKey("role")) c["role"] = Teachers.IsTeacherVoice(h) ? "teacher" : "student"; }
+            if (!c.ContainsKey("job")) c["job"] = Teachers.Job(h);
+            c["pers"] = h.personality.ToString();
             c["placeid"] = Places.CurrentId ?? "";
             // then a fight on her mind): the keys the composite lines need.
             try

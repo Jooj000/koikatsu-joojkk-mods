@@ -51,7 +51,7 @@ namespace Joojkk.CampusLife
             if (cat == "Trouble") Line(head, "These only keep the record: nothing is taken from you.", 18f, GameUi.Dim);
             if (cat == "Secrets") Line(head, "Hidden until they happen; each one leaves a hint.", 18f, GameUi.Dim);
             if (cat == "Extras") Line(head, "About other mods in your game; each shows only while its mod is installed.", 18f, GameUi.Dim);
-            if (cat == "Stories") Line(head, "Each story heroine and teacher has her own: one stage for every part of her story.", 18f, GameUi.Dim);
+            if (cat == "Stories") Line(head, "Each story heroine and professor has her own: one stage for every part of her story.", 18f, GameUi.Dim);
             for (var tier = 1; tier <= 3; tier++)
             {
                 var t = tier;
@@ -115,7 +115,7 @@ namespace Joojkk.CampusLife
             c.TryGetValue("rosterAll:" + d.Id, out all);
             c.TryGetValue("rosterGame:" + d.Id, out game);
             if (all <= 0) return "";
-            return "With " + girls + " girl" + (girls == 1 ? "" : "s") + " at school" + (all == game ? ", only the game's own characters." : " (" + (all - game) + " of your own characters).");
+            return "With " + girls + " girl" + (girls == 1 ? "" : "s") + " on campus" + (all == game ? ", only the game's own characters." : " (" + (all - game) + " of your own characters).");
         }
 
         /// <summary>"Day 12, with Mitama".</summary>

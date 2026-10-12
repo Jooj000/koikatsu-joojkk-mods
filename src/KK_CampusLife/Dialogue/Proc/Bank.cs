@@ -60,7 +60,8 @@ namespace Joojkk.CampusLife
     /// Format: "@rule id" then "on situation", "when k=v k!=v k>=n", "opens move,move", "fit move=good|neutral|bad",
     /// "feel smile", and lines starting "- " ("key=*" holds when the key is known at all). "@list name" then "- item" lines. Inside lines: [a|b|c] picks one,
     /// {slot} fills from the context ({Slot} capitalized), {#list} picks from a list; a line whose slot is missing is
-    /// skipped (a line never cites what she does not know).
+    /// skipped (a line never cites what she does not know). A line starting {student} is never said by a teacher, one
+    /// starting {classes} never by or to the nurse: tools\dlg_audit_vars.py lists what lacks a mark.
     /// </summary>
     internal static class Bank
     {
@@ -222,7 +223,17 @@ namespace Joojkk.CampusLife
             Ensure();
             List<DlgRule> l;
             if (!_byOn.TryGetValue(on, out l)) return Enumerable.Empty<DlgRule>();
-            return l.Where(r => r.When.All(c => c.Holds(ctx)));
+            return l.Where(r => r.When.All(c => c.Holds(ctx)) && (r.Say.Count == 0 || r.Say.Any(x => !Barred(x, ctx))));
+        }
+
+        private static bool Is(Dictionary<string, string> ctx, string key, string value) { string v; return ctx.TryGetValue(key, out v) && v == value; }
+
+        /// <summary>A line marked for someone else: a rule with no line left does not fit at all, so it cannot hide the next best one.</summary>
+        private static bool Barred(string line, Dictionary<string, string> ctx)
+        {
+            if (line.StartsWith("{student}", StringComparison.Ordinal)) return Is(ctx, "role", "teacher");
+            if (line.StartsWith("{classes}", StringComparison.Ordinal)) return Is(ctx, "job", "nurse") || Is(ctx, "myjob", "nurse") || Is(ctx, "otherjob", "nurse");
+            return false;
         }
 
         private static string Stamp { get { return Campus.S != null ? (Campus.S.Day * 16 + (int)G.CurrentMask).ToString(CultureInfo.InvariantCulture) : "0"; } }
@@ -349,6 +360,12 @@ namespace Joojkk.CampusLife
                     var close = t.IndexOf('}', i);
                     if (close < 0) { sb.Append(c); i++; continue; }
                     var slot = t.Substring(i + 1, close - i - 1);
+                    if (slot == "student" || slot == "classes")
+                    {
+                        if (Barred(t, ctx)) return null;
+                        i = close + 1;
+                        continue;
+                    }
                     string val;
                     if (slot.StartsWith("@", StringComparison.Ordinal))
                     {

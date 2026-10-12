@@ -22,10 +22,10 @@ namespace Joojkk.CampusLife
             new Place { Id = "infirmary", Name = "Infirmary",    Keywords = new[] { "保健室", "Infirmary" } },
             new Place { Id = "cafeteria", Name = "Cafeteria",    Keywords = new[] { "食堂", "学食", "購買", "Cafeteria" } },
             new Place { Id = "clubroom",  Name = "Club Room",    Keywords = new[] { "部室", "Club" } },
-            new Place { Id = "staffroom", Name = "Staff Room",   Keywords = new[] { "職員室", "Staff" } },
-            new Place { Id = "classroom", Name = "Classroom",    Keywords = new[] { "教室", "Classroom" } },
+            new Place { Id = "staffroom", Name = "Faculty Room",   Keywords = new[] { "職員室", "Staff", "Faculty" } },
+            new Place { Id = "classroom", Name = "Lecture Hall", Keywords = new[] { "教室", "Classroom", "Lecture" } },
             new Place { Id = "courtyard", Name = "Courtyard",    Keywords = new[] { "中庭", "Courtyard" } },
-            new Place { Id = "field",     Name = "School Field", Keywords = new[] { "グラウンド", "校庭", "野原", "運動場", "Field", "Ground" } },
+            new Place { Id = "field",     Name = "Campus Field", Keywords = new[] { "グラウンド", "校庭", "野原", "運動場", "Field", "Ground" } },
             new Place { Id = "park",      Name = "Park",         Keywords = new[] { "公園", "Park" } },
         };
 

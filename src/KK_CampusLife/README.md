@@ -1,6 +1,6 @@
 # Campus Life for Koikatsu
 
-**School life on top of Koikatsu's story mode.** The girls at your school get moods, memories, friendships and grudges of their own; a director plans their days; conversations become real conversations; and everything you do with them becomes part of a story the whole school talks about.
+**Campus life on top of Koikatsu's story mode.** The girls at your university get moods, memories, friendships and grudges of their own; a director plans their days; conversations become real conversations; and everything you do with them becomes part of a story the whole university talks about.
 
 > Part of [Joojkk's Koikatsu mods](https://github.com/Jooj000/koikatsu-joojkk-mods) ·
 > Sister mods: [School Optimizer](https://github.com/Jooj000/KK_SchoolOptimizer) ·
@@ -9,18 +9,18 @@
 | | |
 |---|---|
 | GUID | `joojkk.campuslife` |
-| Version | 3.3.0 |
+| Version | 3.5.0 |
 | Game | Koikatu / Koikatsu Party, main game (story mode), HF Patch recommended |
 | Menu | **F7** |
 | Language | English (the XUnity AutoTranslator does not touch it) |
 
-**At a glance:** ~46k lines of C# · ~2,600 hand-written situations plus a procedural bank of ~6,500 lines · four voices (gentle, energetic, cool, teasing) with 4+ versions of every line · 45 staged achievements plus a climb for every story heroine and teacher.
+**At a glance:** ~46k lines of C# · ~2,600 hand-written situations plus a procedural bank of ~6,500 lines · four voices (gentle, energetic, cool, teasing) with 4+ versions of every line · 45 staged achievements plus a climb for every story heroine and professor.
 
 ## Features
 
 ### Conversation
 - **A new talk screen** with five icon categories (Talk, Actions, Together, Romance, Spicy). Options are built from what she knows, what she likes, where you are and what happened today, not from a fixed list.
-- **Procedural topics**: her day, the two of you, you, gossip, school, small talk, each scored for this moment. She keeps facts (and who told her, and twisted versions), remembers what you said and brings it back days later.
+- **Procedural topics**: her day, the two of you, you, gossip, campus, small talk, each scored for this moment. She keeps facts (and who told her, and twisted versions), remembers what you said and brings it back days later.
 - **Her voice**: every line is written for four tones and shaped by her personality, mood and your relationship; short answers vary and never repeat back to back; a fitting clip of her own recorded game voice plays with each line.
 - **Touches that answer**: head, cheek, hands, chest, plus places of our own (butt, lips). She answers in her own words by part, by how often you insisted, by how close you are and by what her card allows. A kiss can be yes, wary or no.
 - **Talk with two girls**: aim at one, the other or both. They react to each other, tease, get jealous, help you out or walk off. Pair-only options: ask one about the other, an embarrassing story, a note, invite both, a compliment in front of her, a hidden touch.
@@ -58,7 +58,7 @@ Well-played days (three talks a day, good answers), averaged over two girls of e
 - **Mood**: flirty brings everything about a day earlier (hands, flirting and butt on day 1; an open girl says yes to H on day 1); cheerful half a day; lonely barely changes it; upset holds hands back to day 5 and H by 1-2 days.
 - **Answer order**: in all 60 runs (6 girls x 5 moods x dating or not) the H answer never went back down: no, wary no, wary yes, yes (sometimes skipping a step, never going back).
 
-### A school that lives
+### A college that lives
 - **Friendships, rivalries and romances between the girls** (crush, talking, couple, strained, broken and back), with trust, jealousy and intimacy.
 - **Gossip and rumors** that travel along friendships and get twisted on the way.
 - **Real witnesses**: only someone close enough for what happened (a talk, a flirt, holding hands, a touch, a kiss, H) saw it.
@@ -70,15 +70,15 @@ Well-played days (three talks a day, good answers), averaged over two girls of e
 - **Moods and needs** (cheerful, hungry, bored, stressed, lonely, flirty, sleepy, upset).
 - **Rain** that changes lines, movement and events, done the lightest way possible.
 - **Story heroines walk around as students** every day; the director picks one whose story event opens today.
-- **Teachers** walk the school too, with their own conversation-based events.
+- **Professors** walk the university too, with their own conversation-based events.
 - **Weekly spotlight** for big classes: nobody is left out for more than three weeks.
 - **A girl asleep in the infirmary** can be teased awake; half asleep she gives in more easily.
 
-### School life
+### Campus life
 - **Club board** with requests the girls tell you about, and shape markers on the minimap, her card and the menu.
 - **"Meet me at..."**: reach the place in the right period and she really comes.
-- **Activities and part-time jobs** at real places of the school, with the game's own animations.
-- **School store** in the cafeteria, gifts she likes and today's gift requests.
+- **Activities and part-time jobs** at real places of the university, with the game's own animations.
+- **Campus store** in the cafeteria, gifts she likes and today's gift requests.
 - **Devotion**: past 100 favor, devotion keeps growing and every level unlocks a perk.
 - **Free travel** from the menu (no time lost) and a walking guide with a gold arrow over the right door.
 - **The radar becomes a map**: the floor plan, and girls on another floor are dimmed with a small arrow.
@@ -89,7 +89,7 @@ Well-played days (three talks a day, good answers), averaged over two girls of e
 - **Sunday stories** in three parts after the game's own date.
 - **Spotlight episodes** staged like story mode, on the game's own backgrounds.
 - **Calendar events** as long scenes with choices that meet again.
-- **Club project** before the festival, **student council race** every 9-week loop, **club rank** as a story chapter.
+- **Club project** before the festival, **student union race** every 9-week loop, **club rank** as a story chapter.
 - **The Class Anthology**: the season's big moments, shown as a book on the last Saturday of the loop.
 - **Album of achievements** (F7): a record and a to-do list, with stages ("Familiar Face, 3/4"), secrets with hints and a Steam-style card with a ding when one falls.
 - **Weekly report** and journal in the menu.
@@ -144,3 +144,7 @@ See [CHANGELOG.md](CHANGELOG.md).
 ## License
 
 MIT, see [LICENSE](../../LICENSE).
+
+## Note
+
+- The mod does not add any characters, and all explicit dialogue has been tested only with characters over the age of 18. Neither the mod nor its creator assumes responsibility for how it is used.

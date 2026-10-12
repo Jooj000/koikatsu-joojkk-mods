@@ -48,7 +48,7 @@ namespace Joojkk.CampusLife
             { "book", new[] { "mystery novels", "shoujo manga", "fantasy series", "poetry", "horror stories", "science magazines" } },
             { "season", new[] { "spring", "summer", "autumn", "winter" } },
             { "animal", new[] { "cats", "dogs", "rabbits", "penguins", "hamsters", "otters" } },
-            { "dream", new[] { "a patissier", "a teacher", "a nurse", "a singer", "a vet", "a novelist", "a pro athlete", "a designer" } },
+            { "dream", new[] { "a patissier", "a professor", "a nurse", "a singer", "a vet", "a novelist", "a pro athlete", "a designer" } },
             { "music", new[] { "idol songs", "rock", "classical piano", "city pop", "game soundtracks", "old enka" } },
             { "place", new[] { "the riverbank at sunset", "the old bookstore by the station", "the arcade", "the shrine on the hill", "the beach", "the rooftop garden downtown" } },
             { "secret", new[] { "still sleeps with a plushie", "can't swim", "is scared of thunder", "practices idol dances in her room", "cried at a dog food commercial", "talks to her plants" } },
@@ -172,7 +172,7 @@ namespace Joojkk.CampusLife
             c.Add(new TalkSubject { Id = "p_library", Topic = Topic.Hobbies, Label = "Ask what she's reading", Like = "study", UsesFact = "book",
                 Opener = new[] { "What are you reading? It looked good." },
                 Loves = L("Oh, this? It's {fact:book}... I could talk about it all day.", "{fact:book}! The last chapter had me SCREAMING!", "...{fact:book}. It's well written.", "{fact:book}. Want me to read you the good part?"),
-                Fine = L("Just something for class...", "Eh, something boring for school.", "...Homework reading.", "Nothing exciting."),
+                Fine = L("Just something for class...", "Eh, something boring for class.", "...Assignments reading.", "Nothing exciting."),
                 Dislikes = L("It's... a little private.", "Nothing! Don't look!", "...None of your business.", "Curious, aren't you?"),
                 Replies = new[]
                 {
@@ -215,11 +215,11 @@ namespace Joojkk.CampusLife
                 Opener = new[] { "Did you follow today's lesson? I got lost halfway." },
                 Loves = L("Mm, I think so. Want me to go over it with you?", "Totally! Want the cheat sheet version?", "...Of course. Which part?", "Lost? Poor thing. I'll explain, for a price."),
                 Fine = L("Kind of... the last part was hard.", "Half of it! The other half was a nap.", "...Mostly.", "I followed the clock. Does that count?"),
-                Dislikes = L("Please don't talk about class...", "Ugh, school talk? Pass!", "...Not now.", "Boring. Next."),
+                Dislikes = L("Please don't talk about class...", "Ugh, campus talk? Pass!", "...Not now.", "Boring. Next."),
                 Replies = new[]
                 {
-                    R("Ask her to explain it after school", "explain", L("Okay! I'll bring my notes.", "Study session! With snacks!", "...Thirty minutes. Bring a pen.", "Private lesson. I'll be strict."), 1),
-                    R("Ask what she wants to be after school", "dream", L("I want to be {fact:dream}... it's embarrassing to say.", "{fact:dream}! Big dreams!", "...{fact:dream}.", "{fact:dream}. Laugh and you die."), 0, "dream"),
+                    R("Ask her to explain it after class", "explain", L("Okay! I'll bring my notes.", "Study session! With snacks!", "...Thirty minutes. Bring a pen.", "Private lesson. I'll be strict."), 1),
+                    R("Ask what she wants to be after class", "dream", L("I want to be {fact:dream}... it's embarrassing to say.", "{fact:dream}! Big dreams!", "...{fact:dream}.", "{fact:dream}. Laugh and you die."), 0, "dream"),
                 } });
             c.Add(new TalkSubject { Id = "p_yard", Topic = Topic.Hobbies, Label = "Point out the flowers by the bench",
                 Opener = new[] { "Look, the flowers by the bench are blooming." },
@@ -285,8 +285,8 @@ namespace Joojkk.CampusLife
                     R("Ask her to make you one someday", "make", L("F-for you? ...I'll think about it.", "Sure! One mega bento coming up!", "...If you clean the box after.", "A homemade lunch? We'd be practically married."), 1, null, 1),
                     R("Ask what she'd cook for a special day", "special", L("Hmm... {fact:food}, I think.", "{fact:food}! A mountain of it!", "...{fact:food}.", "{fact:food}. For the right person."), 0, "food"),
                 } });
-            c.Add(new TalkSubject { Id = "like_exercise", Topic = Topic.Sports, Like = "exercise", Label = "Challenge her to a run after school",
-                Opener = new[] { "Race you around the field after school?" },
+            c.Add(new TalkSubject { Id = "like_exercise", Topic = Topic.Sports, Like = "exercise", Label = "Challenge her to a run after class",
+                Opener = new[] { "Race you around the field after class?" },
                 Loves = L("A race? Okay! I won't lose...", "YOU'RE ON! Loser buys drinks!", "...You'll regret this.", "Prepare to eat my dust."),
                 Fine = L("Maybe a short one...", "Sure, why not!", "...Fine.", "If I'm bored."),
                 Dislikes = L("I'm not good at running...", "Today? My legs are dead!", "...No.", "Sweat? No thanks."),
@@ -295,11 +295,11 @@ namespace Joojkk.CampusLife
                     R("Bet the loser buys drinks", "bet", L("Then I'll try my best!", "DEAL! Get your wallet ready!", "...Deal.", "Deal. Hope you're rich."), 1),
                     R("Say you'll let her win", "let", L("Don't you dare go easy on me!", "Boo! Race me for real!", "...Insulting.", "Let me win? Cute. You'd lose anyway."), -1),
                 } });
-            c.Add(new TalkSubject { Id = "like_study", Topic = Topic.Classes, Like = "study", Label = "Ask her to explain the homework",
-                Opener = new[] { "You're good at this stuff. Can you explain today's homework?" },
-                Loves = L("Of course! Look, it's easier if you start here...", "Leave it to me! Teacher mode ON!", "...Sit. Watch carefully.", "Tutoring fee: one juice. Okay, look."),
+            c.Add(new TalkSubject { Id = "like_study", Topic = Topic.Classes, Like = "study", Label = "Ask her to explain the assignments",
+                Opener = new[] { "You're good at this stuff. Can you explain today's assignments?" },
+                Loves = L("Of course! Look, it's easier if you start here...", "Leave it to me! Professor mode ON!", "...Sit. Watch carefully.", "Tutoring fee: one juice. Okay, look."),
                 Fine = L("I can try...", "Sure, I think I get it!", "...Fine. Quickly.", "Hm. Maybe."),
-                Dislikes = L("I didn't get it either...", "No idea! Copy someone else!", "...Do your own homework.", "Lazy, are we?"),
+                Dislikes = L("I didn't get it either...", "No idea! Copy someone else!", "...Do your own assignments.", "Lazy, are we?"),
                 Replies = new[]
                 {
                     R("Ask what she wants to study later", "future", L("I want to be {fact:dream}... so I'm studying hard.", "{fact:dream}! That's the plan!", "...{fact:dream}.", "{fact:dream}. Ambitious, right?"), 0, "dream"),
@@ -332,7 +332,7 @@ namespace Joojkk.CampusLife
                 Dislikes = L("I can't handle spicy...", "My mouth would explode!", "...No.", "I'm not stupid."),
                 Replies = new[]
                 {
-                    R("Loser does the winner's homework", "bet", L("Then... I'll do my best!", "You're ON!", "...Deal.", "Deal. Start on my homework now."), 1),
+                    R("Loser does the winner's assignments", "bet", L("Then... I'll do my best!", "You're ON!", "...Deal.", "Deal. Start on my assignments now."), 1),
                     R("Say you'll bring milk just in case", "milk", L("Thank you... you're thoughtful.", "Hah! I won't need it!", "...Smart.", "Planning my rescue? Cute."), 0),
                 } });
 
@@ -381,7 +381,7 @@ namespace Joojkk.CampusLife
                 } });
             c.Add(new TalkSubject { Id = "fact_book", Topic = Topic.Hobbies, NeedsFact = "book", UsesFact = "book", Label = "Say the bookstore got new {fact:book}",
                 Opener = new[] { "The bookstore by the station got a new shelf of {fact:book}. I thought of you." },
-                Loves = L("You thought of me...? Ehehe... let's go see together!", "NO WAY. After school! Let's go!", "...You remembered. Thank you.", "Thinking of me in a bookstore? Cute."),
+                Loves = L("You thought of me...? Ehehe... let's go see together!", "NO WAY. After class! Let's go!", "...You remembered. Thank you.", "Thinking of me in a bookstore? Cute."),
                 Fine = L("Oh, I'll check it out...", "Huh, cool!", "...I'll look.", "Mm. Thanks."),
                 Dislikes = L("I'm saving money right now...", "Broke! Sadly!", "...Not now.", "Later."),
                 Replies = new[]
@@ -393,7 +393,7 @@ namespace Joojkk.CampusLife
                 Opener = new[] { "Look at this video. I saved it because I know you love {fact:animal}." },
                 Loves = L("Ahh, so cute...! Send it to me, please!", "KYAAA! Play it again! Again!", "...Again.", "You saved it for me? ...Play it again."),
                 Fine = L("Hehe, cute.", "Aww!", "...Cute.", "Mm."),
-                Dislikes = L("Not now, the teacher's looking...", "Later! Phone police!", "...Later.", "Not now."),
+                Dislikes = L("Not now, the professor's looking...", "Later! Phone police!", "...Later.", "Not now."),
                 Replies = new[]
                 {
                     R("Promise to find a {fact:animal} café together", "cafe", L("A date with {fact:animal}...? I'd love that.", "A {fact:animal} café?! YES!", "...Yes.", "Combining my two favorite things. Clever."), 1),
@@ -427,7 +427,7 @@ namespace Joojkk.CampusLife
                 Fine = L("Oh... thank you.", "Haha, thanks!", "...Okay.", "Hm."), Dislikes = L("Um... that's sudden...", "Whoa, where'd that come from?", "...Why.", "Weird thing to say."),
                 Replies = new[]
                 {
-                    R("Ask if she'd hang out after school", "after", L("...Yes. I'd like that.", "Yes! Where to?", "...Fine.", "Pushing your luck. ...Yes."), 1),
+                    R("Ask if she'd hang out after class", "after", L("...Yes. I'd like that.", "Yes! Where to?", "...Fine.", "Pushing your luck. ...Yes."), 1),
                     R("Say it with a straight face, then grin", "grin", L("Mou... you're teasing me!", "Hey! Hehe!", "...Idiot.", "Two can play that game."), 0),
                 } });
             c.Add(new TalkSubject { Id = "r_type", Topic = Topic.Love, Tier = 0, Label = "Ask what her type is",
@@ -495,16 +495,16 @@ namespace Joojkk.CampusLife
             c.Add(new TalkSubject { Id = "x_night", Topic = Topic.Love, Tier = 1, Lewd = true, LewdGain = 5, Label = "Ask what she thinks about before falling asleep",
                 Opener = new[] { "What do you think about before you fall asleep?" },
                 Loves = L("...Wh-why would you ask that? ...Things. Embarrassing things.", "Hehe... secret things! ...Okay, some are about you.", "...Things I won't say out loud.", "You. Obviously. In great detail."),
-                Fine = L("Homework, mostly...", "Food!", "...Tomorrow.", "Sleep."),
+                Fine = L("Assignments, mostly...", "Food!", "...Tomorrow.", "Sleep."),
                 Dislikes = L("That's too personal...", "Nope! Not telling!", "...No.", "Creepy question."),
                 Replies = new[]
                 {
                     R("Ask for details", "details", L("N-no way! ...Maybe later.", "Hehe! You'll have to earn it!", "...Not here.", "Details? Come closer and I'll whisper."), 1, null, 4),
                     R("Say you think about her too", "too", L("...Really? ...Good.", "Hehe! Good!", "...Hm. Good.", "I know. I can tell."), 1, null, 2),
                 } });
-            c.Add(new TalkSubject { Id = "x_whisper", Topic = Topic.Love, Tier = 2, Lewd = true, LewdGain = 7, Label = "Whisper what you'd like to do after school",
-                Opener = new[] { "(You lean in and whisper what you'd like to do with her after school.)" },
-                Loves = L("...! Y-you can't say that here... ...After school, then.", "WHA-! ...Hehe... after school. Promise?", "...Lower your voice. ...Yes.", "Only after school? I was thinking sooner."),
+            c.Add(new TalkSubject { Id = "x_whisper", Topic = Topic.Love, Tier = 2, Lewd = true, LewdGain = 7, Label = "Whisper what you'd like to do after class",
+                Opener = new[] { "(You lean in and whisper what you'd like to do with her after class.)" },
+                Loves = L("...! Y-you can't say that here... ...After class, then.", "WHA-! ...Hehe... after class. Promise?", "...Lower your voice. ...Yes.", "Only after class? I was thinking sooner."),
                 Fine = L("Eh? I didn't catch that...", "Huh? Say again?", "...What?", "Mumbling?"),
                 Dislikes = L("D-don't say things like that!", "Hey! Too much!", "...Disgusting.", "Not here, idiot."),
                 Replies = new[]
@@ -543,21 +543,21 @@ namespace Joojkk.CampusLife
                 Replies = new[]
                 {
                     R("Thank her and promise to study", "thanks", L("Fufu, I'll check, you know.", "I'll quiz you tomorrow!", "...I'll hold you to it.", "Promises, promises."), 1),
-                    R("Ask why she became a teacher", "why", L("I had a teacher who believed in me... I wanted to be that for someone.", "Because school is the best! So I never left!", "...I like seeing people grow.", "Summer vacations. ...And a teacher who changed my life."), 1),
+                    R("Ask why she became a professor", "why", L("I had a professor who believed in me... I wanted to be that for someone.", "Because campus is the best! So I never left!", "...I like seeing people grow.", "Summer vacations. ...And a professor who changed my life."), 1),
                 } });
             c.Add(new TalkSubject { Id = "t_tired", Topic = Topic.AboutHer, Teacher = true, Label = "Tell her she looks tired today",
                 Opener = new[] { "You look tired today, sensei. Are you okay?" },
-                Loves = L("Ah... you noticed? I was grading until late... thank you for asking.", "Ugh, papers! Mountains of papers! Thanks for asking!", "...Grading. Thank you.", "Worried about your teacher? How sweet."),
-                Fine = L("I'm alright.", "I'm fine! Totally!", "...Fine.", "Teachers don't get tired."),
+                Loves = L("Ah... you noticed? I was grading until late... thank you for asking.", "Ugh, papers! Mountains of papers! Thanks for asking!", "...Grading. Thank you.", "Worried about your professor? How sweet."),
+                Fine = L("I'm alright.", "I'm fine! Totally!", "...Fine.", "Professors don't get tired."),
                 Dislikes = L("Is it that obvious...?", "Rude!", "...Thanks.", "Saying I look old?"),
                 Replies = new[]
                 {
-                    R("Offer to help carry the papers", "carry", L("Then... just to the staff room. Thank you.", "My hero!", "...Accepted.", "A gentleman. I'll allow it."), 1),
-                    R("Bring her a canned coffee", "coffee", L("For me? ...It's warm. Thank you.", "Caffeine! Bless you!", "...Exactly what I needed.", "Bribing your teacher? ...Thanks."), 1),
+                    R("Offer to help carry the papers", "carry", L("Then... just to the faculty room. Thank you.", "My hero!", "...Accepted.", "A gentleman. I'll allow it."), 1),
+                    R("Bring her a canned coffee", "coffee", L("For me? ...It's warm. Thank you.", "Caffeine! Bless you!", "...Exactly what I needed.", "Bribing your professor? ...Thanks."), 1),
                 } });
-            c.Add(new TalkSubject { Id = "t_weekend", Topic = Topic.Weekend, Teacher = true, Label = "Ask what teachers do on weekends",
-                Opener = new[] { "What do teachers even do on weekends?" },
-                Loves = L("Fufu... I bake, mostly. And sleep a lot.", "Karaoke! Don't tell the principal!", "...I go to the museum. Alone. It's nice.", "Things students aren't supposed to know about."),
+            c.Add(new TalkSubject { Id = "t_weekend", Topic = Topic.Weekend, Teacher = true, Label = "Ask what professors do on weekends",
+                Opener = new[] { "What do professors even do on weekends?" },
+                Loves = L("Fufu... I bake, mostly. And sleep a lot.", "Karaoke! Don't tell the dean!", "...I go to the museum. Alone. It's nice.", "Things students aren't supposed to know about."),
                 Fine = L("Prepare lessons...", "Grading! Fun!", "...Work.", "Rest."),
                 Dislikes = L("That's a little private...", "Secret!", "...Private.", "Why, want to follow me?"),
                 Replies = new[]
@@ -567,12 +567,12 @@ namespace Joojkk.CampusLife
                 } });
             c.Add(new TalkSubject { Id = "t_close", Topic = Topic.Love, Teacher = true, Tier = 1, Label = "Tell her you like talking to her",
                 Opener = new[] { "I like talking with you, sensei. More than with anyone." },
-                Loves = L("...You shouldn't say that to your teacher. ...But I'm happy.", "Hehe... me too. Don't tell anyone!", "...I feel the same. Keep it quiet.", "Dangerous words. ...I like them."),
+                Loves = L("...You shouldn't say that to your professor. ...But I'm happy.", "Hehe... me too. Don't tell anyone!", "...I feel the same. Keep it quiet.", "Dangerous words. ...I like them."),
                 Fine = L("Fufu, thank you.", "Aww, thanks!", "...Hm.", "Is that so."),
-                Dislikes = L("Let's keep things proper, okay?", "Whoa, whoa! Teacher, remember?", "...Inappropriate.", "Careful, kid."),
+                Dislikes = L("Let's keep things proper, okay?", "Whoa, whoa! Professor, remember?", "...Inappropriate.", "Careful, kid."),
                 Replies = new[]
                 {
-                    R("Ask to see her after school", "after", L("...In the staff room. Only to talk.", "Okay! Secret meeting!", "...Briefly.", "After school. Don't be late."), 1, null, 2),
+                    R("Ask to see her after class", "after", L("...In the faculty room. Only to talk.", "Okay! Secret meeting!", "...Briefly.", "After class. Don't be late."), 1, null, 2),
                     R("Apologize for being forward", "sorry", L("No, it's alright... really.", "No no, it's fine!", "...It's fine.", "Don't apologize. I liked it."), 0),
                 } });
             c.Add(new TalkSubject { Id = "t_flirt", Topic = Topic.Love, Teacher = true, Tier = 2, Lewd = true, LewdGain = 6, Label = "Lean on her desk after class",
@@ -583,7 +583,7 @@ namespace Joojkk.CampusLife
                 Replies = new[]
                 {
                     R("Close the door", "door", L("...Only for a little while.", "Hehe... okay...", "...Quickly.", "Good boy."), 1, null, 6),
-                    R("Step back with a smile", "back", L("M-mou... you're teasing me.", "Hey! Don't tease your teacher!", "...Brat.", "Teasing me? You'll regret it."), 0, null, 3),
+                    R("Step back with a smile", "back", L("M-mou... you're teasing me.", "Hey! Don't tease your professor!", "...Brat.", "Teasing me? You'll regret it."), 0, null, 3),
                 } });
             return c;
         }

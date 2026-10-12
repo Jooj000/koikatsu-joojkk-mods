@@ -21,15 +21,15 @@ namespace Joojkk.CampusLife
             {
                 case "coin": return "Something shiny on the floor";
                 case "pop_quiz": return "Pop quiz!";
-                case "carry_boxes": return "A teacher needs help";
-                case "love_letter": return "A letter in your shoe locker";
-                case "locker_note": return "A note in your shoe locker";
+                case "carry_boxes": return "A professor needs help";
+                case "love_letter": return "A letter in your locker";
+                case "locker_note": return "A note in your locker";
                 case "dropped_notebooks": return "Notebooks everywhere";
                 case "gossip": return "Hallway gossip";
                 case "vending": return "Vending machine lottery";
                 case "wind": return "A sudden gust of wind";
                 case "rumor": return "A rumor about you";
-                case "inspection": return "Student council inspection";
+                case "inspection": return "Student union inspection";
                 case "stray_cat": return "A stray cat";
                 case "rain": return "Sudden rain";
                 case "drenched": return "Caught in the rain";
@@ -80,9 +80,9 @@ namespace Joojkk.CampusLife
             {
                 case "coin":
                     b.Narr("Something glints on the hallway floor... a 500 yen coin.");
-                    b.Choice("Pocket it.", "keep", "Turn it in at the staff room.", "turn");
+                    b.Choice("Pocket it.", "keep", "Turn it in at the faculty room.", "turn");
                     b.Branch("keep"); b.Narr("Finders keepers."); b.End();
-                    b.Branch("turn"); b.Narr("The teacher thanks you for your honesty."); b.End();
+                    b.Branch("turn"); b.Narr("The professor thanks you for your honesty."); b.End();
                     return Scenes.PlayOnMap(b, c =>
                     {
                         if (c == "turn") Pay(new Rewards { Rep = 2 }, null, "Honest student");
@@ -92,8 +92,8 @@ namespace Joojkk.CampusLife
                 case "pop_quiz":
                 {
                     var ok = Campus.Check(G.Int, 50, out roll);
-                    b.Narr("A teacher stops you in the hallway: \"You! What's the capital of Australia? Quick!\"");
-                    b.Narr(ok ? "You answer without hesitation. The teacher nods, impressed." : "Your mind goes blank. \"...Sydney?\" The teacher sighs.");
+                    b.Narr("A professor stops you in the hallway: \"You! What's the capital of Australia? Quick!\"");
+                    b.Narr(ok ? "You answer without hesitation. The professor nods, impressed." : "Your mind goes blank. \"...Sydney?\" The professor sighs.");
                     return Scenes.PlayOnMap(b, _ =>
                     {
                         if (ok) Pay(new Rewards { Rep = 2, Int = 1 }, null, "Pop quiz: correct!");
@@ -103,17 +103,17 @@ namespace Joojkk.CampusLife
 
                 case "carry_boxes":
                 {
-                    b.Narr("A teacher is struggling with a tower of boxes full of handouts.");
+                    b.Narr("A professor is struggling with a tower of boxes full of handouts.");
                     var opts = new List<string> { "Help carry some.", "help", "Pretend you didn't see.", "ignore" };
                     if (G.Str >= 30) { opts.Add("Carry them all yourself. [STR]"); opts.Add("all"); }
                     b.Choice(opts.ToArray());
-                    b.Branch("help"); b.Narr("You take half the boxes. The teacher thanks you."); b.End();
+                    b.Branch("help"); b.Narr("You take half the boxes. The professor thanks you."); b.End();
                     b.Branch("ignore"); b.Narr("You suddenly find the ceiling very interesting."); b.End();
                     b.Branch("all"); b.Narr("You lift the whole tower in one go. A few students clap."); b.End();
                     return Scenes.PlayOnMap(b, c =>
                     {
                         if (c == "all") { Pay(new Rewards { Rep = 4, Str = 1 }, null, "Strong and helpful"); G.AddPeriodSeconds(40f); }
-                        else if (c == "help") { Pay(new Rewards { Rep = 2 }, null, "You helped a teacher"); G.AddPeriodSeconds(60f); }
+                        else if (c == "help") { Pay(new Rewards { Rep = 2 }, null, "You helped a professor"); G.AddPeriodSeconds(60f); }
                     });
                 }
 
@@ -122,16 +122,16 @@ namespace Joojkk.CampusLife
                     // Only a friend writes you a love letter; with nobody like that, no letter (never a stranger's).
                     var g = Girl(h => h.favor >= 50 && !h.isGirlfriend && Duo.YourFriend(h) && Truth.AtSchool(h));
                     if (g == null) return false;
-                    b.Narr("There's a pink envelope in your shoe locker. Inside: \"Please come to the rooftop after school. I have something to tell you.\"");
+                    b.Narr("There's a pink envelope in your locker. Inside: \"Please come to the rooftop after class. I have something to tell you.\"");
                     b.Narr("It's signed with a little heart. No name.");
                     return Scenes.PlayOnMap(b, _ =>
                     {
-                        var r = Board.Make(RequestKind.MeetAt, g, "The love letter", "Someone wants to meet you on the rooftop after school. Who could it be? (Go there and she will come.)", 8, PeriodMask.After, lewd: 3, rep: 0);
+                        var r = Board.Make(RequestKind.MeetAt, g, "The love letter", "Someone wants to meet you on the rooftop after class. Who could it be? (Go there and she will come.)", 8, PeriodMask.After, lewd: 3, rep: 0);
                         r.Place = "rooftop";
                         r.Source = "happening";
                         r.Title = "A love letter";
                         Board.Add(r);
-                        Toasts.Show("New request: go to the rooftop after school.");
+                        Toasts.Show("New request: go to the rooftop after class.");
                     });
                 }
 
@@ -141,17 +141,17 @@ namespace Joojkk.CampusLife
                     var g = Girl(h => h.favor >= 30 && Duo.YourFriend(h) && Truth.AtSchool(h));
                     if (g == null) return false;
                     var initial = GirlInfo.FirstName(g).Substring(0, 1).ToUpper();
-                    b.Narr("There's a folded note in your shoe locker: \"Could you come to the rooftop after school? I need help with something and I'd rather not ask in front of everyone.\"");
+                    b.Narr("There's a folded note in your locker: \"Could you come to the rooftop after class? I need help with something and I'd rather not ask in front of everyone.\"");
                     b.Narr("It's signed with a single letter: " + initial + ".");
                     return Scenes.PlayOnMap(b, _ =>
                     {
                         var r = Board.Make(RequestKind.MeetAt, g, "A note in your locker",
-                            "Someone signed '" + initial + ".' asked for help on the rooftop after school. Go there and she will come.",
+                            "Someone signed '" + initial + ".' asked for help on the rooftop after class. Go there and she will come.",
                             6, PeriodMask.After, rep: 1);
                         r.Place = "rooftop";
                         r.Source = "note";
                         Board.Add(r);
-                        Toasts.Show("New request: go to the rooftop after school.");
+                        Toasts.Show("New request: go to the rooftop after class.");
                     });
                 }
 
@@ -266,7 +266,7 @@ namespace Joojkk.CampusLife
                 {
                     var lewdItems = new[] { "lingerie", "toy", "photo_book" };
                     var carrying = lewdItems.Where(x => S.Count(x) > 0).ToList();
-                    b.Narr("Student council inspection! They're checking everyone's bags at the gate.");
+                    b.Narr("Student union inspection! They're checking everyone's bags at the gate.");
                     if (carrying.Count == 0)
                     {
                         b.Narr("Your bag is spotless. The council president nods approvingly.");
@@ -336,7 +336,7 @@ namespace Joojkk.CampusLife
                     var g = Girl();
                     if (g == null) return false;
                     var name = GirlInfo.FirstName(g);
-                    b.Narr("It starts pouring right as school ends. " + name + " is stuck at the entrance without an umbrella.");
+                    b.Narr("It starts pouring right as campus ends. " + name + " is stuck at the entrance without an umbrella.");
                     b.Choice("Share your umbrella with her.", "share", "Lend it to her and run home in the rain.", "lend", "Wait for the rain to stop.", "wait");
                     b.Branch("share");
                     b.Say(g, Lines.T(GirlInfo.ToneOf(g), "Together...? O-okay. Your shoulder is getting wet... || Together...? Okay... you're getting wet, though. || Sharing...? Mm. Your shoulder's wet... || Th-thank you... let's share.", "Umbrella buddies! Squeeze in! || Umbrella squad! Get in here! || Share! Squeeze closer! || Umbrella buddies! Yay!", "...Fine. Don't get any closer than necessary. || ...Fine. Not too close. || ...Acceptable. Keep your distance. || ...Share, then. Carefully.", "Sharing an umbrella? How romantic~ || Sharing an umbrella? So cliché. I love it. || Under one umbrella? How scandalous~ || Romantic, aren't we?"));

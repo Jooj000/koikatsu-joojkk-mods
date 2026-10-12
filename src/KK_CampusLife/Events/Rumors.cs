@@ -66,12 +66,12 @@ namespace Joojkk.CampusLife
             switch (s.Kind)
             {
                 case "stole": return version == 0 ? o + " left " + a + " for you" : version == 1 ? "you were two-timing " + a + " and " + o + " for weeks" : "you stole " + o + " right out from under " + a;
-                case "cheated": return version == 0 ? a + " got close to you while dating " + t : version == 1 ? a + " has a secret boyfriend in another school" : a + " is playing with " + t + "'s feelings";
+                case "cheated": return version == 0 ? a + " got close to you while dating " + t : version == 1 ? a + " has a secret boyfriend in another campus" : a + " is playing with " + t + "'s feelings";
                 case "caught": return version == 0 ? a + " and " + o + " were seen together behind the gym" : version == 1 ? a + " and " + o + " are secretly engaged" : o + " is trying to steal " + a;
                 case "crush": return version == 0 ? a + " has a crush on " + o : version == 1 ? a + " wrote " + o + " a ten-page love poem" : a + " won't leave " + o + " alone";
                 case "sides": return version == 0 ? a + " and " + o + " fought over you in the hallway" : version == 1 ? a + " slapped " + o + " in front of everyone" : o + " started the fight with " + a;
-                case "seen_with": return version == 0 ? "you and " + a + " were seen together after school" : version == 1 ? "you and " + a + " are dating in secret" : "you're just using " + a;
-                case "council": return version == 0 ? a + " is running for student council" : version == 1 ? a + " is bribing people with sweets for votes" : a + " only wants the council room for herself";
+                case "seen_with": return version == 0 ? "you and " + a + " were seen together after class" : version == 1 ? "you and " + a + " are dating in secret" : "you're just using " + a;
+                case "council": return version == 0 ? a + " is running for student union" : version == 1 ? a + " is bribing people with sweets for votes" : a + " only wants the council room for herself";
                 default: return version == 0 ? "something happened with " + a : "something scandalous happened with " + a;
             }
         }
@@ -252,7 +252,7 @@ namespace Joojkk.CampusLife
                 Write = b =>
                 {
                     b.Narr(GirlInfo.FirstName(h) + " looks like she hasn't slept well.");
-                    b.Face(h, Feel.Sad).Her_(T(h, "You've heard what they're saying about me, haven't you...? || You've heard the rumor about me... haven't you? || Everyone's saying things about me... you too? || You heard what they're saying...?", "Everybody's whispering about me! You heard it too, right?! || Everyone's talking about me! You heard, right?! || Ugh! The whole school's whispering! You too?! || You heard the rumor too, didn't you?!", "The rumor. You've heard it. || You've heard. || The rumor. You know it. || You've heard what they say.", "So. You've heard the rumor too. Everyone has. || Let me guess. You heard too. || The rumor. Even you heard it. || So. You've heard, like everyone else."));
+                    b.Face(h, Feel.Sad).Her_(T(h, "You've heard what they're saying about me, haven't you...? || You've heard the rumor about me... haven't you? || Everyone's saying things about me... you too? || You heard what they're saying...?", "Everybody's whispering about me! You heard it too, right?! || Everyone's talking about me! You heard, right?! || Ugh! The whole university's whispering! You too?! || You heard the rumor too, didn't you?!", "The rumor. You've heard it. || You've heard. || The rumor. You know it. || You've heard what they say.", "So. You've heard the rumor too. Everyone has. || Let me guess. You heard too. || The rumor. Even you heard it. || So. You've heard, like everyone else."));
                     var opts = new List<string> { "Say you believe her", "rs_believe", "Ask for her side of it", "rs_side" };
                     if (s.Step >= 2) { opts.Add("Promise to set it straight"); opts.Add("rs_fix"); }
                     opts.Add("Tell her to ignore it"); opts.Add("rs_ignore");

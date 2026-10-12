@@ -1,0 +1,358 @@
+# The three of the staff, each in her own voice (user, 2026-11-01: "faça os diálogos especificamente para as personalidades
+# das professoras"). Chosen by {pers}, the personality number of the card: 0 Lina Roberts, the nurse (at ease, teases while
+# she takes care of you); 16 Reina Hashimoto (goals, method, little patience); 11 Nonoka Sakurai (motherly, did you eat, did
+# you sleep). Another card in the same seat falls back to the role=teacher lines. Options and reactions: dlg_fact_hooks.txt.
+
+# ================= Lina =================
+@rule day.t.lina.fine
+on day
+when role=teacher job=nurse pers=0 mood=none
+hook f_day_t_lina_fine
+opens ask,tease,share
+- [Quiet morning.|Nobody's fainted yet.] [I could get used to it.|I've been rearranging the cotton balls for fun.]
+- [You again. You look healthy.|Healthy, and still you came by.] [Should I be flattered?|What's your excuse today?]
+- [My beds are empty.|Not a single patient so far.] [A nurse gets lonely, you know.|Pull up a chair, then.]
+
+@rule day.t.lina.up
+on day
+when role=teacher job=nurse pers=0 mood=cheerful|flirty
+feel smile
+hook f_day_t_lina_up
+opens ask,praise,tease
+- [I'm in a good mood today.|Somebody's smiling, and it's me.] [Don't ask why. Guess.|Quiet ward and good coffee.]
+- [You've caught me at a good moment.|Lucky you, I'm feeling generous.] [Ask me anything.|Free bandages for everyone.]
+
+@rule day.t.lina.low
+on day
+when role=teacher job=nurse pers=0 mood=stressed|sleepy|bored|upset|lonely|hungry
+feel worried
+hook f_day_t_lina_low
+opens comfort,ask,share
+- [Long night. I'm the one who should be lying down.|I've been on my feet since dawn.] [Don't tell the patients.|Even nurses need a bed.]
+- [Today I'd like someone to take MY temperature.|Everyone wants something from me today.] [Hah.|I'd trade a lot for five quiet minutes.]
+
+@rule day.t.lina.close
+on day
+when role=teacher job=nurse pers=0 rel=girlfriend|lover
+feel smile
+hook f_day_t_lina_close
+opens tease,share,ask
+- [There you are.|You took your time.] [I saved the chair by the window for you.|I've been pretending to do inventory.]
+- [Come here, let me look at you.|You look tired, sweetheart.] [Doctor's orders: stay a while.|I'm prescribing a long lunch. With me.]
+
+@rule small.t.lina.school
+on small
+when subject=school role=teacher job=nurse pers=0
+hook f_small_t_lina_school
+opens ask,tease,share
+- [I hear everything in this room.|Students tell a nurse things they don't tell anyone.] [Comes with the bed.|Lie down and it all comes out.]
+- [The staff think I just sit here.|Half the faculty come in for a "headache".] [Let them think it.|Those are my favorite secrets.]
+
+@rule small.t.lina.weekend
+on small
+when subject=weekend role=teacher job=nurse pers=0
+hook f_small_t_lina_weekend
+opens ask,tease,share
+- [This weekend I'm not a nurse.|No bandages this weekend.] [A long bath, a good dress, a nice dinner.|Nobody may tell me their symptoms.]
+- [I sleep till noon on Saturdays.|I've got a hairdresser and a bottle of wine waiting.] [It's medicinal.|Don't look so shocked.]
+
+@rule small.t.lina.lunch
+on small
+when subject=lunch role=teacher job=nurse pers=0
+hook f_small_t_lina_lunch
+opens tease,invite,ask
+- [I eat at my desk, between patients.|Lunch is whatever the students leave me.] [Today, a chocolate bar.|A chocolate bar counts. A nurse should eat better, I know.]
+- [I tell everyone to eat vegetables.|Do as I say, not as I snack.] This is a chocolate bar.
+
+@rule small.t.lina.future
+on small
+when subject=future role=teacher job=nurse pers=0
+hook f_small_t_lina_future
+opens ask,praise,tease
+- [I could work at a big hospital.|They've offered me a clinic in town, twice.] [I like it here better.|No one here tries to die on my shift.] One day, a sea view.
+- [Ask me where I'll be in five years.|Five years from now?] [Right here, on this chair, unless a sea view comes up.|Somewhere with a sea view, if the budget surprises me.]
+
+# ================= Reina =================
+@rule day.t.reina.fine
+on day
+when role=teacher job=teacher pers=16 mood=none
+hook f_day_t_reina_fine
+opens ask,praise,share
+- {classes}[I've set three goals for today.|Three goals on today's list.] [Two are done.|The third is this conversation, apparently.]
+- {classes}[Today's lecture went to plan.|The second-years finally proved the theorem.] [That's goal two of three.|Two goals down, one to go.]
+- [You have three minutes. They're the third goal on today's list.|My third goal today is a committee at the top of the hour. You have three minutes.]
+
+@rule day.t.reina.up
+on day
+when role=teacher job=teacher pers=16 mood=cheerful|flirty
+feel smile
+hook f_day_t_reina_up
+opens ask,praise,tease
+- [My paper was accepted.|A journal finally answered me.] [Don't tell the department yet.|That's one more line on the plan.]
+- [The journal took my paper, and every item on today's list is ticked off.|Everything's on schedule, and the journal took my paper.] [It's a rare feeling.|I almost don't know what to do.]
+
+@rule day.t.reina.low
+on day
+when role=teacher job=teacher pers=16 mood=stressed|sleepy|bored|upset|lonely|hungry
+feel worried
+hook f_day_t_reina_low
+opens comfort,ask,share
+- [I've fallen behind my own schedule.|Nothing's gone to plan today.] [It's unacceptable.|I'll have to redo the whole week.]
+- [I rewrote the same page all night.|I slept four hours. It wasn't in the plan.] [Don't look at me like that.|I'll recover by Thursday.]
+
+@rule day.t.reina.close
+on day
+when role=teacher job=teacher pers=16 rel=girlfriend|lover
+feel smile
+hook f_day_t_reina_close
+opens tease,share,ask
+- [I blocked out ten minutes for you.|You're in my calendar today.] [Under "personal development".|"Personal development". Don't tell me that isn't romantic.]
+- [You came. Good.|I was hoping you'd come by.] [I've got you down for ten minutes of "personal development".|Ten minutes. "Personal development", the calendar says.]
+
+@rule small.t.reina.school
+on small
+when subject=school role=teacher job=teacher pers=16
+hook f_small_t_reina_school
+opens ask,agree,tease
+- {classes}I've sent the dean a proposal for the curriculum. [It needs discipline, not money.|Eleven pages. He'll read it, or I'll read it to him.]
+- {classes}[Most students aim too low.|You could all do better than a passing grade.] [My proposal to the dean should fix that.|So I've sent the dean a proposal.]
+
+@rule small.t.reina.weekend
+on small
+when subject=weekend role=teacher job=teacher pers=16
+hook f_small_t_reina_weekend
+opens ask,tease,share
+- [I run ten kilometers on Saturday mornings.|I've got an optional seminar on Saturday.] [Then I review my goals.|It's on the plan, like everything else.]
+- [A weekend is two days of unscheduled potential.|I plan my weekends by the hour.] [Most people waste theirs.|Yes, rest is on the plan. Forty minutes.]
+
+@rule small.t.reina.lunch
+on small
+when subject=lunch role=teacher job=teacher pers=16
+hook f_small_t_reina_lunch
+opens ask,tease,invite
+- [Lunch takes me twelve minutes.|Twelve minutes, the same salad every day.] [Fewer decisions.|It saves time for what matters.]
+- [The cafeteria line is badly designed.|I've timed the cafeteria line.] [I sent them a diagram.|Nine minutes wasted a day.] So: twelve minutes, one salad, at my desk.
+
+@rule small.t.reina.future
+on small
+when subject=future role=teacher job=teacher pers=16
+hook f_small_t_reina_future
+opens ask,share,praise
+- [Department head in four years.|A professorship by thirty-five.] [That's the plan.|Dean after that, if nobody stops me.]
+- [I've got a five-year plan. Do you?|Ten years from now I'll be running this department. Where will you be?] If you don't know, someone else will decide for you.
+
+# ================= Nonoka =================
+@rule day.t.nonoka.fine
+on day
+when role=teacher job=teacher pers=11 mood=none
+hook f_day_t_nonoka_fine
+opens share,comfort,ask
+- [Have you eaten today?|You look thin. Are you eating?] [Be honest.|I've got a rice ball in my bag.]
+- [Oh, there you are.|I was just thinking about my students.] [Are you sleeping enough?|You all work so hard.]
+- [I'm fine, dear. How about you?|Never mind me. How's your week?] [You can tell me.|Sit down a moment.]
+
+@rule day.t.nonoka.up
+on day
+when role=teacher job=teacher pers=11 mood=cheerful|flirty
+feel smile
+hook f_day_t_nonoka_up
+opens ask,praise,share
+- [One of my old students wrote to me.|A graduate came by to say hello this morning.] [She's doing so well.|I nearly cried in the corridor.] Here, I made too many lunchboxes.
+- [I made too many lunchboxes again.|I baked last night.] An old student came by for some. She's doing so well. Here, take one.
+
+@rule day.t.nonoka.low
+on day
+when role=teacher job=teacher pers=11 mood=stressed|sleepy|bored|upset|lonely|hungry
+feel worried
+hook f_day_t_nonoka_low
+opens comfort,ask,share
+- [I've been worrying about one of my students.|A student of mine stopped coming to class.] [I keep thinking about it.|I hope someone's looking after her.]
+- [I'm a little tired, that's all.|I stayed up writing comments on everyone's work.] I keep worrying about one student who's stopped coming.
+
+@rule day.t.nonoka.close
+on day
+when role=teacher job=teacher pers=11 rel=girlfriend|lover
+feel smile
+hook f_day_t_nonoka_close
+opens share,tease,comfort
+- [I made you a lunchbox.|I've put aside something for you.] [Don't tell the others.|Eat it while it's warm.]
+- [Come here, your collar's crooked.|There. That's better.] Now eat this, it's still warm. [You don't take care of yourself.|So I'll have to, won't I?]
+
+@rule small.t.nonoka.school
+on small
+when subject=school role=teacher job=teacher pers=11
+hook f_small_t_nonoka_school
+opens ask,praise,share
+- {classes}[I know all my students' birthdays.|I keep a notebook on every student.] And who's eating alone. Someone should.
+- {classes}[There's always someone eating alone at lunch.|The first-years sit by themselves at lunch.] [It breaks my heart.|I try to sit with them.]
+
+@rule small.t.nonoka.weekend
+on small
+when subject=weekend role=teacher job=teacher pers=11
+hook f_small_t_nonoka_weekend
+opens ask,invite,tease
+- [I'll do the washing and cook enough for the week.|I'm going to the market on Saturday.] [I always cook too much.|Is there anything you'd like me to make?] And then there's my knitting.
+- [I knit on Sundays, with a pot on the stove.|My sister's children come over on Sundays, so I cook and knit.] [It's a scarf this time.|The house is so loud, and I love it.]
+
+@rule small.t.nonoka.lunch
+on small
+when subject=lunch role=teacher job=teacher pers=11
+hook f_small_t_nonoka_lunch
+opens share,ask,agree
+- [I make my own lunch, and a spare.|There's always a spare rice ball in my bag.] [Somebody always forgets theirs.|Did you bring yours?]
+- [Don't just have bread for lunch.|You can't live on vending machine food.] [There's a spare rice ball in my bag.|I made a spare. I'll be checking.]
+
+@rule small.t.nonoka.future
+on small
+when subject=future role=teacher job=teacher pers=11
+hook f_small_t_nonoka_future
+opens ask,share,praise
+- [When I've seen all of you graduate, I'd like a little house with a kitchen garden.|I'd like a little house one day, with a kitchen garden.] And a table big enough for visitors.
+- [What matters is that you're happy, dear.|Have you talked to anyone about what you want to do?] [Me, I just want a garden and a big table. The rest comes later.|You don't have to know yet. I only know I want a garden and a table for visitors.]
+
+# ================= the first thing she says when you walk up (the game's greeting, replaced) =================
+@rule greet.gentle
+on greet
+when tone=gentle
+- [Oh, hello.|Hi.|Um, hello.] [Did you need something?|It's nice to see you.]
+- [Good to see you.|Oh, it's you.] [How are you?|Do you have a moment?]
+
+@rule greet.gentle.friend
+on greet
+when tone=gentle rel=friend
+- [Oh, it's you!|There you are.] [I was hoping I'd run into you.|How's your day been?]
+- [Hello again.|Hi, you.] [Do you have a minute to talk?|I'm glad you came over.]
+
+@rule greet.gentle.gf
+on greet
+when tone=gentle rel=girlfriend|lover
+- [You came to find me.|There you are...] [I was thinking about you just now.|That makes my whole day.]
+- [Hi...|Hey, you.] [I missed you.|Stay a little, okay?]
+
+@rule greet.energetic
+on greet
+when tone=energetic
+- [Hey there!|Yo!|Hi hi!] [What's up?|You need something?]
+- [Oh, hi!|Hey, you!] [Good timing!|What's going on?]
+
+@rule greet.energetic.friend
+on greet
+when tone=energetic rel=friend
+- [Hey hey! It's you!|There you are!] [I've got so much to tell you!|Where've you been?]
+- [Yo! Perfect timing!|Finally, someone fun!] [I was so bored!|Talk to me!]
+
+@rule greet.energetic.gf
+on greet
+when tone=energetic rel=girlfriend|lover
+- [There's my favorite person!|You!] [C'mere, c'mere!|I was just about to come find you!]
+- [Finally! I've been waiting!|Hey, hey, hey!] [What took you so long?|Today just got better!]
+
+@rule greet.cool
+on greet
+when tone=cool
+- [Yes?|Hm?|Oh. You.] [What is it?|Did you want something?]
+- [Hello.|Can I help you?] [Keep it short.|I've got a moment.]
+
+@rule greet.cool.friend
+on greet
+when tone=cool rel=friend
+- [It's you.|Hey.] [I've got time.|What's on your mind?]
+- [Oh. Hi.|You again.] [I don't mind.|Sit, if you want.]
+
+@rule greet.cool.gf
+on greet
+when tone=cool rel=girlfriend|lover
+- [You're here.|Hey.] [...Good.|I was wondering when you'd show up.]
+- [Took you long enough.|There you are.] [Not that I was waiting.|Come here.]
+
+@rule greet.teasing
+on greet
+when tone=teasing
+- [Well, well.|Oh? Look who it is.] [Lost, are you?|What do you want?]
+- [Hey, you.|What's this?] [Did you come over just to stare?|Need something, or are you just bored?]
+
+@rule greet.teasing.friend
+on greet
+when tone=teasing rel=friend
+- [Back again?|Look who can't stay away.] [I'm starting to think you like me.|Admit it, you missed me.]
+- [There's my favorite troublemaker.|Oh, it's you, again.] [What are we up to?|Entertain me.]
+
+@rule greet.teasing.gf
+on greet
+when tone=teasing rel=girlfriend|lover
+- [There you are. I was about to get jealous.|Took you long enough.] [Make it up to me.|You owe me a date.]
+- [Hello, handsome.|Oh, it's my favorite.] [Did you miss me that much?|Couldn't stay away?]
+
+@rule greet.up
+on greet
+when mood=cheerful
+feel smile
+- [Hi!|Oh, hello!] [It's such a good day!|I'm in a great mood, so you're in luck.]
+
+@rule greet.tired
+on greet
+when mood=sleepy
+- [Mmh... hi.|Oh... hello.] [Sorry, I'm half asleep.|Don't mind the yawning.]
+
+@rule greet.low
+on greet
+when mood=stressed|upset|lonely
+feel worried
+- [Oh... hi.|Hello...] [Sorry, it's been one of those days.|You caught me at a bad moment, but it's okay.]
+
+@rule greet.teacher
+on greet
+when role=teacher
+- [Hello.|Ah, hello there.] [Did you need something?|What can I do for you?]
+- [Yes?|Good to see you.] [I've got a moment.|Is everything all right?]
+
+@rule greet.lina
+on greet
+when role=teacher job=nurse pers=0
+- [Oh? And what's wrong with you today?|Hello, patient.] [Show me where it hurts.|You look perfectly healthy to me.]
+- [Well, hello.|Look who's come to see me.] [Sit. Tell me everything.|Do you feel faint, or did you just miss me?]
+
+@rule greet.lina.friend
+on greet
+when role=teacher job=nurse pers=0 rel=friend
+- [There's my favorite frequent visitor.|You again? I'll have to name a bed after you.] [What is it this time?|Sit down, sit down.]
+
+@rule greet.lina.gf
+on greet
+when role=teacher job=nurse pers=0 rel=girlfriend|lover
+feel smile
+- [Hello, you. Nobody's looking, so I'll smile properly.|There you are, sweetheart.] [I've missed my favorite patient.|Stay a while.]
+
+@rule greet.reina
+on greet
+when role=teacher job=teacher pers=16
+- [Yes? Be brief, please.|You have a question?] [I'm between two meetings.|I've got five minutes.]
+- [Good. You're here.|State your business.] [I like people who are on time.|Then back to work, both of us.]
+
+@rule greet.reina.friend
+on greet
+when role=teacher job=teacher pers=16 rel=friend
+- [Ah, you. Did you finish the reading?|You again. Good.] [I'll make time.|I've put you in my schedule.]
+
+@rule greet.reina.gf
+on greet
+when role=teacher job=teacher pers=16 rel=girlfriend|lover
+feel smile
+- [...You're on time. I like that.|There you are. Right on schedule.] [Close your notebook.|I may have cleared my afternoon.]
+
+@rule greet.nonoka
+on greet
+when role=teacher job=teacher pers=11
+- [Oh, hello, dear.|There you are.] [Is something the matter?|Have you had lunch?]
+- [Hello, dear. You look tired.|Oh, good, I was hoping to see you.] [Are you getting enough sleep?|Come, sit with me a moment.]
+
+@rule greet.nonoka.friend
+on greet
+when role=teacher job=teacher pers=11 rel=friend
+- [Oh, it's you, dear!|I was just thinking about you.] [I saved you a little something.|How's your week been?]
+
+@rule greet.nonoka.gf
+on greet
+when role=teacher job=teacher pers=11 rel=girlfriend|lover
+feel smile
+- [There you are, dear.|Oh, you came to see me.] [Did you eat properly?|I made a little extra today.]

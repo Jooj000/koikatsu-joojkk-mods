@@ -127,7 +127,7 @@ namespace Joojkk.CampusLife
         {
             var l = moment == "rivals"
                 ? new[] { "who gets to walk home with you", "who you'd rather sit with at lunch", "who knows you better" }
-                : new[] { "where to eat after school", "whose turn it was to clean", "which club works harder", "the festival theme", "a borrowed notebook" };
+                : new[] { "where to eat after class", "whose turn it was to clean", "which club works harder", "the festival theme", "a borrowed notebook" };
             return l[Random.Range(0, l.Length)];
         }
 
@@ -420,7 +420,7 @@ namespace Joojkk.CampusLife
                 case "lunch": return "Ask what they're having for lunch";
                 case "club": return "Ask how club went";
                 case "study": return "Offer to study together";
-                case "season": return "Ask about the " + SeasonName();
+                case "season": return "Ask about " + SeasonName();
                 case "trisal": return "Ask what the two of them planned";
                 case "gossip": return "Ask who started the rumor";
                 case "bestfriend": return "Ask what she's told her about you";
@@ -431,7 +431,7 @@ namespace Joojkk.CampusLife
         private static string SeasonName()
         {
             var id = Calendar.SeasonEventThisWeek;
-            return id == "" ? "next event" : Calendar.EventName(id);
+            return id == "" ? "the next event" : Calendar.EventRef(id);
         }
 
         // ================= lines =================
@@ -442,6 +442,7 @@ namespace Joojkk.CampusLife
             var t = _trio;
             c["other"] = Teachers.Called(other);
             c["otherrole"] = Teachers.IsTeacherVoice(other) ? "teacher" : "student";
+            c["otherjob"] = Teachers.Job(other);
             c["moment"] = t != null ? t.Moment : "hangout";
             c["pair"] = PairWord(h, other);
             c["trisal"] = h.isGirlfriend && other.isGirlfriend && Harem.Agreed(h, other) ? "yes" : "no";
@@ -449,7 +450,7 @@ namespace Joojkk.CampusLife
             c["likes"] = Interested(h) || h.isGirlfriend ? "yes" : "no";
             c["otherlikes"] = Interested(other) || other.isGirlfriend ? "yes" : "no";
             if (t != null && t.Argue != "") c["argue"] = t.Argue;
-            if (t != null) c["event"] = SeasonName();
+            if (t != null) { c["event"] = SeasonName(); c["evkind"] = Calendar.EventKind(Calendar.SeasonEventThisWeek); }
             return c;
         }
 
@@ -694,6 +695,7 @@ namespace Joojkk.CampusLife
         {
             c["first"] = Teachers.Called(a);
             c["myrole"] = Teachers.IsTeacherVoice(a) ? "teacher" : "student";
+            c["myjob"] = Teachers.Job(a);
             c["wet"] = Weather.Raining ? "yes" : "no";
             c["othermood"] = S.Girl(GirlInfo.Key(b)).Mood.ToString().ToLowerInvariant();
             var likes = GirlInfo.LikesOf(a).Intersect(GirlInfo.LikesOf(b)).ToList();
@@ -799,7 +801,7 @@ namespace Joojkk.CampusLife
                     var pair = PairWord(b0, a);
                     Say2(b, b0, a, "duo3.know", pair == "bff" ? T(b0, an + " and I have been friends forever..." + " || " + an + " and I have been friends forever... || I've known " + an + " since we were little..." + " || " + an + " and I go way back...", "Me and " + an + "? Since FOREVER! || Me and " + an + "? Since forever!" + " || " + an + "?! Childhood buddies!" + " || " + an + " and me! Ages!", "We go way back. || Long history. || We go back. || Years.", "Oh, she's stuck with me~ || She's stuck with me~ || She can't escape me. || She's mine forever~")
                         : pair == "rival" ? T(b0, "...We're in the same class. That's all. || ...Just classmates. || ...We share a class, that's all. || ...Same class. Nothing more.", "Ugh, we just... know each other. || We just know each other! || Ugh, classmates! || We're... acquainted!", "...Same class. || ...Classmates. || ...Same room. || ...Class.", "Unfortunately? Classmates. || Classmates. Sadly. || Unfortunately, same class. || Stuck in the same class.")
-                        : T(b0, "We're in the same class. || Same class. || We share a classroom. || We're classmates.", "We hang out sometimes! || We hang out! || Sometimes we chill! || Friends-ish!", "Class. Club. You know. || Class. Club. || Around. || Here and there.", "Around. Why, curious~? || Around. Curious~? || Why do you ask~? || We know each other. Why?"), X("act", "know"));
+                        : T(b0, "We're in the same class. || Same class. || We share a lecture hall. || We're classmates.", "We hang out sometimes! || We hang out! || Sometimes we chill! || Friends-ish!", "Class. Club. You know. || Class. Club. || Around. || Here and there.", "Around. Why, curious~? || Around. Curious~? || Why do you ask~? || We know each other. Why?"), X("act", "know"));
                     if (pair == "bff") Say2(b, a, b0, "duo3.know.other", T(a, "Hehe... it's true. || Hehe... it's true. || That's right... || Mm, yes.", "Best friends! || Besties! || BFFs! || Best friends!", "...Unfortunately. || ...Sadly. || ...Unfortunately. || ...Yes.", "She'd be lost without me~ || She'd be lost without me~ || She needs me~ || She can't live without me."));
                     break;
                 case "think":
@@ -812,7 +814,7 @@ namespace Joojkk.CampusLife
                     if (p2 != "rival") Arcs.AddBond(GirlInfo.Key(a), GirlInfo.Key(b0), 2);
                     break;
                 default:
-                    b.Me(Lines.Pick("Want to hear a joke?", "So, a joke: why did the student eat his homework? The teacher said it was a piece of cake.", "Okay, okay, I've got a good one."));
+                    b.Me(Lines.Pick("Want to hear a joke?", "So, a joke: why did the student eat his assignments? The professor said it was a piece of cake.", "Okay, okay, I've got a good one."));
                     var tone = GirlInfo.ToneOf(b0);
                     var chance = tone == Tone.Energetic || tone == Tone.Teasing ? 0.7f : 0.45f;
                     q = Random.value < chance ? Q.Good : Q.Neutral;
@@ -939,7 +941,7 @@ namespace Joojkk.CampusLife
                 case "met":
                     b.Me("How did you two meet?");
                     var pw = PairWord(a, b0);
-                    Say2(b, a, b0, "duo3.met.a", pw == "rival" ? T(a, "...We didn't 'meet'. We just ended up in the same places. || ...We didn't really meet. We just kept running into each other. || ...It just happened. || ...We ended up together. That's all.", "Ugh, long story. || Long story! Ugh! || Don't ask! || Oof, long story!", "...Unavoidably. || ...Unavoidable. || ...Circumstance. || ...Inevitable.", "Fate hates me, apparently. || Fate's cruel. || Destiny's joke. || The universe hates me.") : T(a, "We sat next to each other on the first day... || We sat together on the first day... || She smiled at me on the first day... || We were seatmates from day one...", "First day of school! She lent me an eraser! || First day! She lent me a pencil! || Day one! Instant friends! || She shared her lunch on day one!", "Class. She was the only one who made sense. || Class. She made sense. || Classmates. She was competent. || She was the only sensible one.", "She tripped over my bag. Love at first sight~ || She tripped over me. Love at first sight~ || She bumped into me. Destiny~ || She dropped her books. Classic."));
+                    Say2(b, a, b0, "duo3.met.a", pw == "rival" ? T(a, "...We didn't 'meet'. We just ended up in the same places. || ...We didn't really meet. We just kept running into each other. || ...It just happened. || ...We ended up together. That's all.", "Ugh, long story. || Long story! Ugh! || Don't ask! || Oof, long story!", "...Unavoidably. || ...Unavoidable. || ...Circumstance. || ...Inevitable.", "Fate hates me, apparently. || Fate's cruel. || Destiny's joke. || The universe hates me.") : T(a, "We sat next to each other on the first day... || We sat together on the first day... || She smiled at me on the first day... || We were seatmates from day one...", "First day of campus! She lent me an eraser! || First day! She lent me a pencil! || Day one! Instant friends! || She shared her lunch on day one!", "Class. She was the only one who made sense. || Class. She made sense. || Classmates. She was competent. || She was the only sensible one.", "She tripped over my bag. Love at first sight~ || She tripped over me. Love at first sight~ || She bumped into me. Destiny~ || She dropped her books. Classic."));
                     Say2(b, b0, a, "duo3.met.b", pw == "rival" ? T(b0, "...Let's not talk about it. || ...Let's not. || ...Please, never mind. || ...I'd rather not.", "Don't remind me! || Don't remind me! || Nooo, stop! || Ugh, forget it!", "... || ...... || ...No. || ...Skip.", "Her version is wrong, by the way. || Her version's wrong. || Don't believe her. || She lies. Cutely.") : T(b0, "Hehe... that's right. || Hehe... yes. || That's right... || Mm, true.", "And we've been inseparable since! || Inseparable ever since! || Best friends since! || Together ever since!", "...That's roughly accurate. || ...Roughly. || ...Accurate enough. || ...More or less.", "That is NOT how it went~ || That's NOT how it happened~ || Lies~ || Total fiction~"));
                     if (pw == "rival") { qa = qb = Q.Neutral; } else bond = 2;
                     break;

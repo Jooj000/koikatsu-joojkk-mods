@@ -47,8 +47,8 @@ namespace Joojkk.CampusLife
             S.Buffs["club_rank"] = r;
             var members = Board.Students.Where(h => h.isStaff).ToList();
             var text = r == 1 ? "The club reached rank B: people finally know it exists"
-                     : r == 2 ? "The club reached rank A: the school talks about it"
-                     : "The club reached rank S: the best club in school";
+                     : r == 2 ? "The club reached rank A: the university talks about it"
+                     : "The club reached rank S: the best club on campus";
             S.Log(text + ".");
             Toasts.Show(text + "! (+3 favor with the members)");
             Anthology.Add("club", text, 2 + r, string.Join(",", members.Select(GirlInfo.Key).ToArray()));
