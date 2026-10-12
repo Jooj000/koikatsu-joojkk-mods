@@ -932,93 +932,6 @@ namespace Joojkk.CampusLife
 
         private static bool Low(Mood m) { return m == CampusLife.Mood.Stressed || m == CampusLife.Mood.Upset || m == CampusLife.Mood.Lonely || m == CampusLife.Mood.Sleepy; }
 
-        private static void AskDayU(SaveData.Heroine h)
-        {
-            var gs = S.Girl(GirlInfo.Key(h));
-            var tone = GirlInfo.ToneOf(h);
-            var close = Lines.Closeness(h);
-            var mood = gs.MoodDay == S.Day ? gs.Mood : CampusLife.Mood.None;
-            var low = Low(mood);
-            var already = gs.MoodKnownDay == S.Day;
-            string newLike = null;
-            if (!already)
-            {
-                var unknown = GirlInfo.LikesOf(h).Where(l => (gs.KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, l))) == 0).ToList();
-                if (unknown.Count > 0 && Random.value < 0.35f + G.Int / 200f) newLike = unknown[Random.Range(0, unknown.Count)];
-            }
-            var thing = mood == CampusLife.Mood.Stressed ? (Calendar.IsExamWeek ? "the exams" : "her classes") : mood == CampusLife.Mood.Sleepy ? "last night" : mood == CampusLife.Mood.Hungry ? "lunch"
-                      : mood == CampusLife.Mood.Lonely ? "her friends" : mood == CampusLife.Mood.Upset ? "what happened" : !GirlInfo.InNoClub(h) ? GirlInfo.ClubName(h) : "today";
-            var rs = new List<Resp>
-            {
-                Rp(low ? "Tell her it's okay to feel that way about " + thing : "Say you're glad " + thing + " is going well", "dy_support", low ? Q.Good : Q.Neutral),
-                Rp("Ask what happened with " + thing, "dy_more", Q.Good, Tn("Well... it's a long story. Thanks for asking, really.", "Okay, so, get this!", "...You actually want to know? Fine.", "Ooh, you want the details? Settle in.")),
-                low ? Rp("Say you'll let her rest", "dy_rest", Q.Neutral, Tn("...Thank you. Maybe later.", "Yeah... later, okay?", "...Appreciated.", "...Thanks. I'll take you up on that."))
-                    : Rp("Make a light joke about " + thing, "dy_joke", GirlInfo.ToneOf(h) == Tone.Cool ? Q.Neutral : Q.Good, Tn("Hehe... you're silly.", "Ahaha! Stop it!", "...Hm. That was almost funny.", "Heh. Okay, that one was good.")),
-            };
-            Beat(h, Lvl.Friend, "day", b =>
-            {
-                b.Me(Lines.AskHowAreYou(close));
-                b.Her_(already ? Lines.AlreadyAsked(tone, close) : Lines.MoodLine(tone, gs.Mood, close));
-                if (newLike != null) b.Her_(Lines.LikeHint(tone, GirlInfo.LikeLabel(newLike), close));
-            }, rs, r =>
-            {
-                if (already) return;
-                gs.MoodKnownDay = S.Day;
-                var tip = Lines.MoodTip(gs.Mood);
-                Toasts.Show(GirlInfo.FirstName(h) + ": " + Lines.MoodName(gs.Mood) + (tip == "" ? "" : ". " + tip));
-                if (newLike == null) return;
-                gs.KnownLikes |= 1 << Array.IndexOf(GirlInfo.LikeIds, newLike);
-                Toasts.Show("Learned: " + GirlInfo.FirstName(h) + " likes " + GirlInfo.LikeLabel(newLike) + ".");
-            });
-        }
-
-        /// <summary>One friend (or rival) to ask about: the one tied to what is going on, else the closest not asked about today.</summary>
-        private static SaveData.Heroine FriendToAsk(SaveData.Heroine h)
-        {
-            var partner = Pairs.PartnerOf(h);
-            if (partner != null) return partner;
-            var l = Social.Students.Where(o => o != h && Math.Abs(Social.Bond(h, o)) >= 35).ToList();
-            if (l.Count == 0) return null;
-            return l.OrderBy(o => AskedToday(h, "friend:" + GirlInfo.Key(o)) ? 1 : 0).ThenByDescending(o => Math.Abs(Social.Bond(h, o))).FirstOrDefault();
-        }
-
-        private static void AskFriendU(SaveData.Heroine h, SaveData.Heroine f)
-        {
-            var tone = GirlInfo.ToneOf(h);
-            var name = GirlInfo.FirstName(f);
-            var fs = S.Girl(GirlInfo.Key(f));
-            var bond = Social.Bond(h, f);
-            var rival = bond <= -30;
-            var hidden = rival ? null : Board.HiddenFor(GirlInfo.Key(f)).FirstOrDefault();
-            var tells = hidden != null && Social.Trust(h) >= 30;
-            var fm = fs.MoodDay == S.Day ? fs.Mood : CampusLife.Mood.None;
-            MarkAsked(h, "friend:" + GirlInfo.Key(f));
-            var rs = new List<Resp>
-            {
-                Rp(rival ? "Ask why things are rough with " + name : "Say you'd like to know " + name + " better", "fr_interest", rival ? Q.Neutral : Q.Good),
-                Rp("Ask how " + name + " has been lately", "fr_detail", Q.Good, Tn("She's... " + (fm == CampusLife.Mood.None ? "fine, I think." : Lines.MoodName(fm).ToLowerInvariant() + " today."), "Oh, she's " + (fm == CampusLife.Mood.None ? "same as always!" : Lines.MoodName(fm).ToLowerInvariant() + " today!"),
-                    "..." + (fm == CampusLife.Mood.None ? "Normal." : Lines.MoodName(fm) + ", today."), "Hm, " + (fm == CampusLife.Mood.None ? "nothing special." : Lines.MoodName(fm).ToLowerInvariant() + ". Why, interested?"))),
-                rival ? Rp("Suggest she talk things out with " + name, "fr_advice", Social.Trust(h) >= 40 ? Q.Good : Q.Bad,
-                            Social.Trust(h) >= 40 ? Tn("...Maybe you're right. I'll try.", "Ugh... fine. Maybe.", "...I'll think about it.", "...Fine. For you.") : Tn("...You don't know the whole story.", "No way! She started it!", "...Stay out of it.", "Mind your own business, maybe?"))
-                      : Rp("Say " + name + " is lucky to have her", "fr_lucky", Q.Good, Tn("...You think so? That's sweet.", "Right?! I'm the best friend ever!", "...Hm. Maybe.", "Obviously. I'm a catch.")),
-            };
-            Beat(h, Lvl.Friend, "friend:" + GirlInfo.Key(f), b =>
-            {
-                b.Me(ConvoLines.AskFriend(name));
-                if (rival) b.Her_(ConvoLines.Rival(tone, name));
-                else if (tells) b.Her_(ConvoLines.FriendProblem(tone, name, Board.ProblemThird(hidden)));
-                else
-                {
-                    b.Her_(ConvoLines.FriendMood(tone, name, fm));
-                    if (bond >= 60) b.Her_(ConvoLines.FriendBond(tone, name));
-                }
-            }, rs, r =>
-            {
-                if (tells) Board.Reveal(hidden, GirlInfo.Key(h));
-                if (fm != CampusLife.Mood.None) fs.MoodKnownDay = S.Day;
-            });
-        }
-
         private sealed class SchoolTopicInfo { public string Id, Label, Line; }
 
         /// <summary>Something real going on at school that she knows about (an event soon, the council race, the club project).</summary>
@@ -1032,24 +945,6 @@ namespace Joojkk.CampusLife
             if (p != null && p.Stage < 3 && !string.IsNullOrEmpty(p.Type)) return new SchoolTopicInfo { Id = "project", Label = "the club project", Line = "the club's " + ClubProjects.TypeName(p.Type).ToLowerInvariant() };
             if (Rumors.Hottest() != null) return new SchoolTopicInfo { Id = "rumors", Label = "what everyone's whispering about", Line = "the rumor everyone's whispering about" };
             return null;
-        }
-
-        private static void AskSchoolU(SaveData.Heroine h, SchoolTopicInfo t)
-        {
-            var tone = GirlInfo.ToneOf(h);
-            var gossip = t.Id == "rumors" ? Social.Gossip(h) : null;
-            Beat(h, Lvl.Friend, "school:" + t.Id, b =>
-            {
-                b.Me("What do you think about " + t.Line + "?");
-                if (gossip != null) { b.Her_(ConvoLines.GossipLine(tone, gossip.Kind, GossipWho(gossip), gossip.What)); Social.Mentioned(h, gossip); }
-                else b.Her_(T(h, "About " + t.Line + "? I'm a little nervous, honestly... but excited too." + " || " + t.Line + "? I'm nervous... but a little excited. || Oh, " + t.Line + "... I'm looking forward to it, kind of." + " || " + t.Line + "... I hope it goes well.", t.Line.Substring(0, 1).ToUpperInvariant() + t.Line.Substring(1) + "? It's gonna be HUGE!" + " || " + t.Line + "?! Can't wait! || Ooh, " + t.Line + "! It's gonna be epic!" + " || " + t.Line + "! So hyped!",
-                    t.Line.Substring(0, 1).ToUpperInvariant() + t.Line.Substring(1) + ". It's all anyone talks about." + " || " + t.Line + ". Everyone's talking about it." + " || " + t.Line + ". I'm aware." + " || " + t.Line + ". We'll see.", "Oh, " + t.Line + "? I have opinions. Many opinions." + " || " + t.Line + "? I have thoughts." + " || " + t.Line + ", huh? Spicy topic." + " || " + t.Line + "? Let me tell you what I think."));
-            }, new List<Resp>
-            {
-                Rp("Ask what she's planning for " + t.Label, "sc_plan", Q.Good, Tn("I-I haven't decided yet... Maybe you could help?", "Oh, I've got PLANS! You'll see!", "...I have a few ideas.", "That's a secret. For now.")),
-                Rp("Say you'd like to go through " + t.Label + " together", "sc_together", h.relation >= 1 ? Q.Good : Q.Neutral, Tn("...Together? I'd like that.", "Yes! Team up!", "...Could be useful.", "Teaming up with me? Smart.")),
-                Rp("Joke about " + t.Label, "sc_joke", GirlInfo.ToneOf(h) == Tone.Cool ? Q.Neutral : Q.Good, Tn("Hehe... don't jinx it.", "Ahaha! Stop!", "...Hm. Funny.", "Heh. Okay, that was good.")),
-            });
         }
 
         // ---------------- clearing the air (an important scene: five answers) ----------------

@@ -34,6 +34,7 @@ namespace Joojkk.CampusLife
 
         private sealed class Session
         {
+            public List<string> SmallPicked = new List<string>();
             public SaveData.Heroine Her;
             public int Interest, Turns, FavorGained, LewdGained;
             public bool Finished;

@@ -406,7 +406,11 @@ namespace Joojkk.CampusLife
                 if (h.relation >= 1) subjects["future"] = 0.4f;
             }
             var open = subjects.Where(x => !TopicDone(key, "st:" + x.Key)).ToList();
-            var picked = open.OrderByDescending(x => x.Value + Random.value * 0.9f).Take(count).Select(x => x.Key).ToList();
+            // The same subjects while the talk lasts: drawn anew, the labels changed each time the list was rebuilt.
+            var s = SessFor(h);
+            var picked = (s != null ? s.SmallPicked : new List<string>()).Where(p => open.Any(x => x.Key == p)).Take(count).ToList();
+            picked.AddRange(open.Where(x => !picked.Contains(x.Key)).OrderByDescending(x => x.Value + Random.value * 0.9f).Take(count - picked.Count).Select(x => x.Key).ToList());
+            if (s != null) s.SmallPicked = picked;
             return picked.Select(p => new PTopic { Id = "st:" + p, Kind = "small", Subject = p, Label = stranger ? StrangerLabel(p) : SmallLabel(p), Score = 0.5f }).ToList();
         }
 

@@ -9,7 +9,7 @@
 | | |
 |---|---|
 | GUID | `joojkk.campuslife` |
-| Version | 3.5.0 |
+| Version | 3.5.1 |
 | Game | Koikatu / Koikatsu Party, main game (story mode), HF Patch recommended |
 | Menu | **F7** |
 | Language | English (the XUnity AutoTranslator does not touch it) |

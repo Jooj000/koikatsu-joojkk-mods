@@ -476,11 +476,6 @@ namespace Joojkk.CampusLife
 
         // ================= ending =================
 
-        public static string OutOfPatience(Tone t)
-        {
-            return T(t, "Um, sorry, I should get going soon... || Sorry, I need to go... || I should leave soon... || Um, I have to go...", "Ah, I gotta run! Later! || Gotta run! Later! || Bye! Gotta go! || Running! See ya!", "I need to go. || Leaving. || I have to go. || Time to go.", "That's enough for now. I have things to do. || Enough for now. || That's all for today. || I'm busy. Bye.");
-        }
-
         public static string Bye(Tone t, int interest)
         {
             if (interest >= 4) return T(t, "That was really fun. Thank you for talking with me. || That was fun. Thank you. || I enjoyed that so much. || Thank you for the chat... it was fun.", "That was awesome! Let's do this again! || Awesome! Again soon! || So fun! Again! || Let's do it again!", "...That was a good talk. || ...Good talk. || ...Nice conversation. || ...That was pleasant.", "Not bad. You're more interesting than you look. || More interesting than you look. || Not bad. Surprising. || You're fun. Who knew.");
@@ -488,9 +483,5 @@ namespace Joojkk.CampusLife
             return T(t, "Um... see you. || ...See you. || Um... bye. || ...Bye.", "Ehh, I'm kinda tired of talking. || Kinda talked out. || I'm done talking. || Tired of chatting.", "Bye. || Bye. || ...Later. || Goodbye.", "Well. That happened. || Well. That was something. || Okay then. || That happened.");
         }
 
-        public static string TooTired(Tone t)
-        {
-            return T(t, "Sorry, I don't really have time to talk right now... || Sorry, no time right now... || I can't talk now, sorry... || Not now, sorry...", "Ugh, can we talk later? I'm beat! || Later? I'm wiped! || Ugh, later! || I'm beat! Later!", "Not now. || Not now. || Later. || No.", "I've talked enough today. Come back tomorrow. || Talked enough. Tomorrow. || Come back tomorrow. || Done for today.");
-        }
     }
 }

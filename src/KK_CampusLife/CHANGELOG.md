@@ -2,6 +2,10 @@
 
 Until 2.5 the plugin's own version (`CampusLifePlugin.Version`) stayed at 2.0.0 and the numbers were the milestones of the combined repository. From 3.0.0 on the plugin carries the version itself; the cycles between 2.5 and 3.0 are numbered 2.6 to 2.9 below.
 
+## 3.5.1 (2026-10-12)
+- The small talk subjects stay the same for the whole conversation, instead of changing each time you leave a category and come back.
+- Removed unused dialogue left over from the old conversation menu.
+
 ## 3.5.0
 - Professors and the nurse act like staff. They sit at the faculty desks, work in the infirmary and walk the halls, and never take a student's desk.
 - Talking to a professor at her spot opens the mod's procedural conversation in place of the game's repeating one. Students, professors and the nurse each have their own options and first lines.

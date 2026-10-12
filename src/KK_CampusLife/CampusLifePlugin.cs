@@ -24,7 +24,7 @@ namespace Joojkk.CampusLife
     {
         public const string GUID = "joojkk.campuslife";
         public const string PluginName = "Campus Life";
-        public const string Version = "3.5.0";
+        public const string Version = "3.5.1";
 
         internal static CampusLifePlugin Instance;
         internal static ManualLogSource Log;
