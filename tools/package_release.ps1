@@ -1,10 +1,11 @@
 # Builds the release DLLs and makes one zip per mod in dist\release, laid out to be unpacked over the game's folder
 # Usage:  powershell -ExecutionPolicy Bypass -File tools\package_release.ps1 [-Mods KK_CampusLife,...]
-param([string[]]$Mods = @('KK_CampusLife', 'KK_SchoolOptimizer', 'KK_HMaleWardrobe'))
+param([string[]]$Mods = @('KK_CampusLife', 'KK_SchoolOptimizer', 'KK_HMaleWardrobe', 'KK_CampusSaves'))
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 & (Join-Path $root 'build.ps1')
+if ($Mods -contains 'KK_CampusSaves') { & (Join-Path $root 'build.ps1') -Only KK_CampusSaves }
 $out = Join-Path $root 'dist\release'
 if (Test-Path $out) { Remove-Item $out -Recurse -Force }
 New-Item -ItemType Directory -Force $out | Out-Null

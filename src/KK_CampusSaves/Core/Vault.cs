@@ -27,6 +27,7 @@ namespace Joojkk.CampusSaves
         public long Size;
         public string Sha1 = "";
         public string Resume = "";          // where a save made during the day goes back to; empty for a night save
+        public long HeadTicks;              // when the slot file of this version was written
         public List<Run> Runs = new List<Run>();
     }
 
@@ -194,6 +195,29 @@ namespace Joojkk.CampusSaves
             File.Move(tmp, dest);
         }
 
+        /// <summary>
+        /// A save with nothing new: the last version now stands for it. Done by hand, it also stops being an automatic one,
+        /// so it stays for good and no copy is made.
+        /// </summary>
+        public void Same(SaveVersion last, SaveVersion v, bool byHand)
+        {
+            last.HeadTicks = v.HeadTicks;
+            last.Resume = v.Resume;
+            if (byHand && last.Kind == "auto")
+            {
+                last.Kind = "manual";
+                last.Name = v.Name;
+            }
+            WriteVersion(last);
+        }
+
+        /// <summary>The SHA-1 of a whole file, the one <see cref="SaveVersion.Sha1"/> holds.</summary>
+        public static string HashFile(string path)
+        {
+            using (var f = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 20))
+                return Hex(SHA1.Create().ComputeHash(f));
+        }
+
         /// <summary>Takes a version off the list. Its pieces stay until the pack is compacted.</summary>
         public void Remove(SaveVersion v)
         {
@@ -287,6 +311,7 @@ namespace Joojkk.CampusSaves
                         case "size": v.Size = long.Parse(x); break;
                         case "sha1": v.Sha1 = x; break;
                         case "resume": v.Resume = x; break;
+                        case "head": v.HeadTicks = long.Parse(x); break;
                     }
                 }
                 return inRuns ? v : null;

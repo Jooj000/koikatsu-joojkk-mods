@@ -57,7 +57,8 @@ function Build($name) {
   Write-Host "Built $dll"
 }
 
-$names = @('KK_CampusLife', 'KK_HMaleWardrobe', 'KK_SchoolOptimizer') | Where-Object { (Test-Path (Join-Path $root "src\$_")) -and ($Only -eq '' -or $Only -eq $_) }
+# KK_CampusSaves is built only by name until it is released, so that finish_tests leaves it out of the game.
+$names = @('KK_CampusLife', 'KK_HMaleWardrobe', 'KK_SchoolOptimizer', 'KK_CampusSaves') | Where-Object { (Test-Path (Join-Path $root "src\$_")) -and (($Only -eq '' -and $_ -ne 'KK_CampusSaves') -or $Only -eq $_) }
 foreach ($n in $names) { Build $n }
 
 if ($Install) {
