@@ -44,5 +44,9 @@ The options of the "5. Other mods" section show only when their mod is installed
 
 No optional mods.
 
+### Campus Saves (`joojkk.campussaves`)
+
+- Campus Life: with it, each save also shows the day number. Campus Saves works without it.
+
 ## Developer only
 

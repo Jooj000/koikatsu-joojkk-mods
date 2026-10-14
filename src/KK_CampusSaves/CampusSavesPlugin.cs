@@ -27,6 +27,7 @@ namespace Joojkk.CampusSaves
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<int> Interval, KeepAutos;
+        internal static ConfigEntry<bool> OverLoad;
         internal static ConfigEntry<bool> OnPeriod, OnDayEnd, AfterH;
         internal static ConfigEntry<KeyboardShortcut> SaveKey, PanelKey;
 
@@ -40,7 +41,8 @@ namespace Joojkk.CampusSaves
             OnPeriod = Config.Bind("Autosave", "On period change", true, "Saves once you are free on the map in the new period.");
             OnDayEnd = Config.Bind("Autosave", "At the end of the day", true, "Saves when the night menu opens.");
             AfterH = Config.Bind("Autosave", "After H", true, "Saves when you are free on the map again.");
-            KeepAutos = Config.Bind("Autosave", "Recent automatic saves kept", 10, new ConfigDescription("Older ones thin out to one per hour, then one per day.", new AcceptableValueRange<int>(3, 50)));
+            OverLoad = Config.Bind("Panel", "Replace the Load screen", true, "The game's Load button opens this panel. Its own list stays one button away.");
+            KeepAutos = Config.Bind("Autosave", "Recent automatic saves kept", 10, new ConfigDescription("Older ones thin out to one per hour, then one per day.", new AcceptableValueRange<int>(3, 200)));
             SaveKey = Config.Bind("Keys", "Save now", new KeyboardShortcut(KeyCode.F6, KeyCode.LeftControl), "Saves during the day when you are free on the map.");
             PanelKey = Config.Bind("Keys", "Open the saves panel", new KeyboardShortcut(KeyCode.F6, KeyCode.LeftControl, KeyCode.LeftShift), "Campuses, versions, import and normalize.");
 
@@ -84,7 +86,7 @@ namespace Joojkk.CampusSaves
             foreach (var c in Campuses.All)
             {
                 s += c.Name + " slot " + c.Slot + " pack " + (c.Vault.PackSize / 1000000f).ToString("0.0") + " MB:";
-                foreach (var v in c.Vault.Versions) s += " [" + v.Id + " " + v.Kind + " " + v.Trigger + " " + v.Name + " resume '" + v.Resume + "']";
+                foreach (var v in c.Vault.Versions) s += " [" + v.Id + " " + v.Kind + " " + v.Trigger + " day " + v.Day + " " + v.Name + " at " + v.Place + " slot " + v.Slot + " head " + (v == c.HeadVersion()) + " resume '" + v.Resume + "']";
                 s += "\n";
             }
             return s + "campus now " + SaveFlow.CampusId + ", busy " + Campuses.Busy + ", safe " + SaveFlow.Safe() + ", " + Campuses.Status;
@@ -98,10 +100,19 @@ namespace Joojkk.CampusSaves
             return v.Id + " " + v.Resume + ": " + SavesPanel.LoadVersion(c.Id, v.Id);
         }
 
-        public static string Panel(string on) { SavesPanel.Shown = on != "off"; SavesPanel.Selected = Campuses.All.FirstOrDefault(); return "panel " + SavesPanel.Shown; }
+        public static string Panel(string how)
+        {
+            SavesPanel.Shown = how != "off";
+            SavesPanel.Selected = how.StartsWith("history") ? Campuses.All.FirstOrDefault() : null;
+            SavesPanel.Pick = how.StartsWith("history ") ? int.Parse(how.Substring(8)) : 0;
+            return "panel " + SavesPanel.Shown;
+        }
+
+        public static string LoadId(string id) { return SavesPanel.LoadVersion(Campuses.All[0].Id, int.Parse(id)); }
+
+        public static string ExportAll(string unused) { SavesPanel.ExportAll(); return "exporting all"; }
         public static string ImportOne(string slot) { var c = Campuses.All[0]; Campuses.Run(() => Campuses.Import(c, slot)); return "importing " + slot; }
         public static string Free(string unused) { SavesPanel.FreeSpace(); return "freeing"; }
-        public static string Export(string id) { var c = Campuses.All[0]; SavesPanel.Export(c, c.Vault.Versions.First(v => v.Id == int.Parse(id))); return "exporting"; }
         public static string Trigger(string why) { SaveFlow.Trigger(why); return "armed"; }
     }
 }

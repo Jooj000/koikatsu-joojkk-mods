@@ -61,6 +61,7 @@ namespace Joojkk.CampusSaves
 
         private static string _pendingTrigger;
         private static string _finalName, _resume, _rebuilt;
+        private static byte[] _picture;
         private static float _lastSave;
         private static float _resumeAt = -1f;
         private static string[] _resumeData;
@@ -116,6 +117,7 @@ namespace Joojkk.CampusSaves
                 _finalName = null;
                 if (!IsGameDir(path) || !fileName.EndsWith(".dat", StringComparison.OrdinalIgnoreCase)) return;
                 _resume = ResumeNow();
+                _picture = Thumbs.Take();
                 _finalName = fileName;
                 fileName = Temp;
             }
@@ -160,7 +162,9 @@ namespace Joojkk.CampusSaves
             if (c == null) { if (File.Exists(old)) File.Delete(old); return; }
             if (c.Slot != slot) { c.Slot = slot; c.Write(); }
             var kind = NextKind;
-            var v = new SaveVersion { Kind = kind, Trigger = NextTrigger, At = DateTime.Now, Resume = _resume ?? "", HeadTicks = File.GetLastWriteTimeUtc(head).Ticks, Name = Label() };
+            var v = new SaveVersion { Kind = kind, Trigger = NextTrigger, At = DateTime.Now, Resume = _resume ?? "", HeadTicks = File.GetLastWriteTimeUtc(head).Ticks, Name = Label(), Day = DayNow(), Place = PlaceNow() };
+            var picture = _picture;
+            _picture = null;
             NextKind = "manual";
             NextTrigger = "";
             var keep = CampusSavesPlugin.KeepAutos.Value;
@@ -170,13 +174,17 @@ namespace Joojkk.CampusSaves
                 {
                     var known = c.Vault.Versions.LastOrDefault();
                     if (known == null || File.GetLastWriteTimeUtc(old).Ticks != known.HeadTicks)
-                        c.Vault.Absorb(old, new SaveVersion { Name = "Found in " + slot, Kind = "imported", Trigger = "found", At = File.GetLastWriteTime(old), HeadTicks = File.GetLastWriteTimeUtc(old).Ticks, Parent = known != null ? known.Id : 0 });
+                        c.Vault.Absorb(old, new SaveVersion { Name = SaveHeader.Label(old), Kind = "imported", Trigger = "found", At = File.GetLastWriteTime(old), HeadTicks = File.GetLastWriteTimeUtc(old).Ticks, Parent = known != null ? known.Id : 0 });
                     File.Delete(old);
                 }
                 var prev = c.Vault.Versions.LastOrDefault();
                 v.Parent = prev != null ? prev.Id : 0;
                 var sw = Stopwatch.StartNew();
-                if (c.Vault.Absorb(head, v) == null && prev != null) c.Vault.Same(prev, v, kind == "manual");
+                var made = c.Vault.Absorb(head, v);
+                if (made == null && prev != null) c.Vault.Same(prev, v, kind == "manual");
+                var stored = made ?? prev;
+                if (stored != null && picture != null) File.WriteAllBytes(c.Vault.PicturePath(stored.Id), picture);
+                else if (stored != null) Thumbs.Reuse(c.Vault, stored);
                 c.Prune(keep, DateTime.Now);
                 CampusSavesPlugin.Log.LogInfo("Stored in " + sw.ElapsedMilliseconds + " ms, pack " + (c.Vault.PackSize / 1000000) + " MB");
             });
@@ -185,14 +193,66 @@ namespace Joojkk.CampusSaves
             CampusSavesPlugin.Toast("Saved");
         }
 
+        /// <summary>The weekday and the period: the game has no date and no hour.</summary>
         private static string Label()
         {
             try
             {
                 var c = Singleton<Game>.Instance.actScene != null ? Singleton<Game>.Instance.actScene.Cycle : null;
-                return c != null ? c.nowWeek + ", " + c.nowType : "Night";
+                return c != null ? c.nowWeek + ", " + Period(c.nowType) : "Night";
             }
             catch { return "Save"; }
+        }
+
+        private static string Period(Cycle.Type t)
+        {
+            switch (t)
+            {
+                case Cycle.Type.LunchTime: return "Lunch break";
+                case Cycle.Type.StaffTime: return "Club activity";
+                case Cycle.Type.AfterSchool: return "After school";
+                case Cycle.Type.MyHouse: return "Night";
+                default: return t.ToString();
+            }
+        }
+
+        /// <summary>The day number, which only Campus Life counts. This mod works without it.</summary>
+        private static int DayNow()
+        {
+            try
+            {
+                var t = AccessTools.TypeByName("Joojkk.CampusLife.Campus");
+                return t != null ? Traverse.Create(t).Field("S").Field("Day").GetValue<int>() : 0;
+            }
+            catch { return 0; }
+        }
+
+        private static string PlaceNow()
+        {
+            try
+            {
+                var act = Singleton<Game>.Instance.actScene;
+                MapInfo.Param p;
+                return act != null && act.Map != null && Roaming(act.Cycle.nowType) && act.Map.infoDic.TryGetValue(act.Map.no, out p) && p != null ? English(p.MapName ?? "") : "";
+            }
+            catch { return ""; }
+        }
+
+        private static readonly string[][] Places =
+        {
+            new[] { "Library", "\u56F3\u66F8" }, new[] { "Gym", "\u4F53\u80B2\u9928" }, new[] { "Pool", "\u30D7\u30FC\u30EB" },
+            new[] { "Rooftop", "\u5C4B\u4E0A" }, new[] { "Infirmary", "\u4FDD\u5065\u5BA4" }, new[] { "Cafeteria", "\u98DF\u5802", "\u5B66\u98DF", "\u8CFC\u8CB7" },
+            new[] { "Club room", "\u90E8\u5BA4" }, new[] { "Faculty room", "\u8077\u54E1\u5BA4" }, new[] { "Classroom", "\u6559\u5BA4" },
+            new[] { "Courtyard", "\u4E2D\u5EAD" }, new[] { "Field", "\u30B0\u30E9\u30A6\u30F3\u30C9", "\u6821\u5EAD", "\u904B\u52D5\u5834" }, new[] { "Park", "\u516C\u5712" },
+        };
+
+        /// <summary>The maps are named in Japanese, which the translator does not reach on this panel.</summary>
+        private static string English(string map)
+        {
+            foreach (var p in Places)
+                for (var i = 1; i < p.Length; i++)
+                    if (map.Contains(p[i])) return p[0];
+            return map;
         }
 
         /// <summary>Where this save comes back to; empty at night, which is where the game itself comes back.</summary>
@@ -260,6 +320,15 @@ namespace Joojkk.CampusSaves
         }
 
         // ================= loading =================
+
+        /// <summary>The game's Load screen, on the title and at night, opens the panel over it.</summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(LoadScene), "Start")]
+        private static void LoadScreen(LoadScene __instance)
+        {
+            try { if (CampusSavesPlugin.OverLoad.Value) SavesPanel.OpenOver(__instance); }
+            catch (Exception e) { CampusSavesPlugin.Log.LogWarning("Load screen: " + e.Message); }
+        }
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(SaveData), nameof(SaveData.Load), typeof(string), typeof(string))]

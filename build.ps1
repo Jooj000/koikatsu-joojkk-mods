@@ -2,8 +2,8 @@
 # Usage:  powershell -ExecutionPolicy Bypass -File build.ps1 [-Install]
 #   -Install  copies the DLLs (and the CampusLife data folder) into the game's
 #             BepInEx\plugins\Joojkk\ folder.
-#   -Only     builds just that plugin (KK_CampusLife, KK_HMaleWardrobe or KK_SchoolOptimizer). A plugin whose
-#             src folder is missing (a single-mod repository) is skipped.
+#   -Only     builds just that plugin (KK_CampusLife, KK_HMaleWardrobe, KK_SchoolOptimizer or KK_CampusSaves). A plugin
+#             whose src folder is missing (a single-mod repository) is skipped.
 #   -Game     the Koikatsu folder (with Koikatu_Data and BepInEx);  -Csc  the Roslyn csc.exe to use.
 param([switch]$Install, [switch]$Dev, [string]$Only = '',
       [string]$Game = 'E:\SteamLibrary\steamapps\settings\KK',

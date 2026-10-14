@@ -20,6 +20,17 @@ namespace Joojkk.CampusSaves
         public string Dir { get { return Path.Combine(Campuses.Root, Id); } }
         private string InfoPath { get { return Path.Combine(Dir, "campus.txt"); } }
 
+        /// <summary>The version with the latest save date: what a click on the block loads.</summary>
+        public SaveVersion Newest() { return Vault.Snapshot().OrderByDescending(v => v.At).ThenByDescending(v => v.Id).FirstOrDefault(); }
+
+        /// <summary>True when this version is already a save in the list: the slot it came from or went to, or the current head.</summary>
+        public bool InSlot(SaveVersion v)
+        {
+            var head = Path.Combine(Campuses.GameDir, Slot);
+            if (Slot != "" && File.Exists(head) && File.GetLastWriteTimeUtc(head).Ticks == v.HeadTicks) return true;
+            return v.Slot != "" && File.Exists(Path.Combine(Campuses.GameDir, v.Slot));
+        }
+
         public void Write()
         {
             Directory.CreateDirectory(Dir);
@@ -67,8 +78,8 @@ namespace Joojkk.CampusSaves
         }
 
         /// <summary>
-        /// The last 10 automatic versions (or the set number), then one per hour for a day, one per day after that, and 200
-        /// at most. Hand saves and imported ones are never pruned. Only the list shrinks: the pieces wait for compaction.
+        /// The last 10 automatic versions (or the set number), then one per hour for a day and one per day after that. Hand
+        /// saves and imported ones are never pruned. Only the list shrinks: the pieces wait for compaction.
         /// </summary>
         public void Prune(int keep, DateTime now)
         {
@@ -80,7 +91,7 @@ namespace Joojkk.CampusSaves
                 if (i < keep) continue;
                 var age = now - v.At;
                 var bucket = age.TotalDays < 1 ? v.At.ToString("yyyyMMddHH") : v.At.ToString("yyyyMMdd");
-                if (i < 200 && seen.Add(bucket)) continue;
+                if (seen.Add(bucket)) continue;
                 Vault.Remove(v);
             }
         }
@@ -115,6 +126,8 @@ namespace Joojkk.CampusSaves
             }
         }
 
+        public static List<Campus> Snapshot() { lock (All) return All.ToList(); }
+
         public static Campus ById(string id) { lock (All) return All.FirstOrDefault(c => c.Id == id); }
 
         public static Campus BySlot(string slot) { lock (All) return All.FirstOrDefault(c => c.Slot == slot || c.Imported.Contains(slot)); }
@@ -129,6 +142,36 @@ namespace Joojkk.CampusSaves
             c.Write();
             lock (All) All.Add(c);
             return c;
+        }
+
+        /// <summary>Removes a campus: its vault and its slot. Slots imported from it stay where they are.</summary>
+        public static void Delete(Campus c)
+        {
+            if (SavesPanel.Selected == c) SavesPanel.Selected = null;
+            lock (All) All.Remove(c);
+            Run(() =>
+            {
+                var head = Path.Combine(GameDir, c.Slot);
+                if (c.Slot != "" && File.Exists(head))
+                {
+                    File.SetAttributes(head, FileAttributes.Normal);
+                    File.Delete(head);
+                }
+                Directory.Delete(c.Dir, true);
+                Status = "Deleted " + c.Name;
+            });
+        }
+
+        /// <summary>Removes one version, on the background thread like everything that writes to a vault.</summary>
+        public static void Forget(Campus c, SaveVersion v) { Run(() => c.Vault.Remove(v)); }
+
+        /// <summary>Rebuilds a version as a plain save of the game, showing the date it was really saved.</summary>
+        public static void ExportTo(Campus c, SaveVersion v, string slot)
+        {
+            var path = Path.Combine(GameDir, slot);
+            c.Vault.Restore(v, path);
+            File.SetLastWriteTime(path, v.At);
+            c.Vault.MarkSlot(v, slot);
         }
 
         public static void Run(Action a)
@@ -180,7 +223,7 @@ namespace Joojkk.CampusSaves
         public static SaveVersion Import(Campus c, string slot)
         {
             var path = Path.Combine(GameDir, slot);
-            var v = c.Vault.Absorb(path, new SaveVersion { Name = slot, Kind = "imported", Trigger = "import", At = File.GetLastWriteTime(path), HeadTicks = File.GetLastWriteTimeUtc(path).Ticks });
+            var v = c.Vault.Absorb(path, new SaveVersion { Name = SaveHeader.Label(path), Slot = slot, Kind = "imported", Trigger = "import", At = File.GetLastWriteTime(path), HeadTicks = File.GetLastWriteTimeUtc(path).Ticks });
             if (!c.Imported.Contains(slot)) c.Imported.Add(slot);
             c.Write();
             return v;
@@ -203,6 +246,13 @@ namespace Joojkk.CampusSaves
     {
         public string Name = "";
         public int Emblem, Week;
+
+        /// <summary>What the panel calls a save that has no picture of its moment: the game only saves at night.</summary>
+        public static string Label(string path)
+        {
+            var h = Read(path);
+            return h != null ? (ActionGame.Cycle.Week)Math.Min(h.Week, 6) + ", Night" : "Night";
+        }
 
         public static SaveHeader Read(string path)
         {

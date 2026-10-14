@@ -28,6 +28,9 @@ namespace Joojkk.CampusSaves
         public string Sha1 = "";
         public string Resume = "";          // where a save made during the day goes back to; empty for a night save
         public long HeadTicks;              // when the slot file of this version was written
+        public int Day;                     // the Campus Life day, 0 without it: the game itself only knows the weekday
+        public string Place = "";
+        public string Slot = "";            // the slot this version came from or was exported to
         public List<Run> Runs = new List<Run>();
     }
 
@@ -158,7 +161,7 @@ namespace Joojkk.CampusSaves
             if (prev != null && prev.Sha1 == v.Sha1) return null;
             v.Id = prev != null ? prev.Id + 1 : 1;
             WriteVersion(v);
-            Versions.Add(v);
+            lock (Versions) Versions.Add(v);
             return v;
         }
 
@@ -203,6 +206,8 @@ namespace Joojkk.CampusSaves
         {
             last.HeadTicks = v.HeadTicks;
             last.Resume = v.Resume;
+            last.Day = v.Day;
+            last.Place = v.Place;
             if (byHand && last.Kind == "auto")
             {
                 last.Kind = "manual";
@@ -221,9 +226,25 @@ namespace Joojkk.CampusSaves
         /// <summary>Takes a version off the list. Its pieces stay until the pack is compacted.</summary>
         public void Remove(SaveVersion v)
         {
-            Versions.Remove(v);
+            lock (Versions) Versions.Remove(v);
             var p = VersionPath(v.Id);
             if (File.Exists(p)) File.Delete(p);
+            var pic = PicturePath(v.Id);
+            if (File.Exists(pic)) File.Delete(pic);
+        }
+
+        /// <summary>A copy of the list, for the interface: the background thread may be changing the list itself.</summary>
+        public List<SaveVersion> Snapshot() { lock (Versions) return Versions.ToList(); }
+
+        public int Count { get { lock (Versions) return Versions.Count; } }
+
+        public string PicturePath(int id) { return Path.Combine(Dir, "v" + id.ToString("000000") + ".jpg"); }
+
+        /// <summary>Notes the slot a version now lives in.</summary>
+        public void MarkSlot(SaveVersion v, string slot)
+        {
+            v.Slot = slot;
+            WriteVersion(v);
         }
 
         /// <summary>Bytes of the pack no version uses.</summary>
@@ -271,6 +292,10 @@ namespace Joojkk.CampusSaves
             s.Append("size=").Append(v.Size).Append('\n');
             s.Append("sha1=").Append(v.Sha1).Append('\n');
             s.Append("resume=").Append(Clean(v.Resume)).Append('\n');
+            s.Append("head=").Append(v.HeadTicks).Append('\n');
+            s.Append("day=").Append(v.Day).Append('\n');
+            s.Append("place=").Append(Clean(v.Place)).Append('\n');
+            s.Append("slot=").Append(Clean(v.Slot)).Append('\n');
             s.Append("runs\n");
             foreach (var r in v.Runs) s.Append(r.Offset).Append(' ').Append(r.Count).Append('\n');
             var p = VersionPath(v.Id);
@@ -312,6 +337,9 @@ namespace Joojkk.CampusSaves
                         case "sha1": v.Sha1 = x; break;
                         case "resume": v.Resume = x; break;
                         case "head": v.HeadTicks = long.Parse(x); break;
+                        case "day": v.Day = int.Parse(x); break;
+                        case "place": v.Place = x; break;
+                        case "slot": v.Slot = x; break;
                     }
                 }
                 return inRuns ? v : null;
