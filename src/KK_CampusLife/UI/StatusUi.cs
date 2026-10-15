@@ -66,6 +66,12 @@ namespace Joojkk.CampusLife
         public static void Open(PanelTab tab)
         {
             if (Scene != null) { CampusPanel.Show(tab); return; }
+            if (AtNight)
+            {
+                Pending = tab;
+                Singleton<Scene>.Instance.LoadReserve(new Scene.Data { levelName = "Status", isAdd = true, isFade = false, isAsync = false }, false);
+                return;
+            }
             var act = G.Act;
             if (act == null || !G.IsFreeRoaming) return;
             Pending = tab;
@@ -80,6 +86,12 @@ namespace Joojkk.CampusLife
         public static void Close()
         {
             if (Scene != null) Scene.Unload();
+        }
+
+        /// <summary>In the room at night: the clipboard opens to plan, with today's information, and nothing leads out of the room.</summary>
+        public static bool AtNight
+        {
+            get { return G.Act != null && Singleton<Scene>.IsInstance() && Singleton<Scene>.Instance.NowSceneNames.Contains("NightMenu"); }
         }
 
         // ---------------- building ----------------
@@ -422,9 +434,12 @@ namespace Joojkk.CampusLife
             var y = 10f;
             if (!isHere)
             {
-                var go = GameUi.Button(card, "btnGo", "Go there", () => Warp(mapNo));
-                ((RectTransform)go.transform).Place(424f, y, 176f, 40f);
-                y += 50f;
+                if (!AtNight)
+                {
+                    var go = GameUi.Button(card, "btnGo", "Go there", () => Warp(mapNo));
+                    ((RectTransform)go.transform).Place(424f, y, 176f, 40f);
+                    y += 50f;
+                }
             }
             var actsBtn = GameUi.Button(card, "btnActs", "Activities", () => CampusPanel.Show(PanelTab.Activities, p.Id));
             ((RectTransform)actsBtn.transform).Place(424f, y, 176f, 40f);
@@ -453,7 +468,7 @@ namespace Joojkk.CampusLife
         public static void Warp(int mapNo)
         {
             var act = G.Act;
-            if (act == null || mapNo < 0) return;
+            if (act == null || mapNo < 0 || AtNight) return;
             if (act.Player != null && act.Player.mapNo == mapNo) { Close(); return; }
             Sfx.Ok();
             FreeTravel.Begin();

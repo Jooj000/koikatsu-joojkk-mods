@@ -133,7 +133,12 @@ namespace Joojkk.CampusLife
 
         private void OnGUI()
         {
-            try { if (Campus.On) PositionTool.OnGUI(); }
+            try
+            {
+                if (!Campus.On) return;
+                PositionTool.OnGUI();
+                NightIcon.OnGUI();
+            }
             catch (Exception e) { Log.LogDebug(e); }
         }
 

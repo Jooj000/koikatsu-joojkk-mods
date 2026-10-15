@@ -302,7 +302,7 @@ namespace Joojkk.CampusLife
             return c;
         }
 
-        private static readonly System.Text.RegularExpressions.Regex StatWord = new System.Text.RegularExpressions.Regex(@"(?<![#\w>])(STR|INT|SEN)(?![\w<])");
+        private static readonly System.Text.RegularExpressions.Regex StatWord = new System.Text.RegularExpressions.Regex(@"(?<![#\w])(?<!<color=[^>]*>)(STR|INT|SEN)(?!\w)");
 
         /// <summary>STR, INT and SEN in the game's stat colors wherever they appear in a line of text.</summary>
         public static string StatColors(string text)

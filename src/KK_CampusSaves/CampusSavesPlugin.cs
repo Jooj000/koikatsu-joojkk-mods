@@ -27,7 +27,7 @@ namespace Joojkk.CampusSaves
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<int> Interval, KeepAutos;
-        internal static ConfigEntry<bool> OverLoad;
+        internal static ConfigEntry<bool> OverLoad, EscMenu;
         internal static ConfigEntry<bool> OnPeriod, OnDayEnd, AfterH;
         internal static ConfigEntry<KeyboardShortcut> SaveKey, PanelKey;
 
@@ -41,7 +41,8 @@ namespace Joojkk.CampusSaves
             OnPeriod = Config.Bind("Autosave", "On period change", true, "Saves once you are free on the map in the new period.");
             OnDayEnd = Config.Bind("Autosave", "At the end of the day", true, "Saves when the night menu opens.");
             AfterH = Config.Bind("Autosave", "After H", true, "Saves when you are free on the map again.");
-            OverLoad = Config.Bind("Panel", "Replace the Load screen", true, "The game's Load button opens this panel. Its own list stays one button away.");
+            OverLoad = Config.Bind("Panel", "Replace the Load screen", true, "The game's Load and Save buttons open this panel. Its own Load list stays one button away.");
+            EscMenu = Config.Bind("Panel", "Esc menu in story mode", true, "Esc opens Resume, Save, Save & Quit to title, Quit to title and Quit instead of the game's Quit screen.");
             KeepAutos = Config.Bind("Autosave", "Recent automatic saves kept", 10, new ConfigDescription("Older ones thin out to one per hour, then one per day.", new AcceptableValueRange<int>(3, 200)));
             SaveKey = Config.Bind("Keys", "Save now", new KeyboardShortcut(KeyCode.F6, KeyCode.LeftControl), "Saves during the day when you are free on the map.");
             PanelKey = Config.Bind("Keys", "Open the saves panel", new KeyboardShortcut(KeyCode.F6, KeyCode.LeftControl, KeyCode.LeftShift), "Campuses, versions, import and normalize.");
@@ -51,6 +52,7 @@ namespace Joojkk.CampusSaves
             Harmony.CreateAndPatchAll(typeof(SaveFlow), GUID);
             GameAPI.RegisterExtraBehaviour<SavesController>(GUID);
             gameObject.AddComponent<SavesPanel>();
+            gameObject.AddComponent<PauseMenu>();
         }
 
         private void Update()
@@ -86,7 +88,7 @@ namespace Joojkk.CampusSaves
             foreach (var c in Campuses.All)
             {
                 s += c.Name + " slot " + c.Slot + " pack " + (c.Vault.PackSize / 1000000f).ToString("0.0") + " MB:";
-                foreach (var v in c.Vault.Versions) s += " [" + v.Id + " " + v.Kind + " " + v.Trigger + " day " + v.Day + " " + v.Name + " at " + v.Place + " slot " + v.Slot + " head " + (v == c.HeadVersion()) + " resume '" + v.Resume + "']";
+                foreach (var v in c.Vault.Versions) s += " [" + v.Id + " " + v.Kind + " " + v.Trigger + " day " + v.Day + " cards " + v.Cards + " " + v.Name + " at " + v.Place + " slot " + v.Slot + " head " + (v == c.HeadVersion()) + " resume '" + v.Resume + "']";
                 s += "\n";
             }
             return s + "campus now " + SaveFlow.CampusId + ", busy " + Campuses.Busy + ", safe " + SaveFlow.Safe() + ", " + Campuses.Status;
@@ -107,6 +109,14 @@ namespace Joojkk.CampusSaves
             SavesPanel.Pick = how.StartsWith("history ") ? int.Parse(how.Substring(8)) : 0;
             return "panel " + SavesPanel.Shown;
         }
+
+        public static string Menu(string how)
+        {
+            if (how == "esc") Singleton<Manager.Scene>.Instance.GameEnd(true);
+            return "menu " + PauseMenu.Shown;
+        }
+
+        public static string Cards(string slot) { return slot + ": " + SaveHeader.Cards(System.IO.Path.Combine(Campuses.GameDir, slot)); }
 
         public static string LoadId(string id) { return SavesPanel.LoadVersion(Campuses.All[0].Id, int.Parse(id)); }
 

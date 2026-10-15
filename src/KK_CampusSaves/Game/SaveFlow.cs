@@ -306,6 +306,21 @@ namespace Joojkk.CampusSaves
             return "Saved";
         }
 
+        /// <summary>From the Save screen: into a campus, which becomes the one this game follows, or into a new one.</summary>
+        public static string SaveInto(Campus c)
+        {
+            var game = Singleton<Game>.Instance;
+            var slot = c != null && c.Slot != "" ? c.Slot : Campuses.FreeSlot();
+            if (slot == null) return "No free slot";
+            if (c == null) c = Campuses.Create(game.saveData.accademyName, game.saveData.emblemID, slot);
+            CampusId = c.Id;
+            NextKind = "manual";
+            NextTrigger = "";
+            Game.SaveFileName = slot;
+            game.Save(slot);
+            return "Saved";
+        }
+
         public static void Tick()
         {
             if (_resumeAt >= 0f) TickResume();
@@ -328,6 +343,34 @@ namespace Joojkk.CampusSaves
         {
             try { if (CampusSavesPlugin.OverLoad.Value) SavesPanel.OpenOver(__instance); }
             catch (Exception e) { CampusSavesPlugin.Log.LogWarning("Load screen: " + e.Message); }
+        }
+
+        /// <summary>The game's Save screen, in the night menu, does the same.</summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(SaveScene), "Start")]
+        private static void SaveScreen(SaveScene __instance)
+        {
+            try { if (CampusSavesPlugin.OverLoad.Value) SavesPanel.OpenOver(__instance); }
+            catch (Exception e) { CampusSavesPlugin.Log.LogWarning("Save screen: " + e.Message); }
+        }
+
+        /// <summary>
+        /// The game's Quit screen, in story mode, gives way to the menu at once: with that screen open a second Esc ends the
+        /// game, so its No is pressed here and only the menu stays. Everywhere else the screen works as usual.
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ExitScene), "Start")]
+        private static void QuitScreen(ExitScene __instance)
+        {
+            try
+            {
+                if (!CampusSavesPlugin.EscMenu.Value || !PauseMenu.InStory) return;
+                var t = Traverse.Create(__instance);
+                t.Field("canvas").GetValue<Canvas>().enabled = false;
+                t.Field("No").GetValue<UnityEngine.UI.Button>().onClick.Invoke();
+                PauseMenu.Toggle();
+            }
+            catch (Exception e) { CampusSavesPlugin.Log.LogWarning("Quit screen: " + e.Message); }
         }
 
         [HarmonyPrefix]

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,45 +12,93 @@ namespace Joojkk.CampusSaves
 {
     /// <summary>
     /// The saves panel: one block per campus, two columns by three rows with scrolling, and a larger page with the history of
-    /// one campus. Nothing here changes a file until a button is pressed, and what removes something asks for a second click.
+    /// one campus. Nothing here changes a file until a button is pressed, and what removes something asks first, on the game's
+    /// own confirmation screen. Over the game's Save screen the same panel saves instead of loading.
     /// </summary>
     internal sealed class SavesPanel : MonoBehaviour
     {
-        private const float MainW = 1180f, MainH = 640f, DetailW = 1040f, DetailH = 780f;
+        private const float MainW = 1180f, MainH = 800f, DetailW = 1040f, DetailH = 780f;
         private const float BlockH = 160f, Gap = 12f, RowH = 92f;
 
         public static bool Shown;
         public static Campus Selected;     // the campus on the history page; null on the blocks page
         public static int Pick;            // the version chosen in the history
         public static LoadScene LoadUi;    // the game's Load screen under the panel, which loads for it on the title and at night
+        public static SaveScene SaveUi;    // the game's Save screen under the panel: the panel saves
+        public static bool Asking;         // the game's confirmation screen is up, in front of whatever asked
 
-        private static Action _loadNext;
+        private static SavesPanel _me;
+        private static Action _loadNext, _afterTitle;
+        private static bool _offerFree;
         private Vector2 _grid, _list;
-        private string _sure = "";
-        private float _lastClick;
+        private float _lastClick, _titleSince;
         private int _lastRow;
         private readonly List<BaseInputModule> _held = new List<BaseInputModule>();
         private readonly Dictionary<string, Texture2D> _pics = new Dictionary<string, Texture2D>();
 
         private GUIStyle _panel, _card, _cardHover, _rowOn, _title, _name, _nameLong, _text, _dim, _note, _center;
-        private GUIStyle _btn, _blue, _red, _green, _gold, _empty;
-        private Texture2D _lens, _trash, _shade;
+        private GUIStyle _btn, _blue, _red, _green, _tool, _toolText, _empty;
+        private Texture2D _lens, _trash, _shade, _close, _download, _drive, _crate, _vanilla;
+        private GUISkin _skin;
+
+        private void Awake() { _me = this; }
 
         public static void OpenOver(LoadScene screen)
         {
             LoadUi = screen;
+            Open();
+        }
+
+        public static void OpenOver(SaveScene screen)
+        {
+            SaveUi = screen;
+            Open();
+        }
+
+        private static void Open()
+        {
             Selected = null;
             Campuses.Status = "";
             Shown = true;
             _over = true;
         }
 
-        /// <summary>Closes the panel and, when it stands over the Load screen, that screen too.</summary>
+        /// <summary>Closes the panel and, when it stands over the game's Load or Save screen, that screen too.</summary>
         private static void Leave()
         {
             Shown = false;
             Selected = null;
             if (LoadUi != null) LoadUi.onReturn();
+            if (SaveUi != null) Traverse.Create(SaveUi).Method("UnLoad").GetValue();
+        }
+
+        /// <summary>
+        /// Asks on the game's own confirmation screen, the one Quit uses, with the whole sentence. Nothing is drawn here while
+        /// it is up, because this panel would cover it. Whatever answer comes, the screen closes first and the answer runs after.
+        /// </summary>
+        public static void Ask(string text, Action yes, Action no = null)
+        {
+            if (Asking || _me == null) return;
+            Asking = true;
+            var param = new CheckScene.Parameter
+            {
+                Title = text,
+                Yes = () => _me.StartCoroutine(_me.Answer(yes)),
+                No = () => _me.StartCoroutine(_me.Answer(no)),
+                isYesFocus = false,
+            };
+            _me.StartCoroutine(Illusion.Game.Utils.Scene.Check.Load(param, (Action<CheckScene>)(s => { })));
+        }
+
+        private IEnumerator Answer(Action then)
+        {
+            yield return null;
+            Singleton<Scene>.Instance.UnLoad();
+            yield return null;
+            Asking = false;
+            if (then == null) yield break;
+            try { then(); }
+            catch (Exception e) { Campuses.Status = "Failed: " + e.Message; CampusSavesPlugin.Log.LogError(e); }
         }
 
         private static bool _over;
@@ -60,7 +109,7 @@ namespace Joojkk.CampusSaves
             catch { }
 
             // The right button leaves the game's Load screen on its own.
-            if (_over && LoadUi == null)
+            if (_over && LoadUi == null && SaveUi == null)
             {
                 _over = false;
                 Shown = false;
@@ -69,6 +118,17 @@ namespace Joojkk.CampusSaves
 
             HoldClicks();
             if (!Shown && _pics.Count > 0) ClearPictures();
+            if (_offerFree && !Campuses.Busy && !Asking)
+            {
+                _offerFree = false;
+                if (Shown) OfferFree();
+            }
+            if (_afterTitle == null) return;
+            if (!AtTitle || Scene.isReturnTitle || Singleton<Scene>.Instance.IsNowLoadingFade) { _titleSince = Time.realtimeSinceStartup; return; }
+            if (Time.realtimeSinceStartup - _titleSince < 0.3f) return;
+            var a = _afterTitle;
+            _afterTitle = null;
+            a();
         }
 
         /// <summary>
@@ -77,9 +137,9 @@ namespace Joojkk.CampusSaves
         /// </summary>
         private void HoldClicks()
         {
-            var list = LoadUi != null ? Traverse.Create(LoadUi).Field("_canvasGroup").GetValue<CanvasGroup>() : null;
+            var list = LoadUi != null ? Traverse.Create(LoadUi).Field("_canvasGroup").GetValue<CanvasGroup>() : SaveUi != null ? Traverse.Create(SaveUi).Field("_canvasGroup").GetValue<CanvasGroup>() : null;
             if (list != null) list.blocksRaycasts = !Shown;
-            if (Shown)
+            if ((Shown || PauseMenu.Shown) && !Asking)
             {
                 if (_held.Count > 0 && Time.frameCount % 20 != 0) return;
                 foreach (var m in FindObjectsOfType<BaseInputModule>())
@@ -113,9 +173,9 @@ namespace Joojkk.CampusSaves
 
         private static bool AtTitle { get { return Singleton<Scene>.IsInstance() && Singleton<Scene>.Instance.NowSceneNames.Contains("Title"); } }
 
-        private static bool CanLoad { get { return LoadUi != null || AtTitle; } }
+        private static bool CanLoad { get { return SaveUi == null && (LoadUi != null || AtTitle || SaveFlow.Safe()); } }
 
-        private const string LoadElsewhere = "Saves load from the game's Load screen";
+        private const string LoadElsewhere = "Saves load when you are free on the map or from the Load screen";
 
         private static string Mb(long b) { return b >= 1000000000 ? (b / 1e9).ToString("0.0") + " GB" : (b / 1e6).ToString("0") + " MB"; }
 
@@ -165,16 +225,39 @@ namespace Joojkk.CampusSaves
             _blue = Button(new Color(0.16f, 0.45f, 0.88f));
             _red = Button(new Color(0.80f, 0.22f, 0.24f), 13);
             _green = Button(new Color(0.15f, 0.60f, 0.34f), 17);
-            _gold = Button(new Color(0.76f, 0.52f, 0.12f), 16);
+            _tool = Button(new Color(0.20f, 0.23f, 0.32f));
+            _toolText = Text(13, white, TextAnchor.MiddleCenter);
             _lens = Art.Lens();
             _trash = Art.Trash();
+            _close = Art.Close();
+            _download = Art.Download();
+            _drive = Art.Drive();
+            _crate = Art.Crate();
+            _vanilla = Art.IceCream();
+            _skin = Instantiate(GUI.skin);
+            _skin.hideFlags = HideFlags.HideAndDontSave;
+            _skin.verticalScrollbar = Bar(_skin.verticalScrollbar, new Color(0.08f, 0.09f, 0.13f));
+            _skin.verticalScrollbarThumb = Bar(_skin.verticalScrollbarThumb, new Color(0.38f, 0.42f, 0.54f));
+            _skin.verticalScrollbarUpButton = new GUIStyle { name = _skin.verticalScrollbarUpButton.name };
+            _skin.verticalScrollbarDownButton = new GUIStyle { name = _skin.verticalScrollbarDownButton.name };
+        }
+
+        /// <summary>The scrollbars of the default skin are grey boxes.</summary>
+        private static GUIStyle Bar(GUIStyle from, Color c)
+        {
+            var s = new GUIStyle(from) { fixedWidth = 12f, border = new RectOffset(6, 6, 6, 6), margin = new RectOffset(), padding = new RectOffset() };
+            s.normal.background = Art.Card(c, 6);
+            s.hover.background = s.active.background = Art.Card(Color.Lerp(c, Color.white, 0.15f), 6);
+            return s;
         }
 
         private void OnGUI()
         {
-            if (!Shown) return;
+            if (!Shown || Asking) return;
             Styles();
             GUI.depth = -50;
+            var skin = GUI.skin;
+            GUI.skin = _skin;
             var s = Mathf.Min(Screen.width / 1600f, Screen.height / 900f);
             var old = GUI.matrix;
             GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(s, s, 1f));
@@ -190,6 +273,7 @@ namespace Joojkk.CampusSaves
             else DrawBlocks();
             GUI.EndGroup();
             GUI.matrix = old;
+            GUI.skin = skin;
             var e = Event.current;
             if (e.type == EventType.MouseDown || e.type == EventType.MouseUp || e.type == EventType.ScrollWheel) e.Use();
         }
@@ -198,33 +282,82 @@ namespace Joojkk.CampusSaves
 
         private void DrawBlocks()
         {
-            GUI.Label(new Rect(0, 12, MainW, 36), "Campus Saves", _title);
-            var view = new Rect(20, 56, MainW - 40, BlockH * 3 + Gap * 2);
+            GUI.Label(new Rect(0, 12, MainW, 36), SaveUi != null ? "Save" : "Campus Saves", _title);
+            var view = new Rect(20, 56, MainW - 40, MainH - 56 - 124);
             var list = Campuses.Snapshot();
-            var rows = (list.Count + 1) / 2;
-            var content = new Rect(0, 0, view.width - 18, rows * (BlockH + Gap) - Gap);
+            var first = SaveUi != null ? 1 : 0;   // the Save screen starts with a block for a new save
+            var rows = (list.Count + first + 1) / 2;
+            var content = new Rect(0, 0, view.width - 16, rows * (BlockH + Gap) - Gap);
             var cell = (content.width - Gap) / 2f;
             var over = view.Contains(Event.current.mousePosition);
+            Wheel(ref _grid, view, content.height);
             _grid = GUI.BeginScrollView(view, _grid, content, false, false);
+            if (first == 1 && _grid.y < BlockH) NewBlock(new Rect(0, 0, cell, BlockH), over);
             for (var i = 0; i < list.Count; i++)
             {
-                var top = (i / 2) * (BlockH + Gap);
+                var at = i + first;
+                var top = (at / 2) * (BlockH + Gap);
                 if (top + BlockH < _grid.y || top > _grid.y + view.height) continue;
-                Block(list[i], new Rect((i % 2) * (cell + Gap), top, cell, BlockH), over);
+                Block(list[i], new Rect((at % 2) * (cell + Gap), top, cell, BlockH), over);
             }
             GUI.EndScrollView();
-            if (list.Count == 0) GUI.Label(new Rect(0, 240, MainW, 30), "No campuses yet. Import brings your saves in, and your files stay as they are.", _center);
+            if (list.Count == 0 && first == 0) GUI.Label(new Rect(0, 240, MainW, 30), "No campuses yet. Import brings your saves in, and your files stay as they are.", _center);
 
-            var y = MainH - 62;
+            var y = MainH - 112;
             GUI.enabled = !Campuses.Busy;
-            if (GUI.Button(new Rect(20, y, 100, 42), "Import", _btn)) ImportAll();
-            if (Sure("free", "Free space", new Rect(128, y, 120, 42), _btn)) FreeSpace();
-            var plan = _sure == "export" ? ExportPlan() : null;
-            if (Sure("export", plan != null ? Describe(plan) : "EXPORT SAVES", new Rect(MainW / 2f - 170, y, 340, 42), _gold, plan == null || plan.Count > 0)) ExportAll();
+            if (Tool(0, y, _download, "Import")) ImportAll();
+            if (Tool(1, y, _drive, "Free space")) OfferFree();
+            if (Tool(2, y, _crate, "Export")) OfferExport();
             GUI.enabled = true;
-            if (LoadUi != null && GUI.Button(new Rect(256, y, 120, 42), "Game's list", _btn)) Shown = false;
-            if (GUI.Button(new Rect(MainW - 130, y, 110, 42), "Close", _btn)) Leave();
-            GUI.Label(new Rect(20, MainH - 19, MainW - 40, 18), Campuses.Busy ? "Working... " + Campuses.Status : Campuses.Status, _note);
+            if (LoadUi != null && Tool(MainW - 248, y, _vanilla, "Vanilla", true)) Shown = false;
+            if (Tool(MainW - 130, y, _close, "Close", true)) Leave();
+            GUI.Label(new Rect(20, MainH - 30, MainW - 40, 22), Campuses.Busy ? "Working... " + Campuses.Status : Campuses.Status, _note);
+        }
+
+        /// <summary>A button of the bar: the icon with its name under it.</summary>
+        private bool Tool(float at, float y, Texture2D icon, string label, bool placed = false)
+        {
+            var r = new Rect(placed ? at : 20f + at * 118f, y, 110f, 76f);
+            var hit = GUI.Button(r, GUIContent.none, _tool);
+            var tint = GUI.color;
+            if (!GUI.enabled) GUI.color = new Color(1f, 1f, 1f, 0.4f);
+            GUI.DrawTexture(new Rect(r.x + (r.width - 36f) / 2f, r.y + 7f, 36f, 36f), icon);
+            GUI.Label(new Rect(r.x, r.y + 47f, r.width, 22f), label, _toolText);
+            GUI.color = tint;
+            return hit;
+        }
+
+        /// <summary>A step of the wheel moves less than a block, so the list reads as one long list.</summary>
+        private static void Wheel(ref Vector2 at, Rect view, float height)
+        {
+            var e = Event.current;
+            if (e.type != EventType.ScrollWheel || !view.Contains(e.mousePosition)) return;
+            at.y = Mathf.Clamp(at.y + e.delta.y * 18f, 0f, Mathf.Max(0f, height - view.height));
+            e.Use();
+        }
+
+        private void NewBlock(Rect r, bool over)
+        {
+            var e = Event.current;
+            var hover = over && r.Contains(e.mousePosition);
+            GUI.Box(r, GUIContent.none, hover ? _cardHover : _card);
+            GUI.Label(new Rect(r.x, r.y + 46, r.width, 36), "+", _title);
+            GUI.Label(new Rect(r.x, r.y + 86, r.width, 26), "New save", _toolText);
+            if (!hover || e.type != EventType.MouseDown || e.button != 0) return;
+            e.Use();
+            if (!Campuses.Busy) SaveHere(null);
+        }
+
+        private void SaveHere(Campus c)
+        {
+            Action save = () => _loadNext = () =>
+            {
+                var said = SaveFlow.SaveInto(c);
+                CampusSavesPlugin.Toast(said);
+                Leave();
+            };
+            if (c == null || c.Id == SaveFlow.CampusId) save();
+            else Ask("Save over \"" + c.Name + "\"? Its history stays in Campus Saves.", save);
         }
 
         private void Block(Campus c, Rect r, bool over)
@@ -243,7 +376,7 @@ namespace Joojkk.CampusSaves
             else GUI.Label(new Rect(x, r.y + 14, w, 30), c.Name, _name);
             GUI.Label(new Rect(x, r.y + 48 + down, w, 26), last != null ? InGame(last) : "No saves yet", _text);
             GUI.Label(new Rect(x, r.y + 76 + down, w, 26), last != null ? last.At.ToString("dd/MM/yyyy HH:mm") : "", _dim);
-            GUI.Label(new Rect(x, r.y + 104 + down, w, 26), c.Vault.Count + (c.Vault.Count == 1 ? " save, " : " saves, ") + Mb(c.Vault.PackSize), _dim);
+            GUI.Label(new Rect(x, r.y + 104 + down, w, 26), Cards(last, ", ") + c.Vault.Count + (c.Vault.Count == 1 ? " save, " : " saves, ") + Mb(c.Vault.PackSize), _dim);
 
             // A row scrolled out of the view must not take clicks, so outside the view the buttons are only drawn.
             var lens = new Rect(r.xMax - 56, r.y + 14, 44, 44);
@@ -251,34 +384,23 @@ namespace Joojkk.CampusSaves
             if (!over) GUI.Box(lens, GUIContent.none, _blue);
             else if (GUI.Button(lens, GUIContent.none, _blue)) { Selected = c; Pick = 0; _list = Vector2.zero; }
             GUI.DrawTexture(Inset(lens, 11f), _lens);
-            var key = "campus" + c.Id;
             GUI.enabled = !Campuses.Busy && (AtTitle || c.Id != SaveFlow.CampusId);
             if (!over) GUI.Box(bin, GUIContent.none, _red);
-            else if (Sure(key, "", bin, _red)) Campuses.Delete(c);
-            if (_sure != key) GUI.DrawTexture(Inset(bin, 11f), _trash);
+            else if (GUI.Button(bin, GUIContent.none, _red)) Ask("Delete the campus \"" + c.Name + "\", its slot and its " + c.Vault.Count + " saves? This cannot be undone.", () => Campuses.Delete(c));
+            GUI.DrawTexture(Inset(bin, 11f), _trash);
             GUI.enabled = true;
 
             if (!hover || lens.Contains(e.mousePosition) || bin.Contains(e.mousePosition) || e.type != EventType.MouseDown || e.button != 0) return;
             e.Use();
-            if (!CanLoad) Campuses.Status = LoadElsewhere;
-            else if (last != null && !Campuses.Busy) Campuses.Status = LoadVersion(c.Id, last.Id);
+            if (Campuses.Busy) return;
+            if (SaveUi != null) SaveHere(c);
+            else if (!CanLoad) Campuses.Status = LoadElsewhere;
+            else if (last != null) TryLoad(c, last);
         }
+
+        private static string Cards(SaveVersion v, string after) { return v != null && v.Cards > 0 ? v.Cards + (v.Cards == 1 ? " card" : " cards") + after : ""; }
 
         private static Rect Inset(Rect r, float by) { return new Rect(r.x + by, r.y + by, r.width - by * 2f, r.height - by * 2f); }
-
-        /// <summary>The second click does the job; the first one only arms it.</summary>
-        private bool Sure(string key, string label, Rect r, GUIStyle style, bool can = true)
-        {
-            var text = _sure == key && label.Length < 16 ? "Sure?" : label;
-            if (!GUI.Button(r, text, style)) return false;
-            if (_sure == key)
-            {
-                _sure = "";
-                return can;
-            }
-            _sure = key;
-            return false;
-        }
 
         private void DrawPicture(Campus c, SaveVersion v, Rect r)
         {
@@ -320,8 +442,12 @@ namespace Joojkk.CampusSaves
             if (pick != null)
             {
                 GUI.Label(new Rect(left, y, width - 130, 42), InGame(pick), _name);
-                GUI.enabled = CanLoad && !Campuses.Busy;
-                if (GUI.Button(new Rect(left + width - 120, y, 120, 42), "Play", _green)) Campuses.Status = LoadVersion(c.Id, pick.Id);
+                GUI.enabled = (CanLoad || SaveUi != null) && !Campuses.Busy;
+                if (GUI.Button(new Rect(left + width - 120, y, 120, 42), SaveUi != null ? "Save here" : "Play", _green))
+                {
+                    if (SaveUi != null) SaveHere(c);
+                    else TryLoad(c, pick);
+                }
                 GUI.enabled = true;
                 y += 52;
                 if (pick.Place != "") Info(left, ref y, width, "Place", pick.Place);
@@ -329,11 +455,13 @@ namespace Joojkk.CampusSaves
                 Info(left, ref y, width, "Saved at", pick.At.ToString("HH:mm"));
                 Info(left, ref y, width, "Type", Kind(pick));
                 Info(left, ref y, width, "Size", Mb(pick.Size));
+                if (pick.Cards > 0) Info(left, ref y, width, "Cards", pick.Cards.ToString());
                 Info(left, ref y, width, "Comes back to", pick.Resume != "" ? "This moment of the day" : "The night menu");
 
                 GUI.enabled = !Campuses.Busy;
                 if (GUI.Button(new Rect(left, DetailH - 58, 150, 38), "Export this one", _btn)) Export(c, pick);
-                if (Sure("del" + c.Id + pick.Id, "Delete this one", new Rect(left + 160, DetailH - 58, 150, 38), _btn)) { Campuses.Forget(c, pick); Pick = 0; }
+                if (GUI.Button(new Rect(left + 160, DetailH - 58, 150, 38), "Delete this one", _btn))
+                    Ask("Delete this save (" + InGame(pick) + ") from the history of \"" + c.Name + "\"?", () => { Campuses.Forget(c, pick); Pick = 0; });
                 GUI.enabled = true;
             }
             else GUI.Label(new Rect(left, y, width, 30), "No saves yet", _text);
@@ -342,9 +470,10 @@ namespace Joojkk.CampusSaves
             var rx = mid + 6f;
             var rw = DetailW - rx - 20f;
             GUI.Label(new Rect(rx, 62, rw, 30), "SAVE HISTORY", _name);
-            var view = new Rect(rx, 100, rw, (RowH + 4) * 6);
-            var content = new Rect(0, 0, rw - 18, list.Count * (RowH + 4));
+            var view = new Rect(rx, 100, rw, (RowH + 4) * 6.4f);
+            var content = new Rect(0, 0, rw - 16, list.Count * (RowH + 4));
             var over = view.Contains(Event.current.mousePosition);
+            Wheel(ref _list, view, content.height);
             _list = GUI.BeginScrollView(view, _list, content, false, false);
             for (var i = 0; i < list.Count; i++)
             {
@@ -376,27 +505,36 @@ namespace Joojkk.CampusSaves
             var hover = over && r.Contains(e.mousePosition);
             GUI.Box(r, GUIContent.none, on ? _rowOn : hover ? _cardHover : _card);
             GUI.Label(new Rect(r.x + 16, r.y + 12, r.width - 32, 30), (on ? "● " : "") + InGame(v), _name);
-            GUI.Label(new Rect(r.x + 16, r.y + 50, r.width - 32, 26), v.At.ToString("dd/MM/yyyy HH:mm") + "   " + Kind(v), on ? _text : _dim);
+            GUI.Label(new Rect(r.x + 16, r.y + 50, r.width - 32, 26), v.At.ToString("dd/MM/yyyy HH:mm") + "   " + Cards(v, "   ") + Kind(v), on ? _text : _dim);
             if (!hover || e.type != EventType.MouseDown || e.button != 0) return;
             e.Use();
             var twice = _lastRow == v.Id && Time.realtimeSinceStartup - _lastClick < 0.35f;
             Pick = v.Id;
             _lastRow = v.Id;
             _lastClick = Time.realtimeSinceStartup;
-            if (!twice) return;
+            if (!twice || SaveUi != null) return;
             if (!CanLoad) Campuses.Status = LoadElsewhere;
-            else if (!Campuses.Busy) Campuses.Status = LoadVersion(c.Id, v.Id);
+            else if (!Campuses.Busy) TryLoad(c, v);
         }
 
         // ================= what the buttons do =================
 
-        /// <summary>Rebuilds a version and loads it from the title screen. The slot does not change until the next save.</summary>
+        /// <summary>Loading while walking around drops the day, so that one asks. The Load screen already means it.</summary>
+        private static void TryLoad(Campus c, SaveVersion v)
+        {
+            if (AtTitle || LoadUi != null) Campuses.Status = LoadVersion(c.Id, v.Id);
+            else Ask("Load this save (" + InGame(v) + ")? Anything not saved is lost.", () => Campuses.Status = LoadVersion(c.Id, v.Id));
+        }
+
+        /// <summary>
+        /// Rebuilds a version and loads it. The slot does not change until the next save. A save made during the day comes
+        /// back through the start of the Action scene, so from anywhere else the game goes to the title first, on its own.
+        /// </summary>
         public static string LoadVersion(string campus, int version)
         {
             var c = Campuses.ById(campus);
             var v = c != null ? c.Vault.Snapshot().FirstOrDefault(x => x.Id == version) : null;
             if (v == null) return "No such version";
-            if (v.Resume != "" && !AtTitle) return "A save from the middle of a day loads from the title screen";
             var file = Path.Combine(c.Dir, "restore.tmp");
             Campuses.Status = "Rebuilding the save";
             Campuses.Run(() =>
@@ -408,18 +546,29 @@ namespace Joojkk.CampusSaves
                     SaveFlow.PendingCampus = c.Id;
                     SaveFlow.ChosenVersion = v;
                     Campuses.Status = "";
-                    if (LoadUi != null)
+                    if (LoadUi != null && (v.Resume == "" || AtTitle))
                     {
                         // The screen knows what follows a load where it was opened.
                         Traverse.Create(LoadUi).Field("onEnter").GetValue<Action<string>>()(c.Slot);
                         return;
                     }
-                    Game.SaveFileName = c.Slot;
-                    Singleton<Game>.Instance.Load();
-                    Singleton<Scene>.Instance.LoadReserve(new Scene.Data { levelName = "Action", fadeType = Scene.Data.FadeType.In }, true);
+                    if (AtTitle)
+                    {
+                        FromTitle(c);
+                        return;
+                    }
+                    _afterTitle = () => FromTitle(c);
+                    _me.StartCoroutine(Illusion.Game.Utils.Scene.ReturnTitle(true));
                 };
             });
             return "Loading";
+        }
+
+        private static void FromTitle(Campus c)
+        {
+            Game.SaveFileName = c.Slot;
+            Singleton<Game>.Instance.Load();
+            Singleton<Scene>.Instance.LoadReserve(new Scene.Data { levelName = "Action", fadeType = Scene.Data.FadeType.In }, true);
         }
 
         internal static void Export(Campus c, SaveVersion v)
@@ -435,20 +584,48 @@ namespace Joojkk.CampusSaves
 
         private sealed class Job { public Campus C; public SaveVersion V; }
 
-        /// <summary>Everything not already in a slot, newest first in each campus.</summary>
+        /// <summary>The game only comes back at night, so the saves of one day are all the same night to it.</summary>
+        private static string DayOf(SaveVersion v) { return v.Day > 0 ? "day " + v.Day : v.At.ToString("yyyyMMdd") + " " + v.Name.Split(',')[0]; }
+
+        /// <summary>The newest save of each day, when it is not in a slot already, newest first in each campus.</summary>
         private static List<Job> ExportPlan()
         {
             var jobs = new List<Job>();
             foreach (var c in Campuses.Snapshot())
-                foreach (var v in c.Vault.Snapshot().OrderByDescending(x => x.At))
+                foreach (var day in c.Vault.Snapshot().GroupBy(DayOf))
+                {
+                    var v = day.OrderByDescending(x => x.At).ThenByDescending(x => x.Id).First();
                     if (!c.InSlot(v)) jobs.Add(new Job { C = c, V = v });
-            return jobs;
+                }
+            return jobs.OrderByDescending(j => j.V.At).ToList();
         }
 
-        private static string Describe(List<Job> plan)
+        private static void OfferExport()
         {
-            if (plan.Count == 0) return "All saves are in slots already";
-            return "Export " + plan.Count + " saves, " + Mb(plan.Sum(j => j.V.Size)) + ": sure?";
+            var plan = ExportPlan();
+            if (plan.Count == 0) { Campuses.Status = "All saves are in slots already"; return; }
+            Ask("Export " + plan.Count + (plan.Count == 1 ? " save" : " saves") + " to the game's list, one for each day? They take " + Mb(plan.Sum(j => j.V.Size)) + ".", ExportAll);
+        }
+
+        /// <summary>The slots Free space would remove: everything imported but the head of each campus.</summary>
+        private static List<string> FreePlan()
+        {
+            var paths = new List<string>();
+            foreach (var c in Campuses.Snapshot())
+                foreach (var f in c.Imported.Where(x => x != c.Slot))
+                {
+                    var path = Path.Combine(Campuses.GameDir, f);
+                    if (File.Exists(path) && c.Vault.Snapshot().Any(x => x.Kind == "imported" && x.Slot == f)) paths.Add(path);
+                }
+            return paths;
+        }
+
+        private static void OfferFree()
+        {
+            var plan = FreePlan();
+            if (plan.Count == 0) { Campuses.Status = "Nothing to free: no repeated saves in the game's list"; return; }
+            var size = plan.Sum(p => new FileInfo(p).Length);
+            Ask("Delete " + plan.Count + " repeated " + (plan.Count == 1 ? "save" : "saves") + " from the game's list and free " + Mb(size) + "? They stay in Campus Saves.", FreeSpace);
         }
 
         private static long FreeDisk()
@@ -516,6 +693,7 @@ namespace Joojkk.CampusSaves
                     c.Write();
                 }
                 Campuses.Status = "Imported " + slots.Count + " saves into " + groups.Count + " campuses";
+                _offerFree = true;
             });
         }
 

@@ -2,6 +2,15 @@
 
 Until 2.5 the plugin's own version (`CampusLifePlugin.Version`) stayed at 2.0.0 and the numbers were the milestones of the combined repository. From 3.0.0 on the plugin carries the version itself; the cycles between 2.5 and 3.0 are numbered 2.6 to 2.9 below.
 
+## Next version
+- A clipboard icon in the room opens the Campus Life menu at night, to plan the next day with today's information.
+- "Admit about the others" happens once for all of them and rests for a week. A long list ends in "and the others" instead of repeating names, and it costs favor when she minds, a girlfriend most of all.
+- A save that enters the mod starts with today's board, instead of counting the day before as missed.
+- Stats in activities always have their color.
+- Details is shorter and split into blocks. Album comes before it.
+- Girls who miss you appear on the board, all in one entry. Talking takes a name off, and missing it costs nothing.
+- A guard against an empty map at the end of a talk, when an object of the map is gone from the game's list.
+
 ## 3.5.1 (2026-10-12)
 - The small talk subjects stay the same for the whole conversation, instead of changing each time you leave a category and come back.
 - Removed unused dialogue left over from the old conversation menu.

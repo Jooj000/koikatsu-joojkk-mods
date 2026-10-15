@@ -113,6 +113,66 @@ namespace Joojkk.CampusLife
             }
         }
 
+        /// <summary>
+        /// quadro"), by the signal the moods and the weekly report already use. One with her own talk request is left out.
+        /// </summary>
+        private static List<SaveData.Heroine> Missing()
+        {
+            return Students.Where(h =>
+            {
+                var gs = S.Girl(GirlInfo.Key(h));
+                return (h.relation >= 1 || h.isGirlfriend) && (gs.Attention < 25 || gs.Mood == Mood.Lonely) && gs.LastTalkDay != S.Day && (!Truth.Known || Truth.AtSchool(h))
+                       && !OpenFor(gs.Key).Any(r => r.Kind == RequestKind.Talk && r.Source != "miss");
+            }).OrderBy(h => S.Girl(GirlInfo.Key(h)).Attention).ToList();
+        }
+
+        /// <summary>One entry for all of them ("caso tenha mais de uma, use a mesma entrada"), remade each day: Item holds their keys.</summary>
+        private static void PostMissing()
+        {
+            S.Requests.RemoveAll(r => r.Source == "miss" && r.State == RequestState.Active);
+            var girls = Missing();
+            if (girls.Count == 0) return;
+            var r0 = Make(RequestKind.Talk, girls[0], "", "", 3);
+            r0.Source = "miss";
+            Word(r0, girls.Select(GirlInfo.Key).ToList());
+            Add(r0);
+        }
+
+        private static void Word(Request r, List<string> keys)
+        {
+            r.Item = string.Join(MissSep.ToString(), keys.ToArray());
+            r.Girl = keys.Count == 1 ? keys[0] : "";    // one girl is a request of hers, with her mark and "Go to her"
+            var names = keys.Select(GirlInfo.FirstName).ToList();
+            var all = names.Count == 1 ? names[0] : string.Join(", ", names.Take(names.Count - 1).ToArray()) + " and " + names[names.Count - 1];
+            r.Title = names.Count == 1 ? all + " misses you" : "They miss you";
+            r.Text = names.Count == 1 ? all + " hasn't heard from you in a while. A word would do." : all + " haven't heard from you in a while. A word with each of them would do.";
+        }
+
+        /// <summary>Talking takes her name off; the last name closes the entry.</summary>
+        internal const char MissSep = '\n';    // between the girls of the one entry: their keys have | in them
+
+        private static void SawMissing(SaveData.Heroine h)
+        {
+            var r = Active.FirstOrDefault(x => x.Source == "miss");
+            if (r == null) return;
+            var key = GirlInfo.Key(h);
+            var keys = r.Item.Split(MissSep).ToList();
+            if (!keys.Remove(key)) return;
+            if (keys.Count > 0) { Word(r, keys); return; }
+            r.Girl = key;
+            Complete(r, h);
+        }
+
+        /// <summary>Who turned out not to come today leaves the entry.</summary>
+        private static void DropAbsentMissing()
+        {
+            var r = Active.FirstOrDefault(x => x.Source == "miss");
+            if (r == null) return;
+            var keys = r.Item.Split(MissSep).Where(Truth.AtSchool).ToList();
+            if (keys.Count == 0) S.Requests.Remove(r);
+            else Word(r, keys);
+        }
+
         /// <summary>Makes sure today's board exists (e.g. a save loaded in the middle of a day).</summary>
         public static void EnsureToday()
         {
@@ -136,6 +196,7 @@ namespace Joojkk.CampusLife
             int done;
             if (S.Buffs.TryGetValue("board_absent", out done) && done == stamp) return;
             S.Buffs["board_absent"] = stamp;
+            DropAbsentMissing();
             foreach (var r in S.Requests.Where(q => (q.State == RequestState.Active || q.State == RequestState.Hidden) && q.DeadlineDay <= S.Day
                                                     && (!string.IsNullOrEmpty(q.Girl) && !Truth.AtSchool(q.Girl) || !string.IsNullOrEmpty(q.Other) && !Truth.AtSchool(q.Other))))
             {
@@ -152,6 +213,7 @@ namespace Joojkk.CampusLife
             // Clean old finished requests (keep a few days for the journal view)
             S.Requests.RemoveAll(r => r.State != RequestState.Active && r.DeadlineDay < S.Day - 3);
             PostponeAbsent();
+            PostMissing();
 
             var already = S.Requests.Count(r => (r.State == RequestState.Active || r.State == RequestState.Hidden) && r.Source == "board" && r.CreatedDay == S.Day);
             var want = TargetCount - already;
@@ -356,6 +418,7 @@ namespace Joojkk.CampusLife
         public static void OnTalkResult(SaveData.Heroine h, ResultEnum result)
         {
             var key = GirlInfo.Key(h);
+            SawMissing(h);
             foreach (var r in ActiveFor(key).ToList())
                 if (InWindow(r) && Matches(r, result)) Complete(r, h);
         }
@@ -606,6 +669,7 @@ namespace Joojkk.CampusLife
         public static void Fail(Request r)
         {
             if (r.State != RequestState.Active) return;
+            if (r.Source == "miss") { S.Requests.Remove(r); return; }
             r.State = RequestState.Failed;
             var h = GirlInfo.Find(r.Girl);
             if (Cfg.FailedRequestPenalty.Value && h != null && r.Source != "event" && !Devotion.ForgivesMisses(h))
@@ -620,15 +684,30 @@ namespace Joojkk.CampusLife
             if (r.Source == "arc") Arcs.OnRequestFailed(r);
         }
 
+        public const string EntryKey = "dir:entry";
+
+        /// <summary>The day this save first met the mod: what it asked for before you could see it was never asked.</summary>
+        private static bool EnteredOn(int day)
+        {
+            int entry;
+            return S.Buffs.TryGetValue(EntryKey, out entry) && entry == day;
+        }
+
         public static void ExpireAll(int beforeDay)
         {
             S.Requests.RemoveAll(x => x.State == RequestState.Hidden && x.DeadlineDay < beforeDay);
+            if (EnteredOn(beforeDay - 1))
+            {
+                S.Requests.RemoveAll(x => x.State == RequestState.Active && x.DeadlineDay < beforeDay);
+                return;
+            }
             foreach (var r in Active.Where(x => x.DeadlineDay < beforeDay).ToList()) Fail(r);
         }
 
         /// <summary>Requests due today whose period window already passed.</summary>
         public static void ExpirePassedWindows()
         {
+            if (EnteredOn(S.Day)) return;
             var now = G.CurrentMask;
             PeriodMask remaining;
             if (now == PeriodMask.Lunch) remaining = PeriodMask.Any;

@@ -26,10 +26,13 @@ namespace Joojkk.CampusLife
                 S = new CampusState();
             }
             Loaded = true;
+            var entering = !S.Started;
             // Older versions could post requests for story heroines, who have no everyday conversations.
             var dropped = S.Requests.RemoveAll(r => r.State == RequestState.Active && ((r.Girl ?? "").StartsWith("fix:") || (r.Other ?? "").StartsWith("fix:")));
             if (dropped > 0) CampusLifePlugin.Log.LogInfo("Removed " + dropped + " request(s) for story heroines.");
             EnsureStarted();
+            // A save that never had this mod: its day already went by, so nothing can be missed in it.
+            if (entering && S.Started) S.Buffs[Board.EntryKey] = S.Day;
             if (Spotlight.IsActive && S.Spotlight.Count == 0) Spotlight.Rotate();
         }
 
@@ -71,7 +74,8 @@ namespace Joojkk.CampusLife
             Moods.RollAll();
             try { Lore.Prune(); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
             Spotlight.Rotate();
-            if (G.IsSchoolDay) Board.GenerateDaily();
+            // The game only saves at night: a board made here would be missed by the morning. EnsureToday makes it during a day.
+            if (G.InRoamingPeriod) Board.GenerateDaily();
         }
 
         // ---------------- game events ----------------

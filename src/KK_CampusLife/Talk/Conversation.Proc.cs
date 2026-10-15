@@ -26,6 +26,7 @@ namespace Joojkk.CampusLife
             public string Subject = "";        // small talk: what about
             public string ToldFit = "";        // "tell": how your news landed (good, neutral, bad)
             public SchoolTopicInfo School;
+            public List<LoreFact> Told;        // "confide": every untold fact, which saying it once settles
             public List<LoreFact> Facts;       // "confide": your romances with other girls, told in one go
             public int Times;                  // "confide": how many untold steps with them in all (the impact)
             public List<string> Merged;        // topics with the same label folded into this one, settled with it
@@ -214,6 +215,8 @@ namespace Joojkk.CampusLife
             }
         }
 
+        private const int ConfideRest = 7;
+
         /// <summary>A romance of yours with another girl (not her): the confide topic tells it, not a topic of its own.</summary>
         private static bool Confided(LoreFact f, string her)
         {
@@ -233,8 +236,10 @@ namespace Joojkk.CampusLife
             // uma aleatória por estar pegando outras").
             if (!Interested(h)) return null;
             var key = GirlInfo.Key(h);
+            int said;
+            if (S.Buffs.TryGetValue("dir:confide:" + key, out said) && S.Day - said < ConfideRest) return null;
             var best = new Dictionary<string, LoreFact>();
-            var times = 0;
+            var told = new List<LoreFact>();
             foreach (var f in S.Lore)
             {
                 if (!Confided(f, key) || f.Subject != Lore.Player && f.Obj != Lore.Player) continue;
@@ -242,16 +247,16 @@ namespace Joojkk.CampusLife
                 var oh = GirlInfo.Find(other);
                 if (oh == null || S.Day - f.Day > 14 && !(oh.isGirlfriend && f.Verb == "started_dating")) continue;
                 if (TopicDone(key, "confide:" + other + ":" + f.Id)) continue;
-                times++;
+                told.Add(f);
                 LoreFact had;
                 if (!best.TryGetValue(other, out had) || ConfideDepth(f.Verb) > ConfideDepth(had.Verb) || ConfideDepth(f.Verb) == ConfideDepth(had.Verb) && f.Day > had.Day) best[other] = f;
             }
             if (best.Count == 0) return null;
-            var facts = best.Values.OrderByDescending(f => ConfideDepth(f.Verb)).ThenByDescending(f => f.Day).Take(4).ToList();
+            var facts = best.Values.OrderByDescending(f => ConfideDepth(f.Verb)).ThenByDescending(f => f.Day).ToList();
             // No names on the button:
             // they come out in your words when you tell her.
             var deepest = facts.Max(f => ConfideDepth(f.Verb));
-            return new PTopic { Id = "confide", Kind = "confide", Facts = facts, Fact = facts[0], Label = "Admit about the others", Score = 1.6f + deepest * 0.3f, Hot = deepest >= 3, Times = times };
+            return new PTopic { Id = "confide", Kind = "confide", Facts = facts, Told = told, Fact = facts[0], Label = "Admit about the others", Score = 1.6f + deepest * 0.3f, Hot = deepest >= 3, Times = told.Count };
         }
 
         /// <summary>
@@ -264,7 +269,8 @@ namespace Joojkk.CampusLife
             var key = GirlInfo.Key(h);
             var others = t.Facts.Select(f => GirlInfo.Find(f.Subject == Lore.Player ? f.Obj : f.Subject)).ToList();
             var names = others.Select(GirlInfo.FirstName).ToList();
-            c["who"] = names.Count == 1 ? names[0] : names.Count == 2 ? names[0] + " and " + names[1] : string.Join(", ", names.Take(names.Count - 1).ToArray()) + " and " + names[names.Count - 1];
+            // Past four names the sentence stops listing: everyone is told all the same.
+            c["who"] = names.Count == 1 ? names[0] : names.Count == 2 ? names[0] + " and " + names[1] : names.Count > 4 ? string.Join(", ", names.Take(3).ToArray()) + " and the others" : string.Join(", ", names.Take(names.Count - 1).ToArray()) + " and " + names[names.Count - 1];
             c["who1"] = names[0];
             c["count"] = names.Count == 1 ? "one" : names.Count == 2 ? "two" : "many";
             var deep = t.Facts.Max(f => ConfideDepth(f.Verb));
@@ -301,27 +307,32 @@ namespace Joojkk.CampusLife
                 foreach (var o in others) { Share.Learned(h, o, false); worst = Math.Min(worst, Share.Stance(h, o)); }
                 c["stance"] = worst == Share.Refuses ? "refuses" : worst == Share.Separate ? "separate" : worst == Share.Friends ? "friends" : worst == Share.Trio ? "trio" : "unknown";
             }
-            var hurt = h.isGirlfriend ? c["stance"] == "refuses" : wants && deep >= 2;
+            var hurt = h.isGirlfriend ? c["stance"] == "refuses" : wants && (deep >= 2 || names.Count >= 2);
             c["hurt"] = hurt ? "yes" : "no";
             // She hears it from you now (no "you and X" topic about these again), and an honest word counts.
-            foreach (var f in t.Facts)
+            foreach (var f in t.Told)
             {
                 var k = Lore.KnowOf(key, f) ?? Lore.Learn(key, f, How.Heard, Lore.Player);
                 if (k != null) k.ToPlayer = 2;
                 MarkTopic(key, "confide:" + (f.Subject == Lore.Player ? f.Obj : f.Subject) + ":" + f.Id);
             }
+            S.Buffs["dir:confide:" + key] = S.Day;
             // The more times (every step with every girl, not only the deepest), the bigger it lands (mid-cycle list, item
             // 1: "quanto mais de uma vez, maior o impacto"): it hurts more, and the honesty of saying it all counts more.
             var times = Math.Max(t.Times, t.Facts.Count);
             c["times"] = times <= 1 ? "once" : times <= 3 ? "few" : "many";
             if (known < knew.Count) Social.AddTrust(h, hurt ? 1 : Math.Min(1 + times / 2, 4));
+            // pays it too, more than anyone, and one who only accepts it apart still feels a little of it.
+            var cost = 0;
             if (hurt)
             {
                 Social.AddTrust(h, -Math.Min(times, 6));
-                if (!h.isGirlfriend) G.AddFavor(h, -Math.Min(2 * times, 10), 0);
+                cost = h.isGirlfriend ? Math.Min(6 + 2 * times, 16) : Math.Min(3 + 2 * times, 12);
             }
+            else if (h.isGirlfriend && c["stance"] == "separate") cost = Math.Min(1 + times, 5);
+            if (cost > 0) G.AddFavor(h, -cost, 0);
             CampusLifePlugin.Log.LogInfo("Talk confide: " + GirlInfo.FirstName(h) + " <- " + c["who"] + " (depth " + c["depth"] + ", knew " + c["knew"] + ", circle " + circle +
-                                         (circleWho != null ? " " + circleWho : "") + ", interested " + c["interested"] + ", times " + times + (h.isGirlfriend ? ", stance " + c["stance"] : "") + ")");
+                                         (circleWho != null ? " " + circleWho : "") + ", interested " + c["interested"] + ", times " + times + ", favor -" + cost + (h.isGirlfriend ? ", stance " + c["stance"] : "") + ")");
         }
 
         /// <summary>

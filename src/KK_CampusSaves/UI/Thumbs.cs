@@ -149,19 +149,93 @@ namespace Joojkk.CampusSaves
             });
         }
 
+        public static Texture2D Close()
+        {
+            return Paint(64, Color.white, (x, y) => x >= 12f && x <= 52f && y >= 12f && y <= 52f && (Mathf.Abs(x - y) <= 6.5f || Mathf.Abs(x + y - 64f) <= 6.5f));
+        }
+
+        /// <summary>The arrow down into a tray.</summary>
+        public static Texture2D Download()
+        {
+            return Paint(64, Color.white, (x, y) =>
+            {
+                var d = Mathf.Abs(x - 32f);
+                if (d <= 4.5f && y >= 7f && y <= 30f) return true;
+                if (y >= 26f && y <= 46f && d <= 46f - y) return true;
+                if (x >= 8f && x <= 56f && y >= 51f && y <= 58f) return true;
+                return y >= 40f && y <= 58f && (x >= 8f && x <= 15f || x >= 49f && x <= 56f);
+            });
+        }
+
+        /// <summary>A hard drive with its lid off: the frame, the platter and the arm.</summary>
+        public static Texture2D Drive()
+        {
+            return Paint(64, Color.white, (x, y) =>
+            {
+                var frame = x >= 9f && x <= 55f && y >= 5f && y <= 59f && !(x >= 14f && x <= 50f && y >= 10f && y <= 54f);
+                var d = Mathf.Sqrt((x - 32f) * (x - 32f) + (y - 27f) * (y - 27f));
+                var platter = d >= 7f && d <= 14f || d <= 3f;
+                var along = (x - 46f) * -0.56f + (y - 48f) * -0.83f;
+                var side = (x - 46f) * 0.83f - (y - 48f) * 0.56f;
+                var arm = along >= -2f && along <= 17f && Mathf.Abs(side) <= 2f;
+                return frame || platter && !(along >= -2f && along <= 19f && Mathf.Abs(side) <= 4f) || arm;
+            });
+        }
+
+        /// <summary>An open box with an arrow coming out of it.</summary>
+        public static Texture2D Crate()
+        {
+            return Paint(64, Color.white, (x, y) =>
+            {
+                var d = Mathf.Abs(x - 32f);
+                if (d <= 3.5f && y >= 14f && y <= 36f) return true;
+                if (y >= 3f && y <= 18f && d <= (y - 3f) * 0.9f) return true;
+                if (x >= 13f && x <= 51f && y >= 40f && y <= 60f) return true;
+                var lift = 40f - y;
+                if (lift <= 0f || lift >= 10f) return false;
+                return x >= 13f - lift && x <= 25f - lift || x >= 39f + lift && x <= 51f + lift;
+            });
+        }
+
+        /// <summary>A cone with three scoops, in colours: the game's own save list, plain vanilla and friends.</summary>
+        public static Texture2D IceCream()
+        {
+            var pink = new Color(1f, 0.56f, 0.70f);
+            var mint = new Color(0.56f, 0.92f, 0.76f);
+            var cream = new Color(1f, 0.96f, 0.80f);
+            var cone = new Color(0.86f, 0.62f, 0.32f);
+            return Paint(64, (x, y) =>
+            {
+                Func<float, float, float, bool> ball = (cx, cy, r) => (x - cx) * (x - cx) + (y - cy) * (y - cy) <= r * r;
+                if (ball(32f, 15f, 12f)) return cream;
+                if (ball(21f, 31f, 12f)) return pink;
+                if (ball(43f, 31f, 12f)) return mint;
+                if (y >= 37f && y <= 62f && Mathf.Abs(x - 32f) <= (62f - y) * 0.72f) return cone;
+                return Color.clear;
+            });
+        }
+
         /// <summary>Paints a shape four samples per pixel, with y going down as on the screen.</summary>
         private static Texture2D Paint(int size, Color c, Func<float, float, bool> inside)
+        {
+            return Paint(size, (x, y) => inside(x, y) ? c : Color.clear);
+        }
+
+        private static Texture2D Paint(int size, Func<float, float, Color> at)
         {
             var t = new Texture2D(size, size, TextureFormat.ARGB32, false) { hideFlags = HideFlags.HideAndDontSave, wrapMode = TextureWrapMode.Clamp };
             var px = new Color[size * size];
             for (var y = 0; y < size; y++)
                 for (var x = 0; x < size; x++)
                 {
-                    var hits = 0;
+                    var sum = Color.clear;
                     for (var sy = 0; sy < 4; sy++)
                         for (var sx = 0; sx < 4; sx++)
-                            if (inside(x + (sx + 0.5f) / 4f, y + (sy + 0.5f) / 4f)) hits++;
-                    px[(size - 1 - y) * size + x] = new Color(c.r, c.g, c.b, c.a * hits / 16f);
+                        {
+                            var s = at(x + (sx + 0.5f) / 4f, y + (sy + 0.5f) / 4f);
+                            sum += new Color(s.r * s.a, s.g * s.a, s.b * s.a, s.a);
+                        }
+                    px[(size - 1 - y) * size + x] = sum.a > 0f ? new Color(sum.r / sum.a, sum.g / sum.a, sum.b / sum.a, sum.a / 16f) : Color.clear;
                 }
             t.SetPixels(px);
             t.Apply(false, true);

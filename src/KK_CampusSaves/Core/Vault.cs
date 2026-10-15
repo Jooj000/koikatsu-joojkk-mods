@@ -31,6 +31,7 @@ namespace Joojkk.CampusSaves
         public int Day;                     // the Campus Life day, 0 without it: the game itself only knows the weekday
         public string Place = "";
         public string Slot = "";            // the slot this version came from or was exported to
+        public int Cards;                   // the heroines in this save, 0 when not known
         public List<Run> Runs = new List<Run>();
     }
 
@@ -117,6 +118,7 @@ namespace Joojkk.CampusSaves
         /// <summary>Turns a save file into a version. Returns null when it is the same as the last one ("nothing changed").</summary>
         public SaveVersion Absorb(string file, SaveVersion v)
         {
+            if (v.Cards == 0) v.Cards = SaveHeader.Cards(file);
             var whole = SHA1.Create();
             var piece = SHA1.Create();
             var head = new byte[Head];
@@ -208,6 +210,7 @@ namespace Joojkk.CampusSaves
             last.Resume = v.Resume;
             last.Day = v.Day;
             last.Place = v.Place;
+            if (v.Cards > 0) last.Cards = v.Cards;
             if (byHand && last.Kind == "auto")
             {
                 last.Kind = "manual";
@@ -246,6 +249,8 @@ namespace Joojkk.CampusSaves
             v.Slot = slot;
             WriteVersion(v);
         }
+
+        public void MarkCards(SaveVersion v) { WriteVersion(v); }
 
         /// <summary>Bytes of the pack no version uses.</summary>
         public long Garbage()
@@ -296,6 +301,7 @@ namespace Joojkk.CampusSaves
             s.Append("day=").Append(v.Day).Append('\n');
             s.Append("place=").Append(Clean(v.Place)).Append('\n');
             s.Append("slot=").Append(Clean(v.Slot)).Append('\n');
+            s.Append("cards=").Append(v.Cards).Append('\n');
             s.Append("runs\n");
             foreach (var r in v.Runs) s.Append(r.Offset).Append(' ').Append(r.Count).Append('\n');
             var p = VersionPath(v.Id);
@@ -340,6 +346,7 @@ namespace Joojkk.CampusSaves
                         case "day": v.Day = int.Parse(x); break;
                         case "place": v.Place = x; break;
                         case "slot": v.Slot = x; break;
+                        case "cards": v.Cards = int.Parse(x); break;
                     }
                 }
                 return inRuns ? v : null;

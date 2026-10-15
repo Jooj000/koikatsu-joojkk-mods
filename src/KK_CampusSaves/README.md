@@ -14,13 +14,17 @@ Author: Joojkk.
 
 ## The panel
 
-The game's Load button opens it, on the title screen and in the night menu, and Ctrl+Shift+F6 opens it anywhere. The game's own list stays one button away, under **Game's list**, and a setting turns the replacement off.
+The game's Load and Save buttons open it, on the title screen and in the night menu, and Ctrl+Shift+F6 opens it anywhere. The save screen is the same panel: a click on a campus saves into it. The game's own list stays one button away, under the ice cream icon, and a setting turns the replacement off.
 
-- **Blocks:** one per campus, six on screen and the rest by scrolling, each with the picture, the day and the dates of its latest save. One click loads that save. The magnifier opens the history and the bin deletes the campus, after a second click.
-- **History:** every version of the campus, newest first. A click selects one and shows its picture and details, without loading. Play or a double click loads exactly that version.
-- **Import:** groups your slots by campus and copies them into the vaults. Your files are not changed.
-- **Free space:** deletes the imported slots that are not the newest of their campus, after checking that each one can be rebuilt. It asks for a second click.
-- **Export saves:** rebuilds every version that is not in a slot as a plain save, in the free slots, with the date it was saved. It says how many saves and how much space before the second click, and stops when the game runs out of its 100 slots.
+- **Blocks:** one per campus in a list that scrolls, each with the picture, the day, the dates and the cards of its latest save. One click loads that save. The magnifier opens the history and the bin deletes the campus, after asking.
+- **History:** every version of the campus, newest first, each with its own number of cards. A click selects one and shows its picture and details, without loading. Play or a double click loads exactly that version, from the title screen or from the night menu.
+- **Import:** groups your slots by campus and copies them into the vaults. Your files are not changed. When it leaves repeated slots behind, it offers to free them.
+- **Free space:** deletes the imported slots that are not the newest of their campus, after checking that each one can be rebuilt. It asks first.
+- **Export saves:** rebuilds the last version of each day as a plain save, in the free slots, with the date it was saved. Saves made during a day all open on the night before, so a day needs only one. It says how many saves and how much space before it starts, and stops when the game runs out of its 100 slots.
+
+## The Esc menu
+
+In story mode, Esc opens Resume, Save, Save & Quit to title, Quit to title and Quit, in place of the game's quit screen. Saving needs the same calm moment as autosave. A setting turns it off.
 
 Pictures exist from the moment this mod saves: imported saves show none, because the game's saves have no picture. The game has no date and no hour, so a save shows its weekday and period, and the day number when Campus Life is installed. A save from the middle of a day loads from the title screen, not from the night menu.
 

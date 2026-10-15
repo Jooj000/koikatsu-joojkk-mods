@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ActionGame.Communication;
 using HarmonyLib;
 using UniRx;
@@ -38,6 +39,37 @@ namespace Joojkk.CampusLife
             {
                 CampusLifePlugin.Log.LogError(e);
             }
+        }
+
+        /// <summary>
+        /// The game's seat and locker moves read the objects of the map, and one of them gone throws in the middle of the end of
+        /// a talk: the screen stays on an empty map with the event never finished. The list is read again here.
+        /// </summary>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ActionGame.Chara.Base), "KindMoveShift")]
+        private static void FreshMapObjects(ActionGame.Chara.Base __instance)
+        {
+            try
+            {
+                var map = __instance.actScene != null ? __instance.actScene.Map : null;
+                if (map == null || map.mapObjects == null || map.mapObjects.All(k => k != null)) return;
+                CampusLifePlugin.Log.LogWarning("Map " + map.no + ": objects gone from the list, read again");
+                var group = map.mapRoot != null ? map.mapRoot.transform.Find("MapObjectGroup") : null;
+                Traverse.Create(map).Property("mapObjects").SetValue(group != null ? group.GetComponentsInChildren<ActionGame.MapObject.Kind>(true) : new ActionGame.MapObject.Kind[0]);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug(e); }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ActionGame.ActionMap), "Reserve")]
+        private static void WatchReserve(ActionGame.ActionMap __instance)
+        {
+            try
+            {
+                if (__instance.infoDic != null && __instance.infoDic.ContainsKey(__instance.no)) return;
+                CampusLifePlugin.Log.LogWarning("ActionMap.Reserve without info: no " + __instance.no + ", prev " + __instance.prevNo + ", loading " + __instance.isMapLoading + ", main " + (G.Act != null && G.Act.Map == __instance) + ", on " + __instance.gameObject.name);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug(e); }
         }
 
         /// <summary>

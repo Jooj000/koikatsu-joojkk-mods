@@ -57,7 +57,7 @@ namespace Joojkk.CampusLife
             _tabs.Place(16f, 14f, 1840f, 44f);
             var x = 0f;
             TabButtons.Clear();
-            foreach (var tab in new[] { PanelTab.Today, PanelTab.Calendar, PanelTab.Activities, PanelTab.Details, PanelTab.Album })
+            foreach (var tab in new[] { PanelTab.Today, PanelTab.Calendar, PanelTab.Activities, PanelTab.Album, PanelTab.Details })
             {
                 var t = tab;
                 var b = GameUi.Button(_tabs, "tab" + tab, tab.ToString(), () => Show(t, null));
@@ -334,7 +334,7 @@ namespace Joojkk.CampusLife
                 Icon(row, Markers.Get(Markers.StoryShape), 44f);
                 RowText(row, "Story: " + GirlInfo.FullName(h) + "'s next chapter", 24f, GameUi.Gold);
                 var map = StoryCast.MapOf(h);
-                if (map >= 0 && map != G.PlayerMapNo) SmallButton(row, Places.MapLabel(map), () => { if (GirlInfo.IsSpawned(h)) StatusUi.WarpToGirl(h); else StatusUi.Warp(map); }, 190f);
+                if (!StatusUi.AtNight && map >= 0 && map != G.PlayerMapNo) SmallButton(row, Places.MapLabel(map), () => { if (GirlInfo.IsSpawned(h)) StatusUi.WarpToGirl(h); else StatusUi.Warp(map); }, 190f);
                 if (map >= 0)
                     Line(b, "She is waiting at the " + Places.MapLabel(map) + " right now. Talk to her to play her story event.", 19f);
                 else
@@ -355,18 +355,18 @@ namespace Joojkk.CampusLife
             {
                 var spawned = GirlInfo.IsSpawned(h);
                 var sameMap = spawned && GirlInfo.CurrentMap(h) == G.PlayerMapNo;
-                if (spawned && !sameMap) SmallButton(row, "Go to her", () => StatusUi.WarpToGirl(h), 170f);
+                if (!StatusUi.AtNight && spawned && !sameMap) SmallButton(row, "Go to her", () => StatusUi.WarpToGirl(h), 170f);
             }
             if ((r.Kind == RequestKind.Errand || r.Kind == RequestKind.MeetAt) && r.Progress == 0 && !string.IsNullOrEmpty(r.Place) && Places.CurrentId != r.Place)
             {
                 var mapNo = Places.MapFor(r.Place);
-                if (mapNo >= 0) SmallButton(row, Places.Name(r.Place), () => StatusUi.Warp(mapNo), 190f);
+                if (mapNo >= 0 && !StatusUi.AtNight) SmallButton(row, Places.Name(r.Place), () => StatusUi.Warp(mapNo), 190f);
             }
             if (r.Kind == RequestKind.Activity && Activities.Get(r.Activity) != null)
             {
                 var a = Activities.Get(r.Activity);
                 var mapNo = Places.MapFor(a.Place);
-                if (mapNo >= 0 && Places.CurrentId != a.Place) SmallButton(row, Places.Name(a.Place), () => StatusUi.Warp(mapNo), 190f);
+                if (mapNo >= 0 && !StatusUi.AtNight && Places.CurrentId != a.Place) SmallButton(row, Places.Name(a.Place), () => StatusUi.Warp(mapNo), 190f);
             }
 
             Line(b, r.Text, 20f);
@@ -376,6 +376,9 @@ namespace Joojkk.CampusLife
                 var map = GirlInfo.CurrentMap(h);
                 where = GirlInfo.IsSpawned(h) && map >= 0 ? "She is at: " + Places.MapLabel(map) : "She isn't on campus right now.";
             }
+            else if (r.Source == "miss")
+                where = string.Join("   ", r.Item.Split(Board.MissSep).Select(GirlInfo.Find).Where(g => g != null && GirlInfo.IsSpawned(g) && GirlInfo.CurrentMap(g) >= 0)
+                    .Select(g => GirlInfo.FirstName(g) + ": " + Places.MapLabel(GirlInfo.CurrentMap(g))).ToArray());
             // One line of facts under the text; "How" only when it is more than talking to her.
             var dim = "<color=" + Hex(GameUi.Dim) + ">";
             var facts = new List<string>();
@@ -492,17 +495,17 @@ namespace Joojkk.CampusLife
             if (!Cfg.ActivitiesEnabled.Value) { Line(_right, "Activities are turned off in the settings.", 20f, GameUi.Warn); return; }
             var placeId = string.IsNullOrEmpty(_place) ? Places.CurrentId : _place;
             if (string.IsNullOrEmpty(placeId)) placeId = Places.All[0].Id;
-            var here = Places.CurrentId == placeId;
+            var here = !StatusUi.AtNight && Places.CurrentId == placeId;
 
             var head = GameUi.Block(_right, "head");
             var row = GameUi.Row(head, "row", 46f);
             RowText(row, Places.Name(placeId), 28f, GameUi.Gold);
             var mapNo = Places.MapFor(placeId);
-            if (!here && mapNo >= 0) SmallButton(row, "Go there", () => StatusUi.Warp(mapNo), 200f);
+            if (!here && !StatusUi.AtNight && mapNo >= 0) SmallButton(row, "Go there", () => StatusUi.Warp(mapNo), 200f);
             if (placeId == "cafeteria" && here) SmallButton(row, "Campus store", () => Show(PanelTab.Shop), 200f);
             var events = StatusUi.PlaceEvents(placeId);
             foreach (var e in events) Line(head, "Event here: " + e, 20f, GameUi.Gold);
-            if (!here) Line(head, "Go there to do these. Time only passes while you walk around, not in this menu.", 18f, GameUi.Dim);
+            if (!here) Line(head, StatusUi.AtNight ? "Planning for tomorrow: these open when you walk around again." : "Go there to do these. Time only passes while you walk around, not in this menu.", 18f, GameUi.Dim);
             if (Cfg.EnergyEnabled.Value) Line(head, Activities.EnergyNow(s) + ",  " + s.Money.ToString("N0") + " yen", 18f, GameUi.Dim);
 
             foreach (var a in Activities.All.Where(x => x.Place == placeId))
@@ -554,9 +557,17 @@ namespace Joojkk.CampusLife
 
         // ---------------- Details ----------------
 
+        /// <summary>One thing to know: its name, then one short line. A block of these reads at a glance, unlike a paragraph.</summary>
         private static void Para(Transform block, string title, string text)
         {
-            Line(block, "<color=" + Hex(GameUi.Gold) + ">" + title + "</color>  " + text, 19f);
+            Line(block, "<color=" + Hex(GameUi.Gold) + "><b>" + title + "</b></color>", 21f);
+            Line(block, text, 18f, GameUi.Dim);
+        }
+
+        private static void Stat(Transform block, string name, int value, params string[] gives)
+        {
+            Line(block, "<b>" + name + "</b>  <size=26>" + value + "</size>", 22f);
+            Line(block, string.Join("   |   ", gives), 18f, GameUi.Dim);
         }
 
         private static void DetailsLeft()
@@ -564,26 +575,23 @@ namespace Joojkk.CampusLife
             var s = Campus.S;
             var you = GameUi.Block(_left, "stats");
             Header(you, "Your stats");
-            Para(you, "STR " + G.Str, "+" + G.Str / 25 + " energy a day (one per 25), sports jobs and festivals, exercise invitations.");
-            Para(you, "INT " + G.Int, "favor gains +" + G.Int / 2 + "%, " + (G.Int >= Cfg.MoodHintMinIntelligence.Value ? "you read every mood" : "you read moods at " + Cfg.MoodHintMinIntelligence.Value) +
-                                      ", joke odds shown at 40, exams, better pay in INT jobs.");
-            Para(you, "SEN " + G.Sens, "H gains +" + Mathf.RoundToInt(G.Sens / 1.5f) + "%, " + (G.Sens >= 50 ? "more girls ask for you" : "more requests at 50") + ", " +
-                                       (G.Sens >= 40 ? "intimate requests unlocked" : "intimate requests at 40") + ", flirting odds shown at 40, tips.");
+            Stat(you, "STR", G.Str, "+" + G.Str / 25 + " energy a day", "sports jobs", "festivals");
+            Stat(you, "INT", G.Int, "+" + G.Int / 2 + "% favor", G.Int >= Cfg.MoodHintMinIntelligence.Value ? "you read every mood" : "moods at " + Cfg.MoodHintMinIntelligence.Value, "exams");
+            Stat(you, "SEN", G.Sens, "+" + Mathf.RoundToInt(G.Sens / 1.5f) + "% H", G.Sens >= 40 ? "intimate requests" : "intimate requests at 40", G.Sens >= 50 ? "more requests" : "more requests at 50");
 
             var e = GameUi.Block(_left, "energy");
-            Header(e, "Energy, time and reputation");
-            Para(e, "Energy", "for activities; refills every morning. Naps, rest, hearty lunches, energy drinks and devotion level 2 restore it.");
-            Para(e, "Time", "a free period lasts " + Mathf.RoundToInt(500f * Cfg.PeriodLength.Value) + " s of walking around. Activities cost energy and only the time their animation plays; menus, talks and menu teleports cost none.");
-            Para(e, "Reputation", "+" + s.Reputation + "% on request pay now, a daily request at 60, better fundraising. Helping raises it; odd places lower it.");
-            Para(e, "Club", ClubStory.Label() + ". Favor you win in talks, new members and H fill the gauge; each rank is a chapter.");
+            Header(e, "Your day");
+            Para(e, "Energy", "Pays for activities. Refills every morning.");
+            Para(e, "Time", "A free period lasts " + Mathf.RoundToInt(500f * Cfg.PeriodLength.Value) + " s of walking. Menus and menu teleports cost none.");
+            Para(e, "Reputation " + s.Reputation, "+" + s.Reputation + "% on request pay. Helping raises it, odd places lower it.");
+            Para(e, ClubStory.Label(), "Talks, new members and H fill the club gauge. Each rank is a chapter.");
 
             if (Cfg.DevotionEnabled.Value)
             {
                 var d = GameUi.Block(_left, "devotion");
                 Header(d, "Devotion");
-                Line(d, "Favor stops at 100; devotion keeps growing. Requests, liked gifts and stories add it, and favor past 100 turns into it. Every " + Devotion.PerLevel + " points is a level:", 18f);
-                for (var i = 1; i <= Devotion.MaxLevel; i++)
-                    Line(d, "<color=" + Hex(GameUi.Gold) + ">" + i + ". " + Devotion.LevelNames[i] + "</color>  " + Devotion.PerkText[i], 18f);
+                Line(d, "Grows past 100 favor. A level every " + Devotion.PerLevel + " points.", 18f, GameUi.Dim);
+                for (var i = 1; i <= Devotion.MaxLevel; i++) Para(d, i + ". " + Devotion.LevelNames[i], Devotion.PerkText[i]);
             }
         }
 
@@ -591,30 +599,30 @@ namespace Joojkk.CampusLife
         {
             var c = GameUi.Block(_right, "talk");
             Header(c, "Conversations");
-            Para(c, "Speech bubble", "talking: topics (a star marks what she likes when you can read her mood), let her talk (problems, gossip, what her friends need), ask about her day, her friends or the university, jokes, compliments, clearing the air, and the game's small talk and listen.");
-            Para(c, "Heart", "romance and H: sweet talk, her hand, how she feels about you, teasing, whispers, talking about last time and sneaking off together, plus the game's confession, date, H and break up when the game allows them.");
-            Para(c, "Question mark", "invitations (lunch, study, exercise, club, going home, the Koikatsu Club), \"come with me\", gifts, and buttons other mods add. Only what the game allows right now is shown.");
-            Para(c, "Bars", "every turn moves her favor and H bars at once and uses " + Cfg.TurnTalkTime.Value.ToString("0.##") + " of the blue talk-time bar (the game's own options use 1). Her mood and trust change how invitations go: a hungry girl who likes you comes to lunch, a sleepy one won't exercise.");
+            Para(c, "Speech bubble", "Topics, let her talk, ask about her day or her friends. A star marks what she likes.");
+            Para(c, "Heart", "Sweet talk, teasing, how she feels about you, and the game's confession, date and H.");
+            Para(c, "Question mark", "Invitations, \"come with me\" and gifts. Only what is possible right now shows up.");
+            Para(c, "Bars", "Each turn moves favor and H at once and uses " + Cfg.TurnTalkTime.Value.ToString("0.##") + " of the blue talk-time bar.");
 
             var m = GameUi.Block(_right, "moods");
             Header(m, "Moods");
             foreach (Mood mood in Enum.GetValues(typeof(Mood)))
             {
                 if (mood == Mood.None) continue;
-                Para(m, Lines.MoodName(mood), Lines.MoodTip(mood));
+                Line(m, "<color=" + Hex(GameUi.Gold) + "><b>" + Lines.MoodName(mood) + "</b></color>   <color=" + Hex(GameUi.Dim) + ">" + Lines.MoodTip(mood) + "</color>", 19f);
             }
-            Line(m, "Ask \"How's your day?\" (Ask her...) to learn her mood, or have INT " + Cfg.MoodHintMinIntelligence.Value + "+.", 18f);
+            Line(m, "Ask \"How's your day?\" to learn her mood, or have INT " + Cfg.MoodHintMinIntelligence.Value + "+.", 18f, GameUi.Dim);
 
             var r = GameUi.Block(_right, "requests");
             Header(r, "Requests and stories");
-            Para(r, "Board", "requests show once you learn of them (she or a friend tells you, or you see it). Its shape is the mark on her minimap icon.");
-            Para(r, "Stories", "one story heroine with a pending event is chosen each college days.");
-            Para(r, "Outings", "a girl in the spotlight may invite you out (lunch, club time or after class). Alone with her, the last choice can turn romantic: her hand, a kiss, a confession, or somewhere private, which ends in H.");
-            Para(r, "Gifts", "a liked gift beats any chat and adds devotion. Learn likes by asking about her day or from library magazines.");
+            Para(r, "Board", "Requests show once you learn of them. Their shape is the mark on her minimap icon.");
+            Para(r, "Stories", "One story heroine with a pending event is chosen each college day.");
+            Para(r, "Outings", "A girl in the spotlight may invite you out, and alone with her it can turn romantic.");
+            Para(r, "Gifts", "A liked gift beats any chat. Learn likes from her day or from library magazines.");
 
             var a = GameUi.Block(_right, "activities");
             Header(a, "Activities");
-            Para(a, "Spots", "each activity has an icon at its place and plays the game's animation (or a short black screen). \"Do it\" takes you there.");
+            Para(a, "Spots", "Each activity has an icon at its place. \"Do it\" takes you there.");
             Para(a, "Moving a spot", "11. Position tools > Show position readout, stand there and press \"Spot here\".");
         }
 
