@@ -70,6 +70,11 @@
 @weights duo3.talk
 - pers=2.5 argue=30 myrole=2 otherrole=2 trisal=1 pair=1 othermood=3 wet=4 exam=1 sameclub=4 shared=1 period=4
 
+# The romance page's plain steps: the step and how she took it; who is watching and her mood
+# only add lines, so they stay worth 1 and the base lines keep sharing the draw.
+@weights romance
+- pers=2.5 act=3 q=3 close=3 lvl=3 tone=1.5 mood=1 watchers=1
+
 # Her refusals before the game's H: which one first, then who she is to you.
 @weights bounds
 - pers=2.5 hbound=3 hbound2=1.5 rel=2.5 mood=1.5 tone=1.5

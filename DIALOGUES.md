@@ -1,8 +1,10 @@
 # Campus Life - dialogue written for the mod
 
-Total lines (counting every personality version): 2062
+Total lines (counting every personality version): 1931
 
-Every line below was written for Campus Life (author: Joojkk). Lines of the game itself (normal conversations, story events, H) are not listed. Lines marked 'by personality' have four versions: gentle / energetic / cool / teasing, chosen from the girl's personality.
+Every line below was written for Campus Life (author: Joojkk). Lines of the game itself
+(normal conversations, story events, H) are not listed. Lines marked 'by personality' have four
+versions: gentle / energetic / cool / teasing, chosen from the girl's personality.
 
 Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in during the game.
 
@@ -11,7 +13,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### Lines / MoodLine / step Mood.Cheerful
 - **Her (by personality)**
-  - _gentle:_ I'm in a really good mood today. I don't even know why... maybe because you came to talk to me? || Everything feels a little brighter today. And now you're here, so even more. || I've been smiling all day. My friends think I'm weird. || I woke up happy today... and seeing you made it better. || Today feels gentle and warm. I like days like this. || I hummed all the way to school. Silly, right?
+  - _gentle:_ I'm in a really good mood today. I don't even know why... maybe because you came to talk to me? || Everything feels a little brighter today. And now you're here, so even more. || I've been smiling all day. My friends think I'm weird. || I woke up happy today... and seeing you made it better. || Today feels gentle and warm. I like days like this. || I hummed all the way to campus. Silly, right?
   - _energetic:_ Today's awesome! I feel like I could run ten laps! Or eat ten crepes! || Best day ever! I aced a quiz and the cafeteria had melon bread! || I'm so pumped today! Let's do something fun! || I'm buzzing today! Let's go do something! || Everything's going right today! Woo! || Super mood! Ask me for anything!
   - _cool:_ ...I'm fine. Better than fine, actually. Don't make it weird. || Good. Unusually good. I'm suspicious of it. || I'm in a good mood. Don't ruin it. ...You won't. || ...Good mood. Enjoy it quietly. || Today is pleasant. Unusually. || I'm content. Don't comment on it.
   - _teasing:_ Hm? You can tell I'm in a good mood? Then take advantage of it while it lasts~ || Great mood today. Maybe I'll even be nice to you~ || I'm in such a good mood I might spoil you. Might. || Good mood. You might get lucky today~ || I'm feeling generous today. Ask nicely. || Happy mood. Better make the most of it~
@@ -20,7 +22,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Her (by personality)**
   - _gentle:_ Um... sorry, my stomach keeps growling. I skipped breakfast... || I'm so hungry... could we maybe eat together later? || Sorry, I can't focus. I forgot my bento at home... || My tummy keeps rumbling... so embarrassing. || I didn't eat this morning... I'm so hungry. || Um, could we get something to eat? I'm starving...
   - _energetic:_ I'm STARVING. Like, I could eat the whole cafeteria. Wanna eat together? || Food. I need food. Then hugs. Food first. || My stomach's been yelling since second period! Feed me! || Feed me! I'm wasting away! || So hungry! Lunch date?! || I could eat everything in the cafeteria!
-  - _cool:_ I forgot my lunch. It's not a big deal. ...It's a little bit of a big deal. || Hungry. Very. I don't want to talk about it. || I skipped lunch for the student council. Regretting it. || Hungry. Don't comment. || I skipped a meal. Mistake. || Food would be welcome.
+  - _cool:_ I forgot my lunch. It's not a big deal. ...It's a little bit of a big deal. || Hungry. Very. I don't want to talk about it. || I skipped lunch for the student union. Regretting it. || Hungry. Don't comment. || I skipped a meal. Mistake. || Food would be welcome.
   - _teasing:_ I'm hungry~ If someone bought me something, I'd be very grateful. Very. || Starving~ A good boyfriend would know what to do. || Feed me and I'll be extra sweet to you today~ || Hungry~ A good boyfriend brings snacks. || Feed me and I'll be nice. || Starving. Spoil me?
 
 ### Lines / MoodLine / step Mood.Bored
@@ -32,8 +34,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### Lines / MoodLine / step Mood.Stressed
 - **Her (by personality)**
-  - _gentle:_ The tests are coming and I'm so behind... I'm a little scared. || There's so much to do... I don't know where to start. || I've been worrying all day. Can I lean on you a little? || I'm so worried about the tests... || There's so much homework... I'm overwhelmed. || I'm a bit scared... could I lean on you?
-  - _energetic:_ Ugh, my head's gonna explode! Too much homework! || Three reports due this week! Who does that?! || My brain is full! No more room! Help! || Too much homework! My brain's melting! || Deadlines everywhere! Aaah! || I need a vacation! Now!
+  - _gentle:_ The tests are coming and I'm so behind... I'm a little scared. || There's so much to do... I don't know where to start. || I've been worrying all day. Can I lean on you a little? || I'm so worried about the tests... || There's so much assignments... I'm overwhelmed. || I'm a bit scared... could I lean on you?
+  - _energetic:_ Ugh, my head's gonna explode! Too much assignments! || Three reports due this week! Who does that?! || My brain is full! No more room! Help! || Too much assignments! My brain's melting! || Deadlines everywhere! Aaah! || I need a vacation! Now!
   - _cool:_ I have too much on my plate. It's under control. Mostly. || Busy. Deadlines. I'll survive. || Stressed. I'll handle it. ...A coffee wouldn't hurt. || Busy. Manageable. Barely. || Deadlines. I'll cope. || Stressed. Coffee would help.
   - _teasing:_ Everyone's getting on my nerves today. Except you, maybe. Maybe. || Today is testing me. Be extra nice, okay? || I'm wound up tight today. Help me relax? || Everyone's annoying today. You, less so. || Today's awful. Be sweet to me. || Tense today. Help me unwind?
 
@@ -143,8 +145,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ {")} || You're here. I need someone to check my essay. Quietly. || Good. Proofread my report. Ten minutes. || You came. I need a practice partner for English.
   - _teasing:_ {")} || You came. Rate my speech. Honestly. || Look who's here. I need an honest critic for my poem. || You showed up. Help me pick a costume for the festival.
 - **Variants:** Y-you came... I have to read my report in front of the class tomorrow and I freeze every time. Could you listen while I practice? | Th-thanks for coming. I lost the notes for tomorrow's test... could you go over the main points with me?
-- **Variants:** You came! Okay, don't laugh: I signed up to give the club speech and I have no idea what to say. Help me write it? | Yay, you're here! I'm making the poster for the school festival and it looks like a ransom note. Help!
-- **Variants:** Good, you're here. I'm stuck on the math homework and I'd rather not ask in class. Ten minutes? | You came. I need someone to time my run-through for the class presentation. Quietly.
+- **Variants:** You came! Okay, don't laugh: I signed up to give the club speech and I have no idea what to say. Help me write it? | Yay, you're here! I'm making the poster for the campus festival and it looks like a ransom note. Help!
+- **Variants:** Good, you're here. I'm stuck on the math assignments and I'd rather not ask in class. Ten minutes? | You came. I need someone to time my run-through for the class presentation. Quietly.
 - **Variants:** Hey, you actually came. I need a second opinion on the festival poster, and you're the only one who'll be honest. | Look who showed up. I'm writing the class newsletter and I need a real person to tell me if it's boring.
 
 ### Lines / NoteThanks
@@ -181,8 +183,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### Lines / MoodLine / step Mood.Stressed
 - **Her (by personality)**
-  - _gentle:_ A little nervous... there's a lot of studying to do. || A bit stressed... lots of homework. || Busy... I have a test soon. || A little stressed... lots to study. || Nervous about tests... || Busy with homework...
-  - _energetic:_ Stressed! Way too much homework this week. || Stressed! So many deadlines! || Busy busy busy! Too much stuff! || Stressed! Homework overload! || Deadlines! Aah! || Busy busy!
+  - _gentle:_ A little nervous... there's a lot of studying to do. || A bit stressed... lots of assignments. || Busy... I have a test soon. || A little stressed... lots to study. || Nervous about tests... || Busy with assignments...
+  - _energetic:_ Stressed! Way too much assignments this week. || Stressed! So many deadlines! || Busy busy busy! Too much stuff! || Stressed! Assignments overload! || Deadlines! Aah! || Busy busy!
   - _cool:_ Busy. I have a lot to get through. || Stressed. It's manageable. || Busy. Lots on my plate. || Busy. Lots to do. || Stressed. Manageable. || Occupied.
   - _teasing:_ Stressed. Long story, and we don't know each other that well yet. || Stressed. Don't ask, stranger. || On edge. Not a great time to impress me. || Stressed. Long story. || Tense. Don't ask yet. || Busy. Not the best time.
 
@@ -243,7 +245,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 ### Lines / FriendMoodLine / step Mood.Stressed
 - **Her (by personality)**
   - _gentle:_ The tests are coming and I'm so behind... I'm a little scared. || There's so much to do... I don't know where to start. || I've been worrying all day. Can I lean on you a little? || Tests are coming... I'm scared. || So much to do... || Can I lean on you?
-  - _energetic:_ Ugh, my head's gonna explode! Too much homework! || Three reports due this week! Who does that?! || My brain is full! No more room! Help! || Homework explosion! || Reports everywhere! || Brain full!
+  - _energetic:_ Ugh, my head's gonna explode! Too much assignments! || Three reports due this week! Who does that?! || My brain is full! No more room! Help! || Assignments explosion! || Reports everywhere! || Brain full!
   - _cool:_ I have too much on my plate. It's under control. Mostly. || Busy. Deadlines. I'll survive. || Stressed. I'll handle it. ...A coffee wouldn't hurt. || Busy. Under control. || Deadlines. || Stressed. Coffee?
   - _teasing:_ Everyone's getting on my nerves today. You get a pass. || Rough day. You're one of the few I'm not mad at. || Stressed. Help me forget it? || Everyone annoys me. You're spared. || You're one I'm not mad at. || Help me forget it.
 
@@ -266,7 +268,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _gentle:_ Mm... sorry, I stayed up late reading. I can barely keep my eyes open... || I'm so sleepy... can I lean on you a little? || Sorry, I barely slept. I kept thinking about stuff... || Stayed up reading... sleepy. || Can I lean on you? Tired... || Barely slept...
   - _energetic:_ *yawn* I gamed until three. Totally worth it. Totally dying. || *yawn* Movie marathon last night. Big mistake! || Sleepy! I could nap standing up! || *yawn* Gamed till three! || *yawn* Movie night! || Nap standing up!
   - _cool:_ I didn't sleep. Speak slowly. || Tired. Don't expect wit today. || Three hours of sleep. Be gentle with me. || Didn't sleep. Slowly. || Tired. || Exhausted.
-  - _teasing:_ So sleepy... if I nod off, wake me before the teacher sees. || Sleepy... let me rest on your shoulder? || *yawn* Keep me awake, friend. || Wake me before the teacher sees. || Shoulder nap? || Keep me awake, friend.
+  - _teasing:_ So sleepy... if I nod off, wake me before the professor sees. || Sleepy... let me rest on your shoulder? || *yawn* Keep me awake, friend. || Wake me before the professor sees. || Shoulder nap? || Keep me awake, friend.
 
 ### Lines / FriendMoodLine / step Mood.Upset
 - **Her (by personality)**
@@ -314,9 +316,11 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### Opening
 - **Choice:** Promise to keep it secret. | Tease her about it.
+- **Her:** {RomanceSay}
 - **Narration:** {WorriedHint} <color=#6ab4ff>[INT]</color> Ask her... > Just listen.
 
 ### PickTopic
+- **Her:** {Love ? RomanceSay}
 - **Her:** {T}
 - **Her (by personality)**
   - _gentle:_ Oh, um... that's nice, I guess. || Oh... that's interesting, I think. || Um, okay... I see. || Ah... mm, that's nice.
@@ -336,19 +340,28 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 ### AskSchool
 - **Her:** {GossipLine}
 
+### Compliment
+- **You:** {mine ?? RomanceMe}
+- **Her:** {RomanceSay}
+- **Her:** {ok ? RomanceSay}
+
 ### Flirt
-- **Her:** {T}
-- **Her (by personality)**
-  - _gentle:_ Y-you already said something like that... || Y-you said that already... || Ah... again? You're making me blush... || Um... I heard you the first time...
-  - _energetic:_ Okay, okay, I get it! Hehe! || Okay, okay! I heard you! Ehehe! || Again?! Alright, I get it! || Haha, you're repeating yourself!
-  - _cool:_ Once is enough. || You said that. || I heard you the first time. || Once was sufficient.
-  - _teasing:_ Laying it on thick, aren't you? || Running out of material? || Again? Someone's desperate. || Twice in a row? Try harder.
+- **You:** {RomanceMe}
+- **Her:** {RomanceSay}
+- **Her:** {RomanceSay}
+
+### HoldHand
+- **You:** {RomanceMe}
+- **Her:** {RomanceSay}
+
+### AskFeelings
+- **You:** {RomanceMe}
 
 ### MakePlans
 - **You:** {PlayerMakePlans}
 
 ### Opener / step Topic.Classes
-- **Variants:** How are classes going for you? | Did you get today's homework?
+- **Variants:** How are classes going for you? | Did you get today's assignments?
 
 ### Opener / step Topic.Club
 - **Variants:** How's your club doing lately? | Anything new at your club?
@@ -363,7 +376,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Variants:** What do you do in your free time? | Into anything fun lately?
 
 ### Opener / step Topic.Rumors
-- **Variants:** Heard any interesting rumors around school? | Do you know what everyone's whispering about?
+- **Variants:** Heard any interesting rumors around campus? | Do you know what everyone's whispering about?
 
 ### Opener / step Topic.Weekend
 - **Variants:** Got any plans for the weekend? | Did you do anything fun last weekend?
@@ -374,9 +387,9 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### Good / step Topic.Classes
 - **Her (by personality)**
-  - _gentle:_ Classes are going well! I finally understood today's math lesson. || Classes are fine! I even understood math today. || I've been keeping up in class. The teacher was really kind today. || School's going well, I think! I got a good grade on a quiz.
+  - _gentle:_ Classes are going well! I finally understood today's math lesson. || Classes are fine! I even understood math today. || I've been keeping up in class. The professor was really kind today. || Campus is going well, I think! I got a good grade on a quiz.
   - _energetic:_ Classes? Ugh. But okay, history was actually kinda cool today! || Ugh, classes! But PE was awesome today! || Class is class, but history had a cool story today! || Honestly? Science was fun! We blew something up! Kinda!
-  - _cool:_ Fine. I like it when a teacher actually explains things properly. || Classes are tolerable. Today's lecture was well structured. || Good. I appreciate a teacher who prepares. || Productive. I understood everything.
+  - _cool:_ Fine. I like it when a professor actually explains things properly. || Classes are tolerable. Today's lecture was well structured. || Good. I appreciate a professor who prepares. || Productive. I understood everything.
   - _teasing:_ I aced the quiz. Go on, be impressed. || Top of the class, as usual. You may applaud. || I answered every question today. Jealous? || Classes? Easy. Next question.
 
 ### Good / step Topic.Club
@@ -410,7 +423,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 ### Good / step Topic.Rumors
 - **Her (by personality)**
   - _gentle:_ Um, I heard the library is getting new books... does that count as a rumor? || Um, I heard the library got new books... that's a rumor, right? || Someone said there's a stray cat behind the gym... is it true? || I heard the festival might be bigger this year...
-  - _energetic:_ Oh oh oh! Did you hear about the class rep and the vending machine?! || Okay, did you hear what happened at the vending machine?! || Oh! Someone confessed on the roof yesterday! || Big news! The teacher wore mismatched socks!
+  - _energetic:_ Oh oh oh! Did you hear about the course rep and the vending machine?! || Okay, did you hear what happened at the vending machine?! || Oh! Someone confessed on the roof yesterday! || Big news! The professor wore mismatched socks!
   - _cool:_ ...I heard something. Fine, I'll tell you. Quietly. || ...I heard something. Keep it to yourself. || ...There's a rumor. I'll tell you once. || ...Quietly. I heard something interesting.
   - _teasing:_ Rumors are my specialty. Lean in. || Rumors? Oh, I have the good ones. Come closer. || I know everything. Want a sample? || Gossip is my art. Lean in.
 
@@ -492,37 +505,6 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _energetic:_ Hiya! || Hiya! || Hey hey! || Yo!
   - _cool:_ Do you need something? || Need something? || Something? || Yes?
   - _teasing:_ You look like you want to say something. || You want to say something. || Spit it out. || Something on your mind?
-
-### ConvoLines / JealousLove / step 0
-- **Her (by personality)**
-  - _gentle:_ You and {friend} looked really happy together... I'm happy for you. I think. || You and {friend} looked so happy... I'm glad. I think. || You seem close to {friend}... that's nice. Probably. || {friend} makes you smile... I'm happy for you. Mostly.
-  - _energetic:_ Hey! Why is it always {friend}?! What does she have that I don't?! || Why {friend}?! What's she got that I don't?! || {friend} again?! Not fair! || Always {friend}! What about me?!
-  - _cool:_ You've been with {friend} a lot. I noticed. That's all I'll say. || You and {friend}. A lot lately. Noted. || {friend}, often. I see. || I've noticed you and {friend}. That's all.
-  - _teasing:_ So {friend} gets your attention now? I can be much more fun, you know~ || {friend} has you now? I'm more fun~ || Choosing {friend}? I'm better~ || {friend}? I'm way more entertaining~
-- **Her (by personality)**
-  - _gentle:_ I keep thinking about you and {friend}... Sorry, that's weird of me. || I keep thinking about you and {friend}... sorry. || You and {friend}... it's on my mind. Sorry. || I can't stop thinking about you two... sorry.
-  - _energetic:_ I saw you with {friend} again! I'm not jealous! ...Okay, a little! || You and {friend} again! Not jealous! ...A bit! || {friend} again?! I'm fine! ...Kinda not! || Saw you with {friend}! Totally fine! ...No!
-  - _cool:_ If you like {friend}, just say it. Don't keep me guessing. || If it's {friend}, say so. || Just tell me if it's {friend}. || Be honest about {friend}.
-  - _teasing:_ Careful. If you keep spending time with {friend}, I might have to steal you back~ || Keep it up with {friend} and I'll steal you back~ || Careful. I'll take you from {friend}~ || {friend} can't keep you forever~
-
-### ConvoLines / Jealous / step 0
-- **Her (by personality)**
-  - _gentle:_ You've been spending a lot of time with {friend} lately... it's fine. I just noticed, that's all. || You're with {friend} a lot lately... it's okay. I just noticed. || So much time with {friend}... it's fine, really. || I see you with {friend} a lot... that's all.
-  - _energetic:_ Hey! You hang out with {friend} every day now! What about me?! || {friend} every day?! What about me?! || Hey! Me too! Not just {friend}! || {friend} again?! Hang with me!
-  - _cool:_ You and {friend} are always together lately. I'm not complaining. I'm observing. || You and {friend}, constantly. Just observing. || Always with {friend}. An observation. || {friend}, daily. Noted.
-  - _teasing:_ Oh, you remembered me? I thought {friend} had adopted you. || Remembered me? I thought {friend} kept you. || Oh, you escaped {friend}? || {friend} let you off the leash?
-
-### ConvoLines / Jealous / step 1
-- **Her (by personality)**
-  - _gentle:_ Um... did I do something wrong? You only talk to {friend} these days. || Did I do something wrong? It's always {friend}... || Am I boring? You only talk to {friend}... || Did I upset you? It's just {friend} now...
-  - _energetic:_ It's always {friend}, {friend}, {friend}! I'm fun too, you know! || {friend}, {friend}! I'm fun too! || Always {friend}! Pick me sometimes! || Enough {friend}! My turn!
-  - _cool:_ I'm glad you and {friend} get along. ...Don't forget the rest of us. || Good that you and {friend} get along. Remember others. || {friend} is fine. Don't forget us. || Don't forget the rest of us.
-  - _teasing:_ Is {friend} that interesting? Should I be worried? || Is {friend} that great? Should I worry? || {friend}, huh? Am I being replaced? || What's so special about {friend}?
-- **Her (by personality)**
-  - _gentle:_ It's a little lonely when you're always with {friend}... || It's lonely when you're with {friend}... || I miss you when you're with {friend}... || It gets quiet without you...
-  - _energetic:_ No fair! {friend} gets you all to herself! || {friend} hogs you! No fair! || {friend} gets you all day! Unfair! || Share! {friend} keeps you!
-  - _cool:_ You've been busy. With {friend}, mostly. || Busy. With {friend}. || You've been with {friend}. || {friend} has your time.
-  - _teasing:_ Let me guess, {friend} was busy today so you came to me? || {friend} was busy, so me? || Second choice after {friend}? || Oh, {friend} wasn't free?
 
 ### ConvoLines / Incident / step Social.Kinds.Defended
 - **Her (by personality)**
@@ -678,9 +660,9 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _teasing:_ You and {about}, out where anyone could walk by? I did walk by. || I walked by you and {about}. Surprise. || Out in the open with {about}? I saw. || You and {about}. Public. I watched.
 - **Her (by personality)**
   - _gentle:_ There's a rumor about you and {about}... the kind I can't even say. || There's a rumor about you and {about}... I can't even repeat it. || People are saying things about you and {about}... embarrassing things. || I heard something about you and {about}... I'm blushing.
-  - _energetic:_ Everyone's whispering about you and {about}! Is it true?! || The whole school's whispering about you and {about}! True?! || Rumor alert! You and {about}! || Everyone's buzzing about you and {about}!
+  - _energetic:_ Everyone's whispering about you and {about}! Is it true?! || The whole university's whispering about you and {about}! True?! || Rumor alert! You and {about}! || Everyone's buzzing about you and {about}!
   - _cool:_ The rumor about you and {about}. Tell me it's a rumor. || The rumor with {about}. Say it's false. || About you and {about}. Tell me it's a rumor. || That {about} rumor. Explain.
-  - _teasing:_ You and {about}, huh? The whole school is blushing. || You and {about}? Everyone's red-faced. || The whole school is flustered over you and {about}. || You and {about}. Scandalous.
+  - _teasing:_ You and {about}, huh? The whole university is blushing. || You and {about}? Everyone's red-faced. || The whole university is flustered over you and {about}. || You and {about}. Scandalous.
 - **Her (by personality)**
   - _gentle:_ I saw you being really sweet to {about}... she was all red. || You were so sweet to {about}... she turned red. || I saw you with {about}... she was blushing. || You made {about} blush... I saw.
   - _energetic:_ I saw you sweet-talking {about}! Smooth! || Sweet-talking {about}! Smooth! || You charmed {about}! I saw! || Ooh! Flirting with {about}!
@@ -717,8 +699,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 ### ConvoLines / Vent / step Mood.Stressed
 - **Her (by personality)**
   - _gentle:_ It's the exams... Everyone expects so much and I don't want to disappoint anyone. Sorry, I'm just dumping this on you. || Exams... everyone expects so much. I'm scared to disappoint them. Sorry for unloading this. || The tests are close and everyone's counting on me... sorry, I needed to say it. || I'm so afraid of letting everyone down... sorry for dumping it on you.
-  - _energetic:_ Everything's piling up! Homework, club, my mom... I just wanna scream into a pillow! || Homework, club, mom... too much! I wanna scream! || Everything's stacking up! I need a pillow to yell into! || Too much stuff! My head's exploding!
-  - _cool:_ I have three deadlines this week and the teacher added a fourth. I'm handling it. I just needed to say it out loud. || Three deadlines, now four. I'm handling it. Just venting. || Four deadlines this week. Manageable. I needed to say it. || An extra deadline appeared. I'll manage. Venting.
+  - _energetic:_ Everything's piling up! Assignments, club, my mom... I just wanna scream into a pillow! || Assignments, club, mom... too much! I wanna scream! || Everything's stacking up! I need a pillow to yell into! || Too much stuff! My head's exploding!
+  - _cool:_ I have three deadlines this week and the professor added a fourth. I'm handling it. I just needed to say it out loud. || Three deadlines, now four. I'm handling it. Just venting. || Four deadlines this week. Manageable. I needed to say it. || An extra deadline appeared. I'll manage. Venting.
   - _teasing:_ Everyone wants something from me today. You're the first person who just... listened. || Everyone wants something today. You just listened. || All day, demands. You're the only one who listened. || Everyone needs me. You just... heard me out.
 
 ### ConvoLines / Vent / step Mood.Upset
@@ -750,9 +732,9 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 ### ConvoLines / Anecdote / step 0
 - **Her (by personality)**
   - _gentle:_ This morning a little bird landed on my desk by the window. I didn't dare move all through first period. || A bird landed on my desk this morning. I didn't move all period. || A little sparrow visited my window today. I held my breath. || A bird sat by me in class. I froze so it wouldn't leave.
-  - _energetic:_ I tried to jump the school fence this morning because I was late. Spoiler: the fence won. || I tried jumping the fence when late. The fence won. || Fence climb this morning! Fence: one, me: zero! || Tried to vault the gate! Faceplant!
+  - _energetic:_ I tried to jump the university fence this morning because I was late. Spoiler: the fence won. || I tried jumping the fence when late. The fence won. || Fence climb this morning! Fence: one, me: zero! || Tried to vault the gate! Faceplant!
   - _cool:_ The vending machine gave me two drinks for the price of one today. I've decided it's a sign. || Two drinks for one today. A sign. || The vending machine glitched in my favor. A sign. || Free drink. The universe approves.
-  - _teasing:_ A first-year asked me for directions and I sent him to the staff room on purpose. He'll thank me later. || Sent a first-year to the staff room on purpose. He'll thank me. || Gave a newbie wrong directions. Character building. || Misled a first-year. Educational.
+  - _teasing:_ A first-year asked me for directions and I sent him to the faculty room on purpose. He'll thank me later. || Sent a first-year to the faculty room on purpose. He'll thank me. || Gave a newbie wrong directions. Character building. || Misled a first-year. Educational.
 
 ### ConvoLines / Anecdote / step 1
 - **Her (by personality)**
@@ -783,7 +765,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _teasing:_ I dyed a streak of my hair last weekend. Nobody noticed. Do you? || Dyed my hair. Nobody noticed. Do you? || New hair streak. See it? || Notice anything? My hair?
 - **Her (by personality)**
   - _gentle:_ The cherry tree behind the gym is starting to bud. I go look at it every morning. || The cherry tree by the gym is budding... I visit every morning. || The cherry buds are coming... I check daily. || Spring's coming... the tree is budding.
-  - _energetic:_ I signed up to help at the school festival! It's gonna be huge! || I'm helping with the festival! Huge! || Festival volunteer! So excited! || Signed up for the festival! Big!
+  - _energetic:_ I signed up to help at the campus festival! It's gonna be huge! || I'm helping with the festival! Huge! || Festival volunteer! So excited! || Signed up for the festival! Big!
   - _cool:_ The library got the new volume of the series I like. I reserved it the second I saw it. || New volume at the library. Reserved instantly. || The library got my series. Reserved. || New volume in. I claimed it.
   - _teasing:_ I've been people-watching in the courtyard. You'd be amazed what you learn. || People-watching in the courtyard. Educational. || Watching people. You learn things. || The courtyard is full of secrets.
 
@@ -825,7 +807,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 ### ConvoLines / GossipLine / step Social.Kinds.Flirted
 - **Her (by personality)**
   - _gentle:_ People say you kissed {about}... is that true? || Did you really kiss {about}...? || They say you kissed {about}... || A kiss with {about}...? Really?
-  - _energetic:_ Everyone's saying you kissed {about}! || You kissed {about}! Everyone says so! || Kiss with {about}! The school knows! || {about} and you kissed?!
+  - _energetic:_ Everyone's saying you kissed {about}! || You kissed {about}! Everyone says so! || Kiss with {about}! The university knows! || {about} and you kissed?!
   - _cool:_ There's talk you kissed {about}. || Talk of a kiss with {about}. || Rumor: you and {about}. Kiss. || A kiss. {about}. Rumored.
   - _teasing:_ You kissed {about}? The whole class knows. || Kissed {about}? Whole class knows. || Everyone knows about {about}. || {about}. Kiss. Famous now.
 - **Her (by personality)**
@@ -840,7 +822,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _teasing:_ Your hands and {about}. That's the rumor. || Your hands and {about}. The rumor. || Hands on {about}, they say. || Rumor: you and {about}. Hands.
 - **Her (by personality)**
   - _gentle:_ People say you and {about} are getting close... || You and {about} are getting close, they say... || People think you and {about} are close... || You and {about}... close?
-  - _energetic:_ Everyone's talking about you and {about}! || You and {about}! Everyone's talking! || The school's buzzing about you and {about}! || You and {about}! Big news!
+  - _energetic:_ Everyone's talking about you and {about}! || You and {about}! Everyone's talking! || The university's buzzing about you and {about}! || You and {about}! Big news!
   - _cool:_ There's talk about you and {about}. || Talk of you and {about}. || You and {about}. Discussed. || Rumors. You and {about}.
   - _teasing:_ You and {about}, huh? The whole class knows. || You and {about}? Class knows. || Everyone knows about you and {about}. || You and {about}. Famous.
 
@@ -861,7 +843,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 ### ConvoLines / FriendMood / step Mood.Stressed
 - **Her (by personality)**
   - _gentle:_ {friend} looks so stressed about tests... maybe she'd like to study with someone. || {friend} is stressed about tests... she might like a study partner. || {friend} looks worried about exams... maybe help her study? || {friend} is anxious about tests...
-  - _energetic:_ {friend}'s freaking out about homework! || {friend}'s panicking about homework! || {friend}'s homework meltdown! || {friend} is drowning in homework!
+  - _energetic:_ {friend}'s freaking out about assignments! || {friend}'s panicking about assignments! || {friend}'s assignments meltdown! || {friend} is drowning in assignments!
   - _cool:_ {friend} is overwhelmed. Studying might help her. || {friend} is overwhelmed. Study with her. || {friend} needs a study partner. || {friend}. Overloaded. Help her study.
   - _teasing:_ {friend} is a wreck about exams. Go play hero. || {friend}'s an exam mess. Be a hero. || {friend} needs rescuing. Exams. || Play tutor for {friend}.
 
@@ -1000,73 +982,6 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ That crossed a line. || Over the line. || Too far. || That's not okay.
   - _teasing:_ Careful. That one stung. || That stung. Careful. || Watch it. || Ouch. Careful.
 
-### ConvoLines / ComplimentGood
-- **Her (by personality)**
-  - _gentle:_ Eh?! Y-you think so...? Thank you... || Eh?! Really...? Thank you... || Y-you think so? Thanks... || Ah... thank you...!
-  - _energetic:_ Hehe, really?! You noticed! || Really?! You noticed! || Hehe! Thanks! || You saw?! Yay!
-  - _cool:_ ...You're not bad yourself. Thanks. || ...You're not bad either. || ...Thanks. You too. || ...Likewise. Thanks.
-  - _teasing:_ Oh? Took you long enough to notice. || Took you long enough. || Finally noticed? || Slow, but okay.
-- **Her (by personality)**
-  - _gentle:_ R-really? That makes me really happy... || Really? I'm so happy... || That makes me glad... || Oh... thank you so much...
-  - _energetic:_ Yay! Somebody noticed! || Someone noticed! Yay! || Woo! Noticed! || Finally! Yay!
-  - _cool:_ ...Thank you. I appreciate that. || ...Thank you. || ...Appreciated. || ...Thanks.
-  - _teasing:_ Finally, someone with taste. || Good taste. Finally. || Someone with eyes. || At last, taste.
-
-### ConvoLines / ComplimentFlat
-- **Her (by personality)**
-  - _gentle:_ Oh... um, thank you, I guess. || Oh... thanks, I guess. || Um... thank you? || Ah... okay, thanks.
-  - _energetic:_ Haha, thanks? Random, but okay! || Thanks? Random! || Ha! Okay, thanks! || Huh? Thanks!
-  - _cool:_ Okay. || Okay. || Fine. || Noted.
-  - _teasing:_ Flattery won't get you far with me. || Flattery won't work. || Nice try. || Not that easy.
-
-### ConvoLines / ComplimentRepeat
-- **Her (by personality)**
-  - _gentle:_ You said that yesterday too... || You said that before... || That again...? || You told me yesterday...
-  - _energetic:_ You already told me! Got a new one? || Heard it! New one! || Old news! || You already said!
-  - _cool:_ You're repeating yourself. || Repeating. || Same line. || Again?
-  - _teasing:_ Running out of material? || Out of material? || Rerun? || Recycling?
-
-### ConvoLines / FlirtGood / step 0
-- **Her (by personality)**
-  - _gentle:_ M-me too... I'm so happy you said that. || M-me too... I'm so happy. || I feel the same... || Me too... really.
-  - _energetic:_ Aww! You're making me blush! Me too, okay?! || Me too! Stop, I'm blushing! || Aww! Same! || Me too, okay?!
-  - _cool:_ ...Me too. Don't make me say it twice. || ...Same. Once only. || ...Me too. || ...Likewise. Don't repeat it.
-  - _teasing:_ Hmph. Smooth talker. ...I feel the same. || Smooth. ...Same. || Charmer. ...Me too. || Hmph. ...Me too.
-- **Her (by personality)**
-  - _gentle:_ You always know what to say... I love that about you. || You always know what to say... I love it. || You're so sweet... I love that. || Your words make me happy...
-  - _energetic:_ Ehehe! I'm the luckiest girl in school! || Luckiest girl in school! || I'm so lucky! || Best boyfriend ever!
-  - _cool:_ I like this. Us. || I like us. || This is good. || I like this.
-  - _teasing:_ Keep talking like that and I might fall for you all over again. || Keep it up and I'll fall again. || Careful. I'm falling again. || More, and I'm yours all over again.
-- **Her (by personality)**
-  - _gentle:_ Eh...? I-I like spending time with you too... || I-I like being with you too... || Eh...? Me too... || I enjoy our time too...
-  - _energetic:_ Wh-whoa, where did that come from?! ...Thanks, hehe. || Whoa! ...Thanks, hehe. || Where'd that come from?! ...Hehe. || Wh-what?! ...Thanks!
-  - _cool:_ ...You're making me lose my composure. || ...You're rattling me. || ...My composure. Gone. || ...Stop. I'm flustered.
-  - _teasing:_ Oh my. Are you trying to make me blush? || Making me blush? || Oh my. Trying to fluster me? || Is that a blush attempt?
-- **Her (by personality)**
-  - _gentle:_ That's... a really nice thing to say. || That's so nice... || What a kind thing... || That's lovely...
-  - _energetic:_ Haha, you're so straightforward! I like it! || So direct! I like it! || Straightforward! Nice! || Ha! Honest! Love it!
-  - _cool:_ ...I don't dislike hearing that. || ...I don't mind it. || ...Not unpleasant. || ...Fine to hear.
-  - _teasing:_ Careful. I might start believing you. || I might believe you. Careful. || Don't make me believe it. || Dangerous words.
-
-### ConvoLines / FlirtTooSoon
-- **Her (by personality)**
-  - _gentle:_ Um... we don't know each other that well yet... || We don't know each other well yet... || Um... too soon... || I'm not ready for that...
-  - _energetic:_ Whoa, slow down there, buddy! || Whoa, slow down! || Easy there! || Too fast, buddy!
-  - _cool:_ ...That's a bit much. || ...Too much. || ...Excessive. || ...Slow down.
-  - _teasing:_ Nice try. You'll have to work harder than that. || Try harder. || Not that easy. || Nice try.
-
-### ConvoLines / LoveTalk
-- **Her (by personality)**
-  - _gentle:_ Being your girlfriend... I still can't believe it sometimes. || I still can't believe I'm your girlfriend... || Being your girlfriend feels like a dream... || Your girlfriend... it still surprises me.
-  - _energetic:_ Everyone's jealous of us, you know! Hehe! || Everyone envies us! Hehe! || We're the school's couple! || People are so jealous!
-  - _cool:_ I've been thinking about where we could go on our next date. || I've been planning our next date. || Next date ideas. I have some. || Where shall we go next?
-  - _teasing:_ So, what's the plan for our next date? It better be good. || Next date plan? Make it good. || Our next date. Impress me. || Plan something good. Next date.
-- **Her (by personality)**
-  - _gentle:_ Do you... have someone you like? || Is there... someone you like? || Do you like anyone...? || Um... anyone special?
-  - _energetic:_ So! Do you have a crush on anyone? Tell me! || Crush! Who?! Tell me! || Got a crush?! Spill! || Who do you like?! Tell!
-  - _cool:_ Have you ever been in love? || Ever been in love? || Love. Experienced it? || Have you loved someone?
-  - _teasing:_ Who do you like? Come on, I won't tell. || Who's your crush? I'll keep it secret. || Spill. Who do you like? || Your crush. Tell. I won't tell.
-
 ### ConvoLines / ExplainOk
 - **Her (by personality)**
   - _gentle:_ Oh... I see. I'm sorry I doubted you. || Oh... I'm sorry I doubted you. || I see... sorry. || Ah... forgive me.
@@ -1107,13 +1022,6 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ Not funny. || Not funny. || Stop. || Unamusing.
   - _teasing:_ Try it and see what happens. || Try it. See. || Go ahead. I dare you. || Do it and regret it.
 
-### ConvoLines / OutOfPatience
-- **Her (by personality)**
-  - _gentle:_ Um, sorry, I should get going soon... || Sorry, I need to go... || I should leave soon... || Um, I have to go...
-  - _energetic:_ Ah, I gotta run! Later! || Gotta run! Later! || Bye! Gotta go! || Running! See ya!
-  - _cool:_ I need to go. || Leaving. || I have to go. || Time to go.
-  - _teasing:_ That's enough for now. I have things to do. || Enough for now. || That's all for today. || I'm busy. Bye.
-
 ### ConvoLines / Bye
 - **Her (by personality)**
   - _gentle:_ That was really fun. Thank you for talking with me. || That was fun. Thank you. || I enjoyed that so much. || Thank you for the chat... it was fun.
@@ -1131,94 +1039,15 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ Bye. || Bye. || ...Later. || Goodbye.
   - _teasing:_ Well. That happened. || Well. That was something. || Okay then. || That happened.
 
-### ConvoLines / TooTired
-- **Her (by personality)**
-  - _gentle:_ Sorry, I don't really have time to talk right now... || Sorry, no time right now... || I can't talk now, sorry... || Not now, sorry...
-  - _energetic:_ Ugh, can we talk later? I'm beat! || Later? I'm wiped! || Ugh, later! || I'm beat! Later!
-  - _cool:_ Not now. || Not now. || Later. || No.
-  - _teasing:_ I've talked enough today. Come back tomorrow. || Talked enough. Tomorrow. || Come back tomorrow. || Done for today.
-
 ## Romance and H (heart page: hands, teasing, whispers, last time, sneaking off)
 `Dialogue/RomanceLines.cs`
 
-### RomanceLines / PlayerHand
-- **Variants:** Come here. Give me your hand. | I missed holding your hand. | Let's walk like this for a while.
-- **Variants:** Can I... hold your hand for a bit? | Your hands look cold. Here. | Would it be weird if I held your hand?
-
-### RomanceLines / HandYes / step 0
-- **Her (by personality)**
-  - _gentle:_ Mm... your hand is so warm. I could stay like this all day. || Your hand is so warm... I don't want to let go. || Mm... I feel safe like this. || Holding your hand makes everything feel okay.
-  - _energetic:_ Hehe, fingers laced! That's the official couple grip! || Laced fingers! Super official! || Hand-holding power! Hehe! || Look! We're holding hands! Everyone, look!
-  - _cool:_ ...Don't let go yet. || ...Keep holding. || ...Not yet. Don't let go. || ...Stay like this.
-  - _teasing:_ Holding hands in public? How bold. ...I'm not complaining. || Public hand-holding? Scandalous. Keep going. || Showing me off? Good. || Brave, holding my hand here. I approve.
-
-### RomanceLines / HandYes / step 1
-- **Her (by personality)**
-  - _gentle:_ Every time we do this my heart races like the first time... || My heart still races every time... || It's like the first time, every time... || Even now, my heart jumps when you take my hand.
-  - _energetic:_ Swing, swing! Ehehe, I love this! || Swing! Swing! Ahaha! || Wheee! Hand swinging! || Ehehe, this never gets old!
-  - _cool:_ Your hand fits mine. Funny how that works. || Your hand fits mine. Odd. || ...We fit. Strange. || ...It fits. I noticed.
-  - _teasing:_ Squeeze back if you love me. ...Hm. Good answer. || Squeeze if you love me. ...Correct. || Squeeze twice if you're mine. ...Good. || Prove it. Squeeze. ...Good boy.
-- **Her (by personality)**
-  - _gentle:_ People are looking... but I don't mind. Not with you. || Let them look... I'm happy with you. || I don't care who sees. Not with you. || People are staring... it's okay.
-  - _energetic:_ Let's walk the long way so this lasts longer! || Long way home! So this lasts longer! || Let's take the scenic route! Hehe! || Slow walk! Make it last!
-  - _cool:_ ...This is nice. Don't tell anyone I said that. || ...This is pleasant. Keep that secret. || ...Nice. Don't repeat that. || ...I like this. Tell no one.
-  - _teasing:_ If you let go first, you lose. Got it? || First to let go loses. Deal? || Let go and you lose. Got it? || Whoever lets go owes the other. Ready?
-
-### RomanceLines / HandYes / step 0
-- **Her (by personality)**
-  - _gentle:_ Eh...? O-okay... just for a little while... || Eh...? O-okay... just a little... || Ah... um... alright... || Oh... okay... only for a bit...
-  - _energetic:_ Whoa! Um. Okay! Sure! This is fine! Totally fine! || Whoa! Okay! This is fine! Totally fine! || Huh?! Sure! Yep! Hand! Okay! || Ah! Um! Cool! Totally normal!
-  - _cool:_ ...Fine. Your hand's warmer than I expected. || ...Fine. Warm hand. || ...Alright. Surprisingly warm. || ...Acceptable.
-  - _teasing:_ Oh? Taking the initiative today? ...I'll allow it. || Taking the lead? I'll allow it. || Oh? Bold today. Fine. || My, how forward. Go on.
-
-### RomanceLines / HandYes / step 1
-- **Her (by personality)**
-  - _gentle:_ My face is so hot right now... please don't look... || Please don't look at my face... it's so red... || My cheeks are burning... || D-don't look at me...
-  - _energetic:_ Ahaha, my hand's all sweaty, sorry! ...Don't let go though. || My hand's sweaty, sorry! Don't let go! || Ahaha, so sweaty! Keep holding! || Ugh, clammy! Still don't let go!
-  - _cool:_ ...I suppose it's not unpleasant. || ...Not unpleasant. || ...I'll tolerate it. || ...It's fine.
-  - _teasing:_ Careful. If you hold on too long, I might not give it back. || Hold too long and I'll keep it. || Careful, I might not return it. || Keep holding and it's mine.
-- **Her (by personality)**
-  - _gentle:_ It's... kind of nice, isn't it? || It's nice, isn't it...? || This feels... nice. || I like this... a lot.
-  - _energetic:_ Okay, this is kinda cute. Don't make it weird! || Okay, this is cute! Don't ruin it! || Kinda cute! No jokes! || Aww, this is nice! Shh!
-  - _cool:_ Hm. Only until the end of the hallway. || Only to the end of the hall. || Until the corner. || Briefly.
-  - _teasing:_ You're shaking a little. Nervous? How cute. || You're trembling. Adorable. || Nervous? Cute. || Shaky hands? How sweet.
-
-### RomanceLines / HandNo
-- **Her (by personality)**
-  - _gentle:_ Ah... s-sorry, not here... people might see... || S-sorry... not here... || Ah, people might see... || N-not in front of everyone...
-  - _energetic:_ Whoa, whoa! Hands to yourself, mister! || Hands off, mister! || Whoa, slow down! || Nope! Not yet!
-  - _cool:_ No. || No. || Not now. || Don't.
-  - _teasing:_ Holding hands already? Earn it first. || Earn it first. || Too soon, sweetie. || Not so fast.
-
-### RomanceLines / PlayerAskFeelings
-- **Variants:** Can I ask you something? What do you think of me? | Be honest. How do you see me? | What am I to you, exactly?
-
-### RomanceLines / Feelings
+### RomanceLines / FeelingsIntimate
 - **Her (by personality)**
   - _gentle:_ You're my boyfriend... and the only one who gets to see me like... that. Don't make me say more! || You're my boyfriend... and only you see me like... that. Don't make me say more! || You're the only one I'd ever... um... you know. || You're mine, and I'm yours... in every way. Ah, embarrassing!
   - _energetic:_ You're my favorite person! And, um... I kinda can't stop thinking about you. In every way. Ehehe... || You're my favorite! And I think about you ALL the ways! Ehehe! || You're mine! Heart, body, everything! Too much? || I can't stop thinking about you! Like, at all! In every way!
   - _cool:_ You're mine. All of you. That's what I think. || You're mine. Entirely. || All of you belongs to me. || You're mine. Body included.
   - _teasing:_ You're my boyfriend and my favorite toy. Is that honest enough for you? || My boyfriend and my favorite plaything. Honest enough? || Mine to love and mine to tease. || You're my boyfriend. And my toy. Both.
-- **Her (by personality)**
-  - _gentle:_ You're the most important person in the world to me. That's all. || You're the most precious person to me. || You mean everything to me. || You're my most important person.
-  - _energetic:_ You're my boyfriend, silly! The best one in the whole school! || You're my boyfriend, dummy! The best one! || Best boyfriend in the school! Easy! || You're mine! Number one!
-  - _cool:_ You're the person I chose. I don't regret it. || I chose you. No regrets. || You're my choice. Final. || I picked you. Correctly.
-  - _teasing:_ You're mine. Isn't that obvious? Or do you just like hearing it? || You're mine. Need me to say it again? || Mine. Obviously. Like hearing it? || You belong to me. Isn't it clear?
-- **Her (by personality)**
-  - _gentle:_ I... I think about you a lot. More than I should, maybe... || I think about you... a lot. Maybe too much. || You're on my mind so often... || I can't stop thinking about you...
-  - _energetic:_ Honestly? You're kind of my favorite person right now. Don't let it go to your head! || You're kinda my favorite person! Don't get cocky! || Top person right now? You! Shh! || Honestly, you're the best! Don't tell!
-  - _cool:_ You're... important to me. More than I planned. || You matter to me. More than planned. || You're... important. Unexpectedly. || More important than I intended.
-  - _teasing:_ Hmm... let's just say if you asked me out, I wouldn't say no right away. || If you asked me out, I might say yes. Might. || Ask me out sometime. Maybe I'll agree. || Let's say I wouldn't refuse a date.
-- **Her (by personality)**
-  - _gentle:_ You're a really good friend. I'm glad we met. || You're a wonderful friend. || I'm so glad we're friends. || I'm happy I met you.
-  - _energetic:_ You're super fun to be around! Like, top three people, easy! || You're SO fun! Top three, easy! || Best friend material! || Hanging with you rocks!
-  - _cool:_ You're reliable. I like that. || You're dependable. || You're reliable. Good. || I trust you.
-  - _teasing:_ You're interesting. That's rare around here. Keep it up. || You're interesting. That's rare. || Not boring. I like that. || You're fun. Keep it up.
-- **Her (by personality)**
-  - _gentle:_ Um... you seem nice? I don't know you that well yet... || You seem nice...? I don't know you well yet... || Um... I need to know you more... || I'm not sure yet... you seem kind.
-  - _energetic:_ Hmm, you're okay! We should hang out more, then I'll tell you! || You're okay! Hang out more and I'll decide! || Jury's out! Let's chill sometime! || Hmm! Ask me later!
-  - _cool:_ I don't have an opinion yet. || No opinion yet. || Undecided. || Insufficient data.
-  - _teasing:_ Ask me again when you've done something worth talking about. || Do something interesting first. || Impress me, then ask. || Ask again later.
 
 ### RomanceLines / PlayerTease
 - **Variants:** You know what you look like right now? Very kissable. | That skirt's a little short today. Not that I'm complaining. | Is it hot in here, or is it just you?
@@ -1226,7 +1055,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### RomanceLines / TeaseGood / step 0
 - **Her (by personality)**
-  - _gentle:_ Y-you can't just say things like that at school...! ...Say it again later. || N-not at school...! ...Say it again later. || Y-you can't say that here...! Later, okay? || Ah...! Not here... but later...
+  - _gentle:_ Y-you can't just say things like that on campus...! ...Say it again later. || N-not on campus...! ...Say it again later. || Y-you can't say that here...! Later, okay? || Ah...! Not here... but later...
   - _energetic:_ Ehehe, you dummy! ...Okay, maybe a little kiss. Later! || You dummy! ...Maybe a kiss later! Hehe! || Hehe, later! A little one! || Not now! Later, though!
   - _cool:_ ...Keep that energy for when we're alone. || ...Save that for privacy. || ...When we're alone. || ...Later. Remember it.
   - _teasing:_ Kissable? Then why are you still talking? || Kissable? Then stop talking. || Then come here. || Words, words. Prove it.
@@ -1355,7 +1184,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Her (by personality)**
   - _gentle:_ ...Okay. Lead the way. Just... be gentle, okay? || Okay... lead me. Gently, please. || Alright... I'll follow you. Be gentle. || Mm... take me there. Softly.
   - _energetic:_ Ooh, a secret mission! I'm in! Don't get us caught! || Secret mission! Don't get caught! || Sneak mode! I'm in! || Ooh! Adventure! Let's go!
-  - _cool:_ Fine. But if a teacher finds us, it was your idea. || Fine. Your idea, if caught. || Alright. Your fault if anyone sees. || Very well. You take the blame.
+  - _cool:_ Fine. But if a professor finds us, it was your idea. || Fine. Your idea, if caught. || Alright. Your fault if anyone sees. || Very well. You take the blame.
   - _teasing:_ Finally. I was wondering how long you'd make me wait. || Finally. What took so long? || At last. Lead on. || About time.
 - **Her (by personality)**
   - _gentle:_ M-my heart won't calm down... let's go before I lose my nerve... || My heart's racing... let's go before I chicken out... || Quick... before I lose my courage... || Let's go... my heart's pounding...
@@ -1369,10 +1198,6 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _energetic:_ Ehh? Sneak off? With you? Pfft, no way! ...Not yet, anyway. || Sneak off? Nope! Not yet! || Pfft, no! Maybe someday! || Ehh? Not today!
   - _cool:_ No. Don't push your luck. || No. || Not happening. || Don't push.
   - _teasing:_ Sneak off with you? You wish. Try harder. || You wish. || Try harder. || In your dreams.
-
-### RomanceLines / PlayerSweet
-- **Variants:** I was looking forward to seeing you all day. | You're the best part of my day, you know. | Being with you is my favorite thing. | I keep thinking about our last date. | You look cute when you're thinking hard about something. | I'd skip every class just to sit here with you.
-- **Variants:** I really like spending time with you. | You're kind of amazing, you know that? | Talking to you always cheers me up. | I'm glad I met you. | Your laugh is really cute. | I find myself looking for you in the hallway.
 
 ## Two-girl scenes
 `Systems/Duo.cs`
@@ -1478,7 +1303,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _energetic:_ Yay! || Yay! || Woo! || Yes!
   - _cool:_ Thanks. || Thanks. || Good. || Appreciated.
   - _teasing:_ How kind~ || How kind~ || Sweet~ || Generous~
-- **Variants:** the last melon bread | whose turn it was to clean the classroom | who gets the window seat | the club room schedule | a borrowed manga that came back bent
+- **Variants:** the last melon bread | whose turn it was to clean the lecture hall | who gets the window seat | the club room schedule | a borrowed manga that came back bent
 - **Her (by personality)**
   - _gentle:_ You saw it too, right? It was my turn... || It was my turn, right? || You saw it too...? || Tell her it was my turn...
   - _energetic:_ Tell her I'm right! || Tell her I'm right! || I'm right, right?! || Back me up!
@@ -1573,7 +1398,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _gentle:_ It's true, I heard it too... || I heard it too... || It's true... || Yes, I heard...
   - _energetic:_ Totally true! Everyone knows! || Totally true! || Everyone knows! || Yep!
   - _cool:_ That's what they say. || So they say. || That's the talk. || Reportedly.
-  - _teasing:_ The whole school's talking. || Whole school's talking. || Everyone knows. || The gossip's everywhere.
+  - _teasing:_ The whole university's talking. || Whole university's talking. || Everyone knows. || The gossip's everywhere.
 - **Her (by personality)**
   - _gentle:_ We were just talking about you. Only good things! || We were just talking about you. Good things! || Oh, we were talking about you... || Hehe, your ears must be burning.
   - _energetic:_ Hey! We need a tiebreaker: cats or dogs? || Tiebreaker: cats or dogs?! || Quick! Pizza or ramen?! || Settle it: summer or winter?!
@@ -1632,7 +1457,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 ### Board / ProblemFirst / step RequestKind.Study
 - **Her (by personality)**
   - _gentle:_ I don't understand today's lesson at all... I'm scared about the test. || Today's lesson went right over my head... the test scares me. || I'm so behind... would someone study with me? || I don't get any of it... I'm worried about the exam.
-  - _energetic:_ I'm SO lost in class! Help me study?! || Class today?! Total mystery! Study buddy wanted! || I'm drowning in homework! Throw me a rope! || Test incoming and I know NOTHING! Help!
+  - _energetic:_ I'm SO lost in class! Help me study?! || Class today?! Total mystery! Study buddy wanted! || I'm drowning in assignments! Throw me a rope! || Test incoming and I know NOTHING! Help!
   - _cool:_ I'm behind in class. I'd study better with someone. || I fell behind. A study partner would help. || I need to review. Preferably not alone. || The material is dense. I'd study better with someone.
   - _teasing:_ The test is going to destroy me. Unless someone helps. || The exam will crush me. Unless a hero appears~ || I need a tutor. A cute one. || If I fail, it's everyone's fault. Help me~
 
@@ -1712,7 +1537,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Variants:** Hey, you wanted to talk? | I saw your note on the club board.
 
 ### Board / NoteScene
-- **Narration:** { Wind, a far-off club practice, and "}{name}{", name}{ "}{name}{")}
+- **Narration:** { Wind, a far-off club practice, and "}{name}{",
+                              name}{ "}{name}{")}
 - **Variants:** The rooftop is empty at this hour. Wind, a far-off club practice, and {name} waiting by the fence. | {name} is waiting by the fence, up on the rooftop. The sky is going orange behind her. | Nobody else is up here. {name} turns around the moment the door creaks.
 - **You:** {Pick}
 - **Variants:** I got your note. What's up? | So you're the one who left the note.
@@ -1765,8 +1591,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Her:** {")}
 - **Her (by personality)**
   - _gentle:_ I passed! I really passed! It's all thanks to you... thank you so much! || I passed! Thank you so much! || I really passed... it's all because of you! || I did it! Thank you!
-  - _energetic:_ I PASSED! Eighty-two points! You're the best teacher ever! || PASSED! You're the best teacher! || I passed! Treat time! || Yes! Passed! You rock!
-  - _cool:_ I passed. With a decent score, even. ...Your explanations were good. || Passed. Good score. Your explanations helped. || A pass. Thanks to you. || Passed. You're a competent teacher.
+  - _energetic:_ I PASSED! Eighty-two points! You're the best professor ever! || PASSED! You're the best professor! || I passed! Treat time! || Yes! Passed! You rock!
+  - _cool:_ I passed. With a decent score, even. ...Your explanations were good. || Passed. Good score. Your explanations helped. || A pass. Thanks to you. || Passed. You're a competent professor.
   - _teasing:_ Passed~ Guess you're good for something after all. I owe you one... a big one. || Passed~ You're useful after all. I owe you. || Passed. I'll repay you. Generously. || Passed! You earned a reward.
 - **Her:** {")}
 - **Her (by personality)**
@@ -1801,7 +1627,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Narration:** {Name} is drilling hard. Sweat runs down her face.
 - **You:** Go, {Name}! You've got this!
 - **Narration:** You jump in and run the drills with her. She has to push herself to keep up with you.
-- **Her:** {", "Watching me sweat, huh? Enjoying the view? || Enjoying watching me sweat? || Like the view? || Watching closely, hm?")}
+- **Her:** {",
+                        "Watching me sweat, huh? Enjoying the view? || Enjoying watching me sweat? || Like the view? || Watching closely, hm?")}
 - **Her (by personality)**
   - _gentle:_ Hah... hah... thank you for coming. It really helps. || Thank you for coming... it helps so much. || You came... hah... thank you. || Your cheering helps me...
   - _energetic:_ Did you see that?! I'm on fire today! || Did you see that?! On fire! || Woo! I'm unstoppable! || Watch me go!
@@ -1861,7 +1688,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### SecretHobbyArc / Scene
 - **You:** So... I saw you earlier.
-- **Her:** {", "Ah! You saw?! Okay, okay, yes, I love "}{LikeLabel}. Happy? || You saw?! Fine, I love {LikeLabel}! Happy?! || Caught! Yes, {LikeLabel}! || Argh! Okay! {LikeLabel}{")}
+- **Her:** {",
+                    "Ah! You saw?! Okay, okay, yes, I love "}{LikeLabel}. Happy? || You saw?! Fine, I love {LikeLabel}! Happy?! || Caught! Yes, {LikeLabel}! || Argh! Okay! {LikeLabel}{")}
 - **Her (by personality)**
   - _gentle:_ Y-you saw that?! Please don't tell anyone... it's embarrassing... || You saw?! Please don't tell... || Oh no... you saw that... it's so embarrassing... || P-please keep it secret...
   - _energetic:_ Ah! You saw?! Okay, okay, yes, I love {LikeLabel}. Happy? || You saw?! Fine, I love {LikeLabel}! Happy?! || Caught! Yes, {LikeLabel}! || Argh! Okay! {LikeLabel} is my thing!
@@ -1901,7 +1729,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### RivalryArc / Scene / step 0
 - **You:** Hey, what happened back there?
-- **Her:** {T(t, "It's "}{OName}... she said things about me behind my back. I thought we were okay... || It's {OName}... she talked behind my back... || {OName} said mean things about me... I thought we were friends. || {OName}{", "Ugh, "}{OName} is SO annoying! She took my spot and acted like it was nothing! || {OName} is SO annoying! || Ugh! {OName} stole my spot! || {OName}{OName} took credit for my work. I won't forgive that. || {OName} took my credit. Unforgivable. || {OName} wronged me. || {OName}{OName} has been flirting with you, hasn't she? Don't play dumb. || {OName}'s been flirting with you. Don't deny it. || {OName} has eyes for you. I noticed. || {OName}{")}
+- **Her:** {T(t, "It's "}{OName}... she said things about me behind my back. I thought we were okay... || It's {OName}... she talked behind my back... || {OName} said mean things about me... I thought we were friends. || {OName}{",
+                        "Ugh, "}{OName} is SO annoying! She took my spot and acted like it was nothing! || {OName} is SO annoying! || Ugh! {OName} stole my spot! || {OName}{OName} took credit for my work. I won't forgive that. || {OName} took my credit. Unforgivable. || {OName} wronged me. || {OName}{OName} has been flirting with you, hasn't she? Don't play dumb. || {OName}'s been flirting with you. Don't deny it. || {OName} has eyes for you. I noticed. || {OName}{")}
 - **Her (by personality)**
   - _gentle:_ It's {OName}... she said things about me behind my back. I thought we were okay... || It's {OName}... she talked behind my back... || {OName} said mean things about me... I thought we were friends. || {OName}... she hurt me.
   - _energetic:_ Ugh, {OName} is SO annoying! She took my spot and acted like it was nothing! || {OName} is SO annoying! || Ugh! {OName} stole my spot! || {OName}! Argh!
@@ -1982,7 +1811,9 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### FriendshipArc / Scene
 - **You:** You look like you want to say something.
-- **Her:** { you know "}{OName}, right? I'd like to be friends with her, but I never know what to say... || You know {OName}? I'd like to be friends with her... || Um... could you help me talk to {OName}? || I want to be friends with {OName}{", "Hey, you're friends with "}{OName}, right? She seems super fun! Introduce me! || You know {OName}?! Introduce me! || {OName} seems fun! Help me meet her! || Hook me up with {OName}{"! As friends!", "You know "}{OName}. ...I wouldn't mind getting to know her. That's all. || {OName}. I'd like to know her. || Introduce me to {OName}. || {OName}{OName} seems interesting. Be a dear and introduce us? || Introduce me to {OName}, dear? || {OName} intrigues me. Make it happen. || Be useful. Introduce {OName}{")}
+- **Her:** { you know "}{OName}, right? I'd like to be friends with her, but I never know what to say... || You know {OName}? I'd like to be friends with her... || Um... could you help me talk to {OName}? || I want to be friends with {OName}{",
+                    "Hey, you're friends with "}{OName}, right? She seems super fun! Introduce me! || You know {OName}?! Introduce me! || {OName} seems fun! Help me meet her! || Hook me up with {OName}{"! As friends!",
+                    "You know "}{OName}. ...I wouldn't mind getting to know her. That's all. || {OName}. I'd like to know her. || Introduce me to {OName}. || {OName}{OName} seems interesting. Be a dear and introduce us? || Introduce me to {OName}, dear? || {OName} intrigues me. Make it happen. || Be useful. Introduce {OName}{")}
 - **Her (by personality)**
   - _gentle:_ Um... you know {OName}, right? I'd like to be friends with her, but I never know what to say... || You know {OName}? I'd like to be friends with her... || Um... could you help me talk to {OName}? || I want to be friends with {OName}, but I'm shy...
   - _energetic:_ Hey, you're friends with {OName}, right? She seems super fun! Introduce me! || You know {OName}?! Introduce me! || {OName} seems fun! Help me meet her! || Hook me up with {OName}! As friends!
@@ -2007,10 +1838,10 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **You:** Uh... sure. Where?
 - **Her:** {T}
 - **Her (by personality)**
-  - _gentle:_ The rooftop... after school. Please don't be late. || The rooftop, after school. Don't be late. || Meet me on the roof after school... please. || After school... the rooftop.
-  - _energetic:_ Rooftop, after school! It's the classic spot! || Rooftop! After school! Classic! || Roof! After class! || Rooftop time! Be there!
-  - _cool:_ Rooftop. After school. || Rooftop. After school. || The roof. Later. || After school. Rooftop.
-  - _teasing:_ The rooftop after school. Very cliché. Perfect. || Rooftop after school. Cliché. Perfect. || The roof. Very dramatic. || Rooftop. Don't be late.
+  - _gentle:_ The rooftop... after class. Please don't be late. || The rooftop, after class. Don't be late. || Meet me on the roof after class... please. || After class... the rooftop.
+  - _energetic:_ Rooftop, after class! It's the classic spot! || Rooftop! After class! Classic! || Roof! After class! || Rooftop time! Be there!
+  - _cool:_ Rooftop. After class. || Rooftop. After class. || The roof. Later. || After class. Rooftop.
+  - _teasing:_ The rooftop after class. Very cliché. Perfect. || Rooftop after class. Cliché. Perfect. || The roof. Very dramatic. || Rooftop. Don't be late.
 - **Narration:** The wind is gentle on the rooftop. {Name} takes a deep breath.
 - **Her:** {")}
 - **Her (by personality)**
@@ -2050,7 +1881,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **You:** Hey... are you okay?
 - **Her:** {")}
 - **Her (by personality)**
-  - _gentle:_ N-no... everything went wrong today. I forgot my homework, I tripped in the hallway, and... || Everything went wrong today... || I forgot everything and tripped... it's awful... || Today's been terrible...
+  - _gentle:_ N-no... everything went wrong today. I forgot my assignments, I tripped in the hallway, and... || Everything went wrong today... || I forgot everything and tripped... it's awful... || Today's been terrible...
   - _energetic:_ NO! Today is the WORST! Everything is going wrong! || WORST day! Everything's broken! || Nothing's going right! || Today hates me!
   - _cool:_ ...Not now. || ...Not now. || ...Leave it. || ...Bad day.
   - _teasing:_ Do I LOOK okay? || Do I look okay? || Does it look like it? || Obviously not.
@@ -2079,26 +1910,26 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### Happenings / Play / step "coin"
 - **Narration:** Something glints on the hallway floor... a 500 yen coin.
-- **Choice:** Pocket it. | Turn it in at the staff room.
+- **Choice:** Pocket it. | Turn it in at the faculty room.
 - **Narration:** Finders keepers.
-- **Narration:** The teacher thanks you for your honesty.
+- **Narration:** The professor thanks you for your honesty.
 
 ### Happenings / Play / step "pop_quiz"
-- **Narration:** A teacher stops you in the hallway: "You! What's the capital of Australia? Quick!"
+- **Narration:** A professor stops you in the hallway: "You! What's the capital of Australia? Quick!"
 - **Narration:** {"}
 
 ### Happenings / Play / step "carry_boxes"
-- **Narration:** A teacher is struggling with a tower of boxes full of handouts.
-- **Narration:** You take half the boxes. The teacher thanks you.
+- **Narration:** A professor is struggling with a tower of boxes full of handouts.
+- **Narration:** You take half the boxes. The professor thanks you.
 - **Narration:** You suddenly find the ceiling very interesting.
 - **Narration:** You lift the whole tower in one go. A few students clap.
 
 ### Happenings / Play / step "love_letter"
-- **Narration:** There's a pink envelope in your shoe locker. Inside: "Please come to the rooftop after school. I have something to tell you."
+- **Narration:** There's a pink envelope in your locker. Inside: "Please come to the rooftop after class. I have something to tell you."
 - **Narration:** It's signed with a little heart. No name.
 
 ### Happenings / Play / step "locker_note"
-- **Narration:** There's a folded note in your shoe locker: "Could you come to the rooftop after school? I need help with something and I'd rather not ask in front of everyone."
+- **Narration:** There's a folded note in your locker: "Could you come to the rooftop after class? I need help with something and I'd rather not ask in front of everyone."
 - **Narration:** It's signed with a single letter: {initial}.
 
 ### Happenings / Play / step "dropped_notebooks"
@@ -2156,7 +1987,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Narration:** {\""}
 
 ### Happenings / Play / step "inspection"
-- **Narration:** Student council inspection! They're checking everyone's bags at the gate.
+- **Narration:** Student union inspection! They're checking everyone's bags at the gate.
 - **Narration:** Your bag is spotless. The council president nods approvingly.
 
 ### Happenings / Play
@@ -2208,7 +2039,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _teasing:_ Laugh now. I'll drip on you later. || Laugh it up. I'll drip on you. || Oh, you think it's funny? Hug time. || Keep laughing. I'm getting you wet.
 
 ### Happenings / Play / step "rain"
-- **Narration:** It starts pouring right as school ends. {name} is stuck at the entrance without an umbrella.
+- **Narration:** It starts pouring right as campus ends. {name} is stuck at the entrance without an umbrella.
 - **Choice:** Share your umbrella with her. | Lend it to her and run home in the rain. | Wait for the rain to stop.
 - **Girl:** {T}
 - **Her (by personality)**
@@ -2228,8 +2059,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### Choco
 - **Narration:** February 14th. Chocolate Day.
-- **Narration:** The whole school smells of cocoa. Every boy is pretending not to care, and every boy is failing.
-- **Narration:** Your shoe locker is right in front of you. It might be empty. It might not be.
+- **Narration:** The whole university smells of cocoa. Every boy is pretending not to care, and every boy is failing.
+- **Narration:** Your locker is right in front of you. It might be empty. It might not be.
 - **Choice:** Open it calmly | Open it with your eyes closed | Walk past it like a cool guy
 - **Narration:** {"}
 - **Narration:** You open it slowly, whispering a prayer to every god of romance you know...
@@ -2249,7 +2080,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Narration:** Next year, for sure.
 - **Narration:** At lunch, it starts.
 - **Narration:** {N} walks up to your desk, hands hidden behind her back.
-- **Girl:** {") : T}
+- **Girl:** {")
+                        : T}
 - **Her (by personality)**
   - _gentle:_ I made these myself... for you. Only for you. || I made these... just for you. || Homemade... for you alone. || I worked hard on these... they're yours.
   - _energetic:_ Homemade! Eat them all, okay?! || Homemade! Eat every one! || I made them! All for you! || Kitchen chaos! For you!
@@ -2282,14 +2114,14 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _energetic:_ Saving it? Don't let it melt! || Don't let it melt! || Saving it? Eat soon! || Hide it well!
   - _cool:_ Hmph. Suit yourself. || Suit yourself. || Hmph. Fine. || As you like.
   - _teasing:_ Saving the best for last? Smart boy~ || Saving the best for last? Smart. || Later? Good boy. || Savoring me? Clever.
-- **Narration:** After school. Snow falls softly on the way home, and the streetlights come on one by one.
+- **Narration:** After class. Snow falls softly on the way home, and the streetlights come on one by one.
 - **Narration:** Footsteps run up behind you. {N}, out of breath, cheeks red from the cold.
 - **Girl:** {")}
 - **Her (by personality)**
   - _gentle:_ Wait! The one this morning was... not the real one. This is the real one. || Wait! That one was... this is the real one. || The real one is this... please take it. || This morning's wasn't true. This one is.
   - _energetic:_ Hah... hah... I forgot to give you the SPECIAL one! || Forgot the SPECIAL one! Here! || Wait! The real one! || Hah... this one's the real deal!
-  - _cool:_ ...That one at school was for show. This one is honmei. Don't make me say it twice. || ...This is honmei. Once only. || ...The real one. Don't make me repeat. || ...That was decoy. This is real.
-  - _teasing:_ The one at school was obligation. This one's... not. Got it? || That was obligation. This isn't. Got it? || The real one. Treasure it. || School's was fake. This is real.
+  - _cool:_ ...That one on campus was for show. This one is honmei. Don't make me say it twice. || ...This is honmei. Once only. || ...The real one. Don't make me repeat. || ...That was decoy. This is real.
+  - _teasing:_ The one on campus was obligation. This one's... not. Got it? || That was obligation. This isn't. Got it? || The real one. Treasure it. || Campus is was fake. This is real.
 - **Choice:** Promise to return it on White Day | Take her cold hand | Just say thank you
 - **You:** I'll give you something back on White Day. Something good.
 - **Girl:** {T}
@@ -2316,8 +2148,8 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Narration:** Chocolate Day is over. Your bag is heavier, and somehow so is your heart.
 
 ### Sports
-- **Narration:** The Sports Festival! Flags snap in the wind and the whole school is out on the field.
-- **Narration:** Tents, tables, a mountain of traffic cones and a teacher with a megaphone who is already hoarse.
+- **Narration:** The Sports Festival! Flags snap in the wind and the whole university is out on the field.
+- **Narration:** Tents, tables, a mountain of traffic cones and a professor with a megaphone who is already hoarse.
 - **Girl:** {")}
 - **Her (by personality)**
   - _gentle:_ Here's your class headband... Tie it tight, okay? Good luck today. || Your headband... tie it tight. Good luck. || Here, for you. Do your best today. || Our class headband... I'll be cheering.
@@ -2373,9 +2205,10 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ Delete the part where I almost tripped. || Delete the trip. || Cut the stumble. || Edit that out.
   - _teasing:_ Keeping a video of me? What else do you keep~? || Keeping videos of me? What else? || Saving me? Interesting. || A collection? Creepy. Cute.
 - **Narration:** You cheer from the tent until your throat hurts.
-- **Narration:** Closing ceremony in the gym. The scoreboard is covered with a cloth while the principal talks... and talks.
+- **Narration:** Closing ceremony in the gym. The scoreboard is covered with a cloth while the dean talks... and talks.
 - **Narration:** {"}
-- **Girl:** {") : T}
+- **Girl:** {")
+                                       : T}
 - **Her (by personality)**
   - _gentle:_ We won... we really won! I'm so glad I was on your team. || We won! I'm glad we were a team. || We really won... thank you! || Victory... with you.
   - _energetic:_ WE WON WE WON WE WON! || WE WON! || Champions! || Yes yes YES!
@@ -2388,7 +2221,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _teasing:_ Losing is fine. You looked cool anyway~ || You looked cool anyway. || Losing's fine. You were cute. || Still cool, loser~
 - **Choice:** Walk her home | Stay and help clean up
 - **Narration:** The two of you walk home in the orange evening, sore and sunburned and very happy.
-- **Narration:** You fold tents and carry cones until dark. The teachers notice. So does she: she stays to help.
+- **Narration:** You fold tents and carry cones until dark. The professors notice. So does she: she stays to help.
 - **Narration:** The Sports Festival is over. Tomorrow, everything will hurt.
 
 ### Exam
@@ -2411,10 +2244,10 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ ...Fine. I'm calm. I was always calm. || ...Calm. Always was. || ...Fine. || ...Composed.
   - _teasing:_ You're cute when you try to comfort me~ || Cute, comforting me. || You're sweet when you worry. || Comforting me? Adorable.
 - **Narration:** You bury your face in your notes. One last look at everything.
-- **Narration:** The teacher hands out the papers face down. "Begin."
+- **Narration:** The professor hands out the papers face down. "Begin."
 - **Narration:** Deep breath. Question one. You know this. Question two. You know this too.
 - **Narration:** You scribble every formula you crammed into the margin before they leak out of your head.
-- **Narration:** The teacher steps out to answer the phone. The answer key is right there, on the desk...
+- **Narration:** The professor steps out to answer the phone. The answer key is right there, on the desk...
 - **Narration:** {"}
 - **Narration:** Question seven. Nothing you studied looks anything like question seven.
 - **Choice:** Skip it and come back later | Fight it to the end [INT]
@@ -2430,12 +2263,13 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Narration:** The sun sets over the empty desks. Results tomorrow.
 
 ### Culture
-- **Narration:** Two weeks before the Culture Festival. The class meeting has been going in circles for an hour.
-- **Narration:** Three ideas are left on the board. The class rep looks at you: you get the deciding vote.
+- **Narration:** Two weeks before the Culture Festival. The department meeting has been going in circles for an hour.
+- **Narration:** Three ideas are left on the board. The course rep looks at you: you get the deciding vote.
 - **Choice:** Maid cafe [SEN] | Haunted house [STR] | Science exhibit [INT]
 - **Narration:** {"}
 - **Narration:** You stay late to work on it with {N}.
-- **Girl:** {") : T}
+- **Girl:** {")
+                        : T}
 - **Her (by personality)**
   - _gentle:_ The aprons are done... Do you think this one suits me? || The aprons are done... does it suit me? || Do I look okay in this? || I sewed this... how is it?
   - _energetic:_ Look, look! I'm practicing my 'Welcome home, master'! || 'Welcome home, master!' Practicing! || Look! Café mode! || Maid practice! How's this?!
@@ -2497,7 +2331,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _energetic:_ Did you hear that?! Ha, she says that to everyone. ...Right? || She says that to everyone! Right?! || Ha! Fortune! ...Right?! || Totally random! ...Maybe!
   - _cool:_ Fortune telling is nonsense. ...What did she say about us, exactly? || Nonsense. ...What exactly did she say? || Rubbish. ...Repeat it. || Fake. ...Details?
   - _teasing:_ Well? Going to argue with fate? || Arguing with fate? || Destiny says yes. You? || Fate agrees with me.
-- **Narration:** Evening. The stalls glow red and orange. In the schoolyard, the bonfire for the closing dance is lit.
+- **Narration:** Evening. The stalls glow red and orange. In the campus grounds, the bonfire for the closing dance is lit.
 - **Girl:** {T}
 - **Her (by personality)**
   - _gentle:_ The folk dance is starting... um... || The dance is starting... um... || Would you... dance? || The folk dance... um...
@@ -2514,14 +2348,14 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _teasing:_ Your hand's sweaty~ Nervous? || Sweaty hand. Nervous? || Nervous? Cute. || Shaky. Adorable.
 - **Narration:** You sit on the steps and watch the sparks rise into the dark. Her shoulder leans against yours.
 - **Narration:** You spend the afternoon backstage: fixing lights, carrying boxes, saving a play from a broken curtain.
-- **Narration:** By evening, the teachers know your name. In a good way, for once.
+- **Narration:** By evening, the professors know your name. In a good way, for once.
 - **Narration:** The last song ends. The Culture Festival is over, and nobody wants to go home.
 
 ### Tanabata
 - **Narration:** July 7th. Tanabata.
 - **Narration:** Once a year, the weaver princess Orihime and the cowherd Hikoboshi cross the river of stars to meet.
 - **Narration:** On earth, people write their wishes on strips of paper and tie them to bamboo, hoping the stars will read them.
-- **Narration:** The old street near school is full of bamboo branches heavy with colored paper. Lanterns sway overhead.
+- **Narration:** The old street near campus is full of bamboo branches heavy with colored paper. Lanterns sway overhead.
 - **Narration:** Someone tugs your sleeve. {N}, in a summer yukata.
 - **Girl:** {T}
 - **Her (by personality)**
@@ -2587,14 +2421,14 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Narration:** Above the street, the Milky Way is clear tonight. Somewhere up there, two lovers are meeting.
 
 ### Halloween
-- **Narration:** Halloween. The classroom is covered in paper bats, jack-o'-lanterns and orange streamers.
-- **Narration:** There's a costume contest after school, and the class rep says nobody leaves without a costume.
+- **Narration:** Halloween. The lecture hall is covered in paper bats, jack-o'-lanterns and orange streamers.
+- **Narration:** There's a costume contest after class, and the course rep says nobody leaves without a costume.
 - **Choice:** Vampire, cape and all [SEN] | A bedsheet ghost | No costume. You're too cool.
 - **Narration:** Fake fangs, a red-lined cape, hair slicked back. In the mirror, you look... surprisingly good?
 - **Narration:** {"}
 - **Narration:** A bedsheet with two holes. You bump into three desks on the way to your seat.
 - **Narration:** At the contest the whole class laughs when your ghost walks into the door. Special prize: most dedicated ghost.
-- **Narration:** The class rep sighs and sticks cat ears on your head. They stay there all day.
+- **Narration:** The course rep sighs and sticks cat ears on your head. They stay there all day.
 - **Narration:** At the contest you're not even entered. The cat ears get three votes anyway.
 - **Narration:** At lunch, the trick-or-treaters arrive.
 - **Girl:** {T}
@@ -2636,12 +2470,12 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ ...I will remember this. || ...Remembered. || ...You'll regret this. || ...Noted.
   - _teasing:_ Scaring a girl in the dark? You're worse than the ghosts~ || Worse than ghosts. || Scaring me? Bad boy. || You're the real monster.
 - **Narration:** You walk in front, flashlight high. Behind you, she holds the hem of your jacket the whole way.
-- **Narration:** Back in the classroom, the jack-o'-lanterns are lit for the party.
+- **Narration:** Back in the lecture hall, the jack-o'-lanterns are lit for the party.
 - **Narration:** Pumpkin cake, orange juice and the bad horror movie somebody brought. Happy Halloween.
 
 ### Trip
 - **Narration:** Field trip day! The whole class boards the bullet train to {value}.
-- **Narration:** Rice fields fly past the window. Somebody already opened the snacks. The teacher has given up.
+- **Narration:** Rice fields fly past the window. Somebody already opened the snacks. The professor has given up.
 - **Narration:** There's a free seat next to you.
 - **Girl:** {T}
 - **Her (by personality)**
@@ -2690,7 +2524,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ ...This is nice. Don't ruin it by talking. || ...Nice. Don't talk. || ...Silence. Good. || ...Peaceful.
   - _teasing:_ A garden, a quiet afternoon, just us~ What are you thinking about? || Just us. What are you thinking? || Quiet afternoon. Thoughts? || A garden, you, me. Hmm.
 - **Narration:** While the others nap, you climb the rocks behind the bamboo fence, holding your breath...
-- **Narration:** Night at the inn. Lights out at ten, the teacher said. It's eleven-thirty and nobody is asleep.
+- **Narration:** Night at the inn. Lights out at ten, the professor said. It's eleven-thirty and nobody is asleep.
 - **Narration:** A soft knock on the sliding door. It's {N}, in her yukata, whispering.
 - **Girl:** {T}
 - **Her (by personality)**
@@ -2698,7 +2532,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _energetic:_ Psst! The girls are having a pillow fight, I escaped! Hide me! || Pillow fight! I escaped! Hide me! || Shh! Hide me! || Escaped! Cover me!
   - _cool:_ My roommates snore. I'm staying here for ten minutes. || Roommates snore. Ten minutes. || Too noisy there. Ten minutes. || I'll stay briefly.
   - _teasing:_ Sneaking into the boys' room~ If we get caught, it's your fault. || If we're caught, your fault. || Sneaking in. Exciting. || Boys' room. Risky.
-- **Narration:** Footsteps in the corridor. The teacher's flashlight sweeps under the door.
+- **Narration:** Footsteps in the corridor. The professor's flashlight sweeps under the door.
 - **Choice:** Hide her in the closet | Talk quietly until it passes | Send her back before you're caught
 - **Narration:** You both squeeze into the futon closet. It's very dark and very small. You can hear her heartbeat. Or yours.
 - **Girl:** {T}
@@ -2708,7 +2542,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ ...Don't move. Don't breathe. Don't think. || ...Don't move. || ...Silence. || ...Stay still.
   - _teasing:_ Cozy~ We should get caught more often. || Cozy. Get caught more often. || We should hide more. || Snug~
 - **Narration:** The footsteps pass. You talk in whispers until two in the morning: families, dreams, the stupid things you did as kids.
-- **Narration:** You slide the door open just in time. She tiptoes back. The teacher only sees you, waving awkwardly.
+- **Narration:** You slide the door open just in time. She tiptoes back. The professor only sees you, waving awkwardly.
 - **Narration:** You watch the mountains go by and listen to music. Peaceful.
 - **Narration:** {"}
 - **Narration:** The train home. Everyone is exhausted. The car is quiet except for snoring.
@@ -2785,6 +2619,6 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ ...You're out of breath. Idiot. Sit. || ...Out of breath. Sit. || ...Idiot. Rest. || ...You ran. Sit.
   - _teasing:_ Running to me on Christmas Eve? That's practically a confession~ || Running to me? A confession. || Rushing to me? Telling. || You ran? So obvious.
 - **Narration:** You sit together until the cocoa goes cold, watching the snow.
-- **You:** Merry Christmas to you too. See you at school.
+- **You:** Merry Christmas to you too. See you on campus.
 - **Narration:** Next year will be different.
 

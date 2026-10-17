@@ -553,10 +553,7 @@ namespace Joojkk.CampusLife
                     "Ahh, you can't just SAY stuff like that! ...Ask me later, okay?! || Wh-what am I supposed to say to that?! Later! || My brain just stopped! Give me a minute! || Not fair! ...Ask me again sometime.",
                     "...Don't say things like that here. ...Not that I hated it. || ...Not now. Ask me again. || ...I'm not answering that. Yet. || ...You'll have to wait for that one.",
                     "Oh, you're tempting me. ...Not today. || Mm, nice try. Ask me another day~ || Careful, I almost said yes. || Not yet. Keep trying, though~")
-                : T(h, "...Th-thank you. I don't know what to say yet. || ...That makes me happy. I just... can't answer properly. || ...I-I'll think about that, okay? || ...You're making me nervous. In a good way.",
-                    "Eh?! Um! I... I'll answer later, okay?! || Wait, wait, I'm not ready for that! ...But thanks! || Whoa, my heart! Ask me again sometime! || Ahh, I don't know what to say!",
-                    "...I heard you. Give me time. || ...Not yet. But I heard you. || ...I'll remember that. || ...Hm. Ask me again sometime.",
-                    "Oh? Sweet. ...I'll let you know. || Mm, flattery. Maybe it'll work someday~ || Cute. Ask me again later. || Almost got me there.");
+                : RomanceSay(h, "wary", "no");
         }
 
         private static void BuildRomance(Session s, SaveData.Heroine h, GirlState gs, List<UEntry> l)
@@ -1244,8 +1241,7 @@ namespace Joojkk.CampusLife
             var ok = Took(a);
             var b = new SceneBuilder(h, true);
             b.Me("I really like " + trait[0].Replace("her ", "your ").Replace("she ", "you ") + ".");
-            b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Normal).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + T(h, "Y-you noticed that? ...Thank you. || You noticed...? Thank you. || Oh... you saw that? Thanks. || Ah... thank you for noticing.", "You noticed?! That makes me so happy! || You noticed?! Yay! || You saw?! Happy! || No way! You noticed!", "...You pay attention. I like that. || ...Observant. Good. || ...You noticed. Good. || ...Attentive.", "Oh? Someone's been watching me~ || Watching me? || Someone's been looking~ || Noticed, did you?")
-                                                        : T(h, "Um... thanks, I guess? || Um... thanks? || Oh... thank you? || Ah... okay, thanks.", "Oh, uh, thanks! || Uh, thanks! || Oh! Thanks! || Huh, thanks!", "...Okay. || ...Okay. || ...Hm. || ...Alright.", "...Where's this coming from? || ...Why? || ...Random. || ...Okay?"));
+            b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Normal).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceSay(h, "noticed", "yes") : RomanceSay(h, "noticed", "no"));
             Plain(h, Lvl.Romance, QOf(a), "compliment:" + trait[1], b, ok ? "♥ " + GirlInfo.FirstName(h) + (a == "wary_yes" ? " is flustered, but happy you noticed." : " is happy you noticed.") : null);
         }
 
@@ -1253,11 +1249,9 @@ namespace Joojkk.CampusLife
         {
             var a = Consent.HoldHand(h, Onlookers(h).Count);
             var ok = Took(a);
-            var close = Lines.Closeness(h);
-            var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerHand(close));
-            b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Surprised).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceLines.HandYes(tone, close) : RomanceLines.HandNo(tone));
+            b.Me(RomanceMe(h, "hand"));
+            b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Surprised).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceSay(h, "hand", "yes") : RomanceSay(h, "hand", "no"));
             var witnesses = Witness.Who(h, Witness.Hand);
             Plain(h, Lvl.Romance, QOf(a), "hand", b, ok ? "♥ " + GirlInfo.FirstName(h) + (a == "wary_yes" ? " lets you hold her hand, blushing." : " holds your hand.") : null, () =>
             {
@@ -1269,7 +1263,6 @@ namespace Joojkk.CampusLife
         {
             var a = FlirtAnswer(h, false, "sweet");
             var ok = Took(a);
-            var tone = GirlInfo.ToneOf(h);
             // Always about something real between you: a tradition, a good memory, a like you learned, or today.
             string detail;
             if (gs.Traditions.Count > 0) detail = "I keep thinking about " + gs.Traditions[gs.Traditions.Count - 1] + ". It's my favorite part of the week.";
@@ -1277,11 +1270,11 @@ namespace Joojkk.CampusLife
             {
                 var m = gs.Moments.Where(x => x.Tone > 0).OrderByDescending(x => x.Id).FirstOrDefault();
                 if (m != null) detail = "I still think about when " + m.Text + ".";
-                else detail = RomanceLines.PlayerSweet(Lines.Closeness(h));
+                else detail = RomanceMe(h, "flirt");
             }
             var b = new SceneBuilder(h, true);
             b.Me(detail);
-            b.Face(h, a == "yes" ? Feel.Love : ok || a == "wary_no" ? Feel.Shy : Feel.Normal).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + ConvoLines.FlirtGood(tone, Lines.Closeness(h)) : ConvoLines.FlirtTooSoon(tone));
+            b.Face(h, a == "yes" ? Feel.Love : ok || a == "wary_no" ? Feel.Shy : Feel.Normal).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceSay(h, "flirt", "yes") : RomanceSay(h, "flirt", "no"));
             Plain(h, Lvl.Romance, QOf(a), "sweet", b, ok ? "♥ " + GirlInfo.FirstName(h) + " is blushing." : null, () =>
             {
                 if (ok && Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
@@ -1292,9 +1285,8 @@ namespace Joojkk.CampusLife
         {
             var ok = h.relation >= 1 || h.isGirlfriend || h.favor >= 60 && Social.Trust(h) >= 40;
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerAskFeelings());
-            b.Face(h, ok ? Feel.Shy : Feel.Surprised).Her_(ok ? RomanceLines.Feelings(GirlInfo.ToneOf(h), h)
-                : T(h, "Eh? We... don't really know each other that well yet... || We don't know each other well yet... || Um... that's a bit soon... || Eh? We just met...", "Whoa, that's a big question! Ask me again later, okay? || Big question! Later! || Whoa! Ask later! || That's a lot! Later!", "...That's a strange thing to ask so soon. || ...Strange to ask so soon. || ...Premature. || ...Too early.", "Already? Slow down, hotshot. || Slow down, hotshot. || Already? Easy. || Whoa, eager."));
+            b.Me(RomanceMe(h, "feelings"));
+            b.Face(h, ok ? Feel.Shy : Feel.Surprised).Her_(ok ? FeelingsLine(h) : RomanceSay(h, "feelings", "no"));
             Plain(h, Lvl.Romance, ok ? Q.Good : Q.Bad, "meaning", b, null);
         }
 
@@ -1306,26 +1298,26 @@ namespace Joojkk.CampusLife
             {
                 case "date":
                     b.Me("Would you go out with me this weekend?");
-                    b.Face(h, Feel.Worried).Her_(T(h, "Ah... not this time, I'm sorry. Maybe another week? || Not this time, sorry. Another week? || I'm sorry, I can't. Maybe later? || Not this weekend... sorry.", "Aww, I can't this time! Ask me again, okay? || Can't this time! Ask again! || Aww, no! Next time! || Busy! Ask later!", "...Not this week. || ...Not this week. || ...No. Another time. || ...Not now.", "This weekend? Hm. No. Try again later. || This weekend? No. Later. || Hm, no. Try later. || Not this time."));
+                    b.Face(h, Feel.Worried).Her_(RomanceSay(h, "notnow", "date"));
                     break;
                 case "confess":
                     b.Me("There's something I want to tell you...");
-                    b.Face(h, Feel.Surprised).Her_(T(h, "W-wait... I don't think I'm ready to hear it yet... || Wait... I'm not ready to hear it... || Please... not yet... || Ah... not yet...", "Eh?! W-wait! Not yet! I'm not ready! || Wait! Not yet! || Hold on! Not ready! || Eh?! Wait!", "...Not yet. Let's get to know each other first. || ...Not yet. || ...First, know me. || ...Too soon.", "Hold that thought. Not yet. || Hold that thought. || Not yet. || Save it."));
+                    b.Face(h, Feel.Surprised).Her_(RomanceSay(h, "notnow", "confess"));
                     break;
                 case "lunch":
                     b.Me("Want to have lunch together?");
-                    b.Face(h, Feel.Worried).Her_(T(h, "Sorry... I already promised someone today. || Sorry, I promised someone. || I already have plans today... sorry. || Not today... sorry.", "Ahh, not today! Tomorrow, okay? || Not today! Tomorrow! || Can't! Tomorrow, okay? || Nope! Tomorrow!", "...Not today. || ...Not today. || ...Busy. || ...Another day.", "Lunch? Not today. Ask me tomorrow. || Not today. Tomorrow. || Tomorrow, maybe. || Ask tomorrow."));
+                    b.Face(h, Feel.Worried).Her_(RomanceSay(h, "notnow", "lunch"));
                     break;
                 case "home":
                     b.Me("Want to walk home together?");
-                    b.Face(h, Feel.Worried).Her_(T(h, "I'm sorry, I have somewhere to be after class... || Sorry, I have somewhere to be. || I'm busy after class... sorry. || I can't today, sorry.", "Can't today! Errands, ugh! || Can't! Errands! || Busy today! || Nope! Stuff to do!", "...I'm going alone today. || ...Alone today. || ...Busy. || ...Not today.", "Not today. I've got plans. || Plans. Sorry. || Busy. || Not today."));
+                    b.Face(h, Feel.Worried).Her_(RomanceSay(h, "notnow", "home"));
                     break;
                 case "study":
                 case "exercise":
                 case "club":
                 case "follow":
                     b.Me(what == "study" ? "Want to study together?" : what == "exercise" ? "Want to work out together?" : what == "follow" ? "Come with me for a bit?" : "Want to do club activities together?");
-                    b.Face(h, Feel.Worried).Her_(T(h, "Ah... not right now, sorry. Maybe later? || Not right now... later? || Sorry, not now. || Maybe later?", "Hmm, not now! Later, later! || Not now! Later! || Later! || Hmm, later!", "...Not now. || ...Not now. || ...Later. || ...No.", "Not now. Catch me another time. || Another time. || Later. || Not now."));
+                    b.Face(h, Feel.Worried).Her_(RomanceSay(h, "notnow", "later"));
                     break;
                 default:
                     b.Me(Lines.Pick("Want to go somewhere... more private?", "How about we find somewhere quiet, just the two of us?"));
@@ -1344,7 +1336,7 @@ namespace Joojkk.CampusLife
             s.Did.Add("jealous");
             Beat(h, Lvl.Romance, "jealous", b =>
             {
-                b.Her_(Interested(h) ? ConvoLines.JealousLove(GirlInfo.ToneOf(h), rn) : ConvoLines.Jealous(GirlInfo.ToneOf(h), rn));
+                b.Her_(RomanceSay(h, "jealous", Interested(h) ? "love" : "plain", null, rn));
             }, new List<Resp>
             {
                 Rp("Listen to how she feels about " + rn, "jl_listen", Q.Good, Tn("...I just miss you, that's all.", "I just... want you around too, okay?!", "...I'm not jealous. I just noticed.", "...Fine. I'm a little jealous. Happy?")),
@@ -1367,7 +1359,7 @@ namespace Joojkk.CampusLife
             b.Narr("You're about to end things with " + name + ". This can't be taken back.");
             b.Choice("End it with " + name, "bu_end", "Stay together", "bu_stay");
             b.Branch("bu_end"); b.End();
-            b.Branch("bu_stay"); b.Face(h, Feel.Normal).Her_(T(h, "...Hm? Is something wrong? || ...Is something wrong? || ...Hm? What's the matter? || ...Are you okay?", "What? What's with that face? || What's with that face? || What?! || Why the face?!", "...You looked serious for a second. || ...Serious look. || ...You look serious. || ...What?", "What's that look for? || What's that look? || Why so serious? || Hm? That face?")); b.End();
+            b.Branch("bu_stay"); b.Face(h, Feel.Normal).Her_(RomanceSay(h, "breakup", "stay")); b.End();
             Hide();
             Scenes.PlayInTalk(b, c =>
             {

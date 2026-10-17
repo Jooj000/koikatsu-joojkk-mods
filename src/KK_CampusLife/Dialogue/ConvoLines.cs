@@ -40,40 +40,6 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>Jealous because she is into you (the friendship kind is Jealous).</summary>
-        public static string JealousLove(Tone t, string friend)
-        {
-            switch (R(2))
-            {
-                case 0: return T(t, "You and " + friend + " looked really happy together... I'm happy for you. I think. || You and " + friend + " looked so happy... I'm glad. I think. || You seem close to " + friend + "... that's nice. Probably." + " || " + friend + " makes you smile... I'm happy for you. Mostly.",
-                    "Hey! Why is it always " + friend + "?! What does she have that I don't?! || Why " + friend + "?! What's she got that I don't?!" + " || " + friend + " again?! Not fair! || Always " + friend + "! What about me?!",
-                    "You've been with " + friend + " a lot. I noticed. That's all I'll say. || You and " + friend + ". A lot lately. Noted." + " || " + friend + ", often. I see. || I've noticed you and " + friend + ". That's all.",
-                    "So " + friend + " gets your attention now? I can be much more fun, you know~" + " || " + friend + " has you now? I'm more fun~ || Choosing " + friend + "? I'm better~" + " || " + friend + "? I'm way more entertaining~");
-                default: return T(t, "I keep thinking about you and " + friend + "... Sorry, that's weird of me. || I keep thinking about you and " + friend + "... sorry. || You and " + friend + "... it's on my mind. Sorry. || I can't stop thinking about you two... sorry.",
-                    "I saw you with " + friend + " again! I'm not jealous! ...Okay, a little! || You and " + friend + " again! Not jealous! ...A bit!" + " || " + friend + " again?! I'm fine! ...Kinda not! || Saw you with " + friend + "! Totally fine! ...No!",
-                    "If you like " + friend + ", just say it. Don't keep me guessing. || If it's " + friend + ", say so. || Just tell me if it's " + friend + ". || Be honest about " + friend + ".",
-                    "Careful. If you keep spending time with " + friend + ", I might have to steal you back~ || Keep it up with " + friend + " and I'll steal you back~ || Careful. I'll take you from " + friend + "~" + " || " + friend + " can't keep you forever~");
-            }
-        }
-
-        public static string Jealous(Tone t, string friend)
-        {
-            switch (R(3))
-            {
-                case 0: return T(t, "You've been spending a lot of time with " + friend + " lately... it's fine. I just noticed, that's all. || You're with " + friend + " a lot lately... it's okay. I just noticed. || So much time with " + friend + "... it's fine, really. || I see you with " + friend + " a lot... that's all.",
-                    "Hey! You hang out with " + friend + " every day now! What about me?!" + " || " + friend + " every day?! What about me?! || Hey! Me too! Not just " + friend + "!" + " || " + friend + " again?! Hang with me!",
-                    "You and " + friend + " are always together lately. I'm not complaining. I'm observing. || You and " + friend + ", constantly. Just observing. || Always with " + friend + ". An observation." + " || " + friend + ", daily. Noted.",
-                    "Oh, you remembered me? I thought " + friend + " had adopted you. || Remembered me? I thought " + friend + " kept you. || Oh, you escaped " + friend + "?" + " || " + friend + " let you off the leash?");
-                case 1: return T(t, "Um... did I do something wrong? You only talk to " + friend + " these days. || Did I do something wrong? It's always " + friend + "... || Am I boring? You only talk to " + friend + "... || Did I upset you? It's just " + friend + " now...",
-                    "It's always " + friend + ", " + friend + ", " + friend + "! I'm fun too, you know!" + " || " + friend + ", " + friend + "! I'm fun too! || Always " + friend + "! Pick me sometimes! || Enough " + friend + "! My turn!",
-                    "I'm glad you and " + friend + " get along. ...Don't forget the rest of us. || Good that you and " + friend + " get along. Remember others." + " || " + friend + " is fine. Don't forget us. || Don't forget the rest of us.",
-                    "Is " + friend + " that interesting? Should I be worried? || Is " + friend + " that great? Should I worry?" + " || " + friend + ", huh? Am I being replaced? || What's so special about " + friend + "?");
-                default: return T(t, "It's a little lonely when you're always with " + friend + "... || It's lonely when you're with " + friend + "... || I miss you when you're with " + friend + "... || It gets quiet without you...",
-                    "No fair! " + friend + " gets you all to herself!" + " || " + friend + " hogs you! No fair!" + " || " + friend + " gets you all day! Unfair! || Share! " + friend + " keeps you!",
-                    "You've been busy. With " + friend + ", mostly. || Busy. With " + friend + ". || You've been with " + friend + "." + " || " + friend + " has your time.",
-                    "Let me guess, " + friend + " was busy today so you came to me?" + " || " + friend + " was busy, so me? || Second choice after " + friend + "? || Oh, " + friend + " wasn't free?");
-            }
-        }
-
         /// <summary>Her opening when she heard about something you did.</summary>
         public static string Incident(Tone t, string kind, string about, bool self, bool friend, string what = null, bool saw = false)
         {
@@ -374,61 +340,7 @@ namespace Joojkk.CampusLife
 
         // ================= compliments =================
 
-        public static string PlayerCompliment(string kind, string club)
-        {
-            switch (kind)
-            {
-                case "effort": return P("You've been working really hard lately. It shows.", "I noticed how much effort you put in. That's amazing.");
-                case "club": return P("I heard you're doing great at " + club + ".", "You're really good at your club stuff, you know?");
-                case "smart": return P("You always explain things so clearly.", "You're really sharp, you know that?");
-                default: return P("You look really nice today.", "Your hair looks great like that.", "That smile of yours is pretty great.");
-            }
-        }
-
-        public static string ComplimentGood(Tone t, string kind)
-        {
-            if (kind == "looks")
-                return T(t, "Eh?! Y-you think so...? Thank you... || Eh?! Really...? Thank you... || Y-you think so? Thanks... || Ah... thank you...!", "Hehe, really?! You noticed! || Really?! You noticed! || Hehe! Thanks! || You saw?! Yay!", "...You're not bad yourself. Thanks. || ...You're not bad either. || ...Thanks. You too. || ...Likewise. Thanks.", "Oh? Took you long enough to notice. || Took you long enough. || Finally noticed? || Slow, but okay.");
-            return T(t, "R-really? That makes me really happy... || Really? I'm so happy... || That makes me glad... || Oh... thank you so much...", "Yay! Somebody noticed! || Someone noticed! Yay! || Woo! Noticed! || Finally! Yay!", "...Thank you. I appreciate that. || ...Thank you. || ...Appreciated. || ...Thanks.", "Finally, someone with taste. || Good taste. Finally. || Someone with eyes. || At last, taste.");
-        }
-
-        public static string ComplimentFlat(Tone t)
-        {
-            return T(t, "Oh... um, thank you, I guess. || Oh... thanks, I guess. || Um... thank you? || Ah... okay, thanks.", "Haha, thanks? Random, but okay! || Thanks? Random! || Ha! Okay, thanks! || Huh? Thanks!", "Okay. || Okay. || Fine. || Noted.", "Flattery won't get you far with me. || Flattery won't work. || Nice try. || Not that easy.");
-        }
-
-        public static string ComplimentRepeat(Tone t)
-        {
-            return T(t, "You said that yesterday too... || You said that before... || That again...? || You told me yesterday...", "You already told me! Got a new one? || Heard it! New one! || Old news! || You already said!", "You're repeating yourself. || Repeating. || Same line. || Again?", "Running out of material? || Out of material? || Rerun? || Recycling?");
-        }
-
         // ================= romance =================
-
-        public static string FlirtGood(Tone t, int close)
-        {
-            if (close >= 2)
-                switch (R(2))
-                {
-                    case 0: return T(t, "M-me too... I'm so happy you said that. || M-me too... I'm so happy. || I feel the same... || Me too... really.", "Aww! You're making me blush! Me too, okay?! || Me too! Stop, I'm blushing! || Aww! Same! || Me too, okay?!", "...Me too. Don't make me say it twice. || ...Same. Once only. || ...Me too. || ...Likewise. Don't repeat it.", "Hmph. Smooth talker. ...I feel the same. || Smooth. ...Same. || Charmer. ...Me too. || Hmph. ...Me too.");
-                    default: return T(t, "You always know what to say... I love that about you. || You always know what to say... I love it. || You're so sweet... I love that. || Your words make me happy...", "Ehehe! I'm the luckiest girl on campus! || Luckiest girl on campus! || I'm so lucky! || Best boyfriend ever!", "I like this. Us. || I like us. || This is good. || I like this.", "Keep talking like that and I might fall for you all over again. || Keep it up and I'll fall again. || Careful. I'm falling again. || More, and I'm yours all over again.");
-                }
-            switch (R(2))
-            {
-                case 0: return T(t, "Eh...? I-I like spending time with you too... || I-I like being with you too... || Eh...? Me too... || I enjoy our time too...", "Wh-whoa, where did that come from?! ...Thanks, hehe. || Whoa! ...Thanks, hehe. || Where'd that come from?! ...Hehe. || Wh-what?! ...Thanks!", "...You're making me lose my composure. || ...You're rattling me. || ...My composure. Gone. || ...Stop. I'm flustered.", "Oh my. Are you trying to make me blush? || Making me blush? || Oh my. Trying to fluster me? || Is that a blush attempt?");
-                default: return T(t, "That's... a really nice thing to say. || That's so nice... || What a kind thing... || That's lovely...", "Haha, you're so straightforward! I like it! || So direct! I like it! || Straightforward! Nice! || Ha! Honest! Love it!", "...I don't dislike hearing that. || ...I don't mind it. || ...Not unpleasant. || ...Fine to hear.", "Careful. I might start believing you. || I might believe you. Careful. || Don't make me believe it. || Dangerous words.");
-            }
-        }
-
-        public static string FlirtTooSoon(Tone t)
-        {
-            return T(t, "Um... we don't know each other that well yet... || We don't know each other well yet... || Um... too soon... || I'm not ready for that...", "Whoa, slow down there, buddy! || Whoa, slow down! || Easy there! || Too fast, buddy!", "...That's a bit much. || ...Too much. || ...Excessive. || ...Slow down.", "Nice try. You'll have to work harder than that. || Try harder. || Not that easy. || Nice try.");
-        }
-
-        public static string LoveTalk(Tone t, int close)
-        {
-            if (close >= 2) return T(t, "Being your girlfriend... I still can't believe it sometimes. || I still can't believe I'm your girlfriend... || Being your girlfriend feels like a dream... || Your girlfriend... it still surprises me.", "Everyone's jealous of us, you know! Hehe! || Everyone envies us! Hehe! || We're the university's couple! || People are so jealous!", "I've been thinking about where we could go on our next date. || I've been planning our next date. || Next date ideas. I have some. || Where shall we go next?", "So, what's the plan for our next date? It better be good. || Next date plan? Make it good. || Our next date. Impress me. || Plan something good. Next date.");
-            return T(t, "Do you... have someone you like? || Is there... someone you like? || Do you like anyone...? || Um... anyone special?", "So! Do you have a crush on anyone? Tell me! || Crush! Who?! Tell me! || Got a crush?! Spill! || Who do you like?! Tell!", "Have you ever been in love? || Ever been in love? || Love. Experienced it? || Have you loved someone?", "Who do you like? Come on, I won't tell. || Who's your crush? I'll keep it secret. || Spill. Who do you like? || Your crush. Tell. I won't tell.");
-        }
 
         // ================= clearing the air =================
 

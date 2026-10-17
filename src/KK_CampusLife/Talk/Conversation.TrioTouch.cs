@@ -106,7 +106,7 @@ namespace Joojkk.CampusLife
             var ts = G.TalkScene;
             if (t == null || ts == null || ts != _scene) return;
             if (fromSpot) { BTouchClicks++; BTouchLast = part + (SpotReady(ts) ? "" : " (ignored: the talk is busy or the mouse is over the UI)"); }
-            if (fromSpot && !SpotReady(ts)) return;
+            if (fromSpot && (!SpotReady(ts) || !ClaimClick())) return;
             if (Busy("touch on " + GirlInfo.FirstName(t.B) + "'s " + part)) return;
             var look = lookMode ?? ts.touchMode == 1;
             if (part == "head" && !look && (atLips ?? NearMouthB())) part = "mouth";

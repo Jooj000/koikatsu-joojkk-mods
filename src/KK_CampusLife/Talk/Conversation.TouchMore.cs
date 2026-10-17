@@ -30,9 +30,30 @@ namespace Joojkk.CampusLife
             {
                 harmony.Patch(AccessTools.Method(typeof(TalkScene), "InitTouch"), postfix: new HarmonyMethod(typeof(Conversation), nameof(AddSpots)));
                 harmony.Patch(AccessTools.Method(typeof(TalkScene), "TouchFunc"), prefix: new HarmonyMethod(typeof(Conversation), nameof(MouthIsKiss)));
+                harmony.Patch(EnterFuncMethod, postfix: new HarmonyMethod(typeof(Conversation), nameof(HoverNote)));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogWarning("Conversation touch areas: " + e.Message); }
         }
+
+        private static int _clickFrame = -1;
+        internal static bool OneBeat = true;
+        internal static readonly List<string> TouchTrace = new List<string>();
+
+        /// <summary>A click is one touch: the first of the game's areas and ours to take this frame's click keeps it.</summary>
+        private static bool ClaimClick()
+        {
+            if (_clickFrame == Time.frameCount) return false;
+            _clickFrame = Time.frameCount;
+            return true;
+        }
+
+        internal static void TouchNote(string what)
+        {
+            TouchTrace.Add(what);
+            if (TouchTrace.Count > 40) TouchTrace.RemoveAt(0);
+        }
+
+        private static void HoverNote(string _kind) { TouchNote("hover " + _kind); }
 
         private static void AddSpots(TalkScene __instance)
         {
@@ -73,7 +94,10 @@ namespace Joojkk.CampusLife
         {
             try
             {
-                if (!Campus.On || _kind == null || __instance.touchMode != 0 || (_kind != "Head" && _kind != "Cheek")) return;
+                if (!Campus.On || _kind == null) return;
+                TouchNote("click " + _kind);
+                if (!ClaimClick()) { _kind = null; return; }
+                if (__instance.touchMode != 0 || (_kind != "Head" && _kind != "Cheek")) return;
                 if (!NearMouth()) return;
                 _kind = null;   // TouchFunc leaves at once for an unknown place
                 SpotTouch("mouth", false);
@@ -152,7 +176,7 @@ namespace Joojkk.CampusLife
         internal static void SpotTouch(string part, bool fromSpot)
         {
             var ts = G.TalkScene;
-            if (fromSpot && !SpotReady(ts)) return;
+            if (fromSpot && (!SpotReady(ts) || !ClaimClick())) return;
             if (ts == null || ts.targetHeroine == null) return;
             var h = ts.targetHeroine;
             var look = part == "butt" && ts.touchMode == 1;

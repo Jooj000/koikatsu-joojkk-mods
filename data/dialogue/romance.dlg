@@ -1,0 +1,1234 @@
+# The romance page's plain steps, moved word for word out of RomanceLines.cs, ConvoLines.cs and Conversation.Unified.cs.
+# {act} hand | feelings | flirt | compliment | noticed | love | jealous | notnow | breakup | wary (what you did), {rname} who she is jealous of, {q} yes | no | again, love | plain for jealousy, date | confess | lunch | home | later for notnow (how she took it), {close} Lines.Closeness (2 = you are
+# together), {lvl} for feelings gf | deep | friend | far, for her answer to a compliment looks | other, for yours effort | club | smart | looks, set in Conversation.Romance.cs with the old thresholds. Weights in
+# weights.dlg (@weights romance). The steps with sexual content stay fixed in RomanceLines.cs: the note koikatsu-decisao-criterios-falas-fixas.
+
+# ================= holding hands =================
+@rule me.romance.hand.close
+on me.romance
+when act=hand close>=2
+- Come here. Give me your hand.
+- I missed holding your hand.
+- Let's walk like this for a while.
+
+@rule me.romance.hand.far
+on me.romance
+when act=hand close<=1
+- Can I... hold your hand for a bit?
+- Your hands look cold. Here.
+- Would it be weird if I held your hand?
+
+@rule romance.hand.yes.close.gentle
+on romance
+when act=hand q=yes close>=2 tone=gentle
+- Mm... your hand is so warm. I could stay like this all day.
+- Your hand is so warm... I don't want to let go.
+- Mm... I feel safe like this.
+- Holding your hand makes everything feel okay.
+- Every time we do this my heart races like the first time...
+- My heart still races every time...
+- It's like the first time, every time...
+- Even now, my heart jumps when you take my hand.
+- People are looking... but I don't mind. Not with you.
+- Let them look... I'm happy with you.
+- I don't care who sees. Not with you.
+- People are staring... it's okay.
+
+@rule romance.hand.yes.close.energetic
+on romance
+when act=hand q=yes close>=2 tone=energetic
+- Hehe, fingers laced! That's the official couple grip!
+- Laced fingers! Super official!
+- Hand-holding power! Hehe!
+- Look! We're holding hands! Everyone, look!
+- Swing, swing! Ehehe, I love this!
+- Swing! Swing! Ahaha!
+- Wheee! Hand swinging!
+- Ehehe, this never gets old!
+- Let's walk the long way so this lasts longer!
+- Long way home! So this lasts longer!
+- Let's take the scenic route! Hehe!
+- Slow walk! Make it last!
+
+@rule romance.hand.yes.close.cool
+on romance
+when act=hand q=yes close>=2 tone=cool
+- ...Don't let go yet.
+- ...Keep holding.
+- ...Not yet. Don't let go.
+- ...Stay like this.
+- Your hand fits mine. Funny how that works.
+- Your hand fits mine. Odd.
+- ...We fit. Strange.
+- ...It fits. I noticed.
+- ...This is nice. Don't tell anyone I said that.
+- ...This is pleasant. Keep that secret.
+- ...Nice. Don't repeat that.
+- ...I like this. Tell no one.
+
+@rule romance.hand.yes.close.teasing
+on romance
+when act=hand q=yes close>=2 tone=teasing
+- Holding hands in public? How bold. ...I'm not complaining.
+- Public hand-holding? Scandalous. Keep going.
+- Showing me off? Good.
+- Brave, holding my hand here. I approve.
+- Squeeze back if you love me. ...Hm. Good answer.
+- Squeeze if you love me. ...Correct.
+- Squeeze twice if you're mine. ...Good.
+- Prove it. Squeeze. ...Good boy.
+- If you let go first, you lose. Got it?
+- First to let go loses. Deal?
+- Let go and you lose. Got it?
+- Whoever lets go owes the other. Ready?
+
+@rule romance.hand.yes.far.gentle
+on romance
+when act=hand q=yes close<=1 tone=gentle
+- Eh...? O-okay... just for a little while...
+- Eh...? O-okay... just a little...
+- Ah... um... alright...
+- Oh... okay... only for a bit...
+- My face is so hot right now... please don't look...
+- Please don't look at my face... it's so red...
+- My cheeks are burning...
+- D-don't look at me...
+- It's... kind of nice, isn't it?
+- It's nice, isn't it...?
+- This feels... nice.
+- I like this... a lot.
+
+@rule romance.hand.yes.far.energetic
+on romance
+when act=hand q=yes close<=1 tone=energetic
+- Whoa! Um. Okay! Sure! This is fine! Totally fine!
+- Whoa! Okay! This is fine! Totally fine!
+- Huh?! Sure! Yep! Hand! Okay!
+- Ah! Um! Cool! Totally normal!
+- Ahaha, my hand's all sweaty, sorry! ...Don't let go though.
+- My hand's sweaty, sorry! Don't let go!
+- Ahaha, so sweaty! Keep holding!
+- Ugh, clammy! Still don't let go!
+- Okay, this is kinda cute. Don't make it weird!
+- Okay, this is cute! Don't ruin it!
+- Kinda cute! No jokes!
+- Aww, this is nice! Shh!
+
+@rule romance.hand.yes.far.cool
+on romance
+when act=hand q=yes close<=1 tone=cool
+- ...Fine. Your hand's warmer than I expected.
+- ...Fine. Warm hand.
+- ...Alright. Surprisingly warm.
+- ...Acceptable.
+- ...I suppose it's not unpleasant.
+- ...Not unpleasant.
+- ...I'll tolerate it.
+- ...It's fine.
+- Hm. Only until the end of the hallway.
+- Only to the end of the hall.
+- Until the corner.
+- Briefly.
+
+@rule romance.hand.yes.far.teasing
+on romance
+when act=hand q=yes close<=1 tone=teasing
+- Oh? Taking the initiative today? ...I'll allow it.
+- Taking the lead? I'll allow it.
+- Oh? Bold today. Fine.
+- My, how forward. Go on.
+- Careful. If you hold on too long, I might not give it back.
+- Hold too long and I'll keep it.
+- Careful, I might not return it.
+- Keep holding and it's mine.
+- You're shaking a little. Nervous? How cute.
+- You're trembling. Adorable.
+- Nervous? Cute.
+- Shaky hands? How sweet.
+
+@rule romance.hand.no.gentle
+on romance
+when act=hand q=no tone=gentle
+- Ah... s-sorry, not here... people might see...
+- S-sorry... not here...
+- Ah, people might see...
+- N-not in front of everyone...
+
+@rule romance.hand.no.energetic
+on romance
+when act=hand q=no tone=energetic
+- Whoa, whoa! Hands to yourself, mister!
+- Hands off, mister!
+- Whoa, slow down!
+- Nope! Not yet!
+
+@rule romance.hand.no.cool
+on romance
+when act=hand q=no tone=cool
+- No.
+- Not now.
+- Don't.
+
+@rule romance.hand.no.teasing
+on romance
+when act=hand q=no tone=teasing
+- Holding hands already? Earn it first.
+- Earn it first.
+- Too soon, sweetie.
+- Not so fast.
+
+# ================= how she feels about you =================
+@rule me.romance.feelings
+on me.romance
+when act=feelings
+- Can I ask you something? What do you think of me?
+- Be honest. How do you see me?
+- What am I to you, exactly?
+
+@rule romance.feelings.gf.gentle
+on romance
+when act=feelings q=yes lvl=gf tone=gentle
+- You're the most important person in the world to me. That's all.
+- You're the most precious person to me.
+- You mean everything to me.
+- You're my most important person.
+
+@rule romance.feelings.gf.energetic
+on romance
+when act=feelings q=yes lvl=gf tone=energetic
+- You're my boyfriend, silly! The best one in the whole university!
+- You're my boyfriend, dummy! The best one!
+- Best boyfriend in the university! Easy!
+- You're mine! Number one!
+
+@rule romance.feelings.gf.cool
+on romance
+when act=feelings q=yes lvl=gf tone=cool
+- You're the person I chose. I don't regret it.
+- I chose you. No regrets.
+- You're my choice. Final.
+- I picked you. Correctly.
+
+@rule romance.feelings.gf.teasing
+on romance
+when act=feelings q=yes lvl=gf tone=teasing
+- You're mine. Isn't that obvious? Or do you just like hearing it?
+- You're mine. Need me to say it again?
+- Mine. Obviously. Like hearing it?
+- You belong to me. Isn't it clear?
+
+@rule romance.feelings.deep.gentle
+on romance
+when act=feelings q=yes lvl=deep tone=gentle
+- I... I think about you a lot. More than I should, maybe...
+- I think about you... a lot. Maybe too much.
+- You're on my mind so often...
+- I can't stop thinking about you...
+
+@rule romance.feelings.deep.energetic
+on romance
+when act=feelings q=yes lvl=deep tone=energetic
+- Honestly? You're kind of my favorite person right now. Don't let it go to your head!
+- You're kinda my favorite person! Don't get cocky!
+- Top person right now? You! Shh!
+- Honestly, you're the best! Don't tell!
+
+@rule romance.feelings.deep.cool
+on romance
+when act=feelings q=yes lvl=deep tone=cool
+- You're... important to me. More than I planned.
+- You matter to me. More than planned.
+- You're... important. Unexpectedly.
+- More important than I intended.
+
+@rule romance.feelings.deep.teasing
+on romance
+when act=feelings q=yes lvl=deep tone=teasing
+- Hmm... let's just say if you asked me out, I wouldn't say no right away.
+- If you asked me out, I might say yes. Might.
+- Ask me out sometime. Maybe I'll agree.
+- Let's say I wouldn't refuse a date.
+
+@rule romance.feelings.friend.gentle
+on romance
+when act=feelings q=yes lvl=friend tone=gentle
+- You're a really good friend. I'm glad we met.
+- You're a wonderful friend.
+- I'm so glad we're friends.
+- I'm happy I met you.
+
+@rule romance.feelings.friend.energetic
+on romance
+when act=feelings q=yes lvl=friend tone=energetic
+- You're super fun to be around! Like, top three people, easy!
+- You're SO fun! Top three, easy!
+- Best friend material!
+- Hanging with you rocks!
+
+@rule romance.feelings.friend.cool
+on romance
+when act=feelings q=yes lvl=friend tone=cool
+- You're reliable. I like that.
+- You're dependable.
+- You're reliable. Good.
+- I trust you.
+
+@rule romance.feelings.friend.teasing
+on romance
+when act=feelings q=yes lvl=friend tone=teasing
+- You're interesting. That's rare around here. Keep it up.
+- You're interesting. That's rare.
+- Not boring. I like that.
+- You're fun. Keep it up.
+
+@rule romance.feelings.far.gentle
+on romance
+when act=feelings q=yes lvl=far tone=gentle
+- Um... you seem nice? I don't know you that well yet...
+- You seem nice...? I don't know you well yet...
+- Um... I need to know you more...
+- I'm not sure yet... you seem kind.
+
+@rule romance.feelings.far.energetic
+on romance
+when act=feelings q=yes lvl=far tone=energetic
+- Hmm, you're okay! We should hang out more, then I'll tell you!
+- You're okay! Hang out more and I'll decide!
+- Jury's out! Let's chill sometime!
+- Hmm! Ask me later!
+
+@rule romance.feelings.far.cool
+on romance
+when act=feelings q=yes lvl=far tone=cool
+- I don't have an opinion yet.
+- No opinion yet.
+- Undecided.
+- Insufficient data.
+
+@rule romance.feelings.far.teasing
+on romance
+when act=feelings q=yes lvl=far tone=teasing
+- Ask me again when you've done something worth talking about.
+- Do something interesting first.
+- Impress me, then ask.
+- Ask again later.
+
+@rule romance.feelings.no.gentle
+on romance
+when act=feelings q=no tone=gentle
+- Eh? We... don't really know each other that well yet...
+- We don't know each other well yet...
+- Um... that's a bit soon...
+- Eh? We just met...
+
+@rule romance.feelings.no.energetic
+on romance
+when act=feelings q=no tone=energetic
+- Whoa, that's a big question! Ask me again later, okay?
+- Big question! Later!
+- Whoa! Ask later!
+- That's a lot! Later!
+
+@rule romance.feelings.no.cool
+on romance
+when act=feelings q=no tone=cool
+- ...That's a strange thing to ask so soon.
+- ...Strange to ask so soon.
+- ...Premature.
+- ...Too early.
+
+@rule romance.feelings.no.teasing
+on romance
+when act=feelings q=no tone=teasing
+- Already? Slow down, hotshot.
+- Slow down, hotshot.
+- Already? Easy.
+- Whoa, eager.
+
+# ================= being sweet =================
+@rule me.romance.flirt.close
+on me.romance
+when act=flirt close>=2
+- I was looking forward to seeing you all day.
+- You're the best part of my day, you know.
+- Being with you is my favorite thing.
+- I keep thinking about our last date.
+- You look cute when you're thinking hard about something.
+- I'd skip every class just to sit here with you.
+
+@rule me.romance.flirt.far
+on me.romance
+when act=flirt close<=1
+- I really like spending time with you.
+- You're kind of amazing, you know that?
+- Talking to you always cheers me up.
+- I'm glad I met you.
+- Your laugh is really cute.
+- I find myself looking for you in the hallway.
+
+@rule romance.flirt.yes.close.gentle
+on romance
+when act=flirt q=yes close>=2 tone=gentle
+- M-me too... I'm so happy you said that.
+- M-me too... I'm so happy.
+- I feel the same...
+- Me too... really.
+- You always know what to say... I love that about you.
+- You always know what to say... I love it.
+- You're so sweet... I love that.
+- Your words make me happy...
+
+@rule romance.flirt.yes.close.energetic
+on romance
+when act=flirt q=yes close>=2 tone=energetic
+- Aww! You're making me blush! Me too, okay?!
+- Me too! Stop, I'm blushing!
+- Aww! Same!
+- Me too, okay?!
+- Ehehe! I'm the luckiest girl on campus!
+- Luckiest girl on campus!
+- I'm so lucky!
+- Best boyfriend ever!
+
+@rule romance.flirt.yes.close.cool
+on romance
+when act=flirt q=yes close>=2 tone=cool
+- ...Me too. Don't make me say it twice.
+- ...Same. Once only.
+- ...Me too.
+- ...Likewise. Don't repeat it.
+- I like this. Us.
+- I like us.
+- This is good.
+- I like this.
+
+@rule romance.flirt.yes.close.teasing
+on romance
+when act=flirt q=yes close>=2 tone=teasing
+- Hmph. Smooth talker. ...I feel the same.
+- Smooth. ...Same.
+- Charmer. ...Me too.
+- Hmph. ...Me too.
+- Keep talking like that and I might fall for you all over again.
+- Keep it up and I'll fall again.
+- Careful. I'm falling again.
+- More, and I'm yours all over again.
+
+@rule romance.flirt.yes.far.gentle
+on romance
+when act=flirt q=yes close<=1 tone=gentle
+- Eh...? I-I like spending time with you too...
+- I-I like being with you too...
+- Eh...? Me too...
+- I enjoy our time too...
+- That's... a really nice thing to say.
+- That's so nice...
+- What a kind thing...
+- That's lovely...
+
+@rule romance.flirt.yes.far.energetic
+on romance
+when act=flirt q=yes close<=1 tone=energetic
+- Wh-whoa, where did that come from?! ...Thanks, hehe.
+- Whoa! ...Thanks, hehe.
+- Where'd that come from?! ...Hehe.
+- Wh-what?! ...Thanks!
+- Haha, you're so straightforward! I like it!
+- So direct! I like it!
+- Straightforward! Nice!
+- Ha! Honest! Love it!
+
+@rule romance.flirt.yes.far.cool
+on romance
+when act=flirt q=yes close<=1 tone=cool
+- ...You're making me lose my composure.
+- ...You're rattling me.
+- ...My composure. Gone.
+- ...Stop. I'm flustered.
+- ...I don't dislike hearing that.
+- ...I don't mind it.
+- ...Not unpleasant.
+- ...Fine to hear.
+
+@rule romance.flirt.yes.far.teasing
+on romance
+when act=flirt q=yes close<=1 tone=teasing
+- Oh my. Are you trying to make me blush?
+- Making me blush?
+- Oh my. Trying to fluster me?
+- Is that a blush attempt?
+- Careful. I might start believing you.
+- I might believe you. Careful.
+- Don't make me believe it.
+- Dangerous words.
+
+@rule romance.flirt.no.gentle
+on romance
+when act=flirt q=no tone=gentle
+- Um... we don't know each other that well yet...
+- We don't know each other well yet...
+- Um... too soon...
+- I'm not ready for that...
+
+@rule romance.flirt.no.energetic
+on romance
+when act=flirt q=no tone=energetic
+- Whoa, slow down there, buddy!
+- Whoa, slow down!
+- Easy there!
+- Too fast, buddy!
+
+@rule romance.flirt.no.cool
+on romance
+when act=flirt q=no tone=cool
+- ...That's a bit much.
+- ...Too much.
+- ...Excessive.
+- ...Slow down.
+
+@rule romance.flirt.no.teasing
+on romance
+when act=flirt q=no tone=teasing
+- Nice try. You'll have to work harder than that.
+- Try harder.
+- Not that easy.
+- Nice try.
+
+@rule romance.flirt.again.gentle
+on romance
+when act=flirt q=again tone=gentle
+- Y-you already said something like that...
+- Y-you said that already...
+- Ah... again? You're making me blush...
+- Um... I heard you the first time...
+
+@rule romance.flirt.again.energetic
+on romance
+when act=flirt q=again tone=energetic
+- Okay, okay, I get it! Hehe!
+- Okay, okay! I heard you! Ehehe!
+- Again?! Alright, I get it!
+- Haha, you're repeating yourself!
+
+@rule romance.flirt.again.cool
+on romance
+when act=flirt q=again tone=cool
+- Once is enough.
+- You said that.
+- I heard you the first time.
+- Once was sufficient.
+
+@rule romance.flirt.again.teasing
+on romance
+when act=flirt q=again tone=teasing
+- Laying it on thick, aren't you?
+- Running out of material?
+- Again? Someone's desperate.
+- Twice in a row? Try harder.
+
+# ================= with people around, and when she needed to hear it =================
+@rule romance.hand.yes.watched.gentle
+on romance
+when act=hand q=yes close>=2 watchers=few|crowd tone=gentle
+- [Everyone can see us...|They're all looking...] [I'm a little embarrassed, but I won't let go.|It's okay. I'm proud to be with you.]
+- [Um, people are watching...|I can feel them looking...] [Hold on tight, then.|Just don't let go, okay?]
+- [So many people...|In front of everyone...] [My face must be red.|I'm happy anyway.]
+
+@rule romance.hand.yes.watched.energetic
+on romance
+when act=hand q=yes close>=2 watchers=few|crowd tone=energetic
+- [Everybody's looking!|We've got an audience!] [Good! Let them!|Wave, wave! Hehe!]
+- [Ooh, people are staring!|Hey, they noticed us!] [That's right, this one's mine!|Bet they're jealous!]
+- [Look at all these people!|So many eyes on us!] [Hold tighter, make it official!|Ehehe, this is great!]
+
+@rule romance.hand.yes.watched.cool
+on romance
+when act=hand q=yes close>=2 watchers=few|crowd tone=cool
+- [...People are looking.|...We're being watched.] [Let them.|It doesn't matter.]
+- [...An audience.|...Everyone can see.] [I don't care.|Fine by me.]
+- [...They're staring.|...Hm. Eyes on us.] [Keep walking.|Don't let go because of them.]
+
+@rule romance.hand.yes.watched.teasing
+on romance
+when act=hand q=yes close>=2 watchers=few|crowd tone=teasing
+- [Everyone's watching, you know.|We have an audience~] [Let them look.|Smile for them.]
+- [All these eyes on us~|Look who's staring.] [Let them be jealous.|I like it.]
+- [Showing me off in front of everyone?|In front of all these people?] [Bold. I approve.|Good choice~]
+
+@rule romance.hand.no.watched.gentle
+on romance
+when act=hand q=no watchers=few|crowd tone=gentle
+- [N-not with everyone here...|There are so many people...] [I'm sorry.|Maybe when we're alone?]
+- [Um, they'd all see...|People are right there...] [I'm too embarrassed.|Not here, please.]
+- [Ah, wait...|S-sorry...] [Everyone's looking.|Not in front of them.]
+
+@rule romance.hand.no.watched.energetic
+on romance
+when act=hand q=no watchers=few|crowd tone=energetic
+- [Whoa, in front of everyone?!|Hey, people are right there!] [No way!|Not a chance!]
+- [Nope! Too many witnesses!|Are you kidding? Look around!] [Try somewhere else!|Maybe another time!]
+- [Ahaha, not here!|Hold on, hold on!] [They'd never let me hear the end of it!|People talk, you know!]
+
+@rule romance.hand.no.watched.cool
+on romance
+when act=hand q=no watchers=few|crowd tone=cool
+- [...Not in front of them.|...There are people here.] [No.|Don't.]
+- [...Look around first.|...Think.] [Not here.|We're being watched.]
+- [...No audience.|...I don't perform.] [Hands down.|Not now.]
+
+@rule romance.hand.no.watched.teasing
+on romance
+when act=hand q=no watchers=few|crowd tone=teasing
+- [With everyone watching?|In front of all these people?] [Nice try.|Cute, but no.]
+- [An audience, and that's your move?|So public~] [Not a chance.|Try somewhere quieter.]
+- [Oh, no no.|Mm-mm.] [Not here.|Everyone would talk.]
+
+@rule romance.flirt.yes.needed.gentle
+on romance
+when act=flirt q=yes mood=lonely|upset|stressed tone=gentle
+- [Thank you...|Oh...] [I really needed to hear that today.|That helps more than you know.]
+- [You always notice...|I was having a hard day...] [Thank you for saying that.|You made it better.]
+- [Today wasn't easy...|I was feeling a little down...] [but you made me smile.|and now I feel lighter.]
+
+@rule romance.flirt.yes.needed.energetic
+on romance
+when act=flirt q=yes mood=lonely|upset|stressed tone=energetic
+- [Hey, perfect timing!|Oh man, thanks!] [Today was rough!|I needed that!]
+- [Ahaha, you just saved my day!|Okay, that actually helped!] [You're the best!|I owe you one!]
+- [Today was the worst, but...|Ugh, what a day, but...] [that made it way better!|you fixed it, hehe!]
+
+@rule romance.flirt.yes.needed.cool
+on romance
+when act=flirt q=yes mood=lonely|upset|stressed tone=cool
+- [...Today was difficult.|...It's been a long day.] [That helped.|I'm glad you said that.]
+- [...Good timing.|...Hm.] [I needed that.|Thank you.]
+- [...I won't pretend that didn't help.|...You noticed.] [Don't stop.|Thanks.]
+
+@rule romance.flirt.yes.needed.teasing
+on romance
+when act=flirt q=yes mood=lonely|upset|stressed tone=teasing
+- [Trying to cheer me up?|Oh, you noticed?] [...It's working.|Fine, it's working.]
+- [Today was awful, you know.|I was in a terrible mood.] [Lucky you came along.|You just fixed that~]
+- [Hmph. Good timing.|You picked the right day.] [I'll let you stay.|Keep talking.]
+
+# ================= compliments =================
+@rule romance.compliment.yes.looks.gentle
+on romance
+when act=compliment q=yes lvl=looks tone=gentle
+- Eh?! Y-you think so...? Thank you...
+- Eh?! Really...? Thank you...
+- Y-you think so? Thanks...
+- Ah... thank you...!
+
+@rule romance.compliment.yes.looks.energetic
+on romance
+when act=compliment q=yes lvl=looks tone=energetic
+- Hehe, really?! You noticed!
+- Really?! You noticed!
+- Hehe! Thanks!
+- You saw?! Yay!
+
+@rule romance.compliment.yes.looks.cool
+on romance
+when act=compliment q=yes lvl=looks tone=cool
+- ...You're not bad yourself. Thanks.
+- ...You're not bad either.
+- ...Thanks. You too.
+- ...Likewise. Thanks.
+
+@rule romance.compliment.yes.looks.teasing
+on romance
+when act=compliment q=yes lvl=looks tone=teasing
+- Oh? Took you long enough to notice.
+- Took you long enough.
+- Finally noticed?
+- Slow, but okay.
+
+@rule romance.compliment.yes.other.gentle
+on romance
+when act=compliment q=yes lvl=other tone=gentle
+- R-really? That makes me really happy...
+- Really? I'm so happy...
+- That makes me glad...
+- Oh... thank you so much...
+
+@rule romance.compliment.yes.other.energetic
+on romance
+when act=compliment q=yes lvl=other tone=energetic
+- Yay! Somebody noticed!
+- Someone noticed! Yay!
+- Woo! Noticed!
+- Finally! Yay!
+
+@rule romance.compliment.yes.other.cool
+on romance
+when act=compliment q=yes lvl=other tone=cool
+- ...Thank you. I appreciate that.
+- ...Thank you.
+- ...Appreciated.
+- ...Thanks.
+
+@rule romance.compliment.yes.other.teasing
+on romance
+when act=compliment q=yes lvl=other tone=teasing
+- Finally, someone with taste.
+- Good taste. Finally.
+- Someone with eyes.
+- At last, taste.
+
+@rule romance.compliment.no.gentle
+on romance
+when act=compliment q=no tone=gentle
+- Oh... um, thank you, I guess.
+- Oh... thanks, I guess.
+- Um... thank you?
+- Ah... okay, thanks.
+
+@rule romance.compliment.no.energetic
+on romance
+when act=compliment q=no tone=energetic
+- Haha, thanks? Random, but okay!
+- Thanks? Random!
+- Ha! Okay, thanks!
+- Huh? Thanks!
+
+@rule romance.compliment.no.cool
+on romance
+when act=compliment q=no tone=cool
+- Okay.
+- Fine.
+- Noted.
+
+@rule romance.compliment.no.teasing
+on romance
+when act=compliment q=no tone=teasing
+- Flattery won't get you far with me.
+- Flattery won't work.
+- Nice try.
+- Not that easy.
+
+@rule romance.compliment.again.gentle
+on romance
+when act=compliment q=again tone=gentle
+- You said that yesterday too...
+- You said that before...
+- That again...?
+- You told me yesterday...
+
+@rule romance.compliment.again.energetic
+on romance
+when act=compliment q=again tone=energetic
+- You already told me! Got a new one?
+- Heard it! New one!
+- Old news!
+- You already said!
+
+@rule romance.compliment.again.cool
+on romance
+when act=compliment q=again tone=cool
+- You're repeating yourself.
+- Repeating.
+- Same line.
+- Again?
+
+@rule romance.compliment.again.teasing
+on romance
+when act=compliment q=again tone=teasing
+- Running out of material?
+- Out of material?
+- Rerun?
+- Recycling?
+
+@rule romance.noticed.yes.gentle
+on romance
+when act=noticed q=yes tone=gentle
+- Y-you noticed that? ...Thank you.
+- You noticed...? Thank you.
+- Oh... you saw that? Thanks.
+- Ah... thank you for noticing.
+
+@rule romance.noticed.yes.energetic
+on romance
+when act=noticed q=yes tone=energetic
+- You noticed?! That makes me so happy!
+- You noticed?! Yay!
+- You saw?! Happy!
+- No way! You noticed!
+
+@rule romance.noticed.yes.cool
+on romance
+when act=noticed q=yes tone=cool
+- ...You pay attention. I like that.
+- ...Observant. Good.
+- ...You noticed. Good.
+- ...Attentive.
+
+@rule romance.noticed.yes.teasing
+on romance
+when act=noticed q=yes tone=teasing
+- Oh? Someone's been watching me~
+- Watching me?
+- Someone's been looking~
+- Noticed, did you?
+
+@rule romance.noticed.no.gentle
+on romance
+when act=noticed q=no tone=gentle
+- Um... thanks, I guess?
+- Um... thanks?
+- Oh... thank you?
+- Ah... okay, thanks.
+
+@rule romance.noticed.no.energetic
+on romance
+when act=noticed q=no tone=energetic
+- Oh, uh, thanks!
+- Uh, thanks!
+- Oh! Thanks!
+- Huh, thanks!
+
+@rule romance.noticed.no.cool
+on romance
+when act=noticed q=no tone=cool
+- ...Okay.
+- ...Hm.
+- ...Alright.
+
+@rule romance.noticed.no.teasing
+on romance
+when act=noticed q=no tone=teasing
+- ...Where's this coming from?
+- ...Why?
+- ...Random.
+- ...Okay?
+
+# ================= talking about love =================
+@rule romance.love.close.gentle
+on romance
+when act=love close>=2 tone=gentle
+- Being your girlfriend... I still can't believe it sometimes.
+- I still can't believe I'm your girlfriend...
+- Being your girlfriend feels like a dream...
+- Your girlfriend... it still surprises me.
+
+@rule romance.love.close.energetic
+on romance
+when act=love close>=2 tone=energetic
+- Everyone's jealous of us, you know! Hehe!
+- Everyone envies us! Hehe!
+- We're the university's couple!
+- People are so jealous!
+
+@rule romance.love.close.cool
+on romance
+when act=love close>=2 tone=cool
+- I've been thinking about where we could go on our next date.
+- I've been planning our next date.
+- Next date ideas. I have some.
+- Where shall we go next?
+
+@rule romance.love.close.teasing
+on romance
+when act=love close>=2 tone=teasing
+- So, what's the plan for our next date? It better be good.
+- Next date plan? Make it good.
+- Our next date. Impress me.
+- Plan something good. Next date.
+
+@rule romance.love.far.gentle
+on romance
+when act=love close<=1 tone=gentle
+- Do you... have someone you like?
+- Is there... someone you like?
+- Do you like anyone...?
+- Um... anyone special?
+
+@rule romance.love.far.energetic
+on romance
+when act=love close<=1 tone=energetic
+- So! Do you have a crush on anyone? Tell me!
+- Crush! Who?! Tell me!
+- Got a crush?! Spill!
+- Who do you like?! Tell!
+
+@rule romance.love.far.cool
+on romance
+when act=love close<=1 tone=cool
+- Have you ever been in love?
+- Ever been in love?
+- Love. Experienced it?
+- Have you loved someone?
+
+@rule romance.love.far.teasing
+on romance
+when act=love close<=1 tone=teasing
+- Who do you like? Come on, I won't tell.
+- Who's your crush? I'll keep it secret.
+- Spill. Who do you like?
+- Your crush. Tell. I won't tell.
+
+# ================= you spend too much time with someone else =================
+@rule romance.jealous.love.gentle
+on romance
+when act=jealous q=love tone=gentle
+- You and {rname} looked really happy together... I'm happy for you. I think.
+- You and {rname} looked so happy... I'm glad. I think.
+- You seem close to {rname}... that's nice. Probably.
+- {rname} makes you smile... I'm happy for you. Mostly.
+- I keep thinking about you and {rname}... Sorry, that's weird of me.
+- I keep thinking about you and {rname}... sorry.
+- You and {rname}... it's on my mind. Sorry.
+- I can't stop thinking about you two... sorry.
+
+@rule romance.jealous.love.energetic
+on romance
+when act=jealous q=love tone=energetic
+- Hey! Why is it always {rname}?! What does she have that I don't?!
+- Why {rname}?! What's she got that I don't?!
+- {rname} again?! Not fair!
+- Always {rname}! What about me?!
+- I saw you with {rname} again! I'm not jealous! ...Okay, a little!
+- You and {rname} again! Not jealous! ...A bit!
+- {rname} again?! I'm fine! ...Kinda not!
+- Saw you with {rname}! Totally fine! ...No!
+
+@rule romance.jealous.love.cool
+on romance
+when act=jealous q=love tone=cool
+- You've been with {rname} a lot. I noticed. That's all I'll say.
+- You and {rname}. A lot lately. Noted.
+- {rname}, often. I see.
+- I've noticed you and {rname}. That's all.
+- If you like {rname}, just say it. Don't keep me guessing.
+- If it's {rname}, say so.
+- Just tell me if it's {rname}.
+- Be honest about {rname}.
+
+@rule romance.jealous.love.teasing
+on romance
+when act=jealous q=love tone=teasing
+- So {rname} gets your attention now? I can be much more fun, you know~
+- {rname} has you now? I'm more fun~
+- Choosing {rname}? I'm better~
+- {rname}? I'm way more entertaining~
+- Careful. If you keep spending time with {rname}, I might have to steal you back~
+- Keep it up with {rname} and I'll steal you back~
+- Careful. I'll take you from {rname}~
+- {rname} can't keep you forever~
+
+@rule romance.jealous.plain.gentle
+on romance
+when act=jealous q=plain tone=gentle
+- You've been spending a lot of time with {rname} lately... it's fine. I just noticed, that's all.
+- You're with {rname} a lot lately... it's okay. I just noticed.
+- So much time with {rname}... it's fine, really.
+- I see you with {rname} a lot... that's all.
+- Um... did I do something wrong? You only talk to {rname} these days.
+- Did I do something wrong? It's always {rname}...
+- Am I boring? You only talk to {rname}...
+- Did I upset you? It's just {rname} now...
+- It's a little lonely when you're always with {rname}...
+- It's lonely when you're with {rname}...
+- I miss you when you're with {rname}...
+- It gets quiet without you...
+
+@rule romance.jealous.plain.energetic
+on romance
+when act=jealous q=plain tone=energetic
+- Hey! You hang out with {rname} every day now! What about me?!
+- {rname} every day?! What about me?!
+- Hey! Me too! Not just {rname}!
+- {rname} again?! Hang with me!
+- It's always {rname}, {rname}, {rname}! I'm fun too, you know!
+- {rname}, {rname}! I'm fun too!
+- Always {rname}! Pick me sometimes!
+- Enough {rname}! My turn!
+- No fair! {rname} gets you all to herself!
+- {rname} hogs you! No fair!
+- {rname} gets you all day! Unfair!
+- Share! {rname} keeps you!
+
+@rule romance.jealous.plain.cool
+on romance
+when act=jealous q=plain tone=cool
+- You and {rname} are always together lately. I'm not complaining. I'm observing.
+- You and {rname}, constantly. Just observing.
+- Always with {rname}. An observation.
+- {rname}, daily. Noted.
+- I'm glad you and {rname} get along. ...Don't forget the rest of us.
+- Good that you and {rname} get along. Remember others.
+- {rname} is fine. Don't forget us.
+- Don't forget the rest of us.
+- You've been busy. With {rname}, mostly.
+- Busy. With {rname}.
+- You've been with {rname}.
+- {rname} has your time.
+
+@rule romance.jealous.plain.teasing
+on romance
+when act=jealous q=plain tone=teasing
+- Oh, you remembered me? I thought {rname} had adopted you.
+- Remembered me? I thought {rname} kept you.
+- Oh, you escaped {rname}?
+- {rname} let you off the leash?
+- Is {rname} that interesting? Should I be worried?
+- Is {rname} that great? Should I worry?
+- {rname}, huh? Am I being replaced?
+- What's so special about {rname}?
+- Let me guess, {rname} was busy today so you came to me?
+- {rname} was busy, so me?
+- Second choice after {rname}?
+- Oh, {rname} wasn't free?
+
+# ================= asked for something, not now (Consent decides; the private invitation stays in C#) =================
+@rule romance.notnow.date.gentle
+on romance
+when act=notnow q=date tone=gentle
+- Ah... not this time, I'm sorry. Maybe another week?
+- Not this time, sorry. Another week?
+- I'm sorry, I can't. Maybe later?
+- Not this weekend... sorry.
+
+@rule romance.notnow.date.energetic
+on romance
+when act=notnow q=date tone=energetic
+- Aww, I can't this time! Ask me again, okay?
+- Can't this time! Ask again!
+- Aww, no! Next time!
+- Busy! Ask later!
+
+@rule romance.notnow.date.cool
+on romance
+when act=notnow q=date tone=cool
+- ...Not this week.
+- ...No. Another time.
+- ...Not now.
+
+@rule romance.notnow.date.teasing
+on romance
+when act=notnow q=date tone=teasing
+- This weekend? Hm. No. Try again later.
+- This weekend? No. Later.
+- Hm, no. Try later.
+- Not this time.
+
+@rule romance.notnow.confess.gentle
+on romance
+when act=notnow q=confess tone=gentle
+- W-wait... I don't think I'm ready to hear it yet...
+- Wait... I'm not ready to hear it...
+- Please... not yet...
+- Ah... not yet...
+
+@rule romance.notnow.confess.energetic
+on romance
+when act=notnow q=confess tone=energetic
+- Eh?! W-wait! Not yet! I'm not ready!
+- Wait! Not yet!
+- Hold on! Not ready!
+- Eh?! Wait!
+
+@rule romance.notnow.confess.cool
+on romance
+when act=notnow q=confess tone=cool
+- ...Not yet. Let's get to know each other first.
+- ...Not yet.
+- ...First, know me.
+- ...Too soon.
+
+@rule romance.notnow.confess.teasing
+on romance
+when act=notnow q=confess tone=teasing
+- Hold that thought. Not yet.
+- Hold that thought.
+- Not yet.
+- Save it.
+
+@rule romance.notnow.lunch.gentle
+on romance
+when act=notnow q=lunch tone=gentle
+- Sorry... I already promised someone today.
+- Sorry, I promised someone.
+- I already have plans today... sorry.
+- Not today... sorry.
+
+@rule romance.notnow.lunch.energetic
+on romance
+when act=notnow q=lunch tone=energetic
+- Ahh, not today! Tomorrow, okay?
+- Not today! Tomorrow!
+- Can't! Tomorrow, okay?
+- Nope! Tomorrow!
+
+@rule romance.notnow.lunch.cool
+on romance
+when act=notnow q=lunch tone=cool
+- ...Not today.
+- ...Busy.
+- ...Another day.
+
+@rule romance.notnow.lunch.teasing
+on romance
+when act=notnow q=lunch tone=teasing
+- Lunch? Not today. Ask me tomorrow.
+- Not today. Tomorrow.
+- Tomorrow, maybe.
+- Ask tomorrow.
+
+@rule romance.notnow.home.gentle
+on romance
+when act=notnow q=home tone=gentle
+- I'm sorry, I have somewhere to be after class...
+- Sorry, I have somewhere to be.
+- I'm busy after class... sorry.
+- I can't today, sorry.
+
+@rule romance.notnow.home.energetic
+on romance
+when act=notnow q=home tone=energetic
+- Can't today! Errands, ugh!
+- Can't! Errands!
+- Busy today!
+- Nope! Stuff to do!
+
+@rule romance.notnow.home.cool
+on romance
+when act=notnow q=home tone=cool
+- ...I'm going alone today.
+- ...Alone today.
+- ...Busy.
+- ...Not today.
+
+@rule romance.notnow.home.teasing
+on romance
+when act=notnow q=home tone=teasing
+- Not today. I've got plans.
+- Plans. Sorry.
+- Busy.
+- Not today.
+
+@rule romance.notnow.later.gentle
+on romance
+when act=notnow q=later tone=gentle
+- Ah... not right now, sorry. Maybe later?
+- Not right now... later?
+- Sorry, not now.
+- Maybe later?
+
+@rule romance.notnow.later.energetic
+on romance
+when act=notnow q=later tone=energetic
+- Hmm, not now! Later, later!
+- Not now! Later!
+- Later!
+- Hmm, later!
+
+@rule romance.notnow.later.cool
+on romance
+when act=notnow q=later tone=cool
+- ...Not now.
+- ...Later.
+- ...No.
+
+@rule romance.notnow.later.teasing
+on romance
+when act=notnow q=later tone=teasing
+- Not now. Catch me another time.
+- Another time.
+- Later.
+- Not now.
+
+# ================= you looked like you had something to say, then stayed =================
+@rule romance.breakup.stay.gentle
+on romance
+when act=breakup q=stay tone=gentle
+- ...Hm? Is something wrong?
+- ...Is something wrong?
+- ...Hm? What's the matter?
+- ...Are you okay?
+
+@rule romance.breakup.stay.energetic
+on romance
+when act=breakup q=stay tone=energetic
+- What? What's with that face?
+- What's with that face?
+- What?!
+- Why the face?!
+
+@rule romance.breakup.stay.cool
+on romance
+when act=breakup q=stay tone=cool
+- ...You looked serious for a second.
+- ...Serious look.
+- ...You look serious.
+- ...What?
+
+@rule romance.breakup.stay.teasing
+on romance
+when act=breakup q=stay tone=teasing
+- What's that look for?
+- What's that look?
+- Why so serious?
+- Hm? That face?
+
+# ================= wary: she wanted to take it and something held her back =================
+@rule romance.wary.no.gentle
+on romance
+when act=wary q=no tone=gentle
+- ...Th-thank you. I don't know what to say yet.
+- ...That makes me happy. I just... can't answer properly.
+- ...I-I'll think about that, okay?
+- ...You're making me nervous. In a good way.
+
+@rule romance.wary.no.energetic
+on romance
+when act=wary q=no tone=energetic
+- Eh?! Um! I... I'll answer later, okay?!
+- Wait, wait, I'm not ready for that! ...But thanks!
+- Whoa, my heart! Ask me again sometime!
+- Ahh, I don't know what to say!
+
+@rule romance.wary.no.cool
+on romance
+when act=wary q=no tone=cool
+- ...I heard you. Give me time.
+- ...Not yet. But I heard you.
+- ...I'll remember that.
+- ...Hm. Ask me again sometime.
+
+@rule romance.wary.no.teasing
+on romance
+when act=wary q=no tone=teasing
+- Oh? Sweet. ...I'll let you know.
+- Mm, flattery. Maybe it'll work someday~
+- Cute. Ask me again later.
+- Almost got me there.
+
+# ================= what you tell her =================
+@rule me.romance.compliment.effort
+on me.romance
+when act=compliment lvl=effort
+- You've been working really hard lately. It shows.
+- I noticed how much effort you put in. That's amazing.
+- You never coast, do you? I respect that.
+
+@rule me.romance.compliment.club
+on me.romance
+when act=compliment lvl=club
+- I heard you're doing great at {club}.
+- You're really good at your club stuff, you know?
+- People keep talking about you at {club}. In a good way.
+
+@rule me.romance.compliment.smart
+on me.romance
+when act=compliment lvl=smart
+- You always explain things so clearly.
+- You're really sharp, you know that?
+- You make hard things sound easy.
+
+@rule me.romance.compliment.looks
+on me.romance
+when act=compliment lvl=looks
+- You look really nice today.
+- Your hair looks great like that.
+- That smile of yours is pretty great.

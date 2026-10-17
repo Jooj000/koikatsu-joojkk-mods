@@ -3,78 +3,24 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// Lines of the heart page of a conversation: holding hands, asking how she feels, teasing, whispering, talking about
-    /// the last time, sneaking off. Every line of hers has the four personality tones (gentle, energetic, cool, teasing).
+    /// Lines of the heart page of a conversation that stay fixed in code: the intimate answer about feelings, teasing,
+    /// whispering, talking about the last time, sneaking off. Every line of hers has the four personality tones (gentle,
+    /// energetic, cool, teasing). Holding hands, feelings and being sweet are in data\dialogue\romance.dlg.
     /// </summary>
     internal static class RomanceLines
     {
         private static string T(Tone t, string gentle, string energetic, string cool, string teasing) { return Lines.T(t, gentle, energetic, cool, teasing); }
         private static int R(int n) { return Random.Range(0, n); }
 
-        // ================= holding hands =================
-
-        public static string PlayerHand(int close)
-        {
-            if (close >= 2) return Lines.Pick("Come here. Give me your hand.", "I missed holding your hand.", "Let's walk like this for a while.");
-            return Lines.Pick("Can I... hold your hand for a bit?", "Your hands look cold. Here.", "Would it be weird if I held your hand?");
-        }
-
-        public static string HandYes(Tone t, int close)
-        {
-            if (close >= 2)
-                switch (R(3))
-                {
-                    case 0: return T(t, "Mm... your hand is so warm. I could stay like this all day. || Your hand is so warm... I don't want to let go. || Mm... I feel safe like this. || Holding your hand makes everything feel okay.", "Hehe, fingers laced! That's the official couple grip! || Laced fingers! Super official! || Hand-holding power! Hehe! || Look! We're holding hands! Everyone, look!", "...Don't let go yet. || ...Keep holding. || ...Not yet. Don't let go. || ...Stay like this.", "Holding hands in public? How bold. ...I'm not complaining. || Public hand-holding? Scandalous. Keep going. || Showing me off? Good. || Brave, holding my hand here. I approve.");
-                    case 1: return T(t, "Every time we do this my heart races like the first time... || My heart still races every time... || It's like the first time, every time... || Even now, my heart jumps when you take my hand.", "Swing, swing! Ehehe, I love this! || Swing! Swing! Ahaha! || Wheee! Hand swinging! || Ehehe, this never gets old!", "Your hand fits mine. Funny how that works. || Your hand fits mine. Odd. || ...We fit. Strange. || ...It fits. I noticed.", "Squeeze back if you love me. ...Hm. Good answer. || Squeeze if you love me. ...Correct. || Squeeze twice if you're mine. ...Good. || Prove it. Squeeze. ...Good boy.");
-                    default: return T(t, "People are looking... but I don't mind. Not with you. || Let them look... I'm happy with you. || I don't care who sees. Not with you. || People are staring... it's okay.", "Let's walk the long way so this lasts longer! || Long way home! So this lasts longer! || Let's take the scenic route! Hehe! || Slow walk! Make it last!", "...This is nice. Don't tell anyone I said that. || ...This is pleasant. Keep that secret. || ...Nice. Don't repeat that. || ...I like this. Tell no one.", "If you let go first, you lose. Got it? || First to let go loses. Deal? || Let go and you lose. Got it? || Whoever lets go owes the other. Ready?");
-                }
-            switch (R(3))
-            {
-                case 0: return T(t, "Eh...? O-okay... just for a little while... || Eh...? O-okay... just a little... || Ah... um... alright... || Oh... okay... only for a bit...", "Whoa! Um. Okay! Sure! This is fine! Totally fine! || Whoa! Okay! This is fine! Totally fine! || Huh?! Sure! Yep! Hand! Okay! || Ah! Um! Cool! Totally normal!", "...Fine. Your hand's warmer than I expected. || ...Fine. Warm hand. || ...Alright. Surprisingly warm. || ...Acceptable.", "Oh? Taking the initiative today? ...I'll allow it. || Taking the lead? I'll allow it. || Oh? Bold today. Fine. || My, how forward. Go on.");
-                case 1: return T(t, "My face is so hot right now... please don't look... || Please don't look at my face... it's so red... || My cheeks are burning... || D-don't look at me...", "Ahaha, my hand's all sweaty, sorry! ...Don't let go though. || My hand's sweaty, sorry! Don't let go! || Ahaha, so sweaty! Keep holding! || Ugh, clammy! Still don't let go!", "...I suppose it's not unpleasant. || ...Not unpleasant. || ...I'll tolerate it. || ...It's fine.", "Careful. If you hold on too long, I might not give it back. || Hold too long and I'll keep it. || Careful, I might not return it. || Keep holding and it's mine.");
-                default: return T(t, "It's... kind of nice, isn't it? || It's nice, isn't it...? || This feels... nice. || I like this... a lot.", "Okay, this is kinda cute. Don't make it weird! || Okay, this is cute! Don't ruin it! || Kinda cute! No jokes! || Aww, this is nice! Shh!", "Hm. Only until the end of the hallway. || Only to the end of the hall. || Until the corner. || Briefly.", "You're shaking a little. Nervous? How cute. || You're trembling. Adorable. || Nervous? Cute. || Shaky hands? How sweet.");
-            }
-        }
-
-        public static string HandNo(Tone t)
-        {
-            return T(t, "Ah... s-sorry, not here... people might see... || S-sorry... not here... || Ah, people might see... || N-not in front of everyone...", "Whoa, whoa! Hands to yourself, mister! || Hands off, mister! || Whoa, slow down! || Nope! Not yet!", "No. || No. || Not now. || Don't.", "Holding hands already? Earn it first. || Earn it first. || Too soon, sweetie. || Not so fast.");
-        }
-
         // ================= how she feels about you =================
 
-        public static string PlayerAskFeelings()
+        /// <summary>Your girlfriend, once things went further: the rest of this answer is in romance.dlg.</summary>
+        public static string FeelingsIntimate(Tone t)
         {
-            return Lines.Pick("Can I ask you something? What do you think of me?", "Be honest. How do you see me?", "What am I to you, exactly?");
-        }
-
-        /// <summary>Her honest answer, from how much she likes you, your relation and how lewd she is with you.</summary>
-        public static string Feelings(Tone t, SaveData.Heroine h)
-        {
-            if (h.isGirlfriend && h.lewdness >= 70)
-                return T(t, "You're my boyfriend... and the only one who gets to see me like... that. Don't make me say more! || You're my boyfriend... and only you see me like... that. Don't make me say more! || You're the only one I'd ever... um... you know. || You're mine, and I'm yours... in every way. Ah, embarrassing!",
-                    "You're my favorite person! And, um... I kinda can't stop thinking about you. In every way. Ehehe... || You're my favorite! And I think about you ALL the ways! Ehehe! || You're mine! Heart, body, everything! Too much? || I can't stop thinking about you! Like, at all! In every way!",
-                    "You're mine. All of you. That's what I think. || You're mine. Entirely. || All of you belongs to me. || You're mine. Body included.",
-                    "You're my boyfriend and my favorite toy. Is that honest enough for you? || My boyfriend and my favorite plaything. Honest enough? || Mine to love and mine to tease. || You're my boyfriend. And my toy. Both.");
-            if (h.isGirlfriend)
-                return T(t, "You're the most important person in the world to me. That's all. || You're the most precious person to me. || You mean everything to me. || You're my most important person.",
-                    "You're my boyfriend, silly! The best one in the whole university! || You're my boyfriend, dummy! The best one! || Best boyfriend in the university! Easy! || You're mine! Number one!",
-                    "You're the person I chose. I don't regret it. || I chose you. No regrets. || You're my choice. Final. || I picked you. Correctly.",
-                    "You're mine. Isn't that obvious? Or do you just like hearing it? || You're mine. Need me to say it again? || Mine. Obviously. Like hearing it? || You belong to me. Isn't it clear?");
-            if (h.favor >= 80)
-                return T(t, "I... I think about you a lot. More than I should, maybe... || I think about you... a lot. Maybe too much. || You're on my mind so often... || I can't stop thinking about you...",
-                    "Honestly? You're kind of my favorite person right now. Don't let it go to your head! || You're kinda my favorite person! Don't get cocky! || Top person right now? You! Shh! || Honestly, you're the best! Don't tell!",
-                    "You're... important to me. More than I planned. || You matter to me. More than planned. || You're... important. Unexpectedly. || More important than I intended.",
-                    "Hmm... let's just say if you asked me out, I wouldn't say no right away. || If you asked me out, I might say yes. Might. || Ask me out sometime. Maybe I'll agree. || Let's say I wouldn't refuse a date.");
-            if (h.favor >= 50)
-                return T(t, "You're a really good friend. I'm glad we met. || You're a wonderful friend. || I'm so glad we're friends. || I'm happy I met you.",
-                    "You're super fun to be around! Like, top three people, easy! || You're SO fun! Top three, easy! || Best friend material! || Hanging with you rocks!",
-                    "You're reliable. I like that. || You're dependable. || You're reliable. Good. || I trust you.",
-                    "You're interesting. That's rare around here. Keep it up. || You're interesting. That's rare. || Not boring. I like that. || You're fun. Keep it up.");
-            return T(t, "Um... you seem nice? I don't know you that well yet... || You seem nice...? I don't know you well yet... || Um... I need to know you more... || I'm not sure yet... you seem kind.",
-                "Hmm, you're okay! We should hang out more, then I'll tell you! || You're okay! Hang out more and I'll decide! || Jury's out! Let's chill sometime! || Hmm! Ask me later!",
-                "I don't have an opinion yet. || No opinion yet. || Undecided. || Insufficient data.",
-                "Ask me again when you've done something worth talking about. || Do something interesting first. || Impress me, then ask. || Ask again later.");
+            return T(t, "You're my boyfriend... and the only one who gets to see me like... that. Don't make me say more! || You're my boyfriend... and only you see me like... that. Don't make me say more! || You're the only one I'd ever... um... you know. || You're mine, and I'm yours... in every way. Ah, embarrassing!",
+                "You're my favorite person! And, um... I kinda can't stop thinking about you. In every way. Ehehe... || You're my favorite! And I think about you ALL the ways! Ehehe! || You're mine! Heart, body, everything! Too much? || I can't stop thinking about you! Like, at all! In every way!",
+                "You're mine. All of you. That's what I think. || You're mine. Entirely. || All of you belongs to me. || You're mine. Body included.",
+                "You're my boyfriend and my favorite toy. Is that honest enough for you? || My boyfriend and my favorite plaything. Honest enough? || Mine to love and mine to tease. || You're my boyfriend. And my toy. Both.");
         }
 
         // ================= teasing =================
@@ -179,16 +125,6 @@ namespace Joojkk.CampusLife
         public static string SneakNo(Tone t)
         {
             return T(t, "N-not today... I'm not ready for something like that... || Not today... I'm not ready... || I-I can't... not yet... || Sorry... not like this...", "Ehh? Sneak off? With you? Pfft, no way! ...Not yet, anyway. || Sneak off? Nope! Not yet! || Pfft, no! Maybe someday! || Ehh? Not today!", "No. Don't push your luck. || No. || Not happening. || Don't push.", "Sneak off with you? You wish. Try harder. || You wish. || Try harder. || In your dreams.");
-        }
-
-        // ================= being sweet (more variants of the old Flirt) =================
-
-        public static string PlayerSweet(int close)
-        {
-            if (close >= 2) return Lines.Pick("I was looking forward to seeing you all day.", "You're the best part of my day, you know.", "Being with you is my favorite thing.", "I keep thinking about our last date.",
-                "You look cute when you're thinking hard about something.", "I'd skip every class just to sit here with you.");
-            return Lines.Pick("I really like spending time with you.", "You're kind of amazing, you know that?", "Talking to you always cheers me up.", "I'm glad I met you.",
-                "Your laugh is really cute.", "I find myself looking for you in the hallway.");
         }
     }
 }

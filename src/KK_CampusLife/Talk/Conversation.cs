@@ -394,7 +394,7 @@ namespace Joojkk.CampusLife
             else if (jealous != null)
             {
                 gs.JealousDay = S.Day;
-                b.Her_(Interested(h) ? ConvoLines.JealousLove(tone, GirlInfo.FirstName(jealous)) : ConvoLines.Jealous(tone, GirlInfo.FirstName(jealous)));
+                b.Her_(RomanceSay(h, "jealous", Interested(h) ? "love" : "plain", null, GirlInfo.FirstName(jealous)));
                 s.Interest = Math.Max(0, s.Interest - 1);
                 s.Did.Add("jealous");
             }
@@ -805,7 +805,7 @@ namespace Joojkk.CampusLife
             var delta = sc >= 4 ? 2 : sc >= 2 ? 1 : sc >= 0 ? 0 : -1;
             var b = new SceneBuilder(h, true);
             b.Me(mine ?? Opener(t));
-            if (delta > 0) b.Her_(t == Topic.Love ? ConvoLines.LoveTalk(tone, Lines.Closeness(h)) : Good(t, tone));
+            if (delta > 0) b.Her_(t == Topic.Love ? RomanceSay(h, "love", "") : Good(t, tone));
             else if (delta == 0) b.Her_(Lines.T(tone, "Oh, um... that's nice, I guess. || Oh... that's interesting, I think. || Um, okay... I see. || Ah... mm, that's nice.", "Huh, yeah, sure! || Ha, sure, okay! || Oh yeah? Neat! || Huh! Cool, I guess!", "I see. || Mm. || Is that so. || ...Right.", "Mm-hm. Fascinating. Kind of. || Riveting. Truly. || Uh-huh. Go on. Or don't. || Wow. Tell me more. Actually, don't."));
             else b.Her_(Lines.T(tone, "Um... could we talk about something else? || Um... maybe another topic? || Sorry... could we talk about something different? || I'm not sure what to say to that... something else?", "Ehh, boring! Next topic! || Snooze! New topic, please! || Boring! Next! || Nope, nope, next topic!", "Not interested. || I don't care about that. || Let's skip that. || Uninteresting.", "Wow. You really know how to kill a conversation. || Do you practice being this dull? || And the conversation dies. Impressive. || Wow. My eyelids are getting heavy."));
             Play(b, delta, delta >= 2 ? "♪♪ She loved that topic." : delta == 1 ? "♪ She liked that topic." : null, null, t == Topic.Love && delta > 0 ? 2 : 0);
@@ -1030,13 +1030,13 @@ namespace Joojkk.CampusLife
             var gs = S.Girl(GirlInfo.Key(h));
             var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
-            b.Me(mine ?? ConvoLines.PlayerCompliment(kind, GirlInfo.ClubName(h)));
-            if (gs.ComplimentDay >= S.Day - 1) { b.Her_(ConvoLines.ComplimentRepeat(tone)); Play(b, -1, null); return; }
+            b.Me(mine ?? RomanceMe(h, "compliment", kind == "effort" || kind == "club" || kind == "smart" ? kind : "looks"));
+            if (gs.ComplimentDay >= S.Day - 1) { b.Her_(RomanceSay(h, "compliment", "again")); Play(b, -1, null); return; }
             var stat = kind == "smart" ? G.Int : G.Sens;
             var chance = 0.35f + stat / 200f + (kind == "club" ? 0.15f : 0f) + (kind == "looks" ? (h.relation >= 1 ? 0.1f : -0.15f) : 0f);
             if (tone == Tone.Cool) chance -= 0.1f;
             var ok = Random.value < chance;
-            b.Her_(ok ? ConvoLines.ComplimentGood(tone, kind) : ConvoLines.ComplimentFlat(tone));
+            b.Her_(ok ? RomanceSay(h, "compliment", "yes", kind == "looks" ? "looks" : "other") : RomanceSay(h, "compliment", "no"));
             Play(b, ok ? 1 : 0, ok ? "♪ She's happy you noticed." : null, () => gs.ComplimentDay = S.Day);
         }
 
@@ -1058,14 +1058,12 @@ namespace Joojkk.CampusLife
         {
             var s = Sess;
             var h = s.Her;
-            var tone = GirlInfo.ToneOf(h);
-            var close = Lines.Closeness(h);
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerSweet(close));
-            if (s.Did.Contains("flirt")) { b.Her_(Lines.T(tone, "Y-you already said something like that... || Y-you said that already... || Ah... again? You're making me blush... || Um... I heard you the first time...", "Okay, okay, I get it! Hehe! || Okay, okay! I heard you! Ehehe! || Again?! Alright, I get it! || Haha, you're repeating yourself!", "Once is enough. || You said that. || I heard you the first time. || Once was sufficient.", "Laying it on thick, aren't you? || Running out of material? || Again? Someone's desperate. || Twice in a row? Try harder.")); Play(b, 0, null); return; }
+            b.Me(RomanceMe(h, "flirt"));
+            if (s.Did.Contains("flirt")) { b.Her_(RomanceSay(h, "flirt", "again")); Play(b, 0, null); return; }
             s.Did.Add("flirt");
             var ok = Random.value < FlirtChance(s);
-            b.Her_(ok ? ConvoLines.FlirtGood(tone, close) : ConvoLines.FlirtTooSoon(tone));
+            b.Her_(RomanceSay(h, "flirt", ok ? "yes" : "no"));
             var witnesses = Witness.Who(h, Witness.Flirt);
             Play(b, ok ? 2 : -1, ok ? "♥ " + GirlInfo.FirstName(h) + " is blushing." : null, ok ? (Action)(() =>
             {
@@ -1091,14 +1089,12 @@ namespace Joojkk.CampusLife
         {
             var s = Sess;
             var h = s.Her;
-            var tone = GirlInfo.ToneOf(h);
-            var close = Lines.Closeness(h);
             s.Did.Add("hand");
             var chance = h.isGirlfriend ? 1f : Mathf.Clamp(0.25f + h.favor / 150f + G.Sens / 400f + Bonus(h), 0.05f, 0.95f);
             var ok = Random.value < chance;
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerHand(close));
-            b.Her_(ok ? RomanceLines.HandYes(tone, close) : RomanceLines.HandNo(tone));
+            b.Me(RomanceMe(h, "hand"));
+            b.Her_(RomanceSay(h, "hand", ok ? "yes" : "no"));
             var witnesses = Witness.Who(h, Witness.Hand);
             Play(b, ok ? 2 : -1, ok ? "♥ " + GirlInfo.FirstName(h) + " holds your hand." : null, ok ? (Action)(() =>
             {
@@ -1113,8 +1109,8 @@ namespace Joojkk.CampusLife
             var h = s.Her;
             s.Did.Add("feelings");
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerAskFeelings());
-            b.Her_(RomanceLines.Feelings(GirlInfo.ToneOf(h), h));
+            b.Me(RomanceMe(h, "feelings"));
+            b.Her_(FeelingsLine(h));
             Play(b, h.favor >= 50 ? 1 : 0, null);
         }
 
