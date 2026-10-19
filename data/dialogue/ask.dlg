@@ -1,0 +1,1200 @@
+# How she is today: on ask, for "How are you?" and every place that asks it.
+# Conversation.Ask.cs sets amood (cheerful ... upset, none), close (Lines.Closeness: 0 stranger, 1 friend, 2 girlfriend)
+# and tone. The answer to "how are you" also tells the game her mood, so the mood of the rule must stay the real one.
+# The girlfriend's teasing flirty answer stays in Lines.cs.
+
+# ================= close 0 =================
+@rule ask.mood.cheerful.0.gentle
+on ask
+when amood=cheerful close=0 tone=gentle
+- Oh, um... I'm doing well, thank you. It's been a nice day so far.
+- I-I'm good! Today's been nice.
+- Pretty good, thank you. The weather helps.
+- I'm well, thank you. Today's been nice.
+- Good! It's been a pleasant day.
+- I'm doing fine, thank you.
+
+@rule ask.mood.cheerful.0.energetic
+on ask
+when amood=cheerful close=0 tone=energetic
+- Pretty great, actually! Thanks for asking!
+- Super good! Today's been fun!
+- Awesome! Something good happened in class!
+- Great! Thanks for asking!
+- Super!
+- Awesome day!
+
+@rule ask.mood.cheerful.0.cool
+on ask
+when amood=cheerful close=0 tone=cool
+- Fine. Good, even.
+- Good, thank you.
+- Better than usual.
+- Good. Thanks.
+- Decent.
+
+@rule ask.mood.cheerful.0.teasing
+on ask
+when amood=cheerful close=0 tone=teasing
+- Good enough. Why, are you doing a survey?
+- Good. Why, do you want to make it better?
+- Pretty good. And you're curious why?
+- Good. Taking a survey?
+- Fine. Want to improve it?
+- Good. Why so curious?
+
+@rule ask.mood.hungry.0.gentle
+on ask
+when amood=hungry close=0 tone=gentle
+- I'm a little hungry, to be honest... I skipped breakfast.
+- Um, a little hungry... sorry.
+- Hungry... I didn't eat this morning.
+- A little hungry... I skipped breakfast.
+- Hungry, honestly...
+- Um, a bit hungry...
+
+@rule ask.mood.hungry.0.energetic
+on ask
+when amood=hungry close=0 tone=energetic
+- Honestly? Starving. Is it lunch yet?
+- Hungry! Way too hungry!
+- Starving! When's lunch?!
+- Starving! Lunch yet?
+- So hungry!
+- Feed me!
+
+@rule ask.mood.hungry.0.cool
+on ask
+when amood=hungry close=0 tone=cool
+- Hungry. I forgot my lunch.
+- Hungry, if you must know.
+- I missed lunch. That's all.
+- Hungry.
+- I forgot lunch.
+- Hungry, yes.
+
+@rule ask.mood.hungry.0.teasing
+on ask
+when amood=hungry close=0 tone=teasing
+- Hungry. If you're heading to the cafeteria, that's all I'll say.
+- Hungry. Hint, hint.
+- Hungry. You wouldn't happen to have a snack?
+- Hungry. Hint.
+- Hungry. Snack?
+- Hungry. Cafeteria's that way.
+
+@rule ask.mood.bored.0.gentle
+on ask
+when amood=bored close=0 tone=gentle
+- It's been a slow day... nothing much is happening.
+- It's a little boring today...
+- Quiet day. Not much going on.
+- Slow day... nothing's happening.
+- A bit boring today...
+- Quiet day.
+
+@rule ask.mood.bored.0.energetic
+on ask
+when amood=bored close=0 tone=energetic
+- Kinda bored! Today is dragging on forever.
+- Bored! Super bored!
+- Today's so slow! Ugh!
+- Bored! Today's endless!
+- So bored!
+- Ugh, slow day!
+
+@rule ask.mood.bored.0.cool
+on ask
+when amood=bored close=0 tone=cool
+- Bored. Classes were tedious.
+- Dull day.
+- Uneventful. Tedious.
+- Bored.
+- Dull.
+- Tedious.
+
+@rule ask.mood.bored.0.teasing
+on ask
+when amood=bored close=0 tone=teasing
+- Bored. You're not going to make it worse, are you?
+- Bored. Got anything interesting?
+- Bored. Surprise me.
+- Bored. Don't make it worse.
+- Bored. Entertain me.
+
+@rule ask.mood.stressed.0.gentle
+on ask
+when amood=stressed close=0 tone=gentle
+- A little nervous... there's a lot of studying to do.
+- A bit stressed... lots of assignments.
+- Busy... I have a test soon.
+- A little stressed... lots to study.
+- Nervous about tests...
+- Busy with assignments...
+
+@rule ask.mood.stressed.0.energetic
+on ask
+when amood=stressed close=0 tone=energetic
+- Stressed! Way too much assignments this week.
+- Stressed! So many deadlines!
+- Busy busy busy! Too much stuff!
+- Stressed! Assignments overload!
+- Deadlines! Aah!
+- Busy busy!
+
+@rule ask.mood.stressed.0.cool
+on ask
+when amood=stressed close=0 tone=cool
+- Busy. I have a lot to get through.
+- Stressed. It's manageable.
+- Busy. Lots on my plate.
+- Busy. Lots to do.
+- Stressed. Manageable.
+- Occupied.
+
+@rule ask.mood.stressed.0.teasing
+on ask
+when amood=stressed close=0 tone=teasing
+- Stressed. Long story, and we don't know each other that well yet.
+- Stressed. Don't ask, stranger.
+- On edge. Not a great time to impress me.
+- Stressed. Long story.
+- Tense. Don't ask yet.
+- Busy. Not the best time.
+
+@rule ask.mood.lonely.0.gentle
+on ask
+when amood=lonely close=0 tone=gentle
+- It's been a quiet day... I haven't really talked to anyone.
+- A little lonely, honestly...
+- Quiet... nobody's talked to me much today.
+- Quiet day... I haven't talked much.
+- A bit lonely...
+- Nobody's talked to me today.
+
+@rule ask.mood.lonely.0.energetic
+on ask
+when amood=lonely close=0 tone=energetic
+- My friends are all busy today, so it's been kinda quiet.
+- Kinda lonely today! Everyone's busy!
+- My friends abandoned me today!
+- Friends are busy! Quiet day!
+- Lonely today!
+- Everyone's gone!
+
+@rule ask.mood.lonely.0.cool
+on ask
+when amood=lonely close=0 tone=cool
+- Quiet. I've been on my own most of the day.
+- Alone most of the day. It's fine.
+- Quiet. Too quiet, maybe.
+- Alone most of today.
+- Quiet.
+- On my own today.
+
+@rule ask.mood.lonely.0.teasing
+on ask
+when amood=lonely close=0 tone=teasing
+- Quiet day. Not many people to talk to.
+- Lonely day. Good timing.
+- Nobody to talk to. Until now.
+- Quiet. Not many to talk to.
+- Lonely. Good timing.
+- Nobody around. Until you.
+
+@rule ask.mood.flirty.0.gentle
+on ask
+when amood=flirty close=0 tone=gentle
+- I'm in a pretty good mood, actually. I feel like talking today.
+- Good! I feel chatty today.
+- Nice day... I'm in a good mood.
+- I'm in a good mood. Let's talk.
+- Feeling chatty today.
+- Nice mood today.
+
+@rule ask.mood.flirty.0.energetic
+on ask
+when amood=flirty close=0 tone=energetic
+- I'm in a super chatty mood today! Fair warning!
+- Great mood! Talk to me!
+- I'm on fire today! Ask me anything!
+- Chatty mood! Warning!
+- Great mood!
+- On fire today!
+
+@rule ask.mood.flirty.0.cool
+on ask
+when amood=flirty close=0 tone=cool
+- Talkative, for once. Don't get used to it.
+- Unusually good.
+- Good. In the mood to talk.
+- Talkative. Rare.
+- Good mood.
+- Willing to talk.
+
+@rule ask.mood.flirty.0.teasing
+on ask
+when amood=flirty close=0 tone=teasing
+- In a playful mood. Lucky you caught me today.
+- Playful today. Watch yourself.
+- Good mood. You picked the right time.
+- Playful mood. Lucky you.
+- Playful. Careful.
+- Good mood. Right time.
+
+@rule ask.mood.sleepy.0.gentle
+on ask
+when amood=sleepy close=0 tone=gentle
+- Sorry... I stayed up late. I'm a bit sleepy.
+- A little tired... sorry.
+- Sleepy... I studied late.
+- Sorry, I'm sleepy... late night.
+- A bit tired...
+- Sleepy... studied late.
+
+@rule ask.mood.sleepy.0.energetic
+on ask
+when amood=sleepy close=0 tone=energetic
+- *yawn* Sorry! Late night. I'm running on fumes.
+- Sleepy! So sleepy!
+- *yawn* I need a nap!
+- *yawn* Late night!
+- Sleepy!
+- *yawn* Nap please!
+
+@rule ask.mood.sleepy.0.cool
+on ask
+when amood=sleepy close=0 tone=cool
+- Tired. I didn't sleep much.
+- Tired.
+- Short on sleep.
+- Little sleep.
+
+@rule ask.mood.sleepy.0.teasing
+on ask
+when amood=sleepy close=0 tone=teasing
+- Sleepy. Keep it short, okay?
+- Sleepy. Talk slow.
+- Tired. Don't bore me or I'll doze off.
+- Sleepy. Keep it short.
+- Talk slowly. Sleepy.
+- Tired. Don't bore me.
+
+@rule ask.mood.upset.0.gentle
+on ask
+when amood=upset close=0 tone=gentle
+- I'm sorry, I'd rather not talk about it.
+- Not a great day... sorry.
+- I'm a little down today.
+- I'd rather not talk about it.
+- Not a great day.
+- A little down.
+
+@rule ask.mood.upset.0.energetic
+on ask
+when amood=upset close=0 tone=energetic
+- Not great, honestly. I'd rather not get into it.
+- Bad day! Don't ask!
+- Ugh, not great.
+- Not great! Don't ask!
+- Bad day!
+- Ugh.
+
+@rule ask.mood.upset.0.cool
+on ask
+when amood=upset close=0 tone=cool
+- Not a good day. Let's leave it at that.
+- Bad day.
+- Not good.
+- Bad day. Leave it.
+- Not today.
+
+@rule ask.mood.upset.0.teasing
+on ask
+when amood=upset close=0 tone=teasing
+- Bad day. Don't take it personally.
+- Bad day. Don't push it.
+- Rough day. Nothing to do with you.
+- Bad day. Not about you.
+- Rough day. Don't push.
+- Off day. Nothing personal.
+
+@rule ask.mood.none.0.gentle
+on ask
+when amood=none close=0 tone=gentle
+- I'm fine, thank you for asking.
+- I'm okay, thanks.
+- Fine, thank you. And you?
+- Fine, thank you.
+- Okay, thanks.
+- Fine. And you?
+
+@rule ask.mood.none.0.energetic
+on ask
+when amood=none close=0 tone=energetic
+- Doing okay! And you?
+- Good! You?
+- Not bad! How about you?
+- Okay! You?
+- Not bad!
+
+@rule ask.mood.none.0.cool
+on ask
+when amood=none close=0 tone=cool
+- Fine.
+- Fine, thanks.
+- Alright.
+
+@rule ask.mood.none.0.teasing
+on ask
+when amood=none close=0 tone=teasing
+- Fine. You're the curious type, huh?
+- Fine. Why do you ask?
+- Fine. Is this small talk?
+- Fine. Curious, are we?
+- Fine. Why?
+- Small talk?
+
+# ================= close 1 =================
+@rule ask.mood.cheerful.1.gentle
+on ask
+when amood=cheerful close=1 tone=gentle
+- I'm in a really good mood today! It's nice to see you.
+- Today's a good day! And seeing you makes it better.
+- I'm so happy today! Did something good happen to you too?
+- Great mood today! Nice to see you.
+- Good day! You make it better.
+- So happy today!
+
+@rule ask.mood.cheerful.1.energetic
+on ask
+when amood=cheerful close=1 tone=energetic
+- Today's awesome! I feel like I could run ten laps! Or eat ten crepes!
+- Best day ever! I aced a quiz and the cafeteria had melon bread!
+- I'm so pumped today! Let's do something fun!
+- Awesome day! Let's go!
+- Best day! Woo!
+- So pumped!
+
+@rule ask.mood.cheerful.1.cool
+on ask
+when amood=cheerful close=1 tone=cool
+- I'm good. Really good, actually.
+- Good. I'll take it.
+- Good day. Rare, but good.
+- Good. Really good.
+- Good day.
+- Pleasant.
+
+@rule ask.mood.cheerful.1.teasing
+on ask
+when amood=cheerful close=1 tone=teasing
+- Good mood today. Enjoy it while it lasts.
+- Good mood. Don't waste it.
+- Great day, friend. Let's keep it that way.
+- Good mood. Enjoy it.
+- Don't waste my good mood.
+- Great day, friend.
+
+@rule ask.mood.hungry.1.gentle
+on ask
+when amood=hungry close=1 tone=gentle
+- I skipped breakfast and my stomach won't let me forget it...
+- I'm so hungry... want to grab something together?
+- Sorry if my stomach growls. I'm starving...
+- So hungry... skipped breakfast.
+- Want to eat together? I'm starving...
+- Sorry if my stomach growls...
+
+@rule ask.mood.hungry.1.energetic
+on ask
+when amood=hungry close=1 tone=energetic
+- I'm STARVING. Wanna grab lunch together?
+- Food! Now! Come with me!
+- I could eat a horse! Lunch together?
+- Starving! Lunch?!
+- Food! Let's go!
+- I could eat a horse!
+
+@rule ask.mood.hungry.1.cool
+on ask
+when amood=hungry close=1 tone=cool
+- I forgot my lunch. It's... a bit of a problem.
+- Hungry. Very.
+- I skipped lunch. Not my best idea.
+- Forgot lunch. A problem.
+- Hungry.
+- Skipped lunch. Regret.
+
+@rule ask.mood.hungry.1.teasing
+on ask
+when amood=hungry close=1 tone=teasing
+- Hungry. A good friend would know what to do with that information.
+- Starving. Share your snack, friend?
+- Hungry. Your treat?
+- Hungry, friend. Hint.
+- Share a snack?
+- Your treat?
+
+@rule ask.mood.bored.1.gentle
+on ask
+when amood=bored close=1 tone=gentle
+- Today feels so long... Can we talk for a while?
+- Such a slow day... I'm glad you're here.
+- Nothing's happening today. Keep me company?
+- Long day... talk for a bit?
+- Slow day... glad you're here.
+- Keep me company?
+
+@rule ask.mood.bored.1.energetic
+on ask
+when amood=bored close=1 tone=energetic
+- Booooored! Let's do something! Anything!
+- So bored! Let's go somewhere!
+- Bored bored bored! Save me!
+- Bored! Let's do something!
+- Let's go somewhere!
+- Save me from boredom!
+
+@rule ask.mood.bored.1.cool
+on ask
+when amood=bored close=1 tone=cool
+- Classes were dull today. Got anything interesting?
+- Dull day. You're my only hope.
+- Boring. Tell me something.
+- Dull classes. Anything interesting?
+- Dull. You're my hope.
+
+@rule ask.mood.bored.1.teasing
+on ask
+when amood=bored close=1 tone=teasing
+- Bored out of my mind. Entertain me, friend.
+- Bored. Your job now is to fix that.
+- Bored. Be interesting.
+- Entertain me, friend.
+- Fix my boredom.
+- Be interesting.
+
+@rule ask.mood.stressed.1.gentle
+on ask
+when amood=stressed close=1 tone=gentle
+- The tests are coming and I'm so behind... I'm a little scared.
+- There's so much to do... I don't know where to start.
+- I've been worrying all day. Can I lean on you a little?
+- Tests are coming... I'm scared.
+- So much to do...
+- Can I lean on you?
+
+@rule ask.mood.stressed.1.energetic
+on ask
+when amood=stressed close=1 tone=energetic
+- Ugh, my head's gonna explode! Too much assignments!
+- Three reports due this week! Who does that?!
+- My brain is full! No more room! Help!
+- Assignments explosion!
+- Reports everywhere!
+- Brain full!
+
+@rule ask.mood.stressed.1.cool
+on ask
+when amood=stressed close=1 tone=cool
+- I have too much on my plate. It's under control. Mostly.
+- Busy. Deadlines. I'll survive.
+- Stressed. I'll handle it. ...A coffee wouldn't hurt.
+- Busy. Under control.
+- Deadlines.
+- Stressed. Coffee?
+
+@rule ask.mood.stressed.1.teasing
+on ask
+when amood=stressed close=1 tone=teasing
+- Everyone's getting on my nerves today. You get a pass.
+- Rough day. You're one of the few I'm not mad at.
+- Stressed. Help me forget it?
+- Everyone annoys me. You're spared.
+- You're one I'm not mad at.
+- Help me forget it.
+
+@rule ask.mood.lonely.1.gentle
+on ask
+when amood=lonely close=1 tone=gentle
+- Nobody really talked to me today... I'm glad you came by.
+- It's been lonely today... thanks for coming.
+- I missed having someone to talk to.
+- Lonely day... thanks for coming.
+- I missed talking to someone.
+- Glad you came by.
+
+@rule ask.mood.lonely.1.energetic
+on ask
+when amood=lonely close=1 tone=energetic
+- Everyone's busy today. Hang out with me for a bit?
+- All alone today! Hang out with me!
+- Nobody's around! You're stuck with me!
+- Hang out with me!
+- All alone! Stay!
+- You're stuck with me!
+
+@rule ask.mood.lonely.1.cool
+on ask
+when amood=lonely close=1 tone=cool
+- I was on my own all morning. ...You can stay a while.
+- Alone all day. You can keep me company.
+- Quiet day. Stay a bit.
+- Alone all morning. Stay.
+- Quiet. Keep me company.
+- Stay a while.
+
+@rule ask.mood.lonely.1.teasing
+on ask
+when amood=lonely close=1 tone=teasing
+- Oh, a friendly face. Finally.
+- Finally, someone. I was going crazy.
+- Someone remembered me. Nice.
+- A friendly face. Finally.
+- Someone remembered me.
+- About time.
+
+@rule ask.mood.flirty.1.gentle
+on ask
+when amood=flirty close=1 tone=gentle
+- I'm in such a good mood I can't sit still today.
+- I feel all bubbly today...
+- I'm in a funny mood today. A good one.
+- I can't sit still today! Good mood.
+- Bubbly today...
+- Funny good mood today.
+
+@rule ask.mood.flirty.1.energetic
+on ask
+when amood=flirty close=1 tone=energetic
+- I'm super hyped today! Ask me anything!
+- So much energy today! Let's talk!
+- I feel amazing! Talk to me!
+- Hyped! Ask me anything!
+- So much energy!
+- Feeling amazing!
+
+@rule ask.mood.flirty.1.cool
+on ask
+when amood=flirty close=1 tone=cool
+- I'm in a... talkative mood. Rare, I know.
+- I'm in a good mood. Enjoy it.
+- Feeling... friendly today.
+- Talkative. Rare.
+- Good mood. Enjoy.
+- Friendly today.
+
+@rule ask.mood.flirty.1.teasing
+on ask
+when amood=flirty close=1 tone=teasing
+- I'm feeling mischievous today. Watch out.
+- Feeling playful. Lucky you.
+- Good mood. I might tease you.
+- Mischievous mood. Beware.
+- Playful. Lucky you.
+- I might tease you.
+
+@rule ask.mood.sleepy.1.gentle
+on ask
+when amood=sleepy close=1 tone=gentle
+- Mm... sorry, I stayed up late reading. I can barely keep my eyes open...
+- I'm so sleepy... can I lean on you a little?
+- Sorry, I barely slept. I kept thinking about stuff...
+- Stayed up reading... sleepy.
+- Can I lean on you? Tired...
+- Barely slept...
+
+@rule ask.mood.sleepy.1.energetic
+on ask
+when amood=sleepy close=1 tone=energetic
+- *yawn* I gamed until three. Totally worth it. Totally dying.
+- *yawn* Movie marathon last night. Big mistake!
+- Sleepy! I could nap standing up!
+- *yawn* Gamed till three!
+- *yawn* Movie night!
+- Nap standing up!
+
+@rule ask.mood.sleepy.1.cool
+on ask
+when amood=sleepy close=1 tone=cool
+- I didn't sleep. Speak slowly.
+- Tired. Don't expect wit today.
+- Three hours of sleep. Be gentle with me.
+- Didn't sleep. Slowly.
+- Tired.
+- Exhausted.
+
+@rule ask.mood.sleepy.1.teasing
+on ask
+when amood=sleepy close=1 tone=teasing
+- So sleepy... if I nod off, wake me before the professor sees.
+- Sleepy... let me rest on your shoulder?
+- *yawn* Keep me awake, friend.
+- Wake me before the professor sees.
+- Shoulder nap?
+- Keep me awake, friend.
+
+@rule ask.mood.upset.1.gentle
+on ask
+when amood=upset close=1 tone=gentle
+- I'd... rather not talk about it right now. Sorry.
+- It's been a hard day. Can we just... be quiet together?
+- Something happened. I'll tell you later, okay?
+- I'd rather not talk now.
+- Hard day. Quiet together?
+- Later, okay?
+
+@rule ask.mood.upset.1.energetic
+on ask
+when amood=upset close=1 tone=energetic
+- Today sucks and I don't wanna talk about it! ...Thanks for asking, though.
+- Bad day! But thanks for asking!
+- Ugh, today's the worst! ...Thanks.
+- Bad day! Thanks for asking, though!
+- Worst! But thanks!
+- Ugh! Thanks.
+
+@rule ask.mood.upset.1.cool
+on ask
+when amood=upset close=1 tone=cool
+- Bad day. Maybe I'll tell you later.
+- Not good. Later, maybe.
+- Rough day. I'll talk when I'm ready.
+- Bad day. Later.
+- Not good. Later.
+- Rough. When ready.
+
+@rule ask.mood.upset.1.teasing
+on ask
+when amood=upset close=1 tone=teasing
+- Don't push it today. I'm not mad at you, though.
+- Bad mood. Not your fault.
+- Not today, friend. Sorry.
+- Not mad at you. Just don't push.
+- Bad mood. Not you.
+- Not today, friend.
+
+@rule ask.mood.none.1.gentle
+on ask
+when amood=none close=1 tone=gentle
+- I'm okay, thanks for asking!
+- I'm good! Thanks!
+- Doing fine! How about you?
+- Okay, thanks!
+- Good! Thanks!
+- Fine! You?
+
+@rule ask.mood.none.1.energetic
+on ask
+when amood=none close=1 tone=energetic
+- Same old, same old!
+- All good! Nothing to report!
+- Pretty normal! You?
+- Same old!
+- All good!
+- Normal!
+
+@rule ask.mood.none.1.cool
+on ask
+when amood=none close=1 tone=cool
+- Normal day.
+- Nothing worth mentioning.
+- Ordinary.
+- Normal.
+- Nothing new.
+
+@rule ask.mood.none.1.teasing
+on ask
+when amood=none close=1 tone=teasing
+- Same as always. Why, worried about me?
+- Same old. You checking up on me?
+- Normal. Thanks for caring, I guess.
+- Worried about me?
+- Checking up on me?
+- Thanks for caring, I guess.
+
+# ================= close 2 =================
+@rule ask.mood.cheerful.2.gentle
+on ask
+when amood=cheerful close=2 tone=gentle
+- I'm in a really good mood today. I don't even know why... maybe because you came to talk to me?
+- Everything feels a little brighter today. And now you're here, so even more.
+- I've been smiling all day. My friends think I'm weird.
+- I woke up happy today... and seeing you made it better.
+- Today feels gentle and warm. I like days like this.
+- I hummed all the way to campus. Silly, right?
+
+@rule ask.mood.cheerful.2.energetic
+on ask
+when amood=cheerful close=2 tone=energetic
+- Today's awesome! I feel like I could run ten laps! Or eat ten crepes!
+- Best day ever! I aced a quiz and the cafeteria had melon bread!
+- I'm so pumped today! Let's do something fun!
+- I'm buzzing today! Let's go do something!
+- Everything's going right today! Woo!
+- Super mood! Ask me for anything!
+
+@rule ask.mood.cheerful.2.cool
+on ask
+when amood=cheerful close=2 tone=cool
+- ...I'm fine. Better than fine, actually. Don't make it weird.
+- Good. Unusually good. I'm suspicious of it.
+- I'm in a good mood. Don't ruin it. ...You won't.
+- ...Good mood. Enjoy it quietly.
+- Today is pleasant. Unusually.
+- I'm content. Don't comment on it.
+
+@rule ask.mood.cheerful.2.teasing
+on ask
+when amood=cheerful close=2 tone=teasing
+- Hm? You can tell I'm in a good mood? Then take advantage of it while it lasts~
+- Great mood today. Maybe I'll even be nice to you~
+- I'm in such a good mood I might spoil you. Might.
+- Good mood. You might get lucky today~
+- I'm feeling generous today. Ask nicely.
+- Happy mood. Better make the most of it~
+
+@rule ask.mood.hungry.2.gentle
+on ask
+when amood=hungry close=2 tone=gentle
+- Um... sorry, my stomach keeps growling. I skipped breakfast...
+- I'm so hungry... could we maybe eat together later?
+- Sorry, I can't focus. I forgot my bento at home...
+- My tummy keeps rumbling... so embarrassing.
+- I didn't eat this morning... I'm so hungry.
+- Um, could we get something to eat? I'm starving...
+
+@rule ask.mood.hungry.2.energetic
+on ask
+when amood=hungry close=2 tone=energetic
+- I'm STARVING. Like, I could eat the whole cafeteria. Wanna eat together?
+- Food. I need food. Then hugs. Food first.
+- My stomach's been yelling since second period! Feed me!
+- Feed me! I'm wasting away!
+- So hungry! Lunch date?!
+- I could eat everything in the cafeteria!
+
+@rule ask.mood.hungry.2.cool
+on ask
+when amood=hungry close=2 tone=cool
+- I forgot my lunch. It's not a big deal. ...It's a little bit of a big deal.
+- Hungry. Very. I don't want to talk about it.
+- I skipped lunch for the student union. Regretting it.
+- Hungry. Don't comment.
+- I skipped a meal. Mistake.
+- Food would be welcome.
+
+@rule ask.mood.hungry.2.teasing
+on ask
+when amood=hungry close=2 tone=teasing
+- I'm hungry~ If someone bought me something, I'd be very grateful. Very.
+- Starving~ A good boyfriend would know what to do.
+- Feed me and I'll be extra sweet to you today~
+- Hungry~ A good boyfriend brings snacks.
+- Feed me and I'll be nice.
+- Starving. Spoil me?
+
+@rule ask.mood.bored.2.gentle
+on ask
+when amood=bored close=2 tone=gentle
+- Today feels so long... Nothing is happening. Is it okay if I talk with you for a while?
+- It's such a slow day... I'm glad you came to save me.
+- Nothing's happening today. Stay with me a little?
+- Today is dragging... can I stay with you?
+- It's so quiet today... talk to me?
+- I'm a little bored... keep me company?
+
+@rule ask.mood.bored.2.energetic
+on ask
+when amood=bored close=2 tone=energetic
+- Booooored! Let's do something! Anything! Please save me!
+- I'm gonna die of boredom! Take me somewhere!
+- So bored I counted the ceiling tiles. Two hundred twelve!
+- Bored to death! Rescue me!
+- Nothing's happening! Let's make something happen!
+- So bored! Take me anywhere!
+
+@rule ask.mood.bored.2.cool
+on ask
+when amood=bored close=2 tone=cool
+- Classes today were tedious. Entertain me, if you can.
+- Today is dull. You're the most interesting thing so far.
+- Boring day. I'm open to suggestions.
+- Tedious day. Entertain me.
+- Nothing of interest today. Except you.
+- Dull. Suggestions?
+
+@rule ask.mood.bored.2.teasing
+on ask
+when amood=bored close=2 tone=teasing
+- I'm bored out of my mind. Got any ideas to make it... interesting?
+- So bored~ Distract me. Any way you like.
+- I need something exciting. Are you exciting?
+- Bored. Make it interesting.
+- So bored. Distract me. Creatively.
+- I need excitement. Are you up for it?
+
+@rule ask.mood.stressed.2.gentle
+on ask
+when amood=stressed close=2 tone=gentle
+- The tests are coming and I'm so behind... I'm a little scared.
+- There's so much to do... I don't know where to start.
+- I've been worrying all day. Can I lean on you a little?
+- I'm so worried about the tests...
+- There's so much assignments... I'm overwhelmed.
+- I'm a bit scared... could I lean on you?
+
+@rule ask.mood.stressed.2.energetic
+on ask
+when amood=stressed close=2 tone=energetic
+- Ugh, my head's gonna explode! Too much assignments!
+- Three reports due this week! Who does that?!
+- My brain is full! No more room! Help!
+- Too much assignments! My brain's melting!
+- Deadlines everywhere! Aaah!
+- I need a vacation! Now!
+
+@rule ask.mood.stressed.2.cool
+on ask
+when amood=stressed close=2 tone=cool
+- I have too much on my plate. It's under control. Mostly.
+- Busy. Deadlines. I'll survive.
+- Stressed. I'll handle it. ...A coffee wouldn't hurt.
+- Busy. Manageable. Barely.
+- Deadlines. I'll cope.
+- Stressed. Coffee would help.
+
+@rule ask.mood.stressed.2.teasing
+on ask
+when amood=stressed close=2 tone=teasing
+- Everyone's getting on my nerves today. Except you, maybe. Maybe.
+- Today is testing me. Be extra nice, okay?
+- I'm wound up tight today. Help me relax?
+- Everyone's annoying today. You, less so.
+- Today's awful. Be sweet to me.
+- Tense today. Help me unwind?
+
+@rule ask.mood.lonely.2.gentle
+on ask
+when amood=lonely close=2 tone=gentle
+- Nobody really talked to me today... I'm glad you came.
+- I felt a little alone today. You came at the right time.
+- I was hoping you'd find me. I missed you.
+- No one talked to me today... I'm happy you came.
+- It was lonely today... I missed you.
+- I hoped you'd come. You did.
+
+@rule ask.mood.lonely.2.energetic
+on ask
+when amood=lonely close=2 tone=energetic
+- My friends are all busy today. Hang out with me, okay?
+- Everyone ditched me today! You won't, right?
+- So lonely! Good thing my boyfriend showed up!
+- Everyone ditched me! Hang out with me!
+- Lonely day! You're here now! Yay!
+- My friends are busy! You're stuck with me!
+
+@rule ask.mood.lonely.2.cool
+on ask
+when amood=lonely close=2 tone=cool
+- I was alone all morning. Not that I mind. ...Stay a bit.
+- Quiet day. Too quiet. You can stay.
+- I didn't talk to anyone today. You're the first.
+- Alone today. Stay.
+- Quiet day. You may stay.
+- You're the first person I've talked to today.
+
+@rule ask.mood.lonely.2.teasing
+on ask
+when amood=lonely close=2 tone=teasing
+- Oh, so you DO remember I exist. I was starting to wonder.
+- Where were you all day? I was starting to feel abandoned.
+- Finally. I was about to file a missing person report.
+- So you remember me. Finally.
+- Where were you? I was lonely.
+- About time you showed up.
+
+@rule ask.mood.flirty.2.gentle
+on ask
+when amood=flirty close=2 tone=gentle
+- I keep thinking about you today... is that strange?
+- I've been hoping to see you all day...
+- My heart jumped when I saw you. It still does that.
+- I can't stop thinking about you today...
+- My heart skipped when I saw you...
+- I've wanted to see you all day.
+
+@rule ask.mood.flirty.2.energetic
+on ask
+when amood=flirty close=2 tone=energetic
+- Hehe, you look kinda cool today. Did you do something different?
+- You look really good today. Just saying!
+- Hehe, I'm in a lovey mood today. Watch out!
+- You look good today! Just saying!
+- Hehe, lovey mood today! Careful!
+- You look extra cool today!
+
+@rule ask.mood.flirty.2.cool
+on ask
+when amood=flirty close=2 tone=cool
+- ...You're staring. I'm not saying stop.
+- I've been thinking about you. A lot. That's all.
+- Come closer. ...Closer.
+- ...Keep looking. I don't mind.
+- Thinking about you. That's all.
+- Closer. ...Good.
+
+@rule ask.mood.sleepy.2.gentle
+on ask
+when amood=sleepy close=2 tone=gentle
+- Mm... sorry, I stayed up late reading. I can barely keep my eyes open...
+- I'm so sleepy... can I lean on you a little?
+- Sorry, I barely slept. I kept thinking about stuff...
+- So sleepy... I read too late.
+- Can I lean on you? I'm so tired...
+- I barely slept... sorry.
+
+@rule ask.mood.sleepy.2.energetic
+on ask
+when amood=sleepy close=2 tone=energetic
+- *yawn* I gamed until three. Totally worth it. Totally dying.
+- *yawn* Movie marathon last night. Big mistake!
+- Sleepy! I could nap standing up!
+- *yawn* Up till three! Worth it!
+- *yawn* Late night! Zombie mode!
+- Sleepy! Nap time!
+
+@rule ask.mood.sleepy.2.cool
+on ask
+when amood=sleepy close=2 tone=cool
+- I didn't sleep. Speak slowly.
+- Tired. Don't expect wit today.
+- Three hours of sleep. Be gentle with me.
+- No sleep. Talk slowly.
+- Tired. Be patient.
+- Exhausted.
+
+@rule ask.mood.sleepy.2.teasing
+on ask
+when amood=sleepy close=2 tone=teasing
+- So sleepy... wanna be my pillow?
+- Sleepy~ Carry me?
+- *yawn* Your shoulder looks comfy.
+- Be my pillow?
+- Carry me? Sleepy~
+- Your lap looks comfortable.
+
+@rule ask.mood.upset.2.gentle
+on ask
+when amood=upset close=2 tone=gentle
+- I'd... rather not talk about it right now. Sorry.
+- It's been a hard day. Can we just... be quiet together?
+- Something happened. I'll tell you later, okay?
+- I'd rather not talk about it... sorry.
+- Can we just be quiet together?
+- Something happened. Later, okay?
+
+@rule ask.mood.upset.2.energetic
+on ask
+when amood=upset close=2 tone=energetic
+- Hmph! Today sucks and I don't wanna talk about it!
+- Worst. Day. Ever. Don't ask!
+- Ugh! Everything's going wrong today!
+- Today sucks! Don't ask!
+- Worst day! Ugh!
+- Everything's wrong today!
+
+@rule ask.mood.upset.2.cool
+on ask
+when amood=upset close=2 tone=cool
+- Leave me alone for now.
+- Not today. Sorry.
+- I'm in a bad place. Give me time.
+- Leave me be.
+- Not today.
+- Give me time.
+
+@rule ask.mood.upset.2.teasing
+on ask
+when amood=upset close=2 tone=teasing
+- Don't push your luck today. I'm not in the mood.
+- Bad day. Tread carefully.
+- Today I bite. Be warned.
+- Don't push it today.
+- Bad day. Careful.
+- I bite today.
+
+@rule ask.mood.none.2.gentle
+on ask
+when amood=none close=2 tone=gentle
+- I'm okay, thank you for asking.
+- I'm fine. Better now that you asked.
+- Normal day, nothing special. You?
+- I'm fine, thank you.
+- Okay, thanks for asking.
+- Nothing special today. And you?
+
+@rule ask.mood.none.2.energetic
+on ask
+when amood=none close=2 tone=energetic
+- Same old, same old!
+- All good! Nothing to report!
+- Pretty normal! You?
+- Same old!
+- All good!
+- Normal! You?
+
+@rule ask.mood.none.2.cool
+on ask
+when amood=none close=2 tone=cool
+- Normal day.
+- Nothing worth mentioning.
+- Ordinary.
+- Normal.
+- Nothing to report.
+
+@rule ask.mood.none.2.teasing
+on ask
+when amood=none close=2 tone=teasing
+- Why do you ask? Worried about me?
+- Fine. Unless you plan to make it better~
+- Same as always. You can change that, though.
+- Worried about me?
+- Fine. Make it better~
+- Same as always. Unless you change it.
+
+# ================= asked again the same day =================
+@rule ask.again.0.gentle
+on ask
+when amood=again close=0 tone=gentle
+- Um... I just told you. But thank you.
+- I-I already said... but it's nice of you.
+- Um, nothing changed since a minute ago.
+- I just told you... but thanks.
+- I already said... it's sweet.
+- Nothing's changed yet.
+
+@rule ask.again.0.energetic
+on ask
+when amood=again close=0 tone=energetic
+- You already asked! Still the same!
+- Same as five minutes ago!
+- Ha! You asked already!
+- You asked already!
+- Same as before!
+- Ha! Again?
+
+@rule ask.again.0.cool
+on ask
+when amood=again close=0 tone=cool
+- You asked already.
+- Same answer.
+- Still the same.
+- Asked already.
+- Same.
+- Unchanged.
+
+@rule ask.again.0.teasing
+on ask
+when amood=again close=0 tone=teasing
+- You asked that already. Memory trouble?
+- Again? Did you forget?
+- You're repeating yourself.
+- Memory problems?
+- Forgot already?
+- Repeating yourself.
+
+@rule ask.again.1.gentle
+on ask
+when amood=again close=1 tone=gentle
+- I already told you, silly... but thanks for caring.
+- Same as before, silly.
+- Nothing's changed. But that's sweet.
+- Nothing new. Thanks for caring.
+- Still the same... sweet of you.
+
+@rule ask.again.1.energetic
+on ask
+when amood=again close=1 tone=energetic
+- Same as before! You worried about me?
+- Still the same! You're cute!
+- Nothing new! But thanks!
+- Same! You worried?
+- Still the same! Cute!
+- Nothing new! Thanks!
+
+@rule ask.again.1.cool
+on ask
+when amood=again close=1 tone=cool
+- You asked already.
+- Same answer.
+- Still the same.
+- Asked already.
+- Same.
+- Unchanged.
+
+@rule ask.again.1.teasing
+on ask
+when amood=again close=1 tone=teasing
+- Again? You really like my company, huh?
+- Again? Just admit you want to talk to me.
+- You asked already. Looking for excuses to stay?
+- You like my company, huh?
+- Excuse to stay?
+- Admit it, you want to talk.
+
+@rule ask.again.2.gentle
+on ask
+when amood=again close=2 tone=gentle
+- I already told you, silly... but thank you for caring.
+- Same as before. But I love that you ask.
+- You already asked, silly. Come here.
+- Same as before... I love that you ask.
+- You asked already, silly. Come here.
+- Nothing's changed. But thank you.
+
+@rule ask.again.2.energetic
+on ask
+when amood=again close=2 tone=energetic
+- Same as before! You worried about me?
+- Still the same! You're cute!
+- Nothing new! But thanks!
+- Same! Worried?
+- Still the same! Cute!
+- Nothing new! Thanks!
+
+@rule ask.again.2.cool
+on ask
+when amood=again close=2 tone=cool
+- You asked already.
+- Same answer.
+- Still the same.
+- Asked already.
+- Same.
+- Unchanged.
+
+@rule ask.again.2.teasing
+on ask
+when amood=again close=2 tone=teasing
+- Again? You really can't stop thinking about me~
+- You asked already. You just like hearing my voice~
+- Again? You're so obvious~
+- Can't stop thinking about me~
+- You like my voice~
+- So obvious~
+
+# ================= what you ask =================
+@rule me.ask.stranger
+on me.ask
+when close=0
+- Hi. How's your day going?
+- Hey, how are you today?
+- Hello. Having a good day?
+
+@rule me.ask.close
+on me.ask
+when close!=0
+- How are you today?
+- How's your day going?
+- You okay? How are you feeling today?

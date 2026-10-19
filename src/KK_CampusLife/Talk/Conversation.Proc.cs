@@ -695,7 +695,7 @@ namespace Joojkk.CampusLife
         {
             switch (t.Kind)
             {
-                case "day": return Lines.MoodLine(GirlInfo.ToneOf(h), MoodOf(h), Lines.Closeness(h));
+                case "day": return AskMood(h, MoodOf(h));
                 case "gossip": case "you": case "us": return t.Fact != null ? "You know... " + Lore.Render(t.Fact, GirlInfo.Key(h), t.Know != null ? t.Know.Distort : 0) + ". " + char.ToUpperInvariant(Lore.When(t.Fact)[0]) + Lore.When(t.Fact).Substring(1) + "." : "Hm.";
                 default: return T(h, Lines.Pick("Mm... it's nice, just talking like this.", "I like these quiet chats.", "Sorry, I'm not very interesting today...", "Talking with you is relaxing."),
                                   Lines.Pick("Hey, this is fun! We should talk more!", "Ha, you always find something to say!", "I like hanging out like this!", "Okay, your turn to pick a topic!"),

@@ -31,6 +31,7 @@ namespace Joojkk.CampusLife
                 harmony.Patch(AccessTools.Method(typeof(TalkScene), "InitTouch"), postfix: new HarmonyMethod(typeof(Conversation), nameof(AddSpots)));
                 harmony.Patch(AccessTools.Method(typeof(TalkScene), "TouchFunc"), prefix: new HarmonyMethod(typeof(Conversation), nameof(MouthIsKiss)));
                 harmony.Patch(EnterFuncMethod, postfix: new HarmonyMethod(typeof(Conversation), nameof(HoverNote)));
+                harmony.Patch(ExitFuncMethod, postfix: new HarmonyMethod(typeof(Conversation), nameof(HoverGone)));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogWarning("Conversation touch areas: " + e.Message); }
         }
@@ -53,7 +54,11 @@ namespace Joojkk.CampusLife
             if (TouchTrace.Count > 40) TouchTrace.RemoveAt(0);
         }
 
-        private static void HoverNote(string _kind) { TouchNote("hover " + _kind); }
+        internal static string HoverNow = "";   // the area the game's mouse events have the cursor on now
+
+        private static void HoverNote(string _kind) { HoverNow = _kind; TouchNote("hover " + _kind); }
+
+        private static void HoverGone(string _kind) { HoverNow = ""; TouchNote("left " + _kind); }
 
         private static void AddSpots(TalkScene __instance)
         {

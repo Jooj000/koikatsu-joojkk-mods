@@ -1187,7 +1187,7 @@ namespace Joojkk.CampusLife
             Beat(h, Lvl.Friend, "mood:" + mood, b =>
             {
                 b.Me(T(h, "You looked " + seems + " earlier. Want to talk about it? || You seemed " + seems + "... want to talk? || Are you okay? You looked " + seems + ". || You look " + seems + "... what happened?", "You look " + seems + "! What's up? || You're " + seems + "! What's up?! || Why so " + seems + "?! || Hey! You look " + seems + "!", "You seem " + seems + ". Something wrong?" + " || " + seems + ". Why? || You appear " + seems + ". || Something's off. You seem " + seems + ".", "So, why so " + seems + "? || Why so " + seems + ", hm?" + " || " + seems + "? Tell me. || What made you " + seems + "?"));
-                b.Her_(Lines.MoodLine(GirlInfo.ToneOf(h), mood, Lines.Closeness(h)));
+                b.Her_(AskMood(h, mood));
             }, rs, r => { gs.MoodKnownDay = S.Day; });
         }
 

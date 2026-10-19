@@ -99,12 +99,12 @@ namespace Joojkk.CampusLife
             var tone = GirlInfo.ToneOf(h);
             var close = Lines.Closeness(h);
             var b = new SceneBuilder(h, true);
-            b.Me(Lines.AskHowAreYou(close));
+            b.Me(Conversation.AskMe(h));
             var already = gs.MoodKnownDay == s.Day;
             if (already)
-                b.Her_(Lines.AlreadyAsked(tone, close));
+                b.Her_(Conversation.AskAgain(h));
             else
-                b.Her_(Lines.MoodLine(tone, gs.Mood, close));
+                b.Her_(Conversation.AskMood(h, gs.Mood));
 
             // A like she hasn't told you yet: more likely with good INT (you ask the right questions).
             string newLike = null;

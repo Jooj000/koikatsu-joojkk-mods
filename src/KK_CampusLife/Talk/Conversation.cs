@@ -901,9 +901,9 @@ namespace Joojkk.CampusLife
             var tone = GirlInfo.ToneOf(h);
             var close = Lines.Closeness(h);
             var b = new SceneBuilder(h, true);
-            b.Me(mine ?? Lines.AskHowAreYou(close));
+            b.Me(mine ?? AskMe(h));
             var already = gs.MoodKnownDay == S.Day;
-            b.Her_(already ? Lines.AlreadyAsked(tone, close) : Lines.MoodLine(tone, gs.Mood, close));
+            b.Her_(already ? AskAgain(h) : AskMood(h, gs.Mood));
             string newLike = null;
             if (!already)
             {
