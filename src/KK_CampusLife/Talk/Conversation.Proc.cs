@@ -697,10 +697,7 @@ namespace Joojkk.CampusLife
             {
                 case "day": return AskMood(h, MoodOf(h));
                 case "gossip": case "you": case "us": return t.Fact != null ? "You know... " + Lore.Render(t.Fact, GirlInfo.Key(h), t.Know != null ? t.Know.Distort : 0) + ". " + char.ToUpperInvariant(Lore.When(t.Fact)[0]) + Lore.When(t.Fact).Substring(1) + "." : "Hm.";
-                default: return T(h, Lines.Pick("Mm... it's nice, just talking like this.", "I like these quiet chats.", "Sorry, I'm not very interesting today...", "Talking with you is relaxing."),
-                                  Lines.Pick("Hey, this is fun! We should talk more!", "Ha, you always find something to say!", "I like hanging out like this!", "Okay, your turn to pick a topic!"),
-                                  Lines.Pick("...This is fine.", "Quiet talk. I don't mind it.", "You're not bad company.", "...Go on, then."),
-                                  Lines.Pick("Just chatting? Sure, I've got time for you.", "Running out of topics already?", "You just like hearing my voice, huh?", "Fine, entertain me."));
+                default: return Everyday(h, "fallback");
             }
         }
 

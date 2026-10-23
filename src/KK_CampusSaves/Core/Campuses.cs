@@ -100,7 +100,11 @@ namespace Joojkk.CampusSaves
     /// <summary>All the campuses, and the single background thread that does the slow work with them.</summary>
     internal static class Campuses
     {
-        public static string Root { get { return Path.Combine(UserData.Path, "save/campus"); } }
+        /// <summary>A test run has its own vault and slots: the same campus name must never lead it to the player's.</summary>
+        public static readonly bool Testing = File.Exists(Path.Combine(BepInEx.Paths.ConfigPath, "joojkk.autotest.txt"));
+        public const string TestSlots = "joojkk_";
+
+        public static string Root { get { return Path.Combine(UserData.Path, Testing ? "save/campus_test" : "save/campus"); } }
         public static string GameDir { get { return SaveData.Path; } }
         public static readonly List<Campus> All = new List<Campus>();
         public static volatile string Status = "";
@@ -243,12 +247,20 @@ namespace Joojkk.CampusSaves
             return v;
         }
 
+        /// <summary>Removes a file even when something left it read-only.</summary>
+        public static void Erase(string path)
+        {
+            if (!File.Exists(path)) return;
+            File.SetAttributes(path, FileAttributes.Normal);
+            File.Delete(path);
+        }
+
         /// <summary>The next free slot, the way the game names them.</summary>
         public static string FreeSlot()
         {
             for (var i = 1; i <= 100; i++)
             {
-                var name = "file" + i.ToString("00") + ".dat";
+                var name = (Testing ? TestSlots + "slot" : "file") + i.ToString("00") + ".dat";
                 if (!File.Exists(Path.Combine(GameDir, name))) return name;
             }
             return null;

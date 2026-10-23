@@ -33,8 +33,15 @@ namespace Joojkk.CampusLife
                 Spot(body, "cf_j_hand_R", "hand", 0.07f, Vector3.zero, layer);
                 Spot(body, "cf_d_bust01_L", "bust", 0.07f, Vector3.zero, layer);
                 Spot(body, "cf_d_bust01_R", "bust", 0.07f, Vector3.zero, layer);
+                // The same butt area as the first girl's: the game's hip collider, copied (Conversation.ButtArea).
+                var butt = new List<string>();
                 foreach (var side in new[] { "L", "R" })
-                    Spot(body, "cf_j_siri_" + side, "butt", 0.075f, cha.transform.right * (side == "L" ? -0.05f : 0.05f), layer);
+                {
+                    var spot = ButtArea(cha, side, true);
+                    if (spot == null) continue;
+                    BSpots.Add(spot.gameObject);
+                    butt.Add(spot.Shape);
+                }
                 _mouthB = null;
                 var head = cha.objHeadBone != null ? cha.objHeadBone.transform : body;
                 foreach (var name in new[] { "cf_J_MouthBase_tr", "cf_J_MouthBase_s", "cf_J_MouthBase_rx", "cf_J_MouthMove" })
@@ -42,7 +49,7 @@ namespace Joojkk.CampusLife
                     var m = head.FindLoop(name);
                     if (m != null) { _mouthB = m.transform; break; }
                 }
-                CampusLifePlugin.Log.LogInfo("Trio touch areas on the second girl: " + string.Join(", ", BSpots.Select(g => g.name).ToArray()) + ", lips " + (_mouthB != null ? _mouthB.name : "none"));
+                CampusLifePlugin.Log.LogInfo("Trio touch areas on the second girl: " + string.Join(", ", BSpots.Select(g => g.name).ToArray()) + "; butt " + (butt.Count > 0 ? string.Join("; ", butt.ToArray()) : "none (no cf_hit_siri)") + ", lips " + (_mouthB != null ? _mouthB.name : "none"));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Trio touch areas: " + e.Message); }
         }
@@ -77,13 +84,15 @@ namespace Joojkk.CampusLife
             }
             var go = BSpots.FirstOrDefault(g => g != null && g.name.StartsWith("cl_btouch_" + kind + "_", StringComparison.Ordinal));
             if (go == null) { why = "no " + kind + " area on her (" + string.Join(", ", BSpots.Where(g => g != null).Select(g => g.name).ToArray()) + ")"; return false; }
-            world = go.transform.position;
+            var area = go.GetComponent<Collider>();
+            world = area != null ? area.bounds.center : go.transform.position;   // the butt area's middle is not its bone
             return true;
         }
 
         internal static void ClearBSpots()
         {
-            foreach (var g in BSpots) if (g != null) UnityEngine.Object.Destroy(g);
+            // Off her body at once: Destroy waits for the frame's end, and AddBSpots, right after this, looks for her butt area by name.
+            foreach (var g in BSpots) if (g != null) { g.SetActive(false); g.transform.SetParent(null, false); UnityEngine.Object.Destroy(g); }
             BSpots.Clear();
             _mouthB = null;
         }

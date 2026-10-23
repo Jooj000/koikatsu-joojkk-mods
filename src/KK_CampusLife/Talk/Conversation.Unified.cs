@@ -1615,6 +1615,14 @@ namespace Joojkk.CampusLife
             catch (Exception e) { CampusLifePlugin.Log.LogError(e); return false; }
         }
 
+        internal static bool RunSceneNow(string id)
+        {
+            var s = Sess;
+            if (s == null) return false;
+            var x = SceneTalk.Candidates(s.Her).FirstOrDefault(c => c.Id == id);
+            return x != null && SceneTalk.Play(s.Her, x, d => s.Interest = Mathf.Clamp(s.Interest + d, 0, MaxInterest), () => { s.Turns++; AfterScene(); });
+        }
+
         private static bool OpeningUnified(Session s)
         {
             if (s.Did.Contains("opening")) return false;

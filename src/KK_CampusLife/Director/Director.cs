@@ -77,6 +77,23 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
+        /// A save from the middle of a day came back: the world stays where it was (no needs, pairs or rumors ticking), and only
+        /// what lives outside the save is set up again, the agenda of the period and the situation waiting to happen.
+        /// </summary>
+        public static void OnResumed()
+        {
+            if (!Campus.On || !Cfg.DirectorEnabled.Value) return;
+            try
+            {
+                Agenda.NewPeriod();
+                Intents.TuneDesires();
+                _pending = Pick(false);
+                PlanLine();
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogError("Director resume: " + e); }
+        }
+
+        /// <summary>
         /// One dense line per period: what the girls mean to do (by kind), who is looking for the player, the situation
         /// waiting to happen, the week's drama and the tension.
         /// </summary>

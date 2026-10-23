@@ -198,8 +198,7 @@ namespace Joojkk.CampusLife
             var ok = Social.Trust(h) >= 40 || Random.value < 0.4f;
             var b = new SceneBuilder(h, true);
             b.Me("Could you help me study a bit? The next test is going to wreck me.");
-            b.Her_(ok ? Lines.T(tone, "Of course! Let's go over the hard parts together. || Sure! Let's work through it together. || Of course! I'll help as much as I can. || Mm! Let's study side by side.", "Study buddies! I'll quiz you! || Study date! I'll make flash cards! || Let's go! I'll quiz you till you get it! || Yes! Two brains are better than one!", "...Fine. Pay attention, I won't repeat myself. || ...Fine. Listen closely. || ...Sit. We'll go through it once. || ...Alright. Don't waste my time.", "Tutoring costs extra. Kidding. Sit. || My lessons are expensive, you know. Kidding~ Sit. || A private tutor? Lucky you. Come here. || Fine, I'll teach you. Try to keep up.")
-                      : Lines.T(tone, "Ah... I'm not really good at explaining, sorry... || Sorry... I'm bad at explaining things... || Um... I don't think I'd be much help... sorry. || I'm not that good at it myself... sorry.", "Ehh, I can barely study myself! || Ehh?! I'm terrible at studying! || Me? Teach? Ha! No way! || Sorry, I'm the one who needs a tutor!", "...Not today. || ...Not now. || ...Another time. || ...I'm busy.", "Ask me when we're closer. || Get closer to me first. Then maybe. || Hmm, I don't tutor just anyone. || Earn it first."));
+            b.Her_(Everyday(h, ok ? "study.yes" : "study.no"));
             Play(b, ok ? 1 : 0, ok ? "She went through your notes with you. (+2 INT)" : null, ok ? (Action)(() => { G.AddStats(2, 0, 0); Social.AddTrust(h, 1); }) : null);
         }
 

@@ -10,34 +10,8 @@ namespace Joojkk.CampusLife
     {
         private static string T(Tone t, string g, string e, string c, string x) { return Lines.T(t, g, e, c, x); }
         private static string P(params string[] o) { return Lines.Pick(o); }
-        private static int R(int n) { return Random.Range(0, n); }
 
         // ================= openings =================
-
-        public static string Greeting(Tone t, int close, Mood m)
-        {
-            if (m == Mood.Upset) return T(t, "...Oh. Hi. || ...Oh. Hello. || ...Hi... || ...Ah. You.", "Hey. ...Sorry, not my best day. || Hey. ...Rough day, sorry. || Hi. ...Not feeling great. || Oh, hey. ...Ugh, sorry.", "What is it? || Yes? || What? || Something?", "Make it quick, okay? || Quickly, please. || Short version, okay? || Keep it brief.");
-            if (close >= 2)
-                switch (R(3))
-                {
-                    case 0: return T(t, "Ah, it's you! I was hoping you'd come find me. || Oh, it's you! I hoped you'd find me. || You came! I was waiting... || Ah, I'm so glad you're here!", "There you are! I was looking for you! || Found you! I was searching everywhere! || Finally! Where were you?! || There! I've been looking!", "You came. ...Good. || You're here. ...Good. || Oh. You found me. Good. || ...You came. Fine.", "Took you long enough. I missed you. A little. || Finally. I missed you. Slightly. || About time. I missed you. Maybe. || Late. ...I missed you a bit.");
-                    case 1: return T(t, "Hi... my day just got better. || Hi... now my day is better. || Hello... you made today brighter. || Oh... hi. I'm so happy.", "Hey you! Perfect timing! || Hey! Great timing! || You! Perfect! || Hiii! Just in time!", "Hey. I saved some time for you. || Hey. I made time for you. || Hi. I kept a slot free. || Hello. I was free. For you.", "Oh? Coming to see your girlfriend? Good choice. || Visiting your girlfriend? Wise. || Ah, coming to see me? Good boy. || Here for your girlfriend? Correct.");
-                    default: return T(t, "I was just thinking about you. Really! || I was thinking about you! Honestly! || You were on my mind... || I was hoping to see you...", "Yay! Talk to me, talk to me! || Talk to me! Now! || Yay! Chat time! || Tell me everything!", "I'm glad you're here. || I'm glad you came. || Good. You're here. || Glad you're here.", "Hmm~ what took you so long? || Hmm~ you're late. || What kept you? || So slow~");
-                }
-            if (close == 1)
-                switch (R(3))
-                {
-                    case 0: return T(t, "Oh, hi! Do you have a minute? || Oh, hi! Got a minute? || Hello! Are you free? || Ah, hi! Can we talk?", "Yo! What's up? || Yo! What's new? || Hey! What's happening? || Sup!", "Hey. What's going on? || Hey. What's up? || Hi. Something new? || What's going on?", "Well, well. Look who it is. || Look who's here. || Well, hello. || Oh, it's you.");
-                    case 1: return T(t, "Hello! It's nice to see you. || Hello! Good to see you. || Hi! I'm glad you came. || Ah, hello! Nice to see you.", "Heeey! Perfect, I was bored! || Heeey! I was so bored! || Hi! Save me from boredom! || Yay! Someone fun!", "Oh, it's you. Hi. || Oh. Hi. || Hello. || It's you. Hello.", "Came to see me? Smart. || Came to see me? Good call. || Visiting me? Smart. || Clever, coming here.");
-                    default: return T(t, "Ah, hi! How are you doing? || Hi! How are you? || Ah, hello! Doing well? || Hi! How's your day?", "Hey hey! Got something fun for me? || Hey! Got something fun? || Hey! Any news? || Hi hi! Fun stuff?", "Hi. Need something? || Hi. Something you need? || Hello. Yes? || Need anything?", "Hi there. Entertain me. || Hi. Amuse me. || Hello. Impress me. || Entertain me, please.");
-                }
-            switch (R(3))
-            {
-                case 0: return T(t, "Oh, um... hello. || Oh... um, hi. || Ah... hello. || Um... hi there.", "Oh, hey! Hi! || Oh! Hi! || Hey there! || Oh, hiya!", "...Yes? || ...Yes? || ...Hello? || ...What?", "Hm? Can I help you? || Hm? Yes? || Can I help? || Need something?");
-                case 1: return T(t, "H-hello. Did you need something? || H-hi. Need something? || Hello... did you want me? || Um, hello. Yes?", "Hi! You're from the club, right? || Hey! Club guy, right? || Hi! From the club! || Oh! You're in the club!", "Hello. || Hello. || Hi. || ...Hello.", "Oh, it's the club guy. Hi. || Ah, club guy. Hi. || The club boy. Hello. || Oh, club member. Hi.");
-                default: return T(t, "Ah, hi... nice weather today, isn't it? || Hi... nice day, right? || Ah, hello... pretty weather. || Um... nice day today.", "Hiya! || Hiya! || Hey hey! || Yo!", "Do you need something? || Need something? || Something? || Yes?", "You look like you want to say something. || You want to say something. || Spit it out. || Something on your mind?");
-            }
-        }
 
         /// <summary>Jealous because she is into you (the friendship kind is Jealous).</summary>
         /// <summary>Her opening when she heard about something you did.</summary>
@@ -83,7 +57,7 @@ namespace Joojkk.CampusLife
                     if (self) return T(t, "What you said yesterday... I keep thinking about it. || What you said... I keep thinking. || Your words yesterday... I remember. || I think about what you said...", "You were being kinda smooth earlier, huh? || You were smooth earlier! || Smooth talker! || Ooh, so charming earlier!", "About earlier... I didn't hate it. || Earlier... I didn't mind. || ...It was fine. || ...Not unwelcome.", "Still trying to charm me? Keep trying. || Still charming me? Go on. || Trying to win me? Continue. || Keep charming. It's working.");
                     return Seen(t, what, about, saw);
                 default:
-                    return Greeting(t, 1, Mood.None);
+                    return Conversation.EverydayTone(t, "hello");
             }
         }
 
@@ -159,66 +133,6 @@ namespace Joojkk.CampusLife
             return P("So, what's new with you?", "Tell me something. Anything.", "I'm all ears.", "What have you been up to?");
         }
 
-        public static string Vent(Tone t, Mood m)
-        {
-            switch (m)
-            {
-                case Mood.Stressed:
-                    return T(t, "It's the exams... Everyone expects so much and I don't want to disappoint anyone. Sorry, I'm just dumping this on you. || Exams... everyone expects so much. I'm scared to disappoint them. Sorry for unloading this. || The tests are close and everyone's counting on me... sorry, I needed to say it. || I'm so afraid of letting everyone down... sorry for dumping it on you.",
-                        "Everything's piling up! Assignments, club, my mom... I just wanna scream into a pillow! || Assignments, club, mom... too much! I wanna scream! || Everything's stacking up! I need a pillow to yell into! || Too much stuff! My head's exploding!",
-                        "I have three deadlines this week and the professor added a fourth. I'm handling it. I just needed to say it out loud. || Three deadlines, now four. I'm handling it. Just venting. || Four deadlines this week. Manageable. I needed to say it. || An extra deadline appeared. I'll manage. Venting.",
-                        "Everyone wants something from me today. You're the first person who just... listened. || Everyone wants something today. You just listened. || All day, demands. You're the only one who listened. || Everyone needs me. You just... heard me out.");
-                case Mood.Upset:
-                    return T(t, "I had a fight with a friend... I said something I didn't mean. Thank you for listening. || I fought with a friend... I said something cruel. Thanks for listening. || I hurt a friend's feelings... thank you for hearing me. || I said something I regret... thanks for listening.",
-                        "Someone said something really mean about me and everyone laughed. Ugh. Thanks for not laughing. || Someone mocked me and everyone laughed. Thanks for not laughing. || People laughed at me today. Thanks for being different. || Someone was mean and everybody laughed. Ugh. Thanks.",
-                        "A bad day. Things didn't go how I planned. ...Thanks for hearing me out. || Plans went wrong. ...Thanks for listening. || Bad day. ...Thanks for hearing it. || Not my day. ...Thank you.",
-                        "Fine, you want to know? Someone stood me up. There. Happy? ...Thanks, I guess. || Someone stood me up. Happy? ...Thanks. || I got stood up. There. ...Thanks, I suppose. || Stood up. Fine. ...Thanks.");
-                case Mood.Lonely:
-                    return T(t, "Sometimes it feels like nobody would notice if I weren't here... Sorry. That's a gloomy thing to say. || Sometimes I think no one would notice if I disappeared... sorry. Gloomy. || I feel invisible lately... sorry for saying that. || Nobody seems to notice me... sorry, that's sad.",
-                        "Everyone's got plans except me lately! It's kinda sad, right? Hehe... || Everyone has plans but me! Sad, right? Hehe... || Nobody invites me lately! Hehe... sad. || All my friends are busy! Hehe... lonely.",
-                        "My friends have been busy. It's quieter than I'd like. || My friends are busy. It's too quiet. || Quieter than I'd like lately. || My friends are occupied. Quiet days.",
-                        "Don't laugh, but I've been eating lunch alone all week. || Don't laugh. I've eaten alone all week. || Lunch alone all week. Don't laugh. || Solo lunches. All week. Laugh and die.");
-                default:
-                    return T(t, "I'm just tired lately. Thank you for listening. || I'm just tired. Thanks for listening. || Just tired... thank you. || So tired lately... thanks.", "Ugh, today was SO long! || Today was SO long! || Ugh, endless day! || Longest day ever!", "It's been a long week. || Long week. || A tiring week. || The week dragged.", "Life's being annoying. That's all. || Life's annoying. That's all. || Just annoyed with life. || Everything's irritating.");
-            }
-        }
-
-        public static string VentThanks(Tone t)
-        {
-            return T(t, "...I feel lighter now. Thank you. || ...I feel better. Thank you. || ...That helped so much. || ...Lighter now. Thanks.", "Okay! I feel way better! You're like a human stress ball! || Way better! Human stress ball! || I feel great now! Thanks! || Better! You're magic!", "That helped. Don't tell anyone I said that. || That helped. Keep it secret. || Useful. Don't tell. || Helped. Between us.", "You're surprisingly good at this. || You're good at this. Surprising. || Not bad at this. || Surprisingly helpful.");
-        }
-
-        public static string Anecdote(Tone t)
-        {
-            switch (R(6))
-            {
-                case 0: return T(t, "This morning a little bird landed on my desk by the window. I didn't dare move all through first period. || A bird landed on my desk this morning. I didn't move all period. || A little sparrow visited my window today. I held my breath. || A bird sat by me in class. I froze so it wouldn't leave.",
-                    "I tried to jump the university fence this morning because I was late. Spoiler: the fence won. || I tried jumping the fence when late. The fence won. || Fence climb this morning! Fence: one, me: zero! || Tried to vault the gate! Faceplant!",
-                    "The vending machine gave me two drinks for the price of one today. I've decided it's a sign. || Two drinks for one today. A sign. || The vending machine glitched in my favor. A sign. || Free drink. The universe approves.",
-                    "A first-year asked me for directions and I sent him to the faculty room on purpose. He'll thank me later. || Sent a first-year to the faculty room on purpose. He'll thank me. || Gave a newbie wrong directions. Character building. || Misled a first-year. Educational.");
-                case 1: return T(t, "My little sister made me a bento with a face on it. I couldn't bring myself to eat the eyes. || My sister made me a bento with a face. I couldn't eat the eyes. || A smiley bento from my sister... too cute to eat. || My sister drew a face on my rice... I couldn't eat it.",
-                    "I beat my high score in that rhythm game! My fingers still hurt! || New high score in my rhythm game! Fingers hurt! || Beat my record! My hands are dead! || High score! Ouch, fingers!",
-                    "I finished a thousand-piece puzzle yesterday. One piece was missing. I'm still angry. || Thousand-piece puzzle. One piece missing. Still angry. || Finished a puzzle. Minus one piece. Furious. || Puzzle done. One missing. Unacceptable.",
-                    "I convinced the cafeteria lady to give me extra karaage. Charm is a skill. || Extra karaage from the lunch lady. Charm. || Charmed my way to extra karaage. || Free karaage. I'm irresistible.");
-                case 2: return T(t, "I found a really good bookstore near the station. It smells like old paper. I could live there. || There's a bookstore near the station... it smells like old paper. || I found a cozy bookstore... I could stay forever. || A little bookstore by the station... heaven.",
-                    "There's a new crepe stand near the park! I've already tried four flavors! || New crepe stand by the park! Four flavors already! || Crepes near the park! I tried them all! || Crepe stand! Four down!",
-                    "I started learning chess. The club president beat me in six moves. Six. || Started chess. Lost in six moves. Six. || Chess. Six moves. I lost. || Learning chess. Humbling.",
-                    "I saw a cat wearing a tiny sweater on the way here. My day peaked at 7 a.m. || Cat in a sweater this morning. Peak day. || Saw a cat in a sweater. Day peaked early. || A sweatered cat. Nothing tops that.");
-                case 3: return T(t, "I've been practicing calligraphy. My characters still look like they're running away. || My calligraphy characters look like they're fleeing... || Practicing calligraphy... still messy. || Calligraphy is hard... my strokes wobble.",
-                    "Our club's practice match is coming up and I've been training every morning! || Training every morning for our match! || Practice match soon! Training hard! || Morning drills! Match coming!",
-                    "I reorganized my whole room by color. It's very satisfying. Don't judge. || Organized my room by color. Satisfying. || Color-coded my room. Don't judge. || Room by color. Peaceful.",
-                    "I've been writing a story. No, you can't read it. ...Maybe later. || Writing a story. No, you can't read it. Yet. || A story. Secret. ...Maybe someday. || I write. You can't see it. Maybe later.");
-                case 4: return T(t, "I fell asleep on the train and woke up three stations late. I had to run all the way here... || I slept on the train and missed my stop... I had to run. || Three stations too far... I ran all the way. || I dozed off on the train... so late.",
-                    "My phone fell in the pool yesterday. I'm living like a caveman now! || My phone fell in the pool! Caveman life! || Phone in the pool! No tech! || Dropped my phone in water! Disaster!",
-                    "I tried cooking dinner for my family. They were very... polite. || Cooked for my family. They were polite. || Made dinner. Polite reactions. || I cooked. They were... kind.",
-                    "I dyed a streak of my hair last weekend. Nobody noticed. Do you? || Dyed my hair. Nobody noticed. Do you? || New hair streak. See it? || Notice anything? My hair?");
-                default: return T(t, "The cherry tree behind the gym is starting to bud. I go look at it every morning. || The cherry tree by the gym is budding... I visit every morning. || The cherry buds are coming... I check daily. || Spring's coming... the tree is budding.",
-                    "I signed up to help at the campus festival! It's gonna be huge! || I'm helping with the festival! Huge! || Festival volunteer! So excited! || Signed up for the festival! Big!",
-                    "The library got the new volume of the series I like. I reserved it the second I saw it. || New volume at the library. Reserved instantly. || The library got my series. Reserved. || New volume in. I claimed it.",
-                    "I've been people-watching in the courtyard. You'd be amazed what you learn. || People-watching in the courtyard. Educational. || Watching people. You learn things. || The courtyard is full of secrets.");
-            }
-        }
-
         public static string GossipLine(Tone t, string kind, string about, string what = null)
         {
             switch (kind)
@@ -244,13 +158,8 @@ namespace Joojkk.CampusLife
                 case Social.Kinds.SeenLockers:
                     return T(t, "There's a strange rumor going around about you... something about the girls' rooms. || There's a weird rumor about you... the girls' rooms... || People say odd things about you... girls' rooms? || A strange rumor... about the girls' rooms...", "Dude, there's a weird rumor about you and the girls' rooms! || Weird rumor about you and the girls' rooms! || Dude! Girls' rooms rumor! || What's this girls' room rumor?!", "There's an unflattering rumor about you going around. || An unflattering rumor. About you. || A bad rumor is circulating. || Rumors about you. Not nice ones.", "You're famous now. For the wrong reasons. || Famous. Wrong reasons. || Infamous now. Congrats. || You're notorious.");
                 default:
-                    return Anecdote(t);
+                    return Conversation.EverydayTone(t, "anecdote");
             }
-        }
-
-        public static string NothingNew(Tone t)
-        {
-            return T(t, "Hmm... I can't think of anything new, sorry. || Sorry, nothing new comes to mind. || Hmm... I'm out of news. || Nothing new, sorry...", "Ehh, nothing's happening! Boring day! || Nothing's happening! Boring! || No news! Lame! || Zero news today!", "Nothing worth mentioning. || Nothing to report. || Nothing new. || No news.", "You've heard all my stories today. || You've heard everything today. || Stories all used up. || That's all I've got.");
         }
 
         // ================= ask about =================
@@ -294,14 +203,6 @@ namespace Joojkk.CampusLife
 
         public static string AskSchool() { return P("Anything going on around campus?", "What's everyone talking about lately?", "Heard any news?"); }
 
-        public static string Reputation(Tone t, int rep)
-        {
-            if (rep >= 70) return T(t, "Everyone says you're really kind. I think so too. || Everyone thinks you're kind. Me too. || People say you're so nice... I agree. || You're known as kind. It's true.", "You're kinda famous! Everyone likes you! || You're famous! Everyone loves you! || Popular guy! Everyone likes you! || You're a celebrity!", "You have a good reputation. Don't waste it. || Good reputation. Keep it. || People respect you. Don't ruin it. || Well regarded. Maintain it.", "You're popular, you know. It's a little annoying. || Popular. Slightly irritating. || Everyone likes you. Annoying. || You're liked. How tiresome.");
-            if (rep >= 40) return T(t, "People think you're nice, I think. || People like you, I think. || You seem well liked... || I think people think well of you.", "People like you! Mostly! || People like you! Mostly! || You're liked! Kinda! || Most people dig you!", "People don't mind you. || Tolerated. || People are fine with you. || Acceptable reputation.", "You're... known. In a good way. Mostly. || Known. Nicely. Mostly. || A decent reputation. Sort of. || Not bad. Not great.");
-            if (rep >= 20) return T(t, "Um, not everyone knows you yet. || Not everyone knows you yet... || Some people don't know you... || You're still new to many...", "Half the class doesn't know your name! Haha! || Half the class doesn't know you! Ha! || Who? Haha! Kidding! Sorta! || Nobody knows your name! Haha!", "You're not very well known. || Not widely known. || Low profile. || Few know you.", "You're a bit of a mystery. Not the cool kind. || Mysterious. Not cool mysterious. || An unknown. Not intriguing. || A mystery. A boring one.");
-            return T(t, "Some people say... strange things about you. I don't believe them! || People say strange things... I don't believe them! || There are odd rumors... but I trust you! || Some say bad things... I don't buy it!", "People are saying weird stuff about you, dude. || People say weird stuff about you! || Dude, weird rumors! || Your rep's kinda weird, man!", "Your reputation is poor. Work on it. || Poor reputation. Fix it. || Bad standing. Improve. || Your reputation needs work.", "Your reputation is in the gutter. Impressive, really. || Gutter reputation. Impressive. || Your rep is trash. Wow. || Rock-bottom reputation. Remarkable.");
-        }
-
         // ================= joke / tease =================
 
         public static string PlayerJoke()
@@ -312,30 +213,6 @@ namespace Joojkk.CampusLife
                 "I'd tell you a chemistry joke, but I know I wouldn't get a reaction.",
                 "What do you call a sleeping bull? A bulldozer.",
                 "I'm reading a book about anti-gravity. I can't put it down.");
-        }
-
-        public static string JokeGood(Tone t)
-        {
-            switch (R(3))
-            {
-                case 0: return T(t, "Pfft... ahaha! That's so silly! || Pfft... hehe! So silly! || Ahaha! That's ridiculous! || Hehehe! Stop!", "AHAHA! Stop, stop, my stomach! || AHAHA! My stomach! || BWAHAHA! Stop! || Hahaha! I can't breathe!", "...Heh. Okay, that one was good. || ...Heh. Good one. || ...Pfft. Okay. || ...That got me.", "Ugh, that's terrible. *snort* Dammit. || Terrible. *snort* Ugh. || Awful. *giggle* Damn. || So bad. ...Heh. Dammit.");
-                case 1: return T(t, "Hehe... you're funny. || Hehe... funny. || You're so funny... || Ehehe... good one.", "Hahaha! Tell me another! || Another! Another! || Hahaha! More! || Encore!", "I didn't expect to laugh. Well done. || Unexpected laugh. Good. || ...I laughed. Well done. || Not bad.", "Fine. I laughed. Happy? || I laughed. Satisfied? || Fine. Funny. || Okay. Ha.");
-                default: return T(t, "Ahaha... I'm going to think about that all day. || I'll think about that all day... hehe. || Ahaha... that'll stay with me. || Hehe... I'll remember that.", "Pfffft! You're the best! || Pffft! Best! || HA! Love it! || You're hilarious!", "Heh. Not bad at all. || Heh. Good. || Not bad. || ...Decent.", "Okay, okay, you win this round. || You win this round. || Fine. Point to you. || Okay. You got me.");
-            }
-        }
-
-        public static string JokeBad(Tone t)
-        {
-            switch (R(2))
-            {
-                case 0: return T(t, "Um... hehe...? Sorry, I don't think I got it. || Um... hehe? I didn't get it. || Ah... sorry, I don't understand. || Hehe...? Was that a joke?", "...Was that the joke? || ...That's it? || Wait, that was the joke? || ...Huh?", "... || ... || ...Hm. || ...No.", "Wow. That was painful. For both of us. || Painful. For everyone. || Ouch. That hurt us both. || Yikes.");
-                default: return T(t, "Oh... um, that's... nice. || Oh... that's... nice. || Um... okay... || Ah... hehe...", "Booo! Get off the stage! || Booo! || Boo! Get off! || Lame!", "I'll pretend you didn't say that. || I didn't hear that. || Ignoring that. || Forgotten.", "Did that sound funny in your head? || Funny in your head? || That sounded better in your mind, right? || Did you test that?");
-            }
-        }
-
-        public static string JokeHurt(Tone t)
-        {
-            return T(t, "That's... kind of mean, isn't it? || That's a bit mean... || Isn't that unkind...? || That wasn't nice...", "Hey! Not funny! || Not funny! || Hey! Mean! || Rude!", "That crossed a line. || Over the line. || Too far. || That's not okay.", "Careful. That one stung. || That stung. Careful. || Watch it. || Ouch. Careful.");
         }
 
         // ================= compliments =================
@@ -356,44 +233,8 @@ namespace Joojkk.CampusLife
             }
         }
 
-        public static string ExplainOk(Tone t)
-        {
-            return T(t, "Oh... I see. I'm sorry I doubted you. || Oh... I'm sorry I doubted you. || I see... sorry. || Ah... forgive me.", "Ohhh! Okay, that makes sense! My bad! || Ohh! Makes sense! My bad! || Oh! Okay! Sorry! || Got it! Oops!", "...Fine. That's reasonable. || ...Reasonable. || ...Fine. || ...Acceptable.", "Hmph. Fine. I'll let it slide. This time. || Fine. This time. || I'll allow it. Once. || Hmph. Pass. Once.");
-        }
-
-        public static string ExplainFail(Tone t)
-        {
-            return T(t, "I... I don't know if I believe that. || I don't know if I believe you... || Hmm... really...? || I'm not sure...", "Uh-huh. Sure. Totally. || Uh-huh. Sure. || Riiight. || Totally. Not.", "That's not convincing. || Unconvincing. || Not persuasive. || Weak.", "Do you hear yourself? || Listen to yourself. || Really? That's it? || Come on.");
-        }
-
         public static string PlayerApologize() { return P("I'm sorry. Really.", "I messed up. I'm sorry.", "You're right. I'm sorry about that."); }
 
-        public static string ApologyAccepted(Tone t)
-        {
-            return T(t, "...Okay. Thank you for saying that. || ...Okay. Thank you. || ...I forgive you. || ...Thanks for saying sorry.", "Okay, okay! Apology accepted! Just don't do it again! || Accepted! Don't do it again! || Okay! Forgiven! || Fine! Apology accepted!", "Fine. Apology accepted. || Accepted. || Fine. || Apology noted.", "Hmph. You owe me one. || You owe me. || Hmph. Owed. || One favor. Owed.");
-        }
-
         public static string PlayerMakePlans(string friend) { return P("You're right. Let's hang out more, just us.", "Sorry. I'd like to spend more time with you too."); }
-
-        public static string PlansAccepted(Tone t)
-        {
-            return T(t, "Really? Then... I'll be looking forward to it. || Really? I'll look forward to it. || Then I'll wait for it... || Okay... I can't wait.", "Promise?! Okay! Lunch together sometime! || Promise?! Lunch together! || Okay! Lunch date! || Yay! Promise!", "...Okay. I'll hold you to that. || ...Holding you to it. || ...Okay. Noted. || ...I'll remember.", "You'd better mean it. || Mean it. || You'd better. || Don't lie.");
-        }
-
-        public static string KeepSecret(Tone t, bool promise)
-        {
-            if (promise) return T(t, "Thank you... I really owe you one. || Thank you... I owe you. || Thanks so much... || I'm in your debt...", "You're a lifesaver! Our secret, okay?! || Lifesaver! Secret! || Our secret! Thanks! || You rock! Shh!", "Good. ...Thanks. || Good. ...Thanks. || ...Thank you. || ...Appreciated.", "Smart choice. I'll remember this. || Smart. I'll remember. || Wise choice. || Good. Noted.");
-            return T(t, "You're so mean...! || So mean...! || You're cruel...! || How could you...!", "Noooo! You wouldn't! || No! You wouldn't! || Don't you dare! || Nooo!", "Not funny. || Not funny. || Stop. || Unamusing.", "Try it and see what happens. || Try it. See. || Go ahead. I dare you. || Do it and regret it.");
-        }
-
-        // ================= ending =================
-
-        public static string Bye(Tone t, int interest)
-        {
-            if (interest >= 4) return T(t, "That was really fun. Thank you for talking with me. || That was fun. Thank you. || I enjoyed that so much. || Thank you for the chat... it was fun.", "That was awesome! Let's do this again! || Awesome! Again soon! || So fun! Again! || Let's do it again!", "...That was a good talk. || ...Good talk. || ...Nice conversation. || ...That was pleasant.", "Not bad. You're more interesting than you look. || More interesting than you look. || Not bad. Surprising. || You're fun. Who knew.");
-            if (interest >= 2) return T(t, "Thanks for chatting with me. || Thanks for talking. || Thank you. || That was nice.", "Fun chat! || Fun! || Nice chat! || Fun talk!", "That was fine. || Fine. || Okay. || Adequate.", "Okay, that wasn't terrible. || Not terrible. || Passable. || Okay. Fine.");
-            return T(t, "Um... see you. || ...See you. || Um... bye. || ...Bye.", "Ehh, I'm kinda tired of talking. || Kinda talked out. || I'm done talking. || Tired of chatting.", "Bye. || Bye. || ...Later. || Goodbye.", "Well. That happened. || Well. That was something. || Okay then. || That happened.");
-        }
-
     }
 }

@@ -1,6 +1,6 @@
 # Campus Life - dialogue written for the mod
 
-Total lines (counting every personality version): 1805
+Total lines (counting every personality version): 1590
 
 Every line below was written for Campus Life (author: Joojkk). Lines of the game itself
 (normal conversations, story events, H) are not listed. Lines marked 'by personality' have four
@@ -117,24 +117,21 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 
 ### PickTopic
 - **Her:** {Love ? RomanceSay}
-- **Her:** {T}
-- **Her (by personality)**
-  - _gentle:_ Oh, um... that's nice, I guess. || Oh... that's interesting, I think. || Um, okay... I see. || Ah... mm, that's nice.
-  - _energetic:_ Huh, yeah, sure! || Ha, sure, okay! || Oh yeah? Neat! || Huh! Cool, I guess!
-  - _cool:_ I see. || Mm. || Is that so. || ...Right.
-  - _teasing:_ Mm-hm. Fascinating. Kind of. || Riveting. Truly. || Uh-huh. Go on. Or don't. || Wow. Tell me more. Actually, don't.
-- **Her:** {T}
-- **Her (by personality)**
-  - _gentle:_ Um... could we talk about something else? || Um... maybe another topic? || Sorry... could we talk about something different? || I'm not sure what to say to that... something else?
-  - _energetic:_ Ehh, boring! Next topic! || Snooze! New topic, please! || Boring! Next! || Nope, nope, next topic!
-  - _cool:_ Not interested. || I don't care about that. || Let's skip that. || Uninteresting.
-  - _teasing:_ Wow. You really know how to kill a conversation. || Do you practice being this dull? || And the conversation dies. Impressive. || Wow. My eyelids are getting heavy.
+- **Her:** {Everyday}
+- **Her:** {Everyday}
 
 ### LetHerTalk
+- **Her:** {Everyday}
 - **Her:** {GossipLine}
+- **Her:** {Everyday}
+- **Her:** {Everyday}
 
 ### AskSchool
 - **Her:** {GossipLine}
+
+### Joke
+- **Her:** {Everyday}
+- **Her:** {Everyday}
 
 ### Compliment
 - **You:** {mine ?? RomanceMe}
@@ -153,154 +150,18 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 ### AskFeelings
 - **You:** {RomanceMe}
 
+### Explain
+- **Her:** {Everyday}
+
+### Apologize
+- **Her:** {Everyday}
+
 ### MakePlans
 - **You:** {PlayerMakePlans}
-
-### Opener / step Topic.Classes
-- **Variants:** How are classes going for you? | Did you get today's assignments?
-
-### Opener / step Topic.Club
-- **Variants:** How's your club doing lately? | Anything new at your club?
-
-### Opener / step Topic.Food
-- **Variants:** Had anything good to eat today? | What's your favorite thing at the cafeteria?
-
-### Opener / step Topic.Sports
-- **Variants:** Do you follow any sports? | Do you work out at all?
-
-### Opener / step Topic.Hobbies
-- **Variants:** What do you do in your free time? | Into anything fun lately?
-
-### Opener / step Topic.Rumors
-- **Variants:** Heard any interesting rumors around campus? | Do you know what everyone's whispering about?
-
-### Opener / step Topic.Weekend
-- **Variants:** Got any plans for the weekend? | Did you do anything fun last weekend?
-
-### Opener / step Topic.Love
-- **Variants:** So... is there anyone you like? | Have you ever had a crush on someone? | What's your idea of a perfect date?
-- **Variants:** Tell me a bit about yourself. | What's been on your mind lately?
-
-### Good / step Topic.Classes
-- **Her (by personality)**
-  - _gentle:_ Classes are going well! I finally understood today's math lesson. || Classes are fine! I even understood math today. || I've been keeping up in class. The professor was really kind today. || Campus is going well, I think! I got a good grade on a quiz.
-  - _energetic:_ Classes? Ugh. But okay, history was actually kinda cool today! || Ugh, classes! But PE was awesome today! || Class is class, but history had a cool story today! || Honestly? Science was fun! We blew something up! Kinda!
-  - _cool:_ Fine. I like it when a professor actually explains things properly. || Classes are tolerable. Today's lecture was well structured. || Good. I appreciate a professor who prepares. || Productive. I understood everything.
-  - _teasing:_ I aced the quiz. Go on, be impressed. || Top of the class, as usual. You may applaud. || I answered every question today. Jealous? || Classes? Easy. Next question.
-
-### Good / step Topic.Club
-- **Her (by personality)**
-  - _gentle:_ The club is so much fun lately. Everyone has been really kind to me. || The club makes me happy lately. Everyone's so nice. || I really like the club these days... I feel welcome. || Club activities are fun! I'm getting better, little by little.
-  - _energetic:_ The club's on fire! We're practicing like crazy! || Club's amazing! We're totally fired up! || We've been practicing nonstop! It's great! || The club's the best! You should come see!
-  - _cool:_ We've been productive. I like that. || The club has been efficient. I approve. || We're making progress. Good. || The club is in good shape.
-  - _teasing:_ My club? Of course it's going great. I'm in it. || My club's thriving. Naturally, I'm the reason. || Of course it's going well. I'm there. || Club's great. Thanks to me, mostly.
-
-### Good / step Topic.Food
-- **Her (by personality)**
-  - _gentle:_ Oh, the cafeteria curry! I could eat it every day. || The curry at the cafeteria is so good... I'd eat it every day. || I love the little desserts at the store... don't tell anyone. || Mm, the bento I made today turned out nice.
-  - _energetic:_ Food? My favorite subject! The yakisoba bread is the best! || Yakisoba bread! The best food ever invented! || Food! The fried chicken today was SO good! || Don't get me started on melon bread! I love it!
-  - _cool:_ The set lunch is decent. I have opinions about the miso soup. || The set lunch is acceptable. The soup could improve. || I have strong views on the cafeteria's rice. || The menu is predictable. The curry is fine.
-  - _teasing:_ Food talk? Now you're speaking my language. || Food? You've found my weakness. || Talk about food and I'm all yours. Almost. || Mmm, food. Now this is a real topic.
-
-### Good / step Topic.Sports
-- **Her (by personality)**
-  - _gentle:_ I'm not very athletic, but I love cheering at games with friends. || I'm not good at sports, but cheering is fun! || I like watching games... I get so nervous for our team. || I went jogging once. Once. Hehe...
-  - _energetic:_ Sports! Yes! I ran my best time this morning! || Sports! I beat my record this morning! || I could run all day! Wanna race?! || I'm all about sports! Basketball, volleyball, everything!
-  - _cool:_ I swim on weekends. It clears my head. || I swim. It helps me think. || Running in the morning clears my mind. || Some exercise every day. Discipline.
-  - _teasing:_ Sports? Bet I could beat you at anything. Want to find out? || Sports? I'd win. Want to bet? || Challenge me sometime. I don't lose. || I'm good at everything. Sports included.
-
-### Good / step Topic.Hobbies
-- **Her (by personality)**
-  - _gentle:_ I've been reading a really good novel... I can't put it down. || I'm reading a novel... I stayed up too late with it. || I've been knitting a little. It's relaxing. || There's a book I love right now... I could lend it to you.
-  - _energetic:_ I got into a new game and I'm SO hooked! || I'm obsessed with a new game! Can't stop! || I started a new anime! It's SO good! || New hobby: skateboarding! I fell a lot!
-  - _cool:_ I've been sketching. I'm not showing you. Yet. || Sketching. You can't see them. Not yet. || I've been reading philosophy. Slowly. || Calligraphy. It requires patience.
-  - _teasing:_ My hobbies? Collecting interesting people. You might qualify. || My hobby? People-watching. You're interesting. || I collect secrets. Want to give me one? || Hobbies? Teasing you might count.
-
-### Good / step Topic.Rumors
-- **Her (by personality)**
-  - _gentle:_ Um, I heard the library is getting new books... does that count as a rumor? || Um, I heard the library got new books... that's a rumor, right? || Someone said there's a stray cat behind the gym... is it true? || I heard the festival might be bigger this year...
-  - _energetic:_ Oh oh oh! Did you hear about the course rep and the vending machine?! || Okay, did you hear what happened at the vending machine?! || Oh! Someone confessed on the roof yesterday! || Big news! The professor wore mismatched socks!
-  - _cool:_ ...I heard something. Fine, I'll tell you. Quietly. || ...I heard something. Keep it to yourself. || ...There's a rumor. I'll tell you once. || ...Quietly. I heard something interesting.
-  - _teasing:_ Rumors are my specialty. Lean in. || Rumors? Oh, I have the good ones. Come closer. || I know everything. Want a sample? || Gossip is my art. Lean in.
-
-### Good / step Topic.Weekend
-- **Her (by personality)**
-  - _gentle:_ I might bake something this weekend. Maybe cookies? || I might try baking cookies this weekend... || Maybe I'll visit the flower shop this weekend. || I'd like to rest and read this weekend.
-  - _energetic:_ Karaoke! I'm going to sing until my voice gives out! || Karaoke all weekend! Want to come?! || I'm going to the arcade! All day! || Beach trip! Or the mall! Or both!
-  - _cool:_ A quiet weekend. Books, tea, maybe a walk. || A quiet weekend. Tea and books. || Nothing planned. That's the plan. || A walk, some reading. Calm.
-  - _teasing:_ My weekend plans are secret. But they're good ones. || Weekend plans? Secret. Fun ones, though. || Wouldn't you like to know~ || Maybe I'll tell you. If you're good.
-- **Her (by personality)**
-  - _gentle:_ About me? Well... I've always wanted to see the sea in winter. || About me? I'd love to see the sea in winter someday. || Um... I've always wanted a little garden. || Me? I'd like to have a quiet café someday.
-  - _energetic:_ Me? I want to try everything at least once! Skydiving, maybe! || Me? I wanna try everything! Bungee jumping! || I want to travel everywhere! The whole world! || My dream? Something HUGE! Not sure what yet!
-  - _cool:_ ...Not many people ask. I want to study abroad someday. || ...Few ask. I'd like to study abroad. || ...I want to be good at one thing. Truly good. || ...I plan to live somewhere quiet. Eventually.
-  - _teasing:_ About me? Okay, one secret: I'm terrible at mornings. || One secret: I hate mornings. Truly. || A secret? I'm ticklish. Don't you dare. || Fine, a secret: I'm a terrible cook.
+- **Her:** {Everyday}
 
 ## Conversation lines (openings, gossip, friends, romance, clearing the air)
 `Dialogue/ConvoLines.cs`
-
-### ConvoLines / Greeting
-- **Her (by personality)**
-  - _gentle:_ ...Oh. Hi. || ...Oh. Hello. || ...Hi... || ...Ah. You.
-  - _energetic:_ Hey. ...Sorry, not my best day. || Hey. ...Rough day, sorry. || Hi. ...Not feeling great. || Oh, hey. ...Ugh, sorry.
-  - _cool:_ What is it? || Yes? || What? || Something?
-  - _teasing:_ Make it quick, okay? || Quickly, please. || Short version, okay? || Keep it brief.
-
-### ConvoLines / Greeting / step 0
-- **Her (by personality)**
-  - _gentle:_ Ah, it's you! I was hoping you'd come find me. || Oh, it's you! I hoped you'd find me. || You came! I was waiting... || Ah, I'm so glad you're here!
-  - _energetic:_ There you are! I was looking for you! || Found you! I was searching everywhere! || Finally! Where were you?! || There! I've been looking!
-  - _cool:_ You came. ...Good. || You're here. ...Good. || Oh. You found me. Good. || ...You came. Fine.
-  - _teasing:_ Took you long enough. I missed you. A little. || Finally. I missed you. Slightly. || About time. I missed you. Maybe. || Late. ...I missed you a bit.
-
-### ConvoLines / Greeting / step 1
-- **Her (by personality)**
-  - _gentle:_ Hi... my day just got better. || Hi... now my day is better. || Hello... you made today brighter. || Oh... hi. I'm so happy.
-  - _energetic:_ Hey you! Perfect timing! || Hey! Great timing! || You! Perfect! || Hiii! Just in time!
-  - _cool:_ Hey. I saved some time for you. || Hey. I made time for you. || Hi. I kept a slot free. || Hello. I was free. For you.
-  - _teasing:_ Oh? Coming to see your girlfriend? Good choice. || Visiting your girlfriend? Wise. || Ah, coming to see me? Good boy. || Here for your girlfriend? Correct.
-- **Her (by personality)**
-  - _gentle:_ I was just thinking about you. Really! || I was thinking about you! Honestly! || You were on my mind... || I was hoping to see you...
-  - _energetic:_ Yay! Talk to me, talk to me! || Talk to me! Now! || Yay! Chat time! || Tell me everything!
-  - _cool:_ I'm glad you're here. || I'm glad you came. || Good. You're here. || Glad you're here.
-  - _teasing:_ Hmm~ what took you so long? || Hmm~ you're late. || What kept you? || So slow~
-
-### ConvoLines / Greeting / step 0
-- **Her (by personality)**
-  - _gentle:_ Oh, hi! Do you have a minute? || Oh, hi! Got a minute? || Hello! Are you free? || Ah, hi! Can we talk?
-  - _energetic:_ Yo! What's up? || Yo! What's new? || Hey! What's happening? || Sup!
-  - _cool:_ Hey. What's going on? || Hey. What's up? || Hi. Something new? || What's going on?
-  - _teasing:_ Well, well. Look who it is. || Look who's here. || Well, hello. || Oh, it's you.
-
-### ConvoLines / Greeting / step 1
-- **Her (by personality)**
-  - _gentle:_ Hello! It's nice to see you. || Hello! Good to see you. || Hi! I'm glad you came. || Ah, hello! Nice to see you.
-  - _energetic:_ Heeey! Perfect, I was bored! || Heeey! I was so bored! || Hi! Save me from boredom! || Yay! Someone fun!
-  - _cool:_ Oh, it's you. Hi. || Oh. Hi. || Hello. || It's you. Hello.
-  - _teasing:_ Came to see me? Smart. || Came to see me? Good call. || Visiting me? Smart. || Clever, coming here.
-- **Her (by personality)**
-  - _gentle:_ Ah, hi! How are you doing? || Hi! How are you? || Ah, hello! Doing well? || Hi! How's your day?
-  - _energetic:_ Hey hey! Got something fun for me? || Hey! Got something fun? || Hey! Any news? || Hi hi! Fun stuff?
-  - _cool:_ Hi. Need something? || Hi. Something you need? || Hello. Yes? || Need anything?
-  - _teasing:_ Hi there. Entertain me. || Hi. Amuse me. || Hello. Impress me. || Entertain me, please.
-
-### ConvoLines / Greeting / step 0
-- **Her (by personality)**
-  - _gentle:_ Oh, um... hello. || Oh... um, hi. || Ah... hello. || Um... hi there.
-  - _energetic:_ Oh, hey! Hi! || Oh! Hi! || Hey there! || Oh, hiya!
-  - _cool:_ ...Yes? || ...Yes? || ...Hello? || ...What?
-  - _teasing:_ Hm? Can I help you? || Hm? Yes? || Can I help? || Need something?
-
-### ConvoLines / Greeting / step 1
-- **Her (by personality)**
-  - _gentle:_ H-hello. Did you need something? || H-hi. Need something? || Hello... did you want me? || Um, hello. Yes?
-  - _energetic:_ Hi! You're from the club, right? || Hey! Club guy, right? || Hi! From the club! || Oh! You're in the club!
-  - _cool:_ Hello. || Hello. || Hi. || ...Hello.
-  - _teasing:_ Oh, it's the club guy. Hi. || Ah, club guy. Hi. || The club boy. Hello. || Oh, club member. Hi.
-- **Her (by personality)**
-  - _gentle:_ Ah, hi... nice weather today, isn't it? || Hi... nice day, right? || Ah, hello... pretty weather. || Um... nice day today.
-  - _energetic:_ Hiya! || Hiya! || Hey hey! || Yo!
-  - _cool:_ Do you need something? || Need something? || Something? || Yes?
-  - _teasing:_ You look like you want to say something. || You want to say something. || Spit it out. || Something on your mind?
 
 ### ConvoLines / Incident / step Social.Kinds.Defended
 - **Her (by personality)**
@@ -492,79 +353,6 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _cool:_ Explain {other}. Now. || {other}. Explain. || Explain {other}. Immediately. || {other}. Now.
   - _teasing:_ Flirting with {other} behind my back? You've got some nerve. || {other} behind my back? Nerve. || Behind my back with {other}? Bold. || Flirting with {other}? Brave.
 
-### ConvoLines / Vent / step Mood.Stressed
-- **Her (by personality)**
-  - _gentle:_ It's the exams... Everyone expects so much and I don't want to disappoint anyone. Sorry, I'm just dumping this on you. || Exams... everyone expects so much. I'm scared to disappoint them. Sorry for unloading this. || The tests are close and everyone's counting on me... sorry, I needed to say it. || I'm so afraid of letting everyone down... sorry for dumping it on you.
-  - _energetic:_ Everything's piling up! Assignments, club, my mom... I just wanna scream into a pillow! || Assignments, club, mom... too much! I wanna scream! || Everything's stacking up! I need a pillow to yell into! || Too much stuff! My head's exploding!
-  - _cool:_ I have three deadlines this week and the professor added a fourth. I'm handling it. I just needed to say it out loud. || Three deadlines, now four. I'm handling it. Just venting. || Four deadlines this week. Manageable. I needed to say it. || An extra deadline appeared. I'll manage. Venting.
-  - _teasing:_ Everyone wants something from me today. You're the first person who just... listened. || Everyone wants something today. You just listened. || All day, demands. You're the only one who listened. || Everyone needs me. You just... heard me out.
-
-### ConvoLines / Vent / step Mood.Upset
-- **Her (by personality)**
-  - _gentle:_ I had a fight with a friend... I said something I didn't mean. Thank you for listening. || I fought with a friend... I said something cruel. Thanks for listening. || I hurt a friend's feelings... thank you for hearing me. || I said something I regret... thanks for listening.
-  - _energetic:_ Someone said something really mean about me and everyone laughed. Ugh. Thanks for not laughing. || Someone mocked me and everyone laughed. Thanks for not laughing. || People laughed at me today. Thanks for being different. || Someone was mean and everybody laughed. Ugh. Thanks.
-  - _cool:_ A bad day. Things didn't go how I planned. ...Thanks for hearing me out. || Plans went wrong. ...Thanks for listening. || Bad day. ...Thanks for hearing it. || Not my day. ...Thank you.
-  - _teasing:_ Fine, you want to know? Someone stood me up. There. Happy? ...Thanks, I guess. || Someone stood me up. Happy? ...Thanks. || I got stood up. There. ...Thanks, I suppose. || Stood up. Fine. ...Thanks.
-
-### ConvoLines / Vent / step Mood.Lonely
-- **Her (by personality)**
-  - _gentle:_ Sometimes it feels like nobody would notice if I weren't here... Sorry. That's a gloomy thing to say. || Sometimes I think no one would notice if I disappeared... sorry. Gloomy. || I feel invisible lately... sorry for saying that. || Nobody seems to notice me... sorry, that's sad.
-  - _energetic:_ Everyone's got plans except me lately! It's kinda sad, right? Hehe... || Everyone has plans but me! Sad, right? Hehe... || Nobody invites me lately! Hehe... sad. || All my friends are busy! Hehe... lonely.
-  - _cool:_ My friends have been busy. It's quieter than I'd like. || My friends are busy. It's too quiet. || Quieter than I'd like lately. || My friends are occupied. Quiet days.
-  - _teasing:_ Don't laugh, but I've been eating lunch alone all week. || Don't laugh. I've eaten alone all week. || Lunch alone all week. Don't laugh. || Solo lunches. All week. Laugh and die.
-- **Her (by personality)**
-  - _gentle:_ I'm just tired lately. Thank you for listening. || I'm just tired. Thanks for listening. || Just tired... thank you. || So tired lately... thanks.
-  - _energetic:_ Ugh, today was SO long! || Today was SO long! || Ugh, endless day! || Longest day ever!
-  - _cool:_ It's been a long week. || Long week. || A tiring week. || The week dragged.
-  - _teasing:_ Life's being annoying. That's all. || Life's annoying. That's all. || Just annoyed with life. || Everything's irritating.
-
-### ConvoLines / VentThanks
-- **Her (by personality)**
-  - _gentle:_ ...I feel lighter now. Thank you. || ...I feel better. Thank you. || ...That helped so much. || ...Lighter now. Thanks.
-  - _energetic:_ Okay! I feel way better! You're like a human stress ball! || Way better! Human stress ball! || I feel great now! Thanks! || Better! You're magic!
-  - _cool:_ That helped. Don't tell anyone I said that. || That helped. Keep it secret. || Useful. Don't tell. || Helped. Between us.
-  - _teasing:_ You're surprisingly good at this. || You're good at this. Surprising. || Not bad at this. || Surprisingly helpful.
-
-### ConvoLines / Anecdote / step 0
-- **Her (by personality)**
-  - _gentle:_ This morning a little bird landed on my desk by the window. I didn't dare move all through first period. || A bird landed on my desk this morning. I didn't move all period. || A little sparrow visited my window today. I held my breath. || A bird sat by me in class. I froze so it wouldn't leave.
-  - _energetic:_ I tried to jump the university fence this morning because I was late. Spoiler: the fence won. || I tried jumping the fence when late. The fence won. || Fence climb this morning! Fence: one, me: zero! || Tried to vault the gate! Faceplant!
-  - _cool:_ The vending machine gave me two drinks for the price of one today. I've decided it's a sign. || Two drinks for one today. A sign. || The vending machine glitched in my favor. A sign. || Free drink. The universe approves.
-  - _teasing:_ A first-year asked me for directions and I sent him to the faculty room on purpose. He'll thank me later. || Sent a first-year to the faculty room on purpose. He'll thank me. || Gave a newbie wrong directions. Character building. || Misled a first-year. Educational.
-
-### ConvoLines / Anecdote / step 1
-- **Her (by personality)**
-  - _gentle:_ My little sister made me a bento with a face on it. I couldn't bring myself to eat the eyes. || My sister made me a bento with a face. I couldn't eat the eyes. || A smiley bento from my sister... too cute to eat. || My sister drew a face on my rice... I couldn't eat it.
-  - _energetic:_ I beat my high score in that rhythm game! My fingers still hurt! || New high score in my rhythm game! Fingers hurt! || Beat my record! My hands are dead! || High score! Ouch, fingers!
-  - _cool:_ I finished a thousand-piece puzzle yesterday. One piece was missing. I'm still angry. || Thousand-piece puzzle. One piece missing. Still angry. || Finished a puzzle. Minus one piece. Furious. || Puzzle done. One missing. Unacceptable.
-  - _teasing:_ I convinced the cafeteria lady to give me extra karaage. Charm is a skill. || Extra karaage from the lunch lady. Charm. || Charmed my way to extra karaage. || Free karaage. I'm irresistible.
-
-### ConvoLines / Anecdote / step 2
-- **Her (by personality)**
-  - _gentle:_ I found a really good bookstore near the station. It smells like old paper. I could live there. || There's a bookstore near the station... it smells like old paper. || I found a cozy bookstore... I could stay forever. || A little bookstore by the station... heaven.
-  - _energetic:_ There's a new crepe stand near the park! I've already tried four flavors! || New crepe stand by the park! Four flavors already! || Crepes near the park! I tried them all! || Crepe stand! Four down!
-  - _cool:_ I started learning chess. The club president beat me in six moves. Six. || Started chess. Lost in six moves. Six. || Chess. Six moves. I lost. || Learning chess. Humbling.
-  - _teasing:_ I saw a cat wearing a tiny sweater on the way here. My day peaked at 7 a.m. || Cat in a sweater this morning. Peak day. || Saw a cat in a sweater. Day peaked early. || A sweatered cat. Nothing tops that.
-
-### ConvoLines / Anecdote / step 3
-- **Her (by personality)**
-  - _gentle:_ I've been practicing calligraphy. My characters still look like they're running away. || My calligraphy characters look like they're fleeing... || Practicing calligraphy... still messy. || Calligraphy is hard... my strokes wobble.
-  - _energetic:_ Our club's practice match is coming up and I've been training every morning! || Training every morning for our match! || Practice match soon! Training hard! || Morning drills! Match coming!
-  - _cool:_ I reorganized my whole room by color. It's very satisfying. Don't judge. || Organized my room by color. Satisfying. || Color-coded my room. Don't judge. || Room by color. Peaceful.
-  - _teasing:_ I've been writing a story. No, you can't read it. ...Maybe later. || Writing a story. No, you can't read it. Yet. || A story. Secret. ...Maybe someday. || I write. You can't see it. Maybe later.
-
-### ConvoLines / Anecdote / step 4
-- **Her (by personality)**
-  - _gentle:_ I fell asleep on the train and woke up three stations late. I had to run all the way here... || I slept on the train and missed my stop... I had to run. || Three stations too far... I ran all the way. || I dozed off on the train... so late.
-  - _energetic:_ My phone fell in the pool yesterday. I'm living like a caveman now! || My phone fell in the pool! Caveman life! || Phone in the pool! No tech! || Dropped my phone in water! Disaster!
-  - _cool:_ I tried cooking dinner for my family. They were very... polite. || Cooked for my family. They were polite. || Made dinner. Polite reactions. || I cooked. They were... kind.
-  - _teasing:_ I dyed a streak of my hair last weekend. Nobody noticed. Do you? || Dyed my hair. Nobody noticed. Do you? || New hair streak. See it? || Notice anything? My hair?
-- **Her (by personality)**
-  - _gentle:_ The cherry tree behind the gym is starting to bud. I go look at it every morning. || The cherry tree by the gym is budding... I visit every morning. || The cherry buds are coming... I check daily. || Spring's coming... the tree is budding.
-  - _energetic:_ I signed up to help at the campus festival! It's gonna be huge! || I'm helping with the festival! Huge! || Festival volunteer! So excited! || Signed up for the festival! Big!
-  - _cool:_ The library got the new volume of the series I like. I reserved it the second I saw it. || New volume at the library. Reserved instantly. || The library got my series. Reserved. || New volume in. I claimed it.
-  - _teasing:_ I've been people-watching in the courtyard. You'd be amazed what you learn. || People-watching in the courtyard. Educational. || Watching people. You learn things. || The courtyard is full of secrets.
-
 ### ConvoLines / GossipLine / step Social.Kinds.Defended
 - **Her (by personality)**
   - _gentle:_ Oh, {about} told everyone you helped her. She seemed really happy. || {about} told everyone you helped her. She was so happy. || {about} keeps saying you helped her... it's sweet. || {about} is happy you helped her.
@@ -628,13 +416,6 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _energetic:_ Dude, there's a weird rumor about you and the girls' rooms! || Weird rumor about you and the girls' rooms! || Dude! Girls' rooms rumor! || What's this girls' room rumor?!
   - _cool:_ There's an unflattering rumor about you going around. || An unflattering rumor. About you. || A bad rumor is circulating. || Rumors about you. Not nice ones.
   - _teasing:_ You're famous now. For the wrong reasons. || Famous. Wrong reasons. || Infamous now. Congrats. || You're notorious.
-
-### ConvoLines / NothingNew
-- **Her (by personality)**
-  - _gentle:_ Hmm... I can't think of anything new, sorry. || Sorry, nothing new comes to mind. || Hmm... I'm out of news. || Nothing new, sorry...
-  - _energetic:_ Ehh, nothing's happening! Boring day! || Nothing's happening! Boring! || No news! Lame! || Zero news today!
-  - _cool:_ Nothing worth mentioning. || Nothing to report. || Nothing new. || No news.
-  - _teasing:_ You've heard all my stories today. || You've heard everything today. || Stories all used up. || That's all I've got.
 
 ### ConvoLines / FriendMood / step Mood.Stressed
 - **Her (by personality)**
@@ -717,123 +498,6 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _energetic:_ Oh! {friend} has a problem! {problem} You should help her! || {friend}'s got trouble! {problem} Help her! || Hey! {friend} needs you! {problem} || News! {problem} Go help {friend}!
   - _cool:_ {friend} won't ask anyone, but: {problem} Just so you know. || {friend} won't say it: {problem} Now you know. || For your information: {problem} {friend} won't ask. || {problem} {friend} keeps it to herself.
   - _teasing:_ Want a tip? {problem} {friend} would never admit it, though. || Tip: {problem} {friend} would deny it. || Insider info: {problem} Don't tell {friend} I said. || Psst. {problem} {friend} won't admit it.
-
-### ConvoLines / Reputation
-- **Her (by personality)**
-  - _gentle:_ Everyone says you're really kind. I think so too. || Everyone thinks you're kind. Me too. || People say you're so nice... I agree. || You're known as kind. It's true.
-  - _energetic:_ You're kinda famous! Everyone likes you! || You're famous! Everyone loves you! || Popular guy! Everyone likes you! || You're a celebrity!
-  - _cool:_ You have a good reputation. Don't waste it. || Good reputation. Keep it. || People respect you. Don't ruin it. || Well regarded. Maintain it.
-  - _teasing:_ You're popular, you know. It's a little annoying. || Popular. Slightly irritating. || Everyone likes you. Annoying. || You're liked. How tiresome.
-- **Her (by personality)**
-  - _gentle:_ People think you're nice, I think. || People like you, I think. || You seem well liked... || I think people think well of you.
-  - _energetic:_ People like you! Mostly! || People like you! Mostly! || You're liked! Kinda! || Most people dig you!
-  - _cool:_ People don't mind you. || Tolerated. || People are fine with you. || Acceptable reputation.
-  - _teasing:_ You're... known. In a good way. Mostly. || Known. Nicely. Mostly. || A decent reputation. Sort of. || Not bad. Not great.
-- **Her (by personality)**
-  - _gentle:_ Um, not everyone knows you yet. || Not everyone knows you yet... || Some people don't know you... || You're still new to many...
-  - _energetic:_ Half the class doesn't know your name! Haha! || Half the class doesn't know you! Ha! || Who? Haha! Kidding! Sorta! || Nobody knows your name! Haha!
-  - _cool:_ You're not very well known. || Not widely known. || Low profile. || Few know you.
-  - _teasing:_ You're a bit of a mystery. Not the cool kind. || Mysterious. Not cool mysterious. || An unknown. Not intriguing. || A mystery. A boring one.
-- **Her (by personality)**
-  - _gentle:_ Some people say... strange things about you. I don't believe them! || People say strange things... I don't believe them! || There are odd rumors... but I trust you! || Some say bad things... I don't buy it!
-  - _energetic:_ People are saying weird stuff about you, dude. || People say weird stuff about you! || Dude, weird rumors! || Your rep's kinda weird, man!
-  - _cool:_ Your reputation is poor. Work on it. || Poor reputation. Fix it. || Bad standing. Improve. || Your reputation needs work.
-  - _teasing:_ Your reputation is in the gutter. Impressive, really. || Gutter reputation. Impressive. || Your rep is trash. Wow. || Rock-bottom reputation. Remarkable.
-
-### ConvoLines / JokeGood / step 0
-- **Her (by personality)**
-  - _gentle:_ Pfft... ahaha! That's so silly! || Pfft... hehe! So silly! || Ahaha! That's ridiculous! || Hehehe! Stop!
-  - _energetic:_ AHAHA! Stop, stop, my stomach! || AHAHA! My stomach! || BWAHAHA! Stop! || Hahaha! I can't breathe!
-  - _cool:_ ...Heh. Okay, that one was good. || ...Heh. Good one. || ...Pfft. Okay. || ...That got me.
-  - _teasing:_ Ugh, that's terrible. *snort* Dammit. || Terrible. *snort* Ugh. || Awful. *giggle* Damn. || So bad. ...Heh. Dammit.
-
-### ConvoLines / JokeGood / step 1
-- **Her (by personality)**
-  - _gentle:_ Hehe... you're funny. || Hehe... funny. || You're so funny... || Ehehe... good one.
-  - _energetic:_ Hahaha! Tell me another! || Another! Another! || Hahaha! More! || Encore!
-  - _cool:_ I didn't expect to laugh. Well done. || Unexpected laugh. Good. || ...I laughed. Well done. || Not bad.
-  - _teasing:_ Fine. I laughed. Happy? || I laughed. Satisfied? || Fine. Funny. || Okay. Ha.
-- **Her (by personality)**
-  - _gentle:_ Ahaha... I'm going to think about that all day. || I'll think about that all day... hehe. || Ahaha... that'll stay with me. || Hehe... I'll remember that.
-  - _energetic:_ Pfffft! You're the best! || Pffft! Best! || HA! Love it! || You're hilarious!
-  - _cool:_ Heh. Not bad at all. || Heh. Good. || Not bad. || ...Decent.
-  - _teasing:_ Okay, okay, you win this round. || You win this round. || Fine. Point to you. || Okay. You got me.
-
-### ConvoLines / JokeBad / step 0
-- **Her (by personality)**
-  - _gentle:_ Um... hehe...? Sorry, I don't think I got it. || Um... hehe? I didn't get it. || Ah... sorry, I don't understand. || Hehe...? Was that a joke?
-  - _energetic:_ ...Was that the joke? || ...That's it? || Wait, that was the joke? || ...Huh?
-  - _cool:_ ... || ... || ...Hm. || ...No.
-  - _teasing:_ Wow. That was painful. For both of us. || Painful. For everyone. || Ouch. That hurt us both. || Yikes.
-- **Her (by personality)**
-  - _gentle:_ Oh... um, that's... nice. || Oh... that's... nice. || Um... okay... || Ah... hehe...
-  - _energetic:_ Booo! Get off the stage! || Booo! || Boo! Get off! || Lame!
-  - _cool:_ I'll pretend you didn't say that. || I didn't hear that. || Ignoring that. || Forgotten.
-  - _teasing:_ Did that sound funny in your head? || Funny in your head? || That sounded better in your mind, right? || Did you test that?
-
-### ConvoLines / JokeHurt
-- **Her (by personality)**
-  - _gentle:_ That's... kind of mean, isn't it? || That's a bit mean... || Isn't that unkind...? || That wasn't nice...
-  - _energetic:_ Hey! Not funny! || Not funny! || Hey! Mean! || Rude!
-  - _cool:_ That crossed a line. || Over the line. || Too far. || That's not okay.
-  - _teasing:_ Careful. That one stung. || That stung. Careful. || Watch it. || Ouch. Careful.
-
-### ConvoLines / ExplainOk
-- **Her (by personality)**
-  - _gentle:_ Oh... I see. I'm sorry I doubted you. || Oh... I'm sorry I doubted you. || I see... sorry. || Ah... forgive me.
-  - _energetic:_ Ohhh! Okay, that makes sense! My bad! || Ohh! Makes sense! My bad! || Oh! Okay! Sorry! || Got it! Oops!
-  - _cool:_ ...Fine. That's reasonable. || ...Reasonable. || ...Fine. || ...Acceptable.
-  - _teasing:_ Hmph. Fine. I'll let it slide. This time. || Fine. This time. || I'll allow it. Once. || Hmph. Pass. Once.
-
-### ConvoLines / ExplainFail
-- **Her (by personality)**
-  - _gentle:_ I... I don't know if I believe that. || I don't know if I believe you... || Hmm... really...? || I'm not sure...
-  - _energetic:_ Uh-huh. Sure. Totally. || Uh-huh. Sure. || Riiight. || Totally. Not.
-  - _cool:_ That's not convincing. || Unconvincing. || Not persuasive. || Weak.
-  - _teasing:_ Do you hear yourself? || Listen to yourself. || Really? That's it? || Come on.
-
-### ConvoLines / ApologyAccepted
-- **Her (by personality)**
-  - _gentle:_ ...Okay. Thank you for saying that. || ...Okay. Thank you. || ...I forgive you. || ...Thanks for saying sorry.
-  - _energetic:_ Okay, okay! Apology accepted! Just don't do it again! || Accepted! Don't do it again! || Okay! Forgiven! || Fine! Apology accepted!
-  - _cool:_ Fine. Apology accepted. || Accepted. || Fine. || Apology noted.
-  - _teasing:_ Hmph. You owe me one. || You owe me. || Hmph. Owed. || One favor. Owed.
-
-### ConvoLines / PlansAccepted
-- **Her (by personality)**
-  - _gentle:_ Really? Then... I'll be looking forward to it. || Really? I'll look forward to it. || Then I'll wait for it... || Okay... I can't wait.
-  - _energetic:_ Promise?! Okay! Lunch together sometime! || Promise?! Lunch together! || Okay! Lunch date! || Yay! Promise!
-  - _cool:_ ...Okay. I'll hold you to that. || ...Holding you to it. || ...Okay. Noted. || ...I'll remember.
-  - _teasing:_ You'd better mean it. || Mean it. || You'd better. || Don't lie.
-
-### ConvoLines / KeepSecret
-- **Her (by personality)**
-  - _gentle:_ Thank you... I really owe you one. || Thank you... I owe you. || Thanks so much... || I'm in your debt...
-  - _energetic:_ You're a lifesaver! Our secret, okay?! || Lifesaver! Secret! || Our secret! Thanks! || You rock! Shh!
-  - _cool:_ Good. ...Thanks. || Good. ...Thanks. || ...Thank you. || ...Appreciated.
-  - _teasing:_ Smart choice. I'll remember this. || Smart. I'll remember. || Wise choice. || Good. Noted.
-- **Her (by personality)**
-  - _gentle:_ You're so mean...! || So mean...! || You're cruel...! || How could you...!
-  - _energetic:_ Noooo! You wouldn't! || No! You wouldn't! || Don't you dare! || Nooo!
-  - _cool:_ Not funny. || Not funny. || Stop. || Unamusing.
-  - _teasing:_ Try it and see what happens. || Try it. See. || Go ahead. I dare you. || Do it and regret it.
-
-### ConvoLines / Bye
-- **Her (by personality)**
-  - _gentle:_ That was really fun. Thank you for talking with me. || That was fun. Thank you. || I enjoyed that so much. || Thank you for the chat... it was fun.
-  - _energetic:_ That was awesome! Let's do this again! || Awesome! Again soon! || So fun! Again! || Let's do it again!
-  - _cool:_ ...That was a good talk. || ...Good talk. || ...Nice conversation. || ...That was pleasant.
-  - _teasing:_ Not bad. You're more interesting than you look. || More interesting than you look. || Not bad. Surprising. || You're fun. Who knew.
-- **Her (by personality)**
-  - _gentle:_ Thanks for chatting with me. || Thanks for talking. || Thank you. || That was nice.
-  - _energetic:_ Fun chat! || Fun! || Nice chat! || Fun talk!
-  - _cool:_ That was fine. || Fine. || Okay. || Adequate.
-  - _teasing:_ Okay, that wasn't terrible. || Not terrible. || Passable. || Okay. Fine.
-- **Her (by personality)**
-  - _gentle:_ Um... see you. || ...See you. || Um... bye. || ...Bye.
-  - _energetic:_ Ehh, I'm kinda tired of talking. || Kinda talked out. || I'm done talking. || Tired of chatting.
-  - _cool:_ Bye. || Bye. || ...Later. || Goodbye.
-  - _teasing:_ Well. That happened. || Well. That was something. || Okay then. || That happened.
 
 ## Romance and H (heart page: hands, teasing, whispers, last time, sneaking off)
 `Dialogue/RomanceLines.cs`

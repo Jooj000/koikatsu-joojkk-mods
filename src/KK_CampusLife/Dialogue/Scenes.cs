@@ -135,7 +135,7 @@ namespace Joojkk.CampusLife
         {
             var args = new List<string> { "true" };
             for (var i = 0; i + 1 < labelsAndTags.Length; i += 2)
-                args.Add(Gender.Fix(labelsAndTags[i], null, Her).Replace(",", " ") + "," + labelsAndTags[i + 1]);
+                args.Add(Gender.Fix(labelsAndTags[i], null, Her).Replace(", ", " ").Replace(",", " ") + "," + labelsAndTags[i + 1]);
             // Not "multi", as the game's own choices (Communication.Info): a multi choice let the ADV run on into the first
             // branch's tag and variables before the click, so every first option counted as taken.
             List.Add(Program.Transfer.Create(false, Command.Choice, args.ToArray()));

@@ -684,6 +684,12 @@ when hook=n_fine move=tease fit=good|neutral
 - Doctor's orders. I am the doctor here. Sort of.
 - Careful, or I'll prescribe you a very long lecture.
 
+@rule react.h.n_fine.bad
+on react
+when hook=n_fine fit=bad
+- Let's keep today a quiet one, please.
+- I've got forms to fill, if that's all.
+
 @rule day.h.n_quiet
 on day
 when job=nurse tcause=n_quiet
@@ -729,6 +735,12 @@ when hook=n_quiet move=tease fit=good|neutral
 - Don't you dare.
 - Please don't. I just made that bed.
 - Very funny. The forms are three pages long.
+
+@rule react.h.n_quiet.bad
+on react
+when hook=n_quiet fit=bad
+- Don't make me wish for a patient.
+- It was such a quiet morning, too.
 
 @rule day.h.n_thanks
 on day
@@ -776,6 +788,12 @@ when hook=n_thanks move=share fit=good|neutral
 - That's what I'm here for.
 - Come by before it gets bad next time, all right?
 
+@rule react.h.n_thanks.bad
+on react
+when hook=n_thanks fit=bad
+- Let me enjoy that note in peace.
+- That note was the nice part of my day. Don't spoil it.
+
 @rule day.h.n_supplies
 on day
 when job=nurse tcause=n_supplies
@@ -821,6 +839,12 @@ when hook=n_supplies move=tease fit=good|neutral
 - You'll understand when you need some.
 - Everyone has their hobbies.
 - Laugh now. You'll thank me after P.E.
+
+@rule react.h.n_supplies.bad
+on react
+when hook=n_supplies fit=bad
+- Those bandages won't shelve themselves.
+- I have a cabinet to fill. Excuse me.
 
 @rule day.h.n_records
 on day
@@ -868,6 +892,12 @@ when hook=n_records move=tease fit=good|neutral
 - I'll consider your opinion. Now go.
 - Twenty minutes, then. On your orders.
 
+@rule react.h.n_records.bad
+on react
+when hook=n_records fit=bad
+- I've been up all night. Not now.
+- I filed every record in this school. I have no patience left.
+
 @rule day.h.n_checkups
 on day
 when job=nurse tcause=n_checkups
@@ -913,6 +943,12 @@ when hook=n_checkups move=invite fit=good|neutral
 - That would actually help. Thank you.
 - You're a good kid. The boxes are over there.
 - Careful, I might say yes every time.
+
+@rule react.h.n_checkups.bad
+on react
+when hook=n_checkups fit=bad
+- I don't have time for this.
+- That schedule won't fix itself, and neither will you.
 
 @rule day.h.n_cold
 on day
@@ -960,6 +996,12 @@ when hook=n_cold move=share fit=good|neutral
 - I thought so. Tell them to come early, not late.
 - If you get a fever, stay home. I mean it.
 
+@rule react.h.n_cold.bad
+on react
+when hook=n_cold fit=bad
+- I have a line of sick students. Not now.
+- Eleven patients, and then this.
+
 @rule day.h.n_fakers
 on day
 when job=nurse tcause=n_fakers
@@ -1005,6 +1047,12 @@ when hook=n_fakers move=share fit=good|neutral
 - Hm. Your face says otherwise.
 - That's what they all say.
 - Good. Then I won't have to check.
+
+@rule react.h.n_fakers.bad
+on react
+when hook=n_fakers fit=bad
+- You sound like patient number five.
+- I've heard enough excuses for one day.
 
 @rule day.h.n_budget
 on day
@@ -1052,6 +1100,12 @@ when hook=n_budget move=share fit=good|neutral
 - If the student union asks, that would help.
 - Careful, you sound like me.
 
+@rule react.h.n_budget.bad
+on react
+when hook=n_budget fit=bad
+- I asked for gauze, not that.
+- Add it to the list of things I don't need.
+
 @rule day.h.n_empty
 on day
 when job=nurse tcause=n_empty
@@ -1097,6 +1151,12 @@ when hook=n_empty move=tease fit=good|neutral
 - They are. Don't touch them.
 - Largest to smallest. Don't laugh.
 - You're not sick at all, are you? Out.
+
+@rule react.h.n_empty.bad
+on react
+when hook=n_empty fit=bad
+- Hm. I'd rather go back to my page.
+- Maybe empty was better.
 
 @rule day.h.n_alone
 on day
@@ -1144,6 +1204,12 @@ when hook=n_alone move=praise fit=good|neutral
 - They only remember when they need me. But thank you.
 - You're sweet. Now go, before you're late.
 
+@rule react.h.n_alone.bad
+on react
+when hook=n_alone fit=bad
+- I'm used to it. Never mind.
+- I shouldn't have said anything.
+
 @rule day.h.n_lunch
 on day
 when job=nurse tcause=n_lunch
@@ -1189,6 +1255,12 @@ when hook=n_lunch move=tease fit=good|neutral
 - Everyone says that.
 - Do as I say, not as I do.
 - Touche. I'll eat.
+
+@rule react.h.n_lunch.bad
+on react
+when hook=n_lunch fit=bad
+- I haven't eaten. Don't push it.
+- Not on an empty stomach.
 
 # ================= the two girls =================
 @rule duo3.talk.nurse.student

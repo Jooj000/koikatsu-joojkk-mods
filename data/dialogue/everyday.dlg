@@ -1,0 +1,1678 @@
+# Her everyday answers: on everyday.
+# Conversation.Everyday.cs sets s (which answer), tone, and vmood, trep or secret where the answer depends on them.
+# The whole context of the talk is there too, so a rule can be added for a personality, a relation or a mood.
+
+# ================= a friend's hello, when what she heard needs no comment =================
+@rule everyday.hello.gentle
+on everyday
+when s=hello tone=gentle
+- Oh, hi! Do you have a minute?
+- Oh, hi! Got a minute?
+- Hello! Are you free?
+- Ah, hi! Can we talk?
+- Hello! It's nice to see you.
+- Hello! Good to see you.
+- Hi! I'm glad you came.
+- Ah, hello! Nice to see you.
+- Ah, hi! How are you doing?
+- Hi! How are you?
+- Ah, hello! Doing well?
+- Hi! How's your day?
+
+@rule everyday.hello.energetic
+on everyday
+when s=hello tone=energetic
+- Yo! What's up?
+- Yo! What's new?
+- Hey! What's happening?
+- Sup!
+- Heeey! Perfect, I was bored!
+- Heeey! I was so bored!
+- Hi! Save me from boredom!
+- Yay! Someone fun!
+- Hey hey! Got something fun for me?
+- Hey! Got something fun?
+- Hey! Any news?
+- Hi hi! Fun stuff?
+
+@rule everyday.hello.cool
+on everyday
+when s=hello tone=cool
+- Hey. What's going on?
+- Hey. What's up?
+- Hi. Something new?
+- What's going on?
+- Oh, it's you. Hi.
+- Oh. Hi.
+- Hello.
+- It's you. Hello.
+- Hi. Need something?
+- Hi. Something you need?
+- Hello. Yes?
+- Need anything?
+
+@rule everyday.hello.teasing
+on everyday
+when s=hello tone=teasing
+- Well, well. Look who it is.
+- Look who's here.
+- Well, hello.
+- Oh, it's you.
+- Came to see me? Smart.
+- Came to see me? Good call.
+- Visiting me? Smart.
+- Clever, coming here.
+- Hi there. Entertain me.
+- Hi. Amuse me.
+- Hello. Impress me.
+- Entertain me, please.
+
+# ================= She has a story =================
+@rule everyday.anecdote.gentle
+on everyday
+when s=anecdote tone=gentle
+- This morning a little bird landed on my desk by the window. I didn't dare move all through first period.
+- A bird landed on my desk this morning. I didn't move all period.
+- A little sparrow visited my window today. I held my breath.
+- A bird sat by me in class. I froze so it wouldn't leave.
+- My little sister made me a bento with a face on it. I couldn't bring myself to eat the eyes.
+- My sister made me a bento with a face. I couldn't eat the eyes.
+- A smiley bento from my sister... too cute to eat.
+- My sister drew a face on my rice... I couldn't eat it.
+- I found a really good bookstore near the station. It smells like old paper. I could live there.
+- There's a bookstore near the station... it smells like old paper.
+- I found a cozy bookstore... I could stay forever.
+- A little bookstore by the station... heaven.
+- I've been practicing calligraphy. My characters still look like they're running away.
+- My calligraphy characters look like they're fleeing...
+- Practicing calligraphy... still messy.
+- Calligraphy is hard... my strokes wobble.
+- I fell asleep on the train and woke up three stations late. I had to run all the way here...
+- I slept on the train and missed my stop... I had to run.
+- Three stations too far... I ran all the way.
+- I dozed off on the train... so late.
+- The cherry tree behind the gym is starting to bud. I go look at it every morning.
+- The cherry tree by the gym is budding... I visit every morning.
+- The cherry buds are coming... I check daily.
+- Spring's coming... the tree is budding.
+
+@rule everyday.anecdote.energetic
+on everyday
+when s=anecdote tone=energetic
+- I tried to jump the university fence this morning because I was late. Spoiler: the fence won.
+- I tried jumping the fence when late. The fence won.
+- Fence climb this morning! Fence: one, me: zero!
+- Tried to vault the gate! Faceplant!
+- I beat my high score in that rhythm game! My fingers still hurt!
+- New high score in my rhythm game! Fingers hurt!
+- Beat my record! My hands are dead!
+- High score! Ouch, fingers!
+- There's a new crepe stand near the park! I've already tried four flavors!
+- New crepe stand by the park! Four flavors already!
+- Crepes near the park! I tried them all!
+- Crepe stand! Four down!
+- Our club's practice match is coming up and I've been training every morning!
+- Training every morning for our match!
+- Practice match soon! Training hard!
+- Morning drills! Match coming!
+- My phone fell in the pool yesterday. I'm living like a caveman now!
+- My phone fell in the pool! Caveman life!
+- Phone in the pool! No tech!
+- Dropped my phone in water! Disaster!
+- I signed up to help at the campus festival! It's gonna be huge!
+- I'm helping with the festival! Huge!
+- Festival volunteer! So excited!
+- Signed up for the festival! Big!
+
+@rule everyday.anecdote.cool
+on everyday
+when s=anecdote tone=cool
+- The vending machine gave me two drinks for the price of one today. I've decided it's a sign.
+- Two drinks for one today. A sign.
+- The vending machine glitched in my favor. A sign.
+- Free drink. The universe approves.
+- I finished a thousand-piece puzzle yesterday. One piece was missing. I'm still angry.
+- Thousand-piece puzzle. One piece missing. Still angry.
+- Finished a puzzle. Minus one piece. Furious.
+- Puzzle done. One missing. Unacceptable.
+- I started learning chess. The club president beat me in six moves. Six.
+- Started chess. Lost in six moves. Six.
+- Chess. Six moves. I lost.
+- Learning chess. Humbling.
+- I reorganized my whole room by color. It's very satisfying. Don't judge.
+- Organized my room by color. Satisfying.
+- Color-coded my room. Don't judge.
+- Room by color. Peaceful.
+- I tried cooking dinner for my family. They were very... polite.
+- Cooked for my family. They were polite.
+- Made dinner. Polite reactions.
+- I cooked. They were... kind.
+- The library got the new volume of the series I like. I reserved it the second I saw it.
+- New volume at the library. Reserved instantly.
+- The library got my series. Reserved.
+- New volume in. I claimed it.
+
+@rule everyday.anecdote.teasing
+on everyday
+when s=anecdote tone=teasing
+- A first-year asked me for directions and I sent him to the faculty room on purpose. He'll thank me later.
+- Sent a first-year to the faculty room on purpose. He'll thank me.
+- Gave a newbie wrong directions. Character building.
+- Misled a first-year. Educational.
+- I convinced the cafeteria lady to give me extra karaage. Charm is a skill.
+- Extra karaage from the lunch lady. Charm.
+- Charmed my way to extra karaage.
+- Free karaage. I'm irresistible.
+- I saw a cat wearing a tiny sweater on the way here. My day peaked at 7 a.m.
+- Cat in a sweater this morning. Peak day.
+- Saw a cat in a sweater. Day peaked early.
+- A sweatered cat. Nothing tops that.
+- I've been writing a story. No, you can't read it. ...Maybe later.
+- Writing a story. No, you can't read it. Yet.
+- A story. Secret. ...Maybe someday.
+- I write. You can't see it. Maybe later.
+- I dyed a streak of my hair last weekend. Nobody noticed. Do you?
+- Dyed my hair. Nobody noticed. Do you?
+- New hair streak. See it?
+- Notice anything? My hair?
+- I've been people-watching in the courtyard. You'd be amazed what you learn.
+- People-watching in the courtyard. Educational.
+- Watching people. You learn things.
+- The courtyard is full of secrets.
+
+# ================= She has no news =================
+@rule everyday.nothing.gentle
+on everyday
+when s=nothing tone=gentle
+- Hmm... I can't think of anything new, sorry.
+- Sorry, nothing new comes to mind.
+- Hmm... I'm out of news.
+- Nothing new, sorry...
+
+@rule everyday.nothing.energetic
+on everyday
+when s=nothing tone=energetic
+- Ehh, nothing's happening! Boring day!
+- Nothing's happening! Boring!
+- No news! Lame!
+- Zero news today!
+
+@rule everyday.nothing.cool
+on everyday
+when s=nothing tone=cool
+- Nothing worth mentioning.
+- Nothing to report.
+- Nothing new.
+- No news.
+
+@rule everyday.nothing.teasing
+on everyday
+when s=nothing tone=teasing
+- You've heard all my stories today.
+- You've heard everything today.
+- Stories all used up.
+- That's all I've got.
+
+# ================= After she vented =================
+@rule everyday.vent.thanks.gentle
+on everyday
+when s=vent.thanks tone=gentle
+- ...I feel lighter now. Thank you.
+- ...I feel better. Thank you.
+- ...That helped so much.
+- ...Lighter now. Thanks.
+
+@rule everyday.vent.thanks.energetic
+on everyday
+when s=vent.thanks tone=energetic
+- Okay! I feel way better! You're like a human stress ball!
+- Way better! Human stress ball!
+- I feel great now! Thanks!
+- Better! You're magic!
+
+@rule everyday.vent.thanks.cool
+on everyday
+when s=vent.thanks tone=cool
+- That helped. Don't tell anyone I said that.
+- That helped. Keep it secret.
+- Useful. Don't tell.
+- Helped. Between us.
+
+@rule everyday.vent.thanks.teasing
+on everyday
+when s=vent.thanks tone=teasing
+- You're surprisingly good at this.
+- You're good at this. Surprising.
+- Not bad at this.
+- Surprisingly helpful.
+
+# ================= Your joke worked =================
+@rule everyday.joke.good.gentle
+on everyday
+when s=joke.good tone=gentle
+- Pfft... ahaha! That's so silly!
+- Pfft... hehe! So silly!
+- Ahaha! That's ridiculous!
+- Hehehe! Stop!
+- Hehe... you're funny.
+- Hehe... funny.
+- You're so funny...
+- Ehehe... good one.
+- Ahaha... I'm going to think about that all day.
+- I'll think about that all day... hehe.
+- Ahaha... that'll stay with me.
+- Hehe... I'll remember that.
+
+@rule everyday.joke.good.energetic
+on everyday
+when s=joke.good tone=energetic
+- AHAHA! Stop, stop, my stomach!
+- AHAHA! My stomach!
+- BWAHAHA! Stop!
+- Hahaha! I can't breathe!
+- Hahaha! Tell me another!
+- Another! Another!
+- Hahaha! More!
+- Encore!
+- Pfffft! You're the best!
+- Pffft! Best!
+- HA! Love it!
+- You're hilarious!
+
+@rule everyday.joke.good.cool
+on everyday
+when s=joke.good tone=cool
+- ...Heh. Okay, that one was good.
+- ...Heh. Good one.
+- ...Pfft. Okay.
+- ...That got me.
+- I didn't expect to laugh. Well done.
+- Unexpected laugh. Good.
+- ...I laughed. Well done.
+- Not bad.
+- Heh. Not bad at all.
+- Heh. Good.
+- ...Decent.
+
+@rule everyday.joke.good.teasing
+on everyday
+when s=joke.good tone=teasing
+- Ugh, that's terrible. *snort* Dammit.
+- Terrible. *snort* Ugh.
+- Awful. *giggle* Damn.
+- So bad. ...Heh. Dammit.
+- Fine. I laughed. Happy?
+- I laughed. Satisfied?
+- Fine. Funny.
+- Okay. Ha.
+- Okay, okay, you win this round.
+- You win this round.
+- Fine. Point to you.
+- Okay. You got me.
+
+# ================= Your joke fell flat =================
+@rule everyday.joke.bad.gentle
+on everyday
+when s=joke.bad tone=gentle
+- Um... hehe...? Sorry, I don't think I got it.
+- Um... hehe? I didn't get it.
+- Ah... sorry, I don't understand.
+- Hehe...? Was that a joke?
+- Oh... um, that's... nice.
+- Oh... that's... nice.
+- Um... okay...
+- Ah... hehe...
+
+@rule everyday.joke.bad.energetic
+on everyday
+when s=joke.bad tone=energetic
+- ...Was that the joke?
+- ...That's it?
+- Wait, that was the joke?
+- ...Huh?
+- Booo! Get off the stage!
+- Booo!
+- Boo! Get off!
+- Lame!
+
+@rule everyday.joke.bad.cool
+on everyday
+when s=joke.bad tone=cool
+- ...
+- ...Hm.
+- ...No.
+- I'll pretend you didn't say that.
+- I didn't hear that.
+- Ignoring that.
+- Forgotten.
+
+@rule everyday.joke.bad.teasing
+on everyday
+when s=joke.bad tone=teasing
+- Wow. That was painful. For both of us.
+- Painful. For everyone.
+- Ouch. That hurt us both.
+- Yikes.
+- Did that sound funny in your head?
+- Funny in your head?
+- That sounded better in your mind, right?
+- Did you test that?
+
+# ================= Your joke hurt her =================
+@rule everyday.joke.hurt.gentle
+on everyday
+when s=joke.hurt tone=gentle
+- That's... kind of mean, isn't it?
+- That's a bit mean...
+- Isn't that unkind...?
+- That wasn't nice...
+
+@rule everyday.joke.hurt.energetic
+on everyday
+when s=joke.hurt tone=energetic
+- Hey! Not funny!
+- Not funny!
+- Hey! Mean!
+- Rude!
+
+@rule everyday.joke.hurt.cool
+on everyday
+when s=joke.hurt tone=cool
+- That crossed a line.
+- Over the line.
+- Too far.
+- That's not okay.
+
+@rule everyday.joke.hurt.teasing
+on everyday
+when s=joke.hurt tone=teasing
+- Careful. That one stung.
+- That stung. Careful.
+- Watch it.
+- Ouch. Careful.
+
+# ================= She believes your explanation =================
+@rule everyday.explain.ok.gentle
+on everyday
+when s=explain.ok tone=gentle
+- Oh... I see. I'm sorry I doubted you.
+- Oh... I'm sorry I doubted you.
+- I see... sorry.
+- Ah... forgive me.
+
+@rule everyday.explain.ok.energetic
+on everyday
+when s=explain.ok tone=energetic
+- Ohhh! Okay, that makes sense! My bad!
+- Ohh! Makes sense! My bad!
+- Oh! Okay! Sorry!
+- Got it! Oops!
+
+@rule everyday.explain.ok.cool
+on everyday
+when s=explain.ok tone=cool
+- ...Fine. That's reasonable.
+- ...Reasonable.
+- ...Fine.
+- ...Acceptable.
+
+@rule everyday.explain.ok.teasing
+on everyday
+when s=explain.ok tone=teasing
+- Hmph. Fine. I'll let it slide. This time.
+- Fine. This time.
+- I'll allow it. Once.
+- Hmph. Pass. Once.
+
+# ================= She does not =================
+@rule everyday.explain.fail.gentle
+on everyday
+when s=explain.fail tone=gentle
+- I... I don't know if I believe that.
+- I don't know if I believe you...
+- Hmm... really...?
+- I'm not sure...
+
+@rule everyday.explain.fail.energetic
+on everyday
+when s=explain.fail tone=energetic
+- Uh-huh. Sure. Totally.
+- Uh-huh. Sure.
+- Riiight.
+- Totally. Not.
+
+@rule everyday.explain.fail.cool
+on everyday
+when s=explain.fail tone=cool
+- That's not convincing.
+- Unconvincing.
+- Not persuasive.
+- Weak.
+
+@rule everyday.explain.fail.teasing
+on everyday
+when s=explain.fail tone=teasing
+- Do you hear yourself?
+- Listen to yourself.
+- Really? That's it?
+- Come on.
+
+# ================= She takes your apology =================
+@rule everyday.apology.gentle
+on everyday
+when s=apology tone=gentle
+- ...Okay. Thank you for saying that.
+- ...Okay. Thank you.
+- ...I forgive you.
+- ...Thanks for saying sorry.
+
+@rule everyday.apology.energetic
+on everyday
+when s=apology tone=energetic
+- Okay, okay! Apology accepted! Just don't do it again!
+- Accepted! Don't do it again!
+- Okay! Forgiven!
+- Fine! Apology accepted!
+
+@rule everyday.apology.cool
+on everyday
+when s=apology tone=cool
+- Fine. Apology accepted.
+- Accepted.
+- Fine.
+- Apology noted.
+
+@rule everyday.apology.teasing
+on everyday
+when s=apology tone=teasing
+- Hmph. You owe me one.
+- You owe me.
+- Hmph. Owed.
+- One favor. Owed.
+
+# ================= You promise her time together =================
+@rule everyday.plans.gentle
+on everyday
+when s=plans tone=gentle
+- Really? Then... I'll be looking forward to it.
+- Really? I'll look forward to it.
+- Then I'll wait for it...
+- Okay... I can't wait.
+
+@rule everyday.plans.energetic
+on everyday
+when s=plans tone=energetic
+- Promise?! Okay! Lunch together sometime!
+- Promise?! Lunch together!
+- Okay! Lunch date!
+- Yay! Promise!
+
+@rule everyday.plans.cool
+on everyday
+when s=plans tone=cool
+- ...Okay. I'll hold you to that.
+- ...Holding you to it.
+- ...Okay. Noted.
+- ...I'll remember.
+
+@rule everyday.plans.teasing
+on everyday
+when s=plans tone=teasing
+- You'd better mean it.
+- Mean it.
+- You'd better.
+- Don't lie.
+
+# ================= she vents =================
+@rule everyday.vent.stressed.gentle
+on everyday
+when s=vent vmood=stressed tone=gentle
+- It's the exams... Everyone expects so much and I don't want to disappoint anyone. Sorry, I'm just dumping this on you.
+- Exams... everyone expects so much. I'm scared to disappoint them. Sorry for unloading this.
+- The tests are close and everyone's counting on me... sorry, I needed to say it.
+- I'm so afraid of letting everyone down... sorry for dumping it on you.
+
+@rule everyday.vent.stressed.energetic
+on everyday
+when s=vent vmood=stressed tone=energetic
+- Everything's piling up! Assignments, club, my mom... I just wanna scream into a pillow!
+- Assignments, club, mom... too much! I wanna scream!
+- Everything's stacking up! I need a pillow to yell into!
+- Too much stuff! My head's exploding!
+
+@rule everyday.vent.stressed.cool
+on everyday
+when s=vent vmood=stressed tone=cool
+- I have three deadlines this week and the professor added a fourth. I'm handling it. I just needed to say it out loud.
+- Three deadlines, now four. I'm handling it. Just venting.
+- Four deadlines this week. Manageable. I needed to say it.
+- An extra deadline appeared. I'll manage. Venting.
+
+@rule everyday.vent.stressed.teasing
+on everyday
+when s=vent vmood=stressed tone=teasing
+- Everyone wants something from me today. You're the first person who just... listened.
+- Everyone wants something today. You just listened.
+- All day, demands. You're the only one who listened.
+- Everyone needs me. You just... heard me out.
+
+@rule everyday.vent.upset.gentle
+on everyday
+when s=vent vmood=upset tone=gentle
+- I had a fight with a friend... I said something I didn't mean. Thank you for listening.
+- I fought with a friend... I said something cruel. Thanks for listening.
+- I hurt a friend's feelings... thank you for hearing me.
+- I said something I regret... thanks for listening.
+
+@rule everyday.vent.upset.energetic
+on everyday
+when s=vent vmood=upset tone=energetic
+- Someone said something really mean about me and everyone laughed. Ugh. Thanks for not laughing.
+- Someone mocked me and everyone laughed. Thanks for not laughing.
+- People laughed at me today. Thanks for being different.
+- Someone was mean and everybody laughed. Ugh. Thanks.
+
+@rule everyday.vent.upset.cool
+on everyday
+when s=vent vmood=upset tone=cool
+- A bad day. Things didn't go how I planned. ...Thanks for hearing me out.
+- Plans went wrong. ...Thanks for listening.
+- Bad day. ...Thanks for hearing it.
+- Not my day. ...Thank you.
+
+@rule everyday.vent.upset.teasing
+on everyday
+when s=vent vmood=upset tone=teasing
+- Fine, you want to know? Someone stood me up. There. Happy? ...Thanks, I guess.
+- Someone stood me up. Happy? ...Thanks.
+- I got stood up. There. ...Thanks, I suppose.
+- Stood up. Fine. ...Thanks.
+
+@rule everyday.vent.lonely.gentle
+on everyday
+when s=vent vmood=lonely tone=gentle
+- Sometimes it feels like nobody would notice if I weren't here... Sorry. That's a gloomy thing to say.
+- Sometimes I think no one would notice if I disappeared... sorry. Gloomy.
+- I feel invisible lately... sorry for saying that.
+- Nobody seems to notice me... sorry, that's sad.
+
+@rule everyday.vent.lonely.energetic
+on everyday
+when s=vent vmood=lonely tone=energetic
+- Everyone's got plans except me lately! It's kinda sad, right? Hehe...
+- Everyone has plans but me! Sad, right? Hehe...
+- Nobody invites me lately! Hehe... sad.
+- All my friends are busy! Hehe... lonely.
+
+@rule everyday.vent.lonely.cool
+on everyday
+when s=vent vmood=lonely tone=cool
+- My friends have been busy. It's quieter than I'd like.
+- My friends are busy. It's too quiet.
+- Quieter than I'd like lately.
+- My friends are occupied. Quiet days.
+
+@rule everyday.vent.lonely.teasing
+on everyday
+when s=vent vmood=lonely tone=teasing
+- Don't laugh, but I've been eating lunch alone all week.
+- Don't laugh. I've eaten alone all week.
+- Lunch alone all week. Don't laugh.
+- Solo lunches. All week. Laugh and die.
+
+@rule everyday.vent.other.gentle
+on everyday
+when s=vent vmood=other tone=gentle
+- I'm just tired lately. Thank you for listening.
+- I'm just tired. Thanks for listening.
+- Just tired... thank you.
+- So tired lately... thanks.
+
+@rule everyday.vent.other.energetic
+on everyday
+when s=vent vmood=other tone=energetic
+- Ugh, today was SO long!
+- Today was SO long!
+- Ugh, endless day!
+- Longest day ever!
+
+@rule everyday.vent.other.cool
+on everyday
+when s=vent vmood=other tone=cool
+- It's been a long week.
+- Long week.
+- A tiring week.
+- The week dragged.
+
+@rule everyday.vent.other.teasing
+on everyday
+when s=vent vmood=other tone=teasing
+- Life's being annoying. That's all.
+- Life's annoying. That's all.
+- Just annoyed with life.
+- Everything's irritating.
+
+# ================= what people say about you =================
+@rule everyday.rep.high.gentle
+on everyday
+when s=rep trep=high tone=gentle
+- Everyone says you're really kind. I think so too.
+- Everyone thinks you're kind. Me too.
+- People say you're so nice... I agree.
+- You're known as kind. It's true.
+
+@rule everyday.rep.high.energetic
+on everyday
+when s=rep trep=high tone=energetic
+- You're kinda famous! Everyone likes you!
+- You're famous! Everyone loves you!
+- Popular guy! Everyone likes you!
+- You're a celebrity!
+
+@rule everyday.rep.high.cool
+on everyday
+when s=rep trep=high tone=cool
+- You have a good reputation. Don't waste it.
+- Good reputation. Keep it.
+- People respect you. Don't ruin it.
+- Well regarded. Maintain it.
+
+@rule everyday.rep.high.teasing
+on everyday
+when s=rep trep=high tone=teasing
+- You're popular, you know. It's a little annoying.
+- Popular. Slightly irritating.
+- Everyone likes you. Annoying.
+- You're liked. How tiresome.
+
+@rule everyday.rep.good.gentle
+on everyday
+when s=rep trep=good tone=gentle
+- People think you're nice, I think.
+- People like you, I think.
+- You seem well liked...
+- I think people think well of you.
+
+@rule everyday.rep.good.energetic
+on everyday
+when s=rep trep=good tone=energetic
+- People like you! Mostly!
+- You're liked! Kinda!
+- Most people dig you!
+
+@rule everyday.rep.good.cool
+on everyday
+when s=rep trep=good tone=cool
+- People don't mind you.
+- Tolerated.
+- People are fine with you.
+- Acceptable reputation.
+
+@rule everyday.rep.good.teasing
+on everyday
+when s=rep trep=good tone=teasing
+- You're... known. In a good way. Mostly.
+- Known. Nicely. Mostly.
+- A decent reputation. Sort of.
+- Not bad. Not great.
+
+@rule everyday.rep.low.gentle
+on everyday
+when s=rep trep=low tone=gentle
+- Um, not everyone knows you yet.
+- Not everyone knows you yet...
+- Some people don't know you...
+- You're still new to many...
+
+@rule everyday.rep.low.energetic
+on everyday
+when s=rep trep=low tone=energetic
+- Half the class doesn't know your name! Haha!
+- Half the class doesn't know you! Ha!
+- Who? Haha! Kidding! Sorta!
+- Nobody knows your name! Haha!
+
+@rule everyday.rep.low.cool
+on everyday
+when s=rep trep=low tone=cool
+- You're not very well known.
+- Not widely known.
+- Low profile.
+- Few know you.
+
+@rule everyday.rep.low.teasing
+on everyday
+when s=rep trep=low tone=teasing
+- You're a bit of a mystery. Not the cool kind.
+- Mysterious. Not cool mysterious.
+- An unknown. Not intriguing.
+- A mystery. A boring one.
+
+@rule everyday.rep.bad.gentle
+on everyday
+when s=rep trep=bad tone=gentle
+- Some people say... strange things about you. I don't believe them!
+- People say strange things... I don't believe them!
+- There are odd rumors... but I trust you!
+- Some say bad things... I don't buy it!
+
+@rule everyday.rep.bad.energetic
+on everyday
+when s=rep trep=bad tone=energetic
+- People are saying weird stuff about you, dude.
+- People say weird stuff about you!
+- Dude, weird rumors!
+- Your rep's kinda weird, man!
+
+@rule everyday.rep.bad.cool
+on everyday
+when s=rep trep=bad tone=cool
+- Your reputation is poor. Work on it.
+- Poor reputation. Fix it.
+- Bad standing. Improve.
+- Your reputation needs work.
+
+@rule everyday.rep.bad.teasing
+on everyday
+when s=rep trep=bad tone=teasing
+- Your reputation is in the gutter. Impressive, really.
+- Gutter reputation. Impressive.
+- Your rep is trash. Wow.
+- Rock-bottom reputation. Remarkable.
+
+# ================= you caught her out: you promise to keep it, or you tease =================
+@rule everyday.secret.keep.gentle
+on everyday
+when s=secret secret=keep tone=gentle
+- Thank you... I really owe you one.
+- Thank you... I owe you.
+- Thanks so much...
+- I'm in your debt...
+
+@rule everyday.secret.keep.energetic
+on everyday
+when s=secret secret=keep tone=energetic
+- You're a lifesaver! Our secret, okay?!
+- Lifesaver! Secret!
+- Our secret! Thanks!
+- You rock! Shh!
+
+@rule everyday.secret.keep.cool
+on everyday
+when s=secret secret=keep tone=cool
+- Good. ...Thanks.
+- ...Thank you.
+- ...Appreciated.
+
+@rule everyday.secret.keep.teasing
+on everyday
+when s=secret secret=keep tone=teasing
+- Smart choice. I'll remember this.
+- Smart. I'll remember.
+- Wise choice.
+- Good. Noted.
+
+@rule everyday.secret.tease.gentle
+on everyday
+when s=secret secret=tease tone=gentle
+- You're so mean...!
+- So mean...!
+- You're cruel...!
+- How could you...!
+
+@rule everyday.secret.tease.energetic
+on everyday
+when s=secret secret=tease tone=energetic
+- Noooo! You wouldn't!
+- No! You wouldn't!
+- Don't you dare!
+- Nooo!
+
+@rule everyday.secret.tease.cool
+on everyday
+when s=secret secret=tease tone=cool
+- Not funny.
+- Stop.
+- Unamusing.
+
+@rule everyday.secret.tease.teasing
+on everyday
+when s=secret secret=tease tone=teasing
+- Try it and see what happens.
+- Try it. See.
+- Go ahead. I dare you.
+- Do it and regret it.
+
+# ================= a topic she liked =================
+@rule everyday.topic.classes.gentle
+on everyday
+when s=topic gtopic=classes tone=gentle
+- Classes are going well! I finally understood today's math lesson.
+- Classes are fine! I even understood math today.
+- I've been keeping up in class. The professor was really kind today.
+- Campus is going well, I think! I got a good grade on a quiz.
+
+@rule everyday.topic.classes.energetic
+on everyday
+when s=topic gtopic=classes tone=energetic
+- Classes? Ugh. But okay, history was actually kinda cool today!
+- Ugh, classes! But PE was awesome today!
+- Class is class, but history had a cool story today!
+- Honestly? Science was fun! We blew something up! Kinda!
+
+@rule everyday.topic.classes.cool
+on everyday
+when s=topic gtopic=classes tone=cool
+- Fine. I like it when a professor actually explains things properly.
+- Classes are tolerable. Today's lecture was well structured.
+- Good. I appreciate a professor who prepares.
+- Productive. I understood everything.
+
+@rule everyday.topic.classes.teasing
+on everyday
+when s=topic gtopic=classes tone=teasing
+- I aced the quiz. Go on, be impressed.
+- Top of the class, as usual. You may applaud.
+- I answered every question today. Jealous?
+- Classes? Easy. Next question.
+
+@rule everyday.topic.club.gentle
+on everyday
+when s=topic gtopic=club tone=gentle
+- The club is so much fun lately. Everyone has been really kind to me.
+- The club makes me happy lately. Everyone's so nice.
+- I really like the club these days... I feel welcome.
+- Club activities are fun! I'm getting better, little by little.
+
+@rule everyday.topic.club.energetic
+on everyday
+when s=topic gtopic=club tone=energetic
+- The club's on fire! We're practicing like crazy!
+- Club's amazing! We're totally fired up!
+- We've been practicing nonstop! It's great!
+- The club's the best! You should come see!
+
+@rule everyday.topic.club.cool
+on everyday
+when s=topic gtopic=club tone=cool
+- We've been productive. I like that.
+- The club has been efficient. I approve.
+- We're making progress. Good.
+- The club is in good shape.
+
+@rule everyday.topic.club.teasing
+on everyday
+when s=topic gtopic=club tone=teasing
+- My club? Of course it's going great. I'm in it.
+- My club's thriving. Naturally, I'm the reason.
+- Of course it's going well. I'm there.
+- Club's great. Thanks to me, mostly.
+
+@rule everyday.topic.food.gentle
+on everyday
+when s=topic gtopic=food tone=gentle
+- Oh, the cafeteria curry! I could eat it every day.
+- The curry at the cafeteria is so good... I'd eat it every day.
+- I love the little desserts at the store... don't tell anyone.
+- Mm, the bento I made today turned out nice.
+
+@rule everyday.topic.food.energetic
+on everyday
+when s=topic gtopic=food tone=energetic
+- Food? My favorite subject! The yakisoba bread is the best!
+- Yakisoba bread! The best food ever invented!
+- Food! The fried chicken today was SO good!
+- Don't get me started on melon bread! I love it!
+
+@rule everyday.topic.food.cool
+on everyday
+when s=topic gtopic=food tone=cool
+- The set lunch is decent. I have opinions about the miso soup.
+- The set lunch is acceptable. The soup could improve.
+- I have strong views on the cafeteria's rice.
+- The menu is predictable. The curry is fine.
+
+@rule everyday.topic.food.teasing
+on everyday
+when s=topic gtopic=food tone=teasing
+- Food talk? Now you're speaking my language.
+- Food? You've found my weakness.
+- Talk about food and I'm all yours. Almost.
+- Mmm, food. Now this is a real topic.
+
+@rule everyday.topic.sports.gentle
+on everyday
+when s=topic gtopic=sports tone=gentle
+- I'm not very athletic, but I love cheering at games with friends.
+- I'm not good at sports, but cheering is fun!
+- I like watching games... I get so nervous for our team.
+- I went jogging once. Once. Hehe...
+
+@rule everyday.topic.sports.energetic
+on everyday
+when s=topic gtopic=sports tone=energetic
+- Sports! Yes! I ran my best time this morning!
+- Sports! I beat my record this morning!
+- I could run all day! Wanna race?!
+- I'm all about sports! Basketball, volleyball, everything!
+
+@rule everyday.topic.sports.cool
+on everyday
+when s=topic gtopic=sports tone=cool
+- I swim on weekends. It clears my head.
+- I swim. It helps me think.
+- Running in the morning clears my mind.
+- Some exercise every day. Discipline.
+
+@rule everyday.topic.sports.teasing
+on everyday
+when s=topic gtopic=sports tone=teasing
+- Sports? Bet I could beat you at anything. Want to find out?
+- Sports? I'd win. Want to bet?
+- Challenge me sometime. I don't lose.
+- I'm good at everything. Sports included.
+
+@rule everyday.topic.hobbies.gentle
+on everyday
+when s=topic gtopic=hobbies tone=gentle
+- I've been reading a really good novel... I can't put it down.
+- I'm reading a novel... I stayed up too late with it.
+- I've been knitting a little. It's relaxing.
+- There's a book I love right now... I could lend it to you.
+
+@rule everyday.topic.hobbies.energetic
+on everyday
+when s=topic gtopic=hobbies tone=energetic
+- I got into a new game and I'm SO hooked!
+- I'm obsessed with a new game! Can't stop!
+- I started a new anime! It's SO good!
+- New hobby: skateboarding! I fell a lot!
+
+@rule everyday.topic.hobbies.cool
+on everyday
+when s=topic gtopic=hobbies tone=cool
+- I've been sketching. I'm not showing you. Yet.
+- Sketching. You can't see them. Not yet.
+- I've been reading philosophy. Slowly.
+- Calligraphy. It requires patience.
+
+@rule everyday.topic.hobbies.teasing
+on everyday
+when s=topic gtopic=hobbies tone=teasing
+- My hobbies? Collecting interesting people. You might qualify.
+- My hobby? People-watching. You're interesting.
+- I collect secrets. Want to give me one?
+- Hobbies? Teasing you might count.
+
+@rule everyday.topic.rumors.gentle
+on everyday
+when s=topic gtopic=rumors tone=gentle
+- Um, I heard the library is getting new books... does that count as a rumor?
+- Um, I heard the library got new books... that's a rumor, right?
+- Someone said there's a stray cat behind the gym... is it true?
+- I heard the festival might be bigger this year...
+
+@rule everyday.topic.rumors.energetic
+on everyday
+when s=topic gtopic=rumors tone=energetic
+- Oh oh oh! Did you hear about the course rep and the vending machine?!
+- Okay, did you hear what happened at the vending machine?!
+- Oh! Someone confessed on the roof yesterday!
+- Big news! The professor wore mismatched socks!
+
+@rule everyday.topic.rumors.cool
+on everyday
+when s=topic gtopic=rumors tone=cool
+- ...I heard something. Fine, I'll tell you. Quietly.
+- ...I heard something. Keep it to yourself.
+- ...There's a rumor. I'll tell you once.
+- ...Quietly. I heard something interesting.
+
+@rule everyday.topic.rumors.teasing
+on everyday
+when s=topic gtopic=rumors tone=teasing
+- Rumors are my specialty. Lean in.
+- Rumors? Oh, I have the good ones. Come closer.
+- I know everything. Want a sample?
+- Gossip is my art. Lean in.
+
+@rule everyday.topic.weekend.gentle
+on everyday
+when s=topic gtopic=weekend tone=gentle
+- I might bake something this weekend. Maybe cookies?
+- I might try baking cookies this weekend...
+- Maybe I'll visit the flower shop this weekend.
+- I'd like to rest and read this weekend.
+
+@rule everyday.topic.weekend.energetic
+on everyday
+when s=topic gtopic=weekend tone=energetic
+- Karaoke! I'm going to sing until my voice gives out!
+- Karaoke all weekend! Want to come?!
+- I'm going to the arcade! All day!
+- Beach trip! Or the mall! Or both!
+
+@rule everyday.topic.weekend.cool
+on everyday
+when s=topic gtopic=weekend tone=cool
+- A quiet weekend. Books, tea, maybe a walk.
+- A quiet weekend. Tea and books.
+- Nothing planned. That's the plan.
+- A walk, some reading. Calm.
+
+@rule everyday.topic.weekend.teasing
+on everyday
+when s=topic gtopic=weekend tone=teasing
+- My weekend plans are secret. But they're good ones.
+- Weekend plans? Secret. Fun ones, though.
+- Wouldn't you like to know~
+- Maybe I'll tell you. If you're good.
+
+@rule everyday.topic.other.gentle
+on everyday
+when s=topic gtopic=other tone=gentle
+- About me? Well... I've always wanted to see the sea in winter.
+- About me? I'd love to see the sea in winter someday.
+- Um... I've always wanted a little garden.
+- Me? I'd like to have a quiet café someday.
+
+@rule everyday.topic.other.energetic
+on everyday
+when s=topic gtopic=other tone=energetic
+- Me? I want to try everything at least once! Skydiving, maybe!
+- Me? I wanna try everything! Bungee jumping!
+- I want to travel everywhere! The whole world!
+- My dream? Something HUGE! Not sure what yet!
+
+@rule everyday.topic.other.cool
+on everyday
+when s=topic gtopic=other tone=cool
+- ...Not many people ask. I want to study abroad someday.
+- ...Few ask. I'd like to study abroad.
+- ...I want to be good at one thing. Truly good.
+- ...I plan to live somewhere quiet. Eventually.
+
+@rule everyday.topic.other.teasing
+on everyday
+when s=topic gtopic=other tone=teasing
+- About me? Okay, one secret: I'm terrible at mornings.
+- One secret: I hate mornings. Truly.
+- A secret? I'm ticklish. Don't you dare.
+- Fine, a secret: I'm a terrible cook.
+
+# ================= a topic that left her cold, or that she did not want =================
+
+@rule everyday.topic.meh.gentle
+on everyday
+when s=topic.meh tone=gentle
+- Oh, um... that's nice, I guess.
+- Oh... that's interesting, I think.
+- Um, okay... I see.
+- Ah... mm, that's nice.
+
+@rule everyday.topic.meh.energetic
+on everyday
+when s=topic.meh tone=energetic
+- Huh, yeah, sure!
+- Ha, sure, okay!
+- Oh yeah? Neat!
+- Huh! Cool, I guess!
+
+@rule everyday.topic.meh.cool
+on everyday
+when s=topic.meh tone=cool
+- I see.
+- Mm.
+- Is that so.
+- ...Right.
+
+@rule everyday.topic.meh.teasing
+on everyday
+when s=topic.meh tone=teasing
+- Mm-hm. Fascinating. Kind of.
+- Riveting. Truly.
+- Uh-huh. Go on. Or don't.
+- Wow. Tell me more. Actually, don't.
+
+@rule everyday.topic.bad.gentle
+on everyday
+when s=topic.bad tone=gentle
+- Um... could we talk about something else?
+- Um... maybe another topic?
+- Sorry... could we talk about something different?
+- I'm not sure what to say to that... something else?
+
+@rule everyday.topic.bad.energetic
+on everyday
+when s=topic.bad tone=energetic
+- Ehh, boring! Next topic!
+- Snooze! New topic, please!
+- Boring! Next!
+- Nope, nope, next topic!
+
+@rule everyday.topic.bad.cool
+on everyday
+when s=topic.bad tone=cool
+- Not interested.
+- I don't care about that.
+- Let's skip that.
+- Uninteresting.
+
+@rule everyday.topic.bad.teasing
+on everyday
+when s=topic.bad tone=teasing
+- Wow. You really know how to kill a conversation.
+- Do you practice being this dull?
+- And the conversation dies. Impressive.
+- Wow. My eyelids are getting heavy.
+
+# ================= she stops somewhere on a walk =================
+@rule everyday.stop.gym.gentle
+on everyday
+when s=stop stop=gym tone=gentle
+- I like the smell of the gym... is that weird?
+- I like how the gym smells... weird?
+- The gym feels nice... strange, right?
+- I like the gym's quiet hum...
+
+@rule everyday.stop.gym.energetic
+on everyday
+when s=stop stop=gym tone=energetic
+- Gym! My second home! I could do a hundred laps right now!
+- Gym! Home! Hundred laps!
+- My favorite place!
+- Let's work out!
+
+@rule everyday.stop.gym.cool
+on everyday
+when s=stop stop=gym tone=cool
+- ...The gym. Where I go to think. Sort of.
+- ...The gym. Good for thinking.
+- ...I think here.
+- ...Gym. Clears my head.
+
+@rule everyday.stop.gym.teasing
+on everyday
+when s=stop stop=gym tone=teasing
+- This is where I train. Impressed yet?
+- My training ground. Impressed?
+- Where I get strong. Watch.
+- Train with me?
+
+@rule everyday.stop.field.gentle
+on everyday
+when s=stop stop=field tone=gentle
+- The field is so wide... I feel tiny here.
+- The field's so big... I feel small.
+- So wide...
+- It's huge here...
+
+@rule everyday.stop.field.energetic
+on everyday
+when s=stop stop=field tone=energetic
+- Wanna race? No? Next time!
+- Race? No? Later!
+- Let's run!
+- Race you! Next time!
+
+@rule everyday.stop.field.cool
+on everyday
+when s=stop stop=field tone=cool
+- ...Good wind today.
+- ...Nice breeze.
+- ...Good wind.
+- ...Clear air.
+
+@rule everyday.stop.field.teasing
+on everyday
+when s=stop stop=field tone=teasing
+- Run a lap. For me. I'll watch.
+- A lap. For me.
+- Run. I'll watch.
+- Show me your speed.
+
+@rule everyday.stop.library.gentle
+on everyday
+when s=stop stop=library tone=gentle
+- It's so peaceful in here... I could stay all day.
+- It's so calm... I could stay forever.
+- So peaceful...
+- I love it in here...
+
+@rule everyday.stop.library.energetic
+on everyday
+when s=stop stop=library tone=energetic
+- Shhh! Library voice! ...This is hard for me.
+- Shh! Library! ...So hard!
+- Quiet! ...Ugh!
+- Whisper! ...Can't!
+
+@rule everyday.stop.library.cool
+on everyday
+when s=stop stop=library tone=cool
+- ...This is the only quiet place in the university.
+- ...The only quiet place.
+- ...Quiet. Finally.
+- ...Peaceful.
+
+@rule everyday.stop.library.teasing
+on everyday
+when s=stop stop=library tone=teasing
+- Don't make noise. Or do. I like watching people get shushed.
+- Make noise. I like the shushing.
+- Be loud. I dare you.
+- Shh~ Or don't.
+
+@rule everyday.stop.cafeteria.gentle
+on everyday
+when s=stop stop=cafeteria tone=gentle
+- It smells so good... I'm getting hungry.
+- It smells so good... hungry...
+- Mm... I'm getting hungry...
+- Smells nice...
+
+@rule everyday.stop.cafeteria.energetic
+on everyday
+when s=stop stop=cafeteria tone=energetic
+- Melon bread! They still have melon bread!
+- Melon bread! Still here!
+- Food!
+- Yum! Let's eat!
+
+@rule everyday.stop.cafeteria.cool
+on everyday
+when s=stop stop=cafeteria tone=cool
+- ...The set lunch is underrated.
+- ...Set lunch. Underrated.
+- ...The set lunch.
+- ...Decent food.
+
+@rule everyday.stop.cafeteria.teasing
+on everyday
+when s=stop stop=cafeteria tone=teasing
+- If you buy me something, I'll remember it forever. Maybe.
+- Buy me something. I'll remember.
+- Treat me. I won't forget.
+- A treat? I'll be grateful. Maybe.
+
+@rule everyday.stop.rooftop.gentle
+on everyday
+when s=stop stop=rooftop tone=gentle
+- The wind up here feels so nice...
+- The wind is lovely...
+- So breezy up here...
+- It feels nice here...
+
+@rule everyday.stop.rooftop.energetic
+on everyday
+when s=stop stop=rooftop tone=energetic
+- Woo! You can see EVERYTHING from here!
+- You can see EVERYTHING!
+- Whoa! The view!
+- Woo! So high!
+
+@rule everyday.stop.rooftop.cool
+on everyday
+when s=stop stop=rooftop tone=cool
+- ...I come here when I need air.
+- ...I need air.
+- ...Air.
+- ...I come to breathe.
+
+@rule everyday.stop.rooftop.teasing
+on everyday
+when s=stop stop=rooftop tone=teasing
+- Nobody comes up here. Just us. Interesting, isn't it?
+- Just us up here. Interesting.
+- No one else. Hm.
+- Alone together. Fun.
+
+@rule everyday.stop.clubroom.gentle
+on everyday
+when s=stop stop=clubroom tone=gentle
+- This is where my club meets... it's a bit messy.
+- My club's room... sorry for the mess.
+- This is our club room... messy.
+- The club room... don't look too close.
+
+@rule everyday.stop.clubroom.energetic
+on everyday
+when s=stop stop=clubroom tone=energetic
+- Club HQ! Don't touch anything! Okay, touch a little!
+- Club HQ! Touch a little!
+- Our base! Careful!
+- Welcome to HQ!
+
+@rule everyday.stop.clubroom.cool
+on everyday
+when s=stop stop=clubroom tone=cool
+- ...My club's room. It's... a work in progress.
+- ...Club room. Unfinished.
+- ...Work in progress.
+- ...Our room.
+
+@rule everyday.stop.clubroom.teasing
+on everyday
+when s=stop stop=clubroom tone=teasing
+- Our club room. Members only. You can be an honorary one.
+- Members only. You're honorary.
+- Our room. You're special.
+- You're allowed. Barely.
+
+@rule everyday.stop.pool.gentle
+on everyday
+when s=stop stop=pool tone=gentle
+- The water looks so clear today...
+- The water's so clear...
+- So pretty and clear...
+- The pool sparkles...
+
+@rule everyday.stop.pool.energetic
+on everyday
+when s=stop stop=pool tone=energetic
+- I wanna jump in so bad!
+- I wanna jump in!
+- Swim time!
+- Splash!
+
+@rule everyday.stop.pool.cool
+on everyday
+when s=stop stop=pool tone=cool
+- ...Smells like chlorine. I like it.
+- ...Chlorine. I like it.
+- ...The smell. Nice.
+- ...Calm water.
+
+@rule everyday.stop.pool.teasing
+on everyday
+when s=stop stop=pool tone=teasing
+- Swimsuit season. Imagining things?
+- Swimsuit season. Thinking?
+- Imagining me in a swimsuit?
+- Pool. Swimsuits. Hm?
+
+@rule everyday.stop.courtyard.gentle
+on everyday
+when s=stop stop=courtyard tone=gentle
+- The flowers here are so pretty...
+- The flowers are so pretty...
+- Lovely flowers...
+- So many flowers...
+
+@rule everyday.stop.courtyard.energetic
+on everyday
+when s=stop stop=courtyard tone=energetic
+- A cat was here yesterday! Let's look!
+- Cat hunt!
+- Kitty was here! Look!
+- Let's find the cat!
+
+@rule everyday.stop.courtyard.cool
+on everyday
+when s=stop stop=courtyard tone=cool
+- ...It's calm here.
+- ...Calm here.
+- ...Quiet.
+- ...Peaceful.
+
+@rule everyday.stop.courtyard.teasing
+on everyday
+when s=stop stop=courtyard tone=teasing
+- This bench is mine. You can sit. Maybe.
+- My bench. Sit. Maybe.
+- My spot. You may sit.
+- Bench. Mine. Sit.
+
+@rule everyday.stop.other.gentle
+on everyday
+when s=stop stop=other tone=gentle
+- It's nice here...
+- Nice here...
+- I like it here...
+- It's pleasant...
+
+@rule everyday.stop.other.energetic
+on everyday
+when s=stop stop=other tone=energetic
+- Ooh, this place is great!
+- This place rocks!
+- Great spot!
+- Cool place!
+
+@rule everyday.stop.other.cool
+on everyday
+when s=stop stop=other tone=cool
+- ...Hm. Here.
+- ...Here.
+- ...Hm.
+- ...This is it.
+
+@rule everyday.stop.other.teasing
+on everyday
+when s=stop stop=other tone=teasing
+- Here. Satisfied?
+- Here. Happy?
+- Satisfied?
+- There. Happy now?
+
+# ================= you ask her to help you study =================
+@rule everyday.study.yes.gentle
+on everyday
+when s=study.yes tone=gentle
+- Of course! Let's go over the hard parts together.
+- Sure! Let's work through it together.
+- Of course! I'll help as much as I can.
+- Mm! Let's study side by side.
+
+@rule everyday.study.yes.energetic
+on everyday
+when s=study.yes tone=energetic
+- Study buddies! I'll quiz you!
+- Study date! I'll make flash cards!
+- Let's go! I'll quiz you till you get it!
+- Yes! Two brains are better than one!
+
+@rule everyday.study.yes.cool
+on everyday
+when s=study.yes tone=cool
+- ...Fine. Pay attention, I won't repeat myself.
+- ...Fine. Listen closely.
+- ...Sit. We'll go through it once.
+- ...Alright. Don't waste my time.
+
+@rule everyday.study.yes.teasing
+on everyday
+when s=study.yes tone=teasing
+- Tutoring costs extra. Kidding. Sit.
+- My lessons are expensive, you know. Kidding~ Sit.
+- A private tutor? Lucky you. Come here.
+- Fine, I'll teach you. Try to keep up.
+
+@rule everyday.study.no.gentle
+on everyday
+when s=study.no tone=gentle
+- Ah... I'm not really good at explaining, sorry...
+- Sorry... I'm bad at explaining things...
+- Um... I don't think I'd be much help... sorry.
+- I'm not that good at it myself... sorry.
+
+@rule everyday.study.no.energetic
+on everyday
+when s=study.no tone=energetic
+- Ehh, I can barely study myself!
+- Ehh?! I'm terrible at studying!
+- Me? Teach? Ha! No way!
+- Sorry, I'm the one who needs a tutor!
+
+@rule everyday.study.no.cool
+on everyday
+when s=study.no tone=cool
+- ...Not today.
+- ...Not now.
+- ...Another time.
+- ...I'm busy.
+
+@rule everyday.study.no.teasing
+on everyday
+when s=study.no tone=teasing
+- Ask me when we're closer.
+- Get closer to me first. Then maybe.
+- Hmm, I don't tutor just anyone.
+- Earn it first.
+
+# ================= nothing else fits: a quiet line =================
+@rule everyday.fallback.gentle
+on everyday
+when s=fallback tone=gentle
+- Mm... it's nice, just talking like this.
+- I like these quiet chats.
+- Sorry, I'm not very interesting today...
+- Talking with you is relaxing.
+
+@rule everyday.fallback.energetic
+on everyday
+when s=fallback tone=energetic
+- Hey, this is fun! We should talk more!
+- Ha, you always find something to say!
+- I like hanging out like this!
+- Okay, your turn to pick a topic!
+
+@rule everyday.fallback.cool
+on everyday
+when s=fallback tone=cool
+- ...This is fine.
+- Quiet talk. I don't mind it.
+- You're not bad company.
+- ...Go on, then.
+
+@rule everyday.fallback.teasing
+on everyday
+when s=fallback tone=teasing
+- Just chatting? Sure, I've got time for you.
+- Running out of topics already?
+- You just like hearing my voice, huh?
+- Fine, entertain me.
+
+# ================= you leave the two of them: she answers first =================
+@rule duo3.bye.a.gentle
+on duo3.bye.a
+when tone=gentle
+- Ah, okay... see you.
+- Okay... see you.
+- Alright, bye then.
+- See you later...
+
+@rule duo3.bye.a.energetic
+on duo3.bye.a
+when tone=energetic
+- Aww, already? Bye!
+- Already? Bye!
+- Aww! Bye!
+- Leaving? See ya!
+
+@rule duo3.bye.a.cool
+on duo3.bye.a
+when tone=cool
+- Later.
+- Bye.
+- Until next time.
+
+@rule duo3.bye.a.teasing
+on duo3.bye.a
+when tone=teasing
+- Running away? Bye~
+- Fleeing? Bye~
+- Running off? Bye.
+- Escaping? Later~
+
+# ================= and the other one =================
+@rule duo3.bye.b.gentle
+on duo3.bye.b
+when tone=gentle
+- Bye bye...
+- See you...
+- Take care...
+
+@rule duo3.bye.b.energetic
+on duo3.bye.b
+when tone=energetic
+- See ya!
+- Bye bye!
+- Later!
+
+@rule duo3.bye.b.cool
+on duo3.bye.b
+when tone=cool
+- ...Bye.
+- ...Later.
+- ...Farewell.
+
+@rule duo3.bye.b.teasing
+on duo3.bye.b
+when tone=teasing
+- Don't be a stranger~
+- Come back soon~
+- Miss me~
+# The opening question follows the topic the player chose.
+@rule me.opener.classes
+on me.opener
+when topic=classes
+- How are classes going for you?
+- Did you get today's assignments?
+- Which class has been keeping you busiest lately?
+
+@rule me.opener.club
+on me.opener
+when topic=club
+- How's your club doing lately?
+- Anything new at your club?
+- What have you been working on with the club?
+
+@rule me.opener.food
+on me.opener
+when topic=food
+- Had anything good to eat today?
+- What's your favorite thing at the cafeteria?
+- Have you found a new favorite meal lately?
+
+@rule me.opener.sports
+on me.opener
+when topic=sports
+- Do you follow any sports?
+- Do you work out at all?
+- What sport do you enjoy watching or playing?
+
+@rule me.opener.hobbies
+on me.opener
+when topic=hobbies
+- What do you do in your free time?
+- Into anything fun lately?
+- Have you picked up any new hobbies?
+
+@rule me.opener.rumors
+on me.opener
+when topic=rumors
+- Heard any interesting rumors around campus?
+- Do you know what everyone's whispering about?
+- Has anything unusual been going around campus?
+
+@rule me.opener.weekend
+on me.opener
+when topic=weekend
+- Got any plans for the weekend?
+- Did you do anything fun last weekend?
+- Is there something you'd like to do this weekend?
+
+@rule me.opener.love
+on me.opener
+when topic=love
+- So... is there anyone you like?
+- Have you ever had a crush on someone?
+- What's your idea of a perfect date?
+
+@rule me.opener.abouther
+on me.opener
+when topic=abouther
+- Tell me a bit about yourself.
+- What's been on your mind lately?
+- What kind of things have you been enjoying recently?

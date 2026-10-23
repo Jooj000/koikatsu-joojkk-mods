@@ -45,6 +45,7 @@ namespace Joojkk.CampusLife
             yield return "ask me: " + AskMe(h);
             foreach (Mood m in Enum.GetValues(typeof(Mood))) yield return "ask " + m + ": " + AskMood(h, m);
             yield return "ask again: " + AskAgain(h);
+            foreach (var x in EverydaySamples(h)) yield return x;
         }
     }
 }

@@ -30,6 +30,7 @@ namespace Joojkk.CampusLife
             /// <summary>One click, one reaction: her line answers this touch, so the game's clip gives way and its pose goes with the line.</summary>
             public bool Speak = true, Cut;
             public string Pose;
+            public int Frame = -1;   // the frame TouchFunc asked for the game's clip (TouchClip)
         }
 
         private static Pend _pend;
@@ -42,6 +43,7 @@ namespace Joojkk.CampusLife
             {
                 harmony.Patch(AccessTools.Method(typeof(Info), "GetTouchVoice"), postfix: new HarmonyMethod(typeof(Conversation), nameof(TouchClip)));
                 harmony.Patch(AccessTools.Method(typeof(Info), "GetLeaveAloneVoice"), postfix: new HarmonyMethod(typeof(Conversation), nameof(IdleClip)));
+                harmony.Patch(AccessTools.Method(typeof(TalkScene), "TouchFunc"), postfix: new HarmonyMethod(typeof(Conversation), nameof(CutTouchVoice)));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogWarning("Conversation reactions: " + e.Message); }
         }
@@ -254,11 +256,18 @@ namespace Joojkk.CampusLife
                     var level = h.isAnger ? 3 : _stage;
                     // Not after every poke: the first touch of each place, every "stop it", and a third of the rest.
                     var speak = Count("react:touch:" + PartWord(_parts, !_touch)) == 0 || level >= 2 || Random.value <= 0.35f;
-                    _pend = new Pend { Her = h, Kind = "touch", Part = _parts, Look = !_touch, Level = level, Answer = h.isAnger ? "no" : Consent.LastTouch, At = Time.realtimeSinceStartup, Info = __instance, Speak = speak };
+                    _pend = new Pend { Her = h, Kind = "touch", Part = _parts, Look = !_touch, Level = level, Answer = h.isAnger ? "no" : Consent.LastTouch, At = Time.realtimeSinceStartup, Info = __instance, Speak = speak, Frame = Time.frameCount };
                     TouchNote("clip " + PartWord(_parts, !_touch) + (speak ? " (her line answers)" : " (only the clip)"));
                     // She used to take the clip, stand again, and take the line with another pose: two reactions to one
-                    // click (user, 2026-11-01). The pose waits for the line; the voice is cut in TickReact, once it exists.
-                    if (speak && OneBeat) { _pend.Pose = __result.pose; __result.pose = ""; }
+                    // click (user, 2026-11-01). The pose waits for the line and her face is the line's; the voice keeps its
+                    // file, so TouchFunc and TouchEnd run as always (an empty one froze the talk and the map, 2026-11-02),
+                    // and CutTouchVoice takes it away in the same frame.
+                    if (speak && OneBeat)
+                    {
+                        _pend.Pose = __result.pose;
+                        __result.facialExpression = "";
+                        __result.pose = "";
+                    }
                 }
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Touch clip: " + e.Message); }
@@ -377,9 +386,8 @@ namespace Joojkk.CampusLife
                 p.ReadyAt = 0f;
                 if (OneBeat && p.Kind == "touch" && p.Speak && !p.Cut)
                 {
-                    Singleton<Manager.Voice>.Instance.Stop((Transform)voice);
+                    CutVoice((Transform)voice);
                     p.Cut = true;
-                    TouchNote("voice cut");
                 }
                 return;
             }
@@ -388,6 +396,37 @@ namespace Joojkk.CampusLife
             _pend = null;
             try { PlayReact(p); }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Talk reaction: " + e.Message); }
+        }
+
+        /// <summary>
+        /// The game's voice for a touch our line answers goes away in the frame it was asked for, before it loads: no sound, and
+        /// no caption from KK_Subtitles, which showed its text apart from our box ("I told you to stop! so persistent!", always
+        /// the same; user, 2026-11-02). TouchEnd sees the voice gone and gives the talk back as usual.
+        /// </summary>
+        private static void CutTouchVoice(TalkScene __instance)
+        {
+            try
+            {
+                var p = _pend;
+                if (p == null || !OneBeat || p.Kind != "touch" || !p.Speak || p.Cut || p.Frame != Time.frameCount) return;
+                var voice = TransVoiceField != null ? TransVoiceField.GetValue(__instance) as Transform : null;
+                if (voice == null) return;
+                CutVoice(voice);
+                p.Cut = true;
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Touch voice: " + e.Message); }
+        }
+
+        /// <summary>
+        /// Manager.Voice.Stop(Transform) stops only the voices that follow that transform (a mouth), not the voice it returned:
+        /// with TalkScene's transVoice it stopped nothing, and the game's clip played to the end under our line (2026-11-05).
+        /// The voice is the object Voice.Play returned; destroying it ends the sound, its loader and its caption.
+        /// </summary>
+        private static void CutVoice(Transform voice)
+        {
+            if (voice == null) return;
+            UnityEngine.Object.Destroy(voice.gameObject);
+            TouchNote("voice cut");
         }
 
         private static int Count(string key)

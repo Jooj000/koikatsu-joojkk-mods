@@ -779,7 +779,7 @@ namespace Joojkk.CampusLife
             var name = GirlInfo.FirstName(h);
             var b = new SceneBuilder(null, false);
             b.Narr(last ? "You reach the " + Places.Name(place).ToLowerInvariant() + " together." : name + " stops for a moment at the " + Places.Name(place).ToLowerInvariant() + ".");
-            b.Say(h, StopLine(place));
+            b.Say(h, Conversation.EverydayStop(h, place));
             if (!last)
             {
                 b.Choice(Reply1(place), "good", "Keep walking with her.", "plain", "Say you have to go.", "leave");
@@ -823,22 +823,6 @@ namespace Joojkk.CampusLife
                 _arrivedAt = -1f;
             })) return;
             CampusLifePlugin.Log.LogInfo("Walk-and-talk: beat at " + place + " (" + (at + 1) + "/" + Stops.Count + ")");
-        }
-
-        private static string StopLine(string place)
-        {
-            switch (place)
-            {
-                case "gym": return T("I like the smell of the gym... is that weird? || I like how the gym smells... weird? || The gym feels nice... strange, right? || I like the gym's quiet hum...", "Gym! My second home! I could do a hundred laps right now! || Gym! Home! Hundred laps! || My favorite place! || Let's work out!", "...The gym. Where I go to think. Sort of. || ...The gym. Good for thinking. || ...I think here. || ...Gym. Clears my head.", "This is where I train. Impressed yet? || My training ground. Impressed? || Where I get strong. Watch. || Train with me?");
-                case "field": return T("The field is so wide... I feel tiny here. || The field's so big... I feel small. || So wide... || It's huge here...", "Wanna race? No? Next time! || Race? No? Later! || Let's run! || Race you! Next time!", "...Good wind today. || ...Nice breeze. || ...Good wind. || ...Clear air.", "Run a lap. For me. I'll watch. || A lap. For me. || Run. I'll watch. || Show me your speed.");
-                case "library": return T("It's so peaceful in here... I could stay all day. || It's so calm... I could stay forever. || So peaceful... || I love it in here...", "Shhh! Library voice! ...This is hard for me. || Shh! Library! ...So hard! || Quiet! ...Ugh! || Whisper! ...Can't!", "...This is the only quiet place in the university. || ...The only quiet place. || ...Quiet. Finally. || ...Peaceful.", "Don't make noise. Or do. I like watching people get shushed. || Make noise. I like the shushing. || Be loud. I dare you. || Shh~ Or don't.");
-                case "cafeteria": return T("It smells so good... I'm getting hungry. || It smells so good... hungry... || Mm... I'm getting hungry... || Smells nice...", "Melon bread! They still have melon bread! || Melon bread! Still here! || Food! || Yum! Let's eat!", "...The set lunch is underrated. || ...Set lunch. Underrated. || ...The set lunch. || ...Decent food.", "If you buy me something, I'll remember it forever. Maybe. || Buy me something. I'll remember. || Treat me. I won't forget. || A treat? I'll be grateful. Maybe.");
-                case "rooftop": return T("The wind up here feels so nice... || The wind is lovely... || So breezy up here... || It feels nice here...", "Woo! You can see EVERYTHING from here! || You can see EVERYTHING! || Whoa! The view! || Woo! So high!", "...I come here when I need air. || ...I need air. || ...Air. || ...I come to breathe.", "Nobody comes up here. Just us. Interesting, isn't it? || Just us up here. Interesting. || No one else. Hm. || Alone together. Fun.");
-                case "clubroom": return T("This is where my club meets... it's a bit messy. || My club's room... sorry for the mess. || This is our club room... messy. || The club room... don't look too close.", "Club HQ! Don't touch anything! Okay, touch a little! || Club HQ! Touch a little! || Our base! Careful! || Welcome to HQ!", "...My club's room. It's... a work in progress. || ...Club room. Unfinished. || ...Work in progress. || ...Our room.", "Our club room. Members only. You can be an honorary one. || Members only. You're honorary. || Our room. You're special. || You're allowed. Barely.");
-                case "pool": return T("The water looks so clear today... || The water's so clear... || So pretty and clear... || The pool sparkles...", "I wanna jump in so bad! || I wanna jump in! || Swim time! || Splash!", "...Smells like chlorine. I like it. || ...Chlorine. I like it. || ...The smell. Nice. || ...Calm water.", "Swimsuit season. Imagining things? || Swimsuit season. Thinking? || Imagining me in a swimsuit? || Pool. Swimsuits. Hm?");
-                case "courtyard": return T("The flowers here are so pretty... || The flowers are so pretty... || Lovely flowers... || So many flowers...", "A cat was here yesterday! Let's look! || Cat hunt! || Kitty was here! Look! || Let's find the cat!", "...It's calm here. || ...Calm here. || ...Quiet. || ...Peaceful.", "This bench is mine. You can sit. Maybe. || My bench. Sit. Maybe. || My spot. You may sit. || Bench. Mine. Sit.");
-                default: return T("It's nice here... || Nice here... || I like it here... || It's pleasant...", "Ooh, this place is great! || This place rocks! || Great spot! || Cool place!", "...Hm. Here. || ...Here. || ...Hm. || ...This is it.", "Here. Satisfied? || Here. Happy? || Satisfied? || There. Happy now?");
-            }
         }
 
         private static string Reply1(string place)

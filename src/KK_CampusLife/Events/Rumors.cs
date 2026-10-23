@@ -201,15 +201,18 @@ namespace Joojkk.CampusLife
                     b.Narr(GirlInfo.FirstName(h) + " lowers her voice.");
                     b.Face(h, Feel.Serious).Her_(T(h, "About that rumor... I was there. What really happened is: " + What(s, 0) + ". That's all. || I was there... it was just " + What(s, 0) + ". Nothing more. || Really, I saw it. It was only " + What(s, 0) + ". || I was there. The truth is " + What(s, 0) + ".", "Okay, real talk, I was THERE. It's just: " + What(s, 0) + ". People are exaggerating! || I was right there! It was just " + What(s, 0) + "! People exaggerate! || Truth time! " + What(s, 0) + "! That's all! || I saw it! Just " + What(s, 0) + "! Way less exciting!",
                         "I was present. The facts: " + What(s, 0) + ". Nothing more. || I was present. " + What(s, 0) + ". That's it. || The facts: " + What(s, 0) + ". || Witness account: " + What(s, 0) + ".", "Want the real story? " + What(s, 0) + ". Boring, right? || Real story? " + What(s, 0) + ". Sorry to disappoint." + " || " + What(s, 0) + ". That's all. Boring. || The truth: " + What(s, 0) + ". Yawn."));
-                    b.Choice("Thank her for the truth", "rw_thanks", "Ask her to help set it straight", "rw_help");
+                    b.Choice("Thank her for the truth", "rw_thanks", "Ask her to help set it straight", "rw_help", "Ask why she's telling you", "rw_why", "Ask her to keep it quiet", "rw_quiet");
                     b.Branch("rw_thanks"); b.Face(h, Feel.Smile).Her_(T(h, "Of course. || You're welcome. || Of course. || Anytime.", "No prob! || Sure thing! || Anytime! || No problem!", "...You're welcome. || ...Welcome. || ...Fine. || ...Mm.", "You owe me. || You owe me one. || Put it on your tab. || I'll collect later.")); b.End();
                     b.Branch("rw_help"); b.Face(h, Feel.Normal).Her_(T(h, "I'll try... I'll tell anyone who asks. || I'll tell anyone who asks. || I'll try to clear it up. || I'll do my best to help.", "You got it! I'll spread the TRUTH! || I'll tell EVERYONE the truth! || Truth squad, go! || On it! Rumor busting!", "I'll correct people. Efficiently. || I'll correct them. || I'll set the record straight. || I'll handle it.", "Fine. I'll be the voice of reason. For once. || Fine. Voice of reason, just this once. || I'll fix it. You owe me. || Okay. I'll be responsible. Ugh.")); b.End();
+                    b.Branch("rw_why"); b.Face(h, Feel.Normal).Her_(T(h, "Because it isn't fair to her. Someone should say it. || It isn't fair. Someone had to say it. || I couldn't stay quiet about it. || Because you'd listen, I think.", "Because it's NOT FAIR, that's why! || 'Cause it's so unfair! || I can't stand fake news! || Because you actually listen!", "Accuracy matters. That's all. || I dislike false information. || The record should be correct. || You seemed willing to hear it.", "Because lying is only fun when I do it. || Someone has to be the adult here. || I got bored of the fake version. || You looked like you could handle the truth.")); b.End();
+                    b.Branch("rw_quiet"); b.Face(h, Feel.Worried).Her_(T(h, "Oh... all right. I won't feed it. || All right. I won't say a word. || If you think that's best... || Okay. Quietly, then.", "Ooh, secret mode! Okay! || Zipped! Mmph! || Okay! My lips are sealed! || Fine, no more talk from me!", "...Agreed. It starves without attention. || ...Silence. Understood. || ...Reasonable. || ...I'll say nothing.", "Quiet? Me? You ask a lot. || Fine. My silence is expensive. || Okay. No fun for me, then. || Hm. I'll behave. This once.")); b.End();
                 },
                 Result = c =>
                 {
                     s.Step = Mathf.Max(s.Step, 2);
                     if (c == "rw_help") { foreach (var k in s.Versions.Keys.ToList()) if (Random.value < 0.4f) s.Versions[k] = 0; Cool(s, 12); }
-                    Social.AddTrust(h, 3);
+                    else if (c == "rw_quiet") Cool(s, 5);
+                    Social.AddTrust(h, c == "rw_why" ? 5 : 3);
                 },
                 Interest = 1,
             };
@@ -226,10 +229,12 @@ namespace Joojkk.CampusLife
                     b.Face(h, Feel.Surprised).Her_(T(h, "Did you hear? " + What(s, v) + "! Isn't that awful? || Did you hear? " + What(s, v) + "... that's terrible. || Have you heard? " + What(s, v) + ". Poor thing... || Um... " + What(s, v) + ". Isn't that awful?", "Oh my gosh, " + What(s, v) + "! Crazy, right?! || Did you hear?! " + What(s, v) + "! Crazy! || Oh wow! " + What(s, v) + "! Right?! || News flash! " + What(s, v) + "!", "Apparently " + What(s, v) + ". Disappointing. || Apparently, " + What(s, v) + ". || I hear " + What(s, v) + ". Unfortunate." + " || " + What(s, v) + ". So they say.", "Heard the latest? " + What(s, v) + ". Wild. || Hot gossip: " + What(s, v) + ". || Have you heard? " + What(s, v) + ". Scandalous. || Get this: " + What(s, v) + "."));
                     var opts = new List<string>();
                     if (s.Step >= 2) { opts.Add("Tell her what really happened"); opts.Add("tw_fix"); }
+                    opts.Add("Ask where she heard it"); opts.Add("tw_who");
                     opts.Add("Laugh it off"); opts.Add("tw_laugh");
                     opts.Add("Let it go"); opts.Add("tw_go");
                     b.Choice(opts.ToArray());
                     b.Branch("tw_fix"); b.Face(h, Feel.Normal).Her_(T(h, "Oh... that's not as bad. I'm glad I asked you. || Oh... it's not so bad, then. Thank you for telling me. || I'm glad I asked... that's a relief. || Oh, I see. That's much better.", "Wait, that's it? Huh! Way less exciting! || That's it? So much less dramatic! || Wait, really? Huh! Boring! || Oh! Not a big deal then!", "...I was misinformed. Thank you. || ...I was wrong. Thank you. || ...Misinformation. Thanks. || ...Good to know the truth.", "Boo. The truth is boring. || Boo. Truth is so dull. || Aww, ruined it. || The truth is never as fun.")); b.End();
+                    b.Branch("tw_who"); b.Face(h, Feel.Worried).Her_(T(h, "I-I don't remember exactly... someone at lunch. || Just... around. Maybe I shouldn't repeat it. || Someone at lunch... now I feel bad. || I only overheard it. Sorry.", "Uh, everywhere? Everyone's saying it! || Everyone! I think! Wait, who was it? || Huh! Good question! No clue! || Some girl in the hallway! Why?", "...Secondhand. I didn't verify it. || ...A classmate. Unverified. || ...Hearsay, I admit. || ...I should have checked.", "A good gossip never reveals her sources. || From around. Why so serious? || Can't remember. Does it matter? || Oh? Playing detective now?")); b.End();
                     b.Branch("tw_laugh"); b.Face(h, Feel.Laugh).Her_(T(h, "Ehehe... || Hehe... || Ehehe... || Fufu...", "Ahaha! Right?! || Haha! Yeah! || Right?! || Ahaha!", "...Hm. || ...Heh. || ...Mm. || ...", "Heh. || Hah. || Heh~ || Fufu.")); b.End();
                     b.Branch("tw_go"); b.Face(h, Feel.Normal).Her_(T(h, "...Mm. || ...Okay. || ...Mm-hm. || ...I see.", "Okay, okay. || Alright, alright! || Okay! || Sure!", "...Fine. || ...Fine. || ...Mm. || ...Very well.", "Suit yourself. || Suit yourself. || Whatever. || Fine, fine.")); b.End();
                 },
@@ -237,6 +242,7 @@ namespace Joojkk.CampusLife
                 {
                     s.Step = Mathf.Max(s.Step, 3);
                     if (c == "tw_fix") { s.Versions[GirlInfo.Key(h)] = 0; Cool(s, 10); Social.AddTrust(h, 2); }
+                    else if (c == "tw_who") { Cool(s, 4); Social.AddTrust(h, 1); }
                     else if (c == "tw_laugh") Heat(s, 5);
                 },
                 Interest = 0,
@@ -255,11 +261,13 @@ namespace Joojkk.CampusLife
                     b.Face(h, Feel.Sad).Her_(T(h, "You've heard what they're saying about me, haven't you...? || You've heard the rumor about me... haven't you? || Everyone's saying things about me... you too? || You heard what they're saying...?", "Everybody's whispering about me! You heard it too, right?! || Everyone's talking about me! You heard, right?! || Ugh! The whole university's whispering! You too?! || You heard the rumor too, didn't you?!", "The rumor. You've heard it. || You've heard. || The rumor. You know it. || You've heard what they say.", "So. You've heard the rumor too. Everyone has. || Let me guess. You heard too. || The rumor. Even you heard it. || So. You've heard, like everyone else."));
                     var opts = new List<string> { "Say you believe her", "rs_believe", "Ask for her side of it", "rs_side" };
                     if (s.Step >= 2) { opts.Add("Promise to set it straight"); opts.Add("rs_fix"); }
+                    opts.Add("Ask how she's holding up"); opts.Add("rs_hold");
                     opts.Add("Tell her to ignore it"); opts.Add("rs_ignore");
                     b.Choice(opts.ToArray());
                     b.Branch("rs_believe"); b.Face(h, Feel.Love).Her_(T(h, "...Thank you. That means more than you know. || ...Thank you. It means so much. || ...Thank you for believing me. || ...I'm so grateful... thank you.", "...You do? ...Thank you. Seriously. || ...Really? Thank you! I mean it! || ...You believe me? Thanks! || ...Seriously, thank you!", "...Thank you. || ...Thank you. || ...That matters. Thanks. || ...I appreciate it.", "...Heh. You're too nice. ...Thanks. || ...You're too nice. ...Thanks. || ...Heh. Sweet of you. || ...Okay. Thanks.")); b.End();
                     b.Branch("rs_side"); b.Face(h, Feel.Normal).Her_(T(h, "...It's simple, really. " + What(s, 0) + ". That's all it was. || ...It was only " + What(s, 0) + ". That's all. || ...The truth is " + What(s, 0) + ". Really. || ...Just " + What(s, 0) + ". Nothing more.", "It's just " + What(s, 0) + "! That's IT! || Just " + What(s, 0) + "! That's it! || It was " + What(s, 0) + "! Seriously! || Only " + What(s, 0) + "! Nothing else!", "The truth: " + What(s, 0) + "." + " || " + What(s, 0) + ". That's the truth. || Fact: " + What(s, 0) + ". || Only " + What(s, 0) + ".", "The truth? " + What(s, 0) + ". Disappointed? || The truth: " + What(s, 0) + ". Surprised?" + " || " + What(s, 0) + ". That's it. Sorry. || Just " + What(s, 0) + ". Boring, huh?")); b.End();
                     b.Branch("rs_fix"); b.Face(h, Feel.Smile).Her_(T(h, "You'd do that...? Thank you... || You'd really do that...? Thank you... || For me? Thank you so much... || You'd help me...? Thank you.", "You'd do that for me?! You're the best! || You'd do that?! You're amazing! || For me?! You rock! || Really?! Thank you!", "...I'd appreciate it. || ...That would help. || ...Thank you. I'd appreciate that. || ...Do that. Thanks.", "...My hero. Kinda. || ...My kinda-hero. || ...Okay, you're useful. || ...Knight duty? Cute.")); b.End();
+                    b.Branch("rs_hold"); b.Face(h, Feel.Sad).Her_(T(h, "...Not very well. Thank you for asking. || ...I can't sleep much. Thanks for asking. || ...It's been hard. You're the first to ask. || ...Not well. But it helps that you asked.", "...Honestly? Kinda awful. Thanks for asking. || ...Bad! Really bad! But thanks! || ...Not great! You're the first to ask! || ...I'm pretending I'm fine. It's exhausting.", "...I've been better. Thank you for asking. || ...Poorly. Thanks. || ...It's tiring. Few people ask. || ...I manage. Barely.", "...Ask me something easier. ...Thanks, though. || ...I've had better weeks. Thanks. || ...Smiling is hard work lately. || ...Nobody else asked. Noted.")); b.End();
                     b.Branch("rs_ignore"); b.Face(h, Feel.Sad).Her_(T(h, "...Easy for you to say. || ...It's not that easy. || ...You don't understand. || ...Easy for you.", "Ugh, I'm TRYING! || I'm TRYING, okay?! || Ugh! Like that's easy! || That doesn't help!", "...If only. || ...If only it were that simple. || ...Unhelpful. || ...Right.", "...Thanks for nothing. || ...Thanks. For nothing. || ...Wow. Helpful. || ...Great advice. Not.")); b.End();
                 },
                 Result = c =>
@@ -269,6 +277,7 @@ namespace Joojkk.CampusLife
                         case "rs_believe": Social.AddTrust(h, 6); G.AddFavor(h, 3, 0); Cool(s, 10); Pairs.OnHelped(h); break;
                         case "rs_side": Social.AddTrust(h, 4); s.Step = Mathf.Max(s.Step, 2); break;
                         case "rs_fix": Social.AddTrust(h, 8); G.AddFavor(h, 4, 0); Social.Add(Social.Kinds.Defended, h); Pairs.OnHelped(h); Close(s, "cleared"); break;
+                        case "rs_hold": Social.AddTrust(h, 5); Cool(s, 5); break;
                         case "rs_ignore": Social.AddTrust(h, -2); break;
                     }
                     Memories.Add(h, "rumor", c == "rs_fix" ? "you set the record straight for me" : "you talked to me about that rumor", c == "rs_ignore" ? -1 : 1);

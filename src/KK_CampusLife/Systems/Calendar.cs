@@ -127,6 +127,8 @@ namespace Joojkk.CampusLife
             if (S.PendingEvent != "") Toasts.Show("Today: " + EventName(S.PendingEvent) + ".");
         }
 
+        public static void PeriodResumed() { _periodStartedAt = Time.realtimeSinceStartup; }
+
         public static void OnPeriodStart(Cycle.Type period)
         {
             _periodStartedAt = Time.realtimeSinceStartup;

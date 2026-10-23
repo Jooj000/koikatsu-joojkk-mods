@@ -11,6 +11,12 @@ opens ask,share,tease
 - No drama today. That's rare.
 - Nothing to complain about. I'll take it.
 
+@rule react.h.fine_quiet.bad
+on react
+when hook=fine_quiet fit=bad
+- Okay, okay. It's a quiet day. Let it be one.
+- That's not really what I wanted to hear on a quiet day.
+
 @rule move.h.fine_quiet.ask
 on move.ask
 when hook=fine_quiet
@@ -57,6 +63,12 @@ opens ask,share,tease
 - Same as always. The bell rings, I sit down, the bell rings, I stand up.
 - I sat through class and looked out the window a lot.
 
+@rule react.h.fine_routine.bad
+on react
+when hook=fine_routine fit=bad
+- That didn't make today any better.
+- Forget I said anything about my day.
+
 @rule move.h.fine_routine.ask
 on move.ask
 when hook=fine_routine
@@ -101,6 +113,12 @@ opens ask,share,tease
 - I think I forgot something at home, but otherwise fine.
 - I keep feeling like I forgot something today.
 - I left the house with this feeling I forgot something. It's bugging me.
+
+@rule react.h.fine_forgot.bad
+on react
+when hook=fine_forgot fit=bad
+- Great. Now I've forgotten what I was thinking about.
+- That didn't help me remember. Thanks.
 
 @rule move.h.fine_forgot.ask
 on move.ask
@@ -149,6 +167,12 @@ feel smile
 - The vending machine gave me two drinks for one! Lucky day!
 - Everything's going my way today.
 
+@rule react.h.cheerful_luck.bad
+on react
+when hook=cheerful_luck fit=bad
+- Don't ruin my lucky day.
+- Hey, I was having a good day a second ago.
+
 @rule move.h.cheerful_luck.ask
 on move.ask
 when hook=cheerful_luck
@@ -195,6 +219,12 @@ feel smile
 - Everyone keeps asking why I'm smiling. I can't help it.
 - I've been smiling all day for no reason. Don't laugh.
 - I almost skipped down the hallway. That's how good I feel.
+
+@rule react.h.cheerful_noreason.bad
+on react
+when hook=cheerful_noreason fit=bad
+- You almost got me to stop smiling.
+- I was in a good mood. Let me stay there.
 
 @rule move.h.cheerful_noreason.ask
 on move.ask
@@ -243,6 +273,12 @@ feel smile
 - I want to tell somebody, and here you are. Good timing.
 - I was hoping to run into someone. I've got good news.
 
+@rule react.h.cheerful_news.bad
+on react
+when hook=cheerful_news fit=bad
+- Never mind. I'll tell someone else.
+- And I was so happy to tell you, too.
+
 @rule move.h.cheerful_news.ask
 on move.ask
 when hook=cheerful_news
@@ -289,6 +325,12 @@ fit tease=neutral invite=neutral
 - My stomach has been growling all class.
 - My stomach is louder than the teacher.
 - I'm so hungry I can't think. If I faint, tell my family I tried.
+
+@rule react.h.hungry_starving.bad
+on react
+when hook=hungry_starving fit=bad
+- I can't deal with that on an empty stomach.
+- Talk to me after I've eaten. Not before.
 
 @rule move.h.hungry_starving.invite
 on move.invite
@@ -338,6 +380,12 @@ fit tease=neutral invite=neutral
 - I left my lunch on the kitchen table. I can see it in my mind.
 - I've got no lunch today. Not one crumb.
 
+@rule react.h.hungry_nolunch.bad
+on react
+when hook=hungry_nolunch fit=bad
+- I have no lunch, and now this.
+- Today was already bad without that.
+
 @rule move.h.hungry_nolunch.invite
 on move.invite
 when hook=hungry_nolunch
@@ -383,6 +431,12 @@ fit tease=neutral invite=neutral
 - I can smell the cafeteria from here. It's torture.
 - Someone was eating yakisoba bread right in front of me. I nearly cried.
 - The smell from the cafeteria followed me up the stairs. All I can think about is food.
+
+@rule react.h.hungry_smell.bad
+on react
+when hook=hungry_smell fit=bad
+- I'm too hungry for this. Excuse me.
+- Not now. Food's all I can handle.
 
 @rule move.h.hungry_smell.invite
 on move.invite
@@ -432,6 +486,12 @@ fit tease=neutral invite=neutral
 - I've planned this lunch since second period. Don't judge the amount.
 - Thank god, lunch. Don't get between me and the food.
 
+@rule react.h.lunch_ready.bad
+on react
+when hook=lunch_ready fit=bad
+- You're standing between me and my lunch.
+- Not now. I've waited all morning to eat.
+
 @rule move.h.lunch_ready.invite
 on move.invite
 when hook=lunch_ready
@@ -477,6 +537,12 @@ fit tease=neutral invite=neutral
 - The melon bread will be gone if we talk too long. Hurry!
 - The line at the store is my only enemy today. Walk with me?
 - The bell rang and I need to get to the store. Let's go.
+
+@rule react.h.lunch_rush.bad
+on react
+when hook=lunch_rush fit=bad
+- No time for that! The bread!
+- I'm losing my place in line for this?
 
 @rule move.h.lunch_rush.invite
 on move.invite
@@ -525,6 +591,12 @@ fit tease=neutral
 - Slow. So slow. Today's never going to end.
 - If this day were a movie, I'd have left already.
 
+@rule react.h.bored_clock.bad
+on react
+when hook=bored_clock fit=bad
+- That didn't make the clock go any faster.
+- And now it feels even longer.
+
 @rule move.h.bored_clock.ask
 on move.ask
 when hook=bored_clock
@@ -571,6 +643,12 @@ fit tease=neutral praise=good
 - I tried to balance an eraser on my nose. That's how bad it is.
 - I've been spinning my pen for an hour. I'm getting good at it.
 - I've found new ways to waste time in class. It's that kind of day.
+
+@rule react.h.bored_doodles.bad
+on react
+when hook=bored_doodles fit=bad
+- Even the ceiling was better company.
+- I'd rather go back to my pen.
 
 @rule move.h.bored_doodles.ask
 on move.ask
@@ -619,6 +697,12 @@ fit tease=neutral
 - Everyone's half dead today. Please do something fun.
 - Please tell me something happened somewhere. Anything.
 
+@rule react.h.bored_entertain.bad
+on react
+when hook=bored_entertain fit=bad
+- I wanted something fun, not that.
+- No. Try again, or don't.
+
 @rule move.h.bored_entertain.invite
 on move.invite
 when hook=bored_entertain
@@ -665,6 +749,12 @@ feel worried
 - Not great. My to-do list keeps growing.
 - I keep making lists, and the lists make it worse.
 - I wrote everything down, and it's so much. I don't know where to start.
+
+@rule react.h.stressed_todo.bad
+on react
+when hook=stressed_todo fit=bad
+- I don't have room for that on my list.
+- Please. I've got enough to deal with.
 
 @rule move.h.stressed_todo.comfort
 on move.comfort
@@ -713,6 +803,12 @@ feel worried
 - My stomach's in knots about {mything}.
 - I feel like I'm falling behind on {mything}.
 
+@rule react.h.stressed_worry.bad
+on react
+when hook=stressed_worry fit=bad
+- That's not helping. My head's already full.
+- I can't think about that on top of everything.
+
 @rule move.h.stressed_worry.comfort
 on move.comfort
 when hook=stressed_worry
@@ -759,6 +855,12 @@ feel worried
 - Everyone thinks I've got it under control. I don't.
 - I keep acting like everything's okay. It's getting hard.
 
+@rule react.h.stressed_mask.bad
+on react
+when hook=stressed_mask fit=bad
+- See? This is why I just say it's fine.
+- Forget it. I'm fine. Really.
+
 @rule move.h.stressed_mask.comfort
 on move.comfort
 when hook=stressed_mask
@@ -804,6 +906,12 @@ feel worried
 - Everyone needs something from me today. I can't say no.
 - If one more person asks me for something... I'll scream.
 - I've been running errands for people since this morning.
+
+@rule react.h.stressed_favors.bad
+on react
+when hook=stressed_favors fit=bad
+- That's one more thing. No.
+- Not you too. Please.
 
 @rule move.h.stressed_favors.comfort
 on move.comfort
@@ -852,6 +960,12 @@ feel worried
 - I've read this chapter five times. Nothing's sticking.
 - I memorized it this morning and it's already gone.
 
+@rule react.h.exam_blank.bad
+on react
+when hook=exam_blank fit=bad
+- I can't. If I stop reviewing, I'll lose what's left.
+- Not now. Whatever I still remember is about to fall out.
+
 @rule move.h.exam_blank.comfort
 on move.comfort
 when hook=exam_blank
@@ -899,6 +1013,12 @@ feel worried
 - I'm so nervous about the exams I can't sit still.
 - I dreamed about the exam. I got it wrong.
 
+@rule react.h.exam_panic.bad
+on react
+when hook=exam_panic fit=bad
+- That's really not what I need to hear this week.
+- You're making me more nervous.
+
 @rule move.h.exam_panic.comfort
 on move.comfort
 when hook=exam_panic
@@ -944,6 +1064,12 @@ opens share,ask,invite
 - Everyone's panicking. How are you so calm?
 - Did you finish the review sheet? Tell me you did.
 - How's your studying going? Be honest. Don't be honest.
+
+@rule react.h.exam_quiz.bad
+on react
+when hook=exam_quiz fit=bad
+- Forget I asked.
+- That's the last thing I need right before the exams.
 
 @rule move.h.exam_quiz.share
 on move.share
@@ -992,6 +1118,12 @@ feel worried
 - We've got a deadline at the {club}. I can't do it alone.
 - Nobody's doing their part at the {club}.
 
+@rule react.h.stressed_club.bad
+on react
+when hook=stressed_club fit=bad
+- You're not the one who has to clean this up.
+- That doesn't fix anything at the club.
+
 @rule move.h.stressed_club.comfort
 on move.comfort
 when hook=stressed_club
@@ -1037,6 +1169,12 @@ feel worried
 - I used to love the {club}. It's not fun lately.
 - I joined the {club} to have fun, you know? What happened?
 - The {club} feels like a job lately. I want to run away.
+
+@rule react.h.stressed_clubdoubt.bad
+on react
+when hook=stressed_clubdoubt fit=bad
+- You don't get it. I really loved that club.
+- Never mind. I shouldn't have brought it up.
 
 @rule move.h.stressed_clubdoubt.comfort
 on move.comfort
@@ -1085,6 +1223,12 @@ feel sad
 - It's been a long day by myself.
 - I haven't really talked to anyone today. Until now, I guess.
 
+@rule react.h.lonely_alone.bad
+on react
+when hook=lonely_alone fit=bad
+- Oh. I'd rather go back to being alone, then.
+- Maybe I was better off not talking.
+
 @rule move.h.lonely_alone.comfort
 on move.comfort
 when hook=lonely_alone
@@ -1130,6 +1274,12 @@ feel sad
 - Everyone paired up in class but me. It's fine.
 - I ended up the odd one out in group work. It happens.
 - We had to get into groups today, and I was left over.
+
+@rule react.h.lonely_oddone.bad
+on react
+when hook=lonely_oddone fit=bad
+- I said it's fine. Let's drop it.
+- Right. I guess that's why nobody picks me.
 
 @rule move.h.lonely_oddone.comfort
 on move.comfort
@@ -1178,6 +1328,12 @@ feel sad
 - Do you ever feel invisible? Today's like that.
 - You're the first person I've really talked to today. That's a little embarrassing.
 
+@rule react.h.lonely_invisible.bad
+on react
+when hook=lonely_invisible fit=bad
+- I shouldn't have said anything.
+- Invisible was better than this.
+
 @rule move.h.lonely_invisible.comfort
 on move.comfort
 when hook=lonely_invisible
@@ -1225,6 +1381,12 @@ feel sad
 - The day felt so long without you.
 - Everything's quieter without you.
 
+@rule react.h.lonely_missyou.bad
+on react
+when hook=lonely_missyou fit=bad
+- I tell you that, and that's what you say?
+- Did you even think of me at all today?
+
 @rule move.h.lonely_missyou.comfort
 on move.comfort
 when hook=lonely_missyou
@@ -1270,6 +1432,12 @@ feel sad
 - Are you free after school? I don't want to go alone.
 - Can we walk home together? Please?
 - Stay with me after class today. I don't want to be by myself.
+
+@rule react.h.lonely_needyou.bad
+on react
+when hook=lonely_needyou fit=bad
+- ...Forget I asked.
+- I thought you'd understand, of all people.
 
 @rule move.h.lonely_needyou.invite
 on move.invite
@@ -1318,6 +1486,12 @@ feel smile
 - I was hoping you'd show up.
 - I had a feeling I'd see you. And here you are.
 
+@rule react.h.flirty_gladyou.bad
+on react
+when hook=flirty_gladyou fit=bad
+- And here I was, glad to see you.
+- Hm. It just got worse.
+
 @rule move.h.flirty_gladyou.praise
 on move.praise
 when hook=flirty_gladyou
@@ -1364,6 +1538,12 @@ feel smile
 - Notice anything? You're not trying hard enough.
 - Look at me. Notice anything different?
 
+@rule react.h.flirty_lookatme.bad
+on react
+when hook=flirty_lookatme fit=bad
+- You're not even trying. Forget it.
+- Never mind. Look somewhere else.
+
 @rule move.h.flirty_lookatme.praise
 on move.praise
 when hook=flirty_lookatme
@@ -1409,6 +1589,12 @@ feel smile
 - I can't focus on class today. Guess what about.
 - I've been daydreaming all morning. Your fault, maybe.
 - My mind keeps wandering today, and I know exactly where to.
+
+@rule react.h.flirty_daydream.bad
+on react
+when hook=flirty_daydream fit=bad
+- And just like that, I can focus again.
+- Thanks. The daydream's over.
 
 @rule move.h.flirty_daydream.ask
 on move.ask
@@ -1457,6 +1643,12 @@ fit tease=neutral
 - I just couldn't put my phone down. One more, I said.
 - Last night was a mistake. I need a nap, badly.
 
+@rule react.h.sleepy_latenight.bad
+on react
+when hook=sleepy_latenight fit=bad
+- I'm too tired for this.
+- Scold me after my nap. Or don't.
+
 @rule move.h.sleepy_latenight.ask
 on move.ask
 when hook=sleepy_latenight
@@ -1503,6 +1695,12 @@ fit tease=neutral
 - The teacher caught me nodding off.
 - My notes turn into squiggles after the first line. I can't read them.
 - I wrote half my notes in a straight line down the page.
+
+@rule react.h.sleepy_class.bad
+on react
+when hook=sleepy_class fit=bad
+- My head's too heavy for that.
+- Mmh. I'm going to pretend I didn't hear that.
 
 @rule move.h.sleepy_class.ask
 on move.ask
@@ -1551,6 +1749,12 @@ fit tease=neutral
 - My eyes keep closing. Talk slowly.
 - If I lean on you, don't take it personally. I'm fading.
 
+@rule react.h.sleepy_fading.bad
+on react
+when hook=sleepy_fading fit=bad
+- You woke me up, and not in a good way.
+- Not now. I'm barely standing.
+
 @rule move.h.sleepy_fading.invite
 on move.invite
 when hook=sleepy_fading
@@ -1596,6 +1800,12 @@ fit tease=neutral
 - I put my shoes on the wrong feet this morning. I'm not okay.
 - I got off the train one stop late. That's how tired.
 - I walked into the wrong classroom. I sat down, too.
+
+@rule react.h.sleepy_clumsy.bad
+on react
+when hook=sleepy_clumsy fit=bad
+- It's been hard enough just getting through today.
+- I can't. I've been a mess since I got up.
 
 @rule move.h.sleepy_clumsy.ask
 on move.ask
@@ -1644,6 +1854,12 @@ feel pout
 - Terrible, okay? Can we not?
 - I'd rather not get into it.
 
+@rule react.h.upset_noask.bad
+on react
+when hook=upset_noask fit=bad
+- I said I don't want to talk about it.
+- Why can't you just leave it alone?
+
 @rule move.h.upset_noask.comfort
 on move.comfort
 when hook=upset_noask
@@ -1690,6 +1906,12 @@ feel pout
 - I smiled through the whole morning. I can't anymore.
 - I'm tired of pretending I'm okay today.
 
+@rule react.h.upset_holding.bad
+on react
+when hook=upset_holding fit=bad
+- I can't do this right now.
+- I held it in all day, and this is what I get?
+
 @rule move.h.upset_holding.comfort
 on move.comfort
 when hook=upset_holding
@@ -1735,6 +1957,12 @@ feel pout
 - I'm bad company today. Fair warning.
 - If you came to cheer me up, it won't work.
 - I'm not in the mood to be nice. Just so you know.
+
+@rule react.h.upset_badcompany.bad
+on react
+when hook=upset_badcompany fit=bad
+- I warned you.
+- Told you. Go find somebody else.
 
 @rule move.h.upset_badcompany.comfort
 on move.comfort
@@ -1783,6 +2011,12 @@ feel pout
 - Why does it always go like this? Forget it.
 - Nothing I do comes out right. Never mind.
 
+@rule react.h.upset_event.bad
+on react
+when hook=upset_event fit=bad
+- You really don't get it. Forget it.
+- That's exactly the kind of thing that made today bad.
+
 @rule move.h.upset_event.comfort
 on move.comfort
 when hook=upset_event
@@ -1828,6 +2062,12 @@ feel laugh
 - AMAZING! I got a perfect score on the quiz!
 - The best! I won at rock-paper-scissors five times!
 - Today's a ten out of ten! No, eleven! I keep winning at everything!
+
+@rule react.h.genki_high.bad
+on react
+when hook=genki_high fit=bad
+- Hey! You're killing my winning streak!
+- Boo! I was on a roll!
 
 @rule move.h.genki_high.ask
 on move.ask
@@ -1875,6 +2115,12 @@ feel laugh
 - I did a hundred jumps at break! Try and stop me!
 - I ate two lunches and I'm not even full! I'm unstoppable!
 
+@rule react.h.genki_energy.bad
+on react
+when hook=genki_energy fit=bad
+- Nope! Not slowing down for that!
+- Too slow! I'm out of here!
+
 @rule move.h.genki_energy.invite
 on move.invite
 when hook=genki_energy
@@ -1921,6 +2167,12 @@ opens ask,share,praise
 - The schedule held, for once.
 - I reorganized my notes during break. It was efficient.
 
+@rule react.h.cool_report.bad
+on react
+when hook=cool_report fit=bad
+- That was unnecessary.
+- I see. I'll get back to my work, then.
+
 @rule move.h.cool_report.ask
 on move.ask
 when hook=cool_report
@@ -1966,6 +2218,12 @@ opens ask,share,tease
 - It's fine. Is there a reason you want to know?
 - You came over to ask that?
 - Nothing dramatic, sorry to disappoint.
+
+@rule react.h.cool_why.bad
+on react
+when hook=cool_why fit=bad
+- I see. Then there's nothing more to say.
+- This is why I ask what you want.
 
 @rule move.h.cool_why.ask
 on move.ask
@@ -2014,6 +2272,12 @@ feel pout
 - Don't think I was waiting for you.
 - I was just standing here. Don't get the wrong idea.
 
+@rule react.h.tsun_notcare.bad
+on react
+when hook=tsun_notcare fit=bad
+- See? That's exactly why I don't care.
+- I-idiot! Forget I said anything!
+
 @rule move.h.tsun_notcare.tease
 on move.tease
 when hook=tsun_notcare
@@ -2059,6 +2323,12 @@ feel pout
 - I had an extra drink. You can have it. It's not for you.
 - I bought too much, so whatever. Just take it.
 - This was on sale, and I don't want it. Take it.
+
+@rule react.h.tsun_gift.bad
+on react
+when hook=tsun_gift fit=bad
+- Give it back. You don't deserve it.
+- Fine! I'll keep it, then!
 
 @rule move.h.tsun_gift.praise
 on move.praise
@@ -2106,6 +2376,12 @@ feel pout
 - I just got the top score. It was easy.
 - Ninety-eight on the quiz. Not that I care.
 
+@rule react.h.tsun_quiz.bad
+on react
+when hook=tsun_quiz fit=bad
+- Hmph. I knew you wouldn't get it.
+- As if your opinion counted in the first place.
+
 @rule move.h.tsun_quiz.praise
 on move.praise
 when hook=tsun_quiz
@@ -2152,6 +2428,12 @@ opens share,tease,invite
 - Literally nothing's happened, it's tragic. Got any tea?
 - Same old. Whatcha got for me?
 
+@rule react.h.gyaru_meh.bad
+on react
+when hook=gyaru_meh fit=bad
+- Ugh, that's even more boring.
+- Zero out of ten. Try again never.
+
 @rule move.h.gyaru_meh.share
 on move.share
 when hook=gyaru_meh
@@ -2196,6 +2478,12 @@ opens praise,ask,tease
 - My hair's perfect and nobody noticed. Rude.
 - I got new nails and nobody said a word. Look at them.
 - I did my whole look this morning and the whole class slept through it. Tragic.
+
+@rule react.h.gyaru_look.bad
+on react
+when hook=gyaru_look fit=bad
+- Wow. Rude. You and the whole class.
+- Nope. You don't get to look anymore.
 
 @rule move.h.gyaru_look.praise
 on move.praise
@@ -2243,6 +2531,12 @@ feel shy
 - I finished a book at break. I found a good spot to sit.
 - U-um, it was fine. I just read in a quiet spot.
 
+@rule react.h.shy_quiet.bad
+on react
+when hook=shy_quiet fit=bad
+- O-oh... I'll go back to my book.
+- S-sorry. I should have stayed in my spot.
+
 @rule move.h.shy_quiet.ask
 on move.ask
 when hook=shy_quiet
@@ -2289,6 +2583,12 @@ feel shy
 - I answered a question in class. My voice shook.
 - I, um, talked in front of the group today. Only a little.
 
+@rule react.h.shy_smallwin.bad
+on react
+when hook=shy_smallwin fit=bad
+- I... I shouldn't have told you.
+- O-oh. It wasn't a big thing anyway.
+
 @rule move.h.shy_smallwin.praise
 on move.praise
 when hook=shy_smallwin
@@ -2333,6 +2633,12 @@ opens ask,invite,praise
 feel shy
 - I fed the cat behind the gym. Please don't tell anyone.
 - There's a cat behind the gym. I've been feeding it. It's a secret.
+
+@rule react.h.shy_cat.bad
+on react
+when hook=shy_cat fit=bad
+- P-please forget about the cat.
+- I shouldn't have told you about it...
 
 @rule move.h.shy_cat.ask
 on move.ask
@@ -2379,6 +2685,12 @@ opens ask,tease,invite
 - I had a whole dream in history class. It was a good one.
 - I dreamed about pudding.
 
+@rule react.h.lazy_nap.bad
+on react
+when hook=lazy_nap fit=bad
+- Too loud. Going back to sleep.
+- Mmh... that was better in the dream.
+
 @rule move.h.lazy_nap.ask
 on move.ask
 when hook=lazy_nap
@@ -2423,6 +2735,12 @@ opens ask,tease,invite
 - I'm saving my energy. For what, I don't know.
 - Moving is overrated. You go ahead.
 - The sun's so warm on this desk. Mmh.
+
+@rule react.h.lazy_saving.bad
+on react
+when hook=lazy_saving fit=bad
+- That costs too much energy. Pass.
+- Mmh. No. Goodnight.
 
 @rule move.h.lazy_saving.ask
 on move.ask
@@ -2470,6 +2788,12 @@ feel smile
 - Lunch with {who} was fun. I like eating with {who}.
 - {Who} did an impression of the teacher. I almost choked.
 - We got so busy talking, {who} and I, we almost missed the bell.
+
+@rule react.h.lunchwith.bad
+on react
+when hook=lunchwith fit=bad
+- Don't spoil a nice lunch.
+- Hey, I was telling you about something nice.
 
 @rule move.h.lunchwith.ask
 on move.ask
@@ -2520,6 +2844,12 @@ fit comfort=good
 - I said something to {who} I can't unsay.
 - {Who} walked right past me this morning. It hurts more than I thought.
 
+@rule react.h.fightwith.bad
+on react
+when hook=fightwith fit=bad
+- You're just making it worse.
+- I knew I shouldn't have brought it up.
+
 @rule move.h.fightwith.comfort
 on move.comfort
 when hook=fightwith
@@ -2567,6 +2897,12 @@ feel smile
 - {Who} and I made up. What a relief.
 - We sat on the stairs and talked for an hour, {who} and I. I feel lighter.
 
+@rule react.h.madeupwith.bad
+on react
+when hook=madeupwith fit=bad
+- We just made up. Don't stir it up.
+- Can't you just be glad for us?
+
 @rule move.h.madeupwith.praise
 on move.praise
 when hook=madeupwith
@@ -2613,6 +2949,12 @@ feel shy
 - Um... yes. {Who} and I are going out. I'm still pinching myself.
 - So, it's official. Me and {who}. Please don't tease me.
 - I keep waiting for someone to say it's a joke, {who} and me.
+
+@rule react.h.datingwith.bad
+on react
+when hook=datingwith fit=bad
+- See, this is why I didn't want to tell anyone.
+- You could at least be happy for me.
 
 @rule move.h.datingwith.tease
 on move.tease
@@ -2662,6 +3004,12 @@ fit comfort=good
 - I read the same page four times. {Fightwho} keeps getting in my head.
 - If you came to talk about {fightwho}, I'll hide behind this book.
 
+@rule react.h.rain_bookfight.bad
+on react
+when hook=rain_bookfight fit=bad
+- I came here to stop thinking about that.
+- Let me read. Please.
+
 @rule move.h.rain_bookfight.comfort
 on move.comfort
 when hook=rain_bookfight
@@ -2696,6 +3044,12 @@ feel smile
 - I've been reading all afternoon. The rain makes it better.
 - Rainy days are library days. I found the best seat by the window.
 - This author writes rainy scenes so well. It's like being inside the book.
+
+@rule react.h.rain_book.bad
+on react
+when hook=rain_book fit=bad
+- You're louder than the rain. Shh.
+- I'd like to get back to my book now.
 
 @rule move.h.rain_book.ask
 on move.ask
@@ -2744,6 +3098,12 @@ feel smile
 - I walked here the long way, in the rain. On purpose.
 - I wish it rained every day. Listen to that sound.
 
+@rule react.h.rain_lover.bad
+on react
+when hook=rain_lover fit=bad
+- You can't ruin the rain for me. But you're trying.
+- I'll go listen to the rain instead.
+
 @rule move.h.rain_lover.ask
 on move.ask
 when hook=rain_lover
@@ -2790,6 +3150,12 @@ feel pout
 - Practice got moved inside, so now we're all squashed in the gym.
 - I'm SO bored. Rain means no going outside.
 - I can't be inside this long! This building's too small for me today!
+
+@rule react.h.rain_cooped.bad
+on react
+when hook=rain_cooped fit=bad
+- As if being stuck in here wasn't bad enough!
+- I'm already climbing the walls. Don't.
 
 @rule move.h.rain_cooped.ask
 on move.ask
@@ -2838,6 +3204,12 @@ feel smile
 - I've been watching the rain from the window. It's peaceful.
 - Everyone's voices sound softer today. The school's so quiet in the rain.
 
+@rule react.h.rain_soft.bad
+on react
+when hook=rain_soft fit=bad
+- It was such a peaceful day, too.
+- I think I'll go back to my window.
+
 @rule move.h.rain_soft.share
 on move.share
 when hook=rain_soft
@@ -2884,6 +3256,12 @@ opens share,ask
 - People get loud when they can't go out.
 - The cafeteria's unbearable on days like this.
 
+@rule react.h.rain_cool.bad
+on react
+when hook=rain_cool fit=bad
+- And now you're adding to the noise.
+- Another reason to stay away from people today.
+
 @rule move.h.rain_cool.share
 on move.share
 when hook=rain_cool
@@ -2919,6 +3297,12 @@ feel smile
 - Rain all day. I was hoping someone would rescue me.
 - I'm stuck inside and bored. Do something about it.
 
+@rule react.h.rain_tease.bad
+on react
+when hook=rain_tease fit=bad
+- I was hoping for a better rescue.
+- Hm. I was better off bored.
+
 @rule move.h.rain_tease.tease
 on move.tease
 when hook=rain_tease
@@ -2953,6 +3337,12 @@ opens ask,share,invite
 - Everyone's talking about the rain later.
 - I can smell it coming. It's going to pour.
 - Look at those clouds. Any minute now.
+
+@rule react.h.rainlater_sky.bad
+on react
+when hook=rainlater_sky fit=bad
+- Keep that up and I'll leave before it pours.
+- I'd rather watch the clouds, thanks.
 
 @rule move.h.rainlater_sky.ask
 on move.ask
@@ -3002,6 +3392,12 @@ fit comfort=good
 - The lights flickered during class. Everyone screamed.
 - The windows are rattling. Is that normal?
 
+@rule react.h.storm.bad
+on react
+when hook=storm fit=bad
+- Not now! I can't think with all this thunder!
+- You're not helping! That one was close!
+
 @rule move.h.storm.comfort
 on move.comfort
 when hook=storm
@@ -3038,6 +3434,12 @@ fit comfort=good
 - I've been avoiding {fightwho} all day.
 - I keep replaying the fight with {fightwho}.
 
+@rule react.h.fightplace.bad
+on react
+when hook=fightplace fit=bad
+- You don't know what happened, so stop.
+- I don't want to talk about that fight anymore.
+
 @rule move.h.fightplace.comfort
 on move.comfort
 when hook=fightplace
@@ -3070,6 +3472,12 @@ opens ask,share,tease
 - [Two classes down, three to go.|Normal so far.|The usual.] [Nobody's set anything on fire yet.|The chalk still works.|I'll take it.]
 - It's a teacher's day, that's all. [Lessons, papers, more papers.|Attendance, lessons, coffee.]
 - Not bad. Quiet, for once.
+
+@rule react.h.t_fine.bad
+on react
+when hook=t_fine fit=bad
+- Let's keep today normal, shall we?
+- That's enough of that. Don't you have somewhere to be?
 
 @rule move.h.t_fine.ask
 on move.ask
@@ -3117,6 +3525,12 @@ feel smile
 - [You can tell, huh?|Do I look that happy?] [I just saw my new pay slip.|Let's just say the principal signed a very nice paper.]
 - [Today's a good day to be a teacher.|I might actually buy myself something nice.] A raise does that.
 
+@rule react.h.t_raise.bad
+on react
+when hook=t_raise fit=bad
+- I'll pretend I never told you.
+- Keep that up and I'll regret telling you.
+
 @rule move.h.t_raise.ask
 on move.ask
 when hook=t_raise
@@ -3162,6 +3576,12 @@ feel smile
 - [My class's test results came in.|The averages are in.] [They actually listened to me!|Best scores I've had all year.]
 - [You know what makes a teacher happy?|I'm so proud today.] [Good grades, that's what.|Even my worst student passed.]
 - [I graded the last test this morning.|All that nagging paid off.] [Everyone passed!|I could cry. A happy cry.]
+
+@rule react.h.t_results.bad
+on react
+when hook=t_results fit=bad
+- Don't spoil the best day of my term.
+- You could try that attitude on your own grades.
 
 @rule move.h.t_results.ask
 on move.ask
@@ -3209,6 +3629,12 @@ feel smile
 - [Someone important noticed my work.|It's nice to be told you're doing well.] [Don't laugh.|At my age, too.]
 - I've been floating since this morning. The principal said something nice. [That never happens.|Enjoy it while it lasts.]
 
+@rule react.h.t_praise.bad
+on react
+when hook=t_praise fit=bad
+- Thanks for bringing me back to earth.
+- It was nice while it lasted.
+
 @rule move.h.t_praise.ask
 on move.ask
 when hook=t_praise
@@ -3254,6 +3680,12 @@ feel sad
 - [I was up until three grading exams.|I didn't sleep.] [The red pen is still in my hand.|Forty papers, and half of them blank.|I saw the sunrise from my desk.]
 - [Mmh... sorry, I'm half asleep.|Don't mind the yawning.] [I corrected tests all night.|Grading took all night.]
 - Who writes essays in that handwriting? [I read the same answer thirty times.|I graded until morning.]
+
+@rule react.h.t_grading_sleepy.bad
+on react
+when hook=t_grading_sleepy fit=bad
+- I've been reading nonsense all night. I can't take more.
+- Not today. I'm too tired to be polite.
 
 @rule move.h.t_grading_sleepy.comfort
 on move.comfort
@@ -3301,6 +3733,12 @@ feel worried
 - [Grading, grading, grading.|There aren't enough hours for all these tests.] [I'll be fine. Probably.|The deadline is tomorrow.]
 - [If one more student asks about their score...|I still have two classes' worth of papers.] [Sorry. It's not you.|Give me strength.]
 
+@rule react.h.t_grading_stressed.bad
+on react
+when hook=t_grading_stressed fit=bad
+- Do you see these papers? Not now.
+- I have no time for this.
+
 @rule move.h.t_grading_stressed.comfort
 on move.comfort
 when hook=t_grading_stressed
@@ -3346,6 +3784,12 @@ feel sad
 - [I rewrote my lesson plan until dawn.|Tomorrow's lesson kept me up.] [It still isn't good.|Nobody warns you about this part of the job.]
 - [Mmh... lesson plans.|I fell asleep on my notes.] [I have ink on my face, don't I?|Don't tell the class.]
 - I kept thinking of a better way to explain it. [At three in the morning.|Sleep didn't stand a chance.]
+
+@rule react.h.t_lessons.bad
+on react
+when hook=t_lessons fit=bad
+- I gave that lesson my whole night. Let it go.
+- Save it until I've slept.
 
 @rule move.h.t_lessons.comfort
 on move.comfort
@@ -3393,6 +3837,12 @@ feel sad
 - [Teachers can't say no to the principal's drink.|The other teachers dragged me out last night.] [My head hurts.|Don't tell the students.]
 - Forget anything you think you know about teachers. Last night's staff party happened.
 
+@rule react.h.t_staffparty.bad
+on react
+when hook=t_staffparty fit=bad
+- Not so loud. And not that.
+- My head can't take this. Go.
+
 @rule move.h.t_staffparty.tease
 on move.tease
 when hook=t_staffparty
@@ -3438,6 +3888,12 @@ feel worried
 - [Parent meetings all week.|I had three parents in a row today.] [Everyone's child is a genius, apparently.|Smile, nod, repeat.]
 - Being polite to parents for an hour is exhausting. I need a quiet room.
 - [One mother called me at home.|I've been on the phone with parents since morning.] [At home!|About a B-plus.]
+
+@rule react.h.t_parents.bad
+on react
+when hook=t_parents fit=bad
+- I've been polite for hours. Don't test it.
+- I have no patience left today.
 
 @rule move.h.t_parents.comfort
 on move.comfort
@@ -3485,6 +3941,12 @@ feel worried
 - [Another meeting about the budget.|Another form from the principal's office.] [We have less chalk than ambition.|I became a teacher to teach.]
 - If I look tense, it's the principal. Don't repeat that.
 
+@rule react.h.t_principal.bad
+on react
+when hook=t_principal fit=bad
+- Please. I get enough of that from the principal.
+- I've had my fill of that today.
+
 @rule move.h.t_principal.comfort
 on move.comfort
 when hook=t_principal
@@ -3530,6 +3992,12 @@ feel sad
 - [A parent complained about me.|Someone went to the principal about my class.] [After everything I do for those kids.|I had to apologize. Me.]
 - A complaint came in about me. One complaint undoes a year of work.
 - [Teachers aren't supposed to look upset.|I'm keeping it together, more or less.] [That complaint hurt.|I'll be professional tomorrow.]
+
+@rule react.h.t_complaint.bad
+on react
+when hook=t_complaint fit=bad
+- Would you like to file one too?
+- That's what I get for opening up at school.
 
 @rule move.h.t_complaint.comfort
 on move.comfort
@@ -3577,6 +4045,12 @@ feel sad
 - [I confiscated three phones today.|I explained it twice to a room of phones.] I'm tired of being the bad guy.
 - Sometimes I wonder if any of it sticks. Do you actually listen in class?
 
+@rule react.h.t_ignored.bad
+on react
+when hook=t_ignored fit=bad
+- Now I know you don't listen either.
+- And you wonder why I'm tired.
+
 @rule move.h.t_ignored.comfort
 on move.comfort
 when hook=t_ignored
@@ -3621,6 +4095,12 @@ opens ask,tease,invite
 - [Two hours of staff meeting.|The staff meeting went on forever.] [About the color of the new folders.|I drew a whole cat in my notes.]
 - [I've been counting ceiling tiles in the staff meeting.|If I have to hear "as discussed" one more time...] Rescue me.
 - Nothing happens in the staff room but meetings. Say something interesting.
+
+@rule react.h.t_meeting.bad
+on react
+when hook=t_meeting fit=bad
+- That was somehow worse than the meeting.
+- I'd rather go back to the meeting.
 
 @rule move.h.t_meeting.ask
 on move.ask
@@ -3668,6 +4148,12 @@ feel sad
 - [Teachers eat lunch alone a lot, you know.|Students have each other. We have marking.] [It's fine.|Don't feel sorry for me.]
 - It's nice that you came to talk. Nobody talks to a teacher unless they need something.
 
+@rule react.h.t_staffroom.bad
+on react
+when hook=t_staffroom fit=bad
+- I shouldn't have said that to you.
+- Go on, then. I have marking to do.
+
 @rule move.h.t_staffroom.ask
 on move.ask
 when hook=t_staffroom
@@ -3712,6 +4198,12 @@ opens ask,tease,invite
 - [I worked through lunch.|I skipped lunch to finish these papers.] [My stomach is louder than my class.|Don't be like me.]
 - I've had coffee and half a sandwich since morning. A teacher's diet.
 - I can't teach on an empty stomach. Next period is going to be rough.
+
+@rule react.h.t_nolunch.bad
+on react
+when hook=t_nolunch fit=bad
+- I don't have the energy for this.
+- Not on an empty stomach, please.
 
 @rule move.h.t_nolunch.ask
 on move.ask
@@ -3758,6 +4250,12 @@ feel smile
 - I'm in a strange mood today. Must be the weather.
 - I let my mind wander during a lesson today. Don't tell anyone.
 - Mm, I should be working. I can't seem to take anything seriously today.
+
+@rule react.h.t_playful.bad
+on react
+when hook=t_playful fit=bad
+- And the mood's gone. Back to work.
+- I should be taking things seriously. Thank you for the reminder.
 
 @rule move.h.t_playful.tease
 on move.tease

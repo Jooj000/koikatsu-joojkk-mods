@@ -19,7 +19,16 @@ namespace Joojkk.CampusLife
     {
         private static readonly System.Reflection.MethodInfo EnterFuncMethod = AccessTools.Method(typeof(TalkScene), "EnterFunc");
         private static readonly System.Reflection.MethodInfo ExitFuncMethod = AccessTools.Method(typeof(TalkScene), "ExitFunc");
-        private static readonly System.Reflection.FieldInfo TouchWaitField = AccessTools.Field(typeof(TalkScene), "touchDisposableInfo");
+        // The game's own areas: they listen from StartSelection until a touch or a command ends them (disposableTouch set).
+        // Ours answer at the same moments. Not touchDisposableInfo.check (it stays true after every touch until the next
+        private static readonly System.Reflection.FieldInfo GameAreasField = AccessTools.Field(typeof(TalkScene), "lstColDisposable");
+
+        private static bool GameAreasOn(TalkScene ts)
+        {
+            var all = GameAreasField != null ? GameAreasField.GetValue(ts) as System.Collections.IList : null;
+            if (all == null || all.Count == 0) return true;
+            return Traverse.Create(all[0]).Property("disposableTouch").GetValue() != null;
+        }
         private static TalkScene _spotsTalk;
         private static readonly Dictionary<string, int> SpotCount = new Dictionary<string, int>();
         private static Transform _mouth;
@@ -70,18 +79,11 @@ namespace Joojkk.CampusLife
                 var h = __instance.targetHeroine;
                 var cha = h != null ? h.chaCtrl : null;
                 if (!Campus.On || cha == null || cha.objBodyBone == null) return;
-                var layer = LayerMask.NameToLayer("Chara");
+                var butt = new List<string>();
                 foreach (var side in new[] { "L", "R" })
                 {
-                    var bone = cha.objBodyBone.transform.FindLoop("cf_j_siri_" + side);
-                    if (bone == null) continue;
-                    var go = new GameObject("cl_touch_butt_" + side) { layer = layer };
-                    go.transform.SetParent(bone.transform, false);
-                    // Her left is the screen's right: out to the side of the hip, where you can reach from the front.
-                    go.transform.position = bone.transform.position + cha.transform.right * (side == "L" ? -0.05f : 0.05f);
-                    var col = go.AddComponent<SphereCollider>();
-                    col.radius = 0.075f / Mathf.Max(0.01f, go.transform.lossyScale.x);
-                    go.AddComponent<TouchSpot>().Kind = "butt";
+                    var spot = ButtArea(cha, side, false);
+                    if (spot != null) butt.Add(spot.Shape);
                 }
                 var head = cha.objHeadBone != null ? cha.objHeadBone.transform : cha.objBodyBone.transform;
                 foreach (var name in new[] { "cf_J_MouthBase_tr", "cf_J_MouthBase_s", "cf_J_MouthBase_rx", "cf_J_MouthMove" })
@@ -89,9 +91,60 @@ namespace Joojkk.CampusLife
                     var m = head.FindLoop(name);
                     if (m != null) { _mouth = m.transform; break; }
                 }
-                CampusLifePlugin.Log.LogDebug("Talk touch areas: butt " + cha.GetComponentsInChildren<TouchSpot>(true).Length + ", mouth " + (_mouth != null ? _mouth.name : "none"));
+                CampusLifePlugin.Log.LogInfo("Talk touch areas: butt " + (butt.Count > 0 ? string.Join("; ", butt.ToArray()) : "none (no cf_hit_siri)") + ", mouth " + (_mouth != null ? _mouth.name : "none"));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Talk touch areas: " + e.Message); }
+        }
+
+        /// <summary>
+        /// Her butt area: the size and shape of the game's own hip collider cf_hit_siri_L/R (the one H grabs and the physics
+        /// mods sway; user, 2026-11-02: "utilize o mesmo método do vanilla"), copied onto a child of ours. The game's collider
+        /// itself is left alone: with our script on it, it stayed on her after the talk and was switched off under her hands,
+        /// in H too (2026-11-05). The area stays on her body between talks and answers only in a talk with her.
+        /// </summary>
+        internal static TouchSpot ButtArea(ChaControl cha, string side, bool forB)
+        {
+            var hit = cha.objBodyBone.transform.FindLoop("cf_hit_siri_" + side);
+            var src = hit != null ? hit.GetComponent<Collider>() : null;
+            if (src == null) return null;
+            var name = (forB ? "cl_btouch_butt_" : "cl_touch_butt_") + side;
+            var t = hit.transform.Find(name);
+            var go = t != null ? t.gameObject : new GameObject(name);
+            go.layer = LayerMask.NameToLayer("Chara");   // the talk camera's mouse events reach this layer (the old spheres)
+            go.transform.SetParent(hit.transform, false);
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localRotation = Quaternion.identity;
+            go.transform.localScale = Vector3.one;
+            var shape = go.GetComponent<Collider>() != null ? go.GetComponent<Collider>().GetType().Name : CopyCollider(src, go);
+            var spot = go.GetComponent<TouchSpot>();
+            if (spot == null) spot = go.AddComponent<TouchSpot>();
+            spot.Kind = "butt";
+            spot.ForB = forB;
+            spot.Owner = cha;
+            spot.Shape = name + " " + shape + " " + go.GetComponent<Collider>().bounds.size.ToString("F2") + " (game's " + src.GetType().Name + " " + src.bounds.size.ToString("F2") + ")";
+            return spot;
+        }
+
+        private static string CopyCollider(Collider src, GameObject go)
+        {
+            var s = src as SphereCollider;
+            var c = src as CapsuleCollider;
+            var b = src as BoxCollider;
+            var m = src as MeshCollider;
+            if (s != null) { var x = go.AddComponent<SphereCollider>(); x.center = s.center; x.radius = s.radius; }
+            else if (c != null) { var x = go.AddComponent<CapsuleCollider>(); x.center = c.center; x.radius = c.radius; x.height = c.height; x.direction = c.direction; }
+            else if (b != null) { var x = go.AddComponent<BoxCollider>(); x.center = b.center; x.size = b.size; }
+            else if (m != null && m.sharedMesh != null) { var x = go.AddComponent<MeshCollider>(); x.sharedMesh = m.sharedMesh; x.convex = m.convex; }
+            else
+            {
+                // Another kind: a box around it, in our local space.
+                var x = go.AddComponent<BoxCollider>();
+                x.center = go.transform.InverseTransformPoint(src.bounds.center);
+                x.size = go.transform.InverseTransformVector(src.bounds.size);
+                x.size = new Vector3(Mathf.Abs(x.size.x), Mathf.Abs(x.size.y), Mathf.Abs(x.size.z));
+                return "BoxCollider (around " + src.GetType().Name + ")";
+            }
+            return src.GetType().Name;
         }
 
         /// <summary>Her lips, in the touch mode: the game's head or cheek reaction does not play (no kind, no clip), ours does.</summary>
@@ -156,13 +209,18 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>The touch buttons are up and nothing plays (the same moments the game's own areas answer).</summary>
-        private static bool SpotReady(TalkScene ts)
+        private static bool SpotReady(TalkScene ts) { return SpotWhy(ts) == null; }
+
+        /// <summary>Why our areas do not answer now (null: they do).</summary>
+        private static string SpotWhy(TalkScene ts)
         {
-            if (ts == null || ts != G.TalkScene || !Campus.On || TalkBusy() || !CanvasOn(ts)) return false;
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return false;
-            if (TransVoiceField != null && TransVoiceField.GetValue(ts) as UnityEngine.Object != null) return false;
-            var wait = TouchWaitField != null ? TouchWaitField.GetValue(ts) : null;
-            return wait == null || !Traverse.Create(wait).Property("check").GetValue<bool>();
+            string busy;
+            if (ts == null || ts != G.TalkScene || !Campus.On) return "not this talk";
+            if (TalkBusy(out busy)) return busy;
+            if (!CanvasOn(ts)) return "the talk buttons are hidden";
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return "the mouse is over the UI";
+            if (TransVoiceField != null && TransVoiceField.GetValue(ts) as UnityEngine.Object != null) return "her voice is playing";
+            return GameAreasOn(ts) ? null : "the game's areas are off (its touch is still playing)";
         }
 
         internal static void SpotHover(bool on)
@@ -170,9 +228,11 @@ namespace Joojkk.CampusLife
             try
             {
                 var ts = G.TalkScene;
-                if (ts == null || ts != _spotsTalk) return;
-                if (on && SpotReady(ts)) EnterFuncMethod.Invoke(ts, new object[] { "Siri" });
-                else if (!on) ExitFuncMethod.Invoke(ts, new object[] { "Siri" });
+                if (ts == null || ts != _spotsTalk) { TouchNote((on ? "enter" : "exit") + " Siri ignored: not the talk of her areas"); return; }
+                var why = on ? SpotWhy(ts) : null;
+                if (on && why == null) EnterFuncMethod.Invoke(ts, new object[] { "Siri" });
+                else if (on) TouchNote("enter Siri ignored: " + why);
+                else ExitFuncMethod.Invoke(ts, new object[] { "Siri" });
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Talk touch hover: " + e.Message); }
         }
@@ -181,7 +241,11 @@ namespace Joojkk.CampusLife
         internal static void SpotTouch(string part, bool fromSpot)
         {
             var ts = G.TalkScene;
-            if (fromSpot && (!SpotReady(ts) || !ClaimClick())) return;
+            if (fromSpot)
+            {
+                TouchNote("click " + part);
+                if (!SpotReady(ts) || !ClaimClick()) return;
+            }
             if (ts == null || ts.targetHeroine == null) return;
             var h = ts.targetHeroine;
             var look = part == "butt" && ts.touchMode == 1;
@@ -331,12 +395,32 @@ namespace Joojkk.CampusLife
     {
         public string Kind = "";
         public bool ForB;   // on the second girl of the conversation with both (Conversation.BTouch)
+        public ChaControl Owner;   // the girl it is on: her own talk only
+        public string Shape = "";   // for the log: our collider and the game's
 
         private void OnMouseEnter() { Conversation.SpotHover(true); }
 
         private void OnMouseExit() { Conversation.SpotHover(false); }
 
         private static int _frame = -1;
+        private Collider _col;
+
+        /// <summary>
+        /// The first girl's area stays on her body between talks: it is on only in a talk with her (off in the map, in H and in
+        /// anyone else's talk), and a hand resting on her hip, which lies inside it and would lose its clicks (Unity's mouse
+        /// </summary>
+        private void YieldToHand()
+        {
+            if (_col == null) _col = GetComponent<Collider>();
+            if (_col == null) return;
+            var ts = G.TalkScene;
+            var on = Owner != null && ts != null && ts.targetHeroine != null && ts.targetHeroine.chaCtrl == Owner;
+            var cam = on ? Camera.main : null;
+            if (cam != null)
+                foreach (var hit in Physics.RaycastAll(cam.ScreenPointToRay(Input.mousePosition), 30f, cam.eventMask & cam.cullingMask, QueryTriggerInteraction.Collide))
+                    if (hit.collider.tag == "Com/Hit/HandL" || hit.collider.tag == "Com/Hit/HandR") { on = false; break; }
+            if (_col.enabled != on) _col.enabled = on;
+        }
 
         private void OnMouseDown()
         {
@@ -352,9 +436,10 @@ namespace Joojkk.CampusLife
         /// </summary>
         private void Update()
         {
-            if (!ForB || !Input.GetMouseButtonDown(0) || _frame == Time.frameCount) return;
             try
             {
+                if (!ForB) YieldToHand();
+                if (!ForB || !Input.GetMouseButtonDown(0) || _frame == Time.frameCount) return;
                 var cam = Camera.main;
                 if (cam == null) return;
                 TouchSpot best = null;
@@ -362,7 +447,8 @@ namespace Joojkk.CampusLife
                 foreach (var hit in Physics.RaycastAll(cam.ScreenPointToRay(Input.mousePosition), 30f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
                 {
                     var spot = hit.collider != null ? hit.collider.GetComponent<TouchSpot>() : null;
-                    if (spot != null && spot.ForB && hit.distance < near) { best = spot; near = hit.distance; }
+                    var d = hit.distance - (spot != null && spot.Kind == "hand" ? 0.15f : 0f);   // a hand on her hip comes first here too
+                    if (spot != null && spot.ForB && d < near) { best = spot; near = d; }
                 }
                 _frame = Time.frameCount;
                 if (best != null) Conversation.BTouch(best.Kind, true);

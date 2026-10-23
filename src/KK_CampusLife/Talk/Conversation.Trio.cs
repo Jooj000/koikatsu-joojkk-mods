@@ -1092,8 +1092,8 @@ namespace Joojkk.CampusLife
             if (t == null) return;
             var b = new SceneBuilder(t.A, true);
             b.Me(Lines.Pick("I should get going. See you two later.", "Sorry, I have to run. Later!", "I'll leave you two to it."));
-            Say2(b, t.A, t.B, "duo3.bye.a", T(t.A, "Ah, okay... see you. || Okay... see you. || Alright, bye then. || See you later...", "Aww, already? Bye! || Already? Bye! || Aww! Bye! || Leaving? See ya!", "Later. || Later. || Bye. || Until next time.", "Running away? Bye~ || Fleeing? Bye~ || Running off? Bye. || Escaping? Later~"));
-            Say2(b, t.B, t.A, "duo3.bye.b", T(t.B, "Bye bye... || Bye bye... || See you... || Take care...", "See ya! || See ya! || Bye bye! || Later!", "...Bye. || ...Bye. || ...Later. || ...Farewell.", "Don't be a stranger~ || Don't be a stranger~ || Come back soon~ || Miss me~"));
+            Say2(b, t.A, t.B, "duo3.bye.a", "...");
+            Say2(b, t.B, t.A, "duo3.bye.b", "...");
             t.Ending = "leave";
             Hide();
             if (!Scenes.PlayInTalk(b, c => TrioEnd("leave"), false)) TrioEnd("leave");

@@ -28,6 +28,7 @@ namespace Joojkk.CampusSaves
         public static bool Asking;         // the game's confirmation screen is up, in front of whatever asked
 
         private static SavesPanel _me;
+        internal static string ScrollState { get { return _me == null ? "no panel" : "grid " + _me._grid.y.ToString("0") + ", list " + _me._list.y.ToString("0"); } }
         private static Action _loadNext, _afterTitle;
         private static bool _offerFree;
         private Vector2 _grid, _list;
@@ -669,7 +670,7 @@ namespace Joojkk.CampusSaves
             Campuses.Run(() =>
             {
                 var known = Campuses.Snapshot();
-                var slots = Directory.GetFiles(Campuses.GameDir, "*.dat").Select(Path.GetFileName).Where(f => known.All(c => !c.Imported.Contains(f) && c.Slot != f && c.Vault.Snapshot().All(v => v.Slot != f))).ToList();
+                var slots = Directory.GetFiles(Campuses.GameDir, "*.dat").Select(Path.GetFileName).Where(f => !Campuses.Testing || f.StartsWith(Campuses.TestSlots)).Where(f => known.All(c => !c.Imported.Contains(f) && c.Slot != f && c.Vault.Snapshot().All(v => v.Slot != f))).ToList();
                 var groups = new Dictionary<string, List<string>>();
                 var heads = new Dictionary<string, SaveHeader>();
                 foreach (var f in slots)
