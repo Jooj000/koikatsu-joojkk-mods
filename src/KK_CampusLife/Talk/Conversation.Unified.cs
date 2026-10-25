@@ -542,18 +542,13 @@ namespace Joojkk.CampusLife
         /// <summary>A wary yes: a flustered beat before her line.</summary>
         private static string WaryLead(SaveData.Heroine h)
         {
-            return T(h, "Eh... um... || A-ah... || Um... || Oh... um...", "W-whoa, okay... || Eh?! Um... || H-hey... || Uh... wow...", "...Hm. || ...... || ...Well. || ...Oh.", "W-well... || Hmph... || Oh... || My, my...") + " ";
+            return RomanceSay(h, "wary", "lead") + " ";
         }
 
         /// <summary>A wary no: she wanted to take it and something held her back; flustered, never cold.</summary>
         private static string WaryNoLine(SaveData.Heroine h, bool spicy)
         {
-            return spicy
-                ? T(h, "...I-I can't answer that. Not yet. Please don't stop liking me. || ...My face is burning. Let's... not, for now. || ...I want to say something back. I just can't. Not yet. || ...Ask me again some other time. Please.",
-                    "Ahh, you can't just SAY stuff like that! ...Ask me later, okay?! || Wh-what am I supposed to say to that?! Later! || My brain just stopped! Give me a minute! || Not fair! ...Ask me again sometime.",
-                    "...Don't say things like that here. ...Not that I hated it. || ...Not now. Ask me again. || ...I'm not answering that. Yet. || ...You'll have to wait for that one.",
-                    "Oh, you're tempting me. ...Not today. || Mm, nice try. Ask me another day~ || Careful, I almost said yes. || Not yet. Keep trying, though~")
-                : RomanceSay(h, "wary", "no");
+            return RomanceSay(h, "wary", spicy ? "no_spicy" : "no");
         }
 
         private static void BuildRomance(Session s, SaveData.Heroine h, GirlState gs, List<UEntry> l)
@@ -1393,10 +1388,9 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var a = FlirtAnswer(h, true, "tease");
             var ok = Took(a);
-            var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
             b.Me(ctx[1]);
-            b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Pout).Her_(a == "wary_no" ? WaryNoLine(h, true) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceLines.TeaseGood(tone, Lines.Closeness(h)) : RomanceLines.TeaseBad(tone));
+            b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Pout).Her_(a == "wary_no" ? WaryNoLine(h, true) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceSay(h, "tease", "yes") : RomanceSay(h, "tease", "no"));
             Plain(h, Lvl.Spicy, QOf(a), "tease:" + ctx[0], b, ok ? "♥ " + GirlInfo.FirstName(h) + " is flustered." : null);
         }
 
@@ -1405,10 +1399,9 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var a = FlirtAnswer(h, true, "whisper");
             var ok = Took(a);
-            var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerWhisper(h.isGirlfriend));
-            b.Face(h, a == "yes" ? Feel.Love : ok || a == "wary_no" ? Feel.Shy : Feel.Pout).Her_(a == "wary_no" ? WaryNoLine(h, true) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceLines.WhisperGood(tone, h.isGirlfriend) : RomanceLines.WhisperBad(tone));
+            b.Me(RomanceMe(h, "whisper", GfLvl(h)));
+            b.Face(h, a == "yes" ? Feel.Love : ok || a == "wary_no" ? Feel.Shy : Feel.Pout).Her_(a == "wary_no" ? WaryNoLine(h, true) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceSay(h, "whisper", "yes", GfLvl(h)) : RomanceSay(h, "whisper", "no"));
             Plain(h, Lvl.Spicy, QOf(a), "whisper", b, ok ? "♥ " + GirlInfo.FirstName(h) + " is breathing faster." : null, () =>
             {
                 if (ok && Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
@@ -1422,12 +1415,10 @@ namespace Joojkk.CampusLife
             var strong = a == "yes" && (MoodOf(h) == CampusLife.Mood.Flirty || h.lewdness >= 50 || h.isGirlfriend);
             var q = strong ? Q.Good : a == "no" ? Q.Bad : Q.Neutral;
             var b = new SceneBuilder(h, true);
-            b.Me(h.isGirlfriend ? "I can't stop thinking about you. All of you." : "Honestly? I've been wanting to get a lot closer to you.");
-            b.Face(h, q == Q.Good ? Feel.Love : q == Q.Neutral ? Feel.Shy : Feel.Pout).Her_(q == Q.Good
-                ? T(h, "...M-me too. Don't make me say it twice. || ...Me too. Don't make me repeat it. || ...I feel the same. || ...Me too... so much.", "Ah... you can't just SAY that! ...But me too. || You can't just say that! ...Me too! || Ahh! ...Me too! || Hey! ...Same!", "...Then come closer. || ...Then come here. || ...Closer. || ...Same.", "Finally. I was wondering when you'd say it. || Finally. Took you long enough. || About time you said it. || Knew it. Me too.")
+            b.Me(RomanceMe(h, "bold", GfLvl(h)));
+            b.Face(h, q == Q.Good ? Feel.Love : q == Q.Neutral ? Feel.Shy : Feel.Pout).Her_(q == Q.Good ? RomanceSay(h, "bold", "yes")
                 : a == "wary_no" ? WaryNoLine(h, true)
-                : q == Q.Neutral ? T(h, "Eh... th-that's... um... || Eh... that's... um... || Ah... um... || W-well...", "Whoa, okay! That's... a lot! || Whoa! That's a lot! || Wow, okay! || Eep!", "...Bold. || ...Bold. || ...Daring. || ...Hm.", "Oh? Bold today, aren't we? || Bold today, aren't we? || Oh? Brave. || My, my.")
-                : T(h, "...That's too much, I'm sorry. || ...That's too much, sorry. || ...I can't... sorry. || ...Too fast, sorry.", "Whoa, back up! Too fast! || Back up! Too fast! || Whoa! Slow down! || Too much!", "...No. || ...No. || ...Stop. || ...Not happening.", "Down, boy. || Down, boy. || Easy. || Nope."));
+                : RomanceSay(h, "bold", q == Q.Neutral ? "maybe" : "no"));
             Plain(h, Lvl.Spicy, q, "bold", b, q == Q.Good ? "♥ " + GirlInfo.FirstName(h) + " is clearly into it." : null);
         }
 
@@ -1445,18 +1436,16 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var a = FlirtAnswer(h, true, "private");
             var ok = Took(a);
-            var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
             if (mem[2] != null)
             {
                 b.Me("I keep thinking about when " + mem[2] + "...");
-                b.Face(h, ok ? Feel.Shy : Feel.Normal).Her_(ok ? T(h, "...M-me too. Every time I see you. || ...Me too. Every time. || ...I think about it too. || ...Me too... often.", "Shh! Not so loud! ...Me too. || Shh! ...Me too! || Quiet! ...Same! || Not so loud! ...Me too!", "...I remember. || ...I remember. || ...Same. || ...Yes.", "Oh? Me too. Often. || Me too. Often. || Same. Frequently. || Oh, me too.")
-                                                             : T(h, "...Let's not talk about that here. || ...Not here, please. || ...Let's not, here. || ...Another place.", "Not here! || Not here! || Shh! || Later!", "...Not now. || ...Not now. || ...Later. || ...No.", "...Later. || ...Later. || ...Not here. || ...Patience."));
+                b.Face(h, ok ? Feel.Shy : Feel.Normal).Her_(RomanceSay(h, "private", ok ? "yes" : "no", "moment"));
             }
             else
             {
-                b.Me(RomanceLines.PlayerMemories(h.hCount));
-                b.Face(h, ok ? Feel.Love : Feel.Normal).Her_(ok ? RomanceLines.Memories(tone, h.hCount) : T(h, "...Not here, please. || ...Not here. || ...Please, not here. || ...Somewhere else.", "Shh! Not here! || Not here! || Shh! || Quiet!", "...Not now. || ...Not now. || ...No. || ...Later.", "...Patience. || ...Patience. || ...Later. || ...Wait."));
+                b.Me(RomanceMe(h, "memories", MemLvl(h)));
+                b.Face(h, ok ? Feel.Love : Feel.Normal).Her_(RomanceSay(h, "memories", ok ? "yes" : "no", MemLvl(h)));
             }
             if (a == "wary_yes") b.Narr("She looks away, red to the ears, but she doesn't change the subject.");
             Plain(h, Lvl.Spicy, ok ? Q.Good : Q.Neutral, "private:" + mem[1], b, ok ? "♥ " + GirlInfo.FirstName(h) + " remembers it too." : null);
@@ -1468,39 +1457,7 @@ namespace Joojkk.CampusLife
         /// </summary>
         private static string HeldBackLine(SaveData.Heroine h, string why)
         {
-            switch (why)
-            {
-                case "personality":
-                    return T(h, "...I want to. I really do. But I'm not... that kind of girl. Not yet. Please don't hate me. || ...I want to. Really. But not yet. Please understand. || ...My heart says yes, but I'm not ready. Don't hate me. || ...I do want to... just not so soon.", "I-I want to! Honestly! But my brain is screaming and I can't! Give me time?! || I want to! But my brain's screaming! Give me time! || Honestly, yes! But no! Ugh! Wait for me?! || I wanna! But I can't yet! Sorry!",
-                        "...Don't misread me. I want to. I just don't do this so easily. || ...I want to. I just don't move this fast. || ...Desire isn't the issue. Pace is. || ...Yes, I want to. Not yet.", "Mm. Believe me, I'm tempted. But I don't hand that out. Not yet. || Tempted? Very. But I don't give that away so fast. || Mm. Wanting isn't the same as saying yes. Not yet. || I'm tempted. You'll have to wait.");
-                case "mood":
-                    return T(h, "...If it were any other day... I'm just not okay today. Ask me again? || ...Any other day... today I'm just not okay. Ask again? || ...I'm sorry, today is bad. Another day? || ...Not today. I'm not feeling well.", "Ugh, today's the worst! Any other day I'd say yes! ...Rain check? || Today's awful! Any other day, yes! Rain check?! || Ugh, bad day! Ask tomorrow! || Not today! But soon!",
-                        "...Not today. I'm not in a good place. It's not you. || ...Not today. It's not you. || ...Bad day. Not your fault. || ...Today, no. Another day.", "Bad day. Really bad. ...Ask me tomorrow, and I'll probably say yes. || Awful day. Ask tomorrow. I'll probably say yes. || Bad timing. Tomorrow, maybe. || Not today. Tomorrow's likely.");
-                case "guilt":
-                    return T(h, "...After last time, I can't. Not until we talk about it. ...I still want to, though. || ...Not until we talk about last time. I still want to, though. || ...We need to talk about before. Then... yes. || ...After last time, I can't yet. Let's talk first.", "I want to, but— we never talked about last time! We have to first! || We have to talk about last time first! || Last time! We never talked! Do that first! || Talk first! Then maybe!",
-                        "...Not until we settle what happened. Then we'll see. || ...Settle last time first. || ...Resolve the past. Then ask. || ...We talk. Then we'll see.", "Last time is still hanging over us. Fix that first, and then... maybe. || Fix last time first. Then maybe. || Last time's unresolved. Fix it. || Deal with last time. Then ask.");
-                case "girlfriend":
-                    return T(h, "...You have a girlfriend. I... I want to, but I can't do that to her. || ...You have a girlfriend. I can't do that to her. || ...You're with someone. I want to, but no. || ...She'd be hurt. I can't.", "You're taken! I— ugh, why does that make it harder?! No! ...Not like this! || You're taken! No! Not like this! || You have a girlfriend! Argh! No! || Taken! Off limits! Even if...!",
-                        "...You're with someone. I won't be the other girl. ...Even if I want to. || ...You're with someone. I won't be the other girl. || ...Not while you're taken. || ...You belong to someone. No.", "Tempting. But you belong to someone. I don't share well. Ask me when that changes. || You're taken. I don't share. Ask when you're free. || Spoken for. Come back single. || You belong to someone. Not my style.");
-                case "soon":
-                    return T(h, "...It's too soon. We barely... I want to know you more first. Is that okay? || ...Too soon. I want to know you more. || ...We've barely started... please wait. || ...Let's get closer first. Okay?", "Too fast, too fast! I like you, but— slow down a little! || Too fast! Slow down! || Whoa! Too soon! || Slow down a bit!",
-                        "...We've only just started. Give it time. || ...Give it time. || ...Too early. || ...We just started.", "Patience. I want to, but not this fast. Make me wait for it. || Make me wait for it. || Patience. Not yet. || Too fast. Earn it.");
-                case "asked":
-                    return T(h, "...You already asked today. My answer hasn't changed... even if I want it to. || ...You asked already. Still no... even if I want to. || ...My answer's the same today. || ...Still no, today. Sorry.", "You asked already! Stop making it so hard to say no! || You asked already! Stop making it hard! || Again?! Still no! || Asked already! No!",
-                        "...Still no. Asking again won't change today. || ...Still no. || ...Same answer. || ...No. Today, no.", "Again? Persistent. ...Still not today. Tomorrow, maybe. || Persistent. Still no. Tomorrow, maybe. || Again? No. Tomorrow. || Still no. Try tomorrow.");
-                case "grudge":
-                    return T(h, "...I'm still hurt about what happened. I want to, but... not while it hurts. || ...It still hurts. Not while it hurts. || ...I'm still sad about what happened. || ...I need to heal first.", "I'm still mad at you! ...Even if I kinda want to! Fix it first! || Still mad! Fix it first! || I'm upset! Apologize first! || Mad at you! Fix it!",
-                        "...I haven't forgiven you yet. Ask me when I have. || ...Not forgiven yet. || ...Forgiveness first. || ...I'm still angry.", "You still owe me an apology. Then we'll talk. || Apology first. Then we talk. || You owe me. Pay first. || Say sorry first.");
-                case "neglected":
-                    return T(h, "...You've barely looked at me lately. I want to... but I want you to want me first. || ...You've been distant. I want you to want me first. || ...You barely see me lately... || ...Show me you care first.", "You've been ignoring me! And now this?! ...Spend time with me first! || You ignored me! Spend time with me first! || You've been gone! Hang out first! || Ignored! Fix that first!",
-                        "...You've been distant. Fix that, then ask. || ...You've been distant. Fix it. || ...Absent lately. Correct that. || ...Attention first.", "Hm. You remember me only now? Earn it again first. || Only now you remember me? Earn it. || Neglect me, then ask? Earn it back. || You forgot me. Make it up.");
-                case "name":
-                    return T(h, "...People already talk about you. I want to, but I'm scared of what they'd say. || ...People talk about you. I'm scared of what they'd say. || ...Your reputation scares me a little. || ...I'm afraid of the rumors.", "Everyone's already gossiping about you! If they found out— no, no! || Everyone gossips about you! If they found out-! || The rumors! No way! || People would talk! No!",
-                        "...With your reputation, I have to be careful. Not now. || ...Your reputation. I must be careful. || ...Too risky, given the talk. || ...Not with those rumors.", "Your name's a little dirty around campus. I like mine clean. ...For now. || Your name's a bit dirty. I like mine clean. || Your reputation precedes you. Not yet. || Too much gossip about you.");
-                default:
-                    return T(h, "...It's not that I don't want to. Just... not like this. Not here. Not yet. || ...Not like this. Not here. Not yet. || ...It's not that I don't want to... || ...Just... not now.", "Ahh, you're making my heart race! But not here! Not now! ...Ask me again sometime? || Heart racing! But not here! Ask again! || Not here! Not now! Later?! || Ahh! Not now!",
-                        "...Not here. Not now. Don't take it the wrong way. || ...Not here. Not now. || ...Don't misunderstand. Not now. || ...Not the right moment.", "Tempting. Really. ...But not here. Keep that look for later. || Tempting. Not here. Later. || Keep that look for later. || Not here, darling.");
-            }
+            return RomanceSay(h, "heldback", Array.IndexOf(HeldBackWhys, why) >= 0 ? why : "other");
         }
 
         /// <summary>
@@ -1514,22 +1471,20 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var a = Consent.DecideH(h);
             var ok = a == "yes" || a == "wary_yes";
-            var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerSneak());
+            b.Me(RomanceMe(h, "sneak"));
             switch (a)
             {
-                case "yes": b.Face(h, Feel.Love).Her_(RomanceLines.SneakYes(tone)); break;
+                case "yes": b.Face(h, Feel.Love).Her_(RomanceSay(h, "sneak", "yes")); break;
                 case "wary_yes":
                     b.Narr(GirlInfo.FirstName(h) + " looks away, then back at you, and doesn't say no.");
-                    b.Face(h, Feel.Shy).Her_(T(h, "...We shouldn't. ...But if it's you... just this once, okay? || ...We shouldn't. But for you... just once. || ...It's you... so... okay. || ...Just this once. Because it's you.", "Ah— um— okay! Okay. I think. ...Don't make it weird after, okay?! || Um! Okay! I think! Don't make it weird! || Okay! Yes! Ahh! || Alright! Let's go before I panic!",
-                        "...This is a bad idea. ...Lead the way. || ...Bad idea. Lead on. || ...Unwise. Go. || ...Fine. Lead.", "...You know this changes things. ...Fine. Come on, before I think about it. || This changes things. Come on. || Before I think twice. Come. || Fine. Hurry, before I change my mind."));
+                    b.Face(h, Feel.Shy).Her_(RomanceSay(h, "sneak", "wary"));
                     break;
                 case "wary_no":
                     b.Narr(GirlInfo.FirstName(h) + " hesitates a moment too long before she answers.");
                     b.Face(h, Feel.Shy).Her_(HeldBackLine(h, Consent.HeldBack(h)));
                     break;
-                default: b.Face(h, Feel.Pout).Her_(RomanceLines.SneakNo(tone)); break;
+                default: b.Face(h, Feel.Pout).Her_(RomanceSay(h, "sneak", "no")); break;
             }
             if (ok) Bounds(b, h);   // what her card still refuses in the game's H, in her words
             Hide();

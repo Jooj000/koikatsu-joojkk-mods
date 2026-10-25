@@ -1125,13 +1125,11 @@ namespace Joojkk.CampusLife
         {
             var s = Sess;
             var h = s.Her;
-            var tone = GirlInfo.ToneOf(h);
-            var close = Lines.Closeness(h);
             s.Did.Add("tease");
             var ok = Random.value < TeaseChance(s);
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerTease(close));
-            b.Her_(ok ? RomanceLines.TeaseGood(tone, close) : RomanceLines.TeaseBad(tone));
+            b.Me(RomanceMe(h, "tease"));
+            b.Her_(RomanceSay(h, "tease", ok ? "yes" : "no"));
             Play(b, ok ? 1 : -1, ok ? "♥ " + GirlInfo.FirstName(h) + " is flustered." : null, null, ok ? 6 : 0);
         }
 
@@ -1146,12 +1144,11 @@ namespace Joojkk.CampusLife
         {
             var s = Sess;
             var h = s.Her;
-            var tone = GirlInfo.ToneOf(h);
             s.Did.Add("whisper");
             var ok = Random.value < WhisperChance(s);
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerWhisper(h.isGirlfriend));
-            b.Her_(ok ? RomanceLines.WhisperGood(tone, h.isGirlfriend) : RomanceLines.WhisperBad(tone));
+            b.Me(RomanceMe(h, "whisper", GfLvl(h)));
+            b.Her_(RomanceSay(h, "whisper", ok ? "yes" : "no", GfLvl(h)));
             Play(b, ok ? 1 : -2, ok ? "♥ " + GirlInfo.FirstName(h) + " is breathing faster." : "She didn't like that. (-trust)", () =>
             {
                 if (!ok) { Social.AddTrust(h, -2); return; }
@@ -1165,8 +1162,8 @@ namespace Joojkk.CampusLife
             var h = s.Her;
             s.Did.Add("memories");
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerMemories(h.hCount));
-            b.Her_(RomanceLines.Memories(GirlInfo.ToneOf(h), h.hCount));
+            b.Me(RomanceMe(h, "memories", MemLvl(h)));
+            b.Her_(RomanceSay(h, "memories", "yes", MemLvl(h)));
             Play(b, 1, "♥ " + GirlInfo.FirstName(h) + " remembers it too.", () =>
             {
                 if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
@@ -1185,12 +1182,11 @@ namespace Joojkk.CampusLife
         {
             var s = Sess;
             var h = s.Her;
-            var tone = GirlInfo.ToneOf(h);
             s.Did.Add("sneak");
             var ok = Consent.Decide(h, Ask.H);
             var b = new SceneBuilder(h, true);
-            b.Me(RomanceLines.PlayerSneak());
-            b.Her_(ok ? RomanceLines.SneakYes(tone) : RomanceLines.SneakNo(tone));
+            b.Me(RomanceMe(h, "sneak"));
+            b.Her_(RomanceSay(h, "sneak", ok ? "yes" : "no"));
             var invite = ok && GameAllows(3);
             Play(b, ok ? 1 : -1, ok && !invite ? "♥ She's in the mood. Somewhere private, the game will let you invite her to H." : null, null, ok ? 12 : 0,
                 invite ? (Action)(() => Game(13)) : null);

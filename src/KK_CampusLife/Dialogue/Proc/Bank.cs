@@ -450,7 +450,8 @@ namespace Joojkk.CampusLife
         {
             s = s.Trim();
             while (s.Contains("  ")) s = s.Replace("  ", " ");
-            s = s.Replace(" ,", ",").Replace(" .", ".").Replace(" !", "!").Replace(" ?", "?").Replace(",,", ",").Replace("..,", "...");
+            // An ellipsis keeps the space before it ("Hey! ...Fine."): only a lone period closes up.
+            s = s.Replace(" ...", "\u0001").Replace(" ,", ",").Replace(" .", ".").Replace(" !", "!").Replace(" ?", "?").Replace(",,", ",").Replace("..,", "...").Replace("\u0001", " ...");
             if (s.Length > 0 && char.IsLower(s[0])) s = char.ToUpperInvariant(s[0]) + s.Substring(1);
             return s;
         }

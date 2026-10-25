@@ -7,7 +7,7 @@ namespace Joojkk.CampusLife
     /// <summary>
     /// The romance page's plain steps speak from the bank: holding hands, "what am I to you", being
     /// sweet, compliments, love talk, jealousy, the "not now" answers. The answer is decided as before by the caller; only the words come from here. {act} is the step, {q} how she
-    /// took it, {close} Lines.Closeness and {lvl} how far her feelings go.
+    /// took it, {close} Lines.Closeness and {lvl} how far her feelings go. The intimate steps (teasing, whispering, the
     /// </summary>
     internal static partial class Conversation
     {
@@ -40,12 +40,21 @@ namespace Joojkk.CampusLife
         /// <summary>Her honest answer, from how much she likes you, your relation and how lewd she is with you.</summary>
         internal static string FeelingsLine(SaveData.Heroine h)
         {
-            if (h.isGirlfriend && h.lewdness >= 70) return RomanceLines.FeelingsIntimate(GirlInfo.ToneOf(h));
-            return RomanceSay(h, "feelings", "yes", h.isGirlfriend ? "gf" : h.favor >= 80 ? "deep" : h.favor >= 50 ? "friend" : "far");
+            return RomanceSay(h, "feelings", "yes", h.isGirlfriend && h.lewdness >= 70 ? "intimate" : h.isGirlfriend ? "gf" : h.favor >= 80 ? "deep" : h.favor >= 50 ? "friend" : "far");
         }
+
+        /// <summary>{lvl} for whispering and a bold line: your girlfriend or not.</summary>
+        private static string GfLvl(SaveData.Heroine h) { return h.isGirlfriend ? "gf" : "notgf"; }
+
+        /// <summary>{lvl} for the last time: your first time together, or after it.</summary>
+        private static string MemLvl(SaveData.Heroine h) { return h.hCount <= 1 ? "first" : "again"; }
+
+        /// <summary>What held her back (Consent.HeldBack) as {q}; anything else is "other".</summary>
+        private static readonly string[] HeldBackWhys = { "personality", "mood", "guilt", "girlfriend", "soon", "asked", "grudge", "neglected", "name" };
 
         internal static IEnumerable<string> RomanceSamples(SaveData.Heroine h)
         {
+            yield return "tone " + GirlInfo.ToneOf(h) + ", close " + Lines.Closeness(h) + ", girlfriend " + h.isGirlfriend + ", lewdness " + h.lewdness + ", hCount " + h.hCount;
             yield return "hand me: " + RomanceMe(h, "hand");
             yield return "hand yes: " + RomanceSay(h, "hand", "yes");
             yield return "hand no: " + RomanceSay(h, "hand", "no");
@@ -73,6 +82,16 @@ namespace Joojkk.CampusLife
             yield return "breakup stay: " + RomanceSay(h, "breakup", "stay");
             yield return "wary no: " + RomanceSay(h, "wary", "no");
             yield return "me compliment: " + RomanceMe(h, "compliment", "effort") + " / " + RomanceMe(h, "compliment", "club") + " / " + RomanceMe(h, "compliment", "smart") + " / " + RomanceMe(h, "compliment", "looks");
+            yield return "feelings intimate: " + RomanceSay(h, "feelings", "yes", "intimate");
+            yield return "tease me: " + RomanceMe(h, "tease") + " / yes: " + RomanceSay(h, "tease", "yes") + " / no: " + RomanceSay(h, "tease", "no");
+            yield return "whisper me: " + RomanceMe(h, "whisper", GfLvl(h)) + " / yes: " + RomanceSay(h, "whisper", "yes", GfLvl(h)) + " / no: " + RomanceSay(h, "whisper", "no");
+            yield return "memories me: " + RomanceMe(h, "memories", MemLvl(h)) + " / yes: " + RomanceSay(h, "memories", "yes", MemLvl(h)) + " / no: " + RomanceSay(h, "memories", "no");
+            yield return "private yes: " + RomanceSay(h, "private", "yes", "moment") + " / no: " + RomanceSay(h, "private", "no", "moment");
+            yield return "sneak me: " + RomanceMe(h, "sneak") + " / yes: " + RomanceSay(h, "sneak", "yes") + " / wary: " + RomanceSay(h, "sneak", "wary") + " / no: " + RomanceSay(h, "sneak", "no");
+            yield return "bold me: " + RomanceMe(h, "bold", GfLvl(h)) + " / yes: " + RomanceSay(h, "bold", "yes") + " / maybe: " + RomanceSay(h, "bold", "maybe") + " / no: " + RomanceSay(h, "bold", "no");
+            foreach (var why in HeldBackWhys) yield return "heldback " + why + ": " + HeldBackLine(h, why);
+            yield return "heldback other: " + HeldBackLine(h, "other");
+            yield return "wary lead: " + WaryLead(h) + "/ no spicy: " + WaryNoLine(h, true);
         }
     }
 }
