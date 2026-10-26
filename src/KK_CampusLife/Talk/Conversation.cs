@@ -1031,7 +1031,13 @@ namespace Joojkk.CampusLife
             var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
             b.Me(mine ?? RomanceMe(h, "compliment", kind == "effort" || kind == "club" || kind == "smart" ? kind : "looks"));
-            if (gs.ComplimentDay >= S.Day - 1) { b.Her_(RomanceSay(h, "compliment", "again")); Play(b, -1, null); return; }
+            if (gs.ComplimentDay >= S.Day - 1)
+            {
+                RomanceSaid("compliment", gs.ComplimentDay == S.Day ? "today" : "yesterday");   // "you said that yesterday" only the next day
+                b.Her_(RomanceSay(h, "compliment", "again"));
+                Play(b, -1, null);
+                return;
+            }
             var stat = kind == "smart" ? G.Int : G.Sens;
             var chance = 0.35f + stat / 200f + (kind == "club" ? 0.15f : 0f) + (kind == "looks" ? (h.relation >= 1 ? 0.1f : -0.15f) : 0f);
             if (tone == Tone.Cool) chance -= 0.1f;

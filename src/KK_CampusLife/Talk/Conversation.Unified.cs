@@ -1260,13 +1260,11 @@ namespace Joojkk.CampusLife
             var ok = Took(a);
             // Always about something real between you: a tradition, a good memory, a like you learned, or today.
             string detail;
-            if (gs.Traditions.Count > 0) detail = "I keep thinking about " + gs.Traditions[gs.Traditions.Count - 1] + ". It's my favorite part of the week.";
-            else
-            {
-                var m = gs.Moments.Where(x => x.Tone > 0).OrderByDescending(x => x.Id).FirstOrDefault();
-                if (m != null) detail = "I still think about when " + m.Text + ".";
-                else detail = RomanceMe(h, "flirt");
-            }
+            // A tradition or a moment is what you feel, so "Me too" answers it (flirt.share in romance.dlg).
+            var m = gs.Moments.Where(x => x.Tone > 0).OrderByDescending(x => x.Id).FirstOrDefault();
+            if (gs.Traditions.Count > 0) { detail = "I keep thinking about " + gs.Traditions[gs.Traditions.Count - 1] + ". It's my favorite part of the week."; RomanceSaid("flirt", "flirt.share"); }
+            else if (m != null) { detail = "I still think about when " + m.Text + "."; RomanceSaid("flirt", "flirt.share"); }
+            else detail = RomanceMe(h, "flirt");
             var b = new SceneBuilder(h, true);
             b.Me(detail);
             b.Face(h, a == "yes" ? Feel.Love : ok || a == "wary_no" ? Feel.Shy : Feel.Normal).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceSay(h, "flirt", "yes") : RomanceSay(h, "flirt", "no"));
@@ -1365,22 +1363,22 @@ namespace Joojkk.CampusLife
 
         // ================= Spicy beats =================
 
-        /// <summary>Something here and now to tease her about (never a hurt, a grudge or a painful rumor).</summary>
+        /// <summary>Something here and now to tease her about (never a hurt, a grudge or a painful rumor): the option, your line, its hook in intimate.dlg.</summary>
         private static string[] TeaseContext(SaveData.Heroine h)
         {
             var mood = MoodOf(h);
             if (mood == CampusLife.Mood.Upset || mood == CampusLife.Mood.Stressed || Social.Grudge(h) != null) return null;
-            if (mood == CampusLife.Mood.Sleepy) return new[] { "her sleepy face", "I like your sleepy face. It's very... soft." };
-            if (mood == CampusLife.Mood.Hungry) return new[] { "her growling stomach", "Was that your stomach? Should I feed you?" };
-            if (mood == CampusLife.Mood.Flirty) return new[] { "the way she keeps looking at you", "You keep looking at me. Something on your mind?" };
+            if (mood == CampusLife.Mood.Sleepy) return new[] { "her sleepy face", "I like your sleepy face. It's very... soft.", "tease.sleepy" };
+            if (mood == CampusLife.Mood.Hungry) return new[] { "her growling stomach", "Was that your stomach? Should I feed you?", "tease.stomach" };
+            if (mood == CampusLife.Mood.Flirty) return new[] { "the way she keeps looking at you", "You keep looking at me. Something on your mind?", "tease.looking" };
             switch (Places.CurrentId)
             {
-                case "pool": return new[] { "her swimsuit", "That swimsuit is... really working for you." };
-                case "gym": case "field": return new[] { "her gym clothes", "Gym clothes suit you. A little too well." };
-                case "library": return new[] { "how close you're sitting", "We're sitting pretty close for a library." };
-                case "rooftop": return new[] { "being alone up here", "Just the two of us up here... convenient." };
+                case "pool": return new[] { "her swimsuit", "That swimsuit is... really working for you.", "tease.swimsuit" };
+                case "gym": case "field": return new[] { "her gym clothes", "Gym clothes suit you. A little too well.", "tease.gym" };
+                case "library": return new[] { "how close you're sitting", "We're sitting pretty close for a library.", "tease.library" };
+                case "rooftop": return new[] { "being alone up here", "Just the two of us up here... convenient.", "tease.rooftop" };
             }
-            return new[] { "how cute she looks right now", "You know you look really cute right now, right?" };
+            return new[] { "how cute she looks right now", "You know you look really cute right now, right?", "tease.cute" };
         }
 
         private static void TeaseU(SaveData.Heroine h, string[] ctx)
@@ -1390,6 +1388,7 @@ namespace Joojkk.CampusLife
             var ok = Took(a);
             var b = new SceneBuilder(h, true);
             b.Me(ctx[1]);
+            RomanceSaid("tease", ctx[2]);
             b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Pout).Her_(a == "wary_no" ? WaryNoLine(h, true) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceSay(h, "tease", "yes") : RomanceSay(h, "tease", "no"));
             Plain(h, Lvl.Spicy, QOf(a), "tease:" + ctx[0], b, ok ? "♥ " + GirlInfo.FirstName(h) + " is flustered." : null);
         }

@@ -1,7 +1,8 @@
 # The romance page's plain steps, moved word for word out of RomanceLines.cs, ConvoLines.cs and Conversation.Unified.cs.
 # {act} hand | feelings | flirt | compliment | noticed | love | jealous | notnow | breakup | wary (what you did), {rname} who she is jealous of, {q} yes | no | again, love | plain for jealousy, date | confess | lunch | home | later for notnow (how she took it), {close} Lines.Closeness (2 = you are
 # together), {lvl} for feelings gf | deep | friend | far, for her answer to a compliment looks | other, for yours effort | club | smart | looks, set in Conversation.Romance.cs with the old thresholds. Weights in
-# weights.dlg (@weights romance). The steps with sexual content stay fixed in RomanceLines.cs: the note koikatsu-decisao-criterios-falas-fixas.
+# {hook} the line you just said: flirt.share (what you feel, "Me too" answers it), flirt.praise (about her,
+# never "Me too"), flirt.spend ("I really like spending time with you"); today | yesterday for a compliment again.
 
 # ================= holding hands =================
 @rule me.romance.hand.close
@@ -29,10 +30,6 @@ when act=hand q=yes close>=2 tone=gentle
 - My heart still races every time...
 - It's like the first time, every time...
 - Even now, my heart jumps when you take my hand.
-- People are looking... but I don't mind. Not with you.
-- Let them look... I'm happy with you.
-- I don't care who sees. Not with you.
-- People are staring... it's okay.
 
 @rule romance.hand.yes.close.energetic
 on romance
@@ -40,7 +37,6 @@ when act=hand q=yes close>=2 tone=energetic
 - Hehe, fingers laced! That's the official couple grip!
 - Laced fingers! Super official!
 - Hand-holding power! Hehe!
-- Look! We're holding hands! Everyone, look!
 - Swing, swing! Ehehe, I love this!
 - Swing! Swing! Ahaha!
 - Wheee! Hand swinging!
@@ -69,10 +65,6 @@ when act=hand q=yes close>=2 tone=cool
 @rule romance.hand.yes.close.teasing
 on romance
 when act=hand q=yes close>=2 tone=teasing
-- Holding hands in public? How bold. ...I'm not complaining.
-- Public hand-holding? Scandalous. Keep going.
-- Showing me off? Good.
-- Brave, holding my hand here. I approve.
 - Squeeze back if you love me. ...Hm. Good answer.
 - Squeeze if you love me. ...Correct.
 - Squeeze twice if you're mine. ...Good.
@@ -81,6 +73,27 @@ when act=hand q=yes close>=2 tone=teasing
 - First to let go loses. Deal?
 - Let go and you lose. Got it?
 - Whoever lets go owes the other. Ready?
+
+@rule romance.hand.yes.close.seen.gentle
+on romance
+when act=hand q=yes close>=2 watchers=one|few|crowd tone=gentle
+- People are looking... but I don't mind. Not with you.
+- Let them look... I'm happy with you.
+- I don't care who sees. Not with you.
+- People are staring... it's okay.
+
+@rule romance.hand.yes.close.seen.energetic
+on romance
+when act=hand q=yes close>=2 watchers=one|few|crowd tone=energetic
+- Look! We're holding hands! Everyone, look!
+
+@rule romance.hand.yes.close.seen.teasing
+on romance
+when act=hand q=yes close>=2 watchers=one|few|crowd tone=teasing
+- Holding hands in public? How bold. ...I'm not complaining.
+- Public hand-holding? Scandalous. Keep going.
+- Showing me off? Good.
+- Brave, holding my hand here. I approve.
 
 @rule romance.hand.yes.far.gentle
 on romance
@@ -346,85 +359,126 @@ when act=feelings q=no tone=teasing
 - Whoa, eager.
 
 # ================= being sweet =================
-@rule me.romance.flirt.close
+@rule me.romance.flirt.close.share
 on me.romance
 when act=flirt close>=2
+hook flirt.share
 - I was looking forward to seeing you all day.
 - You're the best part of my day, you know.
 - Being with you is my favorite thing.
 - I keep thinking about our last date.
-- You look cute when you're thinking hard about something.
 - I'd skip every class just to sit here with you.
 
-@rule me.romance.flirt.far
+@rule me.romance.flirt.close.praise
+on me.romance
+when act=flirt close>=2
+hook flirt.praise
+- You look cute when you're thinking hard about something.
+
+@rule me.romance.flirt.far.spend
 on me.romance
 when act=flirt close<=1
+hook flirt.spend
 - I really like spending time with you.
+
+@rule me.romance.flirt.far.praise
+on me.romance
+when act=flirt close<=1
+hook flirt.praise
 - You're kind of amazing, you know that?
+- Your laugh is really cute.
+
+@rule me.romance.flirt.far.share
+on me.romance
+when act=flirt close<=1
+hook flirt.share
 - Talking to you always cheers me up.
 - I'm glad I met you.
-- Your laugh is really cute.
 - I find myself looking for you in the hallway.
 
 @rule romance.flirt.yes.close.gentle
 on romance
 when act=flirt q=yes close>=2 tone=gentle
-- M-me too... I'm so happy you said that.
-- M-me too... I'm so happy.
-- I feel the same...
-- Me too... really.
 - You always know what to say... I love that about you.
 - You always know what to say... I love it.
 - You're so sweet... I love that.
 - Your words make me happy...
 
+@rule romance.flirt.yes.close.share.gentle
+on romance
+when act=flirt q=yes close>=2 hook=flirt.share|flirt.spend tone=gentle
+- M-me too... I'm so happy you said that.
+- M-me too... I'm so happy.
+- I feel the same...
+- Me too... really.
+
 @rule romance.flirt.yes.close.energetic
 on romance
 when act=flirt q=yes close>=2 tone=energetic
-- Aww! You're making me blush! Me too, okay?!
-- Me too! Stop, I'm blushing!
-- Aww! Same!
-- Me too, okay?!
 - Ehehe! I'm the luckiest girl on campus!
 - Luckiest girl on campus!
 - I'm so lucky!
 - Best boyfriend ever!
 
+@rule romance.flirt.yes.close.share.energetic
+on romance
+when act=flirt q=yes close>=2 hook=flirt.share|flirt.spend tone=energetic
+- Aww! You're making me blush! Me too, okay?!
+- Me too! Stop, I'm blushing!
+- Aww! Same!
+- Me too, okay?!
+
 @rule romance.flirt.yes.close.cool
 on romance
 when act=flirt q=yes close>=2 tone=cool
-- ...Me too. Don't make me say it twice.
-- ...Same. Once only.
-- ...Me too.
-- ...Likewise. Don't repeat it.
 - I like this. Us.
 - I like us.
 - This is good.
 - I like this.
 
+@rule romance.flirt.yes.close.share.cool
+on romance
+when act=flirt q=yes close>=2 hook=flirt.share|flirt.spend tone=cool
+- ...Me too. Don't make me say it twice.
+- ...Same. Once only.
+- ...Me too.
+- ...Likewise. Don't repeat it.
+
 @rule romance.flirt.yes.close.teasing
 on romance
 when act=flirt q=yes close>=2 tone=teasing
-- Hmph. Smooth talker. ...I feel the same.
-- Smooth. ...Same.
-- Charmer. ...Me too.
-- Hmph. ...Me too.
 - Keep talking like that and I might fall for you all over again.
 - Keep it up and I'll fall again.
 - Careful. I'm falling again.
 - More, and I'm yours all over again.
 
+@rule romance.flirt.yes.close.share.teasing
+on romance
+when act=flirt q=yes close>=2 hook=flirt.share|flirt.spend tone=teasing
+- Hmph. Smooth talker. ...I feel the same.
+- Smooth. ...Same.
+- Charmer. ...Me too.
+- Hmph. ...Me too.
+
 @rule romance.flirt.yes.far.gentle
 on romance
 when act=flirt q=yes close<=1 tone=gentle
-- Eh...? I-I like spending time with you too...
-- I-I like being with you too...
-- Eh...? Me too...
-- I enjoy our time too...
 - That's... a really nice thing to say.
 - That's so nice...
 - What a kind thing...
 - That's lovely...
+
+@rule romance.flirt.yes.far.spend.gentle
+on romance
+when act=flirt q=yes close<=1 hook=flirt.spend tone=gentle
+- Eh...? I-I like spending time with you too...
+- I-I like being with you too...
+
+@rule romance.flirt.yes.far.share.gentle
+on romance
+when act=flirt q=yes close<=1 hook=flirt.share|flirt.spend tone=gentle
+- Eh...? Me too...
+- I enjoy our time too...
 
 @rule romance.flirt.yes.far.energetic
 on romance
@@ -710,10 +764,8 @@ when act=compliment q=no tone=teasing
 @rule romance.compliment.again.gentle
 on romance
 when act=compliment q=again tone=gentle
-- You said that yesterday too...
 - You said that before...
 - That again...?
-- You told me yesterday...
 
 @rule romance.compliment.again.energetic
 on romance
@@ -738,6 +790,18 @@ when act=compliment q=again tone=teasing
 - Out of material?
 - Rerun?
 - Recycling?
+
+@rule romance.compliment.again.today.gentle
+on romance
+when act=compliment q=again hook=today tone=gentle
+- You already said that today...
+- You told me earlier today...
+
+@rule romance.compliment.again.yesterday.gentle
+on romance
+when act=compliment q=again hook=yesterday tone=gentle
+- You said that yesterday too...
+- You told me yesterday...
 
 @rule romance.noticed.yes.gentle
 on romance

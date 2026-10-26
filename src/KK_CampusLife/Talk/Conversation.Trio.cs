@@ -814,7 +814,7 @@ namespace Joojkk.CampusLife
                     if (p2 != "rival") Arcs.AddBond(GirlInfo.Key(a), GirlInfo.Key(b0), 2);
                     break;
                 default:
-                    b.Me(Lines.Pick("Want to hear a joke?", "So, a joke: why did the student eat his assignments? The professor said it was a piece of cake.", "Okay, okay, I've got a good one."));
+                    b.Me(Lines.Pick("So, a joke: why did the student eat his assignments? The professor said it was a piece of cake.", "Okay, I've got one: what do you call a sleeping dinosaur? A dino-snore.", "Want to hear a joke? Why was the math book sad? Too many problems."));   // each one tells the joke she laughs at
                     var tone = GirlInfo.ToneOf(b0);
                     var chance = tone == Tone.Energetic || tone == Tone.Teasing ? 0.7f : 0.45f;
                     q = Random.value < chance ? Q.Good : Q.Neutral;
@@ -990,10 +990,10 @@ namespace Joojkk.CampusLife
                     break;
                 case "tease":
                     lvl = Lvl.Spicy;
-                    b.Me(Lines.Pick("You two are blushing. Something on your minds?", "You know, you're both really cute when you get flustered.", "Careful, keep looking at me like that and I'll get ideas."));
+                    b.Me(Lines.Pick("You two are blushing. Something on your minds?", "You know, you're both really cute when you get flustered.", "You two look flustered. Thinking something naughty?"));   // "...Maybe I am." answers all three
                     qa = Lewdish(a);
                     qb = Lewdish(b0);
-                    Reply(b, a, b0, "tease", qa, qa == Q.Bad ? Tn("D-don't say things like that!", "Hey! Pervert!", "...No.", "Gross.") : qa == Q.Neutral ? Tn("Eh... ehh...?", "Wh- hey!", "...Hm.", "Hmm~") : Tn("...Maybe I am.", "Hehe~ maybe!", "...Perhaps.", "Mmm~ ideas, huh?"));
+                    Reply(b, a, b0, "tease", qa, qa == Q.Bad ? Tn("D-don't say things like that!", "Hey! Pervert!", "...No.", "Gross.") : qa == Q.Neutral ? Tn("Eh... ehh...?", "Wh- hey!", "...Hm.", "Hmm~") : Tn("...Maybe I am.", "Hehe~ maybe!", "...Perhaps.", "Mmm~ and if I am?"));
                     Reply(b, b0, a, "tease", qb, qb == Q.Bad ? Tn("Ah... um... no...", "No way!", "...Inappropriate.", "Ew.") : qb == Q.Neutral ? Tn("Ehehe...?", "Uh, what?!", "...Hm.", "Cute try.") : Tn("...You're bad.", "Ooh! Hehe!", "...Interesting.", "Keep going~"));
                     break;
             }

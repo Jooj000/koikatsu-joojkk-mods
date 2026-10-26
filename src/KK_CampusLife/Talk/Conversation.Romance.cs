@@ -23,18 +23,36 @@ namespace Joojkk.CampusLife
             return c;
         }
 
+        // The hook of the line you just said (2026-11-06, "todas as falas precisam ter sequência lógica"): her answer to the
+        // same step in the same frame reads it, so "Kissable?" only follows "Very kissable." Set by RomanceMe, or by
+        // RomanceSaid when your line was built in C#.
+        private static string _saidAct, _saidHook;
+        private static int _saidFrame = -1;
+
         /// <summary>Her line for a step. Every step and tone has rules; "..." only if a .dlg override left one out.</summary>
         internal static string RomanceSay(SaveData.Heroine h, string act, string q, string lvl = null, string rival = null)
         {
             DlgRule rule;
-            return Bank.Pick("romance", RomanceCtx(h, act, q, lvl, rival), GirlInfo.Key(h), out rule) ?? "...";
+            var c = RomanceCtx(h, act, q, lvl, rival);
+            if (_saidFrame == Time.frameCount && _saidAct == act && !string.IsNullOrEmpty(_saidHook)) c["hook"] = _saidHook;
+            return Bank.Pick("romance", c, GirlInfo.Key(h), out rule) ?? "...";
         }
 
-        /// <summary>Your line for a step.</summary>
+        /// <summary>Your line for a step; its hook goes to her answer.</summary>
         internal static string RomanceMe(SaveData.Heroine h, string act, string lvl = null)
         {
             DlgRule rule;
-            return Bank.Pick("me.romance", RomanceCtx(h, act, "", lvl), "player", out rule) ?? "...";
+            var line = Bank.Pick("me.romance", RomanceCtx(h, act, "", lvl), "player", out rule) ?? "...";
+            RomanceSaid(act, rule != null ? rule.Hook : null);
+            return line;
+        }
+
+        /// <summary>What your line was about, when it was not drawn from the bank.</summary>
+        private static void RomanceSaid(string act, string hook)
+        {
+            _saidAct = act;
+            _saidHook = hook;
+            _saidFrame = Time.frameCount;
         }
 
         /// <summary>Her honest answer, from how much she likes you, your relation and how lewd she is with you.</summary>
@@ -68,7 +86,10 @@ namespace Joojkk.CampusLife
             yield return "compliment looks: " + RomanceSay(h, "compliment", "yes", "looks");
             yield return "compliment other: " + RomanceSay(h, "compliment", "yes", "other");
             yield return "compliment no: " + RomanceSay(h, "compliment", "no");
-            yield return "compliment again: " + RomanceSay(h, "compliment", "again");
+            RomanceSaid("compliment", "today");
+            yield return "compliment again today: " + RomanceSay(h, "compliment", "again");
+            RomanceSaid("compliment", "yesterday");
+            yield return "compliment again yesterday: " + RomanceSay(h, "compliment", "again");
             yield return "noticed yes: " + RomanceSay(h, "noticed", "yes");
             yield return "noticed no: " + RomanceSay(h, "noticed", "no");
             yield return "love: " + RomanceSay(h, "love", "");
@@ -84,6 +105,11 @@ namespace Joojkk.CampusLife
             yield return "me compliment: " + RomanceMe(h, "compliment", "effort") + " / " + RomanceMe(h, "compliment", "club") + " / " + RomanceMe(h, "compliment", "smart") + " / " + RomanceMe(h, "compliment", "looks");
             yield return "feelings intimate: " + RomanceSay(h, "feelings", "yes", "intimate");
             yield return "tease me: " + RomanceMe(h, "tease") + " / yes: " + RomanceSay(h, "tease", "yes") + " / no: " + RomanceSay(h, "tease", "no");
+            foreach (var hook in new[] { "sleepy", "stomach", "looking", "swimsuit", "gym", "library", "rooftop", "cute" })
+            {
+                RomanceSaid("tease", "tease." + hook);
+                yield return "tease " + hook + " yes: " + RomanceSay(h, "tease", "yes");
+            }
             yield return "whisper me: " + RomanceMe(h, "whisper", GfLvl(h)) + " / yes: " + RomanceSay(h, "whisper", "yes", GfLvl(h)) + " / no: " + RomanceSay(h, "whisper", "no");
             yield return "memories me: " + RomanceMe(h, "memories", MemLvl(h)) + " / yes: " + RomanceSay(h, "memories", "yes", MemLvl(h)) + " / no: " + RomanceSay(h, "memories", "no");
             yield return "private yes: " + RomanceSay(h, "private", "yes", "moment") + " / no: " + RomanceSay(h, "private", "no", "moment");

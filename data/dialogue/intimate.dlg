@@ -7,6 +7,11 @@
 # back (Consent.HeldBack: personality | mood | guilt | girlfriend | soon | asked | grudge | neglected | name | other),
 # {close} Lines.Closeness (2 = together), {lvl} intimate (feelings: your girlfriend, lewdness 70+), gf | notgf (whisper,
 # bold), first | again (memories: her H count), moment (private: a real moment, not the H).
+# {hook} the line you just said: each line of yours has one (tease.kiss, whisper.uniform,
+# memories.again, sneak.private; the teasing about something here and now in Conversation.Unified.cs sets tease.sleepy,
+# tease.stomach, tease.looking, tease.swimsuit, tease.gym, tease.library, tease.rooftop, tease.cute). An answer that quotes
+# you or answers one line only has "hook=" for it; the plain rules fit every line of the step. Teasing has no plain
+# answer: every one of them belongs to a line of yours.
 
 # ================= how she feels about you, intimate =================
 @rule romance.feelings.intimate.gentle
@@ -46,151 +51,283 @@ feel shy
 - You're my boyfriend. And my toy. Both.
 
 # ================= teasing =================
-@rule me.romance.tease.close
+@rule me.romance.tease.close.kiss
 on me.romance
 when act=tease close>=2
+hook tease.kiss
 - You know what you look like right now? Very kissable.
+
+@rule me.romance.tease.close.skirt
+on me.romance
+when act=tease close>=2
+hook tease.skirt
 - That skirt's a little short today. Not that I'm complaining.
+
+@rule me.romance.tease.close.hot
+on me.romance
+when act=tease close>=2
+hook tease.hot
 - Is it hot in here, or is it just you?
 
-@rule me.romance.tease.far
+@rule me.romance.tease.far.stare
 on me.romance
 when act=tease close<=1
+hook tease.stare
 - You've been staring at me, haven't you?
+
+@rule me.romance.tease.far.ideas
+on me.romance
+when act=tease close<=1
+hook tease.ideas
 - Careful, if you keep smiling like that I'll get ideas.
+
+@rule me.romance.tease.far.looks
+on me.romance
+when act=tease close<=1
+hook tease.looks
 - You look really good today. Like, distractingly good.
 
-@rule romance.tease.yes.close.gentle
+@rule romance.tease.yes.kiss.gentle
 on romance
-when act=tease q=yes close>=2 tone=gentle
+when act=tease q=yes hook=tease.kiss|tease.hot|tease.library tone=gentle
 feel shy
 - Y-you can't just say things like that on campus...! ...Say it again later.
 - N-not on campus...! ...Say it again later.
 - Y-you can't say that here...! Later, okay?
 - Ah...! Not here... but later...
+
+@rule romance.tease.yes.skirt.gentle
+on romance
+when act=tease q=yes hook=tease.skirt tone=gentle
+feel shy
 - I wore it for you... is that embarrassing?
 - I wore it for you... is that weird?
+
+@rule romance.tease.yes.skirt2.gentle
+on romance
+when act=tease q=yes hook=tease.skirt|tease.swimsuit tone=gentle
+feel shy
 - I chose this for you... um... do you like it?
+
+@rule romance.tease.yes.skirt3.gentle
+on romance
+when act=tease q=yes hook=tease.skirt|tease.swimsuit|tease.cute tone=gentle
+feel shy
 - I hoped you'd notice...
+
+@rule romance.tease.yes.hot.gentle
+on romance
+when act=tease q=yes hook=tease.hot tone=gentle
+feel shy
 - It's you... you make me feel hot all over...
 - It's you... you make me feel so warm...
 - You're why I'm so warm...
 - Because of you... I'm burning up...
 
-@rule romance.tease.yes.close.energetic
+@rule romance.tease.yes.kiss.energetic
 on romance
-when act=tease q=yes close>=2 tone=energetic
+when act=tease q=yes hook=tease.kiss tone=energetic
 feel shy
 - Ehehe, you dummy! ...Okay, maybe a little kiss. Later!
 - You dummy! ...Maybe a kiss later! Hehe!
 - Hehe, later! A little one!
 - Not now! Later, though!
+
+@rule romance.tease.yes.skirt.energetic
+on romance
+when act=tease q=yes hook=tease.skirt|tease.swimsuit|tease.gym tone=energetic
+feel shy
 - Hey! Eyes up here! ...Or not. I'm not your boss. Hehe.
 - Eyes up here! ...Or not. Hehe!
 - Hey! Looking?! ...It's okay!
 - Caught you looking! Hehe!
+
+@rule romance.tease.yes.hot.energetic
+on romance
+when act=tease q=yes hook=tease.hot tone=energetic
+feel shy
 - Hot?! Wh- you're the one making it hot! Jerk! ...Hehe.
 - YOU'RE making it hot! Jerk! Hehe!
 - Hot?! Your fault!
 - It's you, dummy! Hehe!
 
-@rule romance.tease.yes.close.cool
+@rule romance.tease.yes.kiss.cool
 on romance
-when act=tease q=yes close>=2 tone=cool
+when act=tease q=yes hook=tease.kiss|tease.hot|tease.skirt|tease.library tone=cool
 feel shy
 - ...Keep that energy for when we're alone.
 - ...Save that for privacy.
 - ...When we're alone.
 - ...Later. Remember it.
+
+@rule romance.tease.yes.skirt.cool
+on romance
+when act=tease q=yes hook=tease.skirt|tease.swimsuit|tease.gym|tease.cute tone=cool
+feel shy
 - Noticed, did you. Good.
 - You noticed. Good.
 - Hm. Observant.
 - ...You looked. Good.
+
+@rule romance.tease.yes.hot.cool
+on romance
+when act=tease q=yes hook=tease.hot tone=cool
+feel shy
 - It's me. Obviously.
 - Me. Obviously.
 - It's me.
 - Both of us. Mostly me.
 
-@rule romance.tease.yes.close.teasing
+@rule romance.tease.yes.kiss.teasing
 on romance
-when act=tease q=yes close>=2 tone=teasing
+when act=tease q=yes hook=tease.kiss tone=teasing
 feel shy
 - Kissable? Then why are you still talking?
 - Kissable? Then stop talking.
+
+@rule romance.tease.yes.kiss2.teasing
+on romance
+when act=tease q=yes hook=tease.kiss|tease.hot|tease.rooftop tone=teasing
+feel shy
 - Then come here.
+
+@rule romance.tease.yes.kiss3.teasing
+on romance
+when act=tease q=yes hook=tease.kiss|tease.hot|tease.ideas tone=teasing
+feel shy
 - Words, words. Prove it.
+
+@rule romance.tease.yes.skirt.teasing
+on romance
+when act=tease q=yes hook=tease.skirt tone=teasing
+feel shy
 - Short? Oh, you mean this? *She tugs the hem up a little, then lets it fall.* Oops.
 - Short? This? Oops~
+
+@rule romance.tease.yes.skirt2.teasing
+on romance
+when act=tease q=yes hook=tease.skirt|tease.swimsuit tone=teasing
+feel shy
 - Like it? I chose it to tease you.
+
+@rule romance.tease.yes.skirt3.teasing
+on romance
+when act=tease q=yes hook=tease.skirt|tease.swimsuit|tease.cute tone=teasing
+feel shy
 - Noticed? That was the point.
+
+@rule romance.tease.yes.hot.teasing
+on romance
+when act=tease q=yes hook=tease.hot tone=teasing
+feel shy
 - Both. Want to find out which is hotter?
 - Both. Shall we compare?
 - Find out which. Up close.
 - Want to test which is hotter?
 
-@rule romance.tease.yes.far.gentle
+@rule romance.tease.yes.stare.gentle
 on romance
-when act=tease q=yes close<=1 tone=gentle
+when act=tease q=yes hook=tease.stare|tease.looking tone=gentle
 feel shy
 - I-I wasn't staring! ...Maybe a little.
 - I wasn't staring...! Maybe a little...
 - I-I wasn't looking...! Okay, a bit...
 - Ah... you noticed...
+
+@rule romance.tease.yes.ideas.gentle
+on romance
+when act=tease q=yes hook=tease.ideas tone=gentle
+feel shy
 - Ideas...? W-what kind of ideas...?
 - Ideas...? What kind...?
 - W-what ideas...?
 - Um... ideas...?
+
+@rule romance.tease.yes.looks.gentle
+on romance
+when act=tease q=yes hook=tease.looks|tease.cute|tease.swimsuit tone=gentle
+feel shy
 - Th-thank you... I tried a little harder today...
 - Thank you... I tried harder today...
 - Ah... thank you... I put effort in...
 - Thank you... I hoped you'd like it.
 
-@rule romance.tease.yes.far.energetic
+@rule romance.tease.yes.stare.energetic
 on romance
-when act=tease q=yes close<=1 tone=energetic
+when act=tease q=yes hook=tease.stare|tease.looking tone=energetic
 feel shy
 - Me?! Staring?! Pfft, no way! ...Okay, a tiny bit.
 - Staring?! Me?! ...Okay, a little!
 - Pfft! No! ...Yeah, a bit!
 - Not staring! ...Okay, yes!
+
+@rule romance.tease.yes.ideas.energetic
+on romance
+when act=tease q=yes hook=tease.ideas tone=energetic
+feel shy
 - Ideas, huh? Hehe, you're kinda bold! I like it!
 - Bold! I like it!
 - Ideas, huh?! Hehe!
 - Ooh! What ideas?!
+
+@rule romance.tease.yes.looks.energetic
+on romance
+when act=tease q=yes hook=tease.looks tone=energetic
+feel shy
 - Distractingly?! Ahaha, I'll take it!
 - Distracting?! I'll take it!
 - Hehe! Mission accomplished!
 - Yes! Distraction successful!
 
-@rule romance.tease.yes.far.cool
+@rule romance.tease.yes.stare.cool
 on romance
-when act=tease q=yes close<=1 tone=cool
+when act=tease q=yes hook=tease.stare|tease.looking tone=cool
 feel shy
 - ...You noticed. Annoying.
 - ...You caught it.
 - ...Annoying that you noticed.
 - ...Observant.
+
+@rule romance.tease.yes.ideas.cool
+on romance
+when act=tease q=yes hook=tease.ideas tone=cool
+feel shy
 - Ideas. Hm. Keep them to yourself for now.
 - Keep them to yourself. For now.
 - Ideas. Hold them.
 - Hm. Later.
+
+@rule romance.tease.yes.looks.cool
+on romance
+when act=tease q=yes hook=tease.looks|tease.cute|tease.swimsuit|tease.gym tone=cool
+feel shy
 - ...I'll accept the compliment.
 - ...Compliment accepted.
 - ...Thanks.
 - ...Noted.
 
-@rule romance.tease.yes.far.teasing
+@rule romance.tease.yes.stare.teasing
 on romance
-when act=tease q=yes close<=1 tone=teasing
+when act=tease q=yes hook=tease.stare|tease.looking tone=teasing
 feel shy
 - And if I was? What would you do about it?
 - And if I was?
 - What if I was? Then what?
 - I was. Problem?
+
+@rule romance.tease.yes.ideas.teasing
+on romance
+when act=tease q=yes hook=tease.ideas tone=teasing
+feel shy
 - Get them, then. I want to see what you come up with.
 - Show me your ideas.
 - Go on. Surprise me.
 - Let's see what you've got.
+
+@rule romance.tease.yes.looks.teasing
+on romance
+when act=tease q=yes hook=tease.looks tone=teasing
+feel shy
 - Distracting you was the plan. Glad it's working.
 - Distraction was the plan.
 - Working, then. Good.
@@ -232,33 +369,264 @@ feel pout
 - Pathetic. Try again later.
 - Weak. Very weak.
 
+@rule romance.tease.yes.sleepy.gentle
+on romance
+when act=tease q=yes hook=tease.sleepy tone=gentle
+feel shy
+- S-soft...? I stayed up too late... don't look too closely...
+- Is it that obvious...? ...You like it?
+- I'm half asleep... and you say that...
+
+@rule romance.tease.yes.sleepy.energetic
+on romance
+when act=tease q=yes hook=tease.sleepy tone=energetic
+feel shy
+- Soft?! I'm running on two hours of sleep! ...Hehe, thanks.
+- Don't look! My eyes are half closed! ...Soft, huh?
+- Sleepy face? Ugh! ...Okay, I'll take it!
+
+@rule romance.tease.yes.sleepy.cool
+on romance
+when act=tease q=yes hook=tease.sleepy tone=cool
+feel shy
+- ...I'm too tired to argue. Fine. Soft.
+- ...Don't get used to it.
+- ...Hm. Only you would say that.
+
+@rule romance.tease.yes.sleepy.teasing
+on romance
+when act=tease q=yes hook=tease.sleepy tone=teasing
+feel shy
+- Soft? Want to be my pillow, then?
+- Careful. I might fall asleep on your shoulder.
+- Like it? Then you can wake me up tomorrow.
+
+@rule romance.tease.yes.stomach.gentle
+on romance
+when act=tease q=yes hook=tease.stomach tone=gentle
+feel shy
+- Y-you heard that?! ...Um... yes, please...
+- So embarrassing... but... maybe a little snack?
+- Please forget you heard that... ...But I am hungry.
+
+@rule romance.tease.yes.stomach.energetic
+on romance
+when act=tease q=yes hook=tease.stomach tone=energetic
+feel shy
+- Ahaha, busted! Yes! Feed me! Now!
+- My stomach has no shame! ...Lunch? Your treat?
+- That wasn't me! ...Okay, it was. Food, please!
+
+@rule romance.tease.yes.stomach.cool
+on romance
+when act=tease q=yes hook=tease.stomach tone=cool
+feel shy
+- ...You heard nothing.
+- ...Fine. Feed me, then.
+- ...Pretend that didn't happen. And buy me something.
+
+@rule romance.tease.yes.stomach.teasing
+on romance
+when act=tease q=yes hook=tease.stomach tone=teasing
+feel shy
+- Feed me? By hand? ...Bold offer.
+- You'd look cute feeding me.
+- Only if you share. Spoon included.
+
+@rule romance.tease.yes.looking.energetic
+on romance
+when act=tease q=yes hook=tease.looking tone=energetic
+feel shy
+- Maybe! Is that a problem? Hehe!
+- On my mind? You! Obviously! Hehe!
+
+@rule romance.tease.yes.looking.teasing
+on romance
+when act=tease q=yes hook=tease.looking tone=teasing
+feel shy
+- On my mind? Guess.
+- You noticed? Took you long enough.
+
+@rule romance.tease.yes.swimsuit.energetic
+on romance
+when act=tease q=yes hook=tease.swimsuit tone=energetic
+feel shy
+- Working, huh? Then race me to the other side!
+- Hehe! New swimsuit! You like it?!
+
+@rule romance.tease.yes.swimsuit.teasing
+on romance
+when act=tease q=yes hook=tease.swimsuit tone=teasing
+feel shy
+- Working for me? It's working on you, clearly.
+- Careful. You're staring at the water like it owes you money.
+
+@rule romance.tease.yes.gym.gentle
+on romance
+when act=tease q=yes hook=tease.gym tone=gentle
+feel shy
+- Th-they're just gym clothes...! ...You really think so?
+- D-don't look so closely... I'm all sweaty...
+- Too well...? Um... I don't know what to say...
+
+@rule romance.tease.yes.gym.energetic
+on romance
+when act=tease q=yes hook=tease.gym tone=energetic
+feel shy
+- Hehe, the sporty look! Want to race me?
+- Too well?! Eyes on the ball, mister!
+
+@rule romance.tease.yes.gym.cool
+on romance
+when act=tease q=yes hook=tease.gym tone=cool
+feel shy
+- ...They're practical. Nothing more.
+- ...A little too well. Hm. Noted.
+
+@rule romance.tease.yes.gym.teasing
+on romance
+when act=tease q=yes hook=tease.gym tone=teasing
+feel shy
+- Too well? Is that why you keep looking at my legs?
+- Like them? Come jog with me and look all you want.
+- A little too well? Then don't fall behind.
+
+@rule romance.tease.yes.library.gentle
+on romance
+when act=tease q=yes hook=tease.library tone=gentle
+feel shy
+- Shh... people are studying... b-but I don't want to move either...
+- Too close...? Should I... no, I'll stay.
+
+@rule romance.tease.yes.library.energetic
+on romance
+when act=tease q=yes hook=tease.library tone=energetic
+feel shy
+- Shh! Library! ...Scoot closer, though. Hehe.
+- Too close? You want me to move? ...Nope!
+- Shh! The librarian's looking! ...Hehe, don't move.
+
+@rule romance.tease.yes.library.cool
+on romance
+when act=tease q=yes hook=tease.library tone=cool
+feel shy
+- ...Then don't move. And keep your voice down.
+- ...Close is fine. Quiet is required.
+- ...Open your book. Pretend to read.
+
+@rule romance.tease.yes.library.teasing
+on romance
+when act=tease q=yes hook=tease.library tone=teasing
+feel shy
+- Pretty close? I can fix that. *She leans in closer.*
+- Want me to sit on your lap instead? Kidding. Shh.
+- Close? This is close. *Her knee touches yours.*
+
+@rule romance.tease.yes.rooftop.gentle
+on romance
+when act=tease q=yes hook=tease.rooftop tone=gentle
+feel shy
+- C-convenient for what...?
+- It's quiet up here... I like it, with you.
+- J-just us... um... yes... I noticed too...
+
+@rule romance.tease.yes.rooftop.energetic
+on romance
+when act=tease q=yes hook=tease.rooftop tone=energetic
+feel shy
+- Convenient, huh? What are you planning? Hehe!
+- Just us and the sky! ...Okay, now I'm nervous!
+- Nobody up here but us! ...Wait, why did you say it like that?!
+
+@rule romance.tease.yes.rooftop.cool
+on romance
+when act=tease q=yes hook=tease.rooftop tone=cool
+feel shy
+- ...Convenient. Yes. Don't waste it.
+- ...I noticed that too.
+- ...Nobody can hear us here. Remember that.
+
+@rule romance.tease.yes.rooftop.teasing
+on romance
+when act=tease q=yes hook=tease.rooftop tone=teasing
+feel shy
+- Convenient? Then why are you still over there?
+- Took you long enough to notice we're alone.
+
+@rule romance.tease.yes.cute.energetic
+on romance
+when act=tease q=yes hook=tease.cute tone=energetic
+feel shy
+- Cute?! Me?! ...Say it again! Hehe!
+- Right now?! Even with my hair like this? Hehe, thanks!
+- I know, right?! ...Wait, you mean it? Hehe!
+
+@rule romance.tease.yes.cute.teasing
+on romance
+when act=tease q=yes hook=tease.cute tone=teasing
+feel shy
+- Only right now? Try again.
+- I know. But keep saying it.
+
 # ================= whispering =================
-@rule me.romance.whisper.gf
+@rule me.romance.whisper.gf.skin
 on me.romance
 when act=whisper lvl=gf
+hook whisper.skin
 - *You lean in.* I can't stop thinking about last time. About your skin.
+
+@rule me.romance.whisper.gf.now
+on me.romance
+when act=whisper lvl=gf
+hook whisper.now
 - *Quietly.* I want you. Right now. Here.
+
+@rule me.romance.whisper.gf.taste
+on me.romance
+when act=whisper lvl=gf
+hook whisper.taste
 - *In her ear.* You smell amazing. I want to taste you.
 
-@rule me.romance.whisper.notgf
+@rule me.romance.whisper.notgf.thinking
 on me.romance
 when act=whisper lvl=notgf
+hook whisper.thinking
 - *You lean in.* You have no idea what I'm thinking about right now.
+
+@rule me.romance.whisper.notgf.uniform
+on me.romance
+when act=whisper lvl=notgf
+hook whisper.uniform
 - *Quietly.* I keep imagining what you look like without the uniform.
+
+@rule me.romance.whisper.notgf.alone
+on me.romance
+when act=whisper lvl=notgf
+hook whisper.alone
 - *In her ear.* If we were alone right now...
 
-@rule romance.whisper.yes.gf.gentle
+@rule romance.whisper.yes.gf.taste.gentle
 on romance
-when act=whisper q=yes lvl=gf tone=gentle
+when act=whisper q=yes lvl=gf hook=whisper.taste tone=gentle
 feel love
 - Hah... d-don't breathe on my ear like that... my legs are going weak...
 - Hah... your breath... my knees are shaking...
 - D-don't whisper there... I'm melting...
 - Ah... my ear... I can't stand up...
+
+@rule romance.whisper.yes.gf.skin.gentle
+on romance
+when act=whisper q=yes lvl=gf hook=whisper.skin tone=gentle
+feel love
 - Me too... I keep remembering your hands on me...
 - Me too... I remember your hands...
 - I keep thinking about your touch...
 - I still feel your hands on me...
+
+@rule romance.whisper.yes.gf.now.gentle
+on romance
+when act=whisper q=yes lvl=gf hook=whisper.now tone=gentle
+feel love
 - I-I'm all yours... just not in front of everyone...
 - I'm yours... just not in public...
 - All yours... somewhere private...
@@ -268,18 +636,28 @@ feel love
 on romance
 when act=whisper q=yes lvl=gf tone=energetic
 feel love
-- Ahh, stop it! I'm getting all tingly! ...Don't stop.
-- Stop! Tingly! ...Don't stop!
-- Ahh! Shivers! ...More!
-- Eek! Ticklish! ...Keep going!
-- Ehehe, same! I even dreamt about it! ...Was that too honest?
-- Same! I dreamt about it! Too honest?
-- Me too! Every night! Oops!
-- Hehe, I replay it constantly!
 - Ahh, my face is on fire! You're the worst! ...I love it.
 - My face is on fire! I love it!
 - You're terrible! Do it again!
 - Ahh! So red! More!
+
+@rule romance.whisper.yes.gf.taste.energetic
+on romance
+when act=whisper q=yes lvl=gf hook=whisper.taste tone=energetic
+feel love
+- Ahh, stop it! I'm getting all tingly! ...Don't stop.
+- Stop! Tingly! ...Don't stop!
+- Ahh! Shivers! ...More!
+- Eek! Ticklish! ...Keep going!
+
+@rule romance.whisper.yes.gf.skin.energetic
+on romance
+when act=whisper q=yes lvl=gf hook=whisper.skin tone=energetic
+feel love
+- Ehehe, same! I even dreamt about it! ...Was that too honest?
+- Same! I dreamt about it! Too honest?
+- Me too! Every night! Oops!
+- Hehe, I replay it constantly!
 
 @rule romance.whisper.yes.gf.cool
 on romance
@@ -293,7 +671,7 @@ feel love
 - Then don't keep me waiting.
 - Then act.
 - Don't make me wait.
-- ...You'll pay for saying that in a hallway. Later.
+- ...You'll pay for saying that here. Later.
 - ...You'll pay for that later.
 - ...Bold. Later, you'll answer for it.
 - ...Later. You'll regret saying that here.
@@ -302,86 +680,136 @@ feel love
 on romance
 when act=whisper q=yes lvl=gf tone=teasing
 feel love
-- Taste me? Then hurry up and take me somewhere nobody can hear.
 - Then take me somewhere quiet. Now.
 - Hurry. Somewhere nobody hears.
-- Taste me? Find a locked room.
-- Right now? Here? ...You're lucky I like it when you're reckless.
-- Here? You're reckless. I like that.
-- Now? Bold. Good.
-- Right here? Naughty boy.
 - Mm, keep whispering. I want to see how red you can make me.
 - Keep whispering. Make me redder.
 - More. Make me blush.
 - Go on. I want to burn.
 
+@rule romance.whisper.yes.gf.taste.teasing
+on romance
+when act=whisper q=yes lvl=gf hook=whisper.taste tone=teasing
+feel love
+- Taste me? Then hurry up and take me somewhere nobody can hear.
+- Taste me? Find a locked room.
+
+@rule romance.whisper.yes.gf.now.teasing
+on romance
+when act=whisper q=yes lvl=gf hook=whisper.now tone=teasing
+feel love
+- Right now? Here? ...You're lucky I like it when you're reckless.
+- Here? You're reckless. I like that.
+- Now? Bold. Good.
+- Right here? Naughty boy.
+
 @rule romance.whisper.yes.notgf.gentle
 on romance
 when act=whisper q=yes lvl=notgf tone=gentle
 feel shy
-- W-without the uniform?! ...D-don't imagine too hard...
-- W-without...?! Don't imagine too much...!
-- Ah! P-please don't picture that...!
-- Not the uniform...! Stop imagining!
-- If we were alone... I-I don't know what I'd do...
-- If we were alone... I don't know what I'd do...
-- Alone... I'd probably melt...
-- If it were just us... um...
 - My heart's beating so fast... you can't say that so close...
 - My heart... you're too close...
 - So close... my heart's racing...
 - D-don't say that so close...
 
+@rule romance.whisper.yes.notgf.uniform.gentle
+on romance
+when act=whisper q=yes lvl=notgf hook=whisper.uniform tone=gentle
+feel shy
+- W-without the uniform?! ...D-don't imagine too hard...
+- W-without...?! Don't imagine too much...!
+- Ah! P-please don't picture that...!
+- Not the uniform...! Stop imagining!
+
+@rule romance.whisper.yes.notgf.alone.gentle
+on romance
+when act=whisper q=yes lvl=notgf hook=whisper.alone tone=gentle
+feel shy
+- If we were alone... I-I don't know what I'd do...
+- If we were alone... I don't know what I'd do...
+- Alone... I'd probably melt...
+- If it were just us... um...
+
 @rule romance.whisper.yes.notgf.energetic
 on romance
 when act=whisper q=yes lvl=notgf tone=energetic
 feel shy
-- Hey! Pervert! ...What were you imagining, exactly?
-- Pervert! ...What were you picturing?
 - Hey! ...Tell me more, though!
 - Eek! ...Details?
-- Alone, huh? Then you'd better make it worth my time!
-- Alone? Make it worth it!
-- Just us? Better be good!
-- Alone, huh? Impress me!
 - Ahaha! Ticklish! And, um... kinda hot. Don't tell anyone!
 - Ticklish! And... kinda hot! Shh!
 - Haha! Too close! ...I like it!
 - Eek! Tingly! Don't tell!
 
+@rule romance.whisper.yes.notgf.uniform.energetic
+on romance
+when act=whisper q=yes lvl=notgf hook=whisper.uniform|whisper.thinking tone=energetic
+feel shy
+- Hey! Pervert! ...What were you imagining, exactly?
+- Pervert! ...What were you picturing?
+
+@rule romance.whisper.yes.notgf.alone.energetic
+on romance
+when act=whisper q=yes lvl=notgf hook=whisper.alone tone=energetic
+feel shy
+- Alone, huh? Then you'd better make it worth my time!
+- Alone? Make it worth it!
+- Just us? Better be good!
+- Alone, huh? Impress me!
+
 @rule romance.whisper.yes.notgf.cool
 on romance
 when act=whisper q=yes lvl=notgf tone=cool
 feel shy
-- ...That's indecent. Continue.
-- ...Indecent. Go on.
-- ...Shameless. Continue.
-- ...Inappropriate. Proceed.
-- If we were alone, you'd find out.
-- Alone, you'd learn.
-- You'd find out.
-- If we were alone... you'd see.
 - ...You're bold. I'll remember it.
 - ...Bold. Remembered.
 - ...Daring. Noted.
 - ...You're brave.
 
+@rule romance.whisper.yes.notgf.uniform.cool
+on romance
+when act=whisper q=yes lvl=notgf hook=whisper.uniform|whisper.alone tone=cool
+feel shy
+- ...That's indecent. Continue.
+- ...Indecent. Go on.
+- ...Shameless. Continue.
+- ...Inappropriate. Proceed.
+
+@rule romance.whisper.yes.notgf.alone.cool
+on romance
+when act=whisper q=yes lvl=notgf hook=whisper.alone tone=cool
+feel shy
+- If we were alone, you'd find out.
+- Alone, you'd learn.
+- You'd find out.
+- If we were alone... you'd see.
+
 @rule romance.whisper.yes.notgf.teasing
 on romance
 when act=whisper q=yes lvl=notgf tone=teasing
+feel shy
+- Oh? Tell me more. In detail.
+- Tell me more. Slowly.
+- Go on. Details.
+- Mm. More.
+
+@rule romance.whisper.yes.notgf.uniform.teasing
+on romance
+when act=whisper q=yes lvl=notgf hook=whisper.uniform|whisper.thinking tone=teasing
 feel shy
 - Imagining is free. Seeing costs extra.
 - Imagine all you like. Seeing costs extra.
 - Free to dream. Not to look.
 - Picture it. That's all you get. For now.
+
+@rule romance.whisper.yes.notgf.alone.teasing
+on romance
+when act=whisper q=yes lvl=notgf hook=whisper.alone tone=teasing
+feel shy
 - If we were alone, you'd already be on your knees.
 - Alone, you'd be kneeling by now.
 - Alone? You'd be mine already.
 - If we were alone, you'd beg.
-- Oh? Tell me more. In detail.
-- Tell me more. Slowly.
-- Go on. Details.
-- Mm. More.
 
 @rule romance.whisper.no.gentle
 on romance
@@ -427,11 +855,22 @@ when act=memories lvl=first
 - Do you ever think about... that day?
 - That day... I haven't forgotten a single thing.
 
-@rule me.romance.memories.again
+@rule me.romance.memories.again.replay
 on me.romance
 when act=memories lvl=again
+hook memories.replay
 - I keep replaying last time in my head.
+
+@rule me.romance.memories.again.incredible
+on me.romance
+when act=memories lvl=again
+hook memories.incredible
 - You were incredible the other day.
+
+@rule me.romance.memories.again.again
+on me.romance
+when act=memories lvl=again
+hook memories.again
 - When can we do that again?
 
 @rule romance.memories.yes.first.gentle
@@ -470,18 +909,28 @@ feel love
 - So shaky. Cute. I'm in charge next time.
 - You trembled. Next time, I drive.
 
-@rule romance.memories.yes.again.gentle
+@rule romance.memories.yes.again.replay.gentle
 on romance
-when act=memories q=yes lvl=again tone=gentle
+when act=memories q=yes lvl=again hook=memories.replay tone=gentle
 feel love
 - Me too... I can't focus in class when I remember your voice...
 - Me too... I remember your voice in class...
 - I can't concentrate... I keep remembering...
 - Me too... I blush during lessons...
+
+@rule romance.memories.yes.again.replay2.gentle
+on romance
+when act=memories q=yes lvl=again hook=memories.replay|memories.incredible tone=gentle
+feel love
 - I still blush when I walk past... that place...
 - I blush passing that place...
 - That spot still makes me shy...
 - I can't walk by there without blushing...
+
+@rule romance.memories.yes.again.again.gentle
+on romance
+when act=memories q=yes lvl=again hook=memories.again tone=gentle
+feel love
 - Whenever you want... I-I mean... soon, please...
 - Whenever... I mean... soon, please...
 - Anytime... soon would be nice...
@@ -495,10 +944,20 @@ feel love
 - When I was so loud?! Embarrassing! Again!
 - Hehe, I was noisy! Let's repeat!
 - So loud! Oops! Again soon?
+
+@rule romance.memories.yes.again.replay.energetic
+on romance
+when act=memories q=yes lvl=again hook=memories.replay|memories.incredible tone=energetic
+feel love
 - I still have a mark, you know! Right here. *She tugs her collar.* Your fault!
 - Still got a mark! Your fault!
 - Look! A mark! You did that!
 - The mark's still here! Hehe!
+
+@rule romance.memories.yes.again.again.energetic
+on romance
+when act=memories q=yes lvl=again hook=memories.again tone=energetic
+feel love
 - Soon! Tomorrow! Today?! Okay, I'm too excited, sorry!
 - Soon! Today?! Too eager?!
 - Tomorrow! No, today! Hehe!
@@ -516,19 +975,34 @@ feel love
 - ...Same place next time.
 - ...That place. Again.
 - ...I liked that spot.
+
+@rule romance.memories.yes.again.again.cool
+on romance
+when act=memories q=yes lvl=again hook=memories.again tone=cool
+feel love
 - When I say so. Which might be soon.
 - When I decide. Soon, maybe.
 - My call. Possibly soon.
 - When I say. Soon.
 
-@rule romance.memories.yes.again.teasing
+@rule romance.memories.yes.again.incredible.teasing
 on romance
-when act=memories q=yes lvl=again tone=teasing
+when act=memories q=yes lvl=again hook=memories.incredible tone=teasing
 feel love
 - Incredible? I was holding back. Want to see what I can really do?
 - Incredible? I was holding back.
+
+@rule romance.memories.yes.again.replay.teasing
+on romance
+when act=memories q=yes lvl=again hook=memories.replay|memories.incredible tone=teasing
+feel love
 - That was a warm-up.
 - You've seen nothing yet.
+
+@rule romance.memories.yes.again.again.teasing
+on romance
+when act=memories q=yes lvl=again hook=memories.again tone=teasing
+feel love
 - Again? You're insatiable. ...Good. So am I.
 - Again? Insatiable. Good.
 - Already? Me too.
@@ -633,11 +1107,22 @@ when act=private q=no lvl=moment tone=teasing
 - ...Patience.
 
 # ================= sneaking off =================
-@rule me.romance.sneak
+@rule me.romance.sneak.quiet
 on me.romance
 when act=sneak
+hook sneak.quiet
 - Hey... want to sneak off somewhere quiet? Just the two of us.
+
+@rule me.romance.sneak.spot
+on me.romance
+when act=sneak
+hook sneak.spot
 - I know a spot where nobody goes. Come with me?
+
+@rule me.romance.sneak.private
+on me.romance
+when act=sneak
+hook sneak.private
 - Let's skip the next bit and find somewhere private.
 
 @rule romance.sneak.yes.gentle
@@ -687,10 +1172,20 @@ feel love
 - Finally. What took so long?
 - At last. Lead on.
 - About time.
-- Somewhere private? You read my mind. Hurry.
-- Private? You read my mind.
 - Hurry. I'm impatient.
 - Somewhere quiet. Fast.
+
+@rule romance.sneak.yes.private.teasing
+on romance
+when act=sneak q=yes hook=sneak.private tone=teasing
+feel love
+- Somewhere private? You read my mind. Hurry.
+
+@rule romance.sneak.yes.private2.teasing
+on romance
+when act=sneak q=yes hook=sneak.private tone=teasing
+feel love
+- Private? You read my mind.
 
 @rule romance.sneak.wary.gentle
 on romance
@@ -741,10 +1236,15 @@ feel pout
 on romance
 when act=sneak q=no tone=energetic
 feel pout
-- Ehh? Sneak off? With you? Pfft, no way! ...Not yet, anyway.
-- Sneak off? Nope! Not yet!
 - Pfft, no! Maybe someday!
 - Ehh? Not today!
+
+@rule romance.sneak.no.quiet.energetic
+on romance
+when act=sneak q=no hook=sneak.quiet tone=energetic
+feel pout
+- Ehh? Sneak off? With you? Pfft, no way! ...Not yet, anyway.
+- Sneak off? Nope! Not yet!
 
 @rule romance.sneak.no.cool
 on romance
@@ -759,10 +1259,15 @@ feel pout
 on romance
 when act=sneak q=no tone=teasing
 feel pout
-- Sneak off with you? You wish. Try harder.
 - You wish.
 - Try harder.
 - In your dreams.
+
+@rule romance.sneak.no.quiet.teasing
+on romance
+when act=sneak q=no hook=sneak.quiet tone=teasing
+feel pout
+- Sneak off with you? You wish. Try harder.
 
 # ================= a bold line =================
 @rule me.romance.bold.gf
