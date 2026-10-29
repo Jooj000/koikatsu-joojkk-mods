@@ -123,7 +123,8 @@ namespace Joojkk.CampusLife
                     c = HWant(h, gs, pace, favor, lewd, mood, r);
                     break;
                 case Ask.HoldHand:
-                    c = h.isGirlfriend ? Mathf.Max(0.95f, 0.55f + favor / 120f) : h.relation >= 0 ? 0.2f + favor / 120f : 0.02f;
+                    c = h.isGirlfriend ? Mathf.Max(0.95f, 0.55f + favor / 120f) : h.relation >= 1 ? 0.2f + favor / 120f : h.relation == 0 ? 0.05f + favor / 120f : 0.02f;
+                    c += Familiar(h, r);
                     break;
                 default: // together: lunch, club, going home, study, exercise, the club, follow me
                     c = h.isGirlfriend ? 0.85f : h.relation >= 1 ? 0.55f + h.favor / 400f : h.relation == 0 ? 0.25f + h.favor / 300f : 0.1f;
@@ -597,6 +598,60 @@ namespace Joojkk.CampusLife
             return c;
         }
 
+        // ================= how well she knows you, how hard you push =================
+
+        /// <summary>
+        /// Days together for romance (2026-11-07: "as personagens aceitavam romance desde o começo"): a girl you met
+        /// today is not one you have talked to for a week. Counts the days you talked (the last 10): an acquaintance
+        /// loses up to 0.2 in her first days and gains up to 0.1 after a week, a friend half of it; your girlfriend
+        /// nothing.
+        /// </summary>
+        internal static float Familiar(SaveData.Heroine h, List<string> r)
+        {
+            if (h.isGirlfriend || h.relation < 0) return 0f;
+            var days = S.Girl(GirlInfo.Key(h)).TalkDays.Distinct().Count();
+            var d = h.relation == 0 ? Mathf.Clamp((days - 4) * 0.06f, -0.2f, 0.1f) : Mathf.Clamp((days - 4) * 0.03f, -0.1f, 0.05f);
+            if (Mathf.Abs(d) > 0.001f) r.Add(days + (days == 1 ? " day" : " days") + " together");
+            return d;
+        }
+
+        /// <summary>
+        /// How hard you are pushing (2026-11-07: "aceitam spam. então dava pra repetir sweet talk e afins até acabar o
+        /// tempo e farmar favor e H"): the same step again today costs 0.2 a try (0.1 with your girlfriend), and every
+        /// romance or spicy step with her today past the third costs 0.08. <paramref name="again"/> is how many times you
+        /// already tried this one today. Read only; <see cref="Pushed"/> counts the try.
+        /// </summary>
+        internal static float Pushing(SaveData.Heroine h, string step, out int again, List<string> r)
+        {
+            again = PushCount(h, "push:" + step);
+            var all = PushCount(h, "pushall");
+            var c = -again * (h.isGirlfriend ? 0.1f : 0.2f) - Mathf.Max(0, all - 3) * 0.08f;
+            if (again > 0) r.Add("try " + (again + 1) + " of this today");
+            if (all > 3) r.Add("pushing (" + all + " romantic steps today)");
+            return c;
+        }
+
+        /// <summary>Counts a romance or spicy try with her today.</summary>
+        internal static void Pushed(SaveData.Heroine h, string step)
+        {
+            foreach (var tag in new[] { "push:" + step, "pushall" })
+                S.Buffs[tag + "@" + GirlInfo.Key(h)] = S.Day * 100 + Math.Min(99, PushCount(h, tag) + 1);
+        }
+
+        /// <summary>How many times you tried any of these steps with her today (her answer reads it: "You already asked").</summary>
+        internal static int Tries(SaveData.Heroine h, params string[] steps)
+        {
+            var n = 0;
+            foreach (var st in steps) n = Math.Max(n, PushCount(h, "push:" + st));
+            return n;
+        }
+
+        private static int PushCount(SaveData.Heroine h, string tag)
+        {
+            int v;
+            return S.Buffs.TryGetValue(tag + "@" + GirlInfo.Key(h), out v) && v / 100 == S.Day ? v % 100 : 0;
+        }
+
         // ================= romance and spicy lines: the same four answers =================
 
         /// <summary>
@@ -610,7 +665,13 @@ namespace Joojkk.CampusLife
             string why;
             var c = FlirtChance(h, spicy, crowd, refused, out why);
             if (h.isAnger) return "no";
-            var yes = Dice(h, (spicy ? "spicy:" : "romance:") + what) < c;
+            int again;
+            var pr = new List<string>();
+            c = Mathf.Clamp01(c + Pushing(h, what, out again, pr));
+            if (pr.Count > 0) why += ", " + string.Join(", ", pr.ToArray());
+            // A new try is a new roll (one roll for the whole period made a yes come back forever).
+            var yes = Dice(h, (spicy ? "spicy:" : "romance:") + what + (again > 0 ? "#" + again : "")) < c;
+            Pushed(h, what);
             var gs = S.Girl(GirlInfo.Key(h));
             var pace = Profile(h);
             var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
@@ -637,7 +698,7 @@ namespace Joojkk.CampusLife
                 why += "; wants it " + desire.ToString("0.00");
                 a = desire >= 0.5f ? "wary_no" : "no";
             }
-            var key = S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/" + (spicy ? "spicy:" : "romance:") + what;
+            var key = S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/" + (spicy ? "spicy:" : "romance:") + what + "#" + again;
             if (Logged.Add(key)) Note(GirlInfo.FirstName(h) + ": " + (spicy ? "spicy " : "romance ") + what + " -> " + a.Replace('_', ' ') + " (" + why + ")");
             return a;
         }
@@ -655,7 +716,7 @@ namespace Joojkk.CampusLife
             var lewd = h.lewdness * mult;
             float c;
             if (!spicy)
-                c = h.isGirlfriend ? 0.95f : h.relation >= 1 ? 0.6f + favor / 150f : h.relation == 0 ? 0.35f + favor / 120f : 0.05f;
+                c = h.isGirlfriend ? 0.95f : h.relation >= 1 ? 0.6f + favor / 150f : h.relation == 0 ? 0.1f + favor / 110f : 0.05f;
             else
                 c = h.isGirlfriend ? 0.7f + lewd / 200f
                     : h.relation >= 1 ? 0.2f + lewd / 100f + (favor - 40f) / 200f + (pace == Pace.Open ? 0.15f : 0f)
@@ -663,6 +724,7 @@ namespace Joojkk.CampusLife
                     : -0.3f;
             r.Add(h.isGirlfriend ? "girlfriend" : h.relation >= 1 ? "friend" : h.relation == 0 ? "knows you" : "stranger");
             r.Add(pace.ToString().ToLowerInvariant() + " x" + mult.ToString("0.00"));
+            c += Familiar(h, r);
             switch (mood)
             {
                 case Mood.Flirty: c += 0.2f; r.Add("flirty"); break;
@@ -687,7 +749,12 @@ namespace Joojkk.CampusLife
         {
             string why;
             var c = Chance(h, Ask.HoldHand, out why);
-            var a = h.isAnger ? "no" : TouchTier(h, "hand", false, 1, crowd, Dice(h, Ask.HoldHand.ToString()) < c, ref why);
+            int again;
+            var pr = new List<string>();
+            c = Mathf.Clamp01(c + Pushing(h, "hand", out again, pr));
+            if (pr.Count > 0) why += ", " + string.Join(", ", pr.ToArray());
+            var a = h.isAnger ? "no" : TouchTier(h, "hand", false, 1, crowd, Dice(h, Ask.HoldHand + (again > 0 ? "#" + again : "")) < c, ref why);
+            Pushed(h, "hand");
             if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/" + Ask.HoldHand)) Note(GirlInfo.FirstName(h) + ": hold hands -> " + a.Replace('_', ' ') + " (" + Mathf.RoundToInt(c * 100) + "%: " + why + ")");
             return a;
         }

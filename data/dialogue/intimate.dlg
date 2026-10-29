@@ -87,12 +87,18 @@ when act=tease close<=1
 hook tease.looks
 - You look really good today. Like, distractingly good.
 
+# "On campus" only where it is campus (2026-11-07): not in the park.
+@rule romance.tease.yes.kiss.campus.gentle
+on romance
+when act=tease q=yes hook=tease.kiss|tease.hot|tease.library place!=park tone=gentle
+feel shy
+- Y-you can't just say things like that on campus...! ...Say it again later.
+- N-not on campus...! ...Say it again later.
+
 @rule romance.tease.yes.kiss.gentle
 on romance
 when act=tease q=yes hook=tease.kiss|tease.hot|tease.library tone=gentle
 feel shy
-- Y-you can't just say things like that on campus...! ...Say it again later.
-- N-not on campus...! ...Say it again later.
 - Y-you can't say that here...! Later, okay?
 - Ah...! Not here... but later...
 

@@ -653,7 +653,7 @@ namespace Joojkk.CampusLife
             if (x.Tier >= 0)
             {
                 // Heart: her closeness and mood decide, like the old flirting odds.
-                var chance = x.Lewd ? TeaseChance(s) : FlirtChance(s);
+                var chance = (x.Lewd ? TeaseChance(s) : FlirtChance(s)) + Pushy(h, "subject");
                 sc = Random.value < chance ? 3 : Random.value < 0.5f ? 1 : -1;
             }
             return sc;
@@ -669,6 +669,7 @@ namespace Joojkk.CampusLife
             if (gs.LinesUsed.Count > 16) gs.LinesUsed.RemoveAt(0);
             if (!s.Used.Contains(x.Topic)) s.Used.Add(x.Topic);
             var sc = SubjectScore(x, h, s);
+            if (x.Tier >= 0) Consent.Pushed(h, "subject");
             var reaction = sc >= 3 ? 2 : sc >= 1 ? 1 : sc >= 0 ? 0 : -1;
             var b = new SceneBuilder(h, true);
             b.Me(Fill(x.Opener[Random.Range(0, x.Opener.Length)], h));

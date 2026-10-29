@@ -796,6 +796,7 @@ namespace Joojkk.CampusLife
             _prunedDay = S.Day;
             foreach (var k in S.Buffs.Keys.Where(k => k.StartsWith("rep:", StringComparison.Ordinal) && S.Buffs[k] / 10 != S.Day).ToList()) S.Buffs.Remove(k);
             foreach (var k in S.Buffs.Keys.Where(k => (k.StartsWith("fday:", StringComparison.Ordinal) || k.StartsWith("hday:", StringComparison.Ordinal)) && S.Buffs[k] / 1000 != S.Day).ToList()) S.Buffs.Remove(k);
+            foreach (var k in S.Buffs.Keys.Where(k => k.StartsWith("push", StringComparison.Ordinal) && S.Buffs[k] / 100 != S.Day).ToList()) S.Buffs.Remove(k);   // Consent.Pushed
         }
 
         private static string[] Stock(Q q)

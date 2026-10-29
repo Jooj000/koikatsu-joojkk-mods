@@ -1,6 +1,6 @@
 # Campus Life - dialogue written for the mod
 
-Total lines (counting every personality version): 1489
+Total lines (counting every personality version): 1486
 
 Every line below was written for Campus Life (author: Joojkk). Lines of the game itself
 (normal conversations, story events, H) are not listed. Lines marked 'by personality' have four
@@ -114,11 +114,6 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
 - **Choice:** Promise to keep it secret. | Tease her about it.
 - **Her:** {RomanceSay}
 - **Narration:** {WorriedHint} <color=#6ab4ff>[INT]</color> Ask her... > Just listen.
-
-### PickTopic
-- **Her:** {Love ? RomanceSay}
-- **Her:** {Everyday}
-- **Her:** {Everyday}
 
 ### LetHerTalk
 - **Her:** {Everyday}

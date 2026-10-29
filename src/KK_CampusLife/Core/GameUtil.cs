@@ -248,6 +248,7 @@ namespace Joojkk.CampusLife
         /// um limite artificial de piso de dias"): the first 8 favor points of the day (6 of H) count whole, as many again
         /// at half, then a tenth; the steps grow with her pace (Consent.Multiplier: open x1.4, reserved from x0.7). So a
         /// well-played day fills ~20 favor for a normal girl, and the days to date her come from the bar, not from a floor.
+        /// A part of a point is paid by chance (2026-11-07), so a beat late in the day often pays nothing.
         /// Losses always count. Kept in the save (Buffs "fday:girl" / "hday:girl" = day x 1000 + points won).
         /// </summary>
         private static int Daily(SaveData.Heroine h, string tag, int add, float step)
@@ -266,7 +267,11 @@ namespace Joojkk.CampusLife
                 var n = won + i;
                 got += n < full ? 1f : n < 2f * full ? 0.5f : 0.1f;
             }
-            var paid = Mathf.Max(1, Mathf.RoundToInt(got));
+            // Past the curve a beat pays a fraction of a point; it rounds by chance instead of up to 1, so many small beats
+            // in one day no longer fill the bar (2026-11-07: "dava pra repetir sweet talk e afins até acabar o tempo e
+            // farmar favor e H").
+            var whole = Mathf.FloorToInt(got);
+            var paid = whole + (UnityEngine.Random.value < got - whole ? 1 : 0);
             s.Buffs[k] = s.Day * 1000 + Math.Min(999, won + add);
             if (paid < add) CampusLifePlugin.Log.LogInfo((tag == "fday:" ? "Favor" : "H") + " today: " + GirlInfo.FirstName(h) + " " + won + " won, +" + add + " pays +" + paid);
             return paid;

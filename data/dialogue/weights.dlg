@@ -74,7 +74,7 @@
 # only add lines, so they stay worth 1 and the base lines keep sharing the draw. The hook of your line is
 # worth 1 too: her answers to that line come first, and the ones that fit any line of the step stay in the draw.
 @weights romance
-- pers=2.5 act=3 q=3 close=3 lvl=3 tone=1.5 mood=1 watchers=1 hook=1
+- pers=2.5 act=3 q=3 close=3 lvl=3 tone=1.5 mood=1 watchers=1 hook=1 pushed=4
 
 # Her refusals before the game's H: which one first, then who she is to you.
 @weights bounds

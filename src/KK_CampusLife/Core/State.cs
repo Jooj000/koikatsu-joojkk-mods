@@ -173,6 +173,7 @@ namespace Joojkk.CampusLife
         public int JealousDay = -1;     // last day she told you she feels left out
         public int VentDay = -1;        // last day she vented to you
         public int ComplimentDay = -1;  // last day you complimented her
+        public string ComplimentKind = "";  // what that compliment was about (looks, effort, club, smart)
         public List<int> Cleared = new List<int>();     // incidents you talked through with her
         public int DuoDay = -1;         // last day she came over in a two-girl scene
         public List<int> DuoHandled = new List<int>();  // incidents a two-girl scene was already about
@@ -197,7 +198,7 @@ namespace Joojkk.CampusLife
                 {"at", Attention}, {"dv", Devotion}, {"pd", LastPerkDay}, {"arc", Arc == null ? null : Arc.ToDict()},
                 {"td", TalkDay}, {"tt", TalksToday}, {"cd", ChatDay}, {"lto", LastTopics},
                 {"tr", Trust}, {"kn", Known.Cast<object>().ToList()}, {"um", Unmentioned.Cast<object>().ToList()}, {"sw", Saw.Cast<object>().ToList()},
-                {"tds", TalkDays.Cast<object>().ToList()}, {"clr", Cleared.Cast<object>().ToList()}, {"jd", JealousDay}, {"vd", VentDay}, {"cpd", ComplimentDay},
+                {"tds", TalkDays.Cast<object>().ToList()}, {"clr", Cleared.Cast<object>().ToList()}, {"jd", JealousDay}, {"vd", VentDay}, {"cpd", ComplimentDay}, {"cpk", ComplimentKind},
                 {"fa", FinishedArcs.Cast<object>().ToList()}, {"b", bonds}, {"dud", DuoDay}, {"duh", DuoHandled.Cast<object>().ToList()},
                 {"eps", Episodes.Cast<object>().ToList()}, {"epd", EpisodeDay}, {"rp", Rep}
             };
@@ -225,7 +226,7 @@ namespace Joojkk.CampusLife
                 Devotion = d.GetInt("dv"), LastPerkDay = d.GetInt("pd", -1),
                 TalkDay = d.GetInt("td", -1), TalksToday = d.GetInt("tt"), ChatDay = d.GetInt("cd", -1), LastTopics = d.GetString("lto"),
                 Arc = ArcState.FromDict(d.GetObj("arc")),
-                Trust = d.GetInt("tr", -1), JealousDay = d.GetInt("jd", -1), VentDay = d.GetInt("vd", -1), ComplimentDay = d.GetInt("cpd", -1),
+                Trust = d.GetInt("tr", -1), JealousDay = d.GetInt("jd", -1), VentDay = d.GetInt("vd", -1), ComplimentDay = d.GetInt("cpd", -1), ComplimentKind = d.GetString("cpk", ""),
                 Known = Ints(d.GetList("kn")), Unmentioned = Ints(d.GetList("um")), Saw = Ints(d.GetList("sw")), TalkDays = Ints(d.GetList("tds")), Cleared = Ints(d.GetList("clr")),
                 DuoDay = d.GetInt("dud", -1), DuoHandled = Ints(d.GetList("duh")), EpisodeDay = d.GetInt("epd", -1), Rep = d.GetInt("rp", 50)
             };

@@ -791,26 +791,6 @@ namespace Joojkk.CampusLife
             Add("Back", Back);
         }
 
-        private static void PickTopic(Topic t) { PickTopic(t, null, 0); }
-
-        /// <param name="mine">The player's line (a concrete option says it its own way), or null for the topic's opener.</param>
-        /// <param name="bonus">How much the concrete situation adds to the topic's score.</param>
-        private static void PickTopic(Topic t, string mine, int bonus)
-        {
-            var s = Sess;
-            var h = s.Her;
-            var tone = GirlInfo.ToneOf(h);
-            var sc = Score(h, t, s) + bonus;
-            s.Used.Add(t);
-            var delta = sc >= 4 ? 2 : sc >= 2 ? 1 : sc >= 0 ? 0 : -1;
-            var b = new SceneBuilder(h, true);
-            b.Me(mine ?? Opener(t));
-            if (delta > 0) b.Her_(t == Topic.Love ? RomanceSay(h, "love", "") : EverydayTopic(h, t));
-            else if (delta == 0) b.Her_(Everyday(h, "topic.meh"));
-            else b.Her_(Everyday(h, "topic.bad"));
-            Play(b, delta, delta >= 2 ? "♪♪ She loved that topic." : delta == 1 ? "♪ She liked that topic." : null, null, t == Topic.Love && delta > 0 ? 2 : 0);
-        }
-
         // ---------------- let her talk ----------------
 
         private static void LetHerTalk() { LetHerTalk(null); }
@@ -1030,20 +1010,25 @@ namespace Joojkk.CampusLife
             var gs = S.Girl(GirlInfo.Key(h));
             var tone = GirlInfo.ToneOf(h);
             var b = new SceneBuilder(h, true);
-            b.Me(mine ?? RomanceMe(h, "compliment", kind == "effort" || kind == "club" || kind == "smart" ? kind : "looks"));
-            if (gs.ComplimentDay >= S.Day - 1)
+            var what = kind == "effort" || kind == "club" || kind == "smart" ? kind : "looks";
+            b.Me(mine ?? RomanceMe(h, "compliment", what));
+            // The same compliment today or yesterday is a rerun, and her answer says which one ("My hair again?"); another
+            // kind is new, but a second compliment in one day sounds more like flattery (2026-11-07).
+            var sameDay = gs.ComplimentDay == S.Day;
+            if (gs.ComplimentDay >= S.Day - 1 && (gs.ComplimentKind == what || string.IsNullOrEmpty(gs.ComplimentKind)))
             {
-                RomanceSaid("compliment", gs.ComplimentDay == S.Day ? "today" : "yesterday");   // "you said that yesterday" only the next day
-                b.Her_(RomanceSay(h, "compliment", "again"));
+                RomanceSaid("compliment", sameDay ? "today" : "yesterday");   // "you said that yesterday" only the next day
+                b.Her_(RomanceSay(h, "compliment", "again", what));
                 Play(b, -1, null);
                 return;
             }
             var stat = kind == "smart" ? G.Int : G.Sens;
             var chance = 0.35f + stat / 200f + (kind == "club" ? 0.15f : 0f) + (kind == "looks" ? (h.relation >= 1 ? 0.1f : -0.15f) : 0f);
             if (tone == Tone.Cool) chance -= 0.1f;
+            if (sameDay) chance -= 0.2f;
             var ok = Random.value < chance;
             b.Her_(ok ? RomanceSay(h, "compliment", "yes", kind == "looks" ? "looks" : "other") : RomanceSay(h, "compliment", "no"));
-            Play(b, ok ? 1 : 0, ok ? "♪ She's happy you noticed." : null, () => gs.ComplimentDay = S.Day);
+            Play(b, ok ? 1 : 0, ok ? "♪ She's happy you noticed." : null, () => { gs.ComplimentDay = S.Day; gs.ComplimentKind = what; });
         }
 
         private static bool CanFlirt(SaveData.Heroine h) { return h.isGirlfriend || h.relation >= 1 || h.favor >= 50; }
@@ -1058,6 +1043,25 @@ namespace Joojkk.CampusLife
             return Mathf.Clamp(c, 0.05f, 0.9f);
         }
 
+        /// <summary>
+        /// The director's days together and pushing (Consent.Familiar, Consent.Pushing; 2026-11-07) for the classic pages'
+        /// own odds: a girl you just met, or the same step again today, lands less often.
+        /// </summary>
+        private static float Pushy(SaveData.Heroine h, string step)
+        {
+            int again;
+            var r = new List<string>();
+            return Consent.Familiar(h, r) + Consent.Pushing(h, step, out again, r);
+        }
+
+        /// <summary>One roll of a classic romance step, counted as a try with her today.</summary>
+        private static bool Lands(SaveData.Heroine h, string step, float chance)
+        {
+            var ok = Random.value < chance + Pushy(h, step);
+            Consent.Pushed(h, step);
+            return ok;
+        }
+
         private static string FlirtOdds(Session s) { return G.Sens >= 40 ? "  <color=#ff8ad8>(" + Mathf.RoundToInt(FlirtChance(s) * 100) + "%)</color>" : ""; }
 
         private static void Flirt()
@@ -1068,7 +1072,7 @@ namespace Joojkk.CampusLife
             b.Me(RomanceMe(h, "flirt"));
             if (s.Did.Contains("flirt")) { b.Her_(RomanceSay(h, "flirt", "again")); Play(b, 0, null); return; }
             s.Did.Add("flirt");
-            var ok = Random.value < FlirtChance(s);
+            var ok = Lands(h, "flirt", FlirtChance(s));
             b.Her_(RomanceSay(h, "flirt", ok ? "yes" : "no"));
             var witnesses = Witness.Who(h, Witness.Flirt);
             Play(b, ok ? 2 : -1, ok ? "♥ " + GirlInfo.FirstName(h) + " is blushing." : null, ok ? (Action)(() =>
@@ -1097,7 +1101,7 @@ namespace Joojkk.CampusLife
             var h = s.Her;
             s.Did.Add("hand");
             var chance = h.isGirlfriend ? 1f : Mathf.Clamp(0.25f + h.favor / 150f + G.Sens / 400f + Bonus(h), 0.05f, 0.95f);
-            var ok = Random.value < chance;
+            var ok = Lands(h, "hand", chance);
             var b = new SceneBuilder(h, true);
             b.Me(RomanceMe(h, "hand"));
             b.Her_(RomanceSay(h, "hand", ok ? "yes" : "no"));
@@ -1132,7 +1136,7 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var h = s.Her;
             s.Did.Add("tease");
-            var ok = Random.value < TeaseChance(s);
+            var ok = Lands(h, "tease", TeaseChance(s));
             var b = new SceneBuilder(h, true);
             b.Me(RomanceMe(h, "tease"));
             b.Her_(RomanceSay(h, "tease", ok ? "yes" : "no"));
@@ -1151,7 +1155,7 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var h = s.Her;
             s.Did.Add("whisper");
-            var ok = Random.value < WhisperChance(s);
+            var ok = Lands(h, "whisper", WhisperChance(s));
             var b = new SceneBuilder(h, true);
             b.Me(RomanceMe(h, "whisper", GfLvl(h)));
             b.Her_(RomanceSay(h, "whisper", ok ? "yes" : "no", GfLvl(h)));
@@ -1167,13 +1171,14 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var h = s.Her;
             s.Did.Add("memories");
+            var ok = Lands(h, "memories", 1f);   // always welcome, unless you keep bringing it up today
             var b = new SceneBuilder(h, true);
             b.Me(RomanceMe(h, "memories", MemLvl(h)));
-            b.Her_(RomanceSay(h, "memories", "yes", MemLvl(h)));
-            Play(b, 1, "♥ " + GirlInfo.FirstName(h) + " remembers it too.", () =>
+            b.Her_(RomanceSay(h, "memories", ok ? "yes" : "no", MemLvl(h)));
+            Play(b, ok ? 1 : 0, ok ? "♥ " + GirlInfo.FirstName(h) + " remembers it too." : null, () =>
             {
-                if (Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
-            }, 8);
+                if (ok && Cfg.DevotionEnabled.Value && h.isGirlfriend) Devotion.AddTalk(h, 1);
+            }, ok ? 8 : 0);
         }
 
         /// <summary>The director's chance that she says yes to H now (Consent decides it, 2026-10-26).</summary>
@@ -1547,15 +1552,6 @@ namespace Joojkk.CampusLife
                 case Topic.Love: return "<color=#ff8ad8>Love life</color>";
                 default: return "Ask about her";
             }
-        }
-
-        private static string Opener(Topic t)
-        {
-            var ctx = new Dictionary<string, string>();
-            ctx["topic"] = t.ToString().ToLowerInvariant();
-            DlgRule rule;
-            var girl = Sess != null && Sess.Her != null ? GirlInfo.Key(Sess.Her) : null;
-            return Bank.Pick("me.opener", ctx, girl, out rule) ?? "So... how have you been?";
         }
     }
 }

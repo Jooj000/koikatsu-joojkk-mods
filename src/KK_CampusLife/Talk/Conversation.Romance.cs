@@ -20,6 +20,9 @@ namespace Joojkk.CampusLife
             c["close"] = Lines.Closeness(h).ToString();
             if (lvl != null) c["lvl"] = lvl;
             if (rival != null) c["rname"] = rival;
+            // You already tried this step today (2026-11-07): her no says so. Counted when she answered (Consent.Pushed).
+            var tries = act == "flirt" ? Consent.Tries(h, "flirt", "sweet") : act == "noticed" ? Consent.Tries(h, "compliment") : Consent.Tries(h, act);
+            c["pushed"] = tries >= 2 ? "yes" : "no";
             return c;
         }
 
@@ -90,6 +93,11 @@ namespace Joojkk.CampusLife
             yield return "compliment again today: " + RomanceSay(h, "compliment", "again");
             RomanceSaid("compliment", "yesterday");
             yield return "compliment again yesterday: " + RomanceSay(h, "compliment", "again");
+            foreach (var kind in new[] { "looks", "effort", "club", "smart" })
+            {
+                RomanceSaid("compliment", "today");
+                yield return "compliment again " + kind + ": " + RomanceSay(h, "compliment", "again", kind);
+            }
             yield return "noticed yes: " + RomanceSay(h, "noticed", "yes");
             yield return "noticed no: " + RomanceSay(h, "noticed", "no");
             yield return "love: " + RomanceSay(h, "love", "");

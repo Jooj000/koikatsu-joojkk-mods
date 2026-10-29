@@ -138,10 +138,17 @@ when act=hand q=yes close<=1 tone=cool
 - ...Not unpleasant.
 - ...I'll tolerate it.
 - ...It's fine.
+- Hm. Only for a minute.
+- Only for a little while.
+- Briefly.
+
+# Said walking down a hallway (2026-11-07: a place word only where she is).
+@rule romance.hand.yes.far.hallway.cool
+on romance
+when act=hand q=yes close<=1 place=hallway tone=cool
 - Hm. Only until the end of the hallway.
 - Only to the end of the hall.
 - Until the corner.
-- Briefly.
 
 @rule romance.hand.yes.far.teasing
 on romance
@@ -803,6 +810,137 @@ when act=compliment q=again hook=yesterday tone=gentle
 - You said that yesterday too...
 - You told me yesterday...
 
+# A rerun of the same compliment says which one: {lvl} is the kind (looks, effort, club, smart).
+# The kind outweighs the plain rerun lines above (lvl=3 in @weights romance).
+
+@rule romance.compliment.again.looks.gentle
+on romance
+when act=compliment q=again lvl=looks tone=gentle
+- M-my hair again...? You really like it, huh...
+- You said I looked nice already... I'm still blushing from last time...
+- Again...? You'll make me check the mirror all day...
+- You keep saying that about how I look... I don't know what to do with my face...
+
+@rule romance.compliment.again.looks.energetic
+on romance
+when act=compliment q=again lvl=looks tone=energetic
+- Hehe, you already told me I look good. Not complaining, but got anything new?
+- You already said I look good! Say something else!
+- Again with my looks! You're gonna make me vain!
+- Heard it! I look great! Next!
+
+@rule romance.compliment.again.looks.cool
+on romance
+when act=compliment q=again lvl=looks tone=cool
+- My appearance. Again.
+- You've covered how I look. Try something else.
+- Same compliment. Same face. Same answer.
+- You're stuck on my looks.
+
+@rule romance.compliment.again.looks.teasing
+on romance
+when act=compliment q=again lvl=looks tone=teasing
+- You're stuck on how I look, huh. Obsessed. Cute, but obsessed.
+- Still on my face? Try my brain sometime.
+- That's the second time you've said I look good. Keeping count?
+- Again? I know I look good. Tell me something I don't know.
+
+@rule romance.compliment.again.effort.gentle
+on romance
+when act=compliment q=again lvl=effort tone=gentle
+- You said that about my hard work already... thank you, but I'm not working any harder today...
+- You praised how hard I work before, too... You really watch me, don't you...
+- You already told me I work hard... it still makes me happy, though...
+- Again...? I-I'll keep trying, so you don't have to keep saying it...
+
+@rule romance.compliment.again.effort.energetic
+on romance
+when act=compliment q=again lvl=effort tone=energetic
+- You already told me I work hard! I know, I know, I'm amazing. Something new!
+- You already said I work hard! Now come work with me!
+- Same compliment! I'll take it, but I want a new one tomorrow!
+- Again?! You're like my coach!
+
+@rule romance.compliment.again.effort.cool
+on romance
+when act=compliment q=again lvl=effort tone=cool
+- You've praised my effort already.
+- Effort. Again. Noted twice.
+- Repeating it won't make me work harder.
+- Once was enough.
+
+@rule romance.compliment.again.effort.teasing
+on romance
+when act=compliment q=again lvl=effort tone=teasing
+- My hard work again? Are you trying to get me to do your homework?
+- You said that already. Running low on things you like about me?
+- Again? Careful, I'll start thinking that's all you see.
+- Effort, effort. Flattery is starting to show its seams.
+
+@rule romance.compliment.again.club.gentle
+on romance
+when act=compliment q=again lvl=club tone=gentle
+- You said that about {club} already... um, did you want to come watch...?
+- My club again...? You really pay attention...
+- You told me about {club} already... it's still nice to hear...
+- Again...? I'm not that good at {club}, really...
+
+@rule romance.compliment.again.club.energetic
+on romance
+when act=compliment q=again lvl=club tone=energetic
+- {club} again? Then come join us already!
+- You already said that! Come see me at {club} instead of saying it!
+- Again with the club! You're basically a member now!
+- Same compliment! I want you at {club}, not just talking about it!
+
+@rule romance.compliment.again.club.cool
+on romance
+when act=compliment q=again lvl=club tone=cool
+- You've mentioned {club} already.
+- The club. Again.
+- You said that. Come watch if you mean it.
+- Repeating yourself about {club}.
+
+@rule romance.compliment.again.club.teasing
+on romance
+when act=compliment q=again lvl=club tone=teasing
+- {club} again? Want to sign up so you can watch me all day?
+- You said that already. Do you even know what we do at {club}?
+- Again? You're a {club} fan now, huh?
+- Club praise, part two. Thrilling.
+
+@rule romance.compliment.again.smart.gentle
+on romance
+when act=compliment q=again lvl=smart tone=gentle
+- You said I'm smart already... I'm not that smart, really...
+- Again...? I'll help you study if that's what you want...
+- You keep saying I'm clever... it makes me nervous...
+- That again...? I'm happy, but I'm not a genius...
+
+@rule romance.compliment.again.smart.energetic
+on romance
+when act=compliment q=again lvl=smart tone=energetic
+- Smart again? I know! Wanna study together?
+- You already said I'm smart! Ask me a hard question instead!
+- Again! Okay, okay, I'm a genius! Hehe!
+- Same one! Test me if you don't believe it!
+
+@rule romance.compliment.again.smart.cool
+on romance
+when act=compliment q=again lvl=smart tone=cool
+- You've said I'm smart. I heard you the first time.
+- Clever. Again. Yes.
+- Repeating a compliment isn't very clever.
+- Once was sufficient.
+
+@rule romance.compliment.again.smart.teasing
+on romance
+when act=compliment q=again lvl=smart tone=teasing
+- Smart again? So you want my notes. Just ask.
+- You said that already. Smart people notice repeats, you know.
+- Again? You're making me think you need tutoring.
+- Same compliment. Should I grade it?
+
 @rule romance.noticed.yes.gentle
 on romance
 when act=noticed q=yes tone=gentle
@@ -1296,3 +1434,127 @@ when act=compliment lvl=looks
 - You look really nice today.
 - Your hair looks great like that.
 - That smile of yours is pretty great.
+
+# You already tried this step today and she says no: her no says it was
+# asked before. {pushed} comes from Consent.Tries; it outweighs the step's own no (pushed=4 in @weights romance), and
+# the step's lines stay in the draw.
+
+@rule romance.pushed.no.gentle
+on romance
+when q=no pushed=yes tone=gentle
+feel pout
+- Um... you already asked me that today... the answer hasn't changed...
+- P-please don't keep asking... it makes it harder to say yes...
+- You asked before... I-I need a little more time, okay?
+- Again...? I'm sorry... not today.
+- If you keep pushing, I'll just get more nervous...
+
+@rule romance.pushed.no.energetic
+on romance
+when q=no pushed=yes tone=energetic
+feel pout
+- Again?! You asked like five minutes ago!
+- Nope! Same answer as before! Try a different day!
+- Hey, asking louder won't change it! Ha!
+- You're relentless! Still no!
+- Okay, okay, I heard you the first time! No!
+
+@rule romance.pushed.no.cool
+on romance
+when q=no pushed=yes tone=cool
+feel pout
+- You already asked. The answer is the same.
+- Asking again won't change it.
+- I said no. I meant it.
+- Persistence isn't charming.
+- Again. No.
+
+@rule romance.pushed.no.teasing
+on romance
+when q=no pushed=yes tone=teasing
+feel pout
+- Again? Desperate looks bad on you, you know.
+- Asking again? Ooh, needy. Still no.
+- Hehe, keep trying. It's kind of fun saying no.
+- You already got my answer. Want it in writing?
+- If you have to keep asking, you already know.
+
+# Too soon (2026-11-07, "reclamei que as personagens aceitavam romance desde o começo"): her no when she has barely talked to you. Wins over the plain no of each step; the "you already asked" no stays in the pool.
+
+@rule romance.early.no.gentle
+on romance
+when q=no act=hand|flirt|compliment|noticed days=few rel=stranger|acquaintance tone=gentle
+feel shy
+- U-um... we've only just started talking... I'm not ready for that.
+- I'm sorry... I don't really know you yet...
+- C-can we be friends first? Properly?
+- That's... too fast. I barely know your name...
+- Maybe someday... but not when we've only just met.
+
+@rule romance.early.no.energetic
+on romance
+when q=no act=hand|flirt|compliment|noticed days=few rel=stranger|acquaintance tone=energetic
+feel pout
+- Whoa, slow down! We barely know each other!
+- Hey, we just met! At least buy me a drink first. ...Kidding. Mostly.
+- Ha, nice try! Talk to me a few more days first.
+- Too fast! I like you fine, but come on.
+- You don't even know my favorite food yet. No way.
+
+@rule romance.early.no.cool
+on romance
+when q=no act=hand|flirt|compliment|noticed days=few rel=stranger|acquaintance tone=cool
+feel pout
+- We've spoken a handful of times. No.
+- You don't know me. Don't act like you do.
+- That's premature. Get to know me first.
+- No. We're not there. We're barely anywhere.
+- Ask again when we're more than strangers.
+
+@rule romance.early.no.teasing
+on romance
+when q=no act=hand|flirt|compliment|noticed days=few rel=stranger|acquaintance tone=teasing
+feel pout
+- Ooh, bold. But we just met, so no.
+- Already? You don't waste time, huh. Still no.
+- Cute. Come back when you know me a little better.
+- Hmm, I'll think about it. In a few weeks.
+- Earn it first. Talk to me more, then we'll see.
+
+# Yes, again (2026-11-07): she takes a step you already tried today, and says so. Shares the pool with the yes of each step.
+
+@rule romance.pushed.yes.gentle
+on romance
+when q=yes pushed=yes act=hand|flirt|compliment|tease|whisper tone=gentle
+feel shy
+- A-again...? ...Okay. I don't mind hearing it twice...
+- You keep saying things like that today... my heart can't keep up...
+- Um... again? ...I-I like it, so it's fine...
+- You really don't give up, do you... ...Thank you.
+
+@rule romance.pushed.yes.energetic
+on romance
+when q=yes pushed=yes act=hand|flirt|compliment|tease|whisper tone=energetic
+feel smile
+- Again? Hehe, okay, okay, you win!
+- You're really on a roll today, huh! Fine, I'll take it!
+- Hehe, one more time? Sure, why not!
+- You don't quit, do you? Okay, okay. I like it.
+
+@rule romance.pushed.yes.cool
+on romance
+when q=yes pushed=yes act=hand|flirt|compliment|tease|whisper tone=cool
+feel shy
+- Again. ...Fine. Just this once more.
+- Persistent. I'll allow it today.
+- You're repeating yourself. ...It's not unwelcome.
+- Twice today. Don't make it a habit. ...Okay.
+
+@rule romance.pushed.yes.teasing
+on romance
+when q=yes pushed=yes act=hand|flirt|compliment|tease|whisper tone=teasing
+feel smile
+- Again? Someone's needy today. ...Okay, okay.
+- You're really going for it today, huh? Fine, you earned that one.
+- Hehe, you don't give up. That's kind of cute.
+- More of that already? Okay, but you owe me.

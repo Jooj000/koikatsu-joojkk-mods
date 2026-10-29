@@ -43,14 +43,6 @@ namespace Joojkk.CampusLife
             return EverydaySay(h, c);
         }
 
-        /// <summary>A topic she liked.</summary>
-        private static string EverydayTopic(SaveData.Heroine h, Topic t)
-        {
-            var c = EverydayCtx(h, "topic");
-            c["gtopic"] = t == Topic.Classes || t == Topic.Club || t == Topic.Food || t == Topic.Sports || t == Topic.Hobbies || t == Topic.Rumors || t == Topic.Weekend ? t.ToString().ToLowerInvariant() : "other";
-            return EverydaySay(h, c);
-        }
-
         private static readonly string[] WalkStops = { "gym", "field", "library", "cafeteria", "rooftop", "clubroom", "pool", "courtyard" };
 
         /// <summary>A stop on a walk with her.</summary>
@@ -80,8 +72,7 @@ namespace Joojkk.CampusLife
             yield return "everyday keep: " + EverydaySecret(h, true);
             yield return "everyday tease: " + EverydaySecret(h, false);
             yield return "everyday by tone: " + EverydayTone(GirlInfo.ToneOf(h), "hello");
-            foreach (Topic t in Enum.GetValues(typeof(Topic))) yield return "everyday topic " + t + ": " + EverydayTopic(h, t);
-            foreach (var id in new[] { "topic.meh", "topic.bad", "study.yes", "study.no", "fallback" }) yield return "everyday " + id + ": " + Everyday(h, id);
+            foreach (var id in new[] { "study.yes", "study.no", "fallback" }) yield return "everyday " + id + ": " + Everyday(h, id);
             foreach (var p in WalkStops.Concat(new[] { "somewhere" })) yield return "everyday stop " + p + ": " + EverydayStop(h, p);
         }
     }
