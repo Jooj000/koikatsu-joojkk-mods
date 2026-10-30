@@ -147,11 +147,8 @@ namespace Joojkk.CampusLife
             var level = b0.isAnger ? 3 : Mathf.Clamp(n - 1 - (gf || flirty ? 1 : 0) + (gf || flirty ? 0 : 1), 0, 3);
             var q = level <= 0 ? Q.Good : level == 1 ? Q.Neutral : Q.Bad;
             var b = new SceneBuilder(a, true);
-            b.Narr(part == "bust" ? "Your hand brushes " + bn + "'s chest." : "Your hand slides down to " + bn + "'s hip.");
-            Reply(b, b0, a, "touch_" + part, q, q == Q.Bad
-                ? Tn("Kyaa! Wh-what are you doing?!", "HEY! Hands off!", "...Remove your hand. Now.", "Whoa, buddy. Not in front of her.")
-                : q == Q.Neutral ? Tn("Ah... n-not here... she's watching...", "Eh?! H-hey, not now!", "...Not here.", "Bold~ but later, okay?")
-                : Tn("Mm... you're so bold today...", "Hehe~ you can't keep your hands off me!", "...Hm. I don't mind.", "Mmm~ right in front of her? Naughty."));
+            b.Narr(BeatSay(b0, part == "bust" ? "grope.bust.narr" : "grope.hip.narr") ?? "...");
+            Say2(b, b0, a, "duo3.reply", null, X("act", "grope", "part", part, "q", QWord(q)), FaceFor(q));   // duo3.dlg
             TLog("touch " + bn + " " + part + " #" + n + " level " + level);
             TrioPlay(b0, b, () =>
             {
@@ -171,11 +168,8 @@ namespace Joojkk.CampusLife
             var bold = part == "bust" || part == "butt";
             var q = bold ? (b0.isGirlfriend || b0.lewdness >= 50 ? Q.Neutral : Q.Bad) : Q.Good;
             var b = new SceneBuilder(a, true);
-            b.Narr(bold ? "Your eyes wander over " + bn + "." : part == "hand" ? "You look at " + bn + "'s hands." : "You look at " + bn + "'s face for a moment.");
-            Reply(b, b0, a, "look_" + part, q, bold
-                ? (q == Q.Bad ? Tn("U-um... my eyes are up here...", "Hey! Where are you looking?!", "...Eyes up.", "Enjoying the view? Too bad~")
-                              : Tn("Ah... you're staring...", "Hehe, caught you looking!", "...You're staring.", "Like what you see~?"))
-                : Tn("Um... is there something on my face?", "What? What is it?", "...What?", "Hmm? Lost in my eyes~?"));
+            b.Narr(BeatSay(b0, bold ? "look.bold.narr" : part == "hand" ? "look.hand.narr" : "look.face.narr") ?? "...");
+            Say2(b, b0, a, "duo3.reply", null, X("act", bold ? "look_bold" : "look_plain", "part", part, "q", QWord(q)), FaceFor(q));   // duo3.dlg
             TrioPlay(b0, b, () =>
             {
                 PayTo(b0, bold ? Lvl.Romance : Lvl.Friend, q, "t3b:look_" + part);

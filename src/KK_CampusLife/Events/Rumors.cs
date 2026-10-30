@@ -111,16 +111,18 @@ namespace Joojkk.CampusLife
             {
                 foreach (var kv in s.Versions.ToList())
                 {
-                    if (Random.value > s.Heat / 120f) continue;
                     var teller = Social.Get(kv.Key);
                     if (teller == null) continue;
+                    // She passes it on when it is hot enough for her (context, 2026-11-07): the heat, and a chatty tone tells sooner.
+                    var tt = GirlInfo.ToneOf(teller);
+                    if (!Consent.Yes(teller, "rumor:" + s.Kind, s.Heat / 100f + (tt == Tone.Energetic || tt == Tone.Teasing ? 0.15f : tt == Tone.Cool ? -0.15f : 0f))) continue;
                     var friend = Social.FriendsOf(teller, 30).FirstOrDefault(f => !s.Versions.ContainsKey(GirlInfo.Key(f)));
                     if (friend == null) continue;
                     var v = kv.Value;
                     // Her friends hear her side; anyone may hear it twisted.
                     var subj = Social.Get(s.Subject);
                     if (subj != null && Social.Bond(friend, subj) >= 40 && (s.Kind == "stole" || s.Kind == "sides")) v = 2;
-                    else if (v == 0 && Random.value < 0.25f) v = 1;
+                    else if (v == 0 && (subj == null || Social.Bond(friend, subj) <= 0 || Social.Bond(teller, subj) <= 0)) v = 1;   // it gets twisted by girls who don't like her
                     s.Versions[GirlInfo.Key(friend)] = v;
                     // A rumor about you costs a little with girls who hear the bad versions.
                     if (v > 0 && (s.Kind == "stole" || s.Kind == "seen_with")) G.AddFavor(friend, -1, 0);

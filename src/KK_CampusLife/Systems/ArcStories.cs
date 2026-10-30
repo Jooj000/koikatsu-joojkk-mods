@@ -157,7 +157,7 @@ namespace Joojkk.CampusLife
                 case 3:
                 {
                     var chance = 0.3f + c.H.favor / 300f + G.Str / 300f + 0.1f * c.St.Counter;
-                    var won = Random.value < chance;
+                    var won = Consent.Yes(c.H, "arc:won", chance);   // her bars, your STR and how often you came to cheer
                     c.St.Counter = won ? 100 : 0;
                     b.Me("So? How did the tournament go?");
                     if (won)

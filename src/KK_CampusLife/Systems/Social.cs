@@ -293,8 +293,13 @@ namespace Joojkk.CampusLife
                     {
                         if (f == teller) continue;
                         var b = Bond(teller, f);
-                        var chance = b >= 50 ? 0.6f : b >= 35 ? 0.35f : b >= 10 ? 0.08f : 0f;
-                        if (chance > 0f && Random.value < chance) told.Add(new KeyValuePair<SaveData.Heroine, Incident>(f, inc));
+                        if (b < 10) continue;
+                        // Context, not a roll (2026-11-07): how close they are, how juicy it is to her friend, how chatty she is,
+                        // and the days it has been going around.
+                        var tt = GirlInfo.ToneOf(teller);
+                        var score = 0.15f + (b - 10) / 80f + Mathf.Abs(Effect(f, inc)) / 30f + (S.Day - inc.Day) * 0.05f
+                            + (tt == Tone.Energetic || tt == Tone.Teasing ? 0.1f : tt == Tone.Cool ? -0.1f : 0f);
+                        if (Consent.Yes(teller, "tell:" + inc.Id + ":" + GirlInfo.Key(f), score)) told.Add(new KeyValuePair<SaveData.Heroine, Incident>(f, inc));
                     }
             }
             foreach (var kv in told) Learn(kv.Key, kv.Value, true);
@@ -370,6 +375,13 @@ namespace Joojkk.CampusLife
             return h.relation >= 0 && (S.Girl(GirlInfo.Key(h)).Talks >= 2 || h.favor >= 25);
         }
 
+        /// <summary>A girl who can't keep a story to herself: a lively or teasing tone with friends to tell.</summary>
+        public static bool Chatty(SaveData.Heroine h)
+        {
+            var t = GirlInfo.ToneOf(h);
+            return (t == Tone.Energetic || t == Tone.Teasing) && FriendsOf(h, 30).Any();
+        }
+
         /// <summary>The air was cleared about this incident (it no longer counts as a grudge).</summary>
         public static void Cleared(SaveData.Heroine h, Incident inc)
         {
@@ -380,7 +392,7 @@ namespace Joojkk.CampusLife
             {
                 var fs = S.Girl(GirlInfo.Key(f));
                 if (!fs.Known.Any(id => SameStory(S.Incidents.FirstOrDefault(i => i.Id == id), inc))) continue;
-                if (Random.value < (Bond(h, f) >= 50 ? 0.85f : 0.5f))
+                if (Consent.Yes(f, "side:" + inc.Id, (Bond(h, f) - 20) / 40f + (Trust(f) >= 60 ? 0.15f : 0f)))   // close friends and girls who trust you believe your side
                 {
                     ClearStory(f, inc);
                     CampusLifePlugin.Log.LogInfo("Social: " + GirlInfo.FirstName(h) + " told " + GirlInfo.FirstName(f) + " your side (" + inc.Kind + ")");

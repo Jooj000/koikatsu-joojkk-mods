@@ -1290,3 +1290,11 @@ when tone=teasing
 - Don't be a stranger~
 - Come back soon~
 - Miss me~
+
+# ================= your ask in a concrete offer =================
+@rule me.concrete.study
+on me.concrete
+when what=study
+- Could you help me study a bit? The next test is going to wreck me.
+- Can you help me with the notes? I'm lost.
+- Would you study with me for a bit? I really need help.

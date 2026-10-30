@@ -259,7 +259,7 @@ namespace Joojkk.CampusLife
                     s.Stat("workout");
                     break;
                 case "basketball":
-                    r.Text = Random.value < 0.3f + G.Str / 250f ? "You sink the winning shot. A few girls clap from the stage." : "You lose, but it was fun.";
+                    r.Text = Consent.Yes(null, "basketball", 0.3f + G.Str / 250f + s.Energy * 0.02f) ? "You sink the winning shot. A few girls clap from the stage." : "You lose, but it was fun.";
                     s.Stat("workout");
                     break;
                 case "gym_job":
@@ -354,7 +354,7 @@ namespace Joojkk.CampusLife
                 var likes = GirlInfo.LikesOf(h);
                 var unknown = likes.Where(l => (gs.KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, l))) == 0).ToList();
                 if (unknown.Count == 0) continue;
-                if (Random.value > chance) return "You read about trends, but nothing rings a bell about anyone you know.";
+                if (!Consent.Yes(h, "trends", chance + Mathf.Min(0.2f, gs.Talks * 0.02f) - 0.1f)) return "You read about trends, but nothing rings a bell about anyone you know.";   // INT and how well you know her
                 var like = unknown[Random.Range(0, unknown.Count)];
                 gs.KnownLikes |= 1 << Array.IndexOf(GirlInfo.LikeIds, like);
                 var text = "An article reminds you of something " + GirlInfo.FirstName(h) + " said: she likes " + GirlInfo.LikeLabel(like) + ".";

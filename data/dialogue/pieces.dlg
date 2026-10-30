@@ -10,48 +10,56 @@ on @open
 when rel=girlfriend tone=gentle
 - [Mm, you know what?|Hey, love...|Ehehe...]
 - [Ah, I'm happy you came.|Hi, you.|Mm, I missed you today.]
+- [I was hoping I'd see you before class ended.|Hi... you look nice today.|Ah, there you are. I saved this spot for you.]
 
 @rule open.gf.energetic
 on @open
 when rel=girlfriend tone=energetic
 - [Babe!|There you are!|Finally, my favorite person!]
 - [Hehe, hi hi!|You came to see me!|Okay, okay, listen!]
+- [Hi hi hi! Hug first, talk later!|My boyfriend's here! Best part of the day!|You! I have a million things to tell you!]
 
 @rule open.gf.cool
 on @open
 when rel=girlfriend tone=cool
 - [...Oh. It's you.|You're late. Kidding.|Hm. I was hoping you'd come.]
 - [...Hey.|Don't make that face. I'm glad you're here.|Mm. Sit.]
+- [You took your time. ...I'm glad you came.|Hm. I'll pretend I wasn't watching the door.|There you are. Sit close.]
 
 @rule open.gf.teasing
 on @open
 when rel=girlfriend tone=teasing
 - [Missed me already?|Look who can't stay away~|Hey, handsome~]
 - [Oh? My boyfriend, all by himself?|There's my favorite distraction~|Couldn't wait until later, huh?]
+- [Did you miss me, or should I be jealous of something?~|Hey you. Yes, you. My boyfriend~|Come here, I want to show you off~]
 
 @rule open.lover.gentle
 on @open
 when rel=lover tone=gentle
 - [Oh... hi.|Ah, it's you...|Mm, hello.]
 - [I was just thinking about you.|You always find me, don't you?]
+- [It's you... I'm happy.|Mm, I was hoping you'd come by.]
 
 @rule open.lover.energetic
 on @open
 when rel=lover tone=energetic
 - [Hey hey!|Oh! It's you!|Perfect timing!]
 - [I was hoping I'd run into you!|You again? Yay!]
+- [Yay! You found me!|Hey! I was just about to look for you!]
 
 @rule open.lover.cool
 on @open
 when rel=lover tone=cool
 - [...You.|Hm. Hello.|Oh. Hey.]
 - [I wasn't waiting for you. Just so you know.|...You came over.]
+- [...Fine. You can stay.|Hm. You again. Good.]
 
 @rule open.lover.teasing
 on @open
 when rel=lover tone=teasing
 - [You're following me now?|Oh my, look who it is~]
 - [Can't keep away, can you?|Hello, trouble~]
+- [You're getting predictable~|Back for more already?~]
 
 @rule open.friend.gentle
 on @open

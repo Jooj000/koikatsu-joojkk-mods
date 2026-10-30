@@ -8,18 +8,21 @@ on me.day
 when job=nurse
 - [Good morning, sensei.|Hello, sensei.|Sensei, hi.] [Many patients today?|How's the infirmary?|Busy in here?]
 - [Got a minute, sensei?|Am I in the way?] [How has your day been?|Quiet day?]
+- [Hi, sensei. Just passing by.|Sensei, sorry to drop in.] [Has anyone fainted today?|Anything exciting in here?|Are you on your own today?]
 
 @rule me.gossip.nurse
 on me.gossip
 when job=nurse
 - [Sensei, you must hear everything in here.|What are people saying, sensei?]
 - [Everyone talks to the nurse.|People tell you things, right?] [Any news?|What's going around?]
+- [Sensei, who's been in here the most this week?|Is anyone faking it to skip class?]
 
 @rule me.small.future.nurse
 on me.small
 when subject=future job=nurse
 - [Did you always want to be a nurse?|Will you stay at this university?]
 - [What would you do if you weren't a nurse?|Have you ever worked at a hospital?]
+- [Do you like working at a school?|What made you choose the infirmary?]
 
 @rule me.small.nursing
 on me.small
@@ -106,12 +109,14 @@ on idle
 when job=nurse
 - [Is something hurting, or are you just visiting?|Did you need something?|Hm?] [I've got forms to finish.|Sit, if you like.]
 - [Don't lean on the cabinet.|You look a little pale. Are you eating?]
+- [The kettle's on, if you want tea.|Mind the bed, I just changed the sheets.] [It's been a slow morning.|Don't tell anyone, but I like the quiet.]
 
 @rule tail.role.nurse
 on @tail
 when job=nurse
 - [Anyway, get some sleep tonight.|And drink some water.]
 - [Come back if it gets worse.|Try not to need me this week.]
+- [And eat a proper lunch, not just bread.|Mind your posture, too.]
 
 # ================= your options, when she says something =================
 @rule move.ask.state.nurse

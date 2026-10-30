@@ -79,3 +79,25 @@
 # Her refusals before the game's H: which one first, then who she is to you.
 @weights bounds
 - pers=2.5 hbound=3 hbound2=1.5 rel=2.5 mood=1.5 tone=1.5
+
+# A beat's answer: the option you took decides, then how she took it; who she is to you and her mood colour it.
+@weights beat
+- pers=2.5 tag=6 q=3 rel=2 mood=1.5 tone=1.5
+
+# Her first words about a request: the kind decides, then her tone.
+@weights board
+- pers=2.5 kind=6 tone=1.5 rel=1 mood=1
+
+# The lines with a name in the middle: what you did decides, then the step, to whom, and whether she saw it.
+@weights incident
+- pers=2.5 inc=8 what=4 self=3 friend=2 saw=3 tone=1.5
+
+@weights incident.seen
+- pers=2.5 what=4 saw=3 tone=1.5
+
+@weights incident.gossip
+- pers=2.5 inc=8 what=4 tone=1.5
+
+# The errand in her own words: where it is leads.
+@weights @errand
+- errandat=6 reqsrc=4 pers=1

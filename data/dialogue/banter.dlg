@@ -55,6 +55,7 @@ feel smile
 - Sit with me at lunch tomorrow? >> Of course. >> You don't even have to ask! >> I always do. >> Only if you bring dessert.
 - You always know what I'm about to say. >> We've known each other a while. >> It's a gift! >> You're easy to read. >> You're not that hard to read.
 - I'm glad you're here. >> Me too. >> Me too! Always! >> ...Same. >> Careful, people will talk.
+- Remember when we met? You were so quiet. >> I was nervous. You helped. >> And now you never shut up! >> I remember. >> You were quieter, too.
 
 @rule duo3.talk.rival
 on duo3.talk
@@ -63,6 +64,7 @@ feel annoyed
 - Oh. You're still here. >> So are you. >> And I'm staying! >> Clearly. >> Disappointed?
 - I thought you'd have something better to do. >> I could say the same. >> Nope! Not moving! >> I don't. >> I do. This is it.
 - Don't you have somewhere to be? >> Not right now. >> Right here, actually! >> No. >> Trying to get rid of me?
+- Nice of you to join us. Again. >> I go where I like. >> Wouldn't miss it! >> Mm. >> I'm sure you're thrilled.
 
 @rule duo3.talk.trisal
 on duo3.talk
@@ -70,6 +72,8 @@ when trisal=yes myrole=student otherrole=student
 feel smile
 - Whose turn is it to walk home together today? >> Yours, I think. >> Mine! Definitely mine! >> We agreed on yours. >> We could both go.
 - We should tell each other when plans change. >> You're right. I'll write it down. >> Yes! Group chat! >> Agreed. >> Scared I'll get ahead of you?
+- Did he walk you home yesterday or me? I lost track. >> You, I think. I don't mind. >> Me! I remember the crepe! >> You. I keep a calendar. >> Does it matter? He walked us both into trouble.
+- We should plan something for the three of us this weekend. >> I'd like that. Somewhere quiet? >> Yes! Amusement park! >> I'll make a list. >> I already have. You're both late.
 
 # ================= the hour, the weather, the week =================
 @rule duo3.talk.lunch
@@ -78,29 +82,37 @@ when period=lunch
 - What did you bring today? >> Just some rice balls. >> Curry bread! Two of them! >> The usual. >> Why, are you hungry?
 - The cafeteria line is so long today. >> We can wait a little. >> Let's run for it! >> I brought mine. >> Send someone else.
 - I can't believe lunch is half over already. >> It goes by so fast. >> Eat faster! >> It's the same as always. >> You talk too much, that's why.
+- Want to swap a side dish? >> Sure, take the egg roll. >> Yes! Gimme your fried chicken! >> One. >> What are you offering?
 
 @rule duo3.talk.after
 on duo3.talk
 when period=after
 - Are you heading home after this? >> Soon, yes. >> Not yet! >> In a while. >> Depends on who's asking.
 - It's getting dark earlier, isn't it? >> It is. We should go soon. >> Already?! >> It's the season. >> Afraid of the dark?
+- Want to stop by the convenience store on the way? >> Sure, just for a bit. >> Ice cream! Yes! >> If it's quick. >> Only if you're buying.
+- My feet hurt. What a long day. >> Mine too. Let's walk slowly. >> Race you to the gate anyway! >> Sit down, then. >> Want me to carry you? No.
 
 @rule duo3.talk.wet
 on duo3.talk
 when wet=yes
 - Did you bring an umbrella? >> I have a small one. We can share. >> Nope! I'll just run! >> Yes. >> Maybe. What's it worth to you?
 - This rain isn't stopping, is it? >> I don't think so. >> It's kind of fun! >> Not today. >> Then you're stuck here with me.
+- My socks are completely soaked. >> Oh no... I have a spare pair in my locker. >> Mine too! Squish squish! >> Wear better shoes. >> Gross. Don't come near me.
+- Let's wait in the entrance until it stops. >> Okay. It's nice here anyway. >> Or we could just run for it! >> Fine. >> Waiting with you? I'll survive.
 
 @rule duo3.talk.exam
 on duo3.talk
 when exam=yes myrole=student otherrole=student
 - {student}Have you started studying for the exams? >> A little every night. >> Tomorrow! For sure! >> I finished the review. >> Why, do you want my notes?
 - Which subject scares you the most? >> Math, I think. >> All of them! >> None. >> Whichever one you're good at.
+- I dreamt about the exam last night. I failed it. >> That's just nerves. You'll be fine. >> Me too! I showed up in pajamas! >> Dreams don't count. >> In mine, you passed. Barely.
+- Can I copy your notes for chapter three? >> Of course. Just give them back. >> Only if I get yours for four! >> Fine. Don't lose them. >> What will you give me?
 
 @rule duo3.talk.exam.teachers
 on duo3.talk
 when exam=yes myrole=student|teacher otherrole=teacher
 - {classes}Are the exam papers ready? >> Almost. I'm checking them once more. >> Printed and hidden! >> Yes. >> Wouldn't you like to know.
+- {classes}Who's proctoring the morning exam? >> I am, I think. >> Me! I brought a book! >> Check the schedule. >> Not me. I hid the schedule.
 
 # ================= what they share =================
 @rule duo3.talk.club
@@ -115,6 +127,8 @@ on duo3.talk
 when shared=yes myrole=student otherrole=student
 - You're into {sharedlike} too, aren't you? >> I am, a little. >> Totally! >> I am. >> Took you long enough to notice.
 - Been thinking about {sharedlike} lately? >> A little. You too? >> All the time! >> No. >> Why, do you need tips?
+- We're always ending up in the same place, aren't we? >> Hehe, I guess we are. >> Fate! Obviously! >> Coincidence. >> Are you following me?
+- We should sit together in class too. >> I'd like that. >> Yes! Let's ask to switch seats! >> If the teacher lets us. >> Only if you stop stealing my eraser.
 
 # ================= how the other one looks =================
 @rule duo3.talk.sleepy

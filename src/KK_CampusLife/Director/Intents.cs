@@ -503,7 +503,7 @@ namespace Joojkk.CampusLife
                             // Nobody else: it happens, and her girlfriend may hear of it.
                             var p = Pairs.PairOf(tgt.heroine);
                             if (p != null) { p.Trust = PairState.Clamp(p.Trust - 8); p.Jealousy = PairState.Clamp(p.Jealousy + 12); }
-                            if (Random.value < 0.4f) { Rumors.Start("caught", GirlInfo.Key(tgt.heroine), GirlInfo.Key(me.heroine), GirlInfo.Key(theirs), 45); Standing.Add(tgt.heroine, -4, "caught cheating"); }
+                            if (Social.Chatty(theirs) || Standing.Of(tgt.heroine) >= 60 || Standing.Of(me.heroine) >= 60) { Rumors.Start("caught", GirlInfo.Key(tgt.heroine), GirlInfo.Key(me.heroine), GirlInfo.Key(theirs), 45); Standing.Add(tgt.heroine, -4, "caught cheating"); }
                         }
                     }
                 }

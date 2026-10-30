@@ -123,6 +123,7 @@ namespace Joojkk.CampusSaves
         public static string ExportAll(string unused) { SavesPanel.ExportAll(); return "exporting all"; }
         public static string ImportOne(string slot) { var c = Campuses.All[0]; Campuses.Run(() => Campuses.Import(c, slot)); return "importing " + slot; }
         public static string Free(string unused) { SavesPanel.FreeSpace(); return "freeing"; }
+        public static string Compact(string unused) { var c = Campuses.All[0]; Campuses.Run(() => Campuses.Status = "compacted " + c.Vault.Compact() + " bytes, pack " + c.Vault.PackSize + ", garbage " + c.Vault.Garbage()); return "compacting"; }
         public static string Trigger(string why) { SaveFlow.Trigger(why); return "armed"; }
         public static string Status(string unused) { return Campuses.Status + " | busy " + Campuses.Busy + " | test " + Campuses.Testing + " | root " + Campuses.Root + " | slots " + string.Join(", ", System.IO.Directory.GetFiles(Campuses.GameDir, Campuses.TestSlots + "*.dat").Select(System.IO.Path.GetFileName).ToArray()); }
         public static string Scroll(string unused) { return SavesPanel.ScrollState; }

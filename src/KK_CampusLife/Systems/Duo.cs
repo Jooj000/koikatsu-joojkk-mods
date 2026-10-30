@@ -458,7 +458,7 @@ namespace Joojkk.CampusLife
                     var about = Social.Get(gossip.Girl);
                     var name = about != null ? GirlInfo.FirstName(about) : "";
                     intro.Narr(an + " and " + bn + " come over, whispering to each other.");
-                    sb.Say(a, ConvoLines.GossipLine(ta, gossip.Kind, name, gossip.What));
+                    sb.Say(a, ConvoLines.GossipLine(a, gossip.Kind, name, gossip.What));
                     sb.Say(bb, Lines.T(tb, "It's true, I heard it too... || I heard it too... || It's true... || Yes, I heard...", "Totally true! Everyone knows! || Totally true! || Everyone knows! || Yep!", "That's what they say. || So they say. || That's the talk. || Reportedly.", "The whole university's talking. || Whole university's talking. || Everyone knows. || The gossip's everywhere."));
                     sb.End();
                     result = c => { Social.Mentioned(a, gossip); Social.Mentioned(bb, gossip); };

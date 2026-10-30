@@ -1185,7 +1185,7 @@ when act=jealous q=plain tone=teasing
 # ================= asked for something, not now (Consent decides; the private invitation stays in C#) =================
 @rule romance.notnow.date.gentle
 on romance
-when act=notnow q=date tone=gentle
+when act=notnow q=date hook=notnow.date tone=gentle
 - Ah... not this time, I'm sorry. Maybe another week?
 - Not this time, sorry. Another week?
 - I'm sorry, I can't. Maybe later?
@@ -1193,7 +1193,7 @@ when act=notnow q=date tone=gentle
 
 @rule romance.notnow.date.energetic
 on romance
-when act=notnow q=date tone=energetic
+when act=notnow q=date hook=notnow.date tone=energetic
 - Aww, I can't this time! Ask me again, okay?
 - Can't this time! Ask again!
 - Aww, no! Next time!
@@ -1201,14 +1201,14 @@ when act=notnow q=date tone=energetic
 
 @rule romance.notnow.date.cool
 on romance
-when act=notnow q=date tone=cool
+when act=notnow q=date hook=notnow.date tone=cool
 - ...Not this week.
 - ...No. Another time.
 - ...Not now.
 
 @rule romance.notnow.date.teasing
 on romance
-when act=notnow q=date tone=teasing
+when act=notnow q=date hook=notnow.date tone=teasing
 - This weekend? Hm. No. Try again later.
 - This weekend? No. Later.
 - Hm, no. Try later.
@@ -1216,7 +1216,7 @@ when act=notnow q=date tone=teasing
 
 @rule romance.notnow.confess.gentle
 on romance
-when act=notnow q=confess tone=gentle
+when act=notnow q=confess hook=notnow.confess tone=gentle
 - W-wait... I don't think I'm ready to hear it yet...
 - Wait... I'm not ready to hear it...
 - Please... not yet...
@@ -1224,7 +1224,7 @@ when act=notnow q=confess tone=gentle
 
 @rule romance.notnow.confess.energetic
 on romance
-when act=notnow q=confess tone=energetic
+when act=notnow q=confess hook=notnow.confess tone=energetic
 - Eh?! W-wait! Not yet! I'm not ready!
 - Wait! Not yet!
 - Hold on! Not ready!
@@ -1232,7 +1232,7 @@ when act=notnow q=confess tone=energetic
 
 @rule romance.notnow.confess.cool
 on romance
-when act=notnow q=confess tone=cool
+when act=notnow q=confess hook=notnow.confess tone=cool
 - ...Not yet. Let's get to know each other first.
 - ...Not yet.
 - ...First, know me.
@@ -1240,7 +1240,7 @@ when act=notnow q=confess tone=cool
 
 @rule romance.notnow.confess.teasing
 on romance
-when act=notnow q=confess tone=teasing
+when act=notnow q=confess hook=notnow.confess tone=teasing
 - Hold that thought. Not yet.
 - Hold that thought.
 - Not yet.
@@ -1248,7 +1248,7 @@ when act=notnow q=confess tone=teasing
 
 @rule romance.notnow.lunch.gentle
 on romance
-when act=notnow q=lunch tone=gentle
+when act=notnow q=lunch hook=notnow.lunch tone=gentle
 - Sorry... I already promised someone today.
 - Sorry, I promised someone.
 - I already have plans today... sorry.
@@ -1256,7 +1256,7 @@ when act=notnow q=lunch tone=gentle
 
 @rule romance.notnow.lunch.energetic
 on romance
-when act=notnow q=lunch tone=energetic
+when act=notnow q=lunch hook=notnow.lunch tone=energetic
 - Ahh, not today! Tomorrow, okay?
 - Not today! Tomorrow!
 - Can't! Tomorrow, okay?
@@ -1264,14 +1264,14 @@ when act=notnow q=lunch tone=energetic
 
 @rule romance.notnow.lunch.cool
 on romance
-when act=notnow q=lunch tone=cool
+when act=notnow q=lunch hook=notnow.lunch tone=cool
 - ...Not today.
 - ...Busy.
 - ...Another day.
 
 @rule romance.notnow.lunch.teasing
 on romance
-when act=notnow q=lunch tone=teasing
+when act=notnow q=lunch hook=notnow.lunch tone=teasing
 - Lunch? Not today. Ask me tomorrow.
 - Not today. Tomorrow.
 - Tomorrow, maybe.
@@ -1279,7 +1279,7 @@ when act=notnow q=lunch tone=teasing
 
 @rule romance.notnow.home.gentle
 on romance
-when act=notnow q=home tone=gentle
+when act=notnow q=home hook=notnow.home tone=gentle
 - I'm sorry, I have somewhere to be after class...
 - Sorry, I have somewhere to be.
 - I'm busy after class... sorry.
@@ -1287,7 +1287,7 @@ when act=notnow q=home tone=gentle
 
 @rule romance.notnow.home.energetic
 on romance
-when act=notnow q=home tone=energetic
+when act=notnow q=home hook=notnow.home tone=energetic
 - Can't today! Errands, ugh!
 - Can't! Errands!
 - Busy today!
@@ -1295,7 +1295,7 @@ when act=notnow q=home tone=energetic
 
 @rule romance.notnow.home.cool
 on romance
-when act=notnow q=home tone=cool
+when act=notnow q=home hook=notnow.home tone=cool
 - ...I'm going alone today.
 - ...Alone today.
 - ...Busy.
@@ -1303,7 +1303,7 @@ when act=notnow q=home tone=cool
 
 @rule romance.notnow.home.teasing
 on romance
-when act=notnow q=home tone=teasing
+when act=notnow q=home hook=notnow.home tone=teasing
 - Not today. I've got plans.
 - Plans. Sorry.
 - Busy.
@@ -1311,7 +1311,7 @@ when act=notnow q=home tone=teasing
 
 @rule romance.notnow.later.gentle
 on romance
-when act=notnow q=later tone=gentle
+when act=notnow q=later hook=notnow.study|notnow.exercise|notnow.club|notnow.follow tone=gentle
 - Ah... not right now, sorry. Maybe later?
 - Not right now... later?
 - Sorry, not now.
@@ -1319,7 +1319,7 @@ when act=notnow q=later tone=gentle
 
 @rule romance.notnow.later.energetic
 on romance
-when act=notnow q=later tone=energetic
+when act=notnow q=later hook=notnow.study|notnow.exercise|notnow.club|notnow.follow tone=energetic
 - Hmm, not now! Later, later!
 - Not now! Later!
 - Later!
@@ -1327,14 +1327,14 @@ when act=notnow q=later tone=energetic
 
 @rule romance.notnow.later.cool
 on romance
-when act=notnow q=later tone=cool
+when act=notnow q=later hook=notnow.study|notnow.exercise|notnow.club|notnow.follow tone=cool
 - ...Not now.
 - ...Later.
 - ...No.
 
 @rule romance.notnow.later.teasing
 on romance
-when act=notnow q=later tone=teasing
+when act=notnow q=later hook=notnow.study|notnow.exercise|notnow.club|notnow.follow tone=teasing
 - Not now. Catch me another time.
 - Another time.
 - Later.
@@ -1558,3 +1558,126 @@ feel smile
 - You're really going for it today, huh? Fine, you earned that one.
 - Hehe, you don't give up. That's kind of cute.
 - More of that already? Okay, but you owe me.
+
+# ================= your ask the game does not allow now, and her H no =================
+@rule me.romance.notnow.date
+on me.romance
+when act=notnow lvl=date
+hook notnow.date
+- Would you go out with me this weekend?
+- Are you free this weekend? I'd like to take you somewhere.
+- Let's go out together on the weekend. Just us.
+
+@rule me.romance.notnow.confess
+on me.romance
+when act=notnow lvl=confess
+hook notnow.confess
+- There's something I want to tell you...
+- Can I tell you something important?
+- I've been wanting to say this for a while...
+
+@rule me.romance.notnow.lunch
+on me.romance
+when act=notnow lvl=lunch
+hook notnow.lunch
+- Want to have lunch together?
+- Lunch together? My treat.
+- Want to eat lunch with me today?
+
+@rule me.romance.notnow.home
+on me.romance
+when act=notnow lvl=home
+hook notnow.home
+- Want to walk home together?
+- Let's walk back together today.
+- Can I walk you home?
+
+@rule me.romance.notnow.study
+on me.romance
+when act=notnow lvl=study
+hook notnow.study
+- Want to study together?
+- Study with me for a bit?
+- Want to go over the notes together?
+
+@rule me.romance.notnow.exercise
+on me.romance
+when act=notnow lvl=exercise
+hook notnow.exercise
+- Want to work out together?
+- Come work out with me?
+- Want to go for a run together?
+
+@rule me.romance.notnow.club
+on me.romance
+when act=notnow lvl=club
+hook notnow.club
+- Want to do club activities together?
+- Come to the club with me today?
+- Want to join me at the club?
+
+@rule me.romance.notnow.follow
+on me.romance
+when act=notnow lvl=follow
+hook notnow.follow
+- Come with me for a bit?
+- Walk with me for a while?
+- Come along with me?
+
+@rule me.romance.notnow.h
+on me.romance
+when act=notnow lvl=h
+hook notnow.h
+- Want to go somewhere... more private?
+- How about we find somewhere quiet, just the two of us?
+- Want to go somewhere nobody will find us?
+
+@rule romance.notnow.h.gentle
+on romance
+when act=notnow q=h hook=notnow.h tone=gentle
+feel shy
+- Eh?! N-not here... not now...
+- N-not here...
+- Not now... please.
+- Eh?! Not here...
+
+@rule romance.notnow.h.energetic
+on romance
+when act=notnow q=h hook=notnow.h tone=energetic
+feel shy
+- Whoa! Not now, okay?!
+- Not now!
+- Whoa! Later!
+- Not here!
+
+@rule romance.notnow.h.cool
+on romance
+when act=notnow q=h hook=notnow.h tone=cool
+feel shy
+- ...Not now.
+- ...Not here.
+- ...No.
+
+@rule romance.notnow.h.teasing
+on romance
+when act=notnow q=h hook=notnow.h tone=teasing
+feel shy
+- Not here, not now. Patience.
+- Patience.
+- Not here.
+- Wait.
+
+# ================= your compliment about something real, and a private memory =================
+@rule me.romance.noticed.trait
+on me.romance
+when act=noticed lvl=trait
+- I really like {trait}.
+- Can I say something? I like {trait}.
+- You know what I like about you? {Trait}.
+
+@rule me.romance.private.moment
+on me.romance
+when act=private lvl=moment
+- I keep thinking about when {mem}...
+- I can't stop thinking about when {mem}...
+- Do you remember when {mem}? I think about it a lot...

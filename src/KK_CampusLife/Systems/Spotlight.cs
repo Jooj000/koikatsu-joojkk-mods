@@ -84,9 +84,12 @@ namespace Joojkk.CampusLife
                 gs.Attention = Mathf.Clamp(gs.Attention - (h.isGirlfriend ? 8 : 4), 0, 100);
                 // Forgotten girls slowly cool down (girlfriends notice more); never below the vanilla floor of 0.
                 var drift = Cfg.OffscreenDrift.Value;
-                if (drift > 0 && gs.Attention < 20 && Random.value < (h.isGirlfriend ? 0.6f : 0.3f))
+                // Context (2026-11-07): your girlfriend feels it after two days without you, anyone else after four; the
+                // longer it has been, the more it costs.
+                var away = S.Day - gs.LastTalkDay;
+                if (drift > 0 && gs.Attention < 20 && away >= (h.isGirlfriend ? 2 : 4))
                 {
-                    G.AddFavor(h, -Random.Range(1, drift + 1), 0);
+                    G.AddFavor(h, -Mathf.Clamp(away / 2, 1, drift), 0);
                     if (h.isGirlfriend) gs.Mood = Mood.Lonely;
                 }
             }

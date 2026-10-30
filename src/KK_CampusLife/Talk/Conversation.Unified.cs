@@ -512,7 +512,7 @@ namespace Joojkk.CampusLife
         private static void WaryNoH(SaveData.Heroine h)
         {
             var b = new SceneBuilder(h, true);
-            b.Narr(GirlInfo.FirstName(h) + " hesitates a moment too long before she answers.");
+            b.Narr(BeatSay(h, "sneak.waryno") ?? "...");
             b.Face(h, Feel.Shy).Her_(HeldBackLine(h, Consent.HeldBack(h)));
             Play(b, 0, null);
         }
@@ -799,15 +799,57 @@ namespace Joojkk.CampusLife
             foreach (var k in S.Buffs.Keys.Where(k => k.StartsWith("push", StringComparison.Ordinal) && S.Buffs[k] / 100 != S.Day).ToList()) S.Buffs.Remove(k);   // Consent.Pushed
         }
 
-        private static string[] Stock(Q q)
+        /// <summary>
+        /// narration around a sneak are bank rules now): the option's tag first, then how she took it, then her tone and
+        /// mood. Null when the bank has nothing.
+        /// </summary>
+        internal static string BeatSay(SaveData.Heroine h, string tag, string q = null)
         {
-            switch (q)
-            {
-                case Q.Good: return Tn("...Thank you. That really helps.", "Yeah! Exactly! You get it!", "...Yeah. Thanks.", "Heh. You're better at this than I thought.");
-                case Q.Neutral: return Tn("Mm... I guess so.", "Huh. Okay!", "...Sure.", "If you say so.");
-                default: return Tn("...Oh. Okay.", "Hey... that's not really what I meant.", "...That didn't help.", "Wow. Read the room.");
-            }
+            var c = Ctx(h, S.Girl(GirlInfo.Key(h)), new PTopic { Kind = "beat" });
+            c["tag"] = tag ?? "";
+            if (q != null) c["q"] = q;
+            DlgRule r;
+            return Bank.Pick("beat", c, GirlInfo.Key(h), out r);
         }
+
+        /// <summary>
+        /// Her first words about a request on the board, from board.dlg: the kind and her tone pick the
+        /// rule; where to meet and the errand itself are slots. Null when there is no girl or no rule.
+        /// </summary>
+        internal static string BoardSay(SaveData.Heroine h, string kind, string place, string text, string source = "board")
+        {
+            if (h == null) return null;
+            var c = Ctx(h, S.Girl(GirlInfo.Key(h)), new PTopic { Kind = "board" });
+            c["kind"] = kind ?? "";
+            c["place"] = string.IsNullOrEmpty(place) ? "" : Places.Name(place);
+            c["text"] = text ?? "";
+            // The errand in her own words: the board's text speaks of her in the third person.
+            c["errandat"] = place ?? "";
+            c["reqsrc"] = source ?? "";
+            DlgRule r;
+            return Bank.Pick("board", c, GirlInfo.Key(h), out r);
+        }
+
+        /// <summary>
+        /// The lines with a girl's name in the middle, from incident.dlg: what you did (inc), to whom ({about};
+        /// self when it was to her, friend when to her friend), what step it was and whether she saw it. Null when no rule fits.
+        /// </summary>
+        internal static string IncidentSay(SaveData.Heroine h, string on, string inc, string about, bool self, bool friend, string what, bool saw)
+        {
+            if (h == null) return null;
+            var c = Ctx(h, S.Girl(GirlInfo.Key(h)), new PTopic { Kind = on });
+            c["inc"] = inc ?? "";
+            c["about"] = about ?? "";
+            c["self"] = self ? "yes" : "no";
+            c["friend"] = friend ? "yes" : "no";
+            c["what"] = what ?? "";
+            c["saw"] = saw ? "yes" : "no";
+            DlgRule r;
+            return Bank.Pick(on, c, GirlInfo.Key(h), out r);
+        }
+
+        /// <summary>A beat's quality as the bank says it.</summary>
+        private static string QWord(Q q) { return q == Q.Good ? "good" : q == Q.Neutral ? "neutral" : "bad"; }
 
         private static Feel FaceFor(Q q) { return q == Q.Good ? Feel.Smile : q == Q.Neutral ? Feel.Normal : Feel.Pout; }
 
@@ -830,7 +872,7 @@ namespace Joojkk.CampusLife
                 foreach (var r in rs)
                 {
                     b.Branch(r.Tag);
-                    b.Face(h, r.Face ?? FaceFor(r.Q)).Her_(Fill((r.Her ?? Stock(r.Q))[tone], h));
+                    b.Face(h, r.Face ?? FaceFor(r.Q)).Her_(r.Her != null ? Fill(r.Her[tone], h) : BeatSay(h, r.Tag, QWord(r.Q)) ?? "...");
                     b.End();
                 }
             }
@@ -969,20 +1011,28 @@ namespace Joojkk.CampusLife
             }
         }
 
+        /// <summary>Her mood when you explain yourself: cheerful listens, upset and stressed do not, anger closes the door.</summary>
+        private static float MoodEase(SaveData.Heroine h)
+        {
+            var m = MoodOf(h);
+            var c = m == CampusLife.Mood.Cheerful ? 0.12f : m == CampusLife.Mood.Flirty ? 0.06f : m == CampusLife.Mood.Upset ? -0.2f : m == CampusLife.Mood.Stressed ? -0.12f : 0f;
+            return c - (h.isAnger ? 0.2f : h.anger / 400f);
+        }
+
         private static void ClearAir(SaveData.Heroine h, Incident g)
         {
             var s = Sess;
             var about = Social.Get(g.Girl);
             var self = about == h;
             var what = IncidentLabel(h, g);
-            var explainChance = Mathf.Clamp01(0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f);
-            var explained = Random.value < explainChance;
+            var explainChance = 0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f - Weight(h, g) + MoodEase(h);
+            var explained = Ctx(h, "explain:" + g.Id, explainChance);
             s.Did.Add("cleared:" + g.Id);
             Beat(h, Lvl.Friend, "clear:" + g.Id, b =>
             {
                 b.Narr(GirlInfo.FirstName(h) + " folds her arms before you say anything.");
                 b.Face(h, Feel.Serious).Her_(self
-                    ? ConvoLines.Incident(GirlInfo.ToneOf(h), g.Kind, GirlInfo.FirstName(h), true, false, g.What)
+                    ? ConvoLines.Incident(h, g.Kind, GirlInfo.FirstName(h), true, false, g.What)
                     : Social.Saw(h, g)
                     ? T(h, "I saw it, you know. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". With my own eyes. || I saw " + what + ". I really did. || With my own eyes... " + what + ". || I was there. I saw " + what + ".", "Don't even try! I SAW it! " + char.ToUpperInvariant(what[0]) + what.Substring(1) + "! || I SAW " + what + "! Don't lie!" + " || " + what + "! I was right there! || Caught you! " + what + "!",
                         "I was there. I saw " + what + ". So? || I witnessed " + what + ". Explain." + " || " + what + ". I saw. || I was present for " + what + ".", "Funny thing. I happened to see " + what + ". Front row." + " || " + what + "? I had a great view. || I saw " + what + ". Front row seat. || Guess who saw " + what + "?")
@@ -1025,8 +1075,8 @@ namespace Joojkk.CampusLife
             var total = all.Sum(i => Social.Effect(h, i));
             var saw = all.Any(i => Social.Get(i.Girl) == h || Social.Saw(h, i));
             var many = n >= 3;
-            var explainChance = Mathf.Clamp01(0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f - 0.08f * (n - 1));
-            var explained = Random.value < explainChance;
+            var explainChance = 0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f - 0.08f * (n - 1) - all.Sum(i => Weight(h, i)) / n + MoodEase(h);
+            var explained = Ctx(h, "explainall:" + all[0].Id, explainChance);
             foreach (var i in all) s.Did.Add("cleared:" + i.Id);
             var kinds = string.Join(", ", all.Select(i => IncidentLabel(h, i)).ToArray());
             CampusLifePlugin.Log.LogInfo("Talk clear all: " + GirlInfo.FirstName(h) + " " + n + " grudges (" + kinds + "), effect " + total + ", saw " + saw);
@@ -1122,7 +1172,7 @@ namespace Joojkk.CampusLife
             Beat(h, Lvl.Friend, "gossip:" + gossip.Id, b =>
             {
                 b.Me("You heard something about " + who + "?");
-                b.Her_(ConvoLines.GossipLine(GirlInfo.ToneOf(h), gossip.Kind, who, gossip.What));
+                b.Her_(ConvoLines.GossipLine(h, gossip.Kind, who, gossip.What));
                 Social.Mentioned(h, gossip);
             }, new List<Resp>
             {
@@ -1236,7 +1286,7 @@ namespace Joojkk.CampusLife
             var a = FlirtAnswer(h, false, "compliment");
             var ok = Took(a);
             var b = new SceneBuilder(h, true);
-            b.Me("I really like " + trait[0].Replace("her ", "your ").Replace("she ", "you ") + ".");
+            b.Me(RomanceMe(h, "noticed", "trait", trait[0].Replace("her ", "your ").Replace("she ", "you ")));
             b.Face(h, ok || a == "wary_no" ? Feel.Shy : Feel.Normal).Her_(a == "wary_no" ? WaryNoLine(h, false) : ok ? (a == "wary_yes" ? WaryLead(h) : "") + RomanceSay(h, "noticed", "yes") : RomanceSay(h, "noticed", "no"));
             Plain(h, Lvl.Romance, QOf(a), "compliment:" + trait[1], b, ok ? "♥ " + GirlInfo.FirstName(h) + (a == "wary_yes" ? " is flustered, but happy you noticed." : " is happy you noticed.") : null);
         }
@@ -1288,36 +1338,11 @@ namespace Joojkk.CampusLife
         private static void NotNow(SaveData.Heroine h, string what)
         {
             var b = new SceneBuilder(h, true);
-            switch (what)
-            {
-                case "date":
-                    b.Me("Would you go out with me this weekend?");
-                    b.Face(h, Feel.Worried).Her_(RomanceSay(h, "notnow", "date"));
-                    break;
-                case "confess":
-                    b.Me("There's something I want to tell you...");
-                    b.Face(h, Feel.Surprised).Her_(RomanceSay(h, "notnow", "confess"));
-                    break;
-                case "lunch":
-                    b.Me("Want to have lunch together?");
-                    b.Face(h, Feel.Worried).Her_(RomanceSay(h, "notnow", "lunch"));
-                    break;
-                case "home":
-                    b.Me("Want to walk home together?");
-                    b.Face(h, Feel.Worried).Her_(RomanceSay(h, "notnow", "home"));
-                    break;
-                case "study":
-                case "exercise":
-                case "club":
-                case "follow":
-                    b.Me(what == "study" ? "Want to study together?" : what == "exercise" ? "Want to work out together?" : what == "follow" ? "Come with me for a bit?" : "Want to do club activities together?");
-                    b.Face(h, Feel.Worried).Her_(RomanceSay(h, "notnow", "later"));
-                    break;
-                default:
-                    b.Me(Lines.Pick("Want to go somewhere... more private?", "How about we find somewhere quiet, just the two of us?"));
-                    b.Face(h, Feel.Shy).Her_(T(h, "Eh?! N-not here... not now... || N-not here... || Not now... please. || Eh?! Not here...", "Whoa! Not now, okay?! || Not now! || Whoa! Later! || Not here!", "...Not now. || ...Not now. || ...Not here. || ...No.", "Not here, not now. Patience. || Patience. || Not here. || Wait."));
-                    break;
-            }
+            // Your ask and her answer from romance.dlg: act=notnow, lvl/q the ask (h for somewhere private).
+            var ask = what == "date" || what == "confess" || what == "lunch" || what == "home" || what == "study" || what == "exercise" || what == "club" || what == "follow" ? what : "h";
+            b.Me(RomanceMe(h, "notnow", ask));
+            var q = ask == "study" || ask == "exercise" || ask == "club" || ask == "follow" ? "later" : ask;
+            b.Face(h, ask == "h" ? Feel.Shy : ask == "confess" ? Feel.Surprised : Feel.Worried).Her_(RomanceSay(h, "notnow", q));
             Plain(h, Lvl.Romance, Q.Neutral, "notnow:" + what, b, null, null, false);
         }
 
@@ -1439,7 +1464,7 @@ namespace Joojkk.CampusLife
             var b = new SceneBuilder(h, true);
             if (mem[2] != null)
             {
-                b.Me("I keep thinking about when " + mem[2] + "...");
+                b.Me(RomanceMe(h, "private", "moment", null, mem[2]));
                 b.Face(h, ok ? Feel.Shy : Feel.Normal).Her_(RomanceSay(h, "private", ok ? "yes" : "no", "moment"));
             }
             else
@@ -1447,7 +1472,7 @@ namespace Joojkk.CampusLife
                 b.Me(RomanceMe(h, "memories", MemLvl(h)));
                 b.Face(h, ok ? Feel.Love : Feel.Normal).Her_(RomanceSay(h, "memories", ok ? "yes" : "no", MemLvl(h)));
             }
-            if (a == "wary_yes") b.Narr("She looks away, red to the ears, but she doesn't change the subject.");
+            if (a == "wary_yes") b.Narr(BeatSay(h, "private.wary") ?? "...");
             Plain(h, Lvl.Spicy, ok ? Q.Good : Q.Neutral, "private:" + mem[1], b, ok ? "♥ " + GirlInfo.FirstName(h) + " remembers it too." : null);
         }
 
@@ -1477,11 +1502,11 @@ namespace Joojkk.CampusLife
             {
                 case "yes": b.Face(h, Feel.Love).Her_(RomanceSay(h, "sneak", "yes")); break;
                 case "wary_yes":
-                    b.Narr(GirlInfo.FirstName(h) + " looks away, then back at you, and doesn't say no.");
+                    b.Narr(BeatSay(h, "sneak.wary") ?? "...");
                     b.Face(h, Feel.Shy).Her_(RomanceSay(h, "sneak", "wary"));
                     break;
                 case "wary_no":
-                    b.Narr(GirlInfo.FirstName(h) + " hesitates a moment too long before she answers.");
+                    b.Narr(BeatSay(h, "sneak.waryno") ?? "...");
                     b.Face(h, Feel.Shy).Her_(HeldBackLine(h, Consent.HeldBack(h)));
                     break;
                 default: b.Face(h, Feel.Pout).Her_(RomanceSay(h, "sneak", "no")); break;
@@ -1510,11 +1535,11 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var can = GameAllows(3);
             var b = new SceneBuilder(h, true);
-            b.Face(h, Feel.Shy).Her_(T(h, "...About what I owe you. I haven't forgotten. || ...What I owe you. I remember. || ...I haven't forgotten my promise. || ...About what I owe...", "So... that thing I owe you. Yeah. I remember! || That thing I owe you! I remember! || My debt! Yep! || I owe you! I know!", "...My debt. I keep my word. || ...My debt. I keep my word. || ...I owe you. I remember. || ...Debt acknowledged.", "Ah, my little debt. Here to collect? || My debt? Collecting? || Here to collect? || Ah, the debt. Ready?"));
+            b.Face(h, Feel.Shy).Her_(BeatSay(h, "debt.intro") ?? "...");
             if (can) b.Choice("Collect it now", "db_now", "Save it for later", "db_later");
             else b.Choice("Save it for somewhere more private", "db_later");
-            b.Branch("db_now"); b.Face(h, Feel.Love).Her_(T(h, "...Okay. Now, then. || ...Okay. Now. || ...Alright. Right now. || ...Now, then.", "Now?! ...Okay! || Now?! Okay! || Right now?! Yes! || Now! Alright!", "...Fine. Now. || ...Now. || ...Fine. || ...Very well.", "Now? Bold. I like it. || Now? Bold. || Right now? I like it. || Eager. Good.")); Bounds(b, h); b.End();
-            b.Branch("db_later"); b.Face(h, Feel.Smile).Her_(T(h, "...Then I'll be waiting. || ...I'll wait. || ...I'll be waiting for you. || ...Later, then.", "Later! It's a promise! || Later! Promise! || Later! Deal! || Okay! Later!", "...I'll remember. || ...Remembered. || ...Noted. || ...Later.", "I'll hold you to it. || I'll hold you to it. || Don't forget. || Later, then.")); b.End();
+            b.Branch("db_now"); b.Face(h, Feel.Love).Her_(BeatSay(h, "db_now") ?? "..."); Bounds(b, h); b.End();
+            b.Branch("db_later"); b.Face(h, Feel.Smile).Her_(BeatSay(h, "db_later") ?? "..."); b.End();
             Hide();
             Scenes.PlayInTalk(b, c =>
             {
@@ -1529,15 +1554,15 @@ namespace Joojkk.CampusLife
             var trust = Social.Trust(h);
             Beat(h, Lvl.Spicy, "caught:" + gs.Caught, b =>
             {
-                b.Narr(GirlInfo.FirstName(h) + " goes red the moment you bring it up.");
-                b.Face(h, Feel.Shy).Her_(T(h, "...You saw me. Back then. I know you did. || ...You saw me. I know. || ...Back then... you saw. || ...I know you saw me.", "You SAW! When I was... ugh! I know you saw! || You SAW! I know! || You walked in! Ugh! || You saw me! I know it!", "...About when you walked in on me. || ...When you walked in. || ...About that incident. || ...You saw.", "So. You walked in on me. Let's talk about that. || You walked in on me. Let's discuss. || So. You saw. Let's talk. || You got a show. Now talk."));
+                b.Narr(BeatSay(h, "caught.narr") ?? "...");
+                b.Face(h, Feel.Shy).Her_(BeatSay(h, "caught.intro") ?? "...");
             }, new List<Resp>
             {
-                Rp("Admit you saw everything", "cg_admit", Q.Good, Tn("...At least you're honest.", "Everything?! ...Okay. Okay.", "...Honest. Fine.", "Everything, huh? ...Good.")),
-                Rp("Explain you walked in by accident", "cg_explain", trust >= 30 ? Q.Good : Q.Neutral, Tn("...I believe you.", "...Okay, okay, I believe you!", "...Fine.", "An accident. Sure~")),
-                Rp("Promise to keep it between you two", "cg_secret", trust >= 30 ? Q.Good : Q.Neutral, Tn("...Thank you. Really.", "Promise?! Okay. Thanks.", "...Good.", "...Our secret, then."), () => Social.AddTrust(h, 3)),
-                Rp("Tell her there's nothing to be ashamed of", "cg_feel", h.lewdness >= 50 ? Q.Good : Q.Neutral, Tn("...You really think so?", "...Really?", "...Hm.", "...Smooth.")),
-                Rp("Let it go for now", "cg_space", Q.Neutral, Tn("...Okay.", "...Yeah. Let's drop it!", "...Fine.", "...Coward. ...Fine.")),
+                Rp("Admit you saw everything", "cg_admit", Q.Good, null),
+                Rp("Explain you walked in by accident", "cg_explain", trust >= 30 ? Q.Good : Q.Neutral, null),
+                Rp("Promise to keep it between you two", "cg_secret", trust >= 30 ? Q.Good : Q.Neutral, null, () => Social.AddTrust(h, 3)),
+                Rp("Tell her there's nothing to be ashamed of", "cg_feel", h.lewdness >= 50 ? Q.Good : Q.Neutral, null),
+                Rp("Let it go for now", "cg_space", Q.Neutral, null),
             }, r => { if (r != null && r.Tag != "cg_space") gs.CaughtTalked = gs.Caught; });
         }
 

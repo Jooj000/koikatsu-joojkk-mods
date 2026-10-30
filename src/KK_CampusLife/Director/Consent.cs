@@ -275,7 +275,7 @@ namespace Joojkk.CampusLife
             chance = Chance(h, Ask.H, out why);
             if (h.isAnger) return "no";
             if (Reactions.OwesH(h, false)) return "yes";
-            return HTier(h, Dice(h, Ask.H.ToString()) < chance, ref why);
+            return HTier(h, Yes(h, Ask.H.ToString(), chance, ref why), ref why);
         }
 
         /// <summary>The answer once the dice said yes or no.</summary>
@@ -347,7 +347,7 @@ namespace Joojkk.CampusLife
             }
             if (a == "wary_yes") WaryH[GirlInfo.Key(h)] = S.Day;
             if (a == "wary_no") HHeld[key] = _held;
-            if (Logged.Add(key + "/H")) Note(GirlInfo.FirstName(h) + ": H -> " + a.Replace('_', ' ') + " (" + Mathf.RoundToInt(c * 100) + "%: " + why + ")");
+            if (Logged.Add(key + "/H")) Note(GirlInfo.FirstName(h) + ": H -> " + a.Replace('_', ' ') + " (" + "score " + c.ToString("0.00") + ": " + why + ")");
             return a;
         }
 
@@ -392,8 +392,8 @@ namespace Joojkk.CampusLife
             var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
             if (mood == Mood.Lonely) { stay += 0.1f; r.Add("lonely"); }
             else if (mood == Mood.Stressed || mood == Mood.Upset) { stay -= 0.1f; r.Add(mood.ToString().ToLowerInvariant()); }
-            stay += (Dice(h, "guilt") - 0.5f) * 0.3f;
-            gs.Guilt = stay >= 0f ? 1 : 2;
+            // Context decides (2026-11-07); the dice only break an even score.
+            gs.Guilt = Yes(h, "guilt", stay + 0.5f) ? 1 : 2;
             gs.GuiltDay = S.Day;
             if (gs.Guilt == 2) gs.DistanceUntil = S.Day + 1;
             CampusLife.Memories.Add(h, "h_wary", "we went too far, and I let it happen", 0, true);
@@ -454,7 +454,7 @@ namespace Joojkk.CampusLife
             }
             ease -= 0.06f * weight;
             if (saw) { ease -= 0.1f; r.Add("she saw it"); }
-            var score = ease + (Dice(her, "cheat:" + (other != null ? GirlInfo.Key(other) : "")) - 0.5f) * 0.3f;
+            var score = ease; // context only (2026-11-07: "não é para ser chance. é contexto")
             var answer = score >= 0.45f ? "shrugs" : score >= 0.2f ? "teases" : score >= -0.15f ? "hurt" : "furious";
             why = score.ToString("0.00") + ": " + string.Join(", ", r.ToArray());
             var key = S.Day + "/" + GirlInfo.Key(her) + "/cheat/" + (other != null ? GirlInfo.Key(other) : "") + "/" + weight + (saw ? "s" : "");
@@ -491,7 +491,7 @@ namespace Joojkk.CampusLife
             unchecked
             {
                 var hash = 2166136261u;
-                foreach (var ch in GirlInfo.Key(h) + "|" + what + "|" + S.Day + "|" + (int)G.CurrentMask)
+                foreach (var ch in (h != null ? GirlInfo.Key(h) : "you") + "|" + what + "|" + S.Day + "|" + (int)G.CurrentMask)
                 {
                     hash ^= ch;
                     hash *= 16777619u;
@@ -504,6 +504,34 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
+        /// The director decides by context, not by luck (user, 2026-11-07: "não é para ser chance. é contexto. já falei 500
+        /// vezes. chance é só pra ser algo complementar no máximo em uma situação específica em que o contexto não ajuda").
+        /// The score is everything the director read about her (0-1); at or above the bar it is a yes, under it a no. Only
+        /// a score within <see cref="Band"/> of the bar, where the context does not decide, goes to her dice, and the log
+        /// says it was a toss-up.
+        /// </summary>
+        internal static bool Yes(SaveData.Heroine h, string what, float score, ref string why, float bar = 0.5f)
+        {
+            if (score >= bar + Band) return true;
+            if (score < bar - Band) return false;
+            var yes = Dice(h, what) < 0.5f + (score - bar) / (2f * Band) * 0.5f;
+            why = (string.IsNullOrEmpty(why) ? "" : why + "; ") + "toss-up at " + score.ToString("0.00");
+            return yes;
+        }
+
+        internal static bool Yes(SaveData.Heroine h, string what, float score, float bar = 0.5f)
+        {
+            string why = null;
+            return Yes(h, what, score, ref why, bar);
+        }
+
+        /// <summary>How close to the bar the context counts as undecided (a toss-up).</summary>
+        internal const float Band = 0.04f;
+
+        /// <summary>A score as the logs show it ("0.62 of 0.50").</summary>
+        internal static string Score(float score, float bar = 0.5f) { return score.ToString("0.00") + " of " + bar.ToString("0.00"); }
+
+        /// <summary>
         /// personalidade não aberta e valores que contam interesse, sendo eles favor e H acima de 50% na amiga"):
         /// "yes", "wary", "wary_no" or "no" (<see cref="KissTier"/>). Interest is favor and H above half on a friend; then mood, trust, a grudge, who is
         /// watching and how many times you tried. A girl who says yes but is not open by nature lets it happen warily;
@@ -513,7 +541,7 @@ namespace Joojkk.CampusLife
         {
             if (h.isAnger) { why = "angry with you"; return "no"; }
             var c = KissChance(h, tries, crowd, out why);
-            var answer = KissTier(h, tries, crowd, Dice(h, "kiss" + tries) < c, ref why);
+            var answer = KissTier(h, tries, crowd, Yes(h, "kiss" + tries, c, ref why), ref why);
             var line = GirlInfo.FirstName(h) + ": kiss -> " + answer + " (" + why + ")";
             if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/kiss" + tries)) Note(line);
             else CampusLifePlugin.Log.LogInfo("Director decides: " + line);
@@ -594,7 +622,7 @@ namespace Joojkk.CampusLife
             if (crowd >= 4) { c -= h.isGirlfriend ? 0.3f : 0.2f; r.Add("a crowd"); }
             if (tries > 1) { c -= 0.15f * (tries - 1); r.Add("try " + tries); }
             c = Mathf.Clamp01(c);
-            why = Mathf.RoundToInt(c * 100) + "%: " + string.Join(", ", r.ToArray());
+            why = "score " + c.ToString("0.00") + ": " + string.Join(", ", r.ToArray());
             return c;
         }
 
@@ -670,7 +698,7 @@ namespace Joojkk.CampusLife
             c = Mathf.Clamp01(c + Pushing(h, what, out again, pr));
             if (pr.Count > 0) why += ", " + string.Join(", ", pr.ToArray());
             // A new try is a new roll (one roll for the whole period made a yes come back forever).
-            var yes = Dice(h, (spicy ? "spicy:" : "romance:") + what + (again > 0 ? "#" + again : "")) < c;
+            var yes = Yes(h, (spicy ? "spicy:" : "romance:") + what + (again > 0 ? "#" + again : ""), c, ref why);
             Pushed(h, what);
             var gs = S.Girl(GirlInfo.Key(h));
             var pace = Profile(h);
@@ -740,7 +768,7 @@ namespace Joojkk.CampusLife
             if (spicy && crowd >= 3 && lewd < 60 && !GirlInfo.Quirks(h).bitch) { c -= 0.15f; r.Add("a crowd"); }
             if (refused) { c -= 0.3f; r.Add("turned you down already"); }
             c = Mathf.Clamp01(c);
-            why = Mathf.RoundToInt(c * 100) + "%: " + string.Join(", ", r.ToArray());
+            why = "score " + c.ToString("0.00") + ": " + string.Join(", ", r.ToArray());
             return c;
         }
 
@@ -753,18 +781,19 @@ namespace Joojkk.CampusLife
             var pr = new List<string>();
             c = Mathf.Clamp01(c + Pushing(h, "hand", out again, pr));
             if (pr.Count > 0) why += ", " + string.Join(", ", pr.ToArray());
-            var a = h.isAnger ? "no" : TouchTier(h, "hand", false, 1, crowd, Dice(h, Ask.HoldHand + (again > 0 ? "#" + again : "")) < c, ref why);
+            var a = h.isAnger ? "no" : TouchTier(h, "hand", false, 1, crowd, Yes(h, Ask.HoldHand + (again > 0 ? "#" + again : ""), c, ref why), ref why);
             Pushed(h, "hand");
-            if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/" + Ask.HoldHand)) Note(GirlInfo.FirstName(h) + ": hold hands -> " + a.Replace('_', ' ') + " (" + Mathf.RoundToInt(c * 100) + "%: " + why + ")");
+            if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/" + Ask.HoldHand)) Note(GirlInfo.FirstName(h) + ": hold hands -> " + a.Replace('_', ' ') + " (" + "score " + c.ToString("0.00") + ": " + why + ")");
             return a;
         }
 
         /// <summary>What the director would answer now, without logging it as a decision.</summary>
         public static bool WouldSay(SaveData.Heroine h, Ask ask)
         {
-            if (ask == Ask.H) { float c; string w; var a = HAnswer(h, out c, out w); return a == "yes" || a == "wary_yes"; }
+            if (ask == Ask.H) { float hc; string w; var a = HAnswer(h, out hc, out w); return a == "yes" || a == "wary_yes"; }
             string why;
-            return Dice(h, ask.ToString()) < Chance(h, ask, out why);
+            var c = Chance(h, ask, out why);
+            return Yes(h, ask.ToString(), c, ref why);
         }
 
         public static bool Decide(SaveData.Heroine h, Ask ask)
@@ -772,8 +801,8 @@ namespace Joojkk.CampusLife
             if (ask == Ask.H) { var a = DecideH(h); return a == "yes" || a == "wary_yes"; }
             string why;
             var c = Chance(h, ask, out why);
-            var yes = Dice(h, ask.ToString()) < c;
-            var line = GirlInfo.FirstName(h) + ": " + Label(ask) + " -> " + (yes ? "yes" : "no") + " (" + Mathf.RoundToInt(c * 100) + "%: " + why + ")";
+            var yes = Yes(h, ask.ToString(), c, ref why);
+            var line = GirlInfo.FirstName(h) + ": " + Label(ask) + " -> " + (yes ? "yes" : "no") + " (" + "score " + c.ToString("0.00") + ": " + why + ")";
             if (Logged.Add(S.Day + "/" + (int)G.CurrentMask + "/" + GirlInfo.Key(h) + "/" + ask)) Note(line);
             return yes;
         }
@@ -914,11 +943,12 @@ namespace Joojkk.CampusLife
                 if (_herTurnTaken) { __result = false; return; }
                 var ask = OfHerCondition(_condition);
                 string why;
-                var c = Chance(h, ask, out why) * Initiative(h, ask);
-                var yes = Dice(h, "her:" + ask) < c;
+                var c = Chance(h, ask, out why);
+                var bar = Initiative(h, ask, ref why);
+                var yes = bar <= 1f && Yes(h, "her:" + ask, c, ref why, bar);
                 __result = yes;
-                if (yes) _herTurnTaken = true;
-                if (yes || game) Note(GirlInfo.FirstName(h) + " brings up " + Label(ask) + ": " + (yes ? "yes" : "no") + " (" + Mathf.RoundToInt(c * 100) + "%: " + why + (game && !yes ? "; the game wanted it" : "") + ")");
+                if (yes) { _herTurnTaken = true; S.Buffs["herask:" + ask + "@" + GirlInfo.Key(h)] = S.Day; }
+                if (yes || game) Note(GirlInfo.FirstName(h) + " brings up " + Label(ask) + ": " + (yes ? "yes" : "no") + " (" + Score(c, Mathf.Min(1f, bar)) + ": " + why + (game && !yes ? "; the game wanted it" : "") + ")");
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Director answers (her turn): " + e.Message); }
         }
@@ -942,19 +972,26 @@ namespace Joojkk.CampusLife
             return Ask.Follow;
         }
 
-        /// <summary>How readily she takes the first step herself.</summary>
-        private static float Initiative(SaveData.Heroine h, Ask ask)
+        /// <summary>
+        /// How sure she has to be to take the first step herself: the bar her own answer (<see cref="Chance"/>) has to
+        /// reach. An open girl speaks up at 0.6, a normal one at 0.72, a reserved one at 0.85; lonely (going home, lunch,
+        /// following you) and flirty (H, a date, confessing) lower it by 0.1; H asks 0.1 more; a confession needs her sure
+        /// (0.8 and the bar). What she already brought up today she does not bring up again (above 1: never).
+        /// </summary>
+        private static float Initiative(SaveData.Heroine h, Ask ask, ref string why)
         {
-            if (ask == Ask.Breakup) return 1f;
+            if (ask == Ask.Breakup) return 0.5f;
+            int last;
+            if (S.Buffs.TryGetValue("herask:" + ask + "@" + GirlInfo.Key(h), out last) && last == S.Day) { why += "; she already brought it up today"; return 2f; }
             var pace = Profile(h);
-            var f = pace == Pace.Open ? 0.35f : pace == Pace.Normal ? 0.25f : 0.12f;
+            var bar = pace == Pace.Open ? 0.6f : pace == Pace.Normal ? 0.72f : 0.85f;
             var gs = S.Girl(GirlInfo.Key(h));
             var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
-            if (mood == Mood.Lonely && (ask == Ask.GoHome || ask == Ask.Lunch || ask == Ask.Follow)) f *= 1.5f;
-            if (mood == Mood.Flirty && (ask == Ask.H || ask == Ask.Date || ask == Ask.Confess)) f *= 1.5f;
-            if (ask == Ask.Confess) return Chance(h, Ask.Confess, out _) >= 0.8f ? f * 1.5f : 0f; // she confesses only when she is sure
-            if (ask == Ask.H) f *= 0.6f;
-            return f;
+            if (mood == Mood.Lonely && (ask == Ask.GoHome || ask == Ask.Lunch || ask == Ask.Follow)) { bar -= 0.1f; why += "; lonely"; }
+            if (mood == Mood.Flirty && (ask == Ask.H || ask == Ask.Date || ask == Ask.Confess)) { bar -= 0.1f; why += "; flirty"; }
+            if (ask == Ask.Confess) bar = Mathf.Max(bar, 0.8f); // she confesses only when she is sure
+            if (ask == Ask.H) bar += 0.1f;
+            return bar;
         }
 
         // ---------------- touch ----------------
@@ -1018,7 +1055,7 @@ namespace Joojkk.CampusLife
         {
             chance = TouchChance(h, part, look, n, crowd, out why);
             if (h.isAnger) return "no";
-            var yes = Dice(h, "touch:" + part + (look ? ":look" : "") + ":" + n) < chance;
+            var yes = Yes(h, "touch:" + part + (look ? ":look" : "") + ":" + n, chance, ref why);
             return TouchTier(h, part, look, n, crowd, yes, ref why);
         }
 
@@ -1080,7 +1117,7 @@ namespace Joojkk.CampusLife
             var comfort = Comfort(h, intimate);
             if (n > comfort) { c -= (intimate ? 0.15f : 0.1f) * (n - comfort); r.Add("touch #" + n); }
             c = Mathf.Clamp01(c);
-            why = Mathf.RoundToInt(c * 100) + "%: " + string.Join(", ", r.ToArray());
+            why = "score " + c.ToString("0.00") + ": " + string.Join(", ", r.ToArray());
             return c;
         }
 
@@ -1268,8 +1305,8 @@ namespace Joojkk.CampusLife
                 if (n > 1) { c += 0.15f; why.Add("angry again today"); }
                 why.Add("trust " + trust);
                 c = Mathf.Clamp01(c);
-                var drop = Dice(h, "drop" + n) < c;
-                Note(line + "; level drop " + (drop ? "yes" : "no") + " (" + Mathf.RoundToInt(c * 100) + "%: " + string.Join(", ", why.ToArray()) + ")");
+                var drop = Yes(h, "drop" + n, c);
+                Note(line + "; level drop " + (drop ? "yes" : "no") + " (" + "score " + c.ToString("0.00") + ": " + string.Join(", ", why.ToArray()) + ")");
                 if (!drop) return;
                 var name = GirlInfo.FirstName(h);
                 if (h.isGirlfriend)
@@ -1315,10 +1352,10 @@ namespace Joojkk.CampusLife
                 if (mood == Mood.Upset) c -= 0.2f;
                 if (mood == Mood.Cheerful) c += 0.1f;
                 c = Mathf.Clamp01(c);
-                var yes = Dice(h, "sorry" + n) < c;
+                var yes = Yes(h, "sorry" + n, c);
                 var left = yes ? 0 : Mathf.Clamp(h.anger - 40, 20, 80);
                 h.anger = yes ? 0 : left + 40; // the game then takes 30-50 off: 0 stays 0; the rest lands near "left"
-                Note(GirlInfo.FirstName(h) + ": apology #" + n + " -> " + (yes ? "forgiven" : "still angry (about " + left + ")") + " (" + Mathf.RoundToInt(c * 100) + "%)");
+                Note(GirlInfo.FirstName(h) + ": apology #" + n + " -> " + (yes ? "forgiven" : "still angry (about " + left + ")") + " (score " + c.ToString("0.00") + ")");
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Director answers (apology): " + e.Message); }
         }

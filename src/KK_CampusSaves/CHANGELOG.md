@@ -9,6 +9,9 @@
 - Every version shows how many cards it holds, and a campus shows the count of its latest save.
 - Export writes one save per day.
 - A save from the middle of a day can be loaded from the night menu too.
+- The vault compresses the new pieces of a save when that pays off (about 12% smaller with two saves). Older packs still open.
+- Pieces no version uses any more are cleared out after old versions are pruned, once they reach 8 MB and a quarter of the pack. A compaction cut halfway is undone the next time the game starts.
+- Free space also compacts every campus and says how much it freed.
 
 ## 0.1.0 (2026-10-13)
 - First version: saves go through a temporary file, every save becomes a version in a vault stored by pieces, saving during the day, autosave with triggers and a timer, panel with import, free space and export.

@@ -189,6 +189,12 @@ namespace Joojkk.CampusSaves
                 if (stored != null && picture != null) File.WriteAllBytes(c.Vault.PicturePath(stored.Id), picture);
                 else if (stored != null) Thumbs.Reuse(c.Vault, stored);
                 c.Prune(keep, DateTime.Now);
+                if (c.Vault.WorthCompacting())
+                {
+                    Campuses.Status = "Compacting " + c.Name;
+                    var freed = c.Vault.Compact();
+                    Campuses.Status = "Compacted " + c.Name + ": freed " + (freed / 1000000) + " MB";
+                }
                 CampusSavesPlugin.Log.LogInfo("Stored in " + sw.ElapsedMilliseconds + " ms, pack " + (c.Vault.PackSize / 1000000) + " MB");
             });
             Dirty = false;

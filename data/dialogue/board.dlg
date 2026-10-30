@@ -1,0 +1,338 @@
+
+@rule board.first.lunch.gentle
+on board
+when kind=lunch tone=gentle
+- I, um... forgot my lunch today. And I don't really like eating alone...
+- I left my bento at home... and eating by myself feels so lonely.
+- Um, I forgot my lunch... would anyone share a table with me?
+- No lunch today... and no one to sit with. Ehe...
+
+@rule board.first.lunch.energetic
+on board
+when kind=lunch tone=energetic
+- I forgot my bento! And nobody to eat with! Tragic!
+- No bento AND no lunch buddy?! Worst day!
+- My lunch is at home and I'm starving! Someone save me!
+- Forgot my food! Who's eating with me?!
+
+@rule board.first.lunch.cool
+on board
+when kind=lunch tone=cool
+- I forgot my lunch. Eating alone is fine. ...Mostly.
+- No lunch today. Company would be... acceptable.
+- I forgot my bento. I wouldn't mind a lunch partner.
+- Lunch alone again. I'd tolerate company.
+
+@rule board.first.lunch.teasing
+on board
+when kind=lunch tone=teasing
+- Lunch alone again today. How sad for me~
+- Forgot my lunch. Someone could feed me~
+- Lunch for one again. Pity me~
+- No bento, no buddy. Someone fix that.
+
+@rule board.first.study.gentle
+on board
+when kind=study tone=gentle
+- I don't understand today's lesson at all... I'm scared about the test.
+- Today's lesson went right over my head... the test scares me.
+- I'm so behind... would someone study with me?
+- I don't get any of it... I'm worried about the exam.
+
+@rule board.first.study.energetic
+on board
+when kind=study tone=energetic
+- I'm SO lost in class! Help me study?!
+- Class today?! Total mystery! Study buddy wanted!
+- I'm drowning in assignments! Throw me a rope!
+- Test incoming and I know NOTHING! Help!
+
+@rule board.first.study.cool
+on board
+when kind=study tone=cool
+- I'm behind in class. I'd study better with someone.
+- I fell behind. A study partner would help.
+- I need to review. Preferably not alone.
+- The material is dense. I'd study better with someone.
+
+@rule board.first.study.teasing
+on board
+when kind=study tone=teasing
+- The test is going to destroy me. Unless someone helps.
+- The exam will crush me. Unless a hero appears~
+- I need a tutor. A cute one.
+- If I fail, it's everyone's fault. Help me~
+
+@rule board.first.exercise.gentle
+on board
+when kind=exercise tone=gentle
+- I want to get a little stronger... but working out alone is hard.
+- I want to get stronger... but exercising alone is hard.
+- I'd like to train a little... if someone came with me.
+- Working out by myself is lonely... and hard.
+
+@rule board.first.exercise.energetic
+on board
+when kind=exercise tone=energetic
+- I've got too much energy! I need to move!
+- I'm bursting with energy! Someone run with me!
+- I need to MOVE! Training partner, anyone?!
+- Let's work out! Somebody! Anybody!
+
+@rule board.first.exercise.cool
+on board
+when kind=exercise tone=cool
+- I want to train, but alone it's boring.
+- I want to train. Alone, it's tedious.
+- I need a sparring partner.
+- Training is better with a rival.
+
+@rule board.first.exercise.teasing
+on board
+when kind=exercise tone=teasing
+- I need a training partner. One who can keep up.
+- I need someone to train with. Someone who won't cry.
+- Training partner wanted. Must keep up.
+- Who's brave enough to train with me?
+
+@rule board.first.club.gentle
+on board
+when kind=club tone=gentle
+- I'd like to do something with the club... if that's okay.
+- I'd love to do something for the club... if someone helps.
+- Could we do a little club activity? I'd be happy.
+- I have a small idea for the club... if that's okay.
+
+@rule board.first.club.energetic
+on board
+when kind=club tone=energetic
+- Let's do club stuff! I'm bored of waiting!
+- Club time! I'm tired of waiting around!
+- Let's do club stuff! Right now!
+- The club needs action! Let's go!
+
+@rule board.first.club.cool
+on board
+when kind=club tone=cool
+- I have an idea for the club. I need a hand.
+- I have a plan for the club. I need help.
+- A club task needs doing. Volunteers?
+- The club needs attention. I'll need a hand.
+
+@rule board.first.club.teasing
+on board
+when kind=club tone=teasing
+- The club's been quiet. Let's change that.
+- The club's gotten boring. Let's spice it up.
+- Let's shake the club up a bit.
+- Club's too quiet. I have ideas~
+
+@rule board.first.walkhome.gentle
+on board
+when kind=walkhome tone=gentle
+- The way home gets dark early... I don't like walking it alone.
+- It gets dark so early... I don't want to walk home alone.
+- The road home is scary at night...
+- Walking home alone makes me nervous...
+
+@rule board.first.walkhome.energetic
+on board
+when kind=walkhome tone=energetic
+- Walking home alone is so boring!
+- Walking home solo is SO boring! Company?!
+- Someone walk with me! I'll talk the whole way!
+- Who's going my way? Let's walk!
+
+@rule board.first.walkhome.cool
+on board
+when kind=walkhome tone=cool
+- I'd rather not walk home alone today.
+- I'd prefer company on the way home.
+- Walking home alone isn't ideal today.
+- Company for the walk home would be welcome.
+
+@rule board.first.walkhome.teasing
+on board
+when kind=walkhome tone=teasing
+- If someone walked me home, I wouldn't complain.
+- A gentleman would walk me home. Hint.
+- Someone could escort me home. Just saying~
+- Walking me home earns points. Big ones.
+
+@rule board.first.gift.gentle
+on board
+when kind=gift tone=gentle
+- It's been a hard day... I wish something nice would happen.
+- Today was hard... I wish something nice would happen.
+- I'm a little down... something sweet would help.
+- It's been one of those days...
+
+@rule board.first.gift.energetic
+on board
+when kind=gift tone=energetic
+- Ugh, today needs a treat! Like, badly!
+- Today was rough! I need a treat! Now!
+- Ugh, I need a pick-me-up! Big time!
+- Bad day! Cheer me up, somebody!
+
+@rule board.first.gift.cool
+on board
+when kind=gift tone=cool
+- I could use something to lift my mood.
+- Today was trying. Something pleasant would help.
+- I could use a distraction.
+- A small kindness would be welcome today.
+
+@rule board.first.gift.teasing
+on board
+when kind=gift tone=teasing
+- A little present would fix my mood. Just saying.
+- A gift would fix everything. Just saying.
+- My mood needs fixing. Presents work.
+- Cheer me up and I'll owe you~
+
+@rule board.first.meetat.gentle
+on board
+when kind=meetat tone=gentle
+- Would you meet me at the {place} sometime today?
+- Could you come to the {place} later?
+- I'll be at the {place}... would you come?
+- Um, meet me at the {place} today?
+
+@rule board.first.meetat.energetic
+on board
+when kind=meetat tone=energetic
+- Meet me at the {place} later, okay?!
+- The {place}! Later! Be there!
+- See you at the {place}, okay?!
+- Come to the {place} later! Promise!
+
+@rule board.first.meetat.cool
+on board
+when kind=meetat tone=cool
+- Come by the {place} later.
+- The {place}. Later today.
+- I'll be at the {place}. Come.
+- Meet me at the {place}.
+
+@rule board.first.meetat.teasing
+on board
+when kind=meetat tone=teasing
+- The {place}. Later. Don't be late.
+- {place}. Later. I'll be waiting~
+- Find me at the {place}. If you dare.
+- The {place}. Don't keep me waiting.
+
+@rule board.first.errand.gentle
+on board
+when kind=errand tone=gentle
+- Could I ask a small favor? {@errand}
+- Um, a small favor, please? {@errand}
+- Would you help me with something? {@errand}
+- If it's not too much... {@errand}
+
+@rule board.first.errand.energetic
+on board
+when kind=errand tone=energetic
+- Favor time! {@errand}
+- Help help! {@errand}
+- I need you! {@errand}
+- Quick favor! {@errand}
+
+@rule board.first.errand.cool
+on board
+when kind=errand tone=cool
+- I need a favor. {@errand}
+- A request. {@errand}
+- Help me with this. {@errand}
+- Something I need. {@errand}
+
+@rule board.first.errand.teasing
+on board
+when kind=errand tone=teasing
+- You owe me, remember? {@errand}
+- Do me a favor~ {@errand}
+- I'm calling in a favor. {@errand}
+- You'll do this for me, right? {@errand}
+
+# Her errand in her own words, for {@errand} above: errandat is where it is, reqsrc who posted it.
+@rule errand.library
+on @errand
+when errandat=library reqsrc=board
+- [My library books are overdue. Could you return them for me?|Could you take my books back to the library? They're late.|My library books... they were due last week.]
+
+@rule errand.cafeteria
+on @errand
+when errandat=cafeteria reqsrc=board
+- [Could you get me a melon bread before they sell out?|The cafeteria melon bread. I need one. Before it's gone.|Grab me a melon bread? They always run out.]
+
+@rule errand.staffroom
+on @errand
+when errandat=staffroom reqsrc=board
+- [Could you turn in my assignments at the faculty room?|My assignments need to go to the faculty room.|Take my assignments to the faculty room? I can't face them today.]
+
+@rule errand.clubroom
+on @errand
+when errandat=clubroom reqsrc=board
+- [I left my notebook in the club room. Could you get it?|My notebook's still in the club room...|Fetch my notebook from the club room?]
+
+@rule errand.gym
+on @errand
+when errandat=gym reqsrc=board
+- [I left my towel in the gym. Could you find it?|My towel's somewhere in the gym.|Find my towel in the gym? I forgot it after practice.]
+
+@rule errand.pool
+on @errand
+when errandat=pool reqsrc=board
+- [My goggles are still at the pool. Could you get them?|I forgot my goggles at the pool...|Get my goggles back from the pool?]
+
+@rule errand.infirmary
+on @errand
+when errandat=infirmary reqsrc=board
+- [Could you pick up my medicine at the infirmary?|My medicine's waiting at the infirmary.|The infirmary has my medicine. Could you get it for me?]
+
+@rule errand.classroom
+on @errand
+when errandat=classroom reqsrc=board
+- [Could you copy today's notes for me?|I missed today's notes. Could you copy them?|Today's notes... I didn't get any of them down.]
+
+@rule errand.charm
+on @errand
+when reqsrc=arc
+- [I lost my charm. Someone saw one at the {place}.|My charm's gone. Someone said it's at the {place}.|My little charm... it might be at the {place}.]
+
+@rule errand.any
+on @errand
+- [Could you go to the {place} for me?|There's something at the {place} I need.|I need something done at the {place}.]
+
+@rule board.first.other.gentle
+on board
+when tone=gentle
+- Could we talk again later today? There's something I want to tell you.
+- Could we talk later? I have something to tell you.
+- Please find me later today... I want to tell you something.
+- Later, could we talk a little? It's important to me.
+
+@rule board.first.other.energetic
+on board
+when tone=energetic
+- Come find me later! I've got stuff to tell you!
+- Find me later! Big news!
+- Later! Come find me! I have stuff!
+- Don't forget to find me later!
+
+@rule board.first.other.cool
+on board
+when tone=cool
+- Talk to me again later. It's important.
+- Later. We need to talk.
+- Find me later today.
+- We'll talk later. It matters.
+
+@rule board.first.other.teasing
+on board
+when tone=teasing
+- Find me later. I have something to say.
+- Later. Come find me. Alone.
+- I have something to say. Later.
+- Find me later. Don't make me wait.

@@ -554,7 +554,7 @@ namespace Joojkk.CampusLife
                     Say2(b, t.B, t.A, "duo3.end.b", T(t.B, "This was nice. Let's do it again. || That was lovely. Again sometime? || I had fun. Let's do this again. || This was nice. Thank you.", "That was fun! Again sometime! || So fun! Again! || Best hangout! Again soon! || Let's repeat this!", "Until next time. || Next time, then. || Again sometime. || Later.", "Don't miss us too much~ || You'll miss us~ || Try not to miss us. || Dream of us~"));
                     any = true;
                 }
-                else if (end == null && (Random.value < 0.45f || t.Disagree && Random.value < 0.6f))
+                else if (end == null && Chats(t))
                     any |= Banter(b, t, "banter");
             }
             catch (Exception e) { CampusLifePlugin.Log.LogError("Trio after: " + e); }
@@ -611,14 +611,14 @@ namespace Joojkk.CampusLife
             var w = TrioOther(to);
             if (w == null) return false;
             var lvl = t.LastLvl.Value;
-            if (lvl == Lvl.Friend && Random.value > 0.4f) return false;
+            if (lvl == Lvl.Friend && !Chimes(w, to, t)) return false;
             var trisal = w.isGirlfriend && to.isGirlfriend && Harem.Agreed(w, to);
             var wrel = trisal ? "trisal" : w.isGirlfriend ? "yourgf" : PairWord(w, to);
             var lv = lvl == Lvl.Friend ? "friend" : lvl == Lvl.Romance ? "romance" : "spicy";
             var q = t.LastQ == Q.Good ? "good" : t.LastQ == Q.Neutral ? "neutral" : "bad";
             Feel face = lvl == Lvl.Friend ? Feel.Smile : wrel == "yourgf" || wrel == "rival" ? Feel.Pout : Feel.Shy;
             if (t.LastQ == Q.Bad) face = wrel == "rival" ? Feel.Laugh : Feel.Worried;
-            Say2(b, w, to, "duo3.react", WitnessStock(w, lv, q, wrel), X("lvl", lv, "q", q, "wrel", wrel), face);
+            Say2(b, w, to, "duo3.react", null, X("lvl", lv, "q", q, "wrel", wrel), face);
             var wk = GirlInfo.Key(w);
             var tk = GirlInfo.Key(to);
             if (lvl != Lvl.Friend && t.LastQ != Q.Bad)
@@ -632,15 +632,6 @@ namespace Joojkk.CampusLife
             return true;
         }
 
-        private static string WitnessStock(SaveData.Heroine w, string lv, string q, string wrel)
-        {
-            if (q == "bad") return T(w, "Ah... that didn't go well... || Oh... that went badly... || Ah... not so good... || Um... oops...", "Pfft! Smooth. || Pfft! Smooth! || Haha! Fail! || Oof!", "...Nice try. || ...Nice try. || ...Failed. || ...Hm.", "Ooh, that's gotta hurt~ || Ooh, ouch~ || That hurt~ || Yikes~");
-            if (lv == "friend") return T(w, "Hehe, you two get along. || You two get along so well. || Hehe, you're cute together. || You're close, huh?", "Hey, don't leave me out! || Hey! Include me! || Don't forget me! || Me too!", "...Hm. || ...Hm. || ...I see. || ...Mm.", "Aww, cute. || Aww. || Adorable. || Sweet~");
-            if (wrel == "yourgf") return T(w, "U-um... I'm right here, you know... || U-um... I'm still here... || I'm right here, you know... || Hello...? I'm here...", "Hey! Your girlfriend is standing RIGHT here! || Your GIRLFRIEND is right here! || Hello! Girlfriend present! || HEY! Me! Here!", "...I'm still here. || ...I'm here. || ...Still present. || ...Ahem.", "Careful. I'm watching~ || Careful. Watching~ || I see everything~ || Eyes on you~");
-            if (wrel == "rival") return T(w, "... || ...... || ...Hmph. || ......Mm.", "Ugh, seriously? || Seriously?! || Ugh! || Oh, come on!", "...Tch. || ...Tch. || ...Hmph. || ...Ugh.", "Please. She's not your type. || Please. Not your type. || She's not your style. || As if.");
-            return T(w, "Ah... I-I'll pretend I didn't see that... || I-I'll pretend I didn't see... || Ah... I saw nothing... || Um... I'll look away...", "Ooh! Look at you two! || Ooh! You two! || Whoa! Look at you! || Hey hey!", "...Should I give you two a minute? || ...A minute alone? || ...Shall I leave? || ...Should I go?", "Ooh~ getting bold, are we? || Getting bold~ || Ooh, daring~ || My, my~");
-        }
-
         /// <summary>The two of them talking to each other (after a turn, or in a silence); maybe a disagreement.</summary>
         private static bool Banter(SceneBuilder b, Trio t, string kind)
         {
@@ -648,7 +639,7 @@ namespace Joojkk.CampusLife
             var first = Random.value < 0.5f ? t.A : t.B;
             var second = TrioOther(first);
             var calm = t.Settled ? 0.3f : 1f;
-            var argue = !t.Disagree && (pair == "rival" && Random.value < 0.5f * calm || pair == "other" && Random.value < 0.2f * calm);
+            var argue = !t.Disagree && Argues(t, pair, calm);
             if (argue) { t.Disagree = true; t.Argue = ArgueAbout(t.Moment); }
             var x = X("kind", kind, "argue", t.Disagree ? "yes" : "no", "idle", t.Idles.ToString());
             if (t.Disagree) x["topic"] = t.Argue;
@@ -816,8 +807,8 @@ namespace Joojkk.CampusLife
                 default:
                     b.Me(Lines.Pick("So, a joke: why did the student eat his assignments? The professor said it was a piece of cake.", "Okay, I've got one: what do you call a sleeping dinosaur? A dino-snore.", "Want to hear a joke? Why was the math book sad? Too many problems."));   // each one tells the joke she laughs at
                     var tone = GirlInfo.ToneOf(b0);
-                    var chance = tone == Tone.Energetic || tone == Tone.Teasing ? 0.7f : 0.45f;
-                    q = Random.value < chance ? Q.Good : Q.Neutral;
+                    var chance = (tone == Tone.Energetic || tone == Tone.Teasing ? 0.65f : 0.4f) + Lighter(b0) + G.Sens / 400f;
+                    q = Ctx(b0, "t3joke", chance) ? Q.Good : Q.Neutral;
                     Reply(b, b0, a, "joke", q, q == Q.Good ? Tn("Pfft... hehe, that's silly.", "AHAHA! That's so dumb! I love it!", "...Heh.", "Okay, that one got me~") : Tn("Um... hehe...?", "...Wait, that's it?", "...", "Wow. Tragic."));
                     break;
             }
@@ -1015,8 +1006,74 @@ namespace Joojkk.CampusLife
         private static Q Funny(SaveData.Heroine h)
         {
             var tone = GirlInfo.ToneOf(h);
-            var c = tone == Tone.Energetic ? 0.75f : tone == Tone.Teasing ? 0.6f : tone == Tone.Gentle ? 0.5f : 0.3f;
-            return Random.value < c ? Q.Good : Q.Neutral;
+            var c = (tone == Tone.Energetic ? 0.7f : tone == Tone.Teasing ? 0.6f : tone == Tone.Gentle ? 0.5f : 0.35f) + Lighter(h) + G.Sens / 400f;
+            return Ctx(h, "t3funny", c) ? Q.Good : Q.Neutral;
+        }
+
+        /// <summary>Her mood for a joke: cheerful and bored laugh easier, upset, stressed and sleepy do not.</summary>
+        private static float Lighter(SaveData.Heroine h)
+        {
+            var m = MoodOf(h);
+            return m == CampusLife.Mood.Cheerful ? 0.15f : m == CampusLife.Mood.Bored ? 0.1f : m == CampusLife.Mood.Upset || m == CampusLife.Mood.Stressed ? -0.25f : m == CampusLife.Mood.Sleepy ? -0.1f : 0f;
+        }
+
+        /// <summary>
+        /// Whether the two talk to each other after your turn (context, 2026-11-07): an open disagreement keeps them at it;
+        /// close friends chat, strangers less; a silence invites it; they do not banter two beats in a row.
+        /// </summary>
+        private static bool Chats(Trio t)
+        {
+            if (t.Disagree) return true;
+            var bond = Social.Bond(t.A, t.B);
+            var c = 0.3f + bond / 150f + (t.Idles > 0 ? 0.15f : 0f) + (t.Beats % 2 == 0 ? 0.15f : -0.15f);
+            return Ctx(t.A, "t3chat:" + t.Beats, c);
+        }
+
+        /// <summary>
+        /// Whether the other girl chimes in on a friendly turn aimed at her friend: your girlfriend and a close friend do,
+        /// a rival snipes when she is upset, a plain acquaintance mostly listens; a talkative tone speaks up more.
+        /// </summary>
+        private static bool Chimes(SaveData.Heroine w, SaveData.Heroine to, Trio t)
+        {
+            var bond = Social.Bond(w, to);
+            var c = 0.25f + Mathf.Abs(bond) / 150f + (w.isGirlfriend ? 0.25f : 0f);
+            var tone = GirlInfo.ToneOf(w);
+            if (tone == Tone.Energetic || tone == Tone.Teasing) c += 0.1f; else if (tone == Tone.Cool) c -= 0.1f;
+            if (bond <= -30 && MoodOf(w) == CampusLife.Mood.Upset) c += 0.2f;
+            return Ctx(w, "t3chime:" + t.Beats, c);
+        }
+
+        /// <summary>
+        /// Whether two girls start arguing (context, 2026-11-07): how bad the rivalry is, their moods, and a fight you
+        /// already settled (a new one is rarer); friends do not.
+        /// </summary>
+        private static bool Argues(Trio t, string pair, float calm)
+        {
+            if (pair != "rival" && pair != "other") return false;
+            var bond = Social.Bond(t.A, t.B);
+            var c = pair == "rival" ? 0.4f + (-bond - 30) / 140f : 0.15f;
+            foreach (var g in new[] { t.A, t.B })
+            {
+                var m = MoodOf(g);
+                if (m == CampusLife.Mood.Upset || m == CampusLife.Mood.Stressed) c += 0.15f; else if (m == CampusLife.Mood.Cheerful) c -= 0.1f;
+            }
+            if (calm < 1f) c -= 0.3f;
+            return Ctx(t.A, "t3argue", c);
+        }
+
+        /// <summary>
+        /// Whether the other girl notices what you did with her friend behind her back: your girlfriend watches you, a
+        /// teasing or lively one misses little, the longer the hangout the more she pays attention, and a pulled-back hand
+        /// is easy to see.
+        /// </summary>
+        private static bool Notices(SaveData.Heroine other, Trio t, float c, Q q)
+        {
+            if (other.isGirlfriend) c += 0.2f;
+            var tone = GirlInfo.ToneOf(other);
+            if (tone == Tone.Teasing) c += 0.1f; else if (tone == Tone.Energetic) c += 0.05f; else if (tone == Tone.Cool) c -= 0.05f;
+            c += t.Beats * 0.04f;
+            if (q == Q.Bad) c += 0.2f;
+            return Ctx(other, "t3seen:" + t.Beats, c);
         }
 
         private static Q Lewdish(SaveData.Heroine h)

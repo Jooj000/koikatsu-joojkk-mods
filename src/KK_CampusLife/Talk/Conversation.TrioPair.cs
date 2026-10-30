@@ -94,7 +94,7 @@ namespace Joojkk.CampusLife
                     Reply(b, to, other, "note", q, q == Q.Bad
                         ? Tn("...Um. I'll read it later.", "A note? What is this, middle school?", "...No.", "Cute. Not happening~")
                         : Tn("...! (She tucks it away, red to the ears.)", "Hehe! Secret mission accepted!", "...Fine. Later.", "Ooh, a love letter? Saved~"));
-                    seen = Random.value < 0.35f;
+                    seen = Notices(other, t, 0.35f, q);
                     if (seen) Say2(b, other, to, "duo3.pair.note.other", T(other, "...Are you two passing notes? || ...Are you two passing secrets? || ...What was that? || ...Did you just whisper something?", "Hey! What was that?! Let me see! || Hey! What's that?! Share! || I saw! What was it?! || No secrets! Show me!", "...I saw that. || ...I noticed. || ...Caught that. || ...Hm. I saw.", "Secrets? Without me~? || Secrets without me~? Rude. || Whispering? Spill. || Oh~ What's the secret?"), x, Feel.Pout);
                     break;
                 case "invite":
@@ -128,7 +128,7 @@ namespace Joojkk.CampusLife
                         ? Tn("...! (She pulls her hand away.)", "Hey! (she hisses) Not now!", "...Stop that.", "...Behave.")
                         : q == Q.Neutral ? Tn("(She glances at " + on + ", flustered.)", "(She bites her lip, trying not to laugh.)", "...(She doesn't move her hand.)", "(She squeezes back, just once.)")
                         : Tn("(She laces her fingers with yours, eyes on the floor.)", "(She grins and squeezes back.)", "...(Her hand stays.)", "(She traces a slow circle on your palm.)"));
-                    seen = Random.value < 0.3f;
+                    seen = Notices(other, t, 0.3f, q);
                     break;
             }
             TLog("pair " + what + " with " + tn + " (" + pair + ") -> " + q + (seen ? ", " + on + " notices" : ""));
@@ -177,24 +177,11 @@ namespace Joojkk.CampusLife
             c["hbounds"] = list.Count.ToString();
             DlgRule r;
             var line = Bank.Pick("bounds", c, GirlInfo.Key(h), out r);
-            if (string.IsNullOrEmpty(line)) line = BoundsStock(h, c["hbound"]);
-            id = r != null ? r.Id : "stock";
+            if (string.IsNullOrEmpty(line)) return null;   // bounds.dlg has every refusal and tone
+            id = r != null ? r.Id : "";
             // Said as it is: a greeting or a remark about the weather ("Sorry, do I know you?", "My shoes are still wet.")
             // does not belong right before H.
             return line;
-        }
-
-        private static string BoundsStock(SaveData.Heroine h, string what)
-        {
-            switch (what)
-            {
-                case "condom": return T(h, "...You have protection, right? I won't, otherwise. || ...You'll use protection, right? Otherwise, no. || ...Please, protection first. || ...Only with protection. Okay?", "Protection first! No arguing! || Protection! Not optional! || Condom first! Rules are rules! || Safety first! No arguments!", "Condom. Non-negotiable. || Protection. Mandatory. || Condom. Or nothing. || Protection or no.", "Rule one: you wear something. No exceptions~ || You wear something. No negotiation~ || Protection, darling. Always. || Wrap it up, or forget it~");
-                case "kiss": return T(h, "Um... just... not on the lips. Not yet. || ...Not on the lips. Not yet, please. || ...Um, no kissing yet... || ...Kissing is... too much for now.", "No kissing, okay?! The rest is... fine. || No kisses! The rest is okay! || Kissing's off! Got it?! || Lips are off limits!", "...Don't kiss me. That's all. || ...No kissing. || ...Lips are excluded. || ...Don't kiss me.", "Kisses are off the table. For now~ || No kisses. You'll have to earn those~ || Kisses later. Maybe. || Lips are off the menu. For now.");
-                case "anal": return T(h, "And... nothing strange back there, please... || ...Nothing strange, please. || ...Only... normal things. || ...Please don't go back there.", "Normal stuff only, got it?! || Normal only! Deal?! || No weird stuff! || Keep it normal!", "...Nothing weird. || ...Nothing unusual. || ...Standard only. || ...Nothing strange.", "Keep it vanilla, okay~? || Vanilla only, sweetie~ || Normal, please. Don't get creative. || Keep it simple~");
-                case "caress": return T(h, "Don't... touch too much. I get nervous. || ...Not too much touching. I'm nervous. || ...Gently. Not too much. || ...Please, don't touch too much.", "Hands where I can see them! || Hands! Where I can see them! || Watch the hands! || No grabbing!", "...Not too much touching. || ...Limited touching. || ...Keep your hands in check. || ...Minimal contact.", "No groping. I mean it~ || No groping. Seriously~ || Hands to yourself. Mostly. || Behave those hands.");
-                case "massage": return T(h, "...No toys. Please. || ...No toys, please. || ...Nothing like that... || ...Just you. No toys.", "No gadgets! Just you! || No toys! Only you! || Gadgets? Nope! || Leave the toys!", "...No devices. || ...No devices. || ...No tools. || ...No toys.", "Leave the toys at home~ || Toys stay home~ || No toys. You're enough. Barely. || Just you. Don't bring toys.");
-                default: return T(h, "...Go slow. There's a lot I'm not ready for yet. || ...Slowly. I'm not ready for a lot yet. || ...Please be gentle. || ...Let's go slow. Okay?", "Okay but... let's keep it simple, alright?! || Simple! Keep it simple! || Okay, but nothing fancy, okay?! || Slow and simple! Deal!", "...Gently. I'll tell you what's off limits. || ...Gently. I'll say what's off limits. || ...Slowly. I have limits. || ...Carefully. With rules.", "Slow down, tiger. I have rules~ || Easy, tiger. Rules first~ || Slow down. I set the pace. || Patience. I have rules.");
-            }
         }
     }
 }

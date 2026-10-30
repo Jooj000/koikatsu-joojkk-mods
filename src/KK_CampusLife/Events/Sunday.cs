@@ -233,7 +233,7 @@ namespace Joojkk.CampusLife
                     : c == "su_improv" ? "we got lost on purpose on Sunday instead of going to " + planC.Place : c == "su_laugh" ? "you made me laugh so hard on Sunday" : "we tried to go to " + planC.Place + " on Sunday";
                 Memories.Add(h, "sunday", memory, good ? 1 : 0, true);
                 // A good Sunday may become a tradition.
-                if (good && kindC == "plan" && Random.value < 0.5f) Seasons.AddTradition(h, c == "su_improv" ? "getting lost on purpose on Sundays" : "Sundays at " + planC.Place);
+                if (good && kindC == "plan" && gs2.Sundays >= 2) Seasons.AddTradition(h, c == "su_improv" ? "getting lost on purpose on Sundays" : "Sundays at " + planC.Place);
                 if (good) Anthology.Add("sunday", "A Sunday with " + GirlInfo.FirstName(h) + ": " + memory, 1, GirlInfo.Key(h));
                 LastPlayed = kindC + " with " + GirlInfo.FirstName(h) + " (" + c + (good ? ", good" : "") + ")";
                 CampusLifePlugin.Log.LogInfo("Sunday story: " + LastPlayed);

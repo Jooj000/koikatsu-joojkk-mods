@@ -654,7 +654,7 @@ namespace Joojkk.CampusLife
             {
                 // Heart: her closeness and mood decide, like the old flirting odds.
                 var chance = (x.Lewd ? TeaseChance(s) : FlirtChance(s)) + Pushy(h, "subject");
-                sc = Random.value < chance ? 3 : Random.value < 0.5f ? 1 : -1;
+                sc = Ctx(h, "subject:" + x.Id, chance) ? 3 : chance >= 0.3f ? 1 : -1;   // context: yes, almost (she is fond of you), or no
             }
             return sc;
         }

@@ -103,7 +103,7 @@ namespace Joojkk.CampusLife
                 case PairArc.Reconcile:
                     if (p.ArcStep == 1) line = A(p) + " and " + B(p) + " keep almost saying something to each other.";
                     else if (p.ArcStep == 2) { line = A(p) + " left a note on " + B(p) + "'s desk. Nobody knows what it said."; p.Trust = PairState.Clamp(p.Trust + 8); }
-                    else Resolve(p, p.Trust >= 40 || Random.value < 0.5f);
+                    else Resolve(p, Consent.Yes(null, "reconcile:" + p.A + "/" + p.B, p.Trust / 80f + p.Together * 0.05f));
                     break;
             }
             if (line != null) Pairs.News(line);

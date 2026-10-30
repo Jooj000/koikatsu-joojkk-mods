@@ -83,7 +83,7 @@ namespace Joojkk.CampusLife
                 {
                     case "club": G.AddClubPoints(2); break;
                     case "lunch": S.Energy++; break;
-                    case "library": if (Random.value < 0.5f) G.AddStats(1, 0, 0); break;
+                    case "library": if (G.Int < 80) G.AddStats(1, 0, 0); break;   // there is still something to learn there
                     case "events": S.Reputation = Mathf.Min(100, S.Reputation + 1); break;
                     case "pet": foreach (var h in Social.Students) S.Girl(GirlInfo.Key(h)).NeedSocial = Mathf.Min(100, S.Girl(GirlInfo.Key(h)).NeedSocial + 10); break;
                 }
@@ -203,7 +203,7 @@ namespace Joojkk.CampusLife
             {
                 switch (ch)
                 {
-                    case "db_defend": c.Support += 5; G.AddFavor(a, 4, 0); S.Reputation = Mathf.Clamp(S.Reputation + (Random.value < 0.5f ? 2 : -1), 0, 100); break;
+                    case "db_defend": c.Support += 5; G.AddFavor(a, 4, 0); S.Reputation = Mathf.Clamp(S.Reputation + (c.Support >= 50 || G.Sens >= 45 ? 2 : -1), 0, 100); break;   // the room is with her, or you said it well
                     case "db_proof": if (c.Approach == "cm_dig" || G.Int >= 45) { c.Support += 10; if (sc != null) Rumors.Close(sc, "cleared"); } else c.Support += 2; break;
                     case "db_her": c.Support += Social.Trust(a) >= 50 ? 7 : 3; Social.AddTrust(a, 4); break;
                     case "db_laugh": c.Support += G.Sens >= 40 ? 7 : 1; break;

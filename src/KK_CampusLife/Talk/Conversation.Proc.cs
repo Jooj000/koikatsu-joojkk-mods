@@ -748,7 +748,7 @@ namespace Joojkk.CampusLife
                 DlgRule rr;
                 var react = Bank.Pick("react", ctx, key, out rr);
                 var goesOn = step < 3 && m.Q != Q.Bad && rr != null && rr.Opens.Length > 0;
-                react = react == null ? Stock(m.Q)[(int)GirlInfo.ToneOf(h)] : !goesOn && m.Q == Q.Good && !ctx.ContainsKey("hook") ? Close(react, ctx) : react;
+                react = react == null ? BeatSay(h, "", QWord(m.Q)) ?? "..." : !goesOn && m.Q == Q.Good && !ctx.ContainsKey("hook") ? Close(react, ctx) : react;
                 CampusLifePlugin.Log.LogInfo("Talk move: " + GirlInfo.FirstName(h) + " step " + step + " " + m.Id + " '" + m.Label + "' -> " + m.Q + ", rule " + (rr != null ? rr.Id : "(stock)") + ": '" + react + "'");
                 if (goesOn) { Step(h, t, ctx, step + 1, null, react, rr); return; }
                 var b = new SceneBuilder(h, true);

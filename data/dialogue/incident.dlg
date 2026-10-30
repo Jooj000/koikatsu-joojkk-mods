@@ -1,0 +1,1255 @@
+# The lines with a girl's name in the middle: {about} is the girl it was about.
+# incident: her opening when she heard of something you did (self=yes when it was to her; friend=yes when it was to her friend).
+# incident.seen: you and another girl, from a girl who saw it (saw=yes) or heard of it (saw=no); what=kiss|hand|touch|h, none for a sweet word.
+# incident.gossip: what she passes on about you; inc is the kind, what the step for a flirt.
+
+# ================= incident =================
+@rule incident.helped_defended.self_yes.gentle
+on incident
+when inc=helped|defended self=yes tone=gentle
+- Thank you again for earlier. It really meant a lot.
+- Thank you for earlier. It meant so much.
+- About earlier... thank you, really.
+- I'm still grateful for earlier.
+
+@rule incident.helped_defended.self_yes.energetic
+on incident
+when inc=helped|defended self=yes tone=energetic
+- Hey! Thanks for helping me out, you were awesome!
+- Thanks for earlier! You rocked!
+- You were amazing earlier! Thanks!
+- Earlier? Awesome! Thanks!
+
+@rule incident.helped_defended.self_yes.cool
+on incident
+when inc=helped|defended self=yes tone=cool
+- About earlier. ...Thanks.
+- Earlier. ...Thank you.
+- About earlier. Thanks.
+- ...Thanks for earlier.
+
+@rule incident.helped_defended.self_yes.teasing
+on incident
+when inc=helped|defended self=yes tone=teasing
+- You were pretty cool earlier. Don't let it go to your head.
+- Pretty cool earlier. Don't gloat.
+- You did well earlier. Stay humble.
+- Earlier? Not bad. Don't brag.
+
+@rule incident.helped_defended.self_no.gentle
+on incident
+when inc=helped|defended self=no tone=gentle
+- {about} told me you helped her. That was really kind of you.
+- {about} said you helped her. So kind.
+- I heard you helped {about}... that's sweet.
+- {about} told me what you did. Thank you.
+
+@rule incident.helped_defended.self_no.energetic
+on incident
+when inc=helped|defended self=no tone=energetic
+- I heard you helped {about}! Nice going!
+- You helped {about}! Awesome!
+- {about} says you saved her! Nice!
+- Way to help {about}!
+
+@rule incident.helped_defended.self_no.cool
+on incident
+when inc=helped|defended self=no tone=cool
+- Word is you helped {about}. Not bad.
+- You helped {about}. Good.
+- {about} mentioned your help.
+- I heard about {about}. Decent.
+
+@rule incident.helped_defended.self_no.teasing
+on incident
+when inc=helped|defended self=no tone=teasing
+- So you helped {about}? Trying to win points with everyone?
+- Helping {about}? Collecting points?
+- Charming {about} too?
+- Playing hero for {about}?
+
+@rule incident.keptpromise.self_yes.gentle
+on incident
+when inc=kept self=yes tone=gentle
+- You really did what I asked. I won't forget that.
+- You did what I asked. I'll remember.
+- You really helped me. I won't forget.
+- You kept your word... thank you.
+
+@rule incident.keptpromise.self_yes.energetic
+on incident
+when inc=kept self=yes tone=energetic
+- You came through for me! You're the best!
+- You came through! Best!
+- You did it! Amazing!
+- You delivered! Yay!
+
+@rule incident.keptpromise.self_yes.cool
+on incident
+when inc=kept self=yes tone=cool
+- You kept your word. I respect that.
+- You kept your word. Respect.
+- Promise kept. Good.
+- Reliable. I respect it.
+
+@rule incident.keptpromise.self_yes.teasing
+on incident
+when inc=kept self=yes tone=teasing
+- You actually did it. I'm impressed. Slightly.
+- You did it. Mildly impressive.
+- Actually done? Impressive.
+- Wow. You delivered.
+
+@rule incident.keptpromise.self_no.gentle
+on incident
+when inc=kept self=no tone=gentle
+- {about} says you can be counted on.
+- {about} says you're reliable.
+- {about} trusts you a lot.
+- {about} said you always help.
+
+@rule incident.keptpromise.self_no.energetic
+on incident
+when inc=kept self=no tone=energetic
+- {about} won't stop saying how reliable you are!
+- {about} keeps praising you!
+- {about} says you're super reliable!
+- {about} won't shut up about you!
+
+@rule incident.keptpromise.self_no.cool
+on incident
+when inc=kept self=no tone=cool
+- I hear you keep your promises. Rare.
+- You keep promises. Rare.
+- Reliable, they say.
+- I hear you're dependable.
+
+@rule incident.keptpromise.self_no.teasing
+on incident
+when inc=kept self=no tone=teasing
+- {about} seems to think you're dependable. Is that true?
+- Dependable, says {about}. True?
+- {about} vouches for you. Hm.
+- {about} says reliable. Prove it.
+
+@rule incident.goodtalk.self_yes.gentle
+on incident
+when inc=good_talk self=yes tone=gentle
+- I liked talking with you earlier.
+- Earlier was nice... talking with you, I mean.
+- I enjoyed our chat. Thank you.
+- I keep thinking about our talk earlier.
+
+@rule incident.goodtalk.self_yes.energetic
+on incident
+when inc=good_talk self=yes tone=energetic
+- That chat earlier was so fun!
+- Talking with you earlier? Best part of my day!
+- Let's talk like that again!
+- You're really fun to talk to, you know!
+
+@rule incident.goodtalk.self_yes.cool
+on incident
+when inc=good_talk self=yes tone=cool
+- That talk earlier. It was good.
+- You're easy to talk to. Don't let it go to your head.
+- Earlier was nice. Hm.
+- I didn't mind talking with you earlier.
+
+@rule incident.goodtalk.self_yes.teasing
+on incident
+when inc=good_talk self=yes tone=teasing
+- You kept me talking earlier. Sneaky~
+- Good listener, huh? I noticed~
+- That chat earlier? You owe me another one~
+- Talking with you is dangerous. I lose track of time~
+
+@rule incident.goodtalk.gentle
+on incident
+when inc=good_talk tone=gentle
+- {about} said she had a nice talk with you.
+- {about} enjoyed talking to you.
+- {about} said you're nice to talk to.
+- {about} liked your chat.
+
+@rule incident.goodtalk.energetic
+on incident
+when inc=good_talk tone=energetic
+- {about} says you're super fun to talk to!
+- {about} says you're fun!
+- {about} loved chatting with you!
+- You're fun, says {about}!
+
+@rule incident.goodtalk.cool
+on incident
+when inc=good_talk tone=cool
+- I hear you're decent company.
+- You're decent company, I hear.
+- Good conversation, they say.
+- I hear you talk well.
+
+@rule incident.goodtalk.teasing
+on incident
+when inc=good_talk tone=teasing
+- Apparently you're a good listener. Prove it.
+- A good listener? Show me.
+- Good listener, huh? Prove it.
+- Listen to me, then.
+
+@rule incident.rude.self_yes.gentle
+on incident
+when inc=rude self=yes tone=gentle
+- ...What you said earlier really hurt.
+- ...What you said hurt.
+- ...Your words earlier hurt me.
+- ...I'm still hurt.
+
+@rule incident.rude.self_yes.energetic
+on incident
+when inc=rude self=yes tone=energetic
+- Hey. That wasn't cool earlier.
+- That was not cool earlier.
+- Hey. Earlier? Rude.
+- Not okay, earlier.
+
+@rule incident.rude.self_yes.cool
+on incident
+when inc=rude self=yes tone=cool
+- I haven't forgotten what you said.
+- I remember what you said.
+- I haven't forgotten.
+- Your words. I recall them.
+
+@rule incident.rude.self_yes.teasing
+on incident
+when inc=rude self=yes tone=teasing
+- Oh, you're talking to me now? After that?
+- Talking to me now? After that?
+- Oh, now you're nice?
+- You've got nerve.
+
+@rule incident.rude.friend_yes.self_no.gentle
+on incident
+when inc=rude friend=yes self=no tone=gentle
+- {about} is my friend, you know. She was upset after talking to you.
+- {about} is my friend. She was sad after you.
+- You upset {about}... she's my friend.
+- {about} cried... because of you.
+
+@rule incident.rude.friend_yes.self_no.energetic
+on incident
+when inc=rude friend=yes self=no tone=energetic
+- Why were you mean to {about}?! Not cool!
+- Why'd you hurt {about}?!
+- You were mean to {about}! Why?!
+- Not cool with {about}!
+
+@rule incident.rude.friend_yes.self_no.cool
+on incident
+when inc=rude friend=yes self=no tone=cool
+- I heard how you treated {about}. Explain.
+- How you treated {about}. Explain.
+- About {about}. Explain yourself.
+- {about}. Explain.
+
+@rule incident.rude.friend_yes.self_no.teasing
+on incident
+when inc=rude friend=yes self=no tone=teasing
+- So you're the one who made {about} cry? Charming.
+- You made {about} cry? Lovely.
+- {about} in tears. Nice work.
+- Making {about} cry? Classy.
+
+@rule incident.rude.self_no.friend_no.gentle
+on incident
+when inc=rude self=no friend=no tone=gentle
+- I heard you were kind of mean to {about}...
+- I heard you were mean to {about}...
+- People say you hurt {about}...
+- Were you unkind to {about}...?
+
+@rule incident.rude.self_no.friend_no.energetic
+on incident
+when inc=rude self=no friend=no tone=energetic
+- People say you were rude to {about}. Is that true?
+- Were you rude to {about}?!
+- Did you really insult {about}?!
+- Rude to {about}?! True?!
+
+@rule incident.rude.self_no.friend_no.cool
+on incident
+when inc=rude self=no friend=no tone=cool
+- Rumor says you were rude to {about}.
+- You were rude to {about}, I hear.
+- Rudeness to {about}. Rumored.
+- {about}. Rude. Reportedly.
+
+@rule incident.rude.self_no.friend_no.teasing
+on incident
+when inc=rude self=no friend=no tone=teasing
+- I heard about you and {about}. Tsk.
+- Heard about {about}. Tsk tsk.
+- {about}, huh? Tsk.
+- Naughty with {about}.
+
+@rule incident.ignored.self_yes.gentle
+on incident
+when inc=ignored self=yes tone=gentle
+- You walked right past me earlier... I guess you were busy.
+- You walked past me earlier... busy, I guess.
+- You didn't notice me earlier...
+- You passed by me... it's okay.
+
+@rule incident.ignored.self_yes.energetic
+on incident
+when inc=ignored self=yes tone=energetic
+- You totally ignored me earlier! Rude!
+- You ignored me! Rude!
+- You walked right by!
+- Hey! You didn't stop!
+
+@rule incident.ignored.self_yes.cool
+on incident
+when inc=ignored self=yes tone=cool
+- You saw me struggling and kept walking.
+- You saw me. You kept walking.
+- I struggled. You left.
+- You walked past.
+
+@rule incident.ignored.self_yes.teasing
+on incident
+when inc=ignored self=yes tone=teasing
+- Nice of you to just walk by earlier.
+- Lovely, just walking past.
+- Very kind, ignoring me.
+- Thanks for nothing earlier.
+
+@rule incident.ignored.self_no.gentle
+on incident
+when inc=ignored self=no tone=gentle
+- {about} said you didn't stop to help her...
+- {about} said you didn't help her...
+- You didn't stop for {about}...
+- {about} needed help... you didn't stop.
+
+@rule incident.ignored.self_no.energetic
+on incident
+when inc=ignored self=no tone=energetic
+- You left {about} hanging?
+- You left {about} stuck?!
+- You ditched {about}?!
+- {about} needed you!
+
+@rule incident.ignored.self_no.cool
+on incident
+when inc=ignored self=no tone=cool
+- I heard you walked past {about}.
+- You passed {about} by.
+- {about}. You walked on.
+- You didn't help {about}.
+
+@rule incident.ignored.self_no.teasing
+on incident
+when inc=ignored self=no tone=teasing
+- Not very gallant with {about}, were you?
+- Not so gallant with {about}.
+- {about}? Ignored? Tsk.
+- Left {about} alone? Nice.
+
+@rule incident.brokepromise.self_yes.gentle
+on incident
+when inc=broke self=yes tone=gentle
+- You said you'd help... I waited.
+- You said you'd help... I waited.
+- I waited for you...
+- You promised... I was waiting.
+
+@rule incident.brokepromise.self_yes.energetic
+on incident
+when inc=broke self=yes tone=energetic
+- Hey! You forgot about me!
+- You forgot me!
+- Hey! You didn't come!
+- You bailed!
+
+@rule incident.brokepromise.self_yes.cool
+on incident
+when inc=broke self=yes tone=cool
+- You didn't do what you said you would.
+- You didn't do it.
+- Promise broken.
+- You didn't follow through.
+
+@rule incident.brokepromise.self_yes.teasing
+on incident
+when inc=broke self=yes tone=teasing
+- I asked you for one thing. One.
+- One thing. I asked one thing.
+- Just one favor. Failed.
+- Unbelievable.
+
+@rule incident.brokepromise.self_no.gentle
+on incident
+when inc=broke self=no tone=gentle
+- {about} was let down. You promised her something.
+- {about} was disappointed. You promised.
+- You let {about} down...
+- {about} trusted your promise...
+
+@rule incident.brokepromise.self_no.energetic
+on incident
+when inc=broke self=no tone=energetic
+- Dude, you bailed on {about}!
+- You bailed on {about}!
+- You ditched {about}!
+- {about}'s upset with you!
+
+@rule incident.brokepromise.self_no.cool
+on incident
+when inc=broke self=no tone=cool
+- I heard you didn't keep your word to {about}.
+- You broke your word to {about}.
+- {about}. Promise broken.
+- Not kept with {about}.
+
+@rule incident.brokepromise.self_no.teasing
+on incident
+when inc=broke self=no tone=teasing
+- Breaking promises to {about}? Bad look.
+- Promises to {about}? Broken. Bad look.
+- Failing {about}? Ugly.
+- Bad look with {about}.
+
+@rule incident.seengirlsroom.gentle
+on incident
+when inc=girls_room tone=gentle
+- Um... people are saying you were in the girls' restroom...?
+- People say you were in the girls' restroom...?
+- Um... the girls' restroom...? Really?
+- Is it true... the girls' restroom?
+
+@rule incident.seengirlsroom.energetic
+on incident
+when inc=girls_room tone=energetic
+- Okay, WHY were you in the girls' restroom?!
+- WHY the girls' restroom?!
+- The girls' bathroom?! Seriously?!
+- What were you doing in there?!
+
+@rule incident.seengirlsroom.cool
+on incident
+when inc=girls_room tone=cool
+- Explain the girls' restroom thing.
+- The girls' restroom. Explain.
+- Explain the restroom.
+- The restroom. Talk.
+
+@rule incident.seengirlsroom.teasing
+on incident
+when inc=girls_room tone=teasing
+- So. The girls' restroom. I'm listening.
+- The girls' restroom. Go on.
+- So... the girls' restroom?
+- I'm curious. The restroom.
+
+@rule incident.seenlockers.gentle
+on incident
+when inc=lockers tone=gentle
+- I heard someone saw you near the girls' changing room... that's not true, right?
+- Someone saw you near the girls' changing room... not true, right?
+- The changing room...? That's a rumor, right?
+- Please say the changing room thing isn't true...
+
+@rule incident.seenlockers.energetic
+on incident
+when inc=lockers tone=energetic
+- You were in the girls' changing room?! Are you crazy?!
+- The girls' changing room?! Insane!
+- Changing room?! What?!
+- You went in there?!
+
+@rule incident.seenlockers.cool
+on incident
+when inc=lockers tone=cool
+- The changing room. Care to explain?
+- The changing room. Explain.
+- Changing room. Talk.
+- About the changing room.
+
+@rule incident.seenlockers.teasing
+on incident
+when inc=lockers tone=teasing
+- The girls' changing room, huh? Bold.
+- Changing room, huh? Daring.
+- The changing room? Bold boy.
+- Peeking? Naughty.
+
+@rule incident.herboysroom.gentle
+on incident
+when inc=her_boys_room tone=gentle
+- A-about earlier... in the restroom... please don't tell anyone. I got lost, I swear!
+- About the restroom... please keep it secret. I got lost!
+- The restroom... I was lost, I promise! Don't tell!
+- P-please forget the restroom...!
+
+@rule incident.herboysroom.energetic
+on incident
+when inc=her_boys_room tone=energetic
+- Okay, listen! The boys' restroom thing! Total accident! You didn't see anything!
+- The boys' restroom! Accident! Saw nothing!
+- Total mistake! You didn't see!
+- Restroom thing? Never happened!
+
+@rule incident.herboysroom.cool
+on incident
+when inc=her_boys_room tone=cool
+- About the restroom. It was the closest one. We will never speak of it.
+- The restroom. Closest one. Never mention it.
+- It was nearest. Forget it.
+- We don't discuss the restroom.
+
+@rule incident.herboysroom.teasing
+on incident
+when inc=her_boys_room tone=teasing
+- You saw nothing in that restroom. Got it? ...Good.
+- You saw nothing. Right? Good.
+- Restroom? Forgotten. Understood?
+- Nothing happened. Agreed? Good.
+
+@rule incident.flirted.self_yes.what_kiss.gentle
+on incident
+when inc=flirted self=yes what=kiss tone=gentle
+- That kiss... I keep thinking about it.
+- The kiss... I keep remembering.
+- I can't stop thinking about the kiss...
+- That kiss... still on my mind.
+
+@rule incident.flirted.self_yes.what_kiss.energetic
+on incident
+when inc=flirted self=yes what=kiss tone=energetic
+- Okay, so. The kiss. That happened!
+- The kiss! It happened!
+- We kissed! Really!
+- Okay! The kiss! Wow!
+
+@rule incident.flirted.self_yes.what_kiss.cool
+on incident
+when inc=flirted self=yes what=kiss tone=cool
+- About the kiss. ...It wasn't bad.
+- The kiss. ...Not bad.
+- About the kiss. ...Fine.
+- ...The kiss was good.
+
+@rule incident.flirted.self_yes.what_kiss.teasing
+on incident
+when inc=flirted self=yes what=kiss tone=teasing
+- Thinking about that kiss? Me too~
+- Thinking of the kiss? Same~
+- Still on your lips?
+- That kiss~ Remember?
+
+@rule incident.flirted.self_yes.what_hand.gentle
+on incident
+when inc=flirted self=yes what=hand tone=gentle
+- Your hand was really warm earlier...
+- Your hand was warm...
+- I still feel your hand...
+- Your hand... so warm...
+
+@rule incident.flirted.self_yes.what_hand.energetic
+on incident
+when inc=flirted self=yes what=hand tone=energetic
+- We held hands! Like, actually!
+- Hands! We held them!
+- Hand holding! Real!
+- We held hands! Wow!
+
+@rule incident.flirted.self_yes.what_hand.cool
+on incident
+when inc=flirted self=yes what=hand tone=cool
+- Holding hands. ...It was fine.
+- Hands. ...Fine.
+- ...Holding hands. Okay.
+- ...It was acceptable.
+
+@rule incident.flirted.self_yes.what_hand.teasing
+on incident
+when inc=flirted self=yes what=hand tone=teasing
+- Still feel my hand in yours? Hehe.
+- Still feel my hand?
+- Miss my hand?
+- Hands~ Remember?
+
+@rule incident.flirted.self_yes.gentle
+on incident
+when inc=flirted self=yes tone=gentle
+- What you said yesterday... I keep thinking about it.
+- What you said... I keep thinking.
+- Your words yesterday... I remember.
+- I think about what you said...
+
+@rule incident.flirted.self_yes.energetic
+on incident
+when inc=flirted self=yes tone=energetic
+- You were being kinda smooth earlier, huh?
+- You were smooth earlier!
+- Smooth talker!
+- Ooh, so charming earlier!
+
+@rule incident.flirted.self_yes.cool
+on incident
+when inc=flirted self=yes tone=cool
+- About earlier... I didn't hate it.
+- Earlier... I didn't mind.
+- ...It was fine.
+- ...Not unwelcome.
+
+@rule incident.flirted.self_yes.teasing
+on incident
+when inc=flirted self=yes tone=teasing
+- Still trying to charm me? Keep trying.
+- Still charming me? Go on.
+- Trying to win me? Continue.
+- Keep charming. It's working.
+
+# ================= incident.seen =================
+@rule incident.seen.kiss.saw_yes.gentle
+on incident.seen
+when what=kiss saw=yes tone=gentle
+- I... saw you kiss {about}. I didn't mean to look.
+- I saw you kiss {about}... I didn't mean to.
+- I saw you and {about}... kissing. Sorry.
+- You kissed {about}... I saw.
+
+@rule incident.seen.kiss.saw_yes.energetic
+on incident.seen
+when what=kiss saw=yes tone=energetic
+- I SAW that! You and {about}, kissing! Right there!
+- I SAW! You and {about}! Kissing!
+- You kissed {about}! Right there!
+- Kissing {about}! I saw!
+
+@rule incident.seen.kiss.saw_yes.cool
+on incident.seen
+when what=kiss saw=yes tone=cool
+- I saw you kiss {about}. Just so you know.
+- You kissed {about}. I saw.
+- Saw you and {about}. Kissing.
+- {about}. Kiss. Witnessed.
+
+@rule incident.seen.kiss.saw_yes.teasing
+on incident.seen
+when what=kiss saw=yes tone=teasing
+- Kissing {about} in front of everyone? I had a front-row seat.
+- Front row seat to you and {about}.
+- Kissing {about} publicly? I watched.
+- Saw you and {about}. Steamy.
+
+@rule incident.seen.kiss.saw_no.gentle
+on incident.seen
+when what=kiss saw=no tone=gentle
+- People are saying you kissed {about}... is that true?
+- Did you really kiss {about}...?
+- People say you kissed {about}...
+- Is the kiss with {about} true?
+
+@rule incident.seen.kiss.saw_no.energetic
+on incident.seen
+when what=kiss saw=no tone=energetic
+- Is it true you kissed {about}?! Everyone's talking!
+- You kissed {about}?! Everyone's saying it!
+- Kiss with {about}?! True?!
+- Rumor! You and {about}... kissing?!
+
+@rule incident.seen.kiss.saw_no.cool
+on incident.seen
+when what=kiss saw=no tone=cool
+- I heard you kissed {about}. Rumor or fact?
+- You kissed {about}? Fact or rumor?
+- {about}. Kiss. True?
+- Rumor: you kissed {about}. Confirm.
+
+@rule incident.seen.kiss.saw_no.teasing
+on incident.seen
+when what=kiss saw=no tone=teasing
+- So the rumor is you kissed {about}. Do tell.
+- Rumor says you kissed {about}. Spill.
+- You and {about}? Tell me.
+- Kissed {about}? Details.
+
+@rule incident.seen.hand.saw_yes.gentle
+on incident.seen
+when what=hand saw=yes tone=gentle
+- I saw you holding hands with {about}... you looked happy.
+- You held hands with {about}... you looked happy.
+- You and {about}, hand in hand...
+- I saw you and {about}... holding hands.
+
+@rule incident.seen.hand.saw_yes.energetic
+on incident.seen
+when what=hand saw=yes tone=energetic
+- I saw you two holding hands! You and {about}!
+- You and {about}! Hands!
+- Holding hands with {about}! I saw!
+- {about}'s hand! Yours!
+
+@rule incident.seen.hand.saw_yes.cool
+on incident.seen
+when what=hand saw=yes tone=cool
+- You and {about}, hand in hand. I saw.
+- You and {about}. Hands. Saw it.
+- Hand in hand. With {about}.
+- I saw. You and {about}.
+
+@rule incident.seen.hand.saw_yes.teasing
+on incident.seen
+when what=hand saw=yes tone=teasing
+- Holding hands with {about} where anyone can see? Bold.
+- Holding hands with {about} in public? Daring.
+- {about}'s hand? Bold.
+- Hands with {about}? Cute. Public.
+
+@rule incident.seen.hand.saw_no.gentle
+on incident.seen
+when what=hand saw=no tone=gentle
+- Someone said you were holding hands with {about}...
+- They say you held hands with {about}...
+- Someone mentioned you and {about}... hands...
+- Is it true? You and {about}?
+
+@rule incident.seen.hand.saw_no.energetic
+on incident.seen
+when what=hand saw=no tone=energetic
+- I heard you and {about} were holding hands!
+- You and {about} holding hands?!
+- Heard about you and {about}!
+- Hand holding with {about}!
+
+@rule incident.seen.hand.saw_no.cool
+on incident.seen
+when what=hand saw=no tone=cool
+- Word is you held hands with {about}.
+- Held hands with {about}, they say.
+- Rumor: hands with {about}.
+- {about}. Hands. Rumored.
+
+@rule incident.seen.hand.saw_no.teasing
+on incident.seen
+when what=hand saw=no tone=teasing
+- Hand in hand with {about}, I hear. Cute.
+- Hands with {about}. Adorable.
+- {about}, hand in hand? Sweet.
+- Cute rumor. You and {about}.
+
+@rule incident.seen.touch.saw_yes.gentle
+on incident.seen
+when what=touch saw=yes tone=gentle
+- I saw where your hands were with {about}... w-what was that?
+- Your hands with {about}... w-what?
+- I saw your hands... with {about}...
+- W-what were you doing to {about}...?
+
+@rule incident.seen.touch.saw_yes.energetic
+on incident.seen
+when what=touch saw=yes tone=energetic
+- Hey! I saw you getting all touchy with {about}!
+- Touchy with {about}! I saw!
+- Hands all over {about}!
+- Hey! Handsy with {about}!
+
+@rule incident.seen.touch.saw_yes.cool
+on incident.seen
+when what=touch saw=yes tone=cool
+- I saw you with {about}. Your hands were busy.
+- Your hands were busy with {about}.
+- I saw. Hands. {about}.
+- With {about}. Hands. Saw.
+
+@rule incident.seen.touch.saw_yes.teasing
+on incident.seen
+when what=touch saw=yes tone=teasing
+- Getting handsy with {about}? I saw everything~
+- Handsy with {about}? I watched~
+- Busy hands with {about}~
+- Saw everything with {about}~
+
+@rule incident.seen.touch.saw_no.gentle
+on incident.seen
+when what=touch saw=no tone=gentle
+- People say you were touching {about}... that's not true, right?
+- You touched {about}...? Not true, right?
+- People say... you and {about}... touching?
+- Please say it's not true... about {about}.
+
+@rule incident.seen.touch.saw_no.energetic
+on incident.seen
+when what=touch saw=no tone=energetic
+- Is it true you were all over {about}?!
+- You were all over {about}?!
+- Touching {about}?! Really?!
+- Handsy with {about}?!
+
+@rule incident.seen.touch.saw_no.cool
+on incident.seen
+when what=touch saw=no tone=cool
+- I hear you got handsy with {about}.
+- Handsy with {about}, I hear.
+- {about}. Touching. Rumored.
+- Your hands. {about}. Rumors.
+
+@rule incident.seen.touch.saw_no.teasing
+on incident.seen
+when what=touch saw=no tone=teasing
+- Rumor has it your hands wandered with {about}. Hm~
+- Wandering hands with {about}? Hm~
+- Rumor: handsy with {about}~
+- Touchy with {about}? Interesting~
+
+@rule incident.seen.h.saw_yes.gentle
+on incident.seen
+when what=h saw=yes tone=gentle
+- I... I saw you and {about}. I can't unsee it.
+- I saw you and {about}... I can't forget it.
+- You and {about}... I saw it all.
+- I wish I hadn't seen you and {about}...
+
+@rule incident.seen.h.saw_yes.energetic
+on incident.seen
+when what=h saw=yes tone=energetic
+- I SAW you and {about}! Out in the open?! Seriously?!
+- You and {about}! In the open?!
+- I saw you and {about}! Seriously?!
+- Out there?! With {about}?!
+
+@rule incident.seen.h.saw_yes.cool
+on incident.seen
+when what=h saw=yes tone=cool
+- I saw you and {about}. All of it.
+- You and {about}. I saw it all.
+- Everything. You and {about}.
+- I witnessed you and {about}.
+
+@rule incident.seen.h.saw_yes.teasing
+on incident.seen
+when what=h saw=yes tone=teasing
+- You and {about}, out where anyone could walk by? I did walk by.
+- I walked by you and {about}. Surprise.
+- Out in the open with {about}? I saw.
+- You and {about}. Public. I watched.
+
+@rule incident.seen.h.saw_no.gentle
+on incident.seen
+when what=h saw=no tone=gentle
+- There's a rumor about you and {about}... the kind I can't even say.
+- There's a rumor about you and {about}... I can't even repeat it.
+- People are saying things about you and {about}... embarrassing things.
+- I heard something about you and {about}... I'm blushing.
+
+@rule incident.seen.h.saw_no.energetic
+on incident.seen
+when what=h saw=no tone=energetic
+- Everyone's whispering about you and {about}! Is it true?!
+- The whole university's whispering about you and {about}! True?!
+- Rumor alert! You and {about}!
+- Everyone's buzzing about you and {about}!
+
+@rule incident.seen.h.saw_no.cool
+on incident.seen
+when what=h saw=no tone=cool
+- The rumor about you and {about}. Tell me it's a rumor.
+- The rumor with {about}. Say it's false.
+- About you and {about}. Tell me it's a rumor.
+- That {about} rumor. Explain.
+
+@rule incident.seen.h.saw_no.teasing
+on incident.seen
+when what=h saw=no tone=teasing
+- You and {about}, huh? The whole university is blushing.
+- You and {about}? Everyone's red-faced.
+- The whole university is flustered over you and {about}.
+- You and {about}. Scandalous.
+
+@rule incident.seen.default.saw_yes.gentle
+on incident.seen
+when saw=yes tone=gentle
+- I saw you being really sweet to {about}... she was all red.
+- You were so sweet to {about}... she turned red.
+- I saw you with {about}... she was blushing.
+- You made {about} blush... I saw.
+
+@rule incident.seen.default.saw_yes.energetic
+on incident.seen
+when saw=yes tone=energetic
+- I saw you sweet-talking {about}! Smooth!
+- Sweet-talking {about}! Smooth!
+- You charmed {about}! I saw!
+- Ooh! Flirting with {about}!
+
+@rule incident.seen.default.saw_yes.cool
+on incident.seen
+when saw=yes tone=cool
+- I saw you charming {about}. It was something.
+- Charming {about}. I saw.
+- You and {about}. Charm. Noted.
+- I saw you with {about}. Quite smooth.
+
+@rule incident.seen.default.saw_yes.teasing
+on incident.seen
+when saw=yes tone=teasing
+- I caught you flirting with {about}. Not subtle.
+- Flirting with {about}. Subtle, not.
+- Caught you charming {about}.
+- Not subtle with {about}, are you?
+
+@rule incident.seen.default.saw_no.gentle
+on incident.seen
+when saw=no tone=gentle
+- I heard you were being really sweet to {about}...
+- They say you were sweet to {about}...
+- I heard you're nice to {about}...
+- You've been kind to {about}, I hear...
+
+@rule incident.seen.default.saw_no.energetic
+on incident.seen
+when saw=no tone=energetic
+- So, you and {about}, huh? Spill!
+- You and {about}?! Tell me!
+- Spill about {about}!
+- What's up with you and {about}?!
+
+@rule incident.seen.default.saw_no.cool
+on incident.seen
+when saw=no tone=cool
+- I hear you've been charming {about}.
+- You're charming {about}, I hear.
+- Rumor: {about}. Charm.
+- {about}. You're charming her.
+
+@rule incident.seen.default.saw_no.teasing
+on incident.seen
+when saw=no tone=teasing
+- Flirting with {about}? Interesting.
+- Flirting with {about}? Hm.
+- {about}, huh? Intriguing.
+- Charming {about}? Interesting choice.
+
+# ================= incident.gossip =================
+@rule incident.gossip.helped_defended.gentle
+on incident.gossip
+when inc=helped|defended tone=gentle
+- Oh, {about} told everyone you helped her. She seemed really happy.
+- {about} told everyone you helped her. She was so happy.
+- {about} keeps saying you helped her... it's sweet.
+- {about} is happy you helped her.
+
+@rule incident.gossip.helped_defended.energetic
+on incident.gossip
+when inc=helped|defended tone=energetic
+- Did you know {about} has been bragging that you helped her?
+- {about}'s bragging you helped her!
+- {about} says you're her hero!
+- {about} won't stop talking about your help!
+
+@rule incident.gossip.helped_defended.cool
+on incident.gossip
+when inc=helped|defended tone=cool
+- {about} mentioned you helped her. People noticed.
+- {about} mentioned your help. People heard.
+- {about} spoke of your help.
+- Your help to {about}. Noticed.
+
+@rule incident.gossip.helped_defended.teasing
+on incident.gossip
+when inc=helped|defended tone=teasing
+- {about} won't shut up about how you helped her. It's adorable.
+- {about} won't stop talking about you. Cute.
+- {about} is gushing. Adorable.
+- {about} adores you now.
+
+@rule incident.gossip.rude.gentle
+on incident.gossip
+when inc=rude tone=gentle
+- Um... {about} seemed hurt by something you said.
+- {about} seemed hurt by your words...
+- Um... {about} looked upset because of you.
+- {about} was sad after you talked...
+
+@rule incident.gossip.rude.energetic
+on incident.gossip
+when inc=rude tone=energetic
+- Heads up: {about} is mad at you!
+- Warning: {about}'s mad at you!
+- {about} is angry! Watch out!
+- Uh oh! {about}'s upset!
+
+@rule incident.gossip.rude.cool
+on incident.gossip
+when inc=rude tone=cool
+- {about} is not happy with you. Just so you know.
+- {about} is displeased with you.
+- {about} isn't happy. FYI.
+- {about}. Upset. With you.
+
+@rule incident.gossip.rude.teasing
+on incident.gossip
+when inc=rude tone=teasing
+- You know {about} is telling everyone you were rude, right?
+- {about} says you were rude. To everyone.
+- {about}'s spreading that you were rude.
+- Rude to {about}? She's telling people.
+
+@rule incident.gossip.brokepromise.gentle
+on incident.gossip
+when inc=broke tone=gentle
+- {about} said you forgot something you promised her...
+- {about} said you forgot a promise...
+- You forgot something for {about}...
+- {about} was waiting on your promise...
+
+@rule incident.gossip.brokepromise.energetic
+on incident.gossip
+when inc=broke tone=energetic
+- {about} says you bailed on her!
+- {about} says you ditched her!
+- You bailed on {about}?!
+- {about}'s saying you flaked!
+
+@rule incident.gossip.brokepromise.cool
+on incident.gossip
+when inc=broke tone=cool
+- {about} says you didn't keep your word.
+- {about} says you broke your word.
+- Word broken. Says {about}.
+- {about}. Promise. Broken.
+
+@rule incident.gossip.brokepromise.teasing
+on incident.gossip
+when inc=broke tone=teasing
+- Rumor has it you stood up {about}.
+- You stood up {about}, they say.
+- Ditched {about}? Rumor says so.
+- {about} got stood up. By you.
+
+@rule incident.gossip.keptpromise.gentle
+on incident.gossip
+when inc=kept tone=gentle
+- {about} says she can always count on you.
+- {about} says she can rely on you.
+- {about} trusts you so much.
+- {about} says you're always there.
+
+@rule incident.gossip.keptpromise.energetic
+on incident.gossip
+when inc=kept tone=energetic
+- {about} says you're super reliable!
+- {about} says you're super dependable!
+- {about} trusts you totally!
+- {about} says you never fail!
+
+@rule incident.gossip.keptpromise.cool
+on incident.gossip
+when inc=kept tone=cool
+- Apparently you keep your promises. {about} says so.
+- You keep promises. {about} confirms.
+- {about} vouches for you.
+- Reliable, per {about}.
+
+@rule incident.gossip.keptpromise.teasing
+on incident.gossip
+when inc=kept tone=teasing
+- {about} thinks you're dependable. Don't disappoint her.
+- {about} trusts you. Don't fail her.
+- Dependable, says {about}. Careful.
+- {about} counts on you. No pressure.
+
+@rule incident.gossip.goodtalk.gentle
+on incident.gossip
+when inc=good_talk tone=gentle
+- {about} said talking with you was fun.
+- {about} enjoyed talking with you.
+- {about} had fun with you.
+- {about} liked your chat.
+
+@rule incident.gossip.goodtalk.energetic
+on incident.gossip
+when inc=good_talk tone=energetic
+- {about} thinks you're a great listener!
+- {about} says you're a great listener!
+- {about} loved talking to you!
+- {about} thinks you're awesome to talk to!
+
+@rule incident.gossip.goodtalk.cool
+on incident.gossip
+when inc=good_talk tone=cool
+- {about} enjoyed your chat, I hear.
+- {about} liked your chat.
+- Good chat, {about} said.
+- {about} enjoyed it.
+
+@rule incident.gossip.goodtalk.teasing
+on incident.gossip
+when inc=good_talk tone=teasing
+- {about} seems to like talking with you. Should I be jealous?
+- {about} likes talking to you. Jealous? Me?
+- Should I worry about {about}?
+- {about} enjoys you. Hm.
+
+@rule incident.gossip.flirted.what_kiss.gentle
+on incident.gossip
+when inc=flirted what=kiss tone=gentle
+- People say you kissed {about}... is that true?
+- Did you really kiss {about}...?
+- They say you kissed {about}...
+- A kiss with {about}...? Really?
+
+@rule incident.gossip.flirted.what_kiss.energetic
+on incident.gossip
+when inc=flirted what=kiss tone=energetic
+- Everyone's saying you kissed {about}!
+- You kissed {about}! Everyone says so!
+- Kiss with {about}! The university knows!
+- {about} and you kissed?!
+
+@rule incident.gossip.flirted.what_kiss.cool
+on incident.gossip
+when inc=flirted what=kiss tone=cool
+- There's talk you kissed {about}.
+- Talk of a kiss with {about}.
+- Rumor: you and {about}. Kiss.
+- A kiss. {about}. Rumored.
+
+@rule incident.gossip.flirted.what_kiss.teasing
+on incident.gossip
+when inc=flirted what=kiss tone=teasing
+- You kissed {about}? The whole class knows.
+- Kissed {about}? Whole class knows.
+- Everyone knows about {about}.
+- {about}. Kiss. Famous now.
+
+@rule incident.gossip.flirted.what_hand.gentle
+on incident.gossip
+when inc=flirted what=hand tone=gentle
+- Someone saw you holding hands with {about}...
+- You held hands with {about}, someone said...
+- Holding hands with {about}...?
+- They saw you and {about}... hands.
+
+@rule incident.gossip.flirted.what_hand.energetic
+on incident.gossip
+when inc=flirted what=hand tone=energetic
+- You and {about}, holding hands! Everyone saw!
+- Holding hands with {about}! Everyone saw!
+- You and {about}! Hands! Public!
+- Hands with {about}! Seen!
+
+@rule incident.gossip.flirted.what_hand.cool
+on incident.gossip
+when inc=flirted what=hand tone=cool
+- Word is you held hands with {about}.
+- Hands with {about}, they say.
+- Seen: you and {about}. Hands.
+- {about}. Hand in hand.
+
+@rule incident.gossip.flirted.what_hand.teasing
+on incident.gossip
+when inc=flirted what=hand tone=teasing
+- Hand in hand with {about}? People noticed.
+- Hand in hand with {about}? Noticed.
+- {about}'s hand. People saw.
+- Public hand holding. {about}.
+
+@rule incident.gossip.flirted.what_touch.gentle
+on incident.gossip
+when inc=flirted what=touch tone=gentle
+- People say you were... touching {about}...
+- They say you... touched {about}...
+- People are saying things... you and {about}...
+- You and {about}... touching? People say...
+
+@rule incident.gossip.flirted.what_touch.energetic
+on incident.gossip
+when inc=flirted what=touch tone=energetic
+- Dude, people say you were all over {about}!
+- People say you were all over {about}!
+- Handsy with {about}?! Rumor!
+- You and {about}! Hands everywhere!
+
+@rule incident.gossip.flirted.what_touch.cool
+on incident.gossip
+when inc=flirted what=touch tone=cool
+- There's talk about your hands and {about}.
+- Talk about your hands. And {about}.
+- Rumor: hands. {about}.
+- Your hands and {about}. Discussed.
+
+@rule incident.gossip.flirted.what_touch.teasing
+on incident.gossip
+when inc=flirted what=touch tone=teasing
+- Your hands and {about}. That's the rumor.
+- Your hands and {about}. The rumor.
+- Hands on {about}, they say.
+- Rumor: you and {about}. Hands.
+
+@rule incident.gossip.flirted.gentle
+on incident.gossip
+when inc=flirted tone=gentle
+- People say you and {about} are getting close...
+- You and {about} are getting close, they say...
+- People think you and {about} are close...
+- You and {about}... close?
+
+@rule incident.gossip.flirted.energetic
+on incident.gossip
+when inc=flirted tone=energetic
+- Everyone's talking about you and {about}!
+- You and {about}! Everyone's talking!
+- The university's buzzing about you and {about}!
+- You and {about}! Big news!
+
+@rule incident.gossip.flirted.cool
+on incident.gossip
+when inc=flirted tone=cool
+- There's talk about you and {about}.
+- Talk of you and {about}.
+- You and {about}. Discussed.
+- Rumors. You and {about}.
+
+@rule incident.gossip.flirted.teasing
+on incident.gossip
+when inc=flirted tone=teasing
+- You and {about}, huh? The whole class knows.
+- You and {about}? Class knows.
+- Everyone knows about you and {about}.
+- You and {about}. Famous.
+
+@rule incident.gossip.seengirlsroom_seenlockers.gentle
+on incident.gossip
+when inc=girls_room|lockers tone=gentle
+- There's a strange rumor going around about you... something about the girls' rooms.
+- There's a weird rumor about you... the girls' rooms...
+- People say odd things about you... girls' rooms?
+- A strange rumor... about the girls' rooms...
+
+@rule incident.gossip.seengirlsroom_seenlockers.energetic
+on incident.gossip
+when inc=girls_room|lockers tone=energetic
+- Dude, there's a weird rumor about you and the girls' rooms!
+- Weird rumor about you and the girls' rooms!
+- Dude! Girls' rooms rumor!
+- What's this girls' room rumor?!
+
+@rule incident.gossip.seengirlsroom_seenlockers.cool
+on incident.gossip
+when inc=girls_room|lockers tone=cool
+- There's an unflattering rumor about you going around.
+- An unflattering rumor. About you.
+- A bad rumor is circulating.
+- Rumors about you. Not nice ones.
+
+@rule incident.gossip.seengirlsroom_seenlockers.teasing
+on incident.gossip
+when inc=girls_room|lockers tone=teasing
+- You're famous now. For the wrong reasons.
+- Famous. Wrong reasons.
+- Infamous now. Congrats.
+- You're notorious.

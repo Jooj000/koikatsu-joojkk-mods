@@ -78,7 +78,7 @@ namespace Joojkk.CampusLife
 
                     // On her own: a lewd-minded girl gets a little more so each day (Moods reads it for Flirty).
                     var q = GirlInfo.Quirks(h);
-                    if (Cfg.StudentH.Value && h.lewdness < 90 && (gs.Mood == Mood.Flirty || (q.bitch || q.mutturi) && Random.value < 0.35f))
+                    if (Cfg.StudentH.Value && h.lewdness < 90 && (gs.Mood == Mood.Flirty || (q.bitch || q.mutturi) && (gs.Mood == Mood.Bored || gs.Mood == Mood.Lonely || gs.Mood == Mood.Cheerful)))   // on a free-feeling day, not every day
                         G.AddFavor(h, 0, gs.Mood == Mood.Flirty ? 2 : 1);
                 }
                 CampusLifePlugin.Log.LogInfo("Standing: day " + S.Day + ", " + moved + " reputations moved; popular " +

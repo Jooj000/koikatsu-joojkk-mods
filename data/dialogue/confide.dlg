@@ -182,8 +182,9 @@ opens tease,thank,ask
 @rule confide.gf.trio
 on confide
 when dating=yes stance=trio
-opens tease,invite,thank
 feel love
+hook f_confide_gf_trio
+opens tease,invite,thank
 - [{Who}? Oh, I adore her.|Ooh, {who}!|Really? {Who}?] [We should all go out together.|I wouldn't mind being closer to her too.|She's adorable, you know.] [Maybe... the three of us?|Next time, invite me too.|Hehe. This could be fun.]
 - [I actually really like {who}.|You and {who}... and me?] [We'd make a cute trio, don't you think?|I'm not jealous. I'm curious.] [Let's talk about it with her.|Don't make that face, I'm serious.|Think about it.]
 - [Honestly, I was hoping you'd say that.|{Who}, huh?] [She and I get along great.|I've been wanting to spend more time with her.] [We should make plans. All of us.|Let's not keep secrets, any of us.|This could work.]
@@ -222,8 +223,9 @@ opens tease,ask,laugh
 @rule confide.h
 on confide
 when depth=h knew=none interested=no
-opens hush,ask,laugh
 feel shy
+hook f_confide_h
+opens hush,ask,laugh
 - [W-WAIT. You and {who1} did WHAT?|Hold on. You mean... that?|Too much information!] [Why would you tell me that?!|I didn't need to know that!|My face is burning.] [I'm never looking at her the same way.|Don't say it so casually!|Okay. Okay. I heard nothing.]
 - [Oh. Oh!|You actually...?] [Wow. That's... wow.|I don't know what to say.|That's very grown up of you.] [I won't tell anyone. Obviously.|Please spare me the details.|Huh. Okay.]
 - [You two went that far?|Already?!] [That's moving fast.|I didn't think {who1} was like that.] [Your secret's safe with me.|Just... be careful, okay?|My ears are ringing.]

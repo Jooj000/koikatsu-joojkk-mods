@@ -67,29 +67,29 @@ namespace Joojkk.CampusLife
             var t = GirlInfo.ToneOf(h);
             var chance = Chance(h);
             var b = new SceneBuilder(null, false);
-            b.Narr(name + " is fast asleep on the infirmary bed, breathing softly. The curtain is half drawn.");
+            b.Narr(Conversation.BeatSay(h, "sleeptease.asleep") ?? "...");
             b.Choice("Tease her awake.", "tease", "Let her sleep.", "leave");
             b.Branch("leave");
-            b.Narr("You pull the curtain closed and leave her be.");
+            b.Narr(Conversation.BeatSay(h, "sleeptease.leave") ?? "...");
             b.End();
-            var yes = Random.value < chance;
+            var yes = Consent.Yes(h, "sleeptease", chance);
             b.Branch("tease");
-            b.Narr("You sit on the edge of the bed and brush the hair from her face, then let your hand wander.");
+            b.Narr(Conversation.BeatSay(h, "sleeptease.tease") ?? "...");
             if (yes)
             {
-                b.Face(h, Feel.Love).Say(h, Lines.T(t, "Mmh... hm? ...Oh. It's you... Don't stop... || Nn... you're here... It's okay. Stay a little longer... || Mm... was I dreaming? ...No, it's really you. Don't go... || Hm...? Oh... your hands are warm. ...Keep going.", "Nnn... w-wha...? Hehe... sneaky. Come here, then. || Huh...? Hey, no fair, I was asleep! ...Fine, don't stop now! || Mmh... what time is— oh! Ehehe, okay, you caught me! Come closer! || W-wake up call? Ha... sneaky, sneaky. Well? Don't just stand there!", "...You woke me up. ...Take responsibility. || ...So this is how you wake people. ...Fine. Continue. || ...I was asleep. You knew that. ...Don't stop halfway. || ...Hm. Bold. ...I didn't say you could stop.", "Mm~ ...Is this how you wake up a girl? Then do it properly. || Mm~ ...took you long enough to try. Go on, then. || Ara... a sleeping girl and you couldn't resist? Cute. Keep going. || Nnh~ ...If you're going to wake me, at least make it worth it."));
-                b.Narr("She pulls you down by your collar, still half asleep.");
+                b.Face(h, Feel.Love).Say(h, Conversation.BeatSay(h, "sleeptease", "yes") ?? "...");
+                b.Narr(Conversation.BeatSay(h, "sleeptease.yes.narr") ?? "...");
             }
             else
             {
-                b.Face(h, Feel.Surprised).Say(h, Lines.T(t, "Hya?! W-what are you doing?! || Eek?! Wh-what... why are you touching me while I sleep?! || Ah?! N-no, don't! I was sleeping...! || Hyah?! Th-that's not okay! Not while I'm asleep!", "WHOA! Hey! I was sleeping! || Hey-hey-HEY! What's the big idea?! || Whoa, whoa! Not cool! I was napping! || Yikes! Okay, NO. Hands where I can see them!", "...Hands. Off. Now. || ...Don't. Touch. Me. While I sleep. || ...Step back. Right now. || ...I was asleep. That was not an invitation.", "Ah-ah. Nice try. I'm awake now, you know. || Oho? Caught red-handed. Not today, sweetie. || Mm-mm. Sneaking up on me? You'll have to try harder. || Ah, ah, ah~ I'm awake. And the answer is no."));
-                b.Narr("She sits up and pulls the blanket over herself.");
+                b.Face(h, Feel.Surprised).Say(h, Conversation.BeatSay(h, "sleeptease", "no") ?? "...");
+                b.Narr(Conversation.BeatSay(h, "sleeptease.no.narr") ?? "...");
             }
             b.End();
             Scenes.PlayOnMap(b, c =>
             {
                 if (c != "tease") return;
-                CampusLifePlugin.Log.LogInfo("Sleep tease: " + name + " " + (yes ? "gives in" : "says no") + " (chance " + (int)(chance * 100) + "%)");
+                CampusLifePlugin.Log.LogInfo("Sleep tease: " + name + " " + (yes ? "gives in" : "says no") + " (score " + chance.ToString("0.00") + ")");
                 if (yes)
                 {
                     G.AddFavor(h, 2, 3);

@@ -782,3 +782,124 @@ feel shy
 - [Ah-ah~|Not so fast...|Mm...] [I almost let you, you know.|You'll have to try a little harder.]
 - [Heh...|Oh my...] [So close. Too bad~|Ask me when nobody's around.]
 - [Careful...|...!] [Don't make that face. Next time, maybe.|You nearly stole it.]
+
+# ================= the same touch again: she notices it is the second time, in her tone =================
+@rule touch.again.welcome.gentle
+on touch
+when again=yes level=welcome tone=gentle
+feel shy
+- [Again?|Mm... again?] [You really like doing that, don't you.|I don't mind. I just... noticed.]
+- [Ehehe... once more?|That's the second time.] [I'm starting to get used to it.|It's nice, so it's okay.]
+- [You keep doing that...|Again...] [I'm not complaining.|My face is warm, you know.]
+
+@rule touch.again.welcome.energetic
+on touch
+when again=yes level=welcome tone=energetic
+feel smile
+- [Again?! You're hooked!|Round two, huh?] [Hehe!|Fine, fine!]
+- [You can't keep your hands off me today!|Okay, okay, I get it!] [You like me!|Hehe, cute!]
+- [Again! Ha!|Seriously, again?] [I'm keeping count, you know!|That's like, the second time!]
+
+@rule touch.again.welcome.cool
+on touch
+when again=yes level=welcome tone=cool
+- [Again.|That's twice.] [...I'm not stopping you.|I noticed.]
+- [You're persistent.|Once wasn't enough?] [Fine.|...It's acceptable.]
+- [Again, huh.|Hm.] [I'll allow it.|You're consistent, at least.]
+
+@rule touch.again.welcome.teasing
+on touch
+when again=yes level=welcome tone=teasing
+feel smile
+- [Again? Someone's addicted~|Back for more?] [I knew you would be.|Cute.]
+- [Can't get enough of me, huh?|Twice in a row~] [I'll start charging.|Hehe.]
+- [Oh? Again?|You really can't help yourself.] [I like that about you.|Go on, then~]
+
+@rule touch.again.uneasy.gentle
+on touch
+when again=yes level=uneasy tone=gentle
+feel worried
+- [U-um... again...?|You did that already...] [I don't really... know what to do.|Can we slow down a little?]
+- [Again...?|Ah...] [I'm still a bit nervous.|Please, not so much.]
+- [That's twice now...|Um...] [I'm not used to this.|Could you... wait a bit?]
+
+@rule touch.again.uneasy.energetic
+on touch
+when again=yes level=uneasy tone=energetic
+feel surprised
+- [Whoa, again?!|Hey, hey!] [Take it easy!|One was plenty!]
+- [Again? Okay, that's a lot!|Hey! Slow down!] [You're making me jumpy!|Give me a second!]
+- [Seriously, again?|Easy there!] [I'm not a stress ball!|Ha... ha...]
+
+@rule touch.again.uneasy.cool
+on touch
+when again=yes level=uneasy tone=cool
+feel serious
+- [Again.|Twice.] [That's enough for now.|I said I wasn't sure.]
+- [You're pushing it.|Again?] [Ease off.|I'd prefer you didn't.]
+- [Once was fine. Twice...|Hm.] [Let's not.|Mind your hands.]
+
+@rule touch.again.uneasy.teasing
+on touch
+when again=yes level=uneasy tone=teasing
+feel pout
+- [Again? Greedy.|Hey, hey.] [Don't get ahead of yourself.|I didn't say you could.]
+- [Twice? Bold.|Easy, tiger.] [You have to earn the second one.|Not so fast.]
+- [Again already?|Persistent, aren't you?] [Cool it.|I'll let you know when.]
+
+@rule touch.again.stop.gentle
+on touch
+when again=yes level=stop tone=gentle
+feel sad
+- [I asked you to stop...|Please... stop.] [Why are you doing it again?|I don't like this.]
+- [Again...?|No...] [I said no.|Please listen to me.]
+- [Stop it, please.|...Again?] [It's scaring me a little.|I mean it.]
+
+@rule touch.again.stop.energetic
+on touch
+when again=yes level=stop tone=energetic
+feel pout
+- [Hey! I said quit it!|Again?! No!] [Not funny!|Seriously, stop!]
+- [Stop! I mean it!|Hands off!] [I'm getting mad!|Cut it out!]
+- [Again?! Come on!|No, no, no!] [Quit it already!|I said no!]
+
+@rule touch.again.stop.cool
+on touch
+when again=yes level=stop tone=cool
+feel serious
+- [I told you no.|Stop.] [Don't make me repeat myself.|That's the last time.]
+- [Again? No.|Enough.] [I'm serious.|Hands down.]
+- [You heard me the first time.|No.] [Stop it.|Don't test me.]
+
+@rule touch.again.stop.teasing
+on touch
+when again=yes level=stop tone=teasing
+feel pout
+- [I said no. Didn't you hear?|Again? Not cute.] [Hands off.|Try that again and see.]
+- [Strike two.|Nope.] [You're losing points fast.|Stop.]
+- [No means no, mister.|Again? Really?] [Not happening.|Back off.]
+
+# ================= head, cheek and hand when she is not sure, or wants it to stop =================
+@rule touch.head.uneasy
+on touch
+when part=head level=uneasy|stop
+feel worried
+- [My head...?|Um... my hair...] [Please don't.|I'm not a kid.]
+- [W-what are you doing?|Ah... wait.] [That's a little much.|Not my hair, please.]
+- [Hey...|Um...] [I'd rather you didn't.|You're messing up my hair.]
+
+@rule touch.cheek.uneasy
+on touch
+when part=cheek level=uneasy|stop
+feel shy
+- [M-my cheek...?|Ah...!] [That's too close.|Please, not my face.]
+- [Wait, my face...|Um...] [I'm not ready for that.|People can see.]
+- [Eh...?|Your hand...] [I don't know about this.|Let go, please.]
+
+@rule touch.hand.uneasy
+on touch
+when part=hand level=uneasy|stop
+feel worried
+- [My hand...?|Um...] [I'm not sure about this.|Can I have it back?]
+- [A-ah, my hand...|Wait...] [We're not... like that.|Let go, please.]
+- [Hm?|O-oh...] [I'd rather not.|Not right now.]

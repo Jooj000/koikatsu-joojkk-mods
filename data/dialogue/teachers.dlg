@@ -40,11 +40,13 @@ when role=teacher
 on move.comfort
 when kind=day role=teacher
 - {classes}[Tell her she's a good professor|Say the class is lucky to have her|Tell her she works too hard|Offer to help with something]
+- {classes}[Say her lectures are the clearest you've had|Tell her to take a real break today|Say the students talk well of her]
 
 @rule move.tease.teacher
 on move.tease
 when kind=day role=teacher
 - {classes}[Joke about professors' lives|Ask for easier assignments|Tease her, sensei or not|Ask if that means no test]
+- {classes}[Ask if professors get homework too|Say she'd fail her own pop quiz|Ask what she does when nobody's grading]
 
 # ================= when you ask her why =================
 @rule react.comfort.teacher
@@ -111,8 +113,9 @@ opens share,tease,invite
 @rule us.teacher.h
 on us
 when role=teacher realverb=had_h
-opens share,tease,invite
 feel shy
+hook f_us_teacher_h
+opens share,tease,invite
 - {classes}[We can't talk about that here.|Lower your voice.] [There's a class next door.|I'm still your professor.]
 - {classes}[I stood in front of the class the next morning.|I couldn't look at your desk.] [After what we did.|I lost my place in the textbook.]
 - [I've never done anything like that with a student.|I told myself it would be once.] [...It wasn't, was it?|You're a bad influence.]
@@ -121,8 +124,9 @@ feel shy
 @rule you.h.teacher.saw
 on you
 when realverb=had_h how=witness whorole=teacher role=student
-opens admit,hush,tease,deny
 feel worried
+hook f_you_h_teacher_saw
+opens admit,hush,deny
 - [You did it with the professor?!|With {who}?! Your own professor?!|I saw you and {who}. {who}!] [In the {fplace}!|I'll never sit through that class again.|How am I supposed to look at either of you?]
 - [I know what I saw {when}.|{When}, in the {fplace}...] [You and a professor.|That was {who}, wasn't it?] [Do you know what happens if the university finds out?|She could lose her job!]
 - [Of all the people...|I thought I'd seen everything.] [A professor?!|{who}?!] [What is wrong with you?|Tell me I imagined it.]
@@ -130,8 +134,9 @@ feel worried
 @rule you.h.teacher.heard
 on you
 when realverb=had_h how=heard|rumor whorole=teacher role=student
-opens deny,admit,hush,tease
 feel worried
+hook f_you_h_teacher_heard
+opens deny,admit,hush
 - [Is it true you did it with the professor?!|People are saying you and {who}...] [With a professor?!|That can't be real.]
 - [The whole class is whispering about you and {who}.|I heard something crazy.] [You didn't, right?|Tell me you didn't.]
 - [Please say it's a rumor.|Someone says you've been staying after class with {who}.] [Because of the "extra lessons".|And not for assignments.]
@@ -139,8 +144,9 @@ feel worried
 @rule you.h.teacher.gf
 on you
 when realverb=had_h whorole=teacher role=student rel=girlfriend|lover
-opens admit,deny,comfort
 feel pout
+hook f_you_h_teacher_gf
+opens admit,deny,comfort
 - [You cheated on me with a professor?!|With {who}! Our professor!] [How do I sit in that class now?|Was I not grown up enough for you?]
 - [I have to look at her at the blackboard!|She takes attendance and says my name!] [After what you did with her!|Do you have any idea how that feels?]
 - [{who}, of all people.|A professor. You chose a professor.] [Explain. Now.|I can't even tell anyone.]
@@ -148,8 +154,9 @@ feel pout
 @rule you.h.teacher.open
 on you
 when realverb=had_h whorole=teacher role=student profile=open
-opens tease,admit,hush
 feel laugh
+hook f_you_h_teacher_open
+opens tease,admit,hush
 - [Wait, wait. You and the professor?!|{who}?! Seriously?!] [Legend.|I need every detail.]
 - [So that's why your grades went up!|Extra lessons, huh?] [Ha!|What's next, the dean?]
 - [Okay, I'm impressed.|I didn't think you had it in you.] [A professor!|Is she different after class?]
@@ -167,8 +174,9 @@ opens deny,admit,tease
 @rule you.h.student.teacher
 on you
 when realverb=had_h role=teacher whorole=student
-opens admit,hush,deny
 feel serious
+hook f_you_h_student_teacher
+opens admit,hush,deny
 - {classes}[With one of my students.|I teach her, you know.|{who} sits in my class.] [I saw enough {when}.|Do I need to call the dean?]
 - {classes}[As a professor I should report this.|We need to talk, you and I.] [Sit down.|Close the door.]
 - [I can't pretend I didn't see that.|Do you know what the rules say?] [{who} is my responsibility.|Give me one reason not to go to the dean.]
@@ -176,8 +184,9 @@ feel serious
 @rule you.h.student.teacher.jealous
 on you
 when realverb=had_h role=teacher whorole=student rel=girlfriend|lover
-opens admit,deny,comfort
 feel sad
+hook f_you_h_student_teacher_jealous
+opens admit,deny,comfort
 - {classes}[With {who}.|A girl from my own class.] [Someone your age.|I suppose that makes sense. I suppose.]
 - {classes}[I have to teach her tomorrow.|I can't exactly complain to anyone, can I?] [Who would I tell?|That's the worst part.]
 - [I knew this could happen.|I'm older than you, I know how this goes.] [I still hate it.|Say something.]
@@ -185,8 +194,9 @@ feel sad
 @rule you.h.colleague
 on you
 when realverb=had_h role=teacher whorole=teacher
-opens admit,hush,tease
 feel serious
+hook f_you_h_colleague
+opens admit,hush,tease
 - {classes}[{who} told me.|I share a faculty room with {who}, you know.] [We need to have a talk, young man.|Do you think professors don't talk?]
 - {classes}[With my colleague.|With {who}, of all the professors.] [I'll be sitting next to her at the meeting.|How bold.]
 - {classes}[I can't decide who to scold first.|Two professors. You have some nerve.] [You or her.|Sit down.]
@@ -204,8 +214,9 @@ opens admit,tease,deny
 @rule you.peep.teacher
 on you
 when realverb=seen_girls_room|seen_lockers role=teacher
-opens deny,admit,hush
 feel serious
+hook f_you_peep_teacher
+opens deny,admit,hush
 - {classes}[I should give you a formal warning until graduation.|A professor can't ignore that.] [What were you doing in there?|Explain yourself.]
 - {classes}[The girls' side is off limits, as you know.|I heard where you were.] [I'll have to tell your academic advisor.|That was a warning. The only one.]
 - [Do you want me to call the dean?|That's a matter for student affairs.] [Think carefully before you answer.|Well?]

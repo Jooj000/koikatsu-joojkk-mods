@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,12 +40,17 @@ namespace Joojkk.CampusSaves
     /// The versions of one campus. "pack.dat" only grows: each record is the piece's SHA-1, its length and its bytes, so
     /// a crash can only leave a cut tail, which the next open drops. A version is its own small text file, replaced in one
     /// rename. The save file itself is never needed to read this, and this is never needed to play that file.
+    /// A negative length is a piece stored compressed (Deflate), kept only when it is a tenth smaller; the
+    /// pictures inside a save do not shrink, the card data does. <see cref="Compact"/> copies the pieces some version still
+    /// uses into a new pack: "compact.ok" marks the moment the new files are complete, so a crash before it drops them and
+    /// a crash after it finishes the swap.
     /// </summary>
     internal sealed class Vault
     {
         private const int Head = 24;
         private const string PackName = "pack.dat";
-        private static readonly byte[] Magic = Encoding.ASCII.GetBytes("JKPACK1\n");
+        private const string NewPack = "pack.new", Marker = "compact.ok";
+        private static readonly byte[] Magic = Encoding.ASCII.GetBytes("JKPACK2\n");   // JKPACK1 packs read the same: they just have no compressed pieces
 
         private struct Hash : IEquatable<Hash>
         {
@@ -79,6 +85,7 @@ namespace Joojkk.CampusSaves
         {
             Dir = dir;
             Directory.CreateDirectory(dir);
+            Recover();
             OpenPack();
             foreach (var f in Directory.GetFiles(dir, "v*.ver").OrderBy(x => x, StringComparer.Ordinal))
             {
@@ -104,7 +111,7 @@ namespace Joojkk.CampusSaves
                 while (at + Head <= f.Length)
                 {
                     if (f.Read(head, 0, Head) != Head) break;
-                    var len = BitConverter.ToInt32(head, 20);
+                    var len = Stored(BitConverter.ToInt32(head, 20));
                     if (len <= 0 || len > Chunker.Max || at + Head + len > f.Length) break;
                     _index[new Hash(head)] = new Rec { Offset = at, Len = len };
                     at += Head + len;
@@ -122,6 +129,7 @@ namespace Joojkk.CampusSaves
             var whole = SHA1.Create();
             var piece = SHA1.Create();
             var head = new byte[Head];
+            var zbuf = new MemoryStream(Chunker.Max);
             using (var input = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16))
             using (var pack = new FileStream(PackPath, FileMode.Open, FileAccess.Write, FileShare.Read, 1 << 20))
             {
@@ -138,12 +146,14 @@ namespace Joojkk.CampusSaves
                     Rec r;
                     if (!_index.TryGetValue(key, out r))
                     {
-                        r = new Rec { Offset = _packEnd, Len = len };
+                        var z = Squeeze(c.Piece, len, zbuf);
+                        var size = z > 0 ? z : len;
+                        r = new Rec { Offset = _packEnd, Len = size };
                         Buffer.BlockCopy(h, 0, head, 0, 20);
-                        Buffer.BlockCopy(BitConverter.GetBytes(len), 0, head, 20, 4);
+                        Buffer.BlockCopy(BitConverter.GetBytes(z > 0 ? -z : len), 0, head, 20, 4);
                         pack.Write(head, 0, Head);
-                        pack.Write(c.Piece, 0, len);
-                        _packEnd += Head + len;
+                        pack.Write(z > 0 ? zbuf.GetBuffer() : c.Piece, 0, size);
+                        _packEnd += Head + size;
                         _index[key] = r;
                     }
                     if (v.Runs.Count > 0 && r.Offset == runEnd)
@@ -174,6 +184,7 @@ namespace Joojkk.CampusSaves
             var whole = SHA1.Create();
             var head = new byte[Head];
             var buf = new byte[Chunker.Max];
+            var zin = new byte[Chunker.Max];
             using (var pack = new FileStream(PackPath, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 20))
             using (var o = new FileStream(tmp, FileMode.Create, FileAccess.Write, FileShare.None, 1 << 20))
             {
@@ -182,9 +193,7 @@ namespace Joojkk.CampusSaves
                     pack.Position = run.Offset;
                     for (var i = 0; i < run.Count; i++)
                     {
-                        if (pack.Read(head, 0, Head) != Head) throw new IOException("cut pack");
-                        var len = BitConverter.ToInt32(head, 20);
-                        if (len <= 0 || len > buf.Length || pack.Read(buf, 0, len) != len) throw new IOException("bad record");
+                        var len = ReadPiece(pack, head, buf, zin);
                         whole.TransformBlock(buf, 0, len, null, 0);
                         o.Write(buf, 0, len);
                     }
@@ -267,12 +276,170 @@ namespace Joojkk.CampusSaves
                         {
                             pack.Position = at;
                             pack.Read(head, 0, Head);
-                            var size = Head + BitConverter.ToInt32(head, 20);
+                            var size = Head + Stored(BitConverter.ToInt32(head, 20));
                             if (!used.ContainsKey(at)) { used[at] = true; live += size; }
                             at += size;
                         }
                     }
             return _packEnd - live;
+        }
+
+        /// <summary>The bytes a record takes in the pack: a negative length is a compressed piece. 0 when the length is not a length.</summary>
+        private static int Stored(int field) { return field == int.MinValue ? 0 : Math.Abs(field); }
+
+        /// <summary>Deflates a piece into z; its length when that saves a tenth or more, else 0 (store it as it is).</summary>
+        private static int Squeeze(byte[] data, int len, MemoryStream z)
+        {
+            if (len < 1024) return 0;
+            try
+            {
+                z.SetLength(0);
+                using (var d = new DeflateStream(z, CompressionMode.Compress, true)) d.Write(data, 0, len);
+                var n = (int)z.Length;
+                return n > 0 && n <= len - len / 10 ? n : 0;
+            }
+            catch { return 0; }   // no zlib in this Mono: the piece goes in whole, as before
+        }
+
+        /// <summary>Reads the record at the stream's position into buf and returns the piece's length.</summary>
+        private static int ReadPiece(Stream pack, byte[] head, byte[] buf, byte[] zin)
+        {
+            if (pack.Read(head, 0, Head) != Head) throw new IOException("cut pack");
+            var field = BitConverter.ToInt32(head, 20);
+            var size = Stored(field);
+            if (size <= 0 || size > Chunker.Max) throw new IOException("bad record");
+            if (field > 0)
+            {
+                if (pack.Read(buf, 0, size) != size) throw new IOException("bad record");
+                return size;
+            }
+            if (pack.Read(zin, 0, size) != size) throw new IOException("bad record");
+            var len = 0;
+            using (var d = new DeflateStream(new MemoryStream(zin, 0, size), CompressionMode.Decompress))
+            {
+                int n;
+                while (len < buf.Length && (n = d.Read(buf, len, buf.Length - len)) > 0) len += n;
+            }
+            if (len <= 0) throw new IOException("bad compressed record");
+            return len;
+        }
+
+        /// <summary>Bytes of the pack no version uses, and whether compacting would pay (a quarter of the pack, 8 MB or more).</summary>
+        public bool WorthCompacting()
+        {
+            var g = Garbage();
+            return g >= 8L * 1024 * 1024 && g * 4 >= _packEnd;
+        }
+
+        /// <summary>
+        /// Copies the pieces some version still uses into a new pack, compressing the ones that were stored whole, and moves
+        /// every version to its new offsets. Returns the bytes freed. Runs on the background thread, like every write.
+        /// </summary>
+        public long Compact()
+        {
+            var before = _packEnd;
+            var np = Path.Combine(Dir, NewPack);
+            var head = new byte[Head];
+            var buf = new byte[Chunker.Max];
+            var zin = new byte[Chunker.Max];
+            var zbuf = new MemoryStream(Chunker.Max);
+            var moved = new Dictionary<long, long>();
+            var index = new Dictionary<Hash, Rec>();
+            var runs = new Dictionary<int, List<Run>>();
+            var sha = SHA1.Create();
+            long end;
+            List<SaveVersion> list;
+            lock (Versions) list = Versions.ToList();
+            using (var pack = new FileStream(PackPath, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 20))
+            using (var o = new FileStream(np, FileMode.Create, FileAccess.Write, FileShare.None, 1 << 20))
+            {
+                o.Write(Magic, 0, Magic.Length);
+                end = Magic.Length;
+                foreach (var v in list)
+                {
+                    var nr = new List<Run>();
+                    long runEnd = -1;
+                    foreach (var run in v.Runs)
+                    {
+                        var at = run.Offset;
+                        for (var i = 0; i < run.Count; i++)
+                        {
+                            pack.Position = at;
+                            var len = ReadPiece(pack, head, buf, zin);
+                            var size = Stored(BitConverter.ToInt32(head, 20));
+                            long to;
+                            if (!moved.TryGetValue(at, out to))
+                            {
+                                var key = new Hash(head);
+                                if (!new Hash(sha.ComputeHash(buf, 0, len)).Equals(key)) throw new IOException("piece at " + at + " does not match its hash");
+                                var z = Squeeze(buf, len, zbuf);
+                                var stored = z > 0 ? z : len;
+                                Buffer.BlockCopy(BitConverter.GetBytes(z > 0 ? -z : len), 0, head, 20, 4);
+                                o.Write(head, 0, Head);
+                                o.Write(z > 0 ? zbuf.GetBuffer() : buf, 0, stored);
+                                to = end;
+                                moved[at] = to;
+                                index[key] = new Rec { Offset = to, Len = stored };
+                                end += Head + stored;
+                            }
+                            var rec = index[new Hash(head)];
+                            if (nr.Count > 0 && to == runEnd)
+                            {
+                                var last = nr[nr.Count - 1];
+                                last.Count++;
+                                nr[nr.Count - 1] = last;
+                            }
+                            else nr.Add(new Run { Offset = to, Count = 1 });
+                            runEnd = to + Head + rec.Len;
+                            at += Head + size;
+                        }
+                    }
+                    runs[v.Id] = nr;
+                }
+                o.Flush();
+            }
+            // The new versions next to the old ones, then the marker: from here on the swap is finished even after a crash.
+            foreach (var v in list)
+            {
+                var keep = v.Runs;
+                v.Runs = runs[v.Id];
+                WriteVersionTo(v, VersionPath(v.Id) + ".new");
+                v.Runs = keep;
+            }
+            File.WriteAllText(Path.Combine(Dir, Marker), end.ToString(CultureInfo.InvariantCulture));
+            Recover();
+            foreach (var v in list) v.Runs = runs[v.Id];
+            _index.Clear();
+            foreach (var kv in index) _index[kv.Key] = kv.Value;
+            _packEnd = end;
+            return before - end;
+        }
+
+        /// <summary>Finishes a compaction that wrote its marker, or drops one that did not.</summary>
+        private void Recover()
+        {
+            var np = Path.Combine(Dir, NewPack);
+            var mark = Path.Combine(Dir, Marker);
+            var news = Directory.GetFiles(Dir, "v*.ver.new");
+            if (!File.Exists(mark))
+            {
+                if (File.Exists(np)) File.Delete(np);
+                foreach (var f in news) File.Delete(f);
+                return;
+            }
+            foreach (var f in news)
+            {
+                var to = f.Substring(0, f.Length - 4);
+                if (!File.Exists(to)) { File.Delete(f); continue; }   // removed while the copy was made: it stays removed
+                File.Delete(to);
+                File.Move(f, to);
+            }
+            if (File.Exists(np))
+            {
+                if (File.Exists(PackPath)) File.Delete(PackPath);
+                File.Move(np, PackPath);
+            }
+            File.Delete(mark);
         }
 
         public static string Hex(byte[] b)
@@ -284,7 +451,7 @@ namespace Joojkk.CampusSaves
 
         private string VersionPath(int id) { return Path.Combine(Dir, "v" + id.ToString("000000") + ".ver"); }
 
-        private void WriteVersion(SaveVersion v)
+        private static string VersionText(SaveVersion v)
         {
             var i = CultureInfo.InvariantCulture;
             var s = new StringBuilder();
@@ -304,11 +471,18 @@ namespace Joojkk.CampusSaves
             s.Append("cards=").Append(v.Cards).Append('\n');
             s.Append("runs\n");
             foreach (var r in v.Runs) s.Append(r.Offset).Append(' ').Append(r.Count).Append('\n');
+            return s.ToString();
+        }
+
+        private void WriteVersion(SaveVersion v)
+        {
             var p = VersionPath(v.Id);
-            File.WriteAllText(p + ".tmp", s.ToString(), new UTF8Encoding(false));
+            WriteVersionTo(v, p + ".tmp");
             if (File.Exists(p)) File.Delete(p);
             File.Move(p + ".tmp", p);
         }
+
+        private void WriteVersionTo(SaveVersion v, string path) { File.WriteAllText(path, VersionText(v), new UTF8Encoding(false)); }
 
         private static string Clean(string s) { return (s ?? "").Replace('\n', ' ').Replace('\r', ' '); }
 

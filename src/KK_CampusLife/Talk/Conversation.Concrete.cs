@@ -113,8 +113,11 @@ namespace Joojkk.CampusLife
             if (partner != null) l.Add(C("c:partner", "Friend", "Ask how things are with " + GirlInfo.FirstName(partner), 2.4f, () => AskFriend(partner, "So... how are things with " + GirlInfo.FirstName(partner) + "? You two seem close.")));
             if (Social.Gossip(h) != null) l.Add(C("c:rumor", "Rumor", "Ask what everyone's whispering about", 1.8f, () => AskSchool()));
             if (!s.Did.Contains("joke"))
-                l.Add(C("c:joke", "Joke", Lines.Pick("Tell her about the professor's tie with ducks", "Tell her the vending machine ate your coins again", "Tell her you saw the dean trip on the stairs") + JokeOdds(s), 1.2f,
-                    () => Joke(Lines.Pick("Did you see the professor's tie today? It had ducks on it. DUCKS.", "The vending machine ate my coins again. I think it hates me personally.", "I saw the dean miss a step this morning. He pretended it was a dance move."))));
+            {
+                var jk = Random.Range(0, 3);   // the label and your line are the same joke
+                l.Add(C("c:joke", "Joke", new[] { "Tell her about the professor's tie with ducks", "Tell her the vending machine ate your coins again", "Tell her you saw the dean trip on the stairs" }[jk] + JokeOdds(s), 1.2f,
+                    () => Joke(new[] { "Did you see the professor's tie today? It had ducks on it. DUCKS.", "The vending machine ate my coins again. I think it hates me personally.", "I saw the dean miss a step this morning. He pretended it was a dance move." }[jk])));
+            }
             if (!GirlInfo.InNoClub(h)) l.Add(C("c:effort", "Compliment", "Tell her her hard work shows", 1f, () => Compliment("effort", "You've been working really hard lately. It shows.")));
 
             return Three(l, gs);
@@ -195,9 +198,14 @@ namespace Joojkk.CampusLife
         {
             MarkAsked(h, "study");
             var tone = GirlInfo.ToneOf(h);
-            var ok = Social.Trust(h) >= 40 || Random.value < 0.4f;
+            // Context (2026-11-07): trust, what you are to her, her mood (stressed: studying together helps her too) and INT.
+            var m = MoodOf(h);
+            var ok = Ctx(h, "study", Social.Trust(h) / 80f + (h.relation >= 1 || h.isGirlfriend ? 0.15f : 0f) + (m == CampusLife.Mood.Stressed ? 0.15f : m == CampusLife.Mood.Sleepy || m == CampusLife.Mood.Upset ? -0.15f : 0f) + G.Int / 400f);
             var b = new SceneBuilder(h, true);
-            b.Me("Could you help me study a bit? The next test is going to wreck me.");
+            var ctx = AskCtx(h, "none");
+            ctx["what"] = "study";   // me.concrete in everyday.dlg
+            DlgRule mr;
+            b.Me(Bank.Pick("me.concrete", ctx, "player", out mr) ?? "...");
             b.Her_(Everyday(h, ok ? "study.yes" : "study.no"));
             Play(b, ok ? 1 : 0, ok ? "She went through your notes with you. (+2 INT)" : null, ok ? (Action)(() => { G.AddStats(2, 0, 0); Social.AddTrust(h, 1); }) : null);
         }

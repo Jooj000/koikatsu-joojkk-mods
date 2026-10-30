@@ -23,7 +23,8 @@ namespace Joojkk.CampusLife
         /// <summary>A stat roll without spending the lucky charm (the charm, if any, is spent once at the end).</summary>
         private static bool Roll(int stat, int difficulty, int charm)
         {
-            return stat + Random.Range(0, 41) + charm >= difficulty;
+            // Your stat against the bar (2026-11-07: context, not chance); only a tie, within two points, goes to the dice.
+            return Consent.Yes(null, "cal:" + difficulty + ":" + stat, 0.5f + (stat + 20 + charm - difficulty) / 50f);
         }
 
         private static int Charm() { return S.Count("omamori") > 0 ? 15 : 0; }
@@ -162,7 +163,7 @@ namespace Joojkk.CampusLife
             var tugWin = Roll(G.Str / 2 + 25, 55, charm);
             var cheerHit = Roll(G.Sens, 60, charm);
             var threeWin = partner != null && Roll((G.Str + partner.favor) / 2, 70, charm);
-            var teamWin = Random.value < (relayWin || tugWin ? 0.7f : 0.45f);
+            var teamWin = Consent.Yes(null, "cal:team", 0.3f + 0.15f * ((relayWin ? 1 : 0) + (tugWin ? 1 : 0) + (cheerHit ? 1 : 0) + (threeWin ? 1 : 0)) + S.Reputation / 500f);
             var b = new SceneBuilder(null, false);
 
             b.Bg("sports_tents");

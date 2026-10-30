@@ -163,7 +163,7 @@ namespace Joojkk.CampusLife
                 Log(name + ": busy (not friends yet, outside her event)");
                 return;
             }
-            if (last == Stamp && (!Friend(h) || Random.value < 0.5f))
+            if (last == Stamp && (!Friend(h) || h.favor < 70))   // a close teacher makes time twice
             {
                 var b1 = new SceneBuilder(null, false);
                 b1.Say(h, T(h, "We already talked this period, didn't we? Go on, your friends are waiting. || We've talked already this period. Go see your friends. || Didn't we just talk? Go on, have fun. || Again? Go enjoy your break.", "Again? Hehe, I like the enthusiasm! Later, okay? || Again?! Love the energy! Later! || You again! Hehe, later! || Back already? Later, kiddo!", "We spoke already. Go. || We spoke. Go. || Already done. Go. || Enough for now.", "Missed me already? Later, troublemaker. || Can't get enough of me? Later. || Again? Clingy. Later. || Back so soon? Later, troublemaker."));

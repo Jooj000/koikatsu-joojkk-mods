@@ -27,8 +27,9 @@ when how=heard|rumor
 @rule you.h.saw.raised
 on you
 when realverb=had_h how=witness raised=yes
-opens admit,hush,tease,deny
 feel worried
+hook f_you_h_saw_raised
+opens admit,hush,deny
 - [Um... about {when}.|Hey. {When}, in the {fplace}...|I need to say something.] [I saw you. With {who}.|I saw what you and {who} were doing.|I... walked right into you and {who}.] [I ran. Sorry.|I didn't know where to look.|I can't get it out of my head.]
 - [...You know I saw, right?|Don't pretend you didn't see me run.] [You and {who}. In the {fplace}.|In the middle of the {fplace}, with {who}!] [What were you thinking?|Anyone could have walked by.|I didn't sleep last night.]
 - [Hey. We need to talk about {when}.|About the {fplace}...] [I saw you and {who}.|I know what I saw.] [I'm not mad. Just... shocked.|I can't look at you the same way.|Did you think nobody would notice?]
@@ -36,8 +37,9 @@ feel worried
 @rule you.h.saw
 on you
 when realverb=had_h how=witness
-opens admit,hush,tease,deny
 feel worried
+hook f_you_h_saw
+opens admit,hush,tease
 - [I saw you and {who} {when}.|About {when} in the {fplace}...] [I wasn't trying to look!|I didn't mean to see it.|I just turned the corner and...]
 - [You and {who} in the {fplace}... I saw.|I wasn't snooping, I swear.] [It just happened in front of me.|I wish I hadn't seen it.]
 - [I need to tell you: I saw you two {when}.|{When}... I was right there.] [I'm not going to tell anyone.|I just thought you should know.]
@@ -45,8 +47,9 @@ feel worried
 @rule you.h.saw.close
 on you
 when realverb=had_h how=witness rel=girlfriend|lover
-opens admit,comfort,ask,deny
 feel sad
+hook f_you_h_saw_close
+opens admit,comfort,deny
 - [I saw you {when}. With {who}.|In the {fplace}. With {who}.] [I thought we were... something.|Am I not enough?|Why her?]
 - [You and {who}... I saw everything.|Don't lie to me. I was there.] [It hurts, you know.|I don't even know what to say to you.]
 - [{Who}? Really?|I saw you with {who} {when}.] [After everything we said?|Was I just a game to you?]
@@ -54,8 +57,9 @@ feel sad
 @rule you.h.saw.open
 on you
 when realverb=had_h how=witness profile=open
-opens tease,admit,invite
 feel smile
+hook f_you_h_saw_open
+opens tease,admit,invite
 - [So... you and {who}, huh?|I saw you two {when}.] [Pretty bold, doing it in the {fplace}.|I didn't know you had it in you.|Next time, check the hallway first.] [{laugh}|Not that I'm judging.]
 - [So, you and {who} in the {fplace}?|I got quite the show {when}.] [Not bad.|You should've invited me.] [{laugh}|Just kidding. Mostly.]
 - [Saw you and {who}, by the way.|The {fplace}, huh? Bold.] [I'm impressed.|Very bold.] [Don't worry, I won't tell.|Your secret's safe.]
@@ -63,8 +67,9 @@ feel smile
 @rule you.h.saw.shy
 on you
 when realverb=had_h how=witness voice=shy|bookish|proper|serious
-opens admit,hush,comfort
 feel shy
+hook f_you_h_saw_shy
+opens admit,hush,comfort
 - [I-I... {when}... I saw...|Um, um... {when}...] [I'm so sorry, I didn't mean to!|I won't tell anyone, I promise!|I ran away as fast as I could.]
 - [About {when}... I s-saw...|I'm sorry, but {when}, I saw you two.] [I won't say anything!|I-I'm not judging!] [I just can't stop blushing.|Forget I said anything.]
 - [Um... the {fplace}...|I-I was there {when}.] [I didn't see much!|I covered my eyes!] [Really!|Mostly...]
@@ -72,8 +77,9 @@ feel shy
 @rule you.h.saw.tsundere
 on you
 when realverb=had_h how=witness voice=tsundere
-opens deny,tease,admit
 feel pout
+hook f_you_h_saw_tsundere
+opens deny,tease,admit
 - [D-don't think I didn't see you and {who}!|You pervert! In the {fplace}!] [Not that I care what you do!|Have some shame!|Ugh, I can't even look at you.]
 - [Hmph. I saw you with {who}.|Don't think I'm jealous, but I saw you two.] [Disgusting.|You could at least lock a door.] [Idiot.|Not that I care!]
 - [In the {fplace}? Seriously?|You and {who}? Ugh!] [Of all places!|I'm not jealous!] [Baka!|Hmph!]
@@ -81,8 +87,9 @@ feel pout
 @rule you.h.heard
 on you
 when realverb=had_h how=heard|rumor
-opens deny,correct,admit,laugh
 feel worried
+hook f_you_h_heard
+opens deny,correct,admit
 - [{Src} told me something about you and {who}.|People are saying you and {who}... you know.|There's a rumor about you and {who}.] [In the {fplace}. Is it true?|I didn't believe it at first.|Please tell me it's not true.]
 - [People say you and {who} did it in the {fplace}.|{Src} has been telling everyone about you and {who}.] [Tell me it's a lie.|Is it true?] [I need to know.|Please.]
 - [I heard something about you and {who}.|The story about you and {who} is everywhere.] [Is it real?|I don't want to believe it.]
@@ -90,6 +97,7 @@ feel worried
 @rule you.h.heard.nosrc
 on you
 when realverb=had_h how=rumor
+hook f_you_h_heard_nosrc
 opens deny,correct,laugh
 - [Everyone's whispering about you and {who}.|There's a weird story going around about you.] [Something about the {fplace}?|I'm just telling you what I heard.]
 - [Someone said you and {who} were together in the {fplace}.|There's a nasty rumor going around about you.] [I don't know who started it.|Want me to shut it down?]
@@ -99,8 +107,9 @@ opens deny,correct,laugh
 @rule you.peep.saw
 on you
 when realverb=seen_girls_room|seen_lockers how=witness
-opens admit,deny,hush,laugh
 feel pout
+hook f_you_peep_saw
+opens admit,deny,hush
 - [I saw you {when}.|Don't think I didn't notice you {when}.] [What were you doing in there?|That's the girls' side, you know.|You'd better have a good excuse.]
 - [You were in the girls' area {when}.|I saw you sneaking around {when}.] [Pervert.|Explain yourself.]
 - [I caught you {when}.|You were peeking {when}, weren't you?] [Don't deny it.|Shameless.]
@@ -108,7 +117,8 @@ feel pout
 @rule you.peep.heard
 on you
 when realverb=seen_girls_room|seen_lockers how=heard|rumor
-opens deny,correct,laugh,admit
+hook f_you_peep_heard
+opens deny,correct,admit
 - [{Src} says you were in the girls' [restroom|changing room].|There's a story going around about you and the girls' [restroom|changing room].] [Please say it's a misunderstanding.|Were you lost or something?]
 - [Is it true you got caught in the girls' [restroom|changing room]?|Everyone says you were peeking.] [Please tell me it's a mistake.|That's not like you. Right?]
 - [{Src} told me about the [restroom|changing room].|There's a rumor about you peeking.] [I don't know what to believe.|Say something.]
@@ -116,8 +126,9 @@ opens deny,correct,laugh,admit
 @rule you.peep.teasing
 on you
 when realverb=seen_girls_room|seen_lockers voice=gyaru|vamp|teasing|open
-opens laugh,tease,deny
 feel smile
+hook f_you_peep_teasing
+opens laugh,tease,deny
 - [So I hear you like the girls' side of the building.|Lost again, pervert?] [{laugh}|If you wanted to see something, you could have asked.]
 - [Heard you've been touring the girls' rooms.|Ooh, the little peeper.] [Find anything interesting?|{laugh}]
 - [Next time, take me with you.|So you're curious, huh?] [Kidding!|I could just show you.]

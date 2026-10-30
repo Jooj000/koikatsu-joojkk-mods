@@ -116,7 +116,7 @@ namespace Joojkk.CampusLife
                 var couple = p.Stage == PairStage.Couple;
                 if (couple || p.Stage == PairStage.Crush || bond >= 60)
                     foreach (var g in new[] { h, other })
-                        if (g.lewdness < 100 && (couple || Random.value < 0.5f)) G.AddFavor(g, 0, couple ? 2 : 1);
+                        if (g.lewdness < 100 && (couple || p.Stage == PairStage.Crush || GirlInfo.Quirks(g).bitch || GirlInfo.Quirks(g).mutturi)) G.AddFavor(g, 0, couple ? 2 : 1);
             }
         }
 
@@ -144,7 +144,7 @@ namespace Joojkk.CampusLife
                     break;
                 case PairStage.Talking:
                     // The step to Couple is a confession (a director scene) when the player is around; off screen it happens by itself.
-                    if (offscreen && lo >= 60 && Random.value < 0.35f) BecomeCouple(p, null);
+                    if (offscreen && lo >= 60 && S.Day - p.StageDay >= 3) BecomeCouple(p, null);   // a few days of talking, then off screen one of them says it
                     else if (lo < 20) p.Stage = PairStage.Crush;
                     break;
                 case PairStage.Couple:
@@ -152,10 +152,10 @@ namespace Joojkk.CampusLife
                     break;
                 case PairStage.Strained:
                     if (p.Trust >= 55 && p.Jealousy <= 35) { p.Stage = PairStage.Couple; News(GirlInfo.FirstName(ha) + " and " + GirlInfo.FirstName(hb) + " made up. They're holding hands again."); Milestone(p, "made up", 2); }
-                    else if (p.Trust <= 10 || (offscreen && S.Day - p.StageDay >= 5 && Random.value < 0.3f)) Break(p, "drifted apart");
+                    else if (p.Trust <= 10 || (offscreen && S.Day - p.StageDay >= 5 && p.Trust < 40)) Break(p, "drifted apart");
                     break;
                 case PairStage.Broken:
-                    if (offscreen && S.Day - p.StageDay >= 7 && lo >= 40 && p.Trust >= 45 && Random.value < 0.25f)
+                    if (offscreen && S.Day - p.StageDay >= 7 && lo >= 40 && p.Trust >= 45 && p.Together > 0)
                     {
                         p.Stage = PairStage.Talking; p.StageDay = S.Day;
                         News(GirlInfo.FirstName(ha) + " and " + GirlInfo.FirstName(hb) + " were seen talking again, a little shyly.");
@@ -243,7 +243,7 @@ namespace Joojkk.CampusLife
                 if (p.Stage == PairStage.Couple)
                 {
                     // Time together keeps a couple well; time apart and secrets wear it.
-                    if (p.Together == 0 && Random.value < 0.3f) p.Jealousy = PairState.Clamp(p.Jealousy + 3);
+                    if (p.Together == 0) p.Jealousy = PairState.Clamp(p.Jealousy + 1);   // every day apart wears it a little
                     p.Trust = PairState.Clamp(p.Trust + (p.Together > 0 ? 1 : 0));
                 }
                 else if (p.Stage == PairStage.Strained)
@@ -397,7 +397,8 @@ namespace Joojkk.CampusLife
             p.Jealousy = PairState.Clamp(p.Jealousy + 15);
             var partner = Social.Get(p.Other(GirlInfo.Key(h)));
             S.Girl(GirlInfo.Key(h)).Conflicted += 2;
-            if (partner != null && Random.value < 0.35f)
+            // She suspects when she trusts the pair less, is the jealous kind, or it happened where people talk (context, 2026-11-07).
+            if (partner != null && (p.Trust < 50 || p.Jealousy >= 40 || Standing.Of(h) >= 60))
             {
                 Strain(p, GirlInfo.FirstName(partner) + " suspects something");
                 Rumors.Start("cheated", GirlInfo.Key(h), "", GirlInfo.Key(partner), 50);
@@ -538,7 +539,7 @@ namespace Joojkk.CampusLife
                     b.Branch("cr_wait"); b.Face(h, Feel.Smile).Her_(T(h, "Mm... spend more time with her first. That feels right. || More time with her first... yes, that feels right. || Slowly... okay, I can do that. || Little by little... yes.", "Slow and steady! Okay, I can do that! || Slow and steady! I got this! || Okay! Hang out first! || Patience! I can do patience! Maybe!", "...Sensible. || ...Reasonable. || ...A measured plan. || ...Sensible approach.", "Patience. Ugh. Fine. || Patience? Ugh. Fine. || Slow? Boring. Okay. || Fine, I'll take my time.")); b.End();
                     b.Branch("cr_tease"); b.Face(h, Feel.Pout).Her_(T(h, "M-mean! I'm serious! || Th-that's mean! I'm serious! || Don't tease me! I mean it! || That's not nice...", "Hey! I'm being serious here! || Hey! I'm SERIOUS! || Rude! I'm being real! || Stop laughing!", "...I regret telling you. || ...I regret this. || ...Never mind. || ...Mistake.", "...Laugh it up. I'll remember this. || ...I'll remember that. || ...Laugh now. Pay later. || ...Noted. Revenge pending.")); b.End();
                     b.Branch("cr_me");
-                    if (G.Sens >= 40 && Random.value < 0.5f + G.Sens / 300f) b.Face(h, Feel.Love).Her_(T(h, "Someone else...? ...You mean you? ...Oh no. Now I'm confused in a whole new way. || Someone else...? You...? Oh no, now I'm even more confused... || You mean... you? ...Oh. Oh my. || ...You? I... need to think...", "Wait. WAIT. Are you saying... you?! Ahh, my brain! || Wait, YOU?! My brain's exploding! || You're saying... you?! Whoa! || Hold on! You mean you?!", "...You. That's what you mean. ...Interesting. || ...You. Interesting. || ...So it's you. Hm. || ...I see what you mean.", "...Oh? Throwing your hat in the ring? ...I'll consider it. || ...You're volunteering? I'll think about it. || ...Bold of you. Noted. || ...Oh? Applying for the job?"));
+                    if (G.Sens >= 40 && (h.favor >= 60 || h.relation >= 1 || G.Sens >= 70)) b.Face(h, Feel.Love).Her_(T(h, "Someone else...? ...You mean you? ...Oh no. Now I'm confused in a whole new way. || Someone else...? You...? Oh no, now I'm even more confused... || You mean... you? ...Oh. Oh my. || ...You? I... need to think...", "Wait. WAIT. Are you saying... you?! Ahh, my brain! || Wait, YOU?! My brain's exploding! || You're saying... you?! Whoa! || Hold on! You mean you?!", "...You. That's what you mean. ...Interesting. || ...You. Interesting. || ...So it's you. Hm. || ...I see what you mean.", "...Oh? Throwing your hat in the ring? ...I'll consider it. || ...You're volunteering? I'll think about it. || ...Bold of you. Noted. || ...Oh? Applying for the job?"));
                     else b.Face(h, Feel.Pout).Her_(T(h, "...That's not funny right now. || ...Not funny right now. || ...That's not the time. || ...Please be serious.", "Dude! Not the time! || Not now! || Dude! Seriously?! || Not helping!", "...No. || ...No. || ...Not amusing. || ...Stop.", "...Nice try. || ...Cute try. || ...Ha. No. || ...Nope."));
                     b.End();
                 },

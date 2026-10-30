@@ -95,8 +95,9 @@ opens ask,defend,agree
 @rule gossip.boysroom
 on gossip
 when realverb=seen_boys_room
-opens laugh,defend,hush
 feel smile
+hook f_gossip_boysroom
+opens laugh,defend,hush
 - [So {who} got caught in the boys' restroom {when}.|Okay, this is embarrassing for her, but... {deed}.] [{laugh}|She says she got lost.|I'd never live it down.]
 - [Did you hear about {who} and the boys' restroom?|Poor {who}. {Deed}.] [She swears it was an accident.|She's been hiding all day.]
 - [{Who} walked into the wrong restroom {when}.|The boys are still talking about {who}.] [Red as a tomato.|It's legendary now.]

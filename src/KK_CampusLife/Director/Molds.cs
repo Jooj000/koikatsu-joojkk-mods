@@ -167,7 +167,8 @@ namespace Joojkk.CampusLife
             b.Face(a, Feel.Sad).Say(a, T(a, "...Oh. || ...Oh. || ...I see. || ...Hm.", "Seriously?! || Seriously?! || What?! || No way!", "...Hmph. || ...Hmph. || ...Tch. || ...Fine.", "Traitor. || Traitor. || Turncoat. || Wow."));
             b.End();
             b.Branch("fr_mid");
-            var good = G.Int >= 40 || Random.value < 0.5f;
+            // The middle way works when you read it (INT), when the two are friends under the fight, or when both trust you.
+            var good = G.Int >= 40 || Social.Bond(a, o) >= 30 || Social.Trust(a) + Social.Trust(o) >= 120;
             if (good)
             {
                 b.Narr("You get each of them to say one thing, slowly. It turns out the fight was never about lunch or a seat.");
@@ -346,7 +347,8 @@ namespace Joojkk.CampusLife
                         break;
                     case "cg_walk": break;
                 }
-                if (cheating && c != "cg_truth" && c != "cg_keep" && Random.value < 0.4f) Rumors.Start("caught", K(a), K(o), "", 40);
+                // It gets out when it is the talk of campus already (her name), or one of them is a chatterbox (context, 2026-11-07).
+                if (cheating && c != "cg_truth" && c != "cg_keep" && (Standing.Of(a) >= 60 || Standing.Of(o) >= 60 || Social.Chatty(a) || Social.Chatty(o))) Rumors.Start("caught", K(a), K(o), "", 40);
             };
         }
 
@@ -454,7 +456,8 @@ namespace Joojkk.CampusLife
             b.Face(h, Feel.Smile).Say(h, T(h, "...Thank you. Both of you. || ...Thank you both. || ...You two are so kind. || ...Thanks, both of you.", "...Okay. That helped. Weirdly. || ...That helped! Weirdly! || ...Okay! Better! || ...Thanks, guys!", "...Thanks. || ...Thanks. || ...Appreciated. || ...Thank you.", "...You two are sappy. ...Thanks. || ...Sappy. Thanks. || ...Gross. Thanks. || ...So cheesy. Thanks."));
             b.End();
             b.Branch("co_laugh");
-            var ok = GirlInfo.ToneOf(h) == Tone.Energetic || GirlInfo.ToneOf(h) == Tone.Teasing || Random.value < 0.5f;
+            var lt = GirlInfo.ToneOf(h);
+            var ok = Consent.Yes(h, "co:laugh", (lt == Tone.Energetic || lt == Tone.Teasing ? 0.65f : lt == Tone.Gentle ? 0.45f : 0.35f) + Social.Trust(h) / 300f + G.Sens / 400f);
             if (ok) b.Face(h, Feel.Laugh).Say(h, T(h, "Pfft... ahaha! Stop it, that's so stupid! || Ahaha! Stop, so stupid! || Pfft! That's silly! || Hehe! Stop it!", "AHAHA! What even was that?! || AHAHA! What was that?! || Hahaha! Dumb! || LOL! Again!", "...Heh. Idiot. || ...Heh. Idiot. || ...Pfft. || ...Stupid. Funny.", "Hah! Okay, okay, you win. || Okay, you win. || Hah! Fine. || Alright, funny."));
             else b.Face(h, Feel.Pout).Say(h, T(h, "...I'm not in the mood. || ...Not in the mood. || ...Not now. || ...Please, no.", "...Not now, okay? || ...Not now! || ...Nope. || ...Later.", "...No. || ...No. || ...Stop. || ...Not now.", "...Read the room. || ...Read the room. || ...Bad timing. || ...Not funny."));
             b.End();

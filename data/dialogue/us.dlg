@@ -223,8 +223,9 @@ opens share,tease,ask
 @rule us.h
 on us
 when realverb=had_h
-opens share,tease,invite
 feel shy
+hook f_us_h
+opens share,tease,invite
 - [W-what about it?|...Yeah.|Mm.] [It was... good.|I'm still a little embarrassed.|Don't look at me like that.]
 - [About that...|You're bringing that up here?] [I liked it.|It's our secret, okay?]
 - [Mm... I remember.|Every bit of it.] [Don't make me blush.|I think about it at night.]
@@ -232,8 +233,9 @@ feel shy
 @rule us.h.fast.reserved
 on us
 when realverb=had_h speed=same_day|fast profile=reserved
-opens comfort,share,ask
 feel worried
+hook f_us_h_fast_reserved
+opens comfort,share,ask
 - [I... I don't usually do things like that.|I still can't believe I did that.|We'd only just met...] [What must you think of me?|I keep thinking about it.|I don't regret it, but... it was so fast.]
 - [It went so fast.|I'm not that kind of girl, you know.] [I want you to know that.|I just... with you, I didn't want to stop.]
 - [I'm still processing what happened.|I've never moved that fast before.] [Please don't think badly of me.|But it was you, so...]
@@ -241,8 +243,9 @@ feel worried
 @rule us.h.fast.normal
 on us
 when realverb=had_h speed=same_day|fast profile=normal
-opens share,tease,comfort
 feel shy
+hook f_us_h_fast_normal
+opens share,tease,comfort
 - [Yeah... things went fast.|We kind of skipped a few steps, huh?] [I'm not complaining.|I guess we really clicked.|Let's not rush everything else, okay?]
 - [It was fast. But good fast.|We sure didn't waste time.] [I'm okay with it.|I guess that says something.]
 - [Things just happened.|We got carried away.] [No regrets.|Maybe slow down a little next time?]
@@ -250,8 +253,9 @@ feel shy
 @rule us.h.fast.open
 on us
 when realverb=had_h speed=same_day|fast profile=open
-opens tease,invite,share
 feel smile
+hook f_us_h_fast_open
+opens tease,invite,share
 - [Fast? Was it?|Ha, you're still thinking about that?] [I just knew what I wanted.|Why wait?|You weren't complaining at the time.]
 - [Life's short.|Took you long enough, honestly.] [Why wait for something good?|Hehe.]
 - [Fast, slow, who cares?|It was fun.] [Ready for round two?|Don't overthink it.]
@@ -259,8 +263,9 @@ feel smile
 @rule us.h.normal.close
 on us
 when realverb=had_h speed=normal rel=girlfriend|lover
-opens tease,invite,share
 feel love
+hook f_us_h_normal_close
+opens tease,invite,share
 - [It felt natural with you.|I'm glad it was you.] [We were ready.|I feel closer to you now.]
 - [Being with you like that felt right.|I trust you completely now.] [I love you.|You're the one.]
 - [It wasn't scary, with you.|I liked how gentle you were.] [Thank you.|I'm glad we waited.]
@@ -268,8 +273,40 @@ feel love
 @rule us.h.public
 on us
 when realverb=had_h public=yes
-opens hush,tease,ask
 feel worried
+hook f_us_h_public
+opens hush,tease,ask
 - [In the {fplace}, though...|We were in the {fplace}!] [What if someone saw us?|I can't walk past that spot anymore without blushing.|Please tell me nobody saw.]
 - [The {fplace}... we really did that.|I can't believe we did it in the {fplace}.] [What were we thinking?|I check behind me every time now.]
 - [If anyone found out about the {fplace}...|Let's never mention the {fplace} again.] [I'd die.|...Unless we do it again.]
+
+# ================= H, by her voice and how far you two have gone =================
+@rule us.h.tsundere
+on us
+when realverb=had_h voice=tsundere
+feel pout
+hook f_us_h_tsundere
+opens tease,share,hush
+- [W-why are you bringing that up?!|Don't talk about that here!|Hmph.] [It's not like it was special or anything.|I only did it because you looked so pathetic.|Forget it already!]
+- [Idiot! Not so loud!|You're still thinking about that?] [...It was okay. I guess.|D-don't get the wrong idea!]
+- [Ugh, that again?|Hmph. What about it?] [It wasn't bad. Happy?|Don't make that face!]
+
+@rule us.h.teasing
+on us
+when realverb=had_h voice=gyaru|vamp|teasing
+feel smile
+hook f_us_h_teasing
+opens tease,invite,share
+- [Still thinking about it?|Oh, that?|Mmm~] [I can tell. You've got that look.|You were cuter than I expected.|Honestly? Not bad at all.]
+- [You want to talk about it?|Hehe, someone's flustered.] [Or do you want a repeat?|I'll grade you later~]
+- [That was fun, right?|Don't blush, it's only me.] [Let's do it again sometime.|You owe me another one.]
+
+@rule us.h.close.lewd
+on us
+when realverb=had_h rel=girlfriend|lover lewd>=70
+feel love
+hook f_us_h_close_lewd
+opens invite,tease,share
+- [Every time you bring it up, I want you again.|Mm... I was just thinking about it too.] [Is that bad?|Don't look at me like that, or I won't be able to wait.]
+- [With you, I don't even feel shy anymore.|I keep remembering how you held me.] [Let's find time soon.|Tonight?]
+- [You know exactly what you do to me.|I liked it. All of it.] [Don't make me say more here.|Later, okay?]

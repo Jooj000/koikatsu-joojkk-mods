@@ -4,6 +4,7 @@
 on me.school
 - [What do you think about {event}?|So, {event}...]
 - [Heard anything about {event}?|How do you feel about {event}?]
+- [Are you looking forward to {event}?|Got anything planned for {event}?]
 
 @rule school.council
 on school
@@ -39,48 +40,56 @@ on me.school
 when evkind=gift
 - [{Event} is coming, huh?|So, {event}...] [Are you making anything?|Homemade or store-bought?]
 - [Is anyone getting chocolate from you?|Do you give chocolate on {event}?|Is your chocolate for everyone, or for one person?]
+- [Who's lucky this year, on {event}?|Are you the kind to give friend chocolate on {event}?]
 
 @rule me.school.exam
 on me.school
 when evkind=exam
 - [Are you ready for {event}?|How's the studying going?|{Event} are close, huh?]
 - [Have you started revising?|Which subject worries you most?]
+- [Do you study alone or with friends?|Are you nervous about {event}?]
 
 @rule me.school.sports
 on me.school
 when evkind=sports
 - [Are you ready for {event}?|{Event} is coming up, huh?] [Which events are you in?|Are you running in the relay?]
 - [Which team are you on for {event}?|Have you been training for {event}?]
+- [Are you fast? For {event}, I mean.|Do you like {event}, or just put up with it?]
 
 @rule me.school.fair
 on me.school
 when evkind=fair
 - [Are you helping out at {event}?|Have you seen the stalls going up for {event}?]
 - [{Event} is coming up, huh?] [Are you running a stall?|What shouldn't I miss?]
+- [What's your class doing for {event}?|Will you show me around {event}?]
 
 @rule me.school.trip
 on me.school
 when evkind=trip
 - [Are you packed for {event}?|Looking forward to {event}?|Who are you sitting with on the bus?]
 - [{Event} is coming up, huh?] [What are you bringing?|Is there anywhere you want to see?]
+- [Who's in your group for {event}?|Bringing any snacks for {event}?]
 
 @rule me.school.wish
 on me.school
 when evkind=wish
 - [Have you written your wish for {event}?|What are you wishing for at {event}?]
 - [{Event} is coming up, huh?] [Do you still hang up a wish?|Are you going to see the bamboo?]
+- [Can I ask what you wished for at {event}?|Do you think wishes on {event} come true?]
 
 @rule me.school.costume
 on me.school
 when evkind=costume
 - [What are you going as for {event}?|Got a costume for {event}?]
 - [{Event} is coming up, huh?] [Are you dressing up?|Do you do the whole costume thing?]
+- [Scary or cute, for {event}?|Do you want help with your costume for {event}?]
 
 @rule me.school.eve
 on me.school
 when evkind=eve
 - [Any plans for {event}?|Who are you spending {event} with?]
 - [{Event} is coming up, huh?] [Got plans?|Are you staying in?]
+- [Do you do anything special for {event}?|Are you spending {event} with family?]
 
 # ---------------- Chocolate Day ----------------
 @rule school.gift.up

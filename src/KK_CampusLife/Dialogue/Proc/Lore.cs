@@ -282,14 +282,16 @@ namespace Joojkk.CampusLife
                         .Where(x => x.F != null && x.F.Weight >= 1 && S.Day - x.F.Day <= 7).OrderByDescending(x => x.F.Weight * 10 - (S.Day - x.F.Day)).Take(2).ToList();
                     foreach (var x in mine)
                     {
-                        var friends = girls.Where(o => o != g && Social.Bond(g, o) >= (x.F.Exposure == LoreFact.Secret ? 70 : 30)).OrderBy(_ => Random.value).Take(3).ToList();
+                        var friends = girls.Where(o => o != g && Social.Bond(g, o) >= (x.F.Exposure == LoreFact.Secret ? 70 : 30)).OrderByDescending(o => Social.Bond(g, o)).Take(3).ToList();   // her closest friends first
                         foreach (var o in friends)
                         {
                             var ok = GirlInfo.Key(o);
                             if (x.F.Involves(ok) || S.Known.Any(k => k.Girl == ok && k.Fact == x.F.Id)) continue;
-                            var chance = 0.12f + Social.Bond(g, o) / 250f + x.F.Weight * 0.08f + talk;
-                            if (Random.value > chance) continue;
-                            var twist = x.K.Distort > 0 || Random.value < (x.K.How == How.Rumor ? 0.3f : 0.12f) ? 1 : 0;
+                            // Context, not a roll (2026-11-07): how close they are, how big it is, how much she talks, and the days
+                            // it has had to come up; a story she only heard as a rumor gets twisted by a chatty teller.
+                            var chance = 0.12f + Social.Bond(g, o) / 250f + x.F.Weight * 0.08f + talk + (S.Day - x.F.Day) * 0.06f;
+                            if (!Consent.Yes(g, "lore:" + x.F.Id + ":" + ok, chance)) continue;
+                            var twist = x.K.Distort > 0 || x.K.How == How.Rumor && Social.Chatty(g) ? 1 : 0;
                             Learn(ok, x.F, twist > 0 ? How.Rumor : How.Heard, key, twist);
                             x.K.Told++;
                             if (++added >= 150) break;

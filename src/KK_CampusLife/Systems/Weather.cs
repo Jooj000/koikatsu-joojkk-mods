@@ -136,10 +136,18 @@ namespace Joojkk.CampusLife
         public static int Sheltered;
 
         /// <summary>The director keeps her off an outdoor spot while it rains (a rain lover goes anyway, half the time).</summary>
+        /// <summary>A rain lover goes out in it unless she is sleepy, upset or stressed (context, not a coin, 2026-11-07).</summary>
+        private static bool MoodGoes(SaveData.Heroine h)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
+            var m = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
+            return m != Mood.Sleepy && m != Mood.Upset && m != Mood.Stressed;
+        }
+
         public static bool Shelters(int mapNo, SaveData.Heroine h)
         {
             if (!Raining || !Outdoor(mapNo)) return false;
-            if (RainLover(h) && Kind != Storm && Random.value < 0.5f) return false;
+            if (RainLover(h) && Kind != Storm && MoodGoes(h)) return false;
             Sheltered++;
             return true;
         }

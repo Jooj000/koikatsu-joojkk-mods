@@ -101,7 +101,7 @@ namespace Joojkk.CampusLife
         /// <summary>Her hand on the way back; when she takes it and you are close enough, maybe a kiss.</summary>
         private static void Close(Ctx c, SceneBuilder b, Tally t)
         {
-            var ok = Random.value < CloseChance(c);
+            var ok = Consent.Yes(c.Her, "ep:close", CloseChance(c));   // context, not a roll (2026-11-07)
             b.Narr("On the way back, the street is quiet. Your hands keep almost touching.");
             b.Me(c.Girlfriend ? Lines.Pick("Come here. Give me your hand.", "Let's walk like this for a while.") : Lines.Pick("Can I... hold your hand? Just until the station.", "Your hands look cold. Here."));
             if (!ok)
@@ -139,7 +139,7 @@ namespace Joojkk.CampusLife
         {
             var chance = UnityEngine.Mathf.Clamp(0.3f + (c.Favor - 75) / 60f + c.Trust / 250f + G.Sens / 400f + (c.Mood == Mood.Flirty ? 0.15f : 0f) - (c.Mood == Mood.Upset ? 0.2f : 0f), 0.1f, 0.95f);
             string why;
-            var ok = Random.value < chance && Consent.Chance(c.Her, Ask.Confess, out why) >= 0.5f;
+            var ok = Consent.Yes(c.Her, "ep:confess", chance) && Consent.Chance(c.Her, Ask.Confess, out why) >= 0.5f;
             b.Narr("You stop walking. She notices and turns around.");
             b.Me(Lines.Pick("I've been wanting to tell you for a while. I like you. Not as a friend. I really like you.",
                 "Today was one of the best days I've had. Because it was with you. ...I like you. A lot.",
@@ -191,7 +191,7 @@ namespace Joojkk.CampusLife
         /// <summary>Somewhere private: if she says yes, the talk ends in the game's own H with her (see Duo.IntoH).</summary>
         private static void Private(Ctx c, SceneBuilder b, Tally t)
         {
-            var ok = Random.value < PrivateChance(c);
+            var ok = Consent.Yes(c.Her, "ep:private", PrivateChance(c));
             b.Narr("It's getting late, and neither of you seems to want the day to end.");
             b.Me(c.HCount > 0 ? Lines.Pick("I don't want to say goodbye yet. Want to go somewhere just the two of us? Like last time.", "Hey... nobody's around right now. Come with me?")
                               : Lines.Pick("I don't want to say goodbye yet. Want to go somewhere just the two of us?", "Let's go somewhere quieter. Just you and me."));

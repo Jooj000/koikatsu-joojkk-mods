@@ -624,7 +624,7 @@ namespace Joojkk.CampusSaves
         private static void OfferFree()
         {
             var plan = FreePlan();
-            if (plan.Count == 0) { Campuses.Status = "Nothing to free: no repeated saves in the game's list"; return; }
+            if (plan.Count == 0) { FreeSpace(); return; }   // no repeated slots: compacting the history is all there is to do
             var size = plan.Sum(p => new FileInfo(p).Length);
             Ask("Delete " + plan.Count + " repeated " + (plan.Count == 1 ? "save" : "saves") + " from the game's list and free " + Mb(size) + "? They stay in Campus Saves.", FreeSpace);
         }
@@ -718,7 +718,13 @@ namespace Joojkk.CampusSaves
                         File.SetAttributes(path, FileAttributes.Normal);
                         File.Delete(path);
                     }
-                Campuses.Status = "Freed " + Mb(freed);
+                // The pieces no version uses any more: removed and pruned saves leave them in the pack.
+                foreach (var c in Campuses.Snapshot())
+                {
+                    Campuses.Status = "Compacting " + c.Name;
+                    freed += c.Vault.Compact();
+                }
+                Campuses.Status = freed > 0 ? "Freed " + Mb(freed) : "Nothing to free";
             });
         }
     }

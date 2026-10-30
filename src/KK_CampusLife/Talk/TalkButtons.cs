@@ -111,7 +111,7 @@ namespace Joojkk.CampusLife
             if (!already)
             {
                 var unknown = GirlInfo.LikesOf(h).Where(l => (gs.KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, l))) == 0).ToList();
-                if (unknown.Count > 0 && UnityEngine.Random.value < 0.35f + G.Int / 200f)
+                if (unknown.Count > 0 && Conversation.Opens(h))   // context, not a roll (2026-11-07)
                 {
                     newLike = unknown[UnityEngine.Random.Range(0, unknown.Count)];
                     b.Her_(Lines.LikeHint(tone, GirlInfo.LikeLabel(newLike), close));

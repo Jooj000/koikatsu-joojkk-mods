@@ -270,8 +270,14 @@ namespace Joojkk.CampusLife
             // Past the curve a beat pays a fraction of a point; it rounds by chance instead of up to 1, so many small beats
             // in one day no longer fill the bar (2026-11-07: "dava pra repetir sweet talk e afins até acabar o tempo e
             // farmar favor e H").
-            var whole = Mathf.FloorToInt(got);
-            var paid = whole + (UnityEngine.Random.value < got - whole ? 1 : 0);
+            // The part of a point carries to the next beat of the day (2026-11-07: context, not chance): three tenths
+            // pay nothing, the tenth tenth pays one. Kept in Buffs "frac:" + tag + girl = day x 1000 + hundredths.
+            var fk = "frac:" + k;
+            int fv;
+            var carry = s.Buffs.TryGetValue(fk, out fv) && fv / 1000 == s.Day ? (fv % 1000) / 100f : 0f;
+            var sum = got + carry;
+            var paid = Mathf.FloorToInt(sum + 0.001f);
+            s.Buffs[fk] = s.Day * 1000 + Mathf.Clamp(Mathf.RoundToInt((sum - paid) * 100f), 0, 99);
             s.Buffs[k] = s.Day * 1000 + Math.Min(999, won + add);
             if (paid < add) CampusLifePlugin.Log.LogInfo((tag == "fday:" ? "Favor" : "H") + " today: " + GirlInfo.FirstName(h) + " " + won + " won, +" + add + " pays +" + paid);
             return paid;

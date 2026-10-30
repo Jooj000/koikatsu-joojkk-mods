@@ -42,10 +42,13 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>Your line for a step; its hook goes to her answer.</summary>
-        internal static string RomanceMe(SaveData.Heroine h, string act, string lvl = null)
+        internal static string RomanceMe(SaveData.Heroine h, string act, string lvl = null, string trait = null, string mem = null)
         {
             DlgRule rule;
-            var line = Bank.Pick("me.romance", RomanceCtx(h, act, "", lvl), "player", out rule) ?? "...";
+            var c = RomanceCtx(h, act, "", lvl);
+            if (trait != null) c["trait"] = trait;   // what you noticed about her ("your smile")
+            if (mem != null) c["mem"] = mem;         // a moment of yours ("we watched the fireworks")
+            var line = Bank.Pick("me.romance", c, "player", out rule) ?? "...";
             RomanceSaid(act, rule != null ? rule.Hook : null);
             return line;
         }
@@ -103,11 +106,11 @@ namespace Joojkk.CampusLife
             yield return "love: " + RomanceSay(h, "love", "");
             yield return "jealous love: " + RomanceSay(h, "jealous", "love", null, "Elma");
             yield return "jealous plain: " + RomanceSay(h, "jealous", "plain", null, "Elma");
-            yield return "notnow date: " + RomanceSay(h, "notnow", "date");
-            yield return "notnow confess: " + RomanceSay(h, "notnow", "confess");
-            yield return "notnow lunch: " + RomanceSay(h, "notnow", "lunch");
-            yield return "notnow home: " + RomanceSay(h, "notnow", "home");
-            yield return "notnow later: " + RomanceSay(h, "notnow", "later");
+            RomanceSaid("notnow", "notnow.date"); yield return "notnow date: " + RomanceSay(h, "notnow", "date");
+            RomanceSaid("notnow", "notnow.confess"); yield return "notnow confess: " + RomanceSay(h, "notnow", "confess");
+            RomanceSaid("notnow", "notnow.lunch"); yield return "notnow lunch: " + RomanceSay(h, "notnow", "lunch");
+            RomanceSaid("notnow", "notnow.home"); yield return "notnow home: " + RomanceSay(h, "notnow", "home");
+            RomanceSaid("notnow", "notnow.study"); yield return "notnow later: " + RomanceSay(h, "notnow", "later");
             yield return "breakup stay: " + RomanceSay(h, "breakup", "stay");
             yield return "wary no: " + RomanceSay(h, "wary", "no");
             yield return "me compliment: " + RomanceMe(h, "compliment", "effort") + " / " + RomanceMe(h, "compliment", "club") + " / " + RomanceMe(h, "compliment", "smart") + " / " + RomanceMe(h, "compliment", "looks");

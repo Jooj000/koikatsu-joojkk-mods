@@ -194,7 +194,9 @@ namespace Joojkk.CampusLife
                         b.End();
                     }
                     b.Branch("q_joke");
-                    var works = mood != Mood.Upset ? Random.value < 0.6f : Random.value < 0.3f;
+                    // Context (2026-11-07): her tone, trust, and how bad it is (upset is hard to lift).
+                    var jt = GirlInfo.ToneOf(h);
+                    var works = Consent.Yes(h, "quietjoke", 0.35f + Social.Trust(h) / 200f + (jt == Tone.Energetic || jt == Tone.Teasing ? 0.15f : jt == Tone.Cool ? -0.1f : 0f) + (mood == Mood.Upset ? -0.25f : 0f));
                     b.Me(ConvoLines.PlayerJoke());
                     if (works) b.Face(h, Feel.Laugh).Her_(T(h, "Pfft... that's so stupid. ...Thanks. I needed that. || Pfft... so silly. Thanks. || Hehe... that's dumb. I needed it. || Ahaha... thank you.", "Bahaha! Okay, okay, I'm alive again! || Bahaha! Alive again! || HA! I'm back! || Ahaha! Revived!", "...That was terrible. ...I'm smiling. Don't look. || ...Terrible. ...Smiling. Don't look. || ...Awful joke. ...Heh. || ...Stupid. ...Thanks.", "...Ugh. You made me laugh. Unforgivable. || Ugh. You made me laugh. || I laughed. Unforgivable. || Fine. That was funny."));
                     else b.Face(h, Feel.Pout).Her_(T(h, "...Not now. Sorry. || ...Not now. || ...Sorry, not now. || ...Please, not now.", "...Heh. Not really in the mood. || ...Not in the mood. || ...Heh. No. || ...Nah.", "...No. || ...No. || ...Not now. || ...Stop.", "...Read the room. || ...Read the room. || ...Bad timing. || ...Not the time."));
@@ -205,7 +207,7 @@ namespace Joojkk.CampusLife
                 Result = c =>
                 {
                     if (c == "q_sit") { Social.AddTrust(h, 4); Campus.Apply(new Rewards { Favor = 4 }, h); Memories.Add(h, "quiet", "you sat with me without saying anything"); if (mood != Mood.Sleepy) gs.Mood = Mood.None; }
-                    else if (c == "q_ask") { Social.AddTrust(h, 3); Campus.Apply(new Rewards { Favor = 3 }, h); gs.VentDay = S.Day; if (Random.value < 0.6f) gs.Mood = Mood.None; }
+                    else if (c == "q_ask") { Social.AddTrust(h, 3); Campus.Apply(new Rewards { Favor = 3 }, h); gs.VentDay = S.Day; if (mood != Mood.Upset || Social.Trust(h) >= 50) gs.Mood = Mood.None; }   // upset lifts only with someone she trusts
                     else if (c == "q_item") { S.AddItem(coffee, -1); Social.AddTrust(h, 2); Campus.Apply(new Rewards { Favor = 6 }, h); Memories.Add(h, "quiet", "you left me your " + Episodes.ItemName(coffee) + " when I was down"); }
                     else if (c == "q_joke") { if (_quietJoke) { Campus.Apply(new Rewards { Favor = 3 }, h); gs.Mood = Mood.Cheerful; } else Social.AddTrust(h, -1); }
                 },
@@ -444,7 +446,7 @@ namespace Joojkk.CampusLife
                 Write = b =>
                 {
                     b.Narr(name + " doesn't smile when she sees you. She waits until you're close.");
-                    b.Face(h, Feel.Serious).Her_(ConvoLines.Incident(GirlInfo.ToneOf(h), g.Kind, an, self, !self && about != null && Social.Bond(h, about) >= 35, g.What, Social.Saw(h, g)));
+                    b.Face(h, Feel.Serious).Her_(ConvoLines.Incident(h, g.Kind, an, self, !self && about != null && Social.Bond(h, about) >= 35, g.What, Social.Saw(h, g)));
                     b.Face(h, Feel.Sad).Her_(self
                         ? T(h, "I kept telling myself it didn't matter. But it did. It still does. || I told myself it didn't matter. It did. || I tried to forget... I couldn't. || It still hurts... I can't pretend.", "I tried to shrug it off! I couldn't! So now you get to hear it! || Tried to shrug it off! Couldn't! || I can't let it go! So here! || It bugged me! So listen!", "I don't hold grudges. Usually. This one stuck. || No grudges. Usually. This one stuck. || I don't hold grudges. This one, I do. || It lingered. I'll say it.", "I was going to let you sweat. But I'd rather just say it. || I wanted you to sweat. Easier to say it. || Could've made you squirm. I'll just say it. || I'll skip the games. Listen.")
                         : T(h, an + " is my friend. When she's hurt, I'm hurt too." + " || " + an + " is my friend. Her pain is mine. || When " + an + " hurts, I hurt too." + " || " + an + " means a lot to me...", an + "'s my friend, okay?! You don't get to do that!" + " || " + an + "'s my friend! Not okay! || Hey! " + an + "'s my bestie! || You hurt " + an + "! No!", "What you do to my friends, you do to me. || My friends are me. || Hurt my friend, hurt me." + " || " + an + " is mine to protect.", an + " didn't deserve that. Even I know that." + " || " + an + " didn't deserve that. || Even I know " + an + " deserved better. || Leave " + an + " alone."));

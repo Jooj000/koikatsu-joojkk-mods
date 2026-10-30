@@ -89,7 +89,7 @@ namespace Joojkk.CampusLife
                     break;
                 case Mood.Lonely:
                     if (result == ResultEnum.GoHome) { bonus = 7; resolved = true; }
-                    else { bonus = 3; resolved = Random.value < 0.5f; }
+                    else { bonus = 3; resolved = result != ResultEnum.None; }   // anything you do together lifts it (context)
                     break;
                 case Mood.Sleepy:
                     if (result == ResultEnum.Exercise) bonus = -3;

@@ -1,0 +1,526 @@
+# Her answers in a conversation beat, moved word for word out of Conversation.Unified.cs and
+# SleepTease.cs (criteria D and F7 of koikatsu-decisao-criterios-falas-fixas). Read by Conversation.BeatSay.
+# {tag} the option you took or the moment (cg_admit, db_now, caught.intro, sleeptease...), {q} how she took it:
+# good | neutral | bad (yes | no for the sleeping tease). The rules without a tag are the stock answers for a beat
+# whose option has none of its own; @weights beat makes the tag decide first.
+
+# ================= stock answers (no tag of their own) =================
+@rule beat.stock.good.gentle
+on beat
+when q=good tone=gentle
+- ...Thank you. That really helps.
+- ...That means a lot. Thank you.
+
+@rule beat.stock.good.energetic
+on beat
+when q=good tone=energetic
+- Yeah! Exactly! You get it!
+- Right?! That's it exactly!
+
+@rule beat.stock.good.cool
+on beat
+when q=good tone=cool
+- ...Yeah. Thanks.
+- ...Good answer.
+
+@rule beat.stock.good.teasing
+on beat
+when q=good tone=teasing
+- Heh. You're better at this than I thought.
+- Look at you, saying the right thing~
+
+@rule beat.stock.neutral.gentle
+on beat
+when q=neutral tone=gentle
+- Mm... I guess so.
+- ...Maybe you're right.
+
+@rule beat.stock.neutral.energetic
+on beat
+when q=neutral tone=energetic
+- Huh. Okay!
+- Hmm! Could be!
+
+@rule beat.stock.neutral.cool
+on beat
+when q=neutral tone=cool
+- ...Sure.
+- ...Possibly.
+
+@rule beat.stock.neutral.teasing
+on beat
+when q=neutral tone=teasing
+- If you say so.
+- Hm. We'll see~
+
+@rule beat.stock.bad.gentle
+on beat
+when q=bad tone=gentle
+- ...Oh. Okay.
+- ...That's not what I needed.
+
+@rule beat.stock.bad.energetic
+on beat
+when q=bad tone=energetic
+- Hey... that's not really what I meant.
+- Ehh? That's not it at all!
+
+@rule beat.stock.bad.cool
+on beat
+when q=bad tone=cool
+- ...That didn't help.
+- ...No.
+
+@rule beat.stock.bad.teasing
+on beat
+when q=bad tone=teasing
+- Wow. Read the room.
+- Oof. Try again.
+
+# ================= she knows you saw her (Caught) =================
+@rule beat.caught.intro.gentle
+on beat
+when tag=caught.intro tone=gentle
+feel shy
+- ...You saw me. Back then. I know you did.
+- ...You saw me. I know.
+- ...Back then... you saw.
+- ...I know you saw me.
+
+@rule beat.caught.intro.energetic
+on beat
+when tag=caught.intro tone=energetic
+feel shy
+- You SAW! When I was... ugh! I know you saw!
+- You SAW! I know!
+- You walked in! Ugh!
+- You saw me! I know it!
+
+@rule beat.caught.intro.cool
+on beat
+when tag=caught.intro tone=cool
+feel shy
+- ...About when you walked in on me.
+- ...When you walked in.
+- ...About that incident.
+- ...You saw.
+
+@rule beat.caught.intro.teasing
+on beat
+when tag=caught.intro tone=teasing
+feel shy
+- So. You walked in on me. Let's talk about that.
+- You walked in on me. Let's discuss.
+- So. You saw. Let's talk.
+- You got a show. Now talk.
+
+@rule beat.cg_admit.gentle
+on beat
+when tag=cg_admit tone=gentle
+- ...At least you're honest.
+
+@rule beat.cg_admit.energetic
+on beat
+when tag=cg_admit tone=energetic
+- Everything?! ...Okay. Okay.
+
+@rule beat.cg_admit.cool
+on beat
+when tag=cg_admit tone=cool
+- ...Honest. Fine.
+
+@rule beat.cg_admit.teasing
+on beat
+when tag=cg_admit tone=teasing
+- Everything, huh? ...Good.
+
+@rule beat.cg_explain.gentle
+on beat
+when tag=cg_explain tone=gentle
+- ...I believe you.
+
+@rule beat.cg_explain.energetic
+on beat
+when tag=cg_explain tone=energetic
+- ...Okay, okay, I believe you!
+
+@rule beat.cg_explain.cool
+on beat
+when tag=cg_explain tone=cool
+- ...Fine.
+
+@rule beat.cg_explain.teasing
+on beat
+when tag=cg_explain tone=teasing
+- An accident. Sure~
+
+@rule beat.cg_secret.gentle
+on beat
+when tag=cg_secret tone=gentle
+- ...Thank you. Really.
+
+@rule beat.cg_secret.energetic
+on beat
+when tag=cg_secret tone=energetic
+- Promise?! Okay. Thanks.
+
+@rule beat.cg_secret.cool
+on beat
+when tag=cg_secret tone=cool
+- ...Good.
+
+@rule beat.cg_secret.teasing
+on beat
+when tag=cg_secret tone=teasing
+- ...Our secret, then.
+
+@rule beat.cg_feel.gentle
+on beat
+when tag=cg_feel tone=gentle
+- ...You really think so?
+
+@rule beat.cg_feel.energetic
+on beat
+when tag=cg_feel tone=energetic
+- ...Really?
+
+@rule beat.cg_feel.cool
+on beat
+when tag=cg_feel tone=cool
+- ...Hm.
+
+@rule beat.cg_feel.teasing
+on beat
+when tag=cg_feel tone=teasing
+- ...Smooth.
+
+@rule beat.cg_space.gentle
+on beat
+when tag=cg_space tone=gentle
+- ...Okay.
+
+@rule beat.cg_space.energetic
+on beat
+when tag=cg_space tone=energetic
+- ...Yeah. Let's drop it!
+
+@rule beat.cg_space.cool
+on beat
+when tag=cg_space tone=cool
+- ...Fine.
+
+@rule beat.cg_space.teasing
+on beat
+when tag=cg_space tone=teasing
+- ...Coward. ...Fine.
+
+# ================= what she owes you (Debt) =================
+@rule beat.debt.intro.gentle
+on beat
+when tag=debt.intro tone=gentle
+feel shy
+- ...About what I owe you. I haven't forgotten.
+- ...What I owe you. I remember.
+- ...I haven't forgotten my promise.
+- ...About what I owe...
+
+@rule beat.debt.intro.energetic
+on beat
+when tag=debt.intro tone=energetic
+feel shy
+- So... that thing I owe you. Yeah. I remember!
+- That thing I owe you! I remember!
+- My debt! Yep!
+- I owe you! I know!
+
+@rule beat.debt.intro.cool
+on beat
+when tag=debt.intro tone=cool
+feel shy
+- ...My debt. I keep my word.
+- ...I owe you. I remember.
+- ...Debt acknowledged.
+
+@rule beat.debt.intro.teasing
+on beat
+when tag=debt.intro tone=teasing
+feel shy
+- Ah, my little debt. Here to collect?
+- My debt? Collecting?
+- Here to collect?
+- Ah, the debt. Ready?
+
+@rule beat.db_now.gentle
+on beat
+when tag=db_now tone=gentle
+- ...Okay. Now, then.
+- ...Okay. Now.
+- ...Alright. Right now.
+- ...Now, then.
+
+@rule beat.db_now.energetic
+on beat
+when tag=db_now tone=energetic
+- Now?! ...Okay!
+- Now?! Okay!
+- Right now?! Yes!
+- Now! Alright!
+
+@rule beat.db_now.cool
+on beat
+when tag=db_now tone=cool
+- ...Fine. Now.
+- ...Now.
+- ...Fine.
+- ...Very well.
+
+@rule beat.db_now.teasing
+on beat
+when tag=db_now tone=teasing
+- Now? Bold. I like it.
+- Now? Bold.
+- Right now? I like it.
+- Eager. Good.
+
+@rule beat.db_later.gentle
+on beat
+when tag=db_later tone=gentle
+- ...Then I'll be waiting.
+- ...I'll wait.
+- ...I'll be waiting for you.
+- ...Later, then.
+
+@rule beat.db_later.energetic
+on beat
+when tag=db_later tone=energetic
+- Later! It's a promise!
+- Later! Promise!
+- Later! Deal!
+- Okay! Later!
+
+@rule beat.db_later.cool
+on beat
+when tag=db_later tone=cool
+- ...I'll remember.
+- ...Remembered.
+- ...Noted.
+- ...Later.
+
+@rule beat.db_later.teasing
+on beat
+when tag=db_later tone=teasing
+- I'll hold you to it.
+- Don't forget.
+- Later, then.
+
+# ================= the sleeping tease (SleepTease) =================
+@rule beat.sleeptease.yes.gentle
+on beat
+when tag=sleeptease q=yes tone=gentle
+feel love
+- Mmh... hm? ...Oh. It's you... Don't stop...
+- Nn... you're here... It's okay. Stay a little longer...
+- Mm... was I dreaming? ...No, it's really you. Don't go...
+- Hm...? Oh... your hands are warm. ...Keep going.
+
+@rule beat.sleeptease.yes.energetic
+on beat
+when tag=sleeptease q=yes tone=energetic
+feel love
+- Nnn... w-wha...? Hehe... sneaky. Come here, then.
+- Huh...? Hey, no fair, I was asleep! ...Fine, don't stop now!
+- Mmh... what time is— oh! Ehehe, okay, you caught me! Come closer!
+- W-wake up call? Ha... sneaky, sneaky. Well? Don't just stand there!
+
+@rule beat.sleeptease.yes.cool
+on beat
+when tag=sleeptease q=yes tone=cool
+feel love
+- ...You woke me up. ...Take responsibility.
+- ...So this is how you wake people. ...Fine. Continue.
+- ...I was asleep. You knew that. ...Don't stop halfway.
+- ...Hm. Bold. ...I didn't say you could stop.
+
+@rule beat.sleeptease.yes.teasing
+on beat
+when tag=sleeptease q=yes tone=teasing
+feel love
+- Mm~ ...Is this how you wake up a girl? Then do it properly.
+- Mm~ ...took you long enough to try. Go on, then.
+- Ara... a sleeping girl and you couldn't resist? Cute. Keep going.
+- Nnh~ ...If you're going to wake me, at least make it worth it.
+
+@rule beat.sleeptease.no.gentle
+on beat
+when tag=sleeptease q=no tone=gentle
+feel surprised
+- Hya?! W-what are you doing?!
+- Eek?! Wh-what... why are you touching me while I sleep?!
+- Ah?! N-no, don't! I was sleeping...!
+- Hyah?! Th-that's not okay! Not while I'm asleep!
+
+@rule beat.sleeptease.no.energetic
+on beat
+when tag=sleeptease q=no tone=energetic
+feel surprised
+- WHOA! Hey! I was sleeping!
+- Hey-hey-HEY! What's the big idea?!
+- Whoa, whoa! Not cool! I was napping!
+- Yikes! Okay, NO. Hands where I can see them!
+
+@rule beat.sleeptease.no.cool
+on beat
+when tag=sleeptease q=no tone=cool
+feel surprised
+- ...Hands. Off. Now.
+- ...Don't. Touch. Me. While I sleep.
+- ...Step back. Right now.
+- ...I was asleep. That was not an invitation.
+
+@rule beat.sleeptease.no.teasing
+on beat
+when tag=sleeptease q=no tone=teasing
+feel surprised
+- Ah-ah. Nice try. I'm awake now, you know.
+- Oho? Caught red-handed. Not today, sweetie.
+- Mm-mm. Sneaking up on me? You'll have to try harder.
+- Ah, ah, ah~ I'm awake. And the answer is no.
+
+# ================= narration around her answer =================
+@rule beat.sneak.wary
+on beat
+when tag=sneak.wary
+- {name} looks away, then back at you, and doesn't say no.
+- {name} bites her lip, glances at the door, and doesn't say no.
+- {name} goes quiet. Then, very small, a nod.
+
+@rule beat.sneak.waryno
+on beat
+when tag=sneak.waryno
+- {name} hesitates a moment too long before she answers.
+- {name} opens her mouth, closes it, and looks at the floor.
+- For a second {name} looks like she'll say yes.
+
+@rule beat.private.wary
+on beat
+when tag=private.wary
+- She looks away, red to the ears, but she doesn't change the subject.
+- She hides her face in her hands, but she's smiling behind them.
+- Her ears go red. She doesn't stop you.
+
+# ================= narration of the touch, the look, the caught talk and the sleeping tease =================
+@rule beat.grope.bust.narr
+on beat
+when tag=grope.bust.narr
+- Your hand brushes {name}'s chest.
+- Your fingers graze the front of {name}'s blouse.
+- Your hand lingers a little too long against {name}'s chest.
+
+@rule beat.grope.hip.narr
+on beat
+when tag=grope.hip.narr
+- Your hand slides down to {name}'s hip.
+- Your hand settles on the curve of {name}'s hip.
+- You let your hand drift lower, to {name}'s hip.
+
+@rule beat.look.bold.narr
+on beat
+when tag=look.bold.narr
+- Your eyes wander over {name}.
+- Your gaze drifts down {name}, slowly.
+- You catch yourself staring at {name}, and you don't look away.
+
+@rule beat.look.hand.narr
+on beat
+when tag=look.hand.narr
+- You look at {name}'s hands.
+- Your eyes rest on {name}'s fingers for a moment.
+- You notice how small {name}'s hands are.
+
+@rule beat.look.face.narr
+on beat
+when tag=look.face.narr
+- You look at {name}'s face for a moment.
+- You watch {name}'s face while she talks.
+- For a moment you just look at {name}.
+
+@rule beat.caught.narr
+on beat
+when tag=caught.narr
+- {name} goes red the moment you bring it up.
+- {name} freezes, and the color rises all the way to her ears.
+- {name} can't look at you once you bring it up.
+
+@rule beat.sleeptease.asleep
+on beat
+when tag=sleeptease.asleep
+- {name} is fast asleep on the infirmary bed, breathing softly. The curtain is half drawn.
+- {name} is curled up asleep on the infirmary bed. Nobody else is around.
+- Behind the half-drawn curtain, {name} sleeps with one arm over her face.
+
+@rule beat.sleeptease.leave
+on beat
+when tag=sleeptease.leave
+- You pull the curtain closed and leave her be.
+- You draw the curtain shut and tiptoe out.
+- You let her sleep and close the door softly behind you.
+
+@rule beat.sleeptease.tease
+on beat
+when tag=sleeptease.tease
+- You sit on the edge of the bed and brush the hair from her face, then let your hand wander.
+- You sit beside her, tuck a strand of hair behind her ear, and let your fingers trail lower.
+- The bed creaks as you sit down. You brush her cheek, then your hand keeps going.
+
+@rule beat.sleeptease.yes.narr
+on beat
+when tag=sleeptease.yes.narr
+- She pulls you down by your collar, still half asleep.
+- Still half asleep, she wraps her arms around your neck and pulls you in.
+- She smiles without opening her eyes and drags you down next to her.
+
+@rule beat.sleeptease.no.narr
+on beat
+when tag=sleeptease.no.narr
+- She sits up and pulls the blanket over herself.
+- She bolts upright and clutches the blanket to her chest.
+- She scrambles back against the wall, blanket up to her chin.
+
+@rule beat.kiss.yes.narr
+on beat
+when tag=kiss.yes.narr
+- You lean in and kiss her softly.
+- You touch her lips, then lean in and kiss her.
+- You lean in. She doesn't pull away, and your lips meet.
+- You brush her lips with a finger and kiss her before she can say a word.
+- You pull her close by the waist and kiss her, slow and sure.
+- She tilts her face up first, and you meet her halfway.
+
+@rule beat.kiss.wary.narr
+on beat
+when tag=kiss.wary.narr
+- You lean in. She stiffens, hesitates... and doesn't pull away.
+- Your lips meet hers. She holds still, eyes squeezed shut.
+- You lean in slowly. She flinches, then lets you kiss her.
+- She freezes when you lean in, but she doesn't turn her face away.
+- She goes stiff as a board, but when your lips touch hers she doesn't move away.
+- Her breath catches. She lets you kiss her, fists balled at her sides.
+
+@rule beat.kiss.waryno.narr
+on beat
+when tag=kiss.waryno.narr
+- You lean in. She leans in too... then stops an inch away and turns aside, flustered.
+- Your lips almost meet. She pulls back at the last second, cheeks burning.
+- She closes her eyes when you lean in, then catches herself and steps back.
+- For a moment she lets you come close. Then she puts a finger on your lips.
+- She sways toward you, then ducks her head at the very last moment.
+- She almost lets you. Then she laughs nervously and turns her cheek.
+
+@rule beat.kiss.no.narr
+on beat
+when tag=kiss.no.narr
+- You lean in for a kiss. She turns her face away.
+- Your finger brushes her lips; she steps back before you can lean in.
+- You lean in. She puts a hand on your chest and stops you.
+- She leans back out of reach and shakes her head.
+- "No," she says quietly, and turns away.

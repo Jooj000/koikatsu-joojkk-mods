@@ -375,7 +375,7 @@ namespace Joojkk.CampusLife
                 }
                 else if (inc.Kind == Social.Kinds.HerBoysRoom)
                 {
-                    b.Her_(ConvoLines.Incident(tone, inc.Kind, aboutName, true, false));
+                    b.Her_(ConvoLines.Incident(h, inc.Kind, aboutName, true, false));
                     b.Choice("Promise to keep it secret.", "keep", "Tease her about it.", "tease");
                     b.Branch("keep"); b.Her_(EverydaySecret(h, true)); b.End();
                     b.Branch("tease"); b.Her_(EverydaySecret(h, false)); b.End();
@@ -388,7 +388,7 @@ namespace Joojkk.CampusLife
                 else
                 {
                     var friend = about != null && about != h && Social.Bond(h, about) >= 35;
-                    b.Her_(ConvoLines.Incident(tone, inc.Kind, aboutName, about == h, friend, inc.What, Social.Saw(h, inc)));
+                    b.Her_(ConvoLines.Incident(h, inc.Kind, aboutName, about == h, friend, inc.What, Social.Saw(h, inc)));
                 }
             }
             else if (jealous != null)
@@ -398,7 +398,7 @@ namespace Joojkk.CampusLife
                 s.Interest = Math.Max(0, s.Interest - 1);
                 s.Did.Add("jealous");
             }
-            else if (Board.HiddenFor(GirlInfo.Key(h)).Any() && (G.Int >= 40 || Random.value < 0.3f))
+            else if (Board.HiddenFor(GirlInfo.Key(h)).Any() && (G.Int >= 40 || Social.Trust(h) >= 50 || MoodOf(h) == CampusLife.Mood.Stressed || MoodOf(h) == CampusLife.Mood.Upset))   // you read it, she trusts you, or it shows (context, 2026-11-07)
             {
                 b.Narr(ConvoLines.WorriedHint(GirlInfo.FirstName(h)) + " <color=#6ab4ff>[INT]</color> Ask her... > Just listen.");
             }
@@ -809,8 +809,9 @@ namespace Joojkk.CampusLife
             Action done = null;
 
             var mine = Board.HiddenFor(key).FirstOrDefault();
-            var friendReq = mine == null && Random.value < 0.5f
-                ? Social.FriendsOf(h).SelectMany(f => Board.HiddenFor(GirlInfo.Key(f))).FirstOrDefault() : null;
+            // A friend's problem comes up when she is close to that friend or trusts you with it (context, 2026-11-07).
+            var friendReq = mine == null
+                ? Social.FriendsOf(h).Where(f => Social.Bond(h, f) >= 50 || Social.Trust(h) >= 40).SelectMany(f => Board.HiddenFor(GirlInfo.Key(f))).FirstOrDefault() : null;
             var gossip = Social.Gossip(h);
             var mood = MoodOf(h);
             var vent = gs.VentDay != S.Day && (mood == CampusLife.Mood.Stressed || mood == CampusLife.Mood.Upset || mood == CampusLife.Mood.Lonely);
@@ -828,7 +829,7 @@ namespace Joojkk.CampusLife
                 b.Her_(EverydayVent(h, mood));
                 b.Her_(Everyday(h, "vent.thanks"));
                 delta = 1;
-                done = () => { Social.AddTrust(h, 3); if (mood != CampusLife.Mood.Lonely || Random.value < 0.6f) gs.Mood = CampusLife.Mood.None; };
+                done = () => { Social.AddTrust(h, 3); if (mood != CampusLife.Mood.Lonely || Social.Trust(h) >= 50 || h.relation >= 1 || h.isGirlfriend) gs.Mood = CampusLife.Mood.None; };   // loneliness lifts with someone close
                 toast = GirlInfo.FirstName(h) + " feels better after talking. (+trust)";
             }
             else if (friendReq != null)
@@ -840,7 +841,7 @@ namespace Joojkk.CampusLife
             else if (gossip != null)
             {
                 var about = Social.Get(gossip.Girl);
-                b.Her_(ConvoLines.GossipLine(tone, gossip.Kind, about != null ? GirlInfo.FirstName(about) : "", gossip.What));
+                b.Her_(ConvoLines.GossipLine(h, gossip.Kind, about != null ? GirlInfo.FirstName(about) : "", gossip.What));
                 Social.Mentioned(h, gossip);
             }
             else if (!s.Did.Contains("anecdote"))
@@ -865,8 +866,9 @@ namespace Joojkk.CampusLife
                 var friend = f;
                 Add("About " + GirlInfo.FirstName(f), () => AskFriend(friend));
             }
-            var rival = Social.Students.Where(o => o != s.Her && Social.Bond(s.Her, o) <= -30).OrderBy(_ => Random.value).FirstOrDefault();
-            if (rival != null && Random.value < 0.5f && Created.Count < 4) Add("About " + GirlInfo.FirstName(rival), () => AskFriend(rival));
+            // The rival she minds most, when it is a real rivalry or she is upset (context, 2026-11-07).
+            var rival = Social.Students.Where(o => o != s.Her && Social.Bond(s.Her, o) <= -30).OrderBy(o => Social.Bond(s.Her, o)).FirstOrDefault();
+            if (rival != null && (Social.Bond(s.Her, rival) <= -45 || MoodOf(s.Her) == CampusLife.Mood.Upset) && Created.Count < 4) Add("About " + GirlInfo.FirstName(rival), () => AskFriend(rival));
             Add("About the university", AskSchool);
             Add("Back", Back);
         }
@@ -888,7 +890,7 @@ namespace Joojkk.CampusLife
             if (!already)
             {
                 var unknown = GirlInfo.LikesOf(h).Where(l => (gs.KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, l))) == 0).ToList();
-                if (unknown.Count > 0 && Random.value < 0.35f + G.Int / 200f)
+                if (unknown.Count > 0 && Opens(h))
                 {
                     newLike = unknown[Random.Range(0, unknown.Count)];
                     b.Her_(Lines.LikeHint(tone, GirlInfo.LikeLabel(newLike), close));
@@ -956,7 +958,7 @@ namespace Joojkk.CampusLife
             if (gossip != null)
             {
                 var about = Social.Get(gossip.Girl);
-                b.Her_(ConvoLines.GossipLine(tone, gossip.Kind, about != null ? GirlInfo.FirstName(about) : "", gossip.What));
+                b.Her_(ConvoLines.GossipLine(h, gossip.Kind, about != null ? GirlInfo.FirstName(about) : "", gossip.What));
                 Social.Mentioned(h, gossip);
             }
             Play(b, 0, "Reputation: " + S.Reputation + "/100");
@@ -975,7 +977,7 @@ namespace Joojkk.CampusLife
             return Mathf.Clamp(c, 0.05f, 0.95f);
         }
 
-        private static string JokeOdds(Session s) { return G.Int >= 40 ? "  <color=#6ab4ff>(" + Mathf.RoundToInt(JokeChance(s) * 100) + "%)</color>" : ""; }
+        private static string JokeOdds(Session s) { return G.Int >= 40 ? "  <color=#6ab4ff>(" + Read(JokeChance(s)) + ")</color>" : ""; }
 
         private static void Joke(string mine = null)
         {
@@ -984,11 +986,11 @@ namespace Joojkk.CampusLife
             var tone = GirlInfo.ToneOf(h);
             var chance = JokeChance(s);
             s.Did.Add("joke");
-            var roll = Random.value;
             var b = new SceneBuilder(h, true);
             b.Me(mine ?? ConvoLines.PlayerJoke());
-            if (roll < chance) { b.Her_(Everyday(h, "joke.good")); Play(b, roll < chance * 0.4f ? 2 : 1, "♪ She laughed."); return; }
-            var hurt = roll > 0.92f && (tone == Tone.Gentle || MoodOf(h) == CampusLife.Mood.Upset);
+            // Context, not a roll (2026-11-07): her tone, SEN, how the talk is going and her mood; a big laugh when it is easy.
+            if (Ctx(h, "joke", chance)) { b.Her_(Everyday(h, "joke.good")); Play(b, chance >= 0.75f ? 2 : 1, "♪ She laughed."); return; }
+            var hurt = chance < 0.3f && (tone == Tone.Gentle || MoodOf(h) == CampusLife.Mood.Upset);
             b.Her_(Everyday(h, hurt ? "joke.hurt" : "joke.bad"));
             Play(b, -1, hurt ? "That joke hurt her feelings." : null, hurt ? (Action)(() => Social.Add(Social.Kinds.Rude, h)) : null);
         }
@@ -1026,7 +1028,10 @@ namespace Joojkk.CampusLife
             var chance = 0.35f + stat / 200f + (kind == "club" ? 0.15f : 0f) + (kind == "looks" ? (h.relation >= 1 ? 0.1f : -0.15f) : 0f);
             if (tone == Tone.Cool) chance -= 0.1f;
             if (sameDay) chance -= 0.2f;
-            var ok = Random.value < chance;
+            chance += (h.favor - 40) / 200f + Consent.Familiar(h, new List<string>());   // what she thinks of you and how long you know her
+            var m = MoodOf(h);
+            if (m == CampusLife.Mood.Cheerful) chance += 0.1f; else if (m == CampusLife.Mood.Upset || m == CampusLife.Mood.Stressed) chance -= 0.15f;
+            var ok = Ctx(h, "compliment:" + kind, chance);
             b.Her_(ok ? RomanceSay(h, "compliment", "yes", kind == "looks" ? "looks" : "other") : RomanceSay(h, "compliment", "no"));
             Play(b, ok ? 1 : 0, ok ? "♪ She's happy you noticed." : null, () => { gs.ComplimentDay = S.Day; gs.ComplimentKind = what; });
         }
@@ -1054,15 +1059,15 @@ namespace Joojkk.CampusLife
             return Consent.Familiar(h, r) + Consent.Pushing(h, step, out again, r);
         }
 
-        /// <summary>One roll of a classic romance step, counted as a try with her today.</summary>
+        /// <summary>A classic romance step, decided by the context (its score at the bar), counted as a try with her today.</summary>
         private static bool Lands(SaveData.Heroine h, string step, float chance)
         {
-            var ok = Random.value < chance + Pushy(h, step);
+            var ok = Ctx(h, step + "#" + Consent.Tries(h, step), chance + Pushy(h, step));
             Consent.Pushed(h, step);
             return ok;
         }
 
-        private static string FlirtOdds(Session s) { return G.Sens >= 40 ? "  <color=#ff8ad8>(" + Mathf.RoundToInt(FlirtChance(s) * 100) + "%)</color>" : ""; }
+        private static string FlirtOdds(Session s) { return G.Sens >= 40 ? "  <color=#ff8ad8>(" + Read(FlirtChance(s)) + ")</color>" : ""; }
 
         private static void Flirt()
         {
@@ -1084,7 +1089,35 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>The odds in pink once SEN is 40, like the flirting ones.</summary>
-        private static string Odds(float chance) { return G.Sens >= 40 ? "  <color=#ff8ad8>(" + Mathf.RoundToInt(chance * 100) + "%)</color>" : ""; }
+        private static string Odds(float chance) { return G.Sens >= 40 ? "  <color=#ff8ad8>(" + Read(chance) + ")</color>" : ""; }
+
+        /// <summary>
+        /// The context, read (2026-11-07: "não é para ser chance. é contexto"): the score decides, so the hint says how it
+        /// stands, not a percent: "she'd like it", "hard to say" (a toss-up at the bar) or "not now".
+        /// </summary>
+        internal static string Read(float score) { return score >= 0.5f + Consent.Band ? "she'd like it" : score >= 0.5f - Consent.Band ? "hard to say" : "not now"; }
+
+        /// <summary>Context decides (2026-11-07); the director's dice only break a score right at the bar.</summary>
+        internal static bool Ctx(SaveData.Heroine h, string what, float score) { return Consent.Yes(h, "talk:" + what, score); }
+
+        /// <summary>
+        /// Whether she tells you something of herself today (a like, in "How was your day?"): your INT (you ask the right
+        /// questions), trust, the days you have talked, and her mood (cheerful and lonely open up, stressed and upset close).
+        /// </summary>
+        internal static bool Opens(SaveData.Heroine h)
+        {
+            var gs = S.Girl(GirlInfo.Key(h));
+            var c = 0.2f + G.Int / 200f + Social.Trust(h) / 250f + Mathf.Min(0.2f, gs.TalkDays.Distinct().Count() * 0.03f);
+            var m = MoodOf(h);
+            if (m == CampusLife.Mood.Cheerful || m == CampusLife.Mood.Lonely) c += 0.1f; else if (m == CampusLife.Mood.Stressed || m == CampusLife.Mood.Upset) c -= 0.15f;
+            return Ctx(h, "opens", c);
+        }
+
+        /// <summary>How hard a grudge is to explain away: how bad it was to her (Social.Effect) and whether she saw it herself.</summary>
+        internal static float Weight(SaveData.Heroine h, Incident g)
+        {
+            return Mathf.Max(0, -Social.Effect(h, g)) / 40f + (Social.Saw(h, g) ? 0.2f : 0f);
+        }
 
         private static float Bonus(SaveData.Heroine h)
         {
@@ -1236,7 +1269,8 @@ namespace Joojkk.CampusLife
             chance += mood == CampusLife.Mood.Cheerful ? 0.12f : mood == CampusLife.Mood.Flirty ? 0.06f : mood == CampusLife.Mood.Upset ? -0.2f : mood == CampusLife.Mood.Stressed ? -0.12f : 0f;
             chance -= h.isAnger ? 0.2f : h.anger / 400f;
             chance -= Mathf.Min(0.2f, 0.05f * Social.Grudges(h).Count);
-            var ok = Random.value < chance;
+            chance -= Weight(h, g);
+            var ok = Ctx(h, "explain:" + g.Id, chance);
             s.Did.Add("cleared");
             var b = new SceneBuilder(h, true);
             b.Me(ConvoLines.PlayerExplain(g.Kind));

@@ -487,10 +487,10 @@ namespace Joojkk.CampusLife
             }
             TouchNote(on + " line " + (rule != null ? rule.Id : "?"));
             var b = new SceneBuilder(h, true);
-            if (p.Kiss == "yes") b.Narr(Lines.Pick("You lean in and kiss her softly.", "You touch her lips, then lean in and kiss her.", "You lean in. She doesn't pull away, and your lips meet.", "You brush her lips with a finger and kiss her before she can say a word."));
-            else if (p.Kiss == "wary") b.Narr(Lines.Pick("You lean in. She stiffens, hesitates... and doesn't pull away.", "Your lips meet hers. She holds still, eyes squeezed shut.", "You lean in slowly. She flinches, then lets you kiss her.", "She freezes when you lean in, but she doesn't turn her face away."));
-            else if (p.Kiss == "wary_no") b.Narr(Lines.Pick("You lean in. She leans in too... then stops an inch away and turns aside, flustered.", "Your lips almost meet. She pulls back at the last second, cheeks burning.", "She closes her eyes when you lean in, then catches herself and steps back.", "For a moment she lets you come close. Then she puts a finger on your lips."));
-            else if (p.Kiss == "no") b.Narr(Lines.Pick("You lean in for a kiss. She turns her face away.", "Your finger brushes her lips; she steps back before you can lean in.", "You lean in. She puts a hand on your chest and stops you."));
+            if (p.Kiss == "yes") b.Narr(BeatSay(h, "kiss.yes.narr") ?? "...");
+            else if (p.Kiss == "wary") b.Narr(BeatSay(h, "kiss.wary.narr") ?? "...");
+            else if (p.Kiss == "wary_no") b.Narr(BeatSay(h, "kiss.waryno.narr") ?? "...");
+            else if (p.Kiss == "no") b.Narr(BeatSay(h, "kiss.no.narr") ?? "...");
             b.Face(h, p.Kiss == "yes" ? Feel.Love : p.Kiss == "wary" || p.Kiss == "wary_no" ? Feel.Shy : FeelOf(rule, c)).Her_(line);
             // Weight: she walks off after the third silence if she barely knows you; a crowd watching you
             // touch her gets talked about; a rival watching remembers.
@@ -505,8 +505,10 @@ namespace Joojkk.CampusLife
             // Someone who matters walks over during the second silence: her friend teases you both and the
             // story spreads, a rival sneers and pushes her closer to you, your girlfriend sees who you are with.
             SaveData.Heroine by = null;
-            if (on == "idle" && c["idle"] == "2" && c.ContainsKey("wrel") && c["wrel"] != "other" && Random.value < 0.5f)
+            if (on == "idle" && c["idle"] == "2" && c.ContainsKey("wrel") && c["wrel"] != "other")
                 by = Onlookers(h).FirstOrDefault(x => GirlInfo.FirstName(x) == c["watcher"]);
+            // She walks over when it matters to her (context, 2026-11-07): your girlfriend, a rival, or a close friend.
+            if (by != null && !by.isGirlfriend && Social.Bond(h, by) > -30 && Social.Bond(h, by) < 45) by = null;
             if (by != null)
             {
                 b = new SceneBuilder(h, true);
