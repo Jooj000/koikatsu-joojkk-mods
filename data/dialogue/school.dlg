@@ -210,7 +210,7 @@ when school=event evkind=sports role=teacher
 hook f_school_sports_staff
 opens ask,share,tease
 - {classes}[I'm timing the races at {event}.|They've given me the whistle for {event}.] [Don't cheat. I can see you.|I've been told to look enthusiastic.]
-- [{Event} means a day out in the sun for the staff too.|At {event} even the professors run.] [There's a teachers' relay. Don't watch.|Don't laugh at my form.]
+- [{Event} means a day out in the sun for the staff too.|At {event} even the professors run.] [There's a professors' relay. Don't watch.|Don't laugh at my form.]
 
 @rule school.nurse
 on school

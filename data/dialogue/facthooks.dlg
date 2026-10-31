@@ -928,7 +928,7 @@ when hook=f_school_gift_staff
 @rule react.h.f_school_gift_staff.share
 on react
 when hook=f_school_gift_staff move=share fit=good|neutral
-- It gets into the papers. I can smell it on the homework.
+- It gets into the papers. I can smell it on the assignments.
 - Every year, yes.
 
 @rule move.h.f_school_gift_staff.tease
@@ -1334,7 +1334,7 @@ when hook=f_school_sports_staff move=share fit=good|neutral
 @rule move.h.f_school_sports_staff.tease
 on move.tease
 when hook=f_school_sports_staff
-- Say you'd pay to see the teachers' relay
+- Say you'd pay to see the professors' relay
 
 @rule react.h.f_school_sports_staff.tease
 on react
@@ -5585,7 +5585,7 @@ when hook=f_small_t_reina_future
 @rule react.h.f_small_t_reina_future.share
 on react
 when hook=f_small_t_reina_future move=share fit=good|neutral
-- Then that's your homework. One page.
+- Then that's your assignment. One page.
 - Honest, at least. Start tonight.
 
 @rule move.h.f_small_t_reina_future.praise
@@ -5654,7 +5654,7 @@ when hook=f_day_t_nonoka_up
 @rule react.h.f_day_t_nonoka_up.ask
 on react
 when hook=f_day_t_nonoka_up move=ask fit=good|neutral
-- She's a teacher now! Can you imagine?
+- She's a professor now! Can you imagine?
 - She remembered what I packed for her lunch.
 
 @rule move.h.f_day_t_nonoka_up.praise
@@ -7084,7 +7084,7 @@ on react
 when hook=f_you_h_student_teacher fit=bad
 feel pout
 - That is not an answer.
-- Detention would be getting off lightly.
+- A formal warning would be getting off lightly.
 
 @rule move.h.f_you_h_student_teacher_jealous.admit
 on move.admit

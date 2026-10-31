@@ -22,7 +22,7 @@ on me.small
 when subject=future job=nurse
 - [Did you always want to be a nurse?|Will you stay at this university?]
 - [What would you do if you weren't a nurse?|Have you ever worked at a hospital?]
-- [Do you like working at a school?|What made you choose the infirmary?]
+- [Do you like working at a college?|What made you choose the infirmary?]
 
 @rule me.small.nursing
 on me.small
@@ -377,7 +377,7 @@ when kind=small shape=state subject=teaching|exams|school|future role=teacher
 @rule move.tease.state.job.teacher
 on move.tease
 when kind=small shape=state subject=teaching|exams|school|future role=teacher
-- [Joke about professors' lives|Ask for less assignments]
+- [Joke about professors' lives|Ask for less coursework]
 
 @rule move.praise.state.job.teacher
 on move.praise
@@ -901,7 +901,7 @@ when hook=n_records move=tease fit=good|neutral
 on react
 when hook=n_records fit=bad
 - I've been up all night. Not now.
-- I filed every record in this school. I have no patience left.
+- I filed every record in this university. I have no patience left.
 
 @rule day.h.n_checkups
 on day

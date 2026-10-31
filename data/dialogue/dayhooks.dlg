@@ -90,7 +90,7 @@ when hook=fine_routine
 on react
 when hook=fine_routine move=share fit=good|neutral
 - Then we were probably bored at the same time.
-- So it's the whole school, not just me.
+- So it's the whole university, not just me.
 - At least you get it.
 
 @rule move.h.fine_routine.tease
@@ -142,7 +142,7 @@ on react
 when hook=fine_forgot move=share fit=good|neutral
 - Good, I'm not losing it, then.
 - And do you ever remember what it was?
-- Is it the air in this school?
+- Is it the air in this university?
 
 @rule move.h.fine_forgot.tease
 on move.tease
@@ -312,7 +312,7 @@ when hook=cheerful_news
 on react
 when hook=cheerful_news move=tease fit=good|neutral
 - Ha! No! Not even close.
-- If I had, would I still be at school?
+- If I had, would I still be on campus?
 - Keep guessing. It's funny.
 
 @rule day.h.hungry_starving
@@ -323,7 +323,7 @@ opens invite,share,tease
 fit tease=neutral invite=neutral
 - Honestly? I'm starving. I skipped breakfast.
 - My stomach has been growling all class.
-- My stomach is louder than the teacher.
+- My stomach is louder than the professor.
 - I'm so hungry I can't think. If I faint, tell my family I tried.
 
 @rule react.h.hungry_starving.bad
@@ -607,7 +607,7 @@ on react
 when hook=bored_clock move=ask fit=good|neutral
 - Ethics. Or maybe all of them.
 - The one after lunch. It never ends.
-- Math. The teacher read from the book. All of it.
+- Math. The professor read from the book. All of it.
 
 @rule move.h.bored_clock.invite
 on move.invite
@@ -730,7 +730,7 @@ when hook=bored_entertain move=share fit=good|neutral
 @rule move.h.bored_entertain.tease
 on move.tease
 when hook=bored_entertain
-- Do a terrible impression of a teacher
+- Do a terrible impression of a professor
 
 @rule react.h.bored_entertain.tease
 on react
@@ -933,7 +933,7 @@ when hook=stressed_favors
 @rule react.h.stressed_favors.ask
 on react
 when hook=stressed_favors move=ask fit=good|neutral
-- Everyone. Classmates, teachers. They mean well.
+- Everyone. Classmates, professors. They mean well.
 - Whoever finds me first.
 - It'd be faster to list who hasn't.
 
@@ -1303,7 +1303,7 @@ on react
 when hook=lonely_oddone move=ask fit=good|neutral
 - Nothing, that's the thing. Nobody was mean. They just didn't look over.
 - I ended up doing the work alone. It was fine.
-- The teacher put me in a group of two. Awkward.
+- The professor put me in a group of two. Awkward.
 
 @rule move.h.lonely_oddone.invite
 on move.invite
@@ -1323,7 +1323,7 @@ when mood=lonely
 hook lonely_invisible
 opens comfort,share,ask
 feel sad
-- The classroom feels big when nobody talks to you.
+- The lecture hall feels big when nobody talks to you.
 - Break time is long when you're alone.
 - Do you ever feel invisible? Today's like that.
 - You're the first person I've really talked to today. That's a little embarrassing.
@@ -1429,7 +1429,7 @@ when mood=lonely rel=girlfriend|lover
 hook lonely_needyou
 opens invite,comfort,ask
 feel sad
-- Are you free after school? I don't want to go alone.
+- Are you free after class? I don't want to go alone.
 - Can we walk home together? Please?
 - Stay with me after class today. I don't want to be by myself.
 
@@ -1692,7 +1692,7 @@ hook sleepy_class
 opens ask,share,tease
 fit tease=neutral
 - I almost fell asleep in class.
-- The teacher caught me nodding off.
+- The professor caught me nodding off.
 - My notes turn into squiggles after the first line. I can't read them.
 - I wrote half my notes in a straight line down the page.
 
@@ -1799,7 +1799,7 @@ opens ask,share,tease
 fit tease=neutral
 - I put my shoes on the wrong feet this morning. I'm not okay.
 - I got off the train one stop late. That's how tired.
-- I walked into the wrong classroom. I sat down, too.
+- I walked into the wrong lecture hall. I sat down, too.
 
 @rule react.h.sleepy_clumsy.bad
 on react
@@ -2786,7 +2786,7 @@ opens ask,tease,share
 feel smile
 - It was nice! We talked the whole time.
 - Lunch with {who} was fun. I like eating with {who}.
-- {Who} did an impression of the teacher. I almost choked.
+- {Who} did an impression of the professor. I almost choked.
 - We got so busy talking, {who} and I, we almost missed the bell.
 
 @rule react.h.lunchwith.bad
@@ -2803,7 +2803,7 @@ when hook=lunchwith
 @rule react.h.lunchwith.ask
 on react
 when hook=lunchwith move=ask fit=good|neutral
-- Oh, nothing. Teachers, food, who likes who.
+- Oh, nothing. Professors, food, who likes who.
 - {Who} did most of the talking. I just laughed.
 - Stuff you wouldn't care about. Hehe.
 
@@ -3202,7 +3202,7 @@ feel smile
 - It's been a slow day... the rain makes everything soft.
 - Quiet. I like rainy days, a little.
 - I've been watching the rain from the window. It's peaceful.
-- Everyone's voices sound softer today. The school's so quiet in the rain.
+- Everyone's voices sound softer today. The university's so quiet in the rain.
 
 @rule react.h.rain_soft.bad
 on react
@@ -3470,7 +3470,7 @@ when role=teacher mood=none
 hook t_fine
 opens ask,share,tease
 - [Two classes down, three to go.|Normal so far.|The usual.] [Nobody's set anything on fire yet.|The chalk still works.|I'll take it.]
-- It's a teacher's day, that's all. [Lessons, papers, more papers.|Attendance, lessons, coffee.]
+- It's a professor's day, that's all. [Lessons, papers, more papers.|Attendance, lessons, coffee.]
 - Not bad. Quiet, for once.
 
 @rule react.h.t_fine.bad
@@ -3489,7 +3489,7 @@ on react
 when hook=t_fine move=ask fit=good|neutral
 - Every day has one good moment. I wait for it.
 - Ask me again during exam week.
-- You'd be surprised what happens in a classroom.
+- You'd be surprised what happens in a lecture hall.
 
 @rule move.h.t_fine.share
 on move.share
@@ -3506,7 +3506,7 @@ when hook=t_fine move=share fit=good|neutral
 @rule move.h.t_fine.tease
 on move.tease
 when hook=t_fine
-- Ask if she's going easy on homework
+- Ask if she's going easy on assignments
 
 @rule react.h.t_fine.tease
 on react
@@ -3521,9 +3521,9 @@ when role=teacher tcause=raise
 hook t_raise
 opens ask,tease,praise
 feel smile
-- [I shouldn't say this at school, but...|Between us?|Can you keep a secret?] [I got a raise!|My salary went up this month.|The school finally gave me a raise.]
-- [You can tell, huh?|Do I look that happy?] [I just saw my new pay slip.|Let's just say the principal signed a very nice paper.]
-- [Today's a good day to be a teacher.|I might actually buy myself something nice.] A raise does that.
+- [I shouldn't say this on campus, but...|Between us?|Can you keep a secret?] [I got a raise!|My salary went up this month.|The university finally gave me a raise.]
+- [You can tell, huh?|Do I look that happy?] [I just saw my new pay slip.|Let's just say the dean signed a very nice paper.]
+- [Today's a good day to be a professor.|I might actually buy myself something nice.] A raise does that.
 
 @rule react.h.t_raise.bad
 on react
@@ -3574,7 +3574,7 @@ hook t_results
 opens ask,praise,share
 feel smile
 - [My class's test results came in.|The averages are in.] [They actually listened to me!|Best scores I've had all year.]
-- [You know what makes a teacher happy?|I'm so proud today.] [Good grades, that's what.|Even my worst student passed.]
+- [You know what makes a professor happy?|I'm so proud today.] [Good grades, that's what.|Even my worst student passed.]
 - [I graded the last test this morning.|All that nagging paid off.] [Everyone passed!|I could cry. A happy cry.]
 
 @rule react.h.t_results.bad
@@ -3625,9 +3625,9 @@ when role=teacher tcause=praise
 hook t_praise
 opens ask,tease,praise
 feel smile
-- [The principal stopped me in the hall.|I got called to the principal's office.] [Praise, for once!|He said my class is the best in the year.]
+- [The dean stopped me in the hall.|I got called to the dean's office.] [Praise, for once!|He said my class is the best in the year.]
 - [Someone important noticed my work.|It's nice to be told you're doing well.] [Don't laugh.|At my age, too.]
-- I've been floating since this morning. The principal said something nice. [That never happens.|Enjoy it while it lasts.]
+- I've been floating since this morning. The dean said something nice. [That never happens.|Enjoy it while it lasts.]
 
 @rule react.h.t_praise.bad
 on react
@@ -3638,7 +3638,7 @@ when hook=t_praise fit=bad
 @rule move.h.t_praise.ask
 on move.ask
 when hook=t_praise
-- Ask what the principal said
+- Ask what the dean said
 
 @rule react.h.t_praise.ask
 on react
@@ -3650,19 +3650,19 @@ when hook=t_praise move=ask fit=good|neutral
 @rule move.h.t_praise.tease
 on move.tease
 when hook=t_praise
-- Ask what she paid the principal
+- Ask what she paid the dean
 
 @rule react.h.t_praise.tease
 on react
 when hook=t_praise move=tease fit=good|neutral
 - How dare you. Nothing. Much.
 - Are you trying to ruin my day?
-- That's extra homework. ...Kidding.
+- That's extra coursework. ...Kidding.
 
 @rule move.h.t_praise.praise
 on move.praise
 when hook=t_praise
-- Say the principal is right
+- Say the dean is right
 
 @rule react.h.t_praise.praise
 on react
@@ -3747,7 +3747,7 @@ when hook=t_grading_stressed
 @rule react.h.t_grading_stressed.comfort
 on react
 when hook=t_grading_stressed move=comfort fit=good|neutral
-- Now the student is worrying about the teacher. Thank you.
+- Now the student is worrying about the professor. Thank you.
 - I needed to hear that today.
 - It's the job. But it's nice of you to say.
 
@@ -3781,8 +3781,8 @@ when role=teacher tcause=lessons
 hook t_lessons
 opens comfort,ask,tease
 feel sad
-- [I rewrote my lesson plan until dawn.|Tomorrow's lesson kept me up.] [It still isn't good.|Nobody warns you about this part of the job.]
-- [Mmh... lesson plans.|I fell asleep on my notes.] [I have ink on my face, don't I?|Don't tell the class.]
+- [I rewrote my lecture notes until dawn.|Tomorrow's lesson kept me up.] [It still isn't good.|Nobody warns you about this part of the job.]
+- [Mmh... lecture notes.|I fell asleep on my notes.] [I have ink on my face, don't I?|Don't tell the class.]
 - I kept thinking of a better way to explain it. [At three in the morning.|Sleep didn't stand a chance.]
 
 @rule react.h.t_lessons.bad
@@ -3833,9 +3833,9 @@ when role=teacher tcause=staffparty
 hook t_staffparty
 opens tease,ask,comfort
 feel sad
-- [Quietly, please.|Not so loud.] [The staff party went late.|The vice principal kept pouring.]
-- [Teachers can't say no to the principal's drink.|The other teachers dragged me out last night.] [My head hurts.|Don't tell the students.]
-- Forget anything you think you know about teachers. Last night's staff party happened.
+- [Quietly, please.|Not so loud.] [The faculty party went late.|The vice dean kept pouring.]
+- [Professors can't say no to the dean's drink.|The other professors dragged me out last night.] [My head hurts.|Don't tell the students.]
+- Forget anything you think you know about professors. Last night's faculty party happened.
 
 @rule react.h.t_staffparty.bad
 on react
@@ -3846,7 +3846,7 @@ when hook=t_staffparty fit=bad
 @rule move.h.t_staffparty.tease
 on move.tease
 when hook=t_staffparty
-- Ask what the vice principal sang
+- Ask what the vice dean sang
 
 @rule react.h.t_staffparty.tease
 on react
@@ -3864,7 +3864,7 @@ when hook=t_staffparty
 on react
 when hook=t_staffparty move=ask fit=good|neutral
 - The last train. I think.
-- Too late for a school night.
+- Too late for a weeknight.
 - I remember dessert. After that, no.
 
 @rule move.h.t_staffparty.comfort
@@ -3905,7 +3905,7 @@ on react
 when hook=t_parents move=comfort fit=good|neutral
 - It is. Thank you for noticing.
 - You have no idea. But thank you.
-- I'll survive. Teachers always do.
+- I'll survive. Professors always do.
 
 @rule move.h.t_parents.ask
 on move.ask
@@ -3937,20 +3937,20 @@ when role=teacher tcause=principal
 hook t_principal
 opens comfort,ask,share
 feel worried
-- [The principal wants the report by Friday.|The principal has been on my back all day.] [As if I had nothing else to do.|I can't say what I think of that.]
-- [Another meeting about the budget.|Another form from the principal's office.] [We have less chalk than ambition.|I became a teacher to teach.]
-- If I look tense, it's the principal. Don't repeat that.
+- [The dean wants the report by Friday.|The dean has been on my back all day.] [As if I had nothing else to do.|I can't say what I think of that.]
+- [Another meeting about the budget.|Another form from the dean's office.] [We have less chalk than ambition.|I became a professor to teach.]
+- If I look tense, it's the dean. Don't repeat that.
 
 @rule react.h.t_principal.bad
 on react
 when hook=t_principal fit=bad
-- Please. I get enough of that from the principal.
+- Please. I get enough of that from the dean.
 - I've had my fill of that today.
 
 @rule move.h.t_principal.comfort
 on move.comfort
 when hook=t_principal
-- Say the principal should leave her alone
+- Say the dean should leave her alone
 
 @rule react.h.t_principal.comfort
 on react
@@ -3962,7 +3962,7 @@ when hook=t_principal move=comfort fit=good|neutral
 @rule move.h.t_principal.ask
 on move.ask
 when hook=t_principal
-- Ask what the principal wants
+- Ask what the dean wants
 
 @rule react.h.t_principal.ask
 on react
@@ -3989,20 +3989,20 @@ when role=teacher tcause=complaint
 hook t_complaint
 opens comfort,ask,share
 feel sad
-- [A parent complained about me.|Someone went to the principal about my class.] [After everything I do for those kids.|I had to apologize. Me.]
+- [A parent complained about me.|Someone went to the dean about my class.] [After everything I do for those kids.|I had to apologize. Me.]
 - A complaint came in about me. One complaint undoes a year of work.
-- [Teachers aren't supposed to look upset.|I'm keeping it together, more or less.] [That complaint hurt.|I'll be professional tomorrow.]
+- [Professors aren't supposed to look upset.|I'm keeping it together, more or less.] [That complaint hurt.|I'll be professional tomorrow.]
 
 @rule react.h.t_complaint.bad
 on react
 when hook=t_complaint fit=bad
 - Would you like to file one too?
-- That's what I get for opening up at school.
+- That's what I get for opening up on campus.
 
 @rule move.h.t_complaint.comfort
 on move.comfort
 when hook=t_complaint
-- Say she's a good teacher
+- Say she's a good professor
 
 @rule react.h.t_complaint.comfort
 on react
@@ -4085,16 +4085,16 @@ on react
 when hook=t_ignored move=tease fit=good|neutral
 - I know. I saw you.
 - Is that supposed to help?
-- Extra homework. For honesty.
+- Extra coursework. For honesty.
 
 @rule day.h.t_meeting
 on day
 when role=teacher tcause=meeting
 hook t_meeting
 opens ask,tease,invite
-- [Two hours of staff meeting.|The staff meeting went on forever.] [About the color of the new folders.|I drew a whole cat in my notes.]
-- [I've been counting ceiling tiles in the staff meeting.|If I have to hear "as discussed" one more time...] Rescue me.
-- Nothing happens in the staff room but meetings. Say something interesting.
+- [Two hours of faculty meeting.|The faculty meeting went on forever.] [About the color of the new folders.|I drew a whole cat in my notes.]
+- [I've been counting ceiling tiles in the faculty meeting.|If I have to hear "as discussed" one more time...] Rescue me.
+- Nothing happens in the faculty room but meetings. Say something interesting.
 
 @rule react.h.t_meeting.bad
 on react
@@ -4117,7 +4117,7 @@ when hook=t_meeting move=ask fit=good|neutral
 @rule move.h.t_meeting.tease
 on move.tease
 when hook=t_meeting
-- Say teachers have it easy
+- Say professors have it easy
 
 @rule react.h.t_meeting.tease
 on react
@@ -4144,9 +4144,9 @@ when role=teacher tcause=staffroom
 hook t_staffroom
 opens ask,comfort,invite
 feel sad
-- [The staff room is empty at this hour.|Everyone went home already.] [You get used to it.|It's quiet in there.]
-- [Teachers eat lunch alone a lot, you know.|Students have each other. We have marking.] [It's fine.|Don't feel sorry for me.]
-- It's nice that you came to talk. Nobody talks to a teacher unless they need something.
+- [The faculty room is empty at this hour.|Everyone went home already.] [You get used to it.|It's quiet in there.]
+- [Professors eat lunch alone a lot, you know.|Students have each other. We have marking.] [It's fine.|Don't feel sorry for me.]
+- It's nice that you came to talk. Nobody talks to a professor unless they need something.
 
 @rule react.h.t_staffroom.bad
 on react
@@ -4187,7 +4187,7 @@ when hook=t_staffroom
 on react
 when hook=t_staffroom move=invite fit=good|neutral
 - Just for a bit, then. Thank you.
-- A teacher shouldn't need that. ...Stay.
+- A professor shouldn't need that. ...Stay.
 - I'd like that. Don't tell the others.
 
 @rule day.h.t_nolunch
@@ -4196,7 +4196,7 @@ when role=teacher tcause=nolunch
 hook t_nolunch
 opens ask,tease,invite
 - [I worked through lunch.|I skipped lunch to finish these papers.] [My stomach is louder than my class.|Don't be like me.]
-- I've had coffee and half a sandwich since morning. A teacher's diet.
+- I've had coffee and half a sandwich since morning. A professor's diet.
 - I can't teach on an empty stomach. Next period is going to be rough.
 
 @rule react.h.t_nolunch.bad
@@ -5166,7 +5166,7 @@ when hook=after_free
 on react
 when hook=after_free move=invite fit=good|neutral
 - Sure. I've got time.
-- Okay. Somewhere not in a classroom.
+- Okay. Somewhere not in a lecture hall.
 - Why not. Where to?
 
 @rule move.h.after_free.share
@@ -5271,7 +5271,7 @@ when hook=bored_rain
 @rule react.h.bored_rain.invite
 on react
 when hook=bored_rain move=invite fit=good|neutral
-- Okay, as long as it's not homework.
+- Okay, as long as it's not assignments.
 - Anything. I'll take anything.
 - You'd better have a good idea.
 
@@ -5324,7 +5324,7 @@ when hook=lonely_friends
 @rule react.h.lonely_friends.ask
 on react
 when hook=lonely_friends move=ask fit=good|neutral
-- Club stuff, dates, homework. Everyone has something.
+- Club stuff, dates, assignments. Everyone has something.
 - I don't know. They just disappeared.
 - I didn't ask. I didn't want to sound needy.
 
@@ -5346,7 +5346,7 @@ when role=student mood=stressed exam=no period=day|lunch
 hook stressed_homework
 opens comfort,ask,invite
 feel worried
-- Too much homework. I don't know where to start.
+- Too much coursework. I don't know where to start.
 - Three assignments due this week. I'm drowning.
 - My head's full. Too many things to remember.
 
@@ -5976,13 +5976,13 @@ feel smile
 @rule react.h.t_breakthrough.bad
 on react
 when hook=t_breakthrough fit=bad
-- Never mind. You wouldn't understand teacher things.
+- Never mind. You wouldn't understand professor things.
 - That's not what I wanted to hear today.
 
 @rule move.h.t_breakthrough.praise
 on move.praise
 when hook=t_breakthrough
-- Say she's a good teacher
+- Say she's a good professor
 
 @rule react.h.t_breakthrough.praise
 on react
@@ -6006,7 +6006,7 @@ when hook=t_breakthrough move=ask fit=good|neutral
 @rule move.h.t_breakthrough.share
 on move.share
 when hook=t_breakthrough
-- Say a teacher once did that for you
+- Say a professor once did that for you
 
 @rule react.h.t_breakthrough.share
 on react

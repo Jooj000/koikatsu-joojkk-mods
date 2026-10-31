@@ -119,7 +119,7 @@ on duo3.open.a
 when moment=study tone=energetic
 feel worried
 - [Exams! Help! We're doomed!|Okay, study group! You're in it now!|Tell us you understand math. Please.]
-- [Emergency study session! You're the teacher now!|We're going to cram until the guard kicks us out!]
+- [Emergency study session! You're the professor now!|We're going to cram until the guard kicks us out!]
 
 @rule duo3.open.a.study.cool
 on duo3.open.a

@@ -128,7 +128,7 @@ when shared=yes myrole=student otherrole=student
 - You're into {sharedlike} too, aren't you? >> I am, a little. >> Totally! >> I am. >> Took you long enough to notice.
 - Been thinking about {sharedlike} lately? >> A little. You too? >> All the time! >> No. >> Why, do you need tips?
 - We're always ending up in the same place, aren't we? >> Hehe, I guess we are. >> Fate! Obviously! >> Coincidence. >> Are you following me?
-- We should sit together in class too. >> I'd like that. >> Yes! Let's ask to switch seats! >> If the teacher lets us. >> Only if you stop stealing my eraser.
+- We should sit together in class too. >> I'd like that. >> Yes! Let's ask to switch seats! >> If the professor lets us. >> Only if you stop stealing my eraser.
 
 # ================= how the other one looks =================
 @rule duo3.talk.sleepy

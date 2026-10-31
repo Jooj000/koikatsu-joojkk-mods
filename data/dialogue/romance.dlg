@@ -872,7 +872,7 @@ when act=compliment q=again lvl=effort tone=cool
 @rule romance.compliment.again.effort.teasing
 on romance
 when act=compliment q=again lvl=effort tone=teasing
-- My hard work again? Are you trying to get me to do your homework?
+- My hard work again? Are you trying to get me to do your assignments?
 - You said that already. Running low on things you like about me?
 - Again? Careful, I'll start thinking that's all you see.
 - Effort, effort. Flattery is starting to show its seams.

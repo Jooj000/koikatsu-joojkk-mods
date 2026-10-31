@@ -135,7 +135,7 @@ when amood=stressed close=0 tone=gentle
 @rule ask.mood.stressed.0.energetic
 on ask
 when amood=stressed close=0 tone=energetic
-- Stressed! Way too much assignments this week.
+- Stressed! Way too much coursework this week.
 - Stressed! So many deadlines!
 - Busy busy busy! Too much stuff!
 - Stressed! Assignments overload!
@@ -488,7 +488,7 @@ when amood=stressed close=1 tone=gentle
 @rule ask.mood.stressed.1.energetic
 on ask
 when amood=stressed close=1 tone=energetic
-- Ugh, my head's gonna explode! Too much assignments!
+- Ugh, my head's gonna explode! Too much coursework!
 - Three reports due this week! Who does that?!
 - My brain is full! No more room! Help!
 - Assignments explosion!
@@ -842,16 +842,16 @@ when amood=stressed close=2 tone=gentle
 - There's so much to do... I don't know where to start.
 - I've been worrying all day. Can I lean on you a little?
 - I'm so worried about the tests...
-- There's so much assignments... I'm overwhelmed.
+- There's so much coursework... I'm overwhelmed.
 - I'm a bit scared... could I lean on you?
 
 @rule ask.mood.stressed.2.energetic
 on ask
 when amood=stressed close=2 tone=energetic
-- Ugh, my head's gonna explode! Too much assignments!
+- Ugh, my head's gonna explode! Too much coursework!
 - Three reports due this week! Who does that?!
 - My brain is full! No more room! Help!
-- Too much assignments! My brain's melting!
+- Too much coursework! My brain's melting!
 - Deadlines everywhere! Aaah!
 - I need a vacation! Now!
 

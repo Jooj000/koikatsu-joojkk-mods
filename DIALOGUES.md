@@ -1137,7 +1137,7 @@ Placeholders like {Name}, {OName} (second girl), {place} or {item} are filled in
   - _gentle:_ Wait! The one this morning was... not the real one. This is the real one. || Wait! That one was... this is the real one. || The real one is this... please take it. || This morning's wasn't true. This one is.
   - _energetic:_ Hah... hah... I forgot to give you the SPECIAL one! || Forgot the SPECIAL one! Here! || Wait! The real one! || Hah... this one's the real deal!
   - _cool:_ ...That one on campus was for show. This one is honmei. Don't make me say it twice. || ...This is honmei. Once only. || ...The real one. Don't make me repeat. || ...That was decoy. This is real.
-  - _teasing:_ The one on campus was obligation. This one's... not. Got it? || That was obligation. This isn't. Got it? || The real one. Treasure it. || Campus is was fake. This is real.
+  - _teasing:_ The one on campus was obligation. This one's... not. Got it? || That was obligation. This isn't. Got it? || The real one. Treasure it. || The campus one was fake. This is real.
 - **Choice:** Promise to return it on White Day | Take her cold hand | Just say thank you
 - **You:** I'll give you something back on White Day. Something good.
 - **Girl:** {T}

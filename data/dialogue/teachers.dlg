@@ -46,7 +46,7 @@ when kind=day role=teacher
 on move.tease
 when kind=day role=teacher
 - {classes}[Joke about professors' lives|Ask for easier assignments|Tease her, sensei or not|Ask if that means no test]
-- {classes}[Ask if professors get homework too|Say she'd fail her own pop quiz|Ask what she does when nobody's grading]
+- {classes}[Ask if professors get assignments too|Say she'd fail her own pop quiz|Ask what she does when nobody's grading]
 
 # ================= when you ask her why =================
 @rule react.comfort.teacher
@@ -70,7 +70,7 @@ on react
 when move=tease role=teacher fit=good|neutral
 feel laugh
 - {classes}[Are you teasing your professor?|Bold, for someone with a test on Monday.] [{laugh}|I'm writing that down.]
-- {classes}[I can give you extra assignments, you know.|Do you want to clean the lecture hall?] [{laugh}|Just a reminder.]
+- {classes}[I can give you extra coursework, you know.|Do you want to clean the lecture hall?] [{laugh}|Just a reminder.]
 - {classes}[You wouldn't talk like that in class.|Say that in front of everyone.] [Coward.|{laugh}]
 
 @rule react.invite.teacher.free

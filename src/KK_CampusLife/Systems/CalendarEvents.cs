@@ -115,7 +115,7 @@ namespace Joojkk.CampusLife
             {
                 b.Narr("Footsteps run up behind you. " + N(top) + ", out of breath, cheeks red from the cold.");
                 b.Say(top, T(top, "Wait! The one this morning was... not the real one. This is the real one. || Wait! That one was... this is the real one. || The real one is this... please take it. || This morning's wasn't true. This one is.", "Hah... hah... I forgot to give you the SPECIAL one! || Forgot the SPECIAL one! Here! || Wait! The real one! || Hah... this one's the real deal!",
-                    "...That one on campus was for show. This one is honmei. Don't make me say it twice. || ...This is honmei. Once only. || ...The real one. Don't make me repeat. || ...That was decoy. This is real.", "The one on campus was obligation. This one's... not. Got it? || That was obligation. This isn't. Got it? || The real one. Treasure it. || Campus is was fake. This is real."));
+                    "...That one on campus was for show. This one is honmei. Don't make me say it twice. || ...This is honmei. Once only. || ...The real one. Don't make me repeat. || ...That was decoy. This is real.", "The one on campus was obligation. This one's... not. Got it? || That was obligation. This isn't. Got it? || The real one. Treasure it. || The campus one was fake. This is real."));
                 b.Choice("Promise to return it on White Day", "ch_white", "Take her cold hand", "ch_hand", "Just say thank you", "ch_thanks");
                 b.Branch("ch_white");
                 b.Me("I'll give you something back on White Day. Something good.");

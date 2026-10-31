@@ -1120,7 +1120,7 @@ when hook=cooking_yes_learn
 @rule react.h.cooking_yes_learn.invite
 on react
 when hook=cooking_yes_learn move=invite fit=good|neutral
-- I'm a strict teacher. You'll cry over the onions.
+- I'm a strict professor. You'll cry over the onions.
 - Okay! Bring an apron. I'm serious about the apron.
 - You'll start with the rice. Don't argue.
 
