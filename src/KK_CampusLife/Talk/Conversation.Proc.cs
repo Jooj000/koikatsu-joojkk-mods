@@ -246,6 +246,8 @@ namespace Joojkk.CampusLife
                 var other = f.Subject == Lore.Player ? f.Obj : f.Subject;
                 var oh = GirlInfo.Find(other);
                 if (oh == null || S.Day - f.Day > 14 && !(oh.isGirlfriend && f.Verb == "started_dating")) continue;
+                // "começar trisal depois admitir faz com que a terceira continue na lista de traições").
+                if (Harem.Agreed(h, oh) || h.isGirlfriend && Share.Accepts(h, oh) && Share.Said(h, oh)) continue;
                 if (TopicDone(key, "confide:" + other + ":" + f.Id)) continue;
                 told.Add(f);
                 LoreFact had;
@@ -317,6 +319,8 @@ namespace Joojkk.CampusLife
                 MarkTopic(key, "confide:" + (f.Subject == Lore.Player ? f.Obj : f.Subject) + ":" + f.Id);
             }
             S.Buffs["dir:confide:" + key] = S.Day;
+            // the air sobre traição").
+            foreach (var o in others) if (o != null && o != h) SettledAbout(h, o);
             // The more times (every step with every girl, not only the deepest), the bigger it lands (mid-cycle list, item
             // 1: "quanto mais de uma vez, maior o impacto"): it hurts more, and the honesty of saying it all counts more.
             var times = Math.Max(t.Times, t.Facts.Count);
@@ -396,7 +400,18 @@ namespace Joojkk.CampusLife
                 subjects["like:" + l] = hers ? (known ? 1.6f : 1.2f) : 0.15f;
             }
             var v = Voice.Of(h);
-            if (v.Pet != "") subjects["pet:" + v.Pet] = 1.3f;
+            // "está tendo repetição de temas de gostos"). A pet that is also a like she has talks as that like; one she
+            // does not have as a like (always hungry, but "food" not on her list) drops that like, so she never says she
+            // doesn't care about food in the same chat.
+            if (v.Pet != "")
+            {
+                var asLike = PetLike(v.Pet);
+                if (asLike == null || !GirlInfo.Likes(h, asLike))
+                {
+                    if (asLike != null) subjects.Remove("like:" + asLike);
+                    subjects["pet:" + v.Pet] = 1.3f;
+                }
+            }
             // The place weighs more where it has a lot to say.
             var pid = Places.CurrentId ?? "";
             subjects["place:" + pid] = pid == "library" || pid == "rooftop" || pid == "infirmary" || Weather.Raining && Weather.Outdoor(G.PlayerMapNo) ? 1.1f : 0.6f;
@@ -430,13 +445,47 @@ namespace Joojkk.CampusLife
             if (subject.StartsWith("place:", StringComparison.Ordinal)) return "Say something about this place";
             if (subject == "weather") return Weather.Raining ? "Say something about the rain" : "Make small talk about the weather";
             if (subject == "lunch") return "Ask if she's had lunch";
+            // Several "Make small talk" side by side read as the same option: a like or her pet keeps its subject.
+            if (subject.StartsWith("like:", StringComparison.Ordinal)) return "Ask if she's into " + GirlInfo.LikeLabel(subject.Substring(5));
+            if (subject.StartsWith("pet:", StringComparison.Ordinal)) return SmallLabel(subject);
+            if (subject == "exams") return "Say something about the exams";
+            if (subject == "school") return "Say something about classes";
+            if (subject == "weekend") return "Ask about her weekend";
             return "Make small talk";
+        }
+
+        /// <summary>The like a pet theme stands for, or null (books, music, cleaning and naps are not likes).</summary>
+        private static string PetLike(string pet)
+        {
+            switch (pet)
+            {
+                case "food": return "food";
+                case "cats": return "animals";
+                case "sweets": return "sweets";
+                case "clothes": return "fashion";
+                case "cooking": return "cooking";
+                case "coffee": return "coffee";
+                case "running": case "sports": return "exercise";
+                case "studying": return "study";
+                default: return null;
+            }
         }
 
         private static string SmallLabel(string subject)
         {
             if (subject.StartsWith("like:", StringComparison.Ordinal)) return "Chat about " + GirlInfo.LikeLabel(subject.Substring(5));
-            if (subject.StartsWith("pet:", StringComparison.Ordinal)) return "Chat about " + subject.Substring(4);
+            if (subject.StartsWith("pet:", StringComparison.Ordinal))
+                switch (subject.Substring(4))
+                {
+                    case "food": return "Ask if she's hungry again";
+                    case "books": return "Ask what she's reading";
+                    case "music": return "Ask what she's listening to";
+                    case "sports": return "Ask about her training";
+                    case "cleaning": return "Chat about keeping things tidy";
+                    case "naps": return "Ask if she got any sleep";
+                    case "studying": return "Ask how her studying is going";
+                    default: return "Chat about " + subject.Substring(4);
+                }
             if (subject.StartsWith("place:", StringComparison.Ordinal)) return "Chat about this place";
             switch (subject)
             {
@@ -455,6 +504,23 @@ namespace Joojkk.CampusLife
             }
         }
 
+        private static readonly string[] RomanceVerbs = { "started_dating", "dated", "kissed", "flirted", "held_hands" };
+
+        /// <summary>
+        /// conhecidas reclamando de eu estar namorando ... 'you and xx? i didnt know you were her type'"): your girlfriend,
+        /// a girl who wants you, or a girl close to the other one (her friend, the girl she likes, her rival). A girl with
+        /// no stake leaves it alone; it stays a topic you can pick.
+        /// </summary>
+        private static bool Stake(SaveData.Heroine h, LoreFact f)
+        {
+            if (Array.IndexOf(RomanceVerbs, f.Verb) < 0) return true;
+            if (h.isGirlfriend || Interested(h)) return true;
+            var other = GirlInfo.Find(f.Subject == Lore.Player ? f.Obj : f.Subject);
+            if (other == null || other == h) return false;
+            var bond = Social.Bond(h, other);
+            return bond >= 40 || bond <= -30 || RomanceFor(h, other) >= 40;
+        }
+
         /// <summary>
         /// Something she raises herself before you say a word: what she saw or heard about you lately that weighs (the
         /// H in the hallway, being seen where you should not), not brought up yet.
@@ -462,7 +528,7 @@ namespace Joojkk.CampusLife
         private static PTopic RaiseTopic(SaveData.Heroine h)
         {
             var key = GirlInfo.Key(h);
-            var best = Lore.Of(key).Where(x => x.Value.Involves(Lore.Player) && x.Key.How != How.Participant && x.Key.ToPlayer == 0 && x.Value.Weight >= 2 && S.Day - x.Key.Day <= 3 && !SharedAway(h, x.Value))
+            var best = Lore.Of(key).Where(x => x.Value.Involves(Lore.Player) && x.Key.How != How.Participant && x.Key.ToPlayer == 0 && x.Value.Weight >= 2 && S.Day - x.Key.Day <= 3 && !SharedAway(h, x.Value) && Stake(h, x.Value))
                 .OrderByDescending(x => Lore.Salience(x.Key, x.Value)).FirstOrDefault();
             if (best.Value == null) return null;
             return new PTopic { Id = "f:" + best.Value.Id, Kind = "you", Fact = best.Value, Know = best.Key, Label = YouLabel(best.Value, best.Key), Opening = true, Hot = true };
@@ -710,7 +776,7 @@ namespace Joojkk.CampusLife
             var moves = Moves(h, t, ctx, rule, step);
             CampusLifePlugin.Log.LogInfo("Talk moves: " + GirlInfo.FirstName(h) + " '" + her + "' => " + string.Join(" | ", moves.Select(m => m.Label).ToArray()));
             var b = new SceneBuilder(h, true);
-            if (me != null) b.Me(me);
+            if (me != null) { if (me.StartsWith("*")) b.Narr(me.Substring(1)); else b.Me(me); }
             b.Face(h, FeelOf(rule, ctx)).Her_(her);
             var args = new List<string>();
             foreach (var m in moves) { args.Add(m.Label); args.Add(m.Tag); }
@@ -749,15 +815,33 @@ namespace Joojkk.CampusLife
                 var react = Bank.Pick("react", ctx, key, out rr);
                 var goesOn = step < 3 && m.Q != Q.Bad && rr != null && rr.Opens.Length > 0;
                 react = react == null ? BeatSay(h, "", QWord(m.Q)) ?? "..." : !goesOn && m.Q == Q.Good && !ctx.ContainsKey("hook") ? Close(react, ctx) : react;
-                CampusLifePlugin.Log.LogInfo("Talk move: " + GirlInfo.FirstName(h) + " step " + step + " " + m.Id + " '" + m.Label + "' -> " + m.Q + ", rule " + (rr != null ? rr.Id : "(stock)") + ": '" + react + "'");
-                if (goesOn) { Step(h, t, ctx, step + 1, null, react, rr); return; }
+                var mine = PlayerLine(h, ctx, m);
+                CampusLifePlugin.Log.LogInfo("Talk move: " + GirlInfo.FirstName(h) + " step " + step + " " + m.Id + " '" + m.Label + "' -> " + m.Q + ", rule " + (rr != null ? rr.Id : "(stock)") + ": you '" + mine + "', she '" + react + "'");
+                if (goesOn) { Step(h, t, ctx, step + 1, mine, react, rr); return; }
                 var b = new SceneBuilder(h, true);
+                if (mine != null) { if (mine.StartsWith("*")) b.Narr(mine.Substring(1)); else b.Me(mine); }
                 b.Face(h, rr != null && rr.Feel != "" ? FeelOf(rr, ctx) : FaceFor(m.Q)).Her_(react);
                 if (m.Q != Q.Bad) SayClosing(b, h, ctx);
                 Hide();
                 if (!Scenes.PlayInTalk(b, _ => Finish(s, t), false)) Finish(s, t);
             }
             catch (Exception e) { CampusLifePlugin.Log.LogError(e); Finish(s, t); }
+        }
+
+        /// <summary>
+        /// What you say with the option you took: a written line of the bank for that move and
+        /// what she said ("me.move.(move)" rules, same context), else the label in your own words (Speech.Line).
+        /// </summary>
+        private static string PlayerLine(SaveData.Heroine h, Dictionary<string, string> ctx, PMove m)
+        {
+            try
+            {
+                DlgRule r;
+                var w = Bank.Pick("me.move." + m.Id, ctx, "player", out r);
+                if (!string.IsNullOrEmpty(w)) return w;
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogWarning("PlayerLine: " + e.Message); }
+            return Speech.Line(m.Label);
         }
 
         private static void Finish(Session s, PTopic t)

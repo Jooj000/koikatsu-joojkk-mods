@@ -1163,13 +1163,13 @@ when hook=f_school_sports_up move=invite fit=good|neutral
 @rule move.h.f_school_sports_up.ask
 on move.ask
 when hook=f_school_sports_up
-- Ask which event she's in
+- Ask how practice is going
 
 @rule react.h.f_school_sports_up.ask
 on react
 when hook=f_school_sports_up move=ask fit=good|neutral
-- The relay. Third leg. Don't watch the baton.
-- Whichever one they let me run.
+- Every evening. My legs hate me, but we're getting faster.
+- We dropped the baton twice. Then we stopped dropping it.
 
 @rule move.h.f_school_sports_up.tease
 on move.tease
@@ -1254,13 +1254,13 @@ when hook=f_school_sports_low move=invite fit=good|neutral
 @rule move.h.f_school_sports_low.ask
 on move.ask
 when hook=f_school_sports_low
-- Ask who signed her up
+- Ask what she's dreading most
 
 @rule react.h.f_school_sports_low.ask
 on react
 when hook=f_school_sports_low move=ask fit=good|neutral
-- My so-called friends.
-- Nobody will admit to it.
+- Falling in front of everyone. Obviously.
+- The starting gun. My heart stops every time.
 
 @rule react.h.f_school_sports_low.bad
 on react
@@ -1334,7 +1334,7 @@ when hook=f_school_sports_staff move=share fit=good|neutral
 @rule move.h.f_school_sports_staff.tease
 on move.tease
 when hook=f_school_sports_staff
-- Say you'd pay to see the professors' relay
+- Say you'd pay to see the professors run
 
 @rule react.h.f_school_sports_staff.tease
 on react
@@ -2942,6 +2942,34 @@ when hook=f_you_romance_other move=tease fit=good|neutral
 - Somebody has to.
 - Don't flatter yourself.
 
+@rule react.h.f_you_romance_other.ask.bad
+on react
+when hook=f_you_romance_other move=ask fit=bad
+feel pout
+- Does it matter who? Everyone's saying it.
+- Why, so you can go and argue with them?
+
+@rule react.h.f_you_romance_other.admit.bad
+on react
+when hook=f_you_romance_other move=admit fit=bad
+feel pout
+- ...Wow. You didn't even hesitate.
+- I asked, but I didn't want it like that.
+
+@rule react.h.f_you_romance_other.deny.bad
+on react
+when hook=f_you_romance_other move=deny fit=bad
+feel pout
+- Your face says otherwise.
+- You're a bad liar, you know.
+
+@rule react.h.f_you_romance_other.tease.bad
+on react
+when hook=f_you_romance_other move=tease fit=bad
+feel pout
+- I'm not joking.
+- That's not funny.
+
 @rule react.h.f_you_romance_other.bad
 on react
 when hook=f_you_romance_other fit=bad
@@ -2993,6 +3021,34 @@ when hook=f_you_romance_other_jealous move=ask fit=good|neutral
 - You really don't know?
 - ...Never mind. It's nothing.
 
+@rule react.h.f_you_romance_other_jealous.admit.bad
+on react
+when hook=f_you_romance_other_jealous move=admit fit=bad
+feel pout
+- ...You could at least pretend it hurts to say it.
+- So that's it, then.
+
+@rule react.h.f_you_romance_other_jealous.comfort.bad
+on react
+when hook=f_you_romance_other_jealous move=comfort fit=bad
+feel pout
+- Don't say that like it fixes anything.
+- Words are cheap.
+
+@rule react.h.f_you_romance_other_jealous.deny.bad
+on react
+when hook=f_you_romance_other_jealous move=deny fit=bad
+feel pout
+- Then what was it? You can't even say.
+- Stop. I saw enough.
+
+@rule react.h.f_you_romance_other_jealous.ask.bad
+on react
+when hook=f_you_romance_other_jealous move=ask fit=bad
+feel pout
+- If you have to ask, forget it.
+- You really don't get it.
+
 @rule react.h.f_you_romance_other_jealous.bad
 on react
 when hook=f_you_romance_other_jealous fit=bad
@@ -3032,6 +3088,27 @@ on react
 when hook=f_you_romance_other_gf move=comfort fit=good|neutral
 - Then act like it.
 - Then why am I hearing this from other people?
+
+@rule react.h.f_you_romance_other_gf.admit.bad
+on react
+when hook=f_you_romance_other_gf move=admit fit=bad
+feel pout
+- ...And you just say it. Like that.
+- I needed you to say it, but... not like that.
+
+@rule react.h.f_you_romance_other_gf.deny.bad
+on react
+when hook=f_you_romance_other_gf move=deny fit=bad
+feel pout
+- Look at me and say that again.
+- Don't lie to me.
+
+@rule react.h.f_you_romance_other_gf.comfort.bad
+on react
+when hook=f_you_romance_other_gf move=comfort fit=bad
+feel pout
+- Then why do I keep hearing about her?
+- Not now. Please.
 
 @rule react.h.f_you_romance_other_gf.bad
 on react
@@ -3073,6 +3150,27 @@ when hook=f_you_romance_other_acq move=share fit=good|neutral
 - Okay, okay. I won't spread it.
 - Fair enough. Good luck.
 
+@rule react.h.f_you_romance_other_acq.ask.bad
+on react
+when hook=f_you_romance_other_acq move=ask fit=bad
+feel pout
+- It doesn't matter who. Never mind.
+- I was only making conversation.
+
+@rule react.h.f_you_romance_other_acq.laugh.bad
+on react
+when hook=f_you_romance_other_acq move=laugh fit=bad
+feel pout
+- I wasn't teasing you.
+- Okay, okay. I won't bring it up.
+
+@rule react.h.f_you_romance_other_acq.share.bad
+on react
+when hook=f_you_romance_other_acq move=share fit=bad
+feel pout
+- I wasn't asking for details.
+- Okay. Never mind.
+
 @rule react.h.f_you_romance_other_acq.bad
 on react
 when hook=f_you_romance_other_acq fit=bad
@@ -3112,6 +3210,27 @@ on react
 when hook=f_you_romance_other_friendship move=invite fit=good|neutral
 - You've got time for me? Okay.
 - I'll believe it when I see it.
+
+@rule react.h.f_you_romance_other_friendship.ask.bad
+on react
+when hook=f_you_romance_other_friendship move=ask fit=bad
+feel pout
+- If you have to ask, it already has.
+- I don't know. You tell me.
+
+@rule react.h.f_you_romance_other_friendship.comfort.bad
+on react
+when hook=f_you_romance_other_friendship move=comfort fit=bad
+feel pout
+- You say that now.
+- We'll see.
+
+@rule react.h.f_you_romance_other_friendship.invite.bad
+on react
+when hook=f_you_romance_other_friendship move=invite fit=bad
+feel pout
+- You won't have time. You never do now.
+- Don't make plans you won't keep.
 
 @rule react.h.f_you_romance_other_friendship.bad
 on react
@@ -3153,6 +3272,27 @@ when hook=f_you_romance_other_herfriend move=defend fit=good|neutral
 - Nobody plans to. Be careful.
 - I'll hold you to that.
 
+@rule react.h.f_you_romance_other_herfriend.ask.bad
+on react
+when hook=f_you_romance_other_herfriend move=ask fit=bad
+feel pout
+- That's between me and her.
+- You don't get to know that.
+
+@rule react.h.f_you_romance_other_herfriend.comfort.bad
+on react
+when hook=f_you_romance_other_herfriend move=comfort fit=bad
+feel pout
+- Prove it, then.
+- Saying it isn't enough.
+
+@rule react.h.f_you_romance_other_herfriend.defend.bad
+on react
+when hook=f_you_romance_other_herfriend move=defend fit=bad
+feel pout
+- Nobody ever plans to.
+- I'll believe it when I see it.
+
 @rule react.h.f_you_romance_other_herfriend.bad
 on react
 when hook=f_you_romance_other_herfriend fit=bad
@@ -3192,6 +3332,27 @@ on react
 when hook=f_you_romance_other_hercrush move=admit fit=good|neutral
 - It's nobody's fault. Just give me a while.
 - I know. I'll be fine.
+
+@rule react.h.f_you_romance_other_hercrush.ask.bad
+on react
+when hook=f_you_romance_other_hercrush move=ask fit=bad
+feel pout
+- ...Please don't ask me that now.
+- I'm fine. Leave it.
+
+@rule react.h.f_you_romance_other_hercrush.comfort.bad
+on react
+when hook=f_you_romance_other_hercrush move=comfort fit=bad
+feel pout
+- Don't. It makes it worse.
+- ...I don't want to talk about it.
+
+@rule react.h.f_you_romance_other_hercrush.admit.bad
+on react
+when hook=f_you_romance_other_hercrush move=admit fit=bad
+feel pout
+- Don't apologize. That's worse.
+- I don't want your pity.
 
 @rule react.h.f_you_romance_other_hercrush.bad
 on react
@@ -3233,6 +3394,27 @@ when hook=f_you_romance_teacher move=tease fit=good|neutral
 - So that's your secret.
 - I'm telling you, it's going to come out.
 
+@rule react.h.f_you_romance_teacher.deny.bad
+on react
+when hook=f_you_romance_teacher move=deny fit=bad
+feel pout
+- Nobody believes that.
+- You're not fooling anyone.
+
+@rule react.h.f_you_romance_teacher.admit.bad
+on react
+when hook=f_you_romance_teacher move=admit fit=bad
+feel pout
+- You can't say that out loud!
+- That's going to get someone in trouble.
+
+@rule react.h.f_you_romance_teacher.tease.bad
+on react
+when hook=f_you_romance_teacher move=tease fit=bad
+feel pout
+- This isn't funny.
+- You've got a nerve.
+
 @rule react.h.f_you_romance_teacher.bad
 on react
 when hook=f_you_romance_teacher fit=bad
@@ -3272,6 +3454,27 @@ on react
 when hook=f_you_romance_student_teacher move=deny fit=good|neutral
 - Of course you are.
 - Yes. That's what I'd say too.
+
+@rule react.h.f_you_romance_student_teacher.admit.bad
+on react
+when hook=f_you_romance_student_teacher move=admit fit=bad
+feel pout
+- I didn't need to hear that from you. Be sensible.
+- That's precisely what I was afraid of.
+
+@rule react.h.f_you_romance_student_teacher.tease.bad
+on react
+when hook=f_you_romance_student_teacher move=tease fit=bad
+feel pout
+- Don't be clever with me.
+- I'm being serious.
+
+@rule react.h.f_you_romance_student_teacher.deny.bad
+on react
+when hook=f_you_romance_student_teacher move=deny fit=bad
+feel pout
+- Please don't insult me.
+- Study partners. Of course.
 
 @rule react.h.f_you_romance_student_teacher.bad
 on react
@@ -3313,6 +3516,27 @@ when hook=f_you_kind_other move=tease fit=good|neutral
 - It's too late. The word's out.
 - Your reputation's ruined.
 
+@rule react.h.f_you_kind_other.share.bad
+on react
+when hook=f_you_kind_other move=share fit=bad
+feel pout
+- Stop being modest. It's annoying.
+- Fine, be that way.
+
+@rule react.h.f_you_kind_other.laugh.bad
+on react
+when hook=f_you_kind_other move=laugh fit=bad
+feel pout
+- I was being nice, you know.
+- Forget it.
+
+@rule react.h.f_you_kind_other.tease.bad
+on react
+when hook=f_you_kind_other move=tease fit=bad
+feel pout
+- I was trying to be nice.
+- Never mind, then.
+
 @rule react.h.f_you_kind_other.bad
 on react
 when hook=f_you_kind_other fit=bad
@@ -3352,6 +3576,27 @@ on react
 when hook=f_you_rude_other move=deny fit=good|neutral
 - It's how it landed that counts.
 - Tell that to {who}.
+
+@rule react.h.f_you_rude_other.admit.bad
+on react
+when hook=f_you_rude_other move=admit fit=bad
+feel pout
+- Saying it to me doesn't fix it.
+- Then go tell her.
+
+@rule react.h.f_you_rude_other.correct.bad
+on react
+when hook=f_you_rude_other move=correct fit=bad
+feel pout
+- That's not what she told me.
+- Then she's lying? Really?
+
+@rule react.h.f_you_rude_other.deny.bad
+on react
+when hook=f_you_rude_other move=deny fit=bad
+feel pout
+- It's how it landed that counts.
+- That doesn't make it okay.
 
 @rule react.h.f_you_rude_other.bad
 on react
@@ -3404,6 +3649,34 @@ when hook=f_you_drama move=ask fit=good|neutral
 - Do you really want to know?
 - That it's all because of you.
 
+@rule react.h.f_you_drama.correct.bad
+on react
+when hook=f_you_drama move=correct fit=bad
+feel pout
+- That's not what I keep hearing.
+- Sure you don't.
+
+@rule react.h.f_you_drama.deny.bad
+on react
+when hook=f_you_drama move=deny fit=bad
+feel pout
+- That's not an answer.
+- Good luck with that.
+
+@rule react.h.f_you_drama.admit.bad
+on react
+when hook=f_you_drama move=admit fit=bad
+feel pout
+- Well, at least you know.
+- Then fix it.
+
+@rule react.h.f_you_drama.ask.bad
+on react
+when hook=f_you_drama move=ask fit=bad
+feel pout
+- You don't want to know.
+- That it's all because of you.
+
 @rule react.h.f_you_drama.bad
 on react
 when hook=f_you_drama fit=bad
@@ -3444,6 +3717,27 @@ when hook=f_you_distorted move=deny fit=good|neutral
 - Then someone's got a good imagination.
 - Okay. I'll stop asking.
 
+@rule react.h.f_you_distorted.correct.bad
+on react
+when hook=f_you_distorted move=correct fit=bad
+feel pout
+- Hm. That's not what everyone else says.
+- Maybe. I only know what I heard.
+
+@rule react.h.f_you_distorted.laugh.bad
+on react
+when hook=f_you_distorted move=laugh fit=bad
+feel pout
+- It's not that funny. People believe it.
+- Laughing won't make it go away.
+
+@rule react.h.f_you_distorted.deny.bad
+on react
+when hook=f_you_distorted move=deny fit=bad
+feel pout
+- Someone saw it, though.
+- Then why is everyone saying it?
+
 @rule react.h.f_you_distorted.bad
 on react
 when hook=f_you_distorted fit=bad
@@ -3483,6 +3777,27 @@ on react
 when hook=f_you_generic move=laugh fit=good|neutral
 - So it's nothing? All right.
 - You don't seem too bothered.
+
+@rule react.h.f_you_generic.ask.bad
+on react
+when hook=f_you_generic move=ask fit=bad
+feel pout
+- Does it matter who? I was only asking.
+- Why, so you can go yell at them?
+
+@rule react.h.f_you_generic.correct.bad
+on react
+when hook=f_you_generic move=correct fit=bad
+feel pout
+- Hm. That's not how I heard it.
+- If you say so. People are still talking.
+
+@rule react.h.f_you_generic.laugh.bad
+on react
+when hook=f_you_generic move=laugh fit=bad
+feel pout
+- It's not funny, though.
+- Laughing it off won't make it go away.
 
 @rule react.h.f_you_generic.bad
 on react

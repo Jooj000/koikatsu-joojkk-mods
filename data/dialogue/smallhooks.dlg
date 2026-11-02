@@ -2752,7 +2752,7 @@ feel pout
 on me.small
 when hook=spicy_yes_challenge
 - How much spice can you take?
-- What's the hottest thing you've ever eaten?
+- Is it true you put chili on everything?
 
 @rule move.h.spicy_yes_challenge.ask
 on move.ask
@@ -5444,56 +5444,6 @@ when hook=like_no_pass fit=bad
 feel pout
 - Okay, you're a fan. I get it.
 - Let's drop it.
-
-@rule me.h.pet_pet
-on me.small
-when hook=pet_pet
-- You really like {pet}, huh?
-- Tell me about {pet}.
-- How much do you know about {pet}?
-
-@rule move.h.pet_pet.ask
-on move.ask
-when hook=pet_pet
-- Ask what she likes most about {pet}
-
-@rule react.h.pet_pet.ask
-on react
-when hook=pet_pet move=ask fit=good|neutral
-- How long have you got? It's the little details.
-- It's the one thing that always cheers me up.
-- Nobody's asked me that. Give me a second, I have a list.
-
-@rule move.h.pet_pet.praise
-on move.praise
-when hook=pet_pet
-- Say it's nice to see her light up like that
-
-@rule react.h.pet_pet.praise
-on react
-when hook=pet_pet move=praise fit=good|neutral
-- Do I? Hehe. You're embarrassing me.
-- That's what {pet} does to me.
-- Stop looking at me like that.
-
-@rule move.h.pet_pet.tease
-on move.tease
-when hook=pet_pet
-- Ask if she ever talks about anything else
-
-@rule react.h.pet_pet.tease
-on react
-when hook=pet_pet move=tease fit=good|neutral
-- Never. It's a full-time job.
-- You knew what you were getting into.
-- You started this.
-
-@rule react.h.pet_pet.bad
-on react
-when hook=pet_pet fit=bad
-feel pout
-- I knew you'd think it was weird.
-- You don't have to listen.
 
 @rule me.h.plain_unsure
 on me.small
@@ -8837,14 +8787,14 @@ when hook=exams_invite
 @rule move.h.exams_invite.ask
 on move.ask
 when hook=exams_invite
-- Ask which subject she'd start with
+- Ask how she wants to be quizzed
 
 @rule react.h.exams_invite.ask
 on react
 when hook=exams_invite move=ask fit=good|neutral
-- Math. Get it over with.
-- History, so I can feel smart for an hour.
-- Whichever one I understand least. So, all of them.
+- Flashcards. Fast. No mercy.
+- Read me the question, then pretend I got it right.
+- Out loud, on the way to class. It sticks better.
 
 @rule move.h.exams_invite.invite
 on move.invite
@@ -10064,3 +10014,696 @@ when hook=place_rivalnear_rival fit=bad
 feel pout
 - You're on her side, aren't you?
 - Don't get involved.
+
+@rule me.h.pet_food_ask
+on me.small
+when hook=pet_food_ask
+- Hungry again?
+- Got room for more?
+- You always know where the good food is, huh?
+
+@rule move.h.pet_food_ask.share
+on move.share
+when hook=pet_food_ask
+- Tell her the best thing you ate this week
+
+@rule react.h.pet_food_ask.share
+on react
+when hook=pet_food_ask move=share fit=good|neutral
+- Stop, I'm drooling. Where was it?
+- That's going on my list. Right at the top.
+- And you didn't bring me any? Unbelievable.
+
+@rule move.h.pet_food_ask.ask
+on move.ask
+when hook=pet_food_ask
+- Ask what she'd eat right now
+
+@rule react.h.pet_food_ask.ask
+on react
+when hook=pet_food_ask move=ask fit=good|neutral
+- A katsu sandwich. Two. Don't judge me.
+- Anything warm with a lot of sauce.
+- Honestly? Whatever's closest.
+
+@rule move.h.pet_food_ask.invite
+on move.invite
+when hook=pet_food_ask
+- Offer to buy her a snack later
+
+@rule react.h.pet_food_ask.invite
+on react
+when hook=pet_food_ask move=invite fit=good|neutral
+- You say that, but I'll hold you to it.
+- Deal. I'm choosing, though.
+- You're dangerous. Yes.
+
+@rule react.h.pet_food_ask.bad
+on react
+when hook=pet_food_ask fit=bad
+feel pout
+- Food is serious business.
+- Laugh, but I'll be the one eating.
+
+@rule me.h.pet_food_talk
+on me.small
+when hook=pet_food_talk
+- Thinking about food again?
+- What's on the menu in that head of yours?
+
+@rule move.h.pet_food_talk.ask
+on move.ask
+when hook=pet_food_talk
+- Ask how she eats so much
+
+@rule react.h.pet_food_talk.ask
+on react
+when hook=pet_food_talk move=ask fit=good|neutral
+- Big lunch, small worries. That's the secret.
+- I walk fast. It all burns off. Probably.
+- I don't think about it. I just eat.
+
+@rule move.h.pet_food_talk.praise
+on move.praise
+when hook=pet_food_talk
+- Say it's nice to see someone enjoy food that much
+
+@rule react.h.pet_food_talk.praise
+on react
+when hook=pet_food_talk move=praise fit=good|neutral
+- Right? Eating should be fun!
+- You're the first person who didn't call me a bottomless pit.
+- Thanks. Most people just stare at my tray.
+
+@rule move.h.pet_food_talk.tease
+on move.tease
+when hook=pet_food_talk
+- Ask if she's ever skipped a meal
+
+@rule react.h.pet_food_talk.tease
+on react
+when hook=pet_food_talk move=tease fit=good|neutral
+- Once. I still think about it.
+- Never. I'm not a monster.
+- Breakfast, maybe. Then I ate two lunches.
+
+@rule react.h.pet_food_talk.bad
+on react
+when hook=pet_food_talk fit=bad
+feel pout
+- Don't count my rice bowls.
+- Hmph. I'm hungry, not rude.
+
+@rule me.h.pet_books_ask
+on me.small
+when hook=pet_books_ask
+- Read anything good lately?
+- You always have a book on you, huh?
+- Got a recommendation for me?
+
+@rule move.h.pet_books_ask.share
+on move.share
+when hook=pet_books_ask
+- Tell her the last book you actually finished
+
+@rule react.h.pet_books_ask.share
+on react
+when hook=pet_books_ask move=share fit=good|neutral
+- Oh, I know that one! What did you think of the ending?
+- Huh. Not what I expected from you. In a good way.
+- Then you have to read the sequel. I insist.
+
+@rule move.h.pet_books_ask.ask
+on move.ask
+when hook=pet_books_ask
+- Ask what she'd recommend for you
+
+@rule react.h.pet_books_ask.ask
+on react
+when hook=pet_books_ask move=ask fit=good|neutral
+- Something short and sharp. I'll pick one out.
+- Give me a day. I'll make you a list.
+- Mysteries. You look like someone who'd guess the ending.
+
+@rule move.h.pet_books_ask.tease
+on move.tease
+when hook=pet_books_ask
+- Ask if she judges people by their bookshelves
+
+@rule react.h.pet_books_ask.tease
+on react
+when hook=pet_books_ask move=tease fit=good|neutral
+- Only a little. Okay, a lot.
+- Yes. And yours worries me.
+- Doesn't everyone?
+
+@rule react.h.pet_books_ask.bad
+on react
+when hook=pet_books_ask fit=bad
+feel pout
+- Books aren't a joke to me.
+- Never mind. You wouldn't get it.
+
+@rule me.h.pet_books_talk
+on me.small
+when hook=pet_books_talk
+- What are you reading?
+- Still on that same book?
+
+@rule move.h.pet_books_talk.ask
+on move.ask
+when hook=pet_books_talk
+- Ask what she likes about reading
+
+@rule react.h.pet_books_talk.ask
+on react
+when hook=pet_books_talk move=ask fit=good|neutral
+- You get to live somewhere else for a while.
+- It's quiet, and nobody interrupts.
+- Other people's lives are more interesting than mine.
+
+@rule move.h.pet_books_talk.praise
+on move.praise
+when hook=pet_books_talk
+- Say you admire how much she reads
+
+@rule react.h.pet_books_talk.praise
+on react
+when hook=pet_books_talk move=praise fit=good|neutral
+- It's not hard. You just never stop.
+- You'd read more if you had my commute.
+- Thanks. Most people say it's antisocial.
+
+@rule move.h.pet_books_talk.invite
+on move.invite
+when hook=pet_books_talk
+- Suggest a trip to the used bookshop together
+
+@rule react.h.pet_books_talk.invite
+on react
+when hook=pet_books_talk move=invite fit=good|neutral
+- Really? I could spend hours there. You've been warned.
+- Okay, but you carry the bags.
+- I'd like that. I know exactly which aisle.
+
+@rule react.h.pet_books_talk.bad
+on react
+when hook=pet_books_talk fit=bad
+feel pout
+- Fine. Go play your games.
+- That's a rude thing to say to a reader.
+
+@rule me.h.pet_music_ask
+on me.small
+when hook=pet_music_ask
+- What are you listening to these days?
+- Got a song stuck in your head?
+- You're humming again.
+
+@rule move.h.pet_music_ask.share
+on move.share
+when hook=pet_music_ask
+- Tell her the song you've had on repeat
+
+@rule react.h.pet_music_ask.share
+on react
+when hook=pet_music_ask move=share fit=good|neutral
+- Oh, that's a good one! The bridge is the best part.
+- Really? I didn't take you for that kind. I like it.
+- I'll listen to it tonight. If it's bad, I'm telling you.
+
+@rule move.h.pet_music_ask.ask
+on move.ask
+when hook=pet_music_ask
+- Ask what her favorite band is
+
+@rule react.h.pet_music_ask.ask
+on react
+when hook=pet_music_ask move=ask fit=good|neutral
+- That's like picking a favorite child. Three, okay?
+- You won't know them. They're tiny. That's the point.
+- It changes every week. This week it's sad songs.
+
+@rule move.h.pet_music_ask.tease
+on move.tease
+when hook=pet_music_ask
+- Ask if she sings karaoke
+
+@rule react.h.pet_music_ask.tease
+on react
+when hook=pet_music_ask move=tease fit=good|neutral
+- Only after midnight, and only power ballads.
+- Never sober.
+- Maybe. Why, are you asking me out?
+
+@rule react.h.pet_music_ask.bad
+on react
+when hook=pet_music_ask fit=bad
+feel pout
+- You're not taking this seriously.
+- Forget it. My music, my business.
+
+@rule me.h.pet_music_talk
+on me.small
+when hook=pet_music_talk
+- Is that a new song you're humming?
+- What's in your earphones today?
+
+@rule move.h.pet_music_talk.ask
+on move.ask
+when hook=pet_music_talk
+- Ask what's been on her playlist
+
+@rule react.h.pet_music_talk.ask
+on react
+when hook=pet_music_talk move=ask fit=good|neutral
+- Old city pop, mostly. It feels like summer.
+- Sad songs, but happy sad songs.
+- The same five songs. I'm a creature of habit.
+
+@rule move.h.pet_music_talk.praise
+on move.praise
+when hook=pet_music_talk
+- Say she must have a good ear
+
+@rule react.h.pet_music_talk.praise
+on react
+when hook=pet_music_talk move=praise fit=good|neutral
+- You think so? I just hear things others miss.
+- Mm. It's a curse sometimes. Bad speakers hurt.
+- Thanks. Nobody's ever said that.
+
+@rule move.h.pet_music_talk.invite
+on move.invite
+when hook=pet_music_talk
+- Ask if she'd go to a live show with you
+
+@rule react.h.pet_music_talk.invite
+on react
+when hook=pet_music_talk move=invite fit=good|neutral
+- Yes! If you can get tickets, I'm in.
+- Really? Okay. I'm wearing earplugs, though.
+- Only if you don't talk during the songs.
+
+@rule react.h.pet_music_talk.bad
+on react
+when hook=pet_music_talk fit=bad
+feel pout
+- You're one of those "I listen to everything" people, aren't you.
+- Never mind.
+
+@rule me.h.pet_sports_ask
+on me.small
+when hook=pet_sports_ask
+- You play sports, right?
+- Always on the move, huh?
+- Got a game coming up?
+
+@rule move.h.pet_sports_ask.share
+on move.share
+when hook=pet_sports_ask
+- Tell her which sport you used to play
+
+@rule react.h.pet_sports_ask.share
+on react
+when hook=pet_sports_ask move=share fit=good|neutral
+- Really? We should play sometime. I'll be nice. Maybe.
+- I can see it. You've got the stance.
+- Then you know the feeling after a good game.
+
+@rule move.h.pet_sports_ask.ask
+on move.ask
+when hook=pet_sports_ask
+- Ask what she's training for
+
+@rule react.h.pet_sports_ask.ask
+on react
+when hook=pet_sports_ask move=ask fit=good|neutral
+- The regional match. We lost it twice in a row. Not again.
+- Beating last year's me. She was slow.
+- Nothing. I just like being tired.
+
+@rule move.h.pet_sports_ask.tease
+on move.tease
+when hook=pet_sports_ask
+- Ask if she'd really go easy on you
+
+@rule react.h.pet_sports_ask.tease
+on react
+when hook=pet_sports_ask move=tease fit=good|neutral
+- No. Never.
+- I'd try. My body wouldn't let me.
+- Maybe for the first minute.
+
+@rule react.h.pet_sports_ask.bad
+on react
+when hook=pet_sports_ask fit=bad
+feel pout
+- Don't laugh at sports.
+- Fine. Sit on the bench, then.
+
+@rule me.h.pet_sports_talk
+on me.small
+when hook=pet_sports_talk
+- Been training again?
+- You look like you just came from practice.
+
+@rule move.h.pet_sports_talk.ask
+on move.ask
+when hook=pet_sports_talk
+- Ask what she loves about playing
+
+@rule react.h.pet_sports_talk.ask
+on react
+when hook=pet_sports_talk move=ask fit=good|neutral
+- The moment right before you score. Everything goes quiet.
+- Being so tired you can't think.
+- The team. Winning's nice too.
+
+@rule move.h.pet_sports_talk.praise
+on move.praise
+when hook=pet_sports_talk
+- Say she must work really hard at it
+
+@rule react.h.pet_sports_talk.praise
+on react
+when hook=pet_sports_talk move=praise fit=good|neutral
+- Every morning. Every single one.
+- It doesn't feel like work. That's the trick.
+- Thanks. My coach would disagree.
+
+@rule move.h.pet_sports_talk.invite
+on move.invite
+when hook=pet_sports_talk
+- Ask if you can join her for practice
+
+@rule react.h.pet_sports_talk.invite
+on react
+when hook=pet_sports_talk move=invite fit=good|neutral
+- Sure, if you can keep up. Warm-ups are brutal.
+- Come Saturday. Bring water. Lots.
+- You'd quit in ten minutes. Come anyway.
+
+@rule react.h.pet_sports_talk.bad
+on react
+when hook=pet_sports_talk fit=bad
+feel pout
+- You sound like the people who think sports are dumb.
+- Whatever. I'm going for a run.
+
+@rule me.h.pet_cleaning_ask
+on me.small
+when hook=pet_cleaning_ask
+- You like things tidy, huh?
+- Everything in its place?
+- You noticed the mess too?
+
+@rule move.h.pet_cleaning_ask.share
+on move.share
+when hook=pet_cleaning_ask
+- Admit your room is a disaster right now
+
+@rule react.h.pet_cleaning_ask.share
+on react
+when hook=pet_cleaning_ask move=share fit=good|neutral
+- I knew it. I could tell from your bag.
+- Give me one hour in there. I'll change your life.
+- Honestly? Thank you for not lying.
+
+@rule move.h.pet_cleaning_ask.ask
+on move.ask
+when hook=pet_cleaning_ask
+- Ask what bothers her most
+
+@rule react.h.pet_cleaning_ask.ask
+on react
+when hook=pet_cleaning_ask move=ask fit=good|neutral
+- Trays left on tables. Every single time.
+- Crooked posters. I fix them when nobody's looking.
+- Sticky things. Don't make me list them.
+
+@rule move.h.pet_cleaning_ask.tease
+on move.tease
+when hook=pet_cleaning_ask
+- Ask if she'd clean your room for you
+
+@rule react.h.pet_cleaning_ask.tease
+on react
+when hook=pet_cleaning_ask move=tease fit=good|neutral
+- For a price. A high price.
+- Don't tempt me. I'd actually do it.
+- I'd need a hazmat suit, wouldn't I?
+
+@rule react.h.pet_cleaning_ask.bad
+on react
+when hook=pet_cleaning_ask fit=bad
+feel pout
+- Laugh, but you'd love a clean room.
+- It's not weird to like things clean.
+
+@rule me.h.pet_cleaning_talk
+on me.small
+when hook=pet_cleaning_talk
+- Tidying up again?
+- You keep everything so neat.
+
+@rule move.h.pet_cleaning_talk.ask
+on move.ask
+when hook=pet_cleaning_talk
+- Ask why it makes her feel better
+
+@rule react.h.pet_cleaning_talk.ask
+on react
+when hook=pet_cleaning_talk move=ask fit=good|neutral
+- When the room is in order, my head is too.
+- It's the one thing I can always fix.
+- I don't know. It just feels like breathing out.
+
+@rule move.h.pet_cleaning_talk.praise
+on move.praise
+when hook=pet_cleaning_talk
+- Say she must be the most organized person on campus
+
+@rule react.h.pet_cleaning_talk.praise
+on react
+when hook=pet_cleaning_talk move=praise fit=good|neutral
+- Probably. I don't like to brag. I'm bragging.
+- Second, maybe. There's a girl in accounting...
+- Thank you. Finally, someone sees it.
+
+@rule move.h.pet_cleaning_talk.agree
+on move.agree
+when hook=pet_cleaning_talk
+- Say a clean desk does help you focus
+
+@rule react.h.pet_cleaning_talk.agree
+on react
+when hook=pet_cleaning_talk move=agree fit=good|neutral
+- Right? It's science. Probably.
+- See? You understand.
+- Then let me fix yours.
+
+@rule react.h.pet_cleaning_talk.bad
+on react
+when hook=pet_cleaning_talk fit=bad
+feel pout
+- It's not obsessive. It's tidy.
+- You can keep your mess.
+
+@rule me.h.pet_naps_ask
+on me.small
+when hook=pet_naps_ask
+- Tired again?
+- Did you sleep at all last night?
+- Looking for a place to lie down?
+
+@rule move.h.pet_naps_ask.share
+on move.share
+when hook=pet_naps_ask
+- Admit you nap in the library too
+
+@rule react.h.pet_naps_ask.share
+on react
+when hook=pet_naps_ask move=share fit=good|neutral
+- I knew it! We're the same kind of person.
+- Which corner? I have to know.
+- We should form a club. Meetings are naps.
+
+@rule move.h.pet_naps_ask.ask
+on move.ask
+when hook=pet_naps_ask
+- Ask where her secret napping spot is
+
+@rule react.h.pet_naps_ask.ask
+on react
+when hook=pet_naps_ask move=ask fit=good|neutral
+- The bench behind the gym. In the shade. Don't tell anyone.
+- If I told you, it wouldn't be secret.
+- Somewhere warm and quiet. That's all you get.
+
+@rule move.h.pet_naps_ask.tease
+on move.tease
+when hook=pet_naps_ask
+- Ask if she's awake right now
+
+@rule react.h.pet_naps_ask.tease
+on react
+when hook=pet_naps_ask move=tease fit=good|neutral
+- Barely. Talk slower.
+- I'm awake on the inside.
+- ...Mm? Sorry, what?
+
+@rule react.h.pet_naps_ask.bad
+on react
+when hook=pet_naps_ask fit=bad
+feel pout
+- Don't call me lazy.
+- Let me sleep in peace.
+
+@rule me.h.pet_naps_talk
+on me.small
+when hook=pet_naps_talk
+- You look half asleep.
+- Rough night?
+
+@rule move.h.pet_naps_talk.ask
+on move.ask
+when hook=pet_naps_talk
+- Ask how she stays awake in class
+
+@rule react.h.pet_naps_talk.ask
+on react
+when hook=pet_naps_talk move=ask fit=good|neutral
+- I don't. That's the trick.
+- Coffee and spite.
+- I sit near the window. Then I give up.
+
+@rule move.h.pet_naps_talk.agree
+on move.agree
+when hook=pet_naps_talk
+- Say a short nap beats any energy drink
+
+@rule react.h.pet_naps_talk.agree
+on react
+when hook=pet_naps_talk move=agree fit=good|neutral
+- Yes! Finally someone gets it.
+- I'll quote you on that.
+- Exactly. Now let's go take one.
+
+@rule move.h.pet_naps_talk.tease
+on move.tease
+when hook=pet_naps_talk
+- Say she'd sleep through an earthquake
+
+@rule react.h.pet_naps_talk.tease
+on react
+when hook=pet_naps_talk move=tease fit=good|neutral
+- I did. Twice.
+- Only the small ones.
+- I'd wake up for lunch, though.
+
+@rule react.h.pet_naps_talk.bad
+on react
+when hook=pet_naps_talk fit=bad
+feel pout
+- You sound like my mother.
+- Fine. I'm going to sleep anyway.
+
+@rule me.h.pet_studying_ask
+on me.small
+when hook=pet_studying_ask
+- Studying again?
+- Ahead of the class as usual?
+- You really like this stuff, huh?
+
+@rule move.h.pet_studying_ask.share
+on move.share
+when hook=pet_studying_ask
+- Admit you haven't even started yet
+
+@rule react.h.pet_studying_ask.share
+on react
+when hook=pet_studying_ask move=share fit=good|neutral
+- Then start tonight. I'll check tomorrow.
+- You're going to regret that. I'll help, a little.
+- ...I'm going to pretend I didn't hear that.
+
+@rule move.h.pet_studying_ask.ask
+on move.ask
+when hook=pet_studying_ask
+- Ask how she keeps it all straight
+
+@rule react.h.pet_studying_ask.ask
+on react
+when hook=pet_studying_ask move=ask fit=good|neutral
+- Lists. Lists of lists, really.
+- A little every day. Never a lot at once.
+- I explain it to my plant. If the plant gets it, I get it.
+
+@rule move.h.pet_studying_ask.invite
+on move.invite
+when hook=pet_studying_ask
+- Ask if she'd study with you
+
+@rule react.h.pet_studying_ask.invite
+on react
+when hook=pet_studying_ask move=invite fit=good|neutral
+- Only if you actually study. No chatting.
+- Yes. The library, second floor, by the window.
+- Okay. I'll bring the spare highlighters.
+
+@rule react.h.pet_studying_ask.bad
+on react
+when hook=pet_studying_ask fit=bad
+feel pout
+- Studying isn't boring, you're just bad at it.
+- Fine. Fail, then.
+
+@rule me.h.pet_studying_talk
+on me.small
+when hook=pet_studying_talk
+- Still at it?
+- How much did you get through today?
+
+@rule move.h.pet_studying_talk.ask
+on move.ask
+when hook=pet_studying_talk
+- Ask what she's studying so hard for
+
+@rule react.h.pet_studying_talk.ask
+on react
+when hook=pet_studying_talk move=ask fit=good|neutral
+- I want to choose where I go after this, not be chosen.
+- A scholarship. And pride, a little.
+- Because I like it. Is that strange?
+
+@rule move.h.pet_studying_talk.praise
+on move.praise
+when hook=pet_studying_talk
+- Say her notes look better than the textbook
+
+@rule react.h.pet_studying_talk.praise
+on react
+when hook=pet_studying_talk move=praise fit=good|neutral
+- They are better. The textbook has mistakes.
+- Thank you. It took all weekend.
+- You can borrow them. Carefully.
+
+@rule move.h.pet_studying_talk.tease
+on move.tease
+when hook=pet_studying_talk
+- Ask if she ever takes a break
+
+@rule react.h.pet_studying_talk.tease
+on react
+when hook=pet_studying_talk move=tease fit=good|neutral
+- I take a break to study something else.
+- Of course. I review on the train.
+- ...Define "break."
+
+@rule react.h.pet_studying_talk.bad
+on react
+when hook=pet_studying_talk fit=bad
+feel pout
+- Don't make fun of people who work hard.
+- I'll remember that at exam time.

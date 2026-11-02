@@ -186,9 +186,12 @@ namespace Joojkk.CampusLife
 
         private static float Cup(float u, float v)
         {
+            // the handle on the right, joined to the cup; two wisps of steam rising from its middle
             var cup = RoundBox(u + 0.1f, v + 0.1f, 0.3f, 0.34f, 0.1f);
-            var handle = Math.Abs(Circle(u - 0.42f, v + 0.08f, 0.15f)) - 0.06f;
-            var steam = Math.Min(Segment(u, v, 0.02f, 0.38f, 0.08f, 0.66f, 0.04f), Segment(u, v, 0.2f, 0.38f, 0.26f, 0.66f, 0.04f));
+            var handle = Math.Abs(Circle(u - 0.28f, v + 0.08f, 0.15f)) - 0.06f;
+            var steam = Math.Min(
+                Math.Min(Segment(u, v, -0.22f, 0.36f, -0.16f, 0.5f, 0.04f), Segment(u, v, -0.16f, 0.5f, -0.22f, 0.66f, 0.04f)),
+                Math.Min(Segment(u, v, -0.02f, 0.36f, 0.04f, 0.5f, 0.04f), Segment(u, v, 0.04f, 0.5f, -0.02f, 0.66f, 0.04f)));
             return Math.Min(Math.Min(cup, handle), steam);
         }
 

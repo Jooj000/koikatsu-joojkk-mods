@@ -134,7 +134,7 @@ namespace Joojkk.CampusLife
         /// <summary>Closes our part (the talk scene closed, or it goes on with A alone): stage, buttons, names.</summary>
         private static void TrioCleanup()
         {
-            if (_trio != null) { FinishB(); TLog("over (" + (_trio.Ending == "" ? "talk closed" : _trio.Ending) + ")"); if (TrioEnding == "") TrioEnding = _trio.Ending == "" ? "closed" : _trio.Ending; }
+            if (_trio != null) { _pairWith = _trio.Ending == "bleft" ? null : _trio.A; FinishB(); _pairWith = null; TLog("over (" + (_trio.Ending == "" ? "talk closed" : _trio.Ending) + ")"); if (TrioEnding == "") TrioEnding = _trio.Ending == "" ? "closed" : _trio.Ending; }
             _trio = null;
             TrioStage.End();
             ClearTargetButton();
@@ -403,6 +403,8 @@ namespace Joojkk.CampusLife
                 }
                 c4.Add(E("Say you're glad to be with both", () => BothTalk("glad")));
                 c4.Add(E("Compliment them both", () => BothTalk("compliment")));
+                if (t.A.isGirlfriend && t.B.isGirlfriend && !(Share.Stance(t.A, t.B) == Share.Trio && Share.Stance(t.B, t.A) == Share.Trio) && !AskedTrioToday(t.A, t.B))
+                    c4.Add(E("Ask them both about being a trio", TrioAskBoth));
                 c5.Add(E("Tease them both", () => BothTalk("tease")));
                 c5.Add(E("Suggest somewhere private, the three of you", TrioH3));
             }

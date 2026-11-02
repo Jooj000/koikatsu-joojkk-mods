@@ -260,50 +260,60 @@ when kind=errand tone=teasing
 on @errand
 when errandat=library reqsrc=board
 - [My library books are overdue. Could you return them for me?|Could you take my books back to the library? They're late.|My library books... they were due last week.]
+- [The librarian keeps asking for my books. Could you take them back?|Return my books to the library? I'll pay the late fee myself.|If my library books are late again, I'm banned. Help?]
 
 @rule errand.cafeteria
 on @errand
 when errandat=cafeteria reqsrc=board
 - [Could you get me a melon bread before they sell out?|The cafeteria melon bread. I need one. Before it's gone.|Grab me a melon bread? They always run out.]
+- [One melon bread from the cafeteria. Just one. Please?|If you're near the cafeteria, a melon bread would save my day.|They only bake a few melon breads. Could you get one for me?]
 
 @rule errand.staffroom
 on @errand
 when errandat=staffroom reqsrc=board
 - [Could you turn in my assignments at the faculty room?|My assignments need to go to the faculty room.|Take my assignments to the faculty room? I can't face them today.]
+- [My assignments are done, but I can't make myself walk into the faculty room.|Could you drop my assignments on the teacher's desk in the faculty room?|The faculty room wants my assignments today. Could you take them?]
 
 @rule errand.clubroom
 on @errand
 when errandat=clubroom reqsrc=board
 - [I left my notebook in the club room. Could you get it?|My notebook's still in the club room...|Fetch my notebook from the club room?]
+- [My notebook's on the club room table, I think. Could you bring it?|I need my notebook from the club room before class.|Could you check the club room? My notebook has all my notes.]
 
 @rule errand.gym
 on @errand
 when errandat=gym reqsrc=board
 - [I left my towel in the gym. Could you find it?|My towel's somewhere in the gym.|Find my towel in the gym? I forgot it after practice.]
+- [My towel's probably on the gym bench. Could you look?|I left my towel in the gym again. Could you get it?|Could you find my towel in the gym before someone throws it out?]
 
 @rule errand.pool
 on @errand
 when errandat=pool reqsrc=board
 - [My goggles are still at the pool. Could you get them?|I forgot my goggles at the pool...|Get my goggles back from the pool?]
+- [My goggles should be by the pool's edge. Could you get them?|Could you check the pool for my goggles? Blue ones.|I can't swim without my goggles. They're at the pool.]
 
 @rule errand.infirmary
 on @errand
 when errandat=infirmary reqsrc=board
 - [Could you pick up my medicine at the infirmary?|My medicine's waiting at the infirmary.|The infirmary has my medicine. Could you get it for me?]
+- [The nurse has my medicine ready. Could you pick it up?|Could you get my medicine from the infirmary? I'm not feeling great.|My medicine's at the infirmary, and I can't leave class.]
 
 @rule errand.classroom
 on @errand
 when errandat=classroom reqsrc=board
 - [Could you copy today's notes for me?|I missed today's notes. Could you copy them?|Today's notes... I didn't get any of them down.]
+- [Could you copy the notes from today's class for me?|I zoned out all class. Could you copy the notes for me?|Lend me today's notes? Or copy them? Please?]
 
 @rule errand.charm
 on @errand
 when reqsrc=arc
 - [I lost my charm. Someone saw one at the {place}.|My charm's gone. Someone said it's at the {place}.|My little charm... it might be at the {place}.]
+- [My good-luck charm fell off my bag. Someone saw it at the {place}.|I had a charm on my bag... someone found one at the {place}.|My charm! It might be at the {place}. Please?]
 
 @rule errand.any
 on @errand
 - [Could you go to the {place} for me?|There's something at the {place} I need.|I need something done at the {place}.]
+- [Could you run over to the {place}? I'd owe you.|There's something at the {place} I need. Could you go?|Do you have time to go to the {place} for me?]
 
 @rule board.first.other.gentle
 on board

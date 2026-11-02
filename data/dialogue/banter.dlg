@@ -135,35 +135,56 @@ when shared=yes myrole=student otherrole=student
 on duo3.talk
 when othermood=sleepy otherrole=student
 - You look half asleep. >> I stayed up too late. >> I'm awake! I'm fine! >> I didn't sleep. >> Thanks for noticing.
+- Were you up all night again? >> I lost track of time reading. >> Gaming! I almost beat the boss! >> Studying. >> Wouldn't you like to know.
+- You yawned three times in a row. >> Sorry... it's contagious, isn't it? >> Four! You missed one! >> I'm aware. >> Counting my yawns? Bored, are we?
+- Want me to wake you if the teacher comes? >> Would you? Thank you... >> Yes! Poke me hard! >> ...Please. >> Only if you do it gently.
 
 @rule duo3.talk.hungry
 on duo3.talk
 when othermood=hungry otherrole=student
 - I can hear your stomach from here. >> S-sorry. I skipped breakfast. >> I'm starving! >> It's nothing. >> Then feed me.
+- Was that your stomach? >> ...Please don't tell anyone. >> Yep! It's been yelling all morning! >> No. >> It was yours, obviously.
+- Did you skip breakfast? >> I didn't have time this morning. >> I overslept! Food was not an option! >> Yes. >> Breakfast is for people who wake up.
+- I've got some crackers, if you want. >> Oh, you're a lifesaver. Thank you. >> Gimme gimme! Thank you! >> ...One. >> What do you want for them?
 
 @rule duo3.talk.stressed
 on duo3.talk
 when othermood=stressed otherrole=student
 - You seem tense today. Are you okay? >> I just have a lot going on. >> Too much to do! I'll manage! >> It's fine. >> Tense? Me? Never.
+- You've been gripping that pen really hard. >> Have I? I didn't notice. >> It's the test! It's eating me alive! >> It's fine. >> It's a stress pen. It's allowed.
+- Is it the exams? >> Mostly. There's just so much. >> Everything is the exams right now! >> Partly. >> It's always the exams.
+- You can take a break, you know. >> I know... I'll try. >> Breaks are for after! After! >> Later. >> Only if you take one with me.
 
 @rule duo3.talk.upset
 on duo3.talk
 when othermood=upset otherrole=student
 feel worried
 - Did something happen? You've been quiet. >> It's nothing. Thank you, though. >> I'm just annoyed, that's all! >> I don't want to talk about it. >> You'd only laugh.
+- You don't have to smile if you don't feel like it. >> ...Thank you. Really. >> I'm smiling because I'm FINE! >> I wasn't going to. >> Who said I was smiling for you?
+- Want to walk around a bit? Just us. >> ...I'd like that. >> Yes. Anywhere but here! >> ...Fine. >> Is this you being nice? Weird.
+- If someone said something to you, I'll go talk to them. >> Please don't. It's all right. >> Ha! I'd like to see that! >> Don't. >> My hero. Sit down.
 
 @rule duo3.talk.lonely
 on duo3.talk
 when othermood=lonely otherrole=student
 - {student}You went home alone yesterday, didn't you? >> Yes. Everyone was busy. >> Yeah, nobody was around! >> I don't mind. >> Why, did you miss me?
+- I feel like we haven't talked in ages. >> I missed it too, honestly. >> Right?! Where have you been?! >> It's been a week. >> You could have called, you know.
+- Do you want to eat lunch together tomorrow? >> I'd really like that. >> Yes! Tomorrow and the day after! >> ...Sure. >> Are you asking me out?
+- You've been sitting by yourself a lot lately. >> I didn't think anyone noticed. >> I know! I'm bored out of my mind! >> I like the quiet. >> Watching me, were you?
 
 @rule duo3.talk.cheerful
 on duo3.talk
 when othermood=cheerful otherrole=student
 feel smile
 - You're in a good mood today. >> Am I? I suppose so. >> Yeah! Great day! >> It's not bad. >> Jealous?
+- You're in a good mood today. >> I am. It's been a nice day. >> The best! Everything's going right! >> It's fine. >> Don't jinx it.
+- What's got you smiling like that? >> Nothing in particular. Just a good feeling. >> Secret! Okay, I'll tell you later! >> Nothing. >> Wouldn't you like to know~
+- You've been humming all morning. >> Oh no, was it loud? >> It's stuck in my head! Help! >> I wasn't. >> And you've been listening all morning.
 
 @rule duo3.talk.bored
 on duo3.talk
 when othermood=bored otherrole=student
 - You've looked at the clock five times. >> Have I? Sorry. >> This day won't end! >> It's slow today. >> Someone has to keep an eye on it.
+- This break is taking forever. >> It does feel long today. >> SO long! Entertain me! >> It's ten minutes. >> Then do something interesting.
+- Want to play a word game? >> Sure, you start. >> Yes! Anything! I'll go first! >> ...One round. >> Only if I get to win.
+- You've been staring at the clock. >> Has it even moved? >> It's broken! It has to be! >> It's moving. >> I'm staring at you staring at it.

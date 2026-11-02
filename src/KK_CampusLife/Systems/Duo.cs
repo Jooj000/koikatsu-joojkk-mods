@@ -20,7 +20,7 @@ namespace Joojkk.CampusLife
     /// introduction, a girl who feels left out, gossip, or close friends who just want to see you. A girl comes over
     /// with someone at most every other day, and each incident is the reason for one scene only.
     /// </summary>
-    internal static class Duo
+    internal static partial class Duo
     {
         private static CampusState S { get { return Campus.S; } }
         private static int _lastPeriod = -1;
@@ -843,6 +843,7 @@ namespace Joojkk.CampusLife
         // and NPC._isPlayerAction starts her AI again when the player's notice list changes: she left in her talk pose
         // (user, 2026-10-31: Asuka sliding off with her arms crossed in the middle of the talk).
         private static NPC _held;
+        private const string InTalk = "in the talk with you";
         private static Vector3 _heldPos;
         private static Quaternion _heldRot;
         private static bool _heldSaid;
@@ -850,11 +851,13 @@ namespace Joojkk.CampusLife
         /// <summary>Keeps her where she stands now until the talk closes; null lets go.</summary>
         internal static void KeepStill(NPC n)
         {
+            if (_held != null && _held != n && Director.HaltReason(_held.heroine) == InTalk) Director.Release(_held);
             _held = n;
             _heldSaid = false;
             if (n == null) return;
             _heldPos = n.transform.position;
             _heldRot = n.transform.rotation;
+            if (Director.HaltReason(n.heroine) == InTalk) Director.Halt(n, InTalk); // her new spot is the one the director keeps
         }
 
         /// <summary>Every frame, after the game's Update (plugin LateUpdate).</summary>
@@ -864,7 +867,7 @@ namespace Joojkk.CampusLife
             if (n == null) return;
             try
             {
-                if (!G.TalkSceneOpen) { _held = null; return; }
+                if (!G.TalkSceneOpen) { if (Director.HaltReason(n.heroine) == InTalk) Director.Release(n); _held = null; return; }
                 var woke = n.AI != null && n.AI.isRunning && !n.AI.isPaused;
                 var moved = (n.transform.position - _heldPos).sqrMagnitude > 0.0001f;
                 var agentOn = n.agent != null && n.agent.enabled;
@@ -873,7 +876,8 @@ namespace Joojkk.CampusLife
                     _heldSaid = true;
                     Step("holding " + GirlInfo.FirstName(n.heroine) + " (AI awake " + woke + ", moved " + (n.transform.position - _heldPos).magnitude.ToString("0.00") + " m, agent on " + agentOn + ", action " + (n.AI != null ? n.AI.actionNo : -1) + ")");
                 }
-                if (woke) n.Pause(true);
+                // Stopped by the director, not paused: her AI may run, she stays in the talk.
+                if (woke && Director.HaltReason(n.heroine) == null) Director.Halt(n, InTalk);
                 if (agentOn) n.agent.enabled = false;
                 if (n.move != null && n.move.animParamSpeed != 0f) n.move.animParamSpeed = 0f;
                 n.transform.SetPositionAndRotation(_heldPos, _heldRot);
@@ -932,7 +936,8 @@ namespace Joojkk.CampusLife
                 try
                 {
                     if (n == null) { i++; continue; }
-                    n.Pause(true);
+                    // The director moves her now: her AI keeps running, nothing is paused.
+                    Director.Drive(n, "coming over to you");
                     if (n.move != null) n.move.animParamSpeed = 0f;
                     // Off her seat or wait point: without one the game plays the standing idle and clears the props.
                     if (n.isArrival) n.SetWaitPoint(null);
@@ -1035,6 +1040,10 @@ namespace Joojkk.CampusLife
                         if (!n.agent.pathPending && n.agent.pathStatus != NavMeshPathStatus.PathComplete) { Step(GirlInfo.FirstName(n.heroine) + " has no path"); Arrive(n, spots[i], done, i); continue; }
                         if (d < best[i] - 0.1f) { best[i] = d; bestAt[i] = Time.realtimeSinceStartup; }
                         else if (Time.realtimeSinceStartup - bestAt[i] > 2.5f) { Step(GirlInfo.FirstName(n.heroine) + " stuck " + d.ToString("0.0") + " m away"); Arrive(n, spots[i], done, i); continue; }
+                        // Her AI keeps running: it may hand the agent its own spot or brake; the scene's walk comes first.
+                        if (!n.agent.pathPending && (n.agent.destination - spots[i]).sqrMagnitude > 0.09f) n.agent.SetDestination(spots[i]);
+                        if (n.move != null) n.move.isStop = false;
+                        n.agent.isStopped = false;
                         n.AgentVelocityMoveAnimeUpdate();
                         var v = n.agent.velocity;
                         v.y = 0f;
@@ -1090,7 +1099,13 @@ namespace Joojkk.CampusLife
                 try
                 {
                     if (n == null) continue;
-                    if (n.agent != null) n.agent.enabled = false;
+                    // Her AI runs: the agent stays on, stopped by the director, so whatever the AI asks of it works.
+                    if (n.agent != null && !n.agent.enabled)
+                    {
+                        n.agent.enabled = true;
+                        NavMeshHit hit;
+                        n.agent.Warp(NavMesh.SamplePosition(n.transform.position, out hit, 1f, NavMesh.AllAreas) ? hit.position : n.transform.position);
+                    }
                     var look = p.position - n.transform.position;
                     look.y = 0f;
                     if (look.sqrMagnitude > 0.01f) n.transform.rotation = Quaternion.LookRotation(look);
@@ -1101,6 +1116,7 @@ namespace Joojkk.CampusLife
                     }
                 }
                 catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo face: " + e.Message); }
+                if (n != null) Director.Halt(n, "with you", true);
             }
         }
 
@@ -1119,6 +1135,7 @@ namespace Joojkk.CampusLife
                 try
                 {
                     if (n == null) continue;
+                    Director.Release(n);
                     if (n.agent != null)
                     {
                         n.agent.enabled = true;

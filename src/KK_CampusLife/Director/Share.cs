@@ -117,6 +117,31 @@ namespace Joojkk.CampusLife
             return saw && hot ? "confront" : "wait";
         }
 
+        /// <summary>
+        /// recusar mas permitir, e recusar"). Her answer is the same decision as when she finds out (both personalities,
+        /// their bond, her tastes), and asking openly counts: a girl who trusts you, or who hears the other one already
+        /// said yes, steps up from "see her apart" to "the three of us". Returns Trio (yes), Separate/Friends (no, but you
+        /// can see her) or Refuses (no). She told you now: it is said, and nothing about it is pending.
+        /// </summary>
+        public static int AskTrio(SaveData.Heroine gf, SaveData.Heroine other, bool otherSaidYes, out string why)
+        {
+            why = "";
+            if (gf == null || other == null) return Unknown;
+            var d = Decide(gf, other, out why);
+            if (d == Separate || d == Friends)
+            {
+                var comp = Harem.Compatibility(gf, other);
+                if (Social.Trust(gf) >= 65 && comp >= 35 && Pairs.GirlsOk(gf)) { d = Trio; why += ", trusts you enough to try"; }
+                else if (otherSaidYes && comp >= 45) { d = Trio; why += ", the other one said yes"; }
+            }
+            Set(gf, other, d, "asked about a trio: " + why);
+            var gs = S.Girl(GirlInfo.Key(gf));
+            if (!gs.ShareSaid.Contains(GirlInfo.Key(other))) gs.ShareSaid.Add(GirlInfo.Key(other));
+            var pending = gs.Pending ?? "";
+            if (pending.StartsWith("Share", StringComparison.Ordinal) && pending.Contains(GirlInfo.Key(other))) gs.Pending = "";
+            return d;
+        }
+
         public static SaveData.Heroine PendingOther(SaveData.Heroine gf, out bool confront, out bool saw)
         {
             confront = false;

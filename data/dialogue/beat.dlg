@@ -118,101 +118,141 @@ feel shy
 on beat
 when tag=cg_admit tone=gentle
 - ...At least you're honest.
+- ...Everything. Okay. Thank you for not pretending.
+- ...I'd rather hear it from you than wonder.
 
 @rule beat.cg_admit.energetic
 on beat
 when tag=cg_admit tone=energetic
 - Everything?! ...Okay. Okay.
+- You didn't have to say EVERYTHING! ...But okay.
+- Ugh! Fine! At least you're not lying!
 
 @rule beat.cg_admit.cool
 on beat
 when tag=cg_admit tone=cool
 - ...Honest. Fine.
+- ...So you saw. Noted.
+- ...Straight answer. I'll take it.
 
 @rule beat.cg_admit.teasing
 on beat
 when tag=cg_admit tone=teasing
 - Everything, huh? ...Good.
+- Everything? Then you owe me one. A big one.
+- Honest, huh? ...Did you like it?
 
 @rule beat.cg_explain.gentle
 on beat
 when tag=cg_explain tone=gentle
 - ...I believe you.
+- ...An accident. Okay. I can live with that.
+- ...You knocked twice? ...Then it was my fault too.
 
 @rule beat.cg_explain.energetic
 on beat
 when tag=cg_explain tone=energetic
 - ...Okay, okay, I believe you!
+- An accident! Right! Totally! ...I believe you, I think!
+- Next time knock louder! Way louder!
 
 @rule beat.cg_explain.cool
 on beat
 when tag=cg_explain tone=cool
 - ...Fine.
+- ...Accidents happen. Don't let it happen again.
+- ...I'll accept that. Once.
 
 @rule beat.cg_explain.teasing
 on beat
 when tag=cg_explain tone=teasing
 - An accident. Sure~
+- An accident? You're blushing like it wasn't.
+- Sure, sure. A very lucky accident.
 
 @rule beat.cg_secret.gentle
 on beat
 when tag=cg_secret tone=gentle
 - ...Thank you. Really.
+- ...Just between us. Promise me again.
+- ...Thank you. I trust you with it.
 
 @rule beat.cg_secret.energetic
 on beat
 when tag=cg_secret tone=energetic
 - Promise?! Okay. Thanks.
+- Pinky promise! Swear it! ...Okay. Good.
+- If anyone finds out, I'm blaming you! ...Thanks.
 
 @rule beat.cg_secret.cool
 on beat
 when tag=cg_secret tone=cool
 - ...Good.
+- ...Good. Keep it that way.
+- ...Our secret, then. Don't make me regret it.
 
 @rule beat.cg_secret.teasing
 on beat
 when tag=cg_secret tone=teasing
 - ...Our secret, then.
+- A secret, just us? ...I kind of like that.
+- Then we're partners in crime now.
 
 @rule beat.cg_feel.gentle
 on beat
 when tag=cg_feel tone=gentle
 - ...You really think so?
+- ...You really think so? ...That helps a little.
+- ...Nothing to be ashamed of... I'll try to believe that.
 
 @rule beat.cg_feel.energetic
 on beat
 when tag=cg_feel tone=energetic
 - ...Really?
+- Easy for you to say! ...But thanks. Really.
+- Nothing to be ashamed of?! ...Okay. Okay, maybe.
 
 @rule beat.cg_feel.cool
 on beat
 when tag=cg_feel tone=cool
 - ...Hm.
+- ...You're strangely calm about it.
+- ...Maybe. I'll think about it.
 
 @rule beat.cg_feel.teasing
 on beat
 when tag=cg_feel tone=teasing
 - ...Smooth.
+- Nothing to be ashamed of? Then you won't mind if I watch you sometime.
+- So you're saying you liked what you saw.
 
 @rule beat.cg_space.gentle
 on beat
 when tag=cg_space tone=gentle
 - ...Okay.
+- ...Thank you. I'm not ready yet.
+- ...Later. Maybe. Thanks for waiting.
 
 @rule beat.cg_space.energetic
 on beat
 when tag=cg_space tone=energetic
 - ...Yeah. Let's drop it!
+- Yes! Let's never talk about it! ...For now!
+- Good call! Great call! Moving on!
 
 @rule beat.cg_space.cool
 on beat
 when tag=cg_space tone=cool
 - ...Fine.
+- ...Wise.
+- ...Fine by me.
 
 @rule beat.cg_space.teasing
 on beat
 when tag=cg_space tone=teasing
 - ...Coward. ...Fine.
+- Running away? ...Okay. This time.
+- Scared of the answer? ...I'll let you off.
 
 # ================= what she owes you (Debt) =================
 @rule beat.debt.intro.gentle

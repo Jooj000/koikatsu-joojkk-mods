@@ -112,11 +112,15 @@ namespace Joojkk.CampusLife
                 return;
             }
 
-            Safe("cards", AddGirlPages);
-            Safe("campus card", AddCampusCard);
-            Safe("places", AddPlaceCards);
-            Safe("header", AddHeaderButton);
-            Safe("panel", () => CampusPanel.Build(CanvasRoot));
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var parts = new List<string>();
+            Action<string, Action> timed = (what, a) => { var t0 = sw.Elapsed.TotalMilliseconds; Safe(what, a); parts.Add(what + " " + (sw.Elapsed.TotalMilliseconds - t0).ToString("0")); };
+            timed("cards", AddGirlPages);
+            timed("campus card", AddCampusCard);
+            timed("places", AddPlaceCards);
+            timed("header", AddHeaderButton);
+            timed("panel", () => CampusPanel.Build(CanvasRoot));
+            CampusLifePlugin.Log.LogInfo("Clipboard: built in " + sw.Elapsed.TotalMilliseconds.ToString("0") + " ms (" + string.Join(", ", parts.ToArray()) + ")" + (ClipboardWarm.Done ? "" : ", before the warm-up finished"));
 
             var tab = Pending;
             Pending = PanelTab.None;
@@ -150,8 +154,9 @@ namespace Joojkk.CampusLife
                 if (comp == null || comp == male) continue;
                 var h = comp.heroine;
                 if (h == null && comp == fix && act != null && act.fixChara != null) h = act.fixChara.heroine;
-                if (h == null || h.isTeacher) continue;
+                if (h == null) continue; // teachers too
                 Cards.Add(new KeyValuePair<ChaStatusComponent, SaveData.Heroine>(comp, h));
+                TransitionScreen.OfferGameHeart(comp);
                 Safe("pages", () => RebuildPages(comp, h));
                 AddNote(comp, h);
             }
@@ -191,7 +196,7 @@ namespace Joojkk.CampusLife
                 bf == null ? "-" : GirlInfo.FirstName(bf),
             };
 
-            var relation = h.isGirlfriend ? "girlfriend" : h.relation >= 1 ? "friend" : h.relation == 0 ? "acquaintance" : "just met";
+            var relation = h.isTeacher ? Teachers.Stage(h) + (Teachers.MilestoneDue(h) ? ", next step ready" : "") : h.isGirlfriend ? "girlfriend" : h.relation >= 1 ? "friend" : h.relation == 0 ? "acquaintance" : "just met";
             if (h.isDate) relation += ", date set";
             var bond = new[]
             {
@@ -295,7 +300,7 @@ namespace Joojkk.CampusLife
             var bar = GameUi.Image(card, "cl_note", GameUi.SprBlueBar);
             bar.rectTransform.Place(140f, 228f, 284f, 36f);
             var icon = GameUi.Image(bar.transform, "marker", null, Color.white);
-            icon.sprite = story ? Markers.Get(Markers.StoryShape) : Markers.For(r);
+            icon.sprite = story ? Markers.StoryBadge() : Markers.Badge(r);
             icon.rectTransform.Place(-14f, -4f, 44f, 44f);
             var t = GameUi.Text(bar.transform, "text", story ? "Story event today" : r.Title, 20f, Color.white, TextAlignmentOptions.MidlineLeft, false);
             t.rectTransform.Stretch(34f, 2f, 6f, 2f);
@@ -366,15 +371,15 @@ namespace Joojkk.CampusLife
             t.lineSpacing = 6f;
 
             var y = 10f;
-            foreach (var tab in new[] { PanelTab.Today, PanelTab.Calendar, PanelTab.Activities })
+            foreach (var tab in new[] { PanelTab.Today, PanelTab.Calendar, PanelTab.Activities, PanelTab.Album })
             {
                 var tabCopy = tab;
                 var b = GameUi.Button(card, "btn" + tab, tab.ToString(), () => CampusPanel.Show(tabCopy));
                 ((RectTransform)b.transform).Place(424f, y, 176f, 40f);
-                y += 50f;
+                y += 46f;
             }
             var help = GameUi.Text(card, "help", Cfg.PlannerKey.Value + " opens this menu", 16f, GameUi.Dim, TextAlignmentOptions.Center);
-            help.rectTransform.Place(424f, y + 8f, 176f, 60f);
+            help.rectTransform.Place(424f, y + 4f, 176f, 40f);
         }
 
         /// <summary>An empty card with the game's frame, sized by the grid.</summary>

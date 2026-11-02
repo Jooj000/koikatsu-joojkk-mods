@@ -56,187 +56,89 @@ namespace Joojkk.CampusLife
         }
     }
 
-    /// <summary>Store icon in the style of the game's map action icons.</summary>
+    /// <summary>
+    /// The store's map icon: Campus Life's round badge (IconArt.Spot) with a shopping bag, pink when you are next to it.
+    /// icons (160 px at the same 100 pixels per unit), the bag a little bigger inside the badge.
+    /// </summary>
     internal static class StoreIcon
     {
         private static Sprite _on, _off;
+        private static readonly float[] Pink = { 1f, 0.45f, 0.62f };
 
         public static Sprite Get(bool on)
         {
             if (on && _on != null) return _on;
             if (!on && _off != null) return _off;
-            var s = Draw(on);
+            var s = MapSprite.Make(IconArt.Spot("bag", Pink, 160, on, 1.12f), 160, 100f, on ? "cl_store_on" : "cl_store_off");
             if (on) _on = s; else _off = s;
             return s;
         }
+    }
 
-        /// <summary>A round badge with a shopping bag, pink when in range like the game's icons.</summary>
-        private static Sprite Draw(bool on)
+    /// <summary>A float RGBA picture (IconArt) as a sprite for the map (a SpriteRenderer: pixels per unit sets its size).</summary>
+    internal static class MapSprite
+    {
+        public static Sprite Make(float[] px, int size, float ppu, string name)
         {
-            const int size = 128;
-            var tex = new Texture2D(size, size, TextureFormat.ARGB32, false) { name = on ? "cl_store_on" : "cl_store_off", wrapMode = TextureWrapMode.Clamp };
-            var px = new Color32[size * size];
-            var ring = on ? new Color(1f, 0.45f, 0.62f, 1f) : new Color(0.55f, 0.55f, 0.6f, 1f);
-            var face = Color.white;
-            var bag = on ? new Color(1f, 0.45f, 0.62f, 1f) : new Color(0.45f, 0.45f, 0.5f, 1f);
-            const int ss = 3;
-            for (var y = 0; y < size; y++)
-            for (var x = 0; x < size; x++)
-            {
-                var acc = new Color(0, 0, 0, 0);
-                for (var sy = 0; sy < ss; sy++)
-                for (var sx = 0; sx < ss; sx++)
-                {
-                    var u = ((x + (sx + 0.5f) / ss) / size) * 2f - 1f;
-                    var v = ((y + (sy + 0.5f) / ss) / size) * 2f - 1f;
-                    var r = Mathf.Sqrt(u * u + v * v);
-                    Color c;
-                    if (r > 0.96f) c = new Color(0, 0, 0, 0);
-                    else if (r > 0.84f) c = ring;
-                    else if (InBag(u, v)) c = bag;
-                    else c = face;
-                    acc += c;
-                }
-                px[y * size + x] = acc / (ss * ss);
-            }
-            tex.SetPixels32(px);
-            tex.Apply(false, true);
+            var tex = new Texture2D(size, size, TextureFormat.ARGB32, false) { name = name, wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+            var cols = new Color[size * size];
+            for (var i = 0; i < cols.Length; i++) cols[i] = new Color(px[i * 4], px[i * 4 + 1], px[i * 4 + 2], px[i * 4 + 3]);
+            tex.SetPixels(cols);
+            tex.Apply(true, true);
             UnityEngine.Object.DontDestroyOnLoad(tex);
-            var sp = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
-            sp.name = tex.name;
+            var sp = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), ppu);
+            sp.name = name;
             return sp;
-        }
-
-        private static bool InBag(float x, float y)
-        {
-            // Bag body (trapezoid) plus a handle arc.
-            var body = y >= -0.5f && y <= 0.18f && Mathf.Abs(x) <= 0.42f - (y + 0.5f) * 0.08f;
-            var hx = x;
-            var hy = y - 0.18f;
-            var hr = Mathf.Sqrt(hx * hx + hy * hy);
-            var handle = hy >= 0f && hr <= 0.26f && hr >= 0.17f;
-            return body || handle;
         }
     }
 }
 
 namespace Joojkk.CampusLife
 {
-    /// <summary>Activity spot icons: the store badge style with a glyph and the color of the stat the activity trains.</summary>
+    /// <summary>
+    /// Activity spot icons: one drawing per activity (a book to
+    /// study, a ball for basketball, a wave at the pool, a paw for the cats...) on the round badge, the ring in the color of
+    /// the stat it trains. A spot with several activities shows the first one of its main kind.
+    /// </summary>
     internal static class ActivityIcon
     {
         private static readonly System.Collections.Generic.Dictionary<string, Sprite> Cache = new System.Collections.Generic.Dictionary<string, Sprite>();
 
-        public static Sprite Get(ActivitySpots.Kind kind, bool on)
+        public static Sprite Get(ActivitySpots.Kind kind, bool on) { return Get(kind, null, on); }
+
+        public static Sprite Get(ActivitySpots.Kind kind, string activityId, bool on)
         {
-            var key = kind + (on ? "_on" : "_off");
+            var glyph = activityId != null ? IconArt.GlyphOf(activityId) : Fallback(kind);
+            var key = kind + ":" + glyph + (on ? "_on" : "_off");
             Sprite s;
             if (Cache.TryGetValue(key, out s) && s != null) return s;
-            s = Draw(kind, on);
+            s = MapSprite.Make(IconArt.Spot(glyph, Tint(kind), 128, on), 128, 100f, "cl_act_" + glyph + (on ? "_on" : "_off"));
             Cache[key] = s;
             return s;
         }
 
-        private static Color Tint(ActivitySpots.Kind kind)
+        private static string Fallback(ActivitySpots.Kind kind)
         {
             switch (kind)
             {
-                case ActivitySpots.Kind.Int: return new Color(0.42f, 0.71f, 1f, 1f);
-                case ActivitySpots.Kind.Str: return new Color(1f, 0.42f, 0.42f, 1f);
-                case ActivitySpots.Kind.Sens: return new Color(1f, 0.54f, 0.85f, 1f);
-                case ActivitySpots.Kind.Job: return new Color(0.95f, 0.75f, 0.25f, 1f);
-                default: return new Color(0.45f, 0.82f, 0.5f, 1f);
+                case ActivitySpots.Kind.Int: return "book";
+                case ActivitySpots.Kind.Str: return "dumbbell";
+                case ActivitySpots.Kind.Sens: return "star";
+                case ActivitySpots.Kind.Job: return "coin";
+                default: return "moon";
             }
         }
 
-        private static Sprite Draw(ActivitySpots.Kind kind, bool on)
-        {
-            const int size = 128;
-            var tex = new Texture2D(size, size, TextureFormat.ARGB32, false) { name = "cl_act_" + kind + (on ? "_on" : "_off"), wrapMode = TextureWrapMode.Clamp };
-            var px = new Color32[size * size];
-            var tint = Tint(kind);
-            var ring = on ? tint : new Color(0.55f, 0.55f, 0.6f, 1f);
-            var glyph = on ? tint : new Color(0.45f, 0.45f, 0.5f, 1f);
-            const int ss = 3;
-            for (var y = 0; y < size; y++)
-            for (var x = 0; x < size; x++)
-            {
-                var acc = new Color(0, 0, 0, 0);
-                for (var sy = 0; sy < ss; sy++)
-                for (var sx = 0; sx < ss; sx++)
-                {
-                    var u = ((x + (sx + 0.5f) / ss) / size) * 2f - 1f;
-                    var v = ((y + (sy + 0.5f) / ss) / size) * 2f - 1f;
-                    var r = Mathf.Sqrt(u * u + v * v);
-                    Color c;
-                    if (r > 0.96f) c = new Color(0, 0, 0, 0);
-                    else if (r > 0.84f) c = ring;
-                    else if (Glyph(kind, u, v)) c = glyph;
-                    else c = Color.white;
-                    acc += c;
-                }
-                px[y * size + x] = acc / (ss * ss);
-            }
-            tex.SetPixels32(px);
-            tex.Apply(false, true);
-            UnityEngine.Object.DontDestroyOnLoad(tex);
-            var sp = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
-            sp.name = tex.name;
-            return sp;
-        }
-
-        private static bool Glyph(ActivitySpots.Kind kind, float x, float y)
+        /// <summary>The stat's color (the same as the clipboard's stat bars).</summary>
+        public static float[] Tint(ActivitySpots.Kind kind)
         {
             switch (kind)
             {
-                case ActivitySpots.Kind.Int:
-                {
-                    // Open book: two pages tilted up from the spine.
-                    var ax = Mathf.Abs(x);
-                    var top = 0.3f - ax * 0.25f;
-                    var bottom = -0.38f + ax * 0.1f;
-                    var page = ax <= 0.5f && y <= top && y >= bottom && ax >= 0.04f;
-                    var lines = page && ax > 0.12f && ax < 0.42f && Mathf.Repeat(y + 0.4f, 0.16f) < 0.05f && y < top - 0.06f && y > bottom + 0.06f;
-                    return page && !lines;
-                }
-                case ActivitySpots.Kind.Str:
-                {
-                    // Dumbbell: bar and two plates.
-                    var ax = Mathf.Abs(x);
-                    var bar = ax <= 0.45f && Mathf.Abs(y) <= 0.06f;
-                    var plate = ax >= 0.3f && ax <= 0.42f && Mathf.Abs(y) <= 0.3f;
-                    var outer = ax > 0.42f && ax <= 0.52f && Mathf.Abs(y) <= 0.18f;
-                    return bar || plate || outer;
-                }
-                case ActivitySpots.Kind.Sens:
-                {
-                    // Heart: (x^2 + y^2 - 1)^3 - x^2 y^3 <= 0, scaled.
-                    var hx = x / 0.5f;
-                    var hy = (y + 0.05f) / 0.5f;
-                    var a = hx * hx + hy * hy - 1f;
-                    return a * a * a - hx * hx * hy * hy * hy <= 0f;
-                }
-                case ActivitySpots.Kind.Job:
-                {
-                    // Coin with a yen sign.
-                    var r = Mathf.Sqrt(x * x + y * y);
-                    if (r > 0.5f) return false;
-                    if (r > 0.42f) return true;
-                    var ax = Mathf.Abs(x);
-                    var stem = ax <= 0.05f && y <= 0.02f && y >= -0.3f;
-                    var arms = y >= 0.02f && y <= 0.3f && Mathf.Abs(ax - (y - 0.02f) * 0.7f) <= 0.05f;
-                    var bars = ax <= 0.18f && (Mathf.Abs(y + 0.04f) <= 0.025f || Mathf.Abs(y + 0.14f) <= 0.025f);
-                    return !(stem || arms || bars);
-                }
-                default:
-                {
-                    // Crescent moon.
-                    var inA = x * x + y * y <= 0.45f * 0.45f;
-                    var dx = x - 0.2f;
-                    var dy = y - 0.15f;
-                    var inB = dx * dx + dy * dy <= 0.38f * 0.38f;
-                    return inA && !inB;
-                }
+                case ActivitySpots.Kind.Int: return new[] { 0.42f, 0.71f, 1f };
+                case ActivitySpots.Kind.Str: return new[] { 1f, 0.42f, 0.42f };
+                case ActivitySpots.Kind.Sens: return new[] { 1f, 0.54f, 0.85f };
+                case ActivitySpots.Kind.Job: return new[] { 0.95f, 0.72f, 0.2f };
+                default: return new[] { 0.45f, 0.78f, 0.5f };
             }
         }
     }

@@ -74,6 +74,14 @@ namespace Joojkk.CampusLife
         public static bool Steer(ActionControl ac, SaveData.Heroine h, ref ActionControl.ResultInfo r)
         {
             if (h == null || r == null || ac == null) return false;
+            // Stopped by the director: what the game draws for her becomes something calm where she
+            // stands; she is not walking anywhere until the director lets her go.
+            if (Director.Halted(h))
+            {
+                var here = GirlInfo.CurrentMap(h);
+                if (here >= 0 && !IsCalmHere(r, here)) { var calm = CalmOn(ac, h, here); if (calm != null && calm.actionNo != 8) r = calm; }
+                return true;
+            }
             if (Holds(h))
             {
                 if (Duo.Busy || WalkTalk.Active && WalkTalk.Her == h) return true;

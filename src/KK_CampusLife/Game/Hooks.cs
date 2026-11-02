@@ -205,5 +205,84 @@ namespace Joojkk.CampusLife
                 CampusLifePlugin.Log.LogDebug(e);
             }
         }
+        /// <summary>
+        /// muito"). The game picks the result row by how it ended (HSceneProc.EndProc: 6/7 no climax, 8 no finish, 13 a
+        /// girl with no card id and no climax) and draws a favor change from it that can be negative; for those endings a
+        /// loss becomes zero. Gains stay.
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(HSceneResult), "LoadResult")]
+        private static void HResultNoLoss(HSceneResult __instance)
+        {
+            try
+            {
+                var t = Traverse.Create(__instance);
+                var end = t.Field("finishADV").GetValue<int>();
+                var add = t.Field("addFavor").GetValue<int>();
+                if (add < 0 && (end == 6 || end == 7 || end == 8 || end == 13))
+                {
+                    t.Field("addFavor").SetValue(0);
+                    CampusLifePlugin.Log.LogInfo("H result: ending " + end + " would cost " + (-add) + " favor; kept at 0");
+                }
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug(e); }
+        }
+
+        /// <summary>
+        /// de convidar alguém assistindo. saiu para a tela de conversa pós H, e loading infinito"): the game only checks it
+        /// for the one-girl modes, so in 3P it stayed on and led to an endless loading. Hidden there; two girls together
+        /// (lesbian) still get it, which is the game's own way to join them.
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(HSprite), nameof(HSprite.InitPointMenuAndHelp))]
+        private static void HNoInviteIn3P(HSprite __instance)
+        {
+            try
+            {
+                if (__instance == null || __instance.flags == null || __instance.btnTrespassing == null) return;
+                var m = __instance.flags.mode;
+                var three = m == HFlag.EMode.houshi3P || m == HFlag.EMode.sonyu3P || m == HFlag.EMode.houshi3PMMF || m == HFlag.EMode.sonyu3PMMF
+                            || __instance.flags.lstHeroine != null && __instance.flags.lstHeroine.Count >= 2 && m != HFlag.EMode.lesbian;
+                if (three && __instance.btnTrespassing.gameObject.activeSelf)
+                {
+                    __instance.btnTrespassing.gameObject.SetActive(false);
+                    CampusLifePlugin.Log.LogInfo("H: invite button hidden in " + m);
+                }
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug(e); }
+        }
+
+        /// <summary>
+        /// ao invés do padrão, quando não são eventos"). The game gives every fixed character the grey "?" frame with no
+        /// gauges; a teacher with Campus Life's conversations is a regular girl to talk to, so outside a step of her event
+        /// (MilestoneDue) she gets the usual frame, relation icon, favor and lewdness, as the game draws them for a student.
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ParamUI), nameof(ParamUI.SetHeroine))]
+        private static void TeacherParamUi(ParamUI __instance, SaveData.Heroine _heroine)
+        {
+            try
+            {
+                if (__instance == null || _heroine == null || !_heroine.isTeacher || !Campus.On || !Cfg.TeacherTalks.Value || Teachers.MilestoneDue(_heroine)) return;
+                var t = Traverse.Create(__instance);
+                var frame = t.Field("imageFrame").GetValue<UnityEngine.UI.Image>();
+                var frames = t.Field("spriteFrame").GetValue<UnityEngine.Sprite[]>();
+                var state = t.Field("imageState").GetValue<UnityEngine.UI.Image>();
+                var states = t.Field("spriteState").GetValue<UnityEngine.Sprite[]>();
+                var favor = t.Field("imageFavor").GetValue<UnityEngine.UI.Image[]>();
+                var lewd = t.Field("imageLewdness").GetValue<UnityEngine.UI.Image[]>();
+                var num = UnityEngine.Mathf.Max(0, UnityEngine.Mathf.Min(2, _heroine.relation));
+                if (frame != null && frames != null && frames.Length > 0) frame.sprite = frames[0];
+                if (state != null && states != null && num * 2 + 1 < states.Length) { state.sprite = states[num * 2 + (_heroine.isAnger ? 1 : 0)]; state.enabled = true; }
+                if (favor != null && favor.Length >= 3)
+                    for (var i = 0; i < 3; i++) favor[i].fillAmount = i < num ? 1f : i == num ? UnityEngine.Mathf.InverseLerp(0f, 100f, _heroine.favor) : 0f;
+                if (lewd != null)
+                {
+                    foreach (var im in lewd) if (im != null) im.enabled = true;
+                    if (lewd.Length > 1) lewd[1].fillAmount = UnityEngine.Mathf.InverseLerp(0f, 100f, _heroine.lewdness);
+                }
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Teacher status bar: " + e.Message); }
+        }
     }
 }

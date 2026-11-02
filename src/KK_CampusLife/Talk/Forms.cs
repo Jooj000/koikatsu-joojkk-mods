@@ -216,14 +216,8 @@ namespace Joojkk.CampusLife
                 if (n == null) return;
                 if (!_held.Contains(n)) _held.Add(n);
                 _heldAt[n] = n.transform.position;
-                n.Pause(true);
-                if (n.AI != null && n.AI.isRunning && !n.AI.isPaused) n.AI.Pause();
-                if (n.move != null) n.move.isStop = true;
-                if (n.move != null) n.move.animParamSpeed = 0f;
-                var p = G.Act.Player.transform.position;
-                var look = p - n.transform.position;
-                look.y = 0f;
-                if (look.sqrMagnitude > 0.01f) n.transform.rotation = Quaternion.LookRotation(look);
+                // The director stops her, facing you.
+                Director.Halt(n, "a scene with you", true);
                 var cam = Camera.main;
                 if (cam != null && n.chaCtrl != null)
                 {
@@ -247,15 +241,13 @@ namespace Joojkk.CampusLife
                     var moved = (n.transform.position - at).magnitude;
                     CampusLifePlugin.Log.LogInfo("Forms: " + GirlInfo.FirstName(n.heroine) + " held, moved " + moved.ToString("0.00") + " m meanwhile" + (moved > 0.3f ? " (SLID)" : ""));
                 }
-                if (n.move != null) n.move.isStop = false;
+                Director.Release(n);
                 if (n.chaCtrl != null) { n.chaCtrl.ChangeLookEyesPtn(0); n.chaCtrl.ChangeLookNeckPtn(3); }
-                n.Pause(false);
-                if (n.AI != null && (!n.AI.isRunning || n.AI.isPaused)) n.AI.Start();
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Forms let: " + e.Message); }
         }
 
-        /// <summary>Every frame: the game's own "player came near / walked away" check restarts her AI, so held girls are re-stopped.</summary>
+        /// <summary>Every frame: a held girl the director let go of by mistake (a map change) is stopped again; the director keeps her feet (Director.KeepHalted).</summary>
         internal static void KeepHeld()
         {
             if (_held.Count == 0) return;
@@ -265,8 +257,7 @@ namespace Joojkk.CampusLife
                 try
                 {
                     if (n == null || n.move == null) { _held.RemoveAt(i); continue; }
-                    if (!n.move.isStop) n.move.isStop = true;
-                    if (n.AI != null && n.AI.isRunning && !n.AI.isPaused) n.AI.Pause();
+                    if (!Director.Halted(n.heroine)) Director.Halt(n, "a scene with you", true);
                 }
                 catch (Exception e) { _held.RemoveAt(i); CampusLifePlugin.Log.LogDebug("Forms keep held: " + e.Message); }
             }

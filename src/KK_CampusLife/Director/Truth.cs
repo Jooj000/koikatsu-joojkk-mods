@@ -58,12 +58,20 @@ namespace Joojkk.CampusLife
                 var r = n.AI != null ? n.AI.result : null;
                 var with = r != null && r.heroine != null && r.heroine != h && AtSchool(r.heroine) ? GirlInfo.FirstName(r.heroine) : "";
                 var no = r != null ? r.actionNo : -1;
-                if (n.isTalking)
+                // Stopped by the director (a scene with you, a talk between two): what she is doing is that.
+                var halt = Director.HaltReason(h);
+                if (halt != null) return halt == "" ? "standing still" : halt.StartsWith("talking with") || halt.StartsWith("arguing with") ? halt : "stopped: " + halt;
+                // fica com outra ação"). Only the one who started the chat had isTalking; the other is read from her partner.
+                var partner = ChatPartner(n);
+                if (n.isTalking || partner != null)
                 {
-                    var p = TalkingWith(n);
+                    var p = partner ?? TalkingWith(n);
                     return p != null ? "talking with " + GirlInfo.FirstName(p) : "chatting";
                 }
-                var moving = !n.isArrival && n.agent != null && n.agent.enabled && n.agent.velocity.sqrMagnitude > 0.04f;
+                // On the way is "going to eat" until she gets there: not
+                // arrived and her spot still away, whatever her speed at this frame (a menu open stops the clock).
+                var far = r != null && r.point != null && (r.point.MapNo != n.mapNo || (r.point.transform.position - n.transform.position).sqrMagnitude > 1.5f * 1.5f);
+                var moving = !n.isArrival && (far || n.agent != null && n.agent.enabled && n.agent.velocity.sqrMagnitude > 0.04f);
                 if (moving)
                 {
                     var dest = r != null && r.point != null ? r.point.MapNo : n.mapNo;
@@ -79,6 +87,31 @@ namespace Joojkk.CampusLife
                 return where == "unknown" ? "" : "hanging around";
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Truth.Doing: " + e.Message); return ""; }
+        }
+
+        /// <summary>
+        /// The girl she is chatting with when the chat is the other one's action (the game's "talk with a girl", 7): her
+        /// partner's action points at her and they stand together.
+        /// </summary>
+        internal static SaveData.Heroine ChatPartner(NPC n)
+        {
+            if (G.Act == null || G.Act.npcList == null || n.heroine == null) return null;
+            var pos = n.transform.position;
+            foreach (var x in G.Act.npcList)
+            {
+                if (x == null || x == n || x.heroine == null || x.mapNo != n.mapNo || x.AI == null) continue;
+                var xr = x.AI.result;
+                if (xr == null || xr.actionNo != 7 || xr.heroine != n.heroine) continue;
+                if (!x.isTalking && !x.isArrival) continue;
+                if ((x.transform.position - pos).sqrMagnitude < 3f * 3f) return x.heroine;
+            }
+            var r = n.AI != null ? n.AI.result : null;
+            if (r != null && r.actionNo == 7 && r.heroine != null && n.isArrival)
+            {
+                var o = G.Act.npcList.FirstOrDefault(x => x != null && x.heroine == r.heroine);
+                if (o != null && o.mapNo == n.mapNo && (o.transform.position - pos).sqrMagnitude < 3f * 3f) return r.heroine;
+            }
+            return null;
         }
 
         /// <summary>The girl next to her in the talking motion (a chat pair, a group, a duo scene).</summary>

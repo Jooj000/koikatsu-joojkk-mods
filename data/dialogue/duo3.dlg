@@ -346,192 +346,224 @@ on duo3.react
 when lvl=friend q!=bad tone=gentle
 feel smile
 - [Hehe, you two get along.|Aww, that's nice.|You're good at this, you know.]
+- [You always know what to say to her.|She looks happy. I'm glad.|You two are sweet together, as friends.]
 
 @rule duo3.react.friend.energetic
 on duo3.react
 when lvl=friend q!=bad tone=energetic
 feel smile
 - [Hey, don't leave me out!|Me next! Me next!|Ooh, I want one too!]
+- [Ooh, nice one!|Ha! She liked that!|Do me next! Do me next!]
 
 @rule duo3.react.friend.cool
 on duo3.react
 when lvl=friend q!=bad tone=cool
 feel smile
 - [...Hm. Not bad.|You're in a good mood.|Fine. I'll allow it.]
+- [...Not bad.|Smooth.|Hm. She's smiling.]
 
 @rule duo3.react.friend.teasing
 on duo3.react
 when lvl=friend q!=bad tone=teasing
 feel smile
 - [...Hm. Not bad.|You're in a good mood.|Fine. I'll allow it.]
+- [Wow, someone's popular.|Should I leave you two alone?|And what do I get?]
 
 @rule duo3.react.bad.gentle
 on duo3.react
 when q=bad tone=gentle
 feel worried
 - [Ah... that didn't go well...|Um... maybe try something else...|Oh no...]
+- [Um... maybe try something else?|Oh... that didn't go well.|She didn't like that, I think.]
 
 @rule duo3.react.bad.energetic
 on duo3.react
 when q=bad tone=energetic
 feel worried
 - [Pfft! Smooth!|Ouch! Shot down!|Hahaha! Nice try!]
+- [Ouch! That was rough!|Yikes! Try again!|Wow, nope! Not like that!]
 
 @rule duo3.react.bad.cool
 on duo3.react
 when q=bad tone=cool
 feel worried
 - [...Nice try.|That was painful to watch.|Well. That happened.]
+- [...Bad idea.|That missed.|Don't do that again.]
 
 @rule duo3.react.bad.teasing
 on duo3.react
 when q=bad tone=teasing
 feel worried
 - [...Nice try.|That was painful to watch.|Well. That happened.]
+- [Smooth. Really smooth.|Want some tips?|I'm writing that one down.]
 
 @rule duo3.react.romance.yourgf.gentle
 on duo3.react
 when lvl=romance wrel=yourgf q!=bad tone=gentle
 feel pout
 - [U-um... I'm right here, you know...|You're my boyfriend... remember?|...You never say that to me.]
+- [...You're sweet to her too, huh.|I'm right here, you know...|...Say something nice to me too.]
 
 @rule duo3.react.romance.yourgf.energetic
 on duo3.react
 when lvl=romance wrel=yourgf q!=bad tone=energetic
 feel pout
 - [Hey! Your girlfriend is standing RIGHT here!|Excuse me?! Hello?!|Wow. Okay. I see how it is.]
+- [Hey! Hey! I'm your girlfriend!|What about me?!|Don't forget who you're dating!]
 
 @rule duo3.react.romance.yourgf.cool
 on duo3.react
 when lvl=romance wrel=yourgf q!=bad tone=cool
 feel pout
 - [...I'm still here.|Interesting. Very interesting.|We'll talk later.]
+- [...I see.|Interesting choice of words.|...Noted.]
 
 @rule duo3.react.romance.yourgf.teasing
 on duo3.react
 when lvl=romance wrel=yourgf q!=bad tone=teasing
 feel pout
 - [...I'm still here.|Interesting. Very interesting.|We'll talk later.]
+- [Careful. I'm keeping score.|Flirting in front of me? Bold.|You'll make it up to me later.]
 
 @rule duo3.react.spicy.yourgf.gentle
 on duo3.react
 when lvl=spicy wrel=yourgf q!=bad tone=gentle
 feel pout
 - [W-what are you saying to her...?|That's... that's what you say to ME...|Why her...?]
+- [...That's too much, in front of me.|Please... not like that, with me here.|...I don't like this.]
 
 @rule duo3.react.spicy.yourgf.energetic
 on duo3.react
 when lvl=spicy wrel=yourgf q!=bad tone=energetic
 feel pout
 - [WHAT did you just say to her?!|Hey! HEY! I heard that!|Are you kidding me right now?!]
+- [WHAT?! In front of me?!|Hey! Hands to yourself!|Are you serious right now?!]
 
 @rule duo3.react.spicy.yourgf.cool
 on duo3.react
 when lvl=spicy wrel=yourgf q!=bad tone=cool
 feel pout
 - [I heard that.|...Unbelievable.|In front of me. Really.]
+- [...You're done for today.|I'm going to remember that.|...We'll talk later.]
 
 @rule duo3.react.spicy.yourgf.teasing
 on duo3.react
 when lvl=spicy wrel=yourgf q!=bad tone=teasing
 feel pout
 - [I heard that.|...Unbelievable.|In front of me. Really.]
+- [My, my. And I'm your girlfriend.|You'll pay for that tonight.|Oh? Should I start keeping a list?]
 
 @rule duo3.react.trisal.gentle
 on duo3.react
 when wrel=trisal lvl!=friend q!=bad tone=gentle
 feel shy
 - [Hehe... don't forget me, okay?|You two are cute.|...My turn next?]
+- [...It's nice, seeing you two like this.|I don't mind. Really.|...You'll do the same for me, right?]
 
 @rule duo3.react.trisal.energetic
 on duo3.react
 when wrel=trisal lvl!=friend q!=bad tone=energetic
 feel shy
 - [Hey! Me too! Me too!|Save some for me!|Ooh, look at you two!]
+- [Aww! My turn after!|Hehe, I love this!|Hey, share!]
 
 @rule duo3.react.trisal.cool
 on duo3.react
 when wrel=trisal lvl!=friend q!=bad tone=cool
 feel shy
 - [Fair is fair. I'm next.|I'm keeping count.|Mm. I approve.]
+- [...You two.|Fine. Next is mine.|...Cute.]
 
 @rule duo3.react.trisal.teasing
 on duo3.react
 when wrel=trisal lvl!=friend q!=bad tone=teasing
 feel shy
 - [Fair is fair. I'm next.|I'm keeping count.|Mm. I approve.]
+- [Don't leave me out.|Am I watching or joining?|Save some for me.]
 
 @rule duo3.react.rival.gentle
 on duo3.react
 when wrel=rival lvl!=friend q!=bad tone=gentle
 feel pout
 - [...|...Really?|Hmph.]
+- [...Of course it's her.|...I see how it is.|She always gets the attention.]
 
 @rule duo3.react.rival.energetic
 on duo3.react
 when wrel=rival lvl!=friend q!=bad tone=energetic
 feel pout
 - [Ugh, seriously?|Gross. Get a room.|You can do better.]
+- [Seriously? Her?!|Ugh! Of course!|You're wasting that on her!]
 
 @rule duo3.react.rival.cool
 on duo3.react
 when wrel=rival lvl!=friend q!=bad tone=cool
 feel pout
 - [...Tch.|Please. She's not your type.|How tasteless.]
+- [...Her. Really.|Bad taste.|...Whatever.]
 
 @rule duo3.react.rival.teasing
 on duo3.react
 when wrel=rival lvl!=friend q!=bad tone=teasing
 feel pout
 - [...Tch.|Please. She's not your type.|How tasteless.]
+- [You can do better than her.|Desperate, are we?|Cute. For her, I mean.]
 
 @rule duo3.react.bff.gentle
 on duo3.react
 when wrel=bff lvl!=friend q!=bad tone=gentle
 feel shy
 - [Ah... I-I'll pretend I didn't see that...|Hehe, you two...|Should I... go?]
+- [...You two look good together.|I'm happy for her. Really.|She's my best friend. Be good to her.]
 
 @rule duo3.react.bff.energetic
 on duo3.react
 when wrel=bff lvl!=friend q!=bad tone=energetic
 feel shy
 - [Ooh! Look at you two!|Oh my gosh! Tell me everything later!|I KNEW it!]
+- [Ooh! I'm telling everyone!|Yes! I ship it!|Look at her face! She's red!]
 
 @rule duo3.react.bff.cool
 on duo3.react
 when wrel=bff lvl!=friend q!=bad tone=cool
 feel shy
 - [Should I give you two a minute?|Interesting.|I'm telling everyone. Kidding.]
+- [...Treat her right.|She likes that. I can tell.|...Hm. Good.]
 
 @rule duo3.react.bff.teasing
 on duo3.react
 when wrel=bff lvl!=friend q!=bad tone=teasing
 feel shy
 - [Should I give you two a minute?|Interesting.|I'm telling everyone. Kidding.]
+- [I'll hear all about this later, won't I?|Look at her blush~|Should I give you two some room?]
 
 @rule duo3.react.other.gentle
 on duo3.react
 when lvl!=friend q!=bad tone=gentle
 feel shy
 - [Um... I'm still here...|O-oh...|Ah... that's...]
+- [...Oh. Um.|I'll just... look away.|...That's a little embarrassing to watch.]
 
 @rule duo3.react.other.energetic
 on duo3.react
 when lvl!=friend q!=bad tone=energetic
 feel shy
 - [Whoa, getting bold!|Ooh~|Right in front of me, huh?]
+- [Whoa! Okay!|Hey, get a room!|Wow, you're bold!]
 
 @rule duo3.react.other.cool
 on duo3.react
 when lvl!=friend q!=bad tone=cool
 feel shy
 - [...Should I leave?|Bold.|Don't mind me.]
+- [...Hm.|I'm still here.|...Right.]
 
 @rule duo3.react.other.teasing
 on duo3.react
 when lvl!=friend q!=bad tone=teasing
 feel shy
 - [...Should I leave?|Bold.|Don't mind me.]
+- [Don't mind me.|Should I take notes?|Oh, this is fun to watch.]
 
 # ================= the witness of a kiss =================
 @rule duo3.kiss.no.gentle
@@ -539,120 +571,140 @@ on duo3.kiss
 when kiss=no tone=gentle
 feel surprised
 - [Ah... she said no...|Oh... um... are you okay?|...That was awkward.]
+- [...It's okay. She just wasn't ready.|Oh no... are you all right?|...Maybe ask her another time.]
 
 @rule duo3.kiss.no.energetic
 on duo3.kiss
 when kiss=no tone=energetic
 feel surprised
 - [Hah! Shot down!|Ooh, denied!|Ouch! Rejected!]
+- [Ooh, rejected! ...Sorry!|Whoa! Shot down!|Ouch! Rough!]
 
 @rule duo3.kiss.no.cool
 on duo3.kiss
 when kiss=no tone=cool
 feel surprised
 - [...Denied.|Well. That was a no.|Ouch. Right in front of me~]
+- [...She said no.|That was bad timing.|...Read the room.]
 
 @rule duo3.kiss.no.teasing
 on duo3.kiss
 when kiss=no tone=teasing
 feel surprised
 - [...Denied.|Well. That was a no.|Ouch. Right in front of me~]
+- [Denied~|Better luck next time.|Want to try me instead? Kidding.]
 
 @rule duo3.kiss.yourgf.gentle
 on duo3.kiss
 when kiss!=no wrel=yourgf tone=gentle
 feel sad
 - [...You kissed her. Right in front of me.|Why... why her...?|I... I need a moment.]
+- [...I thought I was the one you kiss.|...Please don't do that again.|...That hurt.]
 
 @rule duo3.kiss.yourgf.energetic
 on duo3.kiss
 when kiss!=no wrel=yourgf tone=energetic
 feel sad
 - [Are you SERIOUS right now?!|You kissed her?! I'm your GIRLFRIEND!|Unbelievable! UNBELIEVABLE!]
+- [HEY! What was that?!|You're MY boyfriend!|Did that just happen?!]
 
 @rule duo3.kiss.yourgf.cool
 on duo3.kiss
 when kiss!=no wrel=yourgf tone=cool
 feel sad
 - [...I saw that.|So that's how it is.|We are going to talk about this.]
+- [...We're talking about this later.|I saw that.|...Don't.]
 
 @rule duo3.kiss.yourgf.teasing
 on duo3.kiss
 when kiss!=no wrel=yourgf tone=teasing
 feel sad
 - [...I saw that.|So that's how it is.|We are going to talk about this.]
+- [Oh? And what about me?|You owe me ten of those.|Bold. Very bold. You'll regret it.]
 
 @rule duo3.kiss.trisal.gentle
 on duo3.kiss
 when kiss!=no wrel=trisal tone=gentle
 feel shy
 - [Hehe... now me, okay?|You two look so cute...|...I'm next.]
+- [...My turn next?|You two look so happy.|...I want one too.]
 
 @rule duo3.kiss.trisal.energetic
 on duo3.kiss
 when kiss!=no wrel=trisal tone=energetic
 feel shy
 - [Hey! My turn! My turn!|Save some for me!|Aww! Okay, now me!]
+- [Me too! Me too!|Hehe! Don't skip me!|My turn!]
 
 @rule duo3.kiss.trisal.cool
 on duo3.kiss
 when kiss!=no wrel=trisal tone=cool
 feel shy
 - [Fair is fair.|I'm keeping score.|Mm. Don't forget me.]
+- [...Mine's next.|Fair's fair.|...And me?]
 
 @rule duo3.kiss.trisal.teasing
 on duo3.kiss
 when kiss!=no wrel=trisal tone=teasing
 feel shy
 - [Fair is fair.|I'm keeping score.|Mm. Don't forget me.]
+- [Save some for me.|Line forms here.|Don't think I didn't see that.]
 
 @rule duo3.kiss.rival.gentle
 on duo3.kiss
 when kiss!=no wrel=rival tone=gentle
 feel pout
 - [...Why her...|...I'm leaving soon.|...]
+- [...Her? Really?|...I see.|...Fine. Kiss her, then.]
 
 @rule duo3.kiss.rival.energetic
 on duo3.kiss
 when kiss!=no wrel=rival tone=energetic
 feel pout
 - [EW! Seriously?!|Ugh, get a room!|You have terrible taste!]
+- [Gross! Her?!|You kissed HER?!|Ugh! I'm leaving!]
 
 @rule duo3.kiss.rival.cool
 on duo3.kiss
 when kiss!=no wrel=rival tone=cool
 feel pout
 - [...Tasteless.|Disgusting.|Hmph.]
+- [...Disappointing.|Your taste is awful.|...Whatever.]
 
 @rule duo3.kiss.rival.teasing
 on duo3.kiss
 when kiss!=no wrel=rival tone=teasing
 feel pout
 - [...Tasteless.|Disgusting.|Hmph.]
+- [You're kissing that?|Hope she doesn't bite.|Lowering your standards?]
 
 @rule duo3.kiss.friend.gentle
 on duo3.kiss
 when kiss!=no tone=gentle
 feel shy
 - [Eh?! R-right in front of me...?|W-wow...|I... I didn't see anything!]
+- [Oh! Um... I'll look away.|...That was sweet.|...You two are so cute.]
 
 @rule duo3.kiss.friend.energetic
 on duo3.kiss
 when kiss!=no tone=energetic
 feel shy
 - [WHOA! Hey! I'm right here!|OH MY GOSH!|Did that just happen?!]
+- [WHOA! Right here?!|Ooh! I saw that!|No way! Again!]
 
 @rule duo3.kiss.friend.cool
 on duo3.kiss
 when kiss!=no tone=cool
 feel shy
 - [...I'm standing right here.|Oh my. Don't mind me~|Well. That's new.]
+- [...Okay then.|Didn't need to see that.|...Hm.]
 
 @rule duo3.kiss.friend.teasing
 on duo3.kiss
 when kiss!=no tone=teasing
 feel shy
 - [...I'm standing right here.|Oh my. Don't mind me~|Well. That's new.]
+- [Get a room, you two.|I'll tell everyone~|Wow. Not even shy about it.]
 
 # ================= one of them walks off; the moment ends =================
 @rule duo3.leave.gf.gentle

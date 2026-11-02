@@ -320,7 +320,9 @@ namespace Joojkk.CampusLife
             foreach (var an in AnchorsOn(map))
             {
                 var anchor = an;
-                var kind = an.Acts.GroupBy(KindOf).OrderByDescending(g => g.Count()).First().Key;
+                var main = an.Acts.GroupBy(KindOf).OrderByDescending(g => g.Count()).First();
+                var kind = main.Key;
+                var act = main.First().Id;
                 try
                 {
                     // Walking into the icon shows the activity's name and what it gives (SpotHint).
@@ -330,7 +332,7 @@ namespace Joojkk.CampusLife
                         evt.onTriggerEnter += c => { if (c != null && c.CompareTag("Player")) SpotHint.Enter(anchor); };
                         evt.onTriggerExit += c => { if (c != null && c.CompareTag("Player")) SpotHint.Exit(anchor); };
                     };
-                    list.Add(GameAPI.AddActionIcon(map, an.IconPos, ActivityIcon.Get(kind, true), ActivityIcon.Get(kind, false), () => Use(anchor), created, true, now));
+                    list.Add(GameAPI.AddActionIcon(map, an.IconPos, ActivityIcon.Get(kind, act, true), ActivityIcon.Get(kind, act, false), () => Use(anchor), created, true, now));
                 }
                 catch (Exception e) { CampusLifePlugin.Log.LogError("Activity spot icon: " + e); }
             }

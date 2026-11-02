@@ -38,6 +38,14 @@ namespace Joojkk.CampusLife
         public readonly SaveData.Heroine Her;
         private readonly bool _inTalk;
         private readonly HashSet<string> _registeredNames = new HashSet<string>();
+        // o player solta uma frase no diálogo condizente com a opção, e o contexto"): Branch remembers the label, and the
+        // first line of that branch is preceded by his line (Speech.Line), unless the branch starts with his own Me.
+        private readonly Dictionary<string, string> _labels = new Dictionary<string, string>();
+        private string _pendingMe;
+        /// <summary>Also narrate options that are actions ("You walk her home."), not only the ones he says.</summary>
+        public bool NarrateActions;
+        /// <summary>No automatic line for the player (scenes that write all of his lines themselves).</summary>
+        public bool NoAutoMe;
 
         /// <param name="her">Main heroine (talk scenes) or null (map narration).</param>
         /// <param name="inTalk">True when played inside a TalkScene: [H名] then shows her name.</param>
@@ -81,9 +89,25 @@ namespace Joojkk.CampusLife
             _pendingBg = null;
         }
 
+        /// <summary>His line for the option taken, before the first line of its branch.</summary>
+        private void FlushMe()
+        {
+            var label = _pendingMe;
+            _pendingMe = null;
+            if (label == null || NoAutoMe) return;
+            var line = Speech.Line(label);
+            if (string.IsNullOrEmpty(line)) return;
+            if (line.StartsWith("*") && !NarrateActions) return;
+            var faces = _pendingFaces; var bg = _pendingBg;   // her face and the picture go with her line, as written
+            _pendingFaces = null; _pendingBg = null;
+            if (line.StartsWith("*")) Narr(line.Substring(1)); else Me(line);
+            _pendingFaces = faces; _pendingBg = bg;
+        }
+
         public SceneBuilder Narr(string text)
         {
             if (string.IsNullOrEmpty(text)) return this;
+            FlushMe();
             text = Gender.Fix(text, null, Her);
             Line(text);
             List.Add(Program.Transfer.Text(EventUtils.Narrator, text));
@@ -94,6 +118,7 @@ namespace Joojkk.CampusLife
         public SceneBuilder Me(string text)
         {
             if (string.IsNullOrEmpty(text)) return this;
+            _pendingMe = null;
             text = Gender.Fix(text, null, Her);
             Line(text);
             List.Add(Program.Transfer.Text(PlayerSpeaker, text));
@@ -105,6 +130,7 @@ namespace Joojkk.CampusLife
         public SceneBuilder Her_(string text)
         {
             if (string.IsNullOrEmpty(text)) return this;
+            FlushMe();
             // In her own voice (fillers, exclaims, a stutter, her ~): every line of a talk, old or procedural.
             if (_inTalk && Her != null) text = Voice.Say(Her, Variants.Swap(Her, text));
             text = Gender.Fix(text, Her, Her);
@@ -118,6 +144,7 @@ namespace Joojkk.CampusLife
         public SceneBuilder Say(SaveData.Heroine girl, string text)
         {
             if (string.IsNullOrEmpty(text)) return this;
+            FlushMe();
             if (girl == null) return Narr(text);
             if (_inTalk && girl == Her) return Her_(text);
             text = Gender.Fix(Variants.Swap(girl, text), girl, Her);
@@ -133,7 +160,10 @@ namespace Joojkk.CampusLife
         /// <summary>Shows a choice. Each option jumps to its tag; use Branch(tag) to start each branch.</summary>
         public SceneBuilder Choice(params string[] labelsAndTags)
         {
+            _pendingMe = null;
             var args = new List<string> { "true" };
+            for (var i = 0; i + 1 < labelsAndTags.Length; i += 2)
+                _labels[labelsAndTags[i + 1]] = labelsAndTags[i];
             for (var i = 0; i + 1 < labelsAndTags.Length; i += 2)
                 args.Add(Gender.Fix(labelsAndTags[i], null, Her).Replace(", ", " ").Replace(",", " ") + "," + labelsAndTags[i + 1]);
             // Not "multi", as the game's own choices (Communication.Info): a multi choice let the ADV run on into the first
@@ -145,6 +175,8 @@ namespace Joojkk.CampusLife
         /// <summary>Starts a branch: tag + records the choice in a scenario variable.</summary>
         public SceneBuilder Branch(string tag)
         {
+            string label;
+            _pendingMe = _labels.TryGetValue(tag, out label) ? label : null;
             List.Add(Program.Transfer.Create(true, Command.Tag, tag));
             List.Add(Program.Transfer.VAR("string", ChoiceVar, tag));
             List.Add(Program.Transfer.VAR("string", PickPrefix + tag, "1")); // every choice taken, for long scenes (Scenes.Picks)
@@ -157,12 +189,14 @@ namespace Joojkk.CampusLife
             // Not "multi": the Jump command already reads on from the tag by itself (TextScenario.Jump -> RequestNextLine).
             // As multi, the outer read went on too, past a choice right after the tag and into its first branch, so that
             // branch counted as taken as well.
+            _pendingMe = null;
             List.Add(Program.Transfer.Create(false, Command.Jump, tag));
             return this;
         }
 
         public SceneBuilder Label(string tag)
         {
+            _pendingMe = null;
             List.Add(Program.Transfer.Create(true, Command.Tag, tag));
             return this;
         }
@@ -181,6 +215,7 @@ namespace Joojkk.CampusLife
 
         public SceneBuilder End()
         {
+            _pendingMe = null;
             List.Add(Program.Transfer.Close());
             return this;
         }

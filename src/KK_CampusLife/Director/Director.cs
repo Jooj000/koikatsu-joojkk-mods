@@ -30,7 +30,7 @@ namespace Joojkk.CampusLife
     /// per week keeps big scenes rare, tension rises and cools, recent signatures weigh less and each pair rests between
     /// scenes.
     /// </summary>
-    internal static class Director
+    internal static partial class Director
     {
         private static CampusState S { get { return Campus.S; } }
         private static Situation _pending;
@@ -203,6 +203,9 @@ namespace Joojkk.CampusLife
                 if (_pending != null && !Present(_pending)) _pending = null;
                 if (_pending != null) CampusLifePlugin.Log.LogInfo("Director: waiting to happen this period: " + _pending);
             }
+            try { TickGather(); }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Director gather: " + e.Message); _gathered = null; }
+            if (_gathered != null) return;
             if (Duo.Busy || !Scenes.CanPlayOnMap || WalkTalk.Active) return;
             if (Time.realtimeSinceStartup < _nextTry) return;
             _nextTry = Time.realtimeSinceStartup + 15f;
@@ -220,6 +223,8 @@ namespace Joojkk.CampusLife
                 return;
             }
             if (!Agenda.May("situation " + sit.Mold.Id, BeatKind.Social, sit.A, sit.B)) return;
+            // Both on your map: it happens there first, where you can see it; they come to you later.
+            if (TryGather(sit)) return;
             if (Play(sit)) Agenda.Took("situation " + sit.Mold.Id, BeatKind.Social, sit.A, sit.B); // spent only once it really played, see Play
         }
 

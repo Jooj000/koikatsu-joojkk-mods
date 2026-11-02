@@ -25,6 +25,7 @@ namespace Joojkk.CampusLife
         private sealed class Resp
         {
             public string Label = "", Tag = "";
+            public string Me;   // your line when you pick it (else the label in your words, Speech.Line)
             public Q Q;
             public string[] Her;
             public Feel? Face;
@@ -45,6 +46,7 @@ namespace Joojkk.CampusLife
             public string Label;
             public Action Run;
             public bool Costs = true;   // uses the blue bar (gifts and requests do not)
+            public string Like;         // a like of hers you know it is about: its icon on the card
         }
 
         private static UEntry E(string label, Action run, bool costs = true) { return new UEntry { Label = label, Run = run, Costs = costs }; }
@@ -140,7 +142,7 @@ namespace Joojkk.CampusLife
             // after its apology) shows Talk, or the first category that has something.
             var open = _cat != null ? cats.FirstOrDefault(c => c.Key == _cat) : default(KeyValuePair<string, List<UEntry>>);
             if (open.Value == null) { open = cats.FirstOrDefault(c => c.Key == "Talk"); if (open.Value == null) open = cats[0]; _cat = open.Key; }
-            foreach (var e in open.Value) Add(e.Label, e.Run);
+            foreach (var e in open.Value) Add(e.Label, e.Run, e.Like);
             RefreshCatBar(cats);
         }
 
@@ -406,7 +408,9 @@ namespace Joojkk.CampusLife
             foreach (var t in TalkTopics(h, gs))
             {
                 var topic = t;
-                l.Add(E(topic.Hot ? "<color=#ff9b6a>" + topic.Label + "</color>" : topic.Label, () => PlayTopic(h, topic)));
+                var entry = E(topic.Hot ? "<color=#ff9b6a>" + topic.Label + "</color>" : topic.Label, () => PlayTopic(h, topic));
+                entry.Like = TopicLike(h, topic);
+                l.Add(entry);
             }
             var g = stranger ? Social.OwnGrudge(h) : Social.Grudge(h);
             var all = stranger ? null : OpenGrudges(h, s);
@@ -565,6 +569,8 @@ namespace Joojkk.CampusLife
                 l.Add(E("<color=#ff9b6a>Talk about her jealousy" + (rival != null ? " of " + GirlInfo.FirstName(rival) : "") + "</color>", () => Jealousy(h, rival)));
             var harem = Harem.Subject(h);
             if (harem != null) l.Add(E("Talk about sharing me", () => PlaySubject(h, harem, Lvl.Romance)));
+            var trio = TrioAskEntry(h);
+            if (trio != null) l.Add(trio);
             if (h.isGirlfriend) l.Add(E("<color=#9a9a9a>Break up</color>", () => BreakUp(h)));
         }
 
@@ -861,7 +867,7 @@ namespace Joojkk.CampusLife
         {
             var s = Sess;
             if (s == null) return;
-            var b = new SceneBuilder(h, true);
+            var b = new SceneBuilder(h, true) { NarrateActions = true };
             intro(b);
             var tone = (int)GirlInfo.ToneOf(h);
             if (rs != null && rs.Count > 0)
@@ -872,6 +878,7 @@ namespace Joojkk.CampusLife
                 foreach (var r in rs)
                 {
                     b.Branch(r.Tag);
+                    if (!string.IsNullOrEmpty(r.Me)) b.Me(r.Me);
                     b.Face(h, r.Face ?? FaceFor(r.Q)).Her_(r.Her != null ? Fill(r.Her[tone], h) : BeatSay(h, r.Tag, QWord(r.Q)) ?? "...");
                     b.End();
                 }
@@ -1025,7 +1032,7 @@ namespace Joojkk.CampusLife
             var about = Social.Get(g.Girl);
             var self = about == h;
             var what = IncidentLabel(h, g);
-            var explainChance = 0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f - Weight(h, g) + MoodEase(h);
+            var explainChance = ClampChance(0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f - Weight(h, g) + MoodEase(h));
             var explained = Ctx(h, "explain:" + g.Id, explainChance);
             s.Did.Add("cleared:" + g.Id);
             Beat(h, Lvl.Friend, "clear:" + g.Id, b =>
@@ -1038,22 +1045,11 @@ namespace Joojkk.CampusLife
                         "I was there. I saw " + what + ". So? || I witnessed " + what + ". Explain." + " || " + what + ". I saw. || I was present for " + what + ".", "Funny thing. I happened to see " + what + ". Front row." + " || " + what + "? I had a great view. || I saw " + what + ". Front row seat. || Guess who saw " + what + "?")
                     : T(h, "I heard about " + what + "... from people talking. Is it true? || People are saying " + what + "... is it true? || I heard about " + what + "... please tell me. || Someone told me " + what + "...", "Okay, so I heard about " + what + "! Is that true?! || I heard " + what + "! True?! || Everyone's saying " + what + "! || Spill! " + what + "?!",
                         "People are talking about " + what + ". I'd rather hear it from you." + " || " + what + ". I've heard. Your side? || There's talk of " + what + ". Explain. || I'd rather hear " + what + " from you.", "So. " + char.ToUpperInvariant(what[0]) + what.Substring(1) + ". The whole class knows. Your version?" + " || " + what + "? The whole university knows. || So, " + what + ". Care to explain?" + " || " + what + ". Your version, please."));
-            }, new List<Resp>
-            {
-                Rp("Tell her you understand why " + what + " hurt", "ca_feel", self ? Q.Good : Q.Neutral, Tn("...Thank you for saying that.", "...Okay. That helps. A little.", "...At least you get it.", "...Hm. Fine. That's a start.")),
-                Rp("Ask what she heard about " + what, "ca_facts", self ? Q.Bad : Q.Neutral,
-                    self ? Tn("...I didn't hear it. I was there.", "Heard?! I was THERE!", "...I don't need to hear it. I lived it.", "Heard? Cute. I was the one it happened to.")
-                         : Tn("...Just that you did it. People exaggerate, I know.", "That you totally did it! Did you?", "...The short version. It didn't sound good.", "The juicy version. Want to correct it?")),
-                Rp("Explain what really happened" + (G.Int >= 40 ? "  <color=#6ab4ff>(" + Mathf.RoundToInt(explainChance * 100) + "%)</color>" : ""), "ca_explain", explained ? Q.Good : Q.Bad,
-                    explained ? Tn("...Oh. I didn't know that part. I'm sorry I assumed.", "Wait, REALLY? Oh... that changes things!", "...That's different from what I heard. Okay.", "...Huh. Fine. That's actually a decent excuse.")
-                              : Tn("...That sounds like an excuse.", "Come on, really? That's your story?", "...I don't buy it.", "Nice try.")),
-                Rp("Admit the part that's true about " + what, "ca_admit", Q.Good, Tn("...Thank you for being honest.", "...Okay. Respect for admitting it.", "...Honesty. Good.", "...Well. That's more than most would do.")),
-                Rp("Give her some space", "ca_space", Q.Neutral, Tn("...Yeah. Maybe that's best for now.", "...Okay. Later, then.", "...Fine.", "...Running away? ...Okay. Fine.")),
-            }, r =>
+            }, ClearAirResps(h, g, what, self, explained, explainChance), r =>
             {
                 if (r == null) return;
                 if (r.Tag == "ca_explain" && explained) { Social.Cleared(h, g); Social.AddTrust(h, -Social.Effect(h, g)); Toasts.Show("Misunderstanding cleared."); }
-                else if (r.Tag == "ca_admit") { Social.Cleared(h, g); Social.AddTrust(h, -Social.Effect(h, g) / 2); Toasts.Show("She accepts it."); }
+                else if (r.Tag == "ca_admit") { Social.AddTrust(h, -Social.Effect(h, g) / 2); Social.Cleared(h, g); if (g.Kind == Social.Kinds.Flirted && about != null && about != h) SettledAbout(h, about); Toasts.Show("She accepts it."); }
                 else if (r.Tag == "ca_space") s.Did.Remove("cleared:" + g.Id);
             });
         }
@@ -1075,7 +1071,7 @@ namespace Joojkk.CampusLife
             var total = all.Sum(i => Social.Effect(h, i));
             var saw = all.Any(i => Social.Get(i.Girl) == h || Social.Saw(h, i));
             var many = n >= 3;
-            var explainChance = 0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f - 0.08f * (n - 1) - all.Sum(i => Weight(h, i)) / n + MoodEase(h);
+            var explainChance = ClampChance(0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f - 0.08f * (n - 1) - all.Sum(i => Weight(h, i)) / n + MoodEase(h));
             var explained = Ctx(h, "explainall:" + all[0].Id, explainChance);
             foreach (var i in all) s.Did.Add("cleared:" + i.Id);
             var kinds = string.Join(", ", all.Select(i => IncidentLabel(h, i)).ToArray());
@@ -1092,21 +1088,16 @@ namespace Joojkk.CampusLife
                                  "I keep hearing about you. Again and again. I'd rather hear it from you. || Repeated reports. Your version. || I keep hearing. I'd rather hear you. || Again and again. Explain.", "You're the favorite topic around here. Over and over. Your version? || You're everyone's favorite topic. || Over and over, your name. Explain. || The gossip loves you.")
                             : T(h, "...I heard two things about you. I'd like to know if they're true. || ...Two things about you. Are they true? || ...I heard two things... || ...Two stories reached me...", "Two things! I heard TWO things! Are they true?! || Two things! True?! || I heard TWO things! || Two! Explain!",
                                  "Two stories about you reached me. Your version. || Two stories. Your version. || Two reports. Explain. || Two things. Clarify.", "Two rumors, one you. Explain. || Two rumors, one you. || Two stories. Talk. || Two things. Explain yourself.")));
-            }, new List<Resp>
-            {
-                Rp("Tell her you understand why all of it hurt", "ca_feel", Q.Neutral, Tn("...Understanding isn't the same as stopping.", "...Okay. But it's a LOT.", "...Understanding is cheap.", "...Nice words. Lots of things, though.")),
-                Rp("Ask what exactly she heard", "ca_facts", saw ? Q.Bad : Q.Neutral, saw ? Tn("...Some of it I didn't need to hear. I saw it.", "Heard?! I SAW some of it!", "...Part of it I watched.", "Heard? Cute. I had a good view.")
-                                                                          : Tn("...All of it. Bit by bit.", "Everything! Piece by piece!", "...Enough.", "The whole collection.")),
-                Rp("Explain what really happened" + (G.Int >= 40 ? "  <color=#6ab4ff>(" + Mathf.RoundToInt(explainChance * 100) + "%)</color>" : ""), "ca_explain", explained ? Q.Good : Q.Bad,
-                    explained ? Tn("...Oh. So it wasn't all how it looked. I'm sorry.", "Wait, REALLY? All of it? ...Okay, that changes things!", "...That's different from what I heard. Fine.", "...Huh. Smooth. Fine, I believe you.")
-                              : Tn("...One excuse for everything? No.", "That's not gonna cover ALL of it!", "...Too many coincidences.", "One story for all of that? Nice try.")),
-                Rp("Admit all of it", "ca_admit", Q.Good, Tn("...Thank you for being honest. It still hurts.", "...Okay. Respect. Ouch, but respect.", "...All of it. Good. Honest, at least.", "...Well. That's a confession and a half.")),
-                Rp("Give her some space", "ca_space", Q.Neutral, Tn("...Yeah. Maybe that's best for now.", "...Okay. Later, then.", "...Fine.", "...Running away? ...Okay. Fine.")),
-            }, r =>
+            }, ClearAirAllResps(h, all, saw, explained, explainChance), r =>
             {
                 if (r == null) return;
                 if (r.Tag == "ca_explain" && explained) { foreach (var i in all) Social.Cleared(h, i); Social.AddTrust(h, -total); Toasts.Show("Misunderstandings cleared."); }
-                else if (r.Tag == "ca_admit") { foreach (var i in all) Social.Cleared(h, i); Social.AddTrust(h, -total / 2); Toasts.Show("She accepts it, all of it."); }
+                else if (r.Tag == "ca_admit")
+                {
+                    foreach (var i in all) Social.Cleared(h, i);
+                    foreach (var i in all.Where(i => i.Kind == Social.Kinds.Flirted)) { var o = Social.Get(i.Girl); if (o != null && o != h) SettledAbout(h, o); }
+                    Social.AddTrust(h, -total / 2); Toasts.Show("She accepts it, all of it.");
+                }
                 else if (r.Tag == "ca_explain" || r.Tag == "ca_facts" && saw) { Social.AddTrust(h, -(n - 1)); } // a weak answer to a pile costs more
                 else if (r.Tag == "ca_space") foreach (var i in all) s.Did.Remove("cleared:" + i.Id);
             });

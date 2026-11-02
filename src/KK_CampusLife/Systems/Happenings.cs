@@ -42,8 +42,16 @@ namespace Joojkk.CampusLife
             // The rain's events only when it rains (Weather): stuck at the entrance after school, soaked any other time.
             var pool = All.Where(id => id == "rain" ? Weather.Raining && G.CurrentMask == PeriodMask.After : id == "drenched" ? Weather.Raining && G.CurrentMask != PeriodMask.After
                                        : id != "wind" || !Weather.Raining).ToList();
-            return pool[Random.Range(0, pool.Count)];
+            // The ones that bring a request (a letter, a note, a rumor to check) come more often, much more with the board
+            // empty.
+            var empty = Board.Empty;
+            var w = pool.Select(id => TaskAdders.Contains(id) ? (empty ? 6f : 2.5f) : 1f).ToList();
+            var roll = Random.value * w.Sum();
+            for (var i = 0; i < pool.Count; i++) { roll -= w[i]; if (roll <= 0f) return pool[i]; }
+            return pool[pool.Count - 1];
         }
+
+        private static readonly string[] TaskAdders = { "love_letter", "locker_note", "rumor" };
 
         /// <summary>A girl for the scene: one on your map first, then anyone (weighted by attention).</summary>
         private static SaveData.Heroine Girl(System.Func<SaveData.Heroine, bool> filter = null)

@@ -62,10 +62,10 @@ namespace Joojkk.CampusLife
             foreach (var item in gifts.Skip(_page * PerPage).Take(PerPage))
             {
                 var it = item;
-                // Gifts she is known to like are marked so the choice is obvious.
-                var liked = item.Likes.Any(l => (gs.KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, l))) != 0 && GirlInfo.Likes(_target, l));
-                var label = item.Name + " x" + s.Count(item.Id) + (liked ? "  <color=#FFD27A>(she likes)</color>" : "");
-                Add(label, () =>
+                // Gifts she is known to like carry the like's icon.
+                var liked = item.Likes.FirstOrDefault(l => Conversation.KnownLike(_target, l));
+                var label = item.Name + " x" + s.Count(item.Id);
+                Add(label, liked, () =>
                 {
                     var h = _target;
                     Close();
@@ -76,7 +76,9 @@ namespace Joojkk.CampusLife
             Add("Back", Close, true);
         }
 
-        private static void Add(string label, Action onClick, bool interactable)
+        private static void Add(string label, Action onClick, bool interactable) { Add(label, null, onClick, interactable); }
+
+        private static void Add(string label, string like, Action onClick, bool interactable)
         {
             var go = Object.Instantiate(_template, _list, false);
             go.name = "cl_gift_option";
@@ -99,6 +101,7 @@ namespace Joojkk.CampusLife
                 t.fontSizeMax = t.fontSize;
                 t.text = label;
             }
+            if (like != null) { go.name = "cl_gift_option_liked"; Conversation.LikeMark(go.transform as RectTransform, like, t); }
             Created.Add(go);
         }
     }

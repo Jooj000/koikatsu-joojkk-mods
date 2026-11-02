@@ -171,6 +171,8 @@ namespace Joojkk.CampusLife
                 _page = Page.Talk;
                 _sub = null;
                 _cat = null;
+                // She stands with another girl (a chat, a quarrel the director set up): the talk is with both.
+                if (Unified) Duo.PullIn(ts, h);
             }
             catch (Exception e)
             {
@@ -229,6 +231,8 @@ namespace Joojkk.CampusLife
             _reopenAt = 0f;
             TrioCleanup();
             Finish(true);
+            // The first girl had nothing to sum up: the second one's line alone.
+            if (_pairLine.Key != null) { if (_pairLine.Value) Toasts.Show("Talk with " + _pairName + ": " + _pairLine.Key.Substring(Mathf.Min(_pairLine.Key.Length, _pairName.Length + 1)) + "."); _pairLine = new KeyValuePair<string, bool>(null, false); }
             Clear();
             ClearCatBar();
             foreach (var m in Moved)
@@ -1325,6 +1329,8 @@ namespace Joojkk.CampusLife
         {
             if (_scene == null || CommandFunc == null) return;
             var s = Sess;
+            // With both: the second girl's summary first, so the goodbye sums up the two of them in one line.
+            if ((command >= 11 || command == -1) && _trio != null && _trio.SB != null) { _pairWith = _trio.A; FinishB(); _pairWith = null; }
             if (command >= 11 || command == -1) Finish(true); // invitations and goodbye end our part of the talk
             Clear();
             _sub = null;
@@ -1519,10 +1525,26 @@ namespace Joojkk.CampusLife
                 Social.Add(Social.Kinds.GoodTalk, h);
             }
             S.Stat("chats");
-            if (show && (s.FavorGained != 0 || s.LewdGained != 0 || trust != 0))
-                Toasts.Show("Talk with " + GirlInfo.FirstName(h) + ": " + (s.FavorGained >= 0 ? "+" : "") + s.FavorGained + " favor" +
-                            (s.LewdGained != 0 ? ", +" + s.LewdGained + " H" : "") + (trust != 0 ? ", " + (trust > 0 ? "+" : "") + trust + " trust" : "") + ".");
+            var gained = (s.FavorGained >= 0 ? "+" : "") + s.FavorGained + " favor" + (s.LewdGained != 0 ? ", +" + s.LewdGained + " H" : "") + (trust != 0 ? ", " + (trust > 0 ? "+" : "") + trust + " trust" : "");
+            var any = s.FavorGained != 0 || s.LewdGained != 0 || trust != 0;
+            // log de saída 'conversou com xx...' só mostra o nome de uma"): the second girl's part waits for the first's.
+            if (_pairWith != null && _pairWith != h) { _pairLine = new KeyValuePair<string, bool>(GirlInfo.FirstName(h) + " " + gained, any); _pairName = GirlInfo.FirstName(h); return; }
+            if (_pairLine.Key != null && _pairName != GirlInfo.FirstName(h))
+            {
+                var line = "Talk with " + GirlInfo.FirstName(h) + " and " + _pairName + ": " + GirlInfo.FirstName(h) + " " + gained + "; " + _pairLine.Key + ".";
+                if (show && (any || _pairLine.Value)) Toasts.Show(line);
+                CampusLifePlugin.Log.LogInfo("Conversation: " + line);
+                _pairLine = new KeyValuePair<string, bool>(null, false);
+                _pairWith = null;
+                return;
+            }
+            if (show && any) Toasts.Show("Talk with " + GirlInfo.FirstName(h) + ": " + gained + ".");
         }
+
+        /// <summary>Set while the talk with both closes: the first girl (the second one's summary joins hers).</summary>
+        private static SaveData.Heroine _pairWith;
+        private static KeyValuePair<string, bool> _pairLine;
+        private static string _pairName;
 
         // ================= buttons =================
 
@@ -1534,7 +1556,30 @@ namespace Joojkk.CampusLife
 
         private static readonly PropertyInfo OverrideColorTags = typeof(TextMeshProUGUI).GetProperty("overrideColorTags");
 
-        private static void Add(string label, Action onClick)
+        private static void Add(string label, Action onClick) { Add(label, onClick, null); }
+
+        /// <summary>
+        /// A like of hers the topic is about, when you know she has it:
+        /// small talk about it, a pet she would love, a subject with a like.
+        /// </summary>
+        private static string TopicLike(SaveData.Heroine h, PTopic t)
+        {
+            if (t == null || string.IsNullOrEmpty(t.Subject)) return null;
+            string like = null;
+            if (t.Subject.StartsWith("like:", StringComparison.Ordinal)) like = t.Subject.Substring(5);
+            else if (t.Subject.StartsWith("pet:", StringComparison.Ordinal)) like = "animals";
+            return KnownLike(h, like) ? like : null;
+        }
+
+        /// <summary>She has the like and the player found out.</summary>
+        internal static bool KnownLike(SaveData.Heroine h, string like)
+        {
+            if (h == null || string.IsNullOrEmpty(like)) return false;
+            var i = Array.IndexOf(GirlInfo.LikeIds, like);
+            return i >= 0 && (S.Girl(GirlInfo.Key(h)).KnownLikes & (1 << i)) != 0 && GirlInfo.Likes(h, like);
+        }
+
+        private static void Add(string label, Action onClick, string like)
         {
             if (_template == null || _list == null) return;
             var go = Object.Instantiate(_template.gameObject, _list, false);
@@ -1567,7 +1612,29 @@ namespace Joojkk.CampusLife
                 ConvArt.ColorFace(txt, onClick == null ? GameUi.Dim : OptionColor());
                 txt.text = Gender.Fix(label, null, TalkingTo);
             }
+            if (like != null) LikeMark(go.transform as RectTransform, like, txt);
             Created.Add(go);
+        }
+
+        /// <summary>The like's round badge at the right end of an option card (the text gives it room).</summary>
+        internal static void LikeMark(RectTransform card, string like, TextMeshProUGUI txt)
+        {
+            try
+            {
+                var i = Array.IndexOf(GirlInfo.LikeIds, like);
+                if (card == null || i < 0) return;
+                var img = GameUi.Image(card, "cl_like", null, Color.white);
+                img.sprite = ConvArt.Badge(IconArt.FirstLike + i);
+                img.raycastTarget = false;
+                img.preserveAspect = true;
+                var rt = img.rectTransform;
+                rt.anchorMin = rt.anchorMax = new Vector2(1f, 0.5f);
+                rt.pivot = new Vector2(1f, 0.5f);
+                rt.sizeDelta = new Vector2(30f, 30f);
+                rt.anchoredPosition = new Vector2(-10f, 0f);
+                if (txt != null) txt.rectTransform.offsetMax = new Vector2(txt.rectTransform.offsetMax.x - 32f, txt.rectTransform.offsetMax.y);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Like mark: " + e.Message); }
         }
 
         // ================= topic lines (ported from the old Chat) =================

@@ -206,11 +206,37 @@ namespace Joojkk.CampusLife
             PostMissing();
 
             var already = S.Requests.Count(r => (r.State == RequestState.Active || r.State == RequestState.Hidden) && r.Source == "board" && r.CreatedDay == S.Day);
-            var want = TargetCount - already;
-            if (want <= 0) return;
+            Post(TargetCount - already);
+        }
 
+        /// <summary>Nothing open on the board (active or still to find out) for today or later.</summary>
+        public static bool Empty { get { return !S.Requests.Any(r => (r.State == RequestState.Active || r.State == RequestState.Hidden) && r.DeadlineDay >= S.Day); } }
+
+        /// <summary>
+        /// horário novo (não no primeiro)"): three more, once per period. The day's first period has GenerateDaily.
+        /// </summary>
+        public static void RefillIfEmpty()
+        {
+            if (!Cfg.BoardEnabled.Value || !G.IsSchoolDay || !G.InRoamingPeriod) return;
+            int day;
+            if (!S.Buffs.TryGetValue("board_day", out day) || day != S.Day) return; // the first period: the daily board
+            var stamp = S.Day * 16 + (int)G.CurrentMask;
+            int done;
+            if (S.Buffs.TryGetValue("board_refill", out done) && done == stamp) return;
+            S.Buffs["board_refill"] = stamp; // looked at once, when the period starts: emptied later, it waits for the next one
+            if (!Empty) return;
+            var n = Post(3);
+            CampusLifePlugin.Log.LogInfo("Board: empty at the start of " + G.CurrentMask + "; " + n + " new requests");
+            if (n > 0) Toasts.Show("New requests on the board (" + n + ").");
+        }
+
+        /// <summary>Up to <paramref name="want"/> requests from the girls at school with none of theirs open; how many were made.</summary>
+        private static int Post(int want)
+        {
+            if (want <= 0) return 0;
+            var made = 0;
             var pool = Students.Where(h => Truth.AtSchool(h) && !OpenFor(GirlInfo.Key(h)).Any(r => r.Source == "board")).ToList();
-            if (pool.Count == 0) return;
+            if (pool.Count == 0) return 0;
 
             var spot = Spotlight.IsActive ? S.Spotlight : null;
             for (var i = 0; i < want && pool.Count > 0; i++)
@@ -226,7 +252,9 @@ namespace Joojkk.CampusLife
                     r.DeadlineDay = S.Day + 1;
                 }
                 Add(r);
+                made++;
             }
+            return made;
         }
 
         private static SaveData.Heroine PickWeighted(List<SaveData.Heroine> pool, List<string> spotlight)

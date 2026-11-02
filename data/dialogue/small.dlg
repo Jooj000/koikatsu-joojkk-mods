@@ -215,48 +215,278 @@ hook like_no_convince
 opens ask,share,invite
 - I've only heard bad things about {like}. Prove them wrong?
 
-@rule small.pet.pet~state
+@rule small.pet.food.talk~state
 on small
-when subject=pet
+when subject=pet pet=food
 feel smile
 shape state
-hook pet_pet
+hook pet_food_talk
 opens ask,praise,tease
-- {Pet}? Oh, you have no idea. I'm kind of obsessed.
-- {Pet}? Oh, you have no idea. Okay, so...
-- Ahh, {pet}! I could go all day.
-- Don't get me started on {pet}. It's my favorite thing.
-- {Pet} is my happy place. You'd love it too.
-- Okay, {pet}. Yes. Sit down, this'll take a while.
-- Finally, someone with good taste. Thank you.
-- Nobody ever asks me about {pet}. Now you've done it.
-- If I could do {pet} all day, I would. Sadly, there's class.
-- I got into {pet} when I was little. It stuck.
-- You've got that look. You want to hear about {pet}. Fine, I'll tell you.
-- Ask me anything about {pet}. Go on.
+- Did you eat yet? I had lunch at eleven and I'm already starving.
+- There's a new bakery by the station. I went twice. Today.
+- My stomach growled in the middle of the lecture. Everyone heard.
+- I keep a snack in every bag I own. Don't laugh, it's planning.
+- Thursday is curry day at the cafeteria. I count down to it.
+- I made a whole pot of rice last night. It's gone.
 
-@rule small.pet.pet~q
+@rule small.pet.food.talk~q
 on small
-when subject=pet
+when subject=pet pet=food
 feel smile
 shape q
-hook pet_pet
+hook pet_food_talk
 opens ask,praise,tease
-- You want to talk about {pet}? Really? Everyone says I talk about {pet} too much.
-- How did you know I like {pet}? I'm flattered.
-- You've been paying attention, huh? Okay, I'll tell you everything.
-- I've got a whole notebook on {pet}. Too much?
-- People think {pet} is weird, but it isn't. Right?
-- You don't think {pet} is weird? Promise?
+- Have you eaten yet? Be honest.
 
-@rule small.pet.pet~show
+@rule small.pet.food.ask~q
 on small
-when subject=pet
+when subject=pet pet=food
+feel smile
+shape q
+hook pet_food_ask
+opens share,ask,invite
+- What's the best thing you ate this week?
+- Where do you go when you're starving between classes?
+- Do you think the cafeteria would sell me two desserts?
+
+@rule small.pet.food.ask~show
+on small
+when subject=pet pet=food
 feel smile
 shape show
-hook pet_pet
+hook pet_food_ask
+opens share,ask,invite
+- Look, I saved half my melon bread. Want some?
+
+@rule small.pet.books.talk~state
+on small
+when subject=pet pet=books
+feel smile
+shape state
+hook pet_books_talk
+opens ask,praise,invite
+- I stayed up till three finishing a novel. Worth it.
+- The sequel comes out next month. I already pre-ordered it.
+- I found a used bookshop near campus. I lost two hours there.
+- I always carry a book. In case the line is long.
+- I cried on the train because of a book. Very cool of me.
+
+@rule small.pet.books.ask~q
+on small
+when subject=pet pet=books
+feel smile
+shape q
+hook pet_books_ask
+opens share,ask,tease
+- Do you read? Like, actual books?
+- Have you ever read something that changed how you think?
+- What was the last book you couldn't put down?
+
+@rule small.pet.books.talk~show
+on small
+when subject=pet pet=books
+feel smile
+shape show
+hook pet_books_talk
+opens ask,praise,invite
+- This one. Read the first page. Just one.
+
+@rule small.pet.music.talk~state
+on small
+when subject=pet pet=music
+feel smile
+shape state
+hook pet_music_talk
+opens ask,praise,invite
+- I've had the same song stuck in my head since Monday.
+- I made a new playlist for walking to class. It's perfect.
+- I went to a tiny live show last weekend. My ears are still ringing.
+- I used to play the piano. My fingers still remember some of it.
+- My earphones broke and the whole day felt too quiet.
+
+@rule small.pet.music.ask~q
+on small
+when subject=pet pet=music
+feel smile
+shape q
+hook pet_music_ask
+opens share,ask,tease
+- What are you listening to these days?
+- Do you have a song for when you're sad?
+- Have you ever been to a live show?
+
+@rule small.pet.music.talk~show
+on small
+when subject=pet pet=music
+feel smile
+shape show
+hook pet_music_talk
+opens ask,praise,invite
+- Here, take one earphone. Just listen to the chorus.
+
+@rule small.pet.sports.talk~state
+on small
+when subject=pet pet=sports
+feel smile
+shape state
+hook pet_sports_talk
+opens ask,praise,invite
+- We had volleyball practice this morning. My arms are dead.
+- I beat my best time on the track yesterday. Barely.
+- I can't sit still in lectures. My legs want to run.
+- My knee's a bit sore, but it's the good kind of sore.
+- We've got a match on Saturday. I'm way too excited.
+
+@rule small.pet.sports.ask~q
+on small
+when subject=pet pet=sports
+feel smile
+shape q
+hook pet_sports_ask
+opens share,ask,tease
+- Do you play anything? Or are you a spectator?
+- Want to see who's faster sometime?
+- Do you think I should try out for the main team?
+
+@rule small.pet.sports.talk~show
+on small
+when subject=pet pet=sports
+feel smile
+shape show
+hook pet_sports_talk
+opens ask,praise,invite
+- Look at this bruise. I got it diving for a ball. Worth it.
+
+@rule small.pet.cleaning.talk~state
+on small
+when subject=pet pet=cleaning
+feel smile
+shape state
+hook pet_cleaning_talk
+opens ask,praise,agree
+- I reorganized my desk by color last night. It's beautiful.
+- Someone left their tray on the table again. It's been bothering me all day.
+- I bought a label maker. I've labeled everything. Even the labels.
+- The club room was a mess, so I stayed late and fixed it.
+
+@rule small.pet.cleaning.ask~state
+on small
+when subject=pet pet=cleaning
+feel smile
+shape state
+hook pet_cleaning_ask
+opens share,ask,tease
+- Cleaning my room is how I relax. Is that strange?
+
+@rule small.pet.cleaning.talk~q
+on small
+when subject=pet pet=cleaning
+feel smile
+shape q
+hook pet_cleaning_talk
+opens ask,praise,agree
+- Is your room clean right now? Be honest.
+
+@rule small.pet.cleaning.ask~q
+on small
+when subject=pet pet=cleaning
+feel smile
+shape q
+hook pet_cleaning_ask
+opens share,ask,tease
+- Doesn't it bother you when things are out of place?
+- Do you fold your clothes or just throw them in a drawer?
+
+@rule small.pet.cleaning.talk~show
+on small
+when subject=pet pet=cleaning
+feel smile
+shape show
+hook pet_cleaning_talk
+opens ask,praise,agree
+- Look at my pencil case. Every pen has its own spot.
+
+@rule small.pet.naps.talk~state
+on small
+when subject=pet pet=naps
+feel smile
+shape state
+hook pet_naps_talk
+opens ask,agree,tease
+- I took a nap between classes and woke up in a different period.
+- I found a secret napping spot. It has shade and everything.
+- I could sleep anywhere. I slept on the bus standing up once.
+- Twenty minutes. That's all I need. Then I'm a new person.
+- I tried to stay up studying. I woke up on my notes.
+
+@rule small.pet.naps.ask~q
+on small
+when subject=pet pet=naps
+feel smile
+shape q
+hook pet_naps_ask
+opens share,ask,tease
+- Do you ever just lie down in the grass and sleep?
+
+@rule small.pet.naps.talk~q
+on small
+when subject=pet pet=naps
+feel smile
+shape q
+hook pet_naps_talk
+opens ask,agree,tease
+- How many hours did you sleep last night? Mine's embarrassing.
+- Is it rude to nap in the library? Asking for me.
+
+@rule small.pet.naps.talk~show
+on small
+when subject=pet pet=naps
+feel smile
+shape show
+hook pet_naps_talk
+opens ask,agree,tease
+- Feel this cushion. I carry it around. Don't judge.
+
+@rule small.pet.studying.talk~state
+on small
+when subject=pet pet=studying
+feel smile
+shape state
+hook pet_studying_talk
 opens ask,praise,tease
-- I was just reading about {pet} last night. Want to see?
+- I color-coded all my notes this week. Five colors.
+- I made flashcards for the whole exam. Three hundred of them.
+- I'm already two chapters ahead. It calms me down.
+- The library opens at eight. I was there at eight.
+- I finally understood that proof. I almost cheered out loud.
+
+@rule small.pet.studying.ask~q
+on small
+when subject=pet pet=studying
+feel smile
+shape q
+hook pet_studying_ask
+opens share,ask,invite
+- Did you start studying for the exam yet?
+- Do you want to compare notes sometime?
+
+@rule small.pet.studying.talk~q
+on small
+when subject=pet pet=studying
+feel smile
+shape q
+hook pet_studying_talk
+opens ask,praise,tease
+- How do you study? I'm always looking for better ways.
+
+@rule small.pet.studying.talk~show
+on small
+when subject=pet pet=studying
+feel smile
+shape show
+hook pet_studying_talk
+opens ask,praise,tease
+- Look at these notes. Tell me they're not pretty.
 
 @rule small.weather.nice~state
 on small

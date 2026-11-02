@@ -203,7 +203,8 @@ namespace Joojkk.CampusLife
             _photo.enabled = false;
 
             _heart = GameUi.Image(root, "heart", null, Color.white);
-            _heart.sprite = _heartSprite ?? (_heartSprite = MakeHeart(256));
+            _heart.sprite = _heartSprite ?? (_heartSprite = SavedHeart() ?? MakeHeart(256));
+            _heart.preserveAspect = true;
             var hr = _heart.rectTransform;
             hr.anchorMin = hr.anchorMax = new Vector2(0.5f, 0.5f);
             hr.pivot = new Vector2(0.5f, 0.5f);
@@ -236,6 +237,60 @@ namespace Joojkk.CampusLife
             _tip.rectTransform.Stretch(160f, 16f, 160f, 16f);
 
             _canvas.gameObject.SetActive(false);
+        }
+
+        // in the clipboard (ChaStatusComponent.objHeart) is a sprite of the game's UI atlas, loaded only with that screen:
+        // the first time the clipboard opens it is copied out of the atlas into a PNG, which every loading screen uses
+        // after that (our drawn heart only until then).
+        private static string HeartFile { get { return System.IO.Path.Combine(System.IO.Path.Combine(BepInEx.Paths.ConfigPath, "joojkk_campuslife"), "girlfriend_heart.png"); } }
+
+        private static bool _gameHeart;
+
+        /// <summary>From the clipboard's cards: the game's girlfriend heart, copied once.</summary>
+        public static void OfferGameHeart(ChaStatusComponent comp)
+        {
+            if (_gameHeart || comp == null || comp.objHeart == null) return;
+            _gameHeart = true;
+            try
+            {
+                if (System.IO.File.Exists(HeartFile)) return;
+                var img = comp.objHeart.GetComponentInChildren<Image>(true);
+                var sp = img != null ? img.sprite : null;
+                if (sp == null || sp.texture == null) { CampusLifePlugin.Log.LogInfo("Loading heart: the card's heart has no sprite"); return; }
+                var r = sp.textureRect;
+                var rt = RenderTexture.GetTemporary(sp.texture.width, sp.texture.height, 0, RenderTextureFormat.ARGB32);
+                var was = RenderTexture.active;
+                Graphics.Blit(sp.texture, rt);
+                RenderTexture.active = rt;
+                var tex = new Texture2D((int)r.width, (int)r.height, TextureFormat.ARGB32, false);
+                tex.ReadPixels(new Rect(r.x, r.y, r.width, r.height), 0, 0);
+                tex.Apply();
+                RenderTexture.active = was;
+                RenderTexture.ReleaseTemporary(rt);
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(HeartFile));
+                System.IO.File.WriteAllBytes(HeartFile, tex.EncodeToPNG());
+                Object.Destroy(tex);
+                CampusLifePlugin.Log.LogInfo("Loading heart: copied the card's girlfriend heart '" + sp.name + "' (" + r.width + "x" + r.height + ") to " + HeartFile);
+                var saved = SavedHeart();
+                if (saved != null) { _heartSprite = saved; if (_heart != null) _heart.sprite = saved; }
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Loading heart: " + e.Message); }
+        }
+
+        /// <summary>The loading heart made ahead of time (ClipboardWarm).</summary>
+        public static void WarmHeart() { if (_heartSprite == null) _heartSprite = SavedHeart() ?? MakeHeart(256); }
+
+        private static Sprite SavedHeart()
+        {
+            try
+            {
+                if (!System.IO.File.Exists(HeartFile)) return null;
+                var tex = new Texture2D(2, 2, TextureFormat.ARGB32, false) { name = "cl_loading_heart_game", wrapMode = TextureWrapMode.Clamp };
+                if (!tex.LoadImage(System.IO.File.ReadAllBytes(HeartFile))) return null;
+                Object.DontDestroyOnLoad(tex);
+                return Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Loading heart file: " + e.Message); return null; }
         }
 
         /// <summary>A red heart drawn from its curve, (x²+y²-1)³ = x²y³, smoothed with 4 samples per pixel.</summary>

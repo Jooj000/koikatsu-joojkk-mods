@@ -136,7 +136,9 @@ namespace Joojkk.CampusLife
             if (S.LastHappeningDay == S.Day && S.LastHappeningPeriod == (int)period) return;
             S.LastHappeningDay = S.Day;
             S.LastHappeningPeriod = (int)period;
-            if (Random.value < Cfg.HappeningChance.Value) S.PendingHappening = Happenings.Roll();
+            // An empty board makes something that brings a request likelier to happen at all.
+            var chance = Board.Empty ? Mathf.Min(0.9f, Cfg.HappeningChance.Value * 1.6f) : Cfg.HappeningChance.Value;
+            if (Random.value < chance) S.PendingHappening = Happenings.Roll();
         }
 
         /// <summary>
@@ -152,6 +154,7 @@ namespace Joojkk.CampusLife
             _lastTry = Time.realtimeSinceStartup;
             Campus.FixWeekNumbering();
             Board.EnsureToday();
+            Board.RefillIfEmpty();
             Board.CheckErrands();
             Board.KeepTalkTime();
             Rendezvous.Tick();

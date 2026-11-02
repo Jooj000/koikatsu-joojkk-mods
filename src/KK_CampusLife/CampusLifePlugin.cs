@@ -85,6 +85,8 @@ namespace Joojkk.CampusLife
                 ClassLoan.Sweep();
                 Scenes.Watchdog();
                 Forms.KeepHeld();
+                ChoicePause.Tick();
+                Director.KeepHalted();
                 Reactions.Tick();
                 Consent.Tick();
                 Stage.Tick();
@@ -110,6 +112,7 @@ namespace Joojkk.CampusLife
                     Markers.UpdateMinimap();
                     RadarMap.Update();
                     CafeteriaStore.Update();
+                    ClipboardWarm.Tick();
                 }
                 if (GiftMenu.IsOpen && !G.TalkSceneOpen) GiftMenu.Close();
             }

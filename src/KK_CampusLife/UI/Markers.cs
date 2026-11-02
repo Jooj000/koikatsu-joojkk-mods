@@ -24,7 +24,96 @@ namespace Joojkk.CampusLife
 
         public static int ShapeOf(Request r) { return r == null ? 1 : 1 + Math.Abs(r.Id) % (ShapeNames.Length - 1); }
 
-        public static Sprite For(Request r) { return Get(ShapeOf(r)); }
+        /// <summary>Her minimap badge: the same as on the board.</summary>
+        public static Sprite For(Request r) { return Badge(r); }
+
+        // tipo de missão, variando as cores para caso haja mais de uma com o mesmo ícone"): the request is a round badge with
+        // the drawing of what she asks for (a speech bubble to talk, a bowl for lunch, a book to study...). The first
+        // request of a kind has the kind's color; a second or third one with the same drawing takes the next colors, so the
+        // badge on her minimap icon matches one request on the board. The gold star stays today's story heroine.
+        private static readonly Dictionary<string, Sprite> BadgeCache = new Dictionary<string, Sprite>();
+
+        public static Sprite Badge(Request r)
+        {
+            if (r == null) return StoryBadge();
+            var glyph = GlyphOf(r);
+            return Badge(glyph, ColorOf(r, glyph));
+        }
+
+        public static Sprite StoryBadge() { return Badge("star", Gold); }
+
+        internal static string Describe(Request r)
+        {
+            var g = GlyphOf(r);
+            var c = ColorOf(r, g);
+            return g + " rgb(" + c[0].ToString("0.00") + "," + c[1].ToString("0.00") + "," + c[2].ToString("0.00") + ")";
+        }
+
+        /// <summary>What she asks for, as a drawing.</summary>
+        public static string GlyphOf(Request r)
+        {
+            if (r.Lewd || r.Kind == RequestKind.Intimate) return "heart";
+            switch (r.Kind)
+            {
+                case RequestKind.Talk: return "bubble";
+                case RequestKind.MeetAt: return "pin";
+                case RequestKind.Lunch: return "bowl";
+                case RequestKind.Study: return "book";
+                case RequestKind.Exercise: return "dumbbell";
+                case RequestKind.Club: return "people";
+                case RequestKind.WalkHome: return "shoe";
+                case RequestKind.Gift: return "gift";
+                case RequestKind.Errand: return "box";
+                case RequestKind.Activity: return Activities.Get(r.Activity) != null ? IconArt.GlyphOf(r.Activity) : "star";
+                default: return "star";
+            }
+        }
+
+        private static readonly float[][] Palette =
+        {
+            new[] { 0.42f, 0.7f, 0.98f }, new[] { 1f, 0.6f, 0.3f }, new[] { 0.45f, 0.82f, 0.52f }, new[] { 0.7f, 0.5f, 0.92f },
+            new[] { 0.98f, 0.45f, 0.42f }, new[] { 0.3f, 0.8f, 0.82f }, new[] { 0.95f, 0.78f, 0.28f }, new[] { 1f, 0.55f, 0.8f },
+        };
+
+        /// <summary>The kind's color for the first request with this drawing, the next colors for the others.</summary>
+        private static float[] ColorOf(Request r, string glyph)
+        {
+            var same = Board.Active.Where(x => x != null && GlyphOf(x) == glyph).OrderBy(x => x.Id).ToList();
+            var n = Math.Max(0, same.FindIndex(x => x.Id == r.Id));
+            var first = KindColor(r);
+            if (n == 0) return first;
+            var start = Array.FindIndex(Palette, c => Math.Abs(c[0] - first[0]) + Math.Abs(c[1] - first[1]) + Math.Abs(c[2] - first[2]) < 0.15f);
+            return Palette[((start < 0 ? 0 : start) + n) % Palette.Length];
+        }
+
+        private static readonly float[] Gold = { 0.98f, 0.76f, 0.26f };
+
+        private static float[] KindColor(Request r)
+        {
+            if (r.Lewd || r.Kind == RequestKind.Intimate) return Palette[7];
+            switch (r.Kind)
+            {
+                case RequestKind.Talk: case RequestKind.Study: return Palette[0];
+                case RequestKind.Lunch: return Palette[1];
+                case RequestKind.Errand: case RequestKind.Activity: return Palette[2];
+                case RequestKind.WalkHome: return Palette[3];
+                case RequestKind.Exercise: case RequestKind.Club: return Palette[4];
+                case RequestKind.MeetAt: return Palette[5];
+                case RequestKind.Gift: return Palette[7];
+                default: return Palette[6];
+            }
+        }
+
+        private static Sprite Badge(string glyph, float[] color)
+        {
+            var key = glyph + ":" + color[0] + "," + color[1] + "," + color[2];
+            Sprite s;
+            if (BadgeCache.TryGetValue(key, out s) && s != null) return s;
+            const int size = 72;
+            s = MapSprite.Make(IconArt.RequestBadge(glyph, color, size), size, 100f, "cl_req_" + glyph);
+            BadgeCache[key] = s;
+            return s;
+        }
 
         public static Sprite Get(int shape)
         {
@@ -199,7 +288,7 @@ namespace Joojkk.CampusLife
                 rt.anchoredPosition = new Vector2(1f, 1f);
                 // A small corner badge, not a second icon.
                 var parentRt = icon as RectTransform;
-                var s = parentRt != null ? Mathf.Clamp(parentRt.rect.width * 0.4f, 8f, 12f) : 10f;
+                var s = parentRt != null ? Mathf.Clamp(parentRt.rect.width * 0.48f, 10f, 14f) : 12f;
                 rt.sizeDelta = new Vector2(s, s);
                 var anchor = graphic ?? parentRt;
                 if (anchor != null) Badges.Add(new KeyValuePair<RectTransform, RectTransform>(anchor, rt));

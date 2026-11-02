@@ -32,6 +32,9 @@ namespace Joojkk.CampusLife
         private static NPC _nb;
         private static ChaControl _a, _b;
         private static Vector3 _mid, _aHome;
+        private static Vector3 _aSpot;
+        private static Quaternion _aSpotRot;
+        private static bool _aSnapSaid;
         private static Quaternion _aHomeRot;
         private static RuntimeAnimatorController _bCtrl;
         private static readonly Illusion.Game.Elements.EasyLoader.Motion BMotion = new Illusion.Game.Elements.EasyLoader.Motion();
@@ -82,6 +85,9 @@ namespace Joojkk.CampusLife
                 var halfW0 = depth0 * Mathf.Tan(_now.fieldOfView * 0.5f * Mathf.Deg2Rad) * _now.aspect;
                 _half = HalfGap(depth0, _now);
                 Place(_a.transform, _mid - right * _half, right);
+                _aSpot = _a.transform.position;
+                _aSpotRot = _a.transform.rotation;
+                _aSnapSaid = false;
                 Place(_nb.transform, _mid + right * _half, -right);
                 if (_nb.transform != _b.transform) _b.transform.SetPositionAndRotation(_nb.transform.position, _nb.transform.rotation);
                 Duo.KeepStill(_nb);
@@ -214,6 +220,13 @@ namespace Joojkk.CampusLife
             try
             {
                 if (_ts == null || G.TalkScene != _ts || _now == null) { End(); return; }
+                IconsTick();
+                // "as posições da dupla mudam ao começar o diálogo de saída"): she keeps her place beside the other one.
+                if (!_bGone && _a != null && (_a.transform.position - _aSpot).sqrMagnitude > 0.0025f)
+                {
+                    if (!_aSnapSaid) { _aSnapSaid = true; CampusLifePlugin.Log.LogInfo("Trio stage: the game moved " + _a.name + " " + (_a.transform.position - _aSpot).magnitude.ToString("0.00") + " m; kept beside her friend"); }
+                    _a.transform.SetPositionAndRotation(_aSpot, _aSpotRot);
+                }
                 var gameMoves = UpdateCam == null || (bool)UpdateCam.GetValue(_ts);
                 if (gameMoves || !_hasBase)
                 {
@@ -532,17 +545,44 @@ namespace Joojkk.CampusLife
                     rects.Add(r);
                     box = Join(box, sb);
                 }
+                // Other mods' touch icons (KKAPI copies the first touch button next to it: the panty fairy's wind, panty and
+                // clothes) are siblings of the touch buttons, shown and hidden by their mod as it likes: all of them join the
+                // row, on or off, and the row is laid out again when one turns on.
+                var parent = rects[0].parent;
+                if (parent != null)
+                    foreach (Transform c in parent)
+                    {
+                        var r = c as RectTransform;
+                        if (r == null || rects.Contains(r) || c.name.StartsWith("cl_", StringComparison.Ordinal) || c.GetComponent<Button>() == null) continue;
+                        rects.Add(r);
+                    }
                 // One row: the game stands them as a corner (two over one); at the top center they go
                 // side by side, left to right as they were, level with the highest one.
                 rects = rects.OrderBy(r => ScreenBox(r).center.x).ThenByDescending(r => ScreenBox(r).center.y).ToList();
                 foreach (var r in rects) _moved.Add(new KeyValuePair<RectTransform, Vector3>(r, r.localPosition));
-                _rowY = box.yMax - rects.Max(r => ScreenBox(r).height) * 0.5f;
+                _rowY = box.yMax - rects.Where(r => r.gameObject.activeInHierarchy).DefaultIfEmpty(rects[0]).Max(r => ScreenBox(r).height) * 0.5f;
+                _iconRow = rects;
+                _iconSig = IconSig();
                 CampusLifePlugin.Log.LogInfo("Trio icons in a row at the top center (screen " + Screen.width + "x" + Screen.height + "): " + Layout(rects));
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Trio icons: " + e.Message); }
         }
 
         private static float _rowY;
+        private static List<RectTransform> _iconRow;
+        private static string _iconSig;
+
+        private static string IconSig() { return _iconRow == null ? "" : string.Join("", _iconRow.Select(r => r != null && r.gameObject.activeInHierarchy ? "1" : "0").ToArray()); }
+
+        /// <summary>A touch icon of another mod turned on or off: the row again, without gaps.</summary>
+        private static void IconsTick()
+        {
+            if (_iconRow == null) return;
+            var sig = IconSig();
+            if (sig == _iconSig) return;
+            _iconSig = sig;
+            CampusLifePlugin.Log.LogInfo("Trio icons changed (" + sig + "): " + Layout(_iconRow));
+        }
 
         private static string Layout(List<RectTransform> rects)
         {
@@ -550,6 +590,9 @@ namespace Joojkk.CampusLife
             var total = rects.Sum(r => ScreenBox(r).width) + gap * (rects.Count - 1);
             var rowX = Screen.width * 0.5f - total * 0.5f;
             var said = new List<string>();
+            rects = rects.Where(r => r != null && r.gameObject.activeInHierarchy).ToList();
+            total = rects.Sum(r => ScreenBox(r).width) + gap * Mathf.Max(0, rects.Count - 1);
+            rowX = Screen.width * 0.5f - total * 0.5f;
             foreach (var r in rects)
             {
                 var sb = ScreenBox(r);
@@ -567,6 +610,7 @@ namespace Joojkk.CampusLife
                 try { if (m.Key != null) m.Key.localPosition = m.Value; }
                 catch { }
             _moved.Clear();
+            _iconRow = null;
         }
 
         // ---------------- screen helpers (the game's canvases may be overlay or camera) ----------------

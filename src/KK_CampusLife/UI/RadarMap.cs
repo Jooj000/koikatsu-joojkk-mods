@@ -502,7 +502,7 @@ namespace Joojkk.CampusLife
                     var rt = arrow.rectTransform;
                     rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
                     rt.pivot = new Vector2(0.5f, 0.5f);
-                    rt.sizeDelta = new Vector2(9f, 9f);
+                    rt.sizeDelta = new Vector2(11f, 11f);
                     Arrows[npc] = arrow;
                 }
                 if (!arrow.gameObject.activeSelf) arrow.gameObject.SetActive(true);
@@ -518,24 +518,11 @@ namespace Joojkk.CampusLife
             }
         }
 
-        /// <summary>A small white triangle pointing up.</summary>
+        /// <summary>A white chevron with a dark line, pointing up.</summary>
         private static Sprite Arrow()
         {
             if (_arrow != null) return _arrow;
-            const int n = 32;
-            var tex = new Texture2D(n, n, TextureFormat.ARGB32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
-            var px = new Color32[n * n];
-            for (var y = 0; y < n; y++)
-                for (var x = 0; x < n; x++)
-                {
-                    // Apex at the top: the half-width grows from 0 at the top row to n/2 at the bottom.
-                    var half = (n - 1 - y) * 0.5f;
-                    var inside = Mathf.Abs(x - (n - 1) * 0.5f) <= half + 0.5f && y >= 2 && y <= n - 3;
-                    px[y * n + x] = inside ? new Color32(255, 255, 255, 255) : new Color32(255, 255, 255, 0);
-                }
-            tex.SetPixels32(px);
-            tex.Apply();
-            _arrow = Sprite.Create(tex, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f));
+            _arrow = MapSprite.Make(IconArt.Chevron(48), 48, 100f, "cl_floor_arrow");
             return _arrow;
         }
 

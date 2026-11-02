@@ -55,18 +55,26 @@ namespace Joojkk.CampusLife
 
             _tabs = GameUi.Rect(_root, "tabs");
             _tabs.Place(16f, 14f, 1840f, 44f);
+            // help page apart after a gap, and on the right what leads out: the store (when you are at the cafeteria) and
+            // back to the cards.
             var x = 0f;
             TabButtons.Clear();
             foreach (var tab in new[] { PanelTab.Today, PanelTab.Calendar, PanelTab.Activities, PanelTab.Album, PanelTab.Details })
             {
                 var t = tab;
+                if (tab == PanelTab.Details) x += 40f;
                 var b = GameUi.Button(_tabs, "tab" + tab, tab.ToString(), () => Show(t, null));
-                ((RectTransform)b.transform).Place(x, 0f, 200f, 44f);
+                ((RectTransform)b.transform).Place(x, 0f, 196f, 44f);
                 TabButtons[tab] = b;
-                x += 212f;
+                x += 204f;
             }
             var cards = GameUi.Button(_tabs, "tabCards", "Cards", Hide, GameUi.SprButton);
-            ((RectTransform)cards.transform).Place(1840f - 200f, 0f, 200f, 44f);
+            ((RectTransform)cards.transform).Place(1840f - 196f, 0f, 196f, 44f);
+            if (!StatusUi.AtNight && Places.CurrentId == "cafeteria")
+            {
+                var store = GameUi.Button(_tabs, "tabStore", "Campus store", () => Show(PanelTab.Shop), GameUi.SprButton);
+                ((RectTransform)store.transform).Place(1840f - 196f - 12f - 220f, 0f, 220f, 44f);
+            }
 
             _left = GameUi.ScrollList(_root, "left", out _leftScroll, 10f);
             ((RectTransform)_leftScroll.transform).Place(16f, 70f, 640f, 842f);
@@ -331,7 +339,7 @@ namespace Joojkk.CampusLife
             {
                 var b = GameUi.Block(_right, "story" + n++);
                 var row = GameUi.Row(b, "title", 46f);
-                Icon(row, Markers.Get(Markers.StoryShape), 44f);
+                Icon(row, Markers.StoryBadge(), 44f);
                 RowText(row, "Story: " + GirlInfo.FullName(h) + "'s next chapter", 24f, GameUi.Gold);
                 var map = StoryCast.MapOf(h);
                 if (!StatusUi.AtNight && map >= 0 && map != G.PlayerMapNo) SmallButton(row, Places.MapLabel(map), () => { if (GirlInfo.IsSpawned(h)) StatusUi.WarpToGirl(h); else StatusUi.Warp(map); }, 190f);
@@ -348,7 +356,7 @@ namespace Joojkk.CampusLife
             var h = GirlInfo.Find(r.Girl);
             var b = GameUi.Block(_right, "req" + r.Id);
             var row = GameUi.Row(b, "title", 46f);
-            Icon(row, Markers.For(r), 44f);
+            Icon(row, Markers.Badge(r), 44f);
             var tag = r.Source == "arc" ? "Story: " : r.Lewd ? "Private: " : "";
             RowText(row, tag + r.Title, 24f, GameUi.Gold);
             if (h != null)
@@ -512,6 +520,7 @@ namespace Joojkk.CampusLife
             {
                 var b = GameUi.Block(_right, a.Id);
                 var r = GameUi.Row(b, "row", 44f);
+                Icon(r, ActivityIcon.Get(ActivitySpots.KindOf(a), a.Id, true), 42f);
                 var cost = string.Join(", ", new[] { Activities.PeriodText(a), Cfg.EnergyEnabled.Value ? a.Energy + " energy" : null, a.MoneyCost > 0 ? a.MoneyCost + " yen" : null, a.IsJob ? "job" : null, a.OncePerDay ? "once a day" : null }.Where(x => x != null).ToArray());
                 var gain = Activities.GainText(a, false);
                 var info = (gain.Length > 0 ? "<color=" + Hex(GameUi.Gold) + ">" + gain + "</color>  " : "") + a.Desc;
@@ -628,16 +637,33 @@ namespace Joojkk.CampusLife
 
         // ---------------- School store ----------------
 
+        // its icon (the like it is for, or the bag), the price as a gold tag, the likes as their round icons instead of a
+        // sentence, and the girls you know would love it.
         private static void ShopLeft()
         {
             var s = Campus.S;
             var b = GameUi.Block(_left, "wallet");
-            Header(b, "Campus store");
-            Line(b, "Money: <color=" + Hex(GameUi.Gold) + ">" + s.Money.ToString("N0") + " yen</color>", 24f);
-            Line(b, "<size=18><color=" + Hex(GameUi.Dim) + ">A gift she likes beats any chat. How to learn her likes: Details tab.</color></size>");
-            var row = GameUi.Row(b, "row", 44f);
-            SmallButton(row, "Leave", StatusUi.Close, 200f);
+            var top = GameUi.Row(b, "title", 64f);
+            Icon(top, StoreIcon.Get(true), 60f);
+            RowText(top, "Campus store", 30f, GameUi.Gold);
+            var money = GameUi.Row(b, "money", 46f);
+            RowText(money, "<color=" + Hex(GameUi.Gold) + "><size=30>" + s.Money.ToString("N0") + "</size></color> yen", 24f);
+            SmallButton(money, "Leave", StatusUi.Close, 160f);
+            Line(b, "<size=18><color=" + Hex(GameUi.Dim) + ">A gift she likes beats any chat. The round icons are the likes it is for; the names, girls you know love it.</color></size>");
             Bag(_left);
+        }
+
+        private static readonly Dictionary<string, Sprite> ItemIcons = new Dictionary<string, Sprite>();
+
+        private static Sprite ItemIcon(ItemDef i)
+        {
+            var glyph = i.Type == ItemType.Gift ? (i.Intimate ? "lovebook" : "bag") : i.LunchOnly ? "bowl" : "box";
+            var tint = i.Type == ItemType.Gift ? new[] { 1f, 0.45f, 0.62f } : new[] { 0.42f, 0.71f, 1f };
+            Sprite sp;
+            if (ItemIcons.TryGetValue(glyph, out sp) && sp != null) return sp;
+            sp = MapSprite.Make(IconArt.Spot(glyph, tint, 72, true), 72, 100f, "cl_item_" + glyph);
+            ItemIcons[glyph] = sp;
+            return sp;
         }
 
         private static void ShopRight()
@@ -652,14 +678,24 @@ namespace Joojkk.CampusLife
                 {
                     if (i.Intimate && !Cfg.LewdRequests.Value) continue;
                     var b = GameUi.Block(_right, i.Id);
-                    var r = GameUi.Row(b, "row", 44f);
-                    var have = s.Count(i.Id) > 0 ? "  <size=18><color=" + Hex(GameUi.Green) + ">(have " + s.Count(i.Id) + ")</color></size>" : "";
-                    RowText(r, i.Name + "  <color=" + Hex(GameUi.Gold) + ">" + Items.PriceOf(i).ToString("N0") + " yen</color>" + have, 23f);
+                    var r = GameUi.Row(b, "row", 46f);
+                    Icon(r, ItemIcon(i), 42f);
+                    var have = s.Count(i.Id) > 0 ? "  <size=18><color=" + Hex(GameUi.Green) + ">x" + s.Count(i.Id) + "</color></size>" : "";
+                    RowText(r, i.Name + have, 23f);
+                    foreach (var l in i.Likes)
+                    {
+                        var li = Array.IndexOf(GirlInfo.LikeIds, l);
+                        if (li >= 0) Icon(r, ConvArt.Badge(IconArt.FirstLike + li), 32f);
+                    }
+                    var price = GameUi.Text(r, "price", Items.PriceOf(i).ToString("N0") + " yen", 22f, GameUi.Gold, TextAlignmentOptions.MidlineRight, false);
+                    price.Size(130f, 40f);
                     var item = i;
                     var can = s.Money >= Items.PriceOf(i) && (!i.LunchOnly || lunch);
-                    SmallButton(r, "Buy", () => { if (Campus.Buy(item)) Sfx.Ok(); Refresh(); }, 140f, can);
-                    var likes = i.Likes.Length > 0 ? "  <color=" + Hex(GameUi.Dim) + ">For girls who like " + string.Join(", ", i.Likes.Select(GirlInfo.LikeLabel).ToArray()) + ".</color>" : "";
-                    Line(b, i.Desc + (i.LunchOnly ? " Sold at lunch only." : "") + likes, 19f);
+                    SmallButton(r, "Buy", () => { if (Campus.Buy(item)) Sfx.Ok(); Refresh(); }, 120f, can);
+                    var fans = i.Likes.Length == 0 ? new List<string>() : Social.Students.Where(h => h != null && i.Likes.Any(l => Conversation.KnownLike(h, l))).Select(GirlInfo.FirstName).Distinct().Take(5).ToList();
+                    var note = i.Desc + (i.LunchOnly ? " <color=" + Hex(GameUi.Warn) + ">Lunch only.</color>" : "")
+                               + (fans.Count > 0 ? "  <color=" + Hex(GameUi.Gold) + ">" + string.Join(", ", fans.ToArray()) + "</color>" : "");
+                    Line(b, note, 19f, GameUi.Dim);
                 }
             }
         }

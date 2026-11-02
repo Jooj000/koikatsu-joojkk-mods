@@ -423,21 +423,6 @@ on move.tease
 when kind=small subject=school
 - {student}[Joke about her grades|Ask if she was awake in class|Say she sounds like a professor|Bet she forgot the assignments]
 
-@rule move.ask.pet
-on move.ask
-when kind=small subject=pet
-- [Ask more about {pet}|Ask how she got into {pet}|Ask what's so great about {pet}|Ask for her favorite story about {pet}]
-
-@rule move.share.pet
-on move.share
-when kind=small subject=pet
-- [Say {pet} sounds fun|Admit you know nothing about {pet}|Say you can see why she likes it|Say you'd like to know more]
-
-@rule move.invite.pet
-on move.invite
-when kind=small subject=pet
-- [Ask her to show you {pet}|Suggest doing something with {pet} together|Ask if you can join her|Offer to go with her]
-
 @rule move.tease.like.yes
 on move.tease
 when kind=small likes=yes
