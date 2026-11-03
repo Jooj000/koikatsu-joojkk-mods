@@ -27,6 +27,7 @@ namespace Joojkk.CampusLife
         public static ConfigEntry<bool> PositionReadout;
         public static ConfigEntry<KeyboardShortcut> SaveWarpSpotKey;
         public static ConfigEntry<KeyboardShortcut> MoveStoreKey;
+        public static ConfigEntry<KeyboardShortcut> SpotEditorKey;
 
         // 12. School life director
         public static ConfigEntry<bool> ConversationForms;
@@ -259,6 +260,7 @@ namespace Joojkk.CampusLife
             PositionReadout = B(c, pt, "Show position readout", false, "Shows the map number and your position and facing at the top left while walking around, to place things. The keys below only work while it is shown; each also copies the position to the clipboard and the log.");
             SaveWarpSpotKey = B(c, pt, "Set warp spot key", new KeyboardShortcut(KeyCode.F7, KeyCode.LeftControl), "Makes the current spot the place where the menu's \"Go there\" buttons put you on this map. Saved in BepInEx/config/joojkk.campuslife.spots.txt.");
             MoveStoreKey = B(c, pt, "Move store key", new KeyboardShortcut(KeyCode.F7, KeyCode.LeftControl, KeyCode.LeftShift), "Moves the university store icon to just in front of you (any map). Saved in the same spots file.");
+            SpotEditorKey = B(c, pt, "Activity spots window key", new KeyboardShortcut(KeyCode.F7, KeyCode.LeftAlt), "Opens a small window with the activities of the map you are on: put each one where you stand or one body length in front of you, or back to its default spot. Works without the position readout. Saved in the same spots file.");
 
             const string d = "12. School life director";
             ConversationForms = B(c, d, "Conversation by scene", true, "Talks open with a scene when she has something on her mind (a worry, a friend, something you did together), with concrete things to say built from her mood, the place and what you share. Also needed for the moments girls start on the map (next setting).");

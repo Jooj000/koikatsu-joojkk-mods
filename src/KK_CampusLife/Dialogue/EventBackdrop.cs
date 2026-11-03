@@ -54,7 +54,7 @@ namespace Joojkk.CampusLife
         };
 
         /// <summary>0 day, 1 evening (after school), 2 night.</summary>
-        private static int TimeSlot()
+        internal static int TimeSlot()
         {
             var p = G.Period;
             if (p == null) return 0;
@@ -102,6 +102,9 @@ namespace Joojkk.CampusLife
             foreach (var id in ids) Get(id);
         }
 
+        /// <summary>A picture by scene id ("@room", "classroom_exam"...), for the loading screen.</summary>
+        internal static Texture2D Picture(string id) { return Get(id); }
+
         private static Texture2D Get(string id)
         {
             if (string.IsNullOrEmpty(id)) return null;
@@ -117,7 +120,7 @@ namespace Joojkk.CampusLife
             if (!File.Exists(path)) { CampusLifePlugin.Log.LogDebug("Event background missing: " + path); Cache[id] = null; return null; }
             try
             {
-                tex = new Texture2D(2, 2, TextureFormat.RGB24, false) { name = "cl_bg_" + id, wrapMode = TextureWrapMode.Clamp };
+                tex = new Texture2D(2, 2, TextureFormat.RGB24, true) { name = "cl_bg_" + id, wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Trilinear, anisoLevel = 4 };
                 if (!tex.LoadImage(File.ReadAllBytes(path))) { UnityEngine.Object.Destroy(tex); tex = null; }
                 else UnityEngine.Object.DontDestroyOnLoad(tex);
             }

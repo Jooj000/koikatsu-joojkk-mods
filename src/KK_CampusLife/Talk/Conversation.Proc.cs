@@ -622,6 +622,15 @@ namespace Joojkk.CampusLife
                 var second = new[] { f.Subject, f.Obj }.Where(x => !string.IsNullOrEmpty(x) && x != key && x != Lore.Player && x != other).Select(Teachers.Called).FirstOrDefault();
                 if (second != null) c["who2"] = second;
                 if (k != null && !string.IsNullOrEmpty(k.From)) c["src"] = k.From == Lore.Player ? "you" : Teachers.Called(k.From);
+                // the story names her as "her" ("...your promise to her"); if her name is still in it, no line names the teller.
+                string srcName;
+                if (k != null && !string.IsNullOrEmpty(k.From) && k.From != Lore.Player && c.TryGetValue("src", out srcName) && !string.IsNullOrEmpty(srcName) && c["deed"].Contains(srcName))
+                {
+                    var deed = c["deed"];
+                    foreach (var prep in new[] { "to", "with", "on", "about", "for", "from", "at" }) deed = deed.Replace(" " + prep + " " + srcName, " " + prep + " her");
+                    c["deed"] = deed;
+                    if (deed.Contains(srcName)) c.Remove("src");
+                }
                 if (!string.IsNullOrEmpty(t.ToldFit)) c["told"] = t.ToldFit;
                 if (!string.IsNullOrEmpty(f.Note)) c["note"] = f.Note.Replace("her Monday lunches", "the Monday lunches"); // saved like that before 2026-10-31
                 if (f.Since >= 0) { c["since"] = f.Since.ToString(); c["speed"] = f.Since == 0 ? "same_day" : f.Since <= 2 ? "fast" : "normal"; }

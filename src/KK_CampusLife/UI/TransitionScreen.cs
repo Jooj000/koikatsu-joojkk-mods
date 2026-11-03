@@ -126,6 +126,21 @@ namespace Joojkk.CampusLife
                 {
                     _title.text = _played ? "Loading..." : "Loading game";
                     _photo.enabled = false;
+                    // gray. At night or from your room it is your room that shows (the game's own picture of it); otherwise
+                    // the picture of the map you are on, when it has one.
+                    if (_played && G.Act != null)
+                    {
+                        var room = EventBackdrop.TimeSlot() == 2 || G.PlayerMapNo == 0;
+                        var pic = room ? EventBackdrop.Picture("@room") : MapShots.For(G.PlayerMapNo);
+                        if (pic != null)
+                        {
+                            _photo.enabled = true;
+                            _photo.texture = pic;
+                            _photo.uvRect = new Rect(0f, 0f, 1f, 1f);
+                            _photoFit.aspectRatio = (float)pic.width / Mathf.Max(1, pic.height);
+                            CampusLifePlugin.Log.LogInfo("Loading screen: " + (room ? "your room (the game's own picture, " : "the map you are on (") + pic.width + "x" + pic.height + ")");
+                        }
+                    }
                 }
                 NextTip();
             }
@@ -142,6 +157,8 @@ namespace Joojkk.CampusLife
         {
             if (!_on) return;
             _on = false;
+            // change): a destination belongs to one loading only.
+            _destAt = -100f;
             if (_canvas != null) _canvas.gameObject.SetActive(false);
         }
 
@@ -149,6 +166,27 @@ namespace Joojkk.CampusLife
         {
             _shownDest = _dest;
             _title.text = "Going to: " + PlaceName(_dest);
+            // The full-size picture of the destination when there is one (MapShots); the game's small thumbnail only until then.
+            var big = MapShots.For(_dest);
+            if (big != null)
+            {
+                _photo.enabled = true;
+                _photo.texture = big;
+                _photo.uvRect = new Rect(0f, 0f, 1f, 1f);
+                _photoFit.aspectRatio = (float)big.width / Mathf.Max(1, big.height);
+                return;
+            }
+            // (the night menu), so it never gets a picture of its own: the game's own full-size picture of it is shown.
+            var adv = GamePicture(_dest);
+            if (adv != null)
+            {
+                CampusLifePlugin.Log.LogInfo("Loading screen: going to map " + _dest + ", the game's own picture of it (" + adv.width + "x" + adv.height + ")");
+                _photo.enabled = true;
+                _photo.texture = adv;
+                _photo.uvRect = new Rect(0f, 0f, 1f, 1f);
+                _photoFit.aspectRatio = (float)adv.width / Mathf.Max(1, adv.height);
+                return;
+            }
             Sprite s;
             Thumbs.TryGetValue(_dest, out s);
             _photo.enabled = s != null && s.texture != null;
@@ -157,9 +195,96 @@ namespace Joojkk.CampusLife
             var tr = s.textureRect;
             float w = s.texture.width, hgt = s.texture.height;
             var crop = new Rect(tr.x + tr.width * 0.03f, tr.y + tr.height * 0.04f, tr.width * 0.94f, tr.height * 0.66f);
+            _photoFit.aspectRatio = crop.width / Mathf.Max(1f, crop.height);
+            // também estão assim"): the thumbnail is a few hundred pixels wide, so blown up to the screen its pixels showed as
+            // blocks. Until the map has its own picture it is shown blurred (a real blur at 384 wide), like a photo out
+            // of focus behind the heart, never as squares.
+            var soft = SoftThumb(_dest, s.texture, crop);
+            if (soft != null) { _photo.texture = soft; _photo.uvRect = new Rect(0f, 0f, 1f, 1f); return; }
             _photo.texture = s.texture;
             _photo.uvRect = new Rect(crop.x / w, crop.y / hgt, crop.width / w, crop.height / hgt);
-            _photoFit.aspectRatio = crop.width / Mathf.Max(1f, crop.height);
+        }
+
+        /// <summary>One box blur pass along rows (or columns) with radius r, edges clamped.</summary>
+        private static void BoxBlur(Color32[] px, int w, int h, int r, bool rows)
+        {
+            int n = rows ? w : h, lines = rows ? h : w, win = 2 * r + 1;
+            var line = new Color32[n];
+            for (var L = 0; L < lines; L++)
+            {
+                for (var i = 0; i < n; i++) line[i] = px[rows ? L * w + i : i * w + L];
+                int sr = 0, sg = 0, sb = 0;
+                for (var k = -r; k <= r; k++) { var c = line[Mathf.Clamp(k, 0, n - 1)]; sr += c.r; sg += c.g; sb += c.b; }
+                for (var i = 0; i < n; i++)
+                {
+                    px[rows ? L * w + i : i * w + L] = new Color32((byte)(sr / win), (byte)(sg / win), (byte)(sb / win), 255);
+                    var add = line[Mathf.Min(i + r + 1, n - 1)];
+                    var sub = line[Mathf.Max(i - r, 0)];
+                    sr += add.r - sub.r; sg += add.g - sub.g; sb += add.b - sub.b;
+                }
+            }
+        }
+
+        /// <summary>The game's ADV picture of a map the player never roams (his room), null for the others.</summary>
+        private static Texture2D GamePicture(int no)
+        {
+            try
+            {
+                var raw = G.MapName(no) ?? "";
+                if (raw.Contains("自室")) return EventBackdrop.Picture("@room");
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Loading screen game picture " + no + ": " + e.Message); }
+            return null;
+        }
+
+        private static readonly Dictionary<int, Texture2D> Softs = new Dictionary<int, Texture2D>();
+
+        /// <summary>The thumbnail's picture part, shrunk to a sixth in two smooth steps (a blur that stretches without blocks).</summary>
+        private static Texture2D SoftThumb(int no, Texture src, Rect crop)
+        {
+            Texture2D t;
+            if (Softs.TryGetValue(no, out t)) return t;
+            t = null;
+            var t0 = Time.realtimeSinceStartup;
+            var prev = RenderTexture.active;
+            RenderTexture full = null, small = null;
+            Texture2D cut = null;
+            try
+            {
+                full = RenderTexture.GetTemporary(src.width, src.height, 0, RenderTextureFormat.ARGB32);
+                full.filterMode = FilterMode.Bilinear;
+                Graphics.Blit(src, full);
+                RenderTexture.active = full;
+                int cw = Mathf.Max(8, (int)crop.width), ch = Mathf.Max(8, (int)crop.height);
+                cut = new Texture2D(cw, ch, TextureFormat.RGB24, false) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+                cut.ReadPixels(new Rect(crop.x, crop.y, cw, ch), 0, 0);
+                cut.Apply();
+                // drawn up to 384x216 and blurred for real (three box passes each way, close to a gaussian), so stretched to
+                // the screen it reads as a photo out of focus.
+                int w = 384, h = Mathf.Clamp(Mathf.RoundToInt(384f * ch / cw), 96, 384);   // the thumbnail's own shape
+                small = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32);
+                small.filterMode = FilterMode.Bilinear;
+                Graphics.Blit(cut, small);
+                RenderTexture.active = small;
+                t = new Texture2D(w, h, TextureFormat.RGB24, false) { name = "cl_softthumb_" + no, filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+                t.ReadPixels(new Rect(0, 0, w, h), 0, 0);
+                var px = t.GetPixels32();
+                for (var pass = 0; pass < 3; pass++) { BoxBlur(px, w, h, 9, true); BoxBlur(px, w, h, 9, false); }
+                t.SetPixels32(px);
+                t.Apply();
+                Object.DontDestroyOnLoad(t);
+                CampusLifePlugin.Log.LogInfo("Loading screen: map " + no + " has no picture of its own yet, its " + cw + "x" + ch + " thumbnail is shown blurred (" + w + "x" + h + ", " + Mathf.RoundToInt((Time.realtimeSinceStartup - t0) * 1000f) + " ms)");
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Loading screen soft picture " + no + ": " + e.Message); t = null; }
+            finally
+            {
+                RenderTexture.active = prev;
+                if (full != null) RenderTexture.ReleaseTemporary(full);
+                if (small != null) RenderTexture.ReleaseTemporary(small);
+                if (cut != null) Object.Destroy(cut);
+            }
+            Softs[no] = t;
+            return t;
         }
 
         /// <summary>Our English name for school places; otherwise the game's own map name (XUnity translates it).</summary>
@@ -203,7 +328,7 @@ namespace Joojkk.CampusLife
             _photo.enabled = false;
 
             _heart = GameUi.Image(root, "heart", null, Color.white);
-            _heart.sprite = _heartSprite ?? (_heartSprite = SavedHeart() ?? MakeHeart(256));
+            _heart.sprite = _heartSprite ?? (_heartSprite = MakeHeart(HeartSize));
             _heart.preserveAspect = true;
             var hr = _heart.rectTransform;
             hr.anchorMin = hr.anchorMax = new Vector2(0.5f, 0.5f);
@@ -239,86 +364,80 @@ namespace Joojkk.CampusLife
             _canvas.gameObject.SetActive(false);
         }
 
-        // in the clipboard (ChaStatusComponent.objHeart) is a sprite of the game's UI atlas, loaded only with that screen:
-        // the first time the clipboard opens it is copied out of the atlas into a PNG, which every loading screen uses
-        // after that (our drawn heart only until then).
-        private static string HeartFile { get { return System.IO.Path.Combine(System.IO.Path.Combine(BepInEx.Paths.ConfigPath, "joojkk_campuslife"), "girlfriend_heart.png"); } }
+        // do loading está pixelado. aumente o tamanho direito ao invés de só esticar." The card's heart is a 53x47 sprite of
+        // the game's atlas, so copying it and stretching it to 280 px looked blocky. The loading heart is drawn here in the
+        // same look (white border, maroon outline, pink fill with a lit rim and a gloss) at 512 px with mipmaps.
+        private const int HeartSize = 512;
 
-        private static bool _gameHeart;
-
-        /// <summary>From the clipboard's cards: the game's girlfriend heart, copied once.</summary>
-        public static void OfferGameHeart(ChaStatusComponent comp)
-        {
-            if (_gameHeart || comp == null || comp.objHeart == null) return;
-            _gameHeart = true;
-            try
-            {
-                if (System.IO.File.Exists(HeartFile)) return;
-                var img = comp.objHeart.GetComponentInChildren<Image>(true);
-                var sp = img != null ? img.sprite : null;
-                if (sp == null || sp.texture == null) { CampusLifePlugin.Log.LogInfo("Loading heart: the card's heart has no sprite"); return; }
-                var r = sp.textureRect;
-                var rt = RenderTexture.GetTemporary(sp.texture.width, sp.texture.height, 0, RenderTextureFormat.ARGB32);
-                var was = RenderTexture.active;
-                Graphics.Blit(sp.texture, rt);
-                RenderTexture.active = rt;
-                var tex = new Texture2D((int)r.width, (int)r.height, TextureFormat.ARGB32, false);
-                tex.ReadPixels(new Rect(r.x, r.y, r.width, r.height), 0, 0);
-                tex.Apply();
-                RenderTexture.active = was;
-                RenderTexture.ReleaseTemporary(rt);
-                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(HeartFile));
-                System.IO.File.WriteAllBytes(HeartFile, tex.EncodeToPNG());
-                Object.Destroy(tex);
-                CampusLifePlugin.Log.LogInfo("Loading heart: copied the card's girlfriend heart '" + sp.name + "' (" + r.width + "x" + r.height + ") to " + HeartFile);
-                var saved = SavedHeart();
-                if (saved != null) { _heartSprite = saved; if (_heart != null) _heart.sprite = saved; }
-            }
-            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Loading heart: " + e.Message); }
-        }
+        /// <summary>Kept for the clipboard's call: the card's heart is no longer copied (it is too small to show big).</summary>
+        public static void OfferGameHeart(ChaStatusComponent comp) { }
 
         /// <summary>The loading heart made ahead of time (ClipboardWarm).</summary>
-        public static void WarmHeart() { if (_heartSprite == null) _heartSprite = SavedHeart() ?? MakeHeart(256); }
+        public static void WarmHeart() { if (_heartSprite == null) _heartSprite = MakeHeart(HeartSize); }
 
-        private static Sprite SavedHeart()
+        /// <summary>Signed distance to a heart with its tip at (0,0) and its lobes up to y≈1.06 (negative inside).</summary>
+        private static float HeartDist(float x, float y)
         {
-            try
-            {
-                if (!System.IO.File.Exists(HeartFile)) return null;
-                var tex = new Texture2D(2, 2, TextureFormat.ARGB32, false) { name = "cl_loading_heart_game", wrapMode = TextureWrapMode.Clamp };
-                if (!tex.LoadImage(System.IO.File.ReadAllBytes(HeartFile))) return null;
-                Object.DontDestroyOnLoad(tex);
-                return Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-            }
-            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Loading heart file: " + e.Message); return null; }
+            x = Mathf.Abs(x);
+            if (y + x > 1f) return Mathf.Sqrt((x - 0.25f) * (x - 0.25f) + (y - 0.75f) * (y - 0.75f)) - 0.35355f;
+            var a = x * x + (y - 1f) * (y - 1f);
+            var m = 0.5f * Mathf.Max(x + y, 0f);
+            var b = (x - m) * (x - m) + (y - m) * (y - m);
+            return Mathf.Sqrt(Mathf.Min(a, b)) * (x - y > 0f ? 1f : -1f);
         }
 
-        /// <summary>A red heart drawn from its curve, (x²+y²-1)³ = x²y³, smoothed with 4 samples per pixel.</summary>
+        private static float Smooth(float e0, float e1, float x)
+        {
+            var t = Mathf.Clamp01((x - e0) / (e1 - e0));
+            return t * t * (3f - 2f * t);
+        }
+
+        /// <summary>The girlfriend heart in the game's card style, n×n, edges smoothed by the distance itself.</summary>
         private static Sprite MakeHeart(int n)
         {
-            var tex = new Texture2D(n, n, TextureFormat.ARGB32, false) { wrapMode = TextureWrapMode.Clamp, name = "cl_loading_heart" };
-            var px = new Color32[n * n];
-            var top = new Color(1f, 0.36f, 0.45f);
-            var bottom = new Color(0.78f, 0.04f, 0.16f);
+            var t0 = Time.realtimeSinceStartup;
+            var tex = new Texture2D(n, n, TextureFormat.ARGB32, true) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Trilinear, name = "cl_loading_heart" };
+            var px = new Color[n * n];
+            var white = Color.white;
+            var maroon = new Color(0.392f, 0.039f, 0.039f);
+            var fill = new Color(1f, 0.404f, 0.541f);
+            var light = new Color(1f, 0.729f, 0.906f);
+            var dark = new Color(0.69f, 0.243f, 0.337f);
+            const float span = 1.62f, border = 0.075f, outline = 0.045f;
+            var aa = span / n;
             for (var y = 0; y < n; y++)
-            {
-                var col = Color.Lerp(bottom, top, (float)y / n);
                 for (var x = 0; x < n; x++)
                 {
-                    var inside = 0;
-                    for (var s = 0; s < 4; s++)
+                    var u = ((x + 0.5f) / n - 0.5f) * span;
+                    var v = ((y + 0.5f) / n) * span - 0.30f;
+                    var d = HeartDist(u, v);
+                    if (d > border + aa) { px[y * n + x] = new Color(1f, 1f, 1f, 0f); continue; }
+                    Color c;
+                    if (d > outline) c = Color.Lerp(maroon, white, Smooth(outline - aa, outline + aa, d));
+                    else if (d > 0f) c = maroon;
+                    else
                     {
-                        var u = ((x + 0.25f + 0.5f * (s & 1)) / n - 0.5f) * 2.7f;
-                        var v = ((y + 0.25f + 0.5f * (s >> 1)) / n - 0.5f) * 2.7f + 0.12f;
-                        var a = u * u + v * v - 1f;
-                        if (a * a * a - u * u * v * v * v <= 0f) inside++;
+                        var ex = HeartDist(u + 0.01f, v) - HeartDist(u - 0.01f, v);
+                        var ey = HeartDist(u, v + 0.01f) - HeartDist(u, v - 0.01f);
+                        var len = Mathf.Sqrt(ex * ex + ey * ey);
+                        if (len < 1e-5f) len = 1f;
+                        var lit = -ex / len * 0.6f + ey / len * 0.8f; // above zero toward the upper left
+                        var rim = 1f - Smooth(0f, 0.09f, -d);
+                        c = fill;
+                        c = lit > 0f ? Color.Lerp(c, light, rim * Mathf.Min(1f, lit * 1.3f)) : Color.Lerp(c, dark, rim * Mathf.Min(1f, -lit * 1.2f));
+                        var gx = (u + 0.30f) / 0.13f;
+                        var gy = (v - 0.86f) / 0.085f;
+                        var g = gx * gx + gy * gy;
+                        if (g < 1f) c = Color.Lerp(c, white, Smooth(1f, 0.55f, g));
+                        c = Color.Lerp(maroon, c, Smooth(0f, 2f * aa, -d));
                     }
-                    col.a = inside / 4f;
-                    px[y * n + x] = col;
+                    c.a = Smooth(border + aa, border - aa, d);
+                    px[y * n + x] = c;
                 }
-            }
-            tex.SetPixels32(px);
-            tex.Apply(false, true);
+            tex.SetPixels(px);
+            tex.Apply(true, true);
+            Object.DontDestroyOnLoad(tex);
+            CampusLifePlugin.Log.LogInfo("Loading heart: drawn at " + n + "x" + n + " with mipmaps in " + Mathf.RoundToInt((Time.realtimeSinceStartup - t0) * 1000f) + " ms");
             return Sprite.Create(tex, new Rect(0f, 0f, n, n), new Vector2(0.5f, 0.5f));
         }
     }

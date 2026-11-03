@@ -13,24 +13,26 @@ namespace Joojkk.CampusLife
     /// <summary>
     /// redondos abaixo da barra de H na conversa, e somente se descobrir. faça um ícone diferente para cada mood, e passando
     /// o mouse por cima aparece o nome. nos likes, só faça um ícone e ao passar o mouse aparecem os gostos com seus
-    /// ícones"). Her mood once you know it, and one star for the likes you found out; hovering shows a small note.
-    /// descoberto. mantenha as funções que você atribuiu juntas dessa." The row now sits under the talk's time bar, and
-    /// after the mood and the star each like you found out has its own small badge (its name on hover); a like learned
-    /// during the talk pops into the row. The like badges on the options, the gift menu and the shop stay.
+    /// ícones"). Her mood once you know it, and one star for the likes you found out.
+    /// sólida. faça com que tenha apenas um ícone principal, em que é passado hover ou clicado e abre uma bandeja com os
+    /// ícones e seus nomes." So the row is the mood and one main likes icon, bigger and clear of the bar; hovering the star
+    /// opens a tray with each like found out (its own colored icon and its name), and a click keeps the tray open until the
+    /// next click. A like learned during the talk makes the star pulse and opens the tray for a moment with the new one
+    /// popping in. The like badges on the options, the gift menu and the shop stay.
     /// </summary>
     internal static class TalkBadges
     {
-        private const float Size = 28f, Small = 22f, Gap = 5f, Refresh = 0.5f, Pop = 0.45f;
+        private const float Size = 36f, Gap = 8f, Below = 14f, Refresh = 0.5f, Pop = 0.45f, Flash = 3f;
+        private const float RowH = 40f, TrayIcon = 32f, TrayPad = 10f;
         private static readonly AccessTools.FieldRef<TalkScene, Image> LewdRef = AccessTools.FieldRefAccess<TalkScene, Image>("imageLewdness");
         private static readonly AccessTools.FieldRef<TalkScene, Image> TimeRef = AccessTools.FieldRefAccess<TalkScene, Image>("imageTime");
-        private static readonly Dictionary<string, Image> LikeIcons = new Dictionary<string, Image>();
-        private static readonly Dictionary<string, float> Popping = new Dictionary<string, float>();
 
         private static TalkScene _scene;
-        private static RectTransform _row, _tip;
+        private static RectTransform _row, _tip, _tray;
         private static Image _mood, _likes;
-        private static float _next;
-        private static bool _failed;
+        private static float _next, _pulseAt = -10f, _flashUntil;
+        private static bool _failed, _pinned, _hover;
+        private static string _newLike;
 
         public static void Update()
         {
@@ -44,6 +46,7 @@ namespace Joojkk.CampusLife
                 {
                     if (_row != null) Object.Destroy(_row.gameObject);
                     _row = null;
+                    _tray = _tip = null;
                     _scene = null;
                     return;
                 }
@@ -51,10 +54,11 @@ namespace Joojkk.CampusLife
                 {
                     if (_row != null) Object.Destroy(_row.gameObject);
                     _row = null;
+                    _tray = _tip = null;
                     _scene = ts;
-                    LikeIcons.Clear();
-                    Popping.Clear();
                     _known = null;
+                    _pinned = _hover = false;
+                    _flashUntil = 0f;
                     if (!Build(ts)) return;
                     _next = 0f;
                 }
@@ -70,7 +74,11 @@ namespace Joojkk.CampusLife
             }
         }
 
-        /// <summary>The row of icons, just under the time bar's lower left corner (the H bar's if there is none), in the bar's own canvas.</summary>
+        /// <summary>
+        /// The row, under the time bar (the H bar's if there is none), in the bar's own canvas. The bar's frame can reach
+        /// below the fill image, so the row goes under the lowest of the bar and its frame (its parent, when that is a
+        /// small box around it), with a clear gap.
+        /// </summary>
         private static bool Build(TalkScene ts)
         {
             Image bar = null;
@@ -79,15 +87,32 @@ namespace Joojkk.CampusLife
             if (bar == null) return false;
             var parent = bar.transform.parent as RectTransform;
             if (parent == null) return false;
+            var corners = new Vector3[4];
+            bar.rectTransform.GetWorldCorners(corners);
+            var left = corners[0];
+            var bottom = corners[0].y;
+            var pc = new Vector3[4];
+            parent.GetWorldCorners(pc);
+            var barH = corners[1].y - corners[0].y;
+            if (pc[1].y - pc[0].y < barH * 4f) bottom = Mathf.Min(bottom, pc[0].y);
+            foreach (var g in parent.GetComponentsInChildren<Graphic>(false))
+            {
+                if (g == null || g.rectTransform == bar.rectTransform) continue;
+                var gc = new Vector3[4];
+                g.rectTransform.GetWorldCorners(gc);
+                // a frame or back of the bar: overlaps it sideways and is not much taller
+                if (gc[2].x < corners[0].x || gc[0].x > corners[2].x || gc[1].y - gc[0].y > barH * 4f) continue;
+                if (gc[1].y < corners[0].y - barH || gc[0].y > corners[1].y) continue;
+                bottom = Mathf.Min(bottom, gc[0].y);
+            }
             _row = GameUi.Rect(parent, "cl_talk_badges");
             _row.anchorMin = _row.anchorMax = new Vector2(0.5f, 0.5f);
             _row.pivot = new Vector2(0f, 1f);
-            _row.sizeDelta = new Vector2(2 * Size + Gap + GirlInfo.LikeIds.Length * (Small + Gap), Size);
-            var corners = new Vector3[4];
-            bar.rectTransform.GetWorldCorners(corners);
-            _row.position = corners[0];
-            _row.anchoredPosition += new Vector2(0f, -Gap);
+            _row.sizeDelta = new Vector2(2 * Size + Gap, Size);
+            _row.position = new Vector3(left.x, bottom, left.z);
+            _row.anchoredPosition += new Vector2(0f, -Below);
             _row.SetAsLastSibling();
+            CampusLifePlugin.Log.LogDebug("Talk badges: bar bottom " + corners[0].y + ", frame bottom " + bottom + ", row at " + _row.anchoredPosition);
             _mood = Icon("mood", 0);
             _likes = Icon("likes", 1);
             _likes.sprite = ConvArt.Badge(IconArt.LikesStar);
@@ -101,8 +126,22 @@ namespace Joojkk.CampusLife
             img.preserveAspect = true;
             img.rectTransform.Place(slot * (Size + Gap), 0f, Size, Size);
             var trig = img.gameObject.AddComponent<EventTrigger>();
-            Hook(trig, EventTriggerType.PointerEnter, () => ShowTip(slot));
-            Hook(trig, EventTriggerType.PointerExit, HideTip);
+            if (slot == 0)
+            {
+                Hook(trig, EventTriggerType.PointerEnter, ShowMoodTip);
+                Hook(trig, EventTriggerType.PointerExit, HideTip);
+            }
+            else
+            {
+                Hook(trig, EventTriggerType.PointerEnter, () => { _hover = true; ShowTray(); });
+                Hook(trig, EventTriggerType.PointerExit, () => { _hover = false; if (!_pinned && Time.realtimeSinceStartup > _flashUntil) HideTray(); });
+                Hook(trig, EventTriggerType.PointerClick, () =>
+                {
+                    _pinned = !_pinned;
+                    if (_pinned) ShowTray();
+                    else if (!_hover) HideTray();
+                });
+            }
             img.gameObject.SetActive(false);
             return img;
         }
@@ -118,36 +157,31 @@ namespace Joojkk.CampusLife
             t.triggers.Add(e);
         }
 
-        /// <summary>A like's own small badge, made the first time it is shown.</summary>
-        private static Image LikeIcon(string like)
-        {
-            Image img;
-            if (LikeIcons.TryGetValue(like, out img) && img != null) return img;
-            img = GameUi.Image(_row, "like_" + like, null, Color.white);
-            img.sprite = ConvArt.Badge(IconArt.FirstLike + Array.IndexOf(GirlInfo.LikeIds, like));
-            img.raycastTarget = true;
-            img.preserveAspect = true;
-            var trig = img.gameObject.AddComponent<EventTrigger>();
-            var l = like;
-            Hook(trig, EventTriggerType.PointerEnter, () => ShowLikeTip(l));
-            Hook(trig, EventTriggerType.PointerExit, HideTip);
-            LikeIcons[like] = img;
-            return img;
-        }
-
-        /// <summary>A like learned while the row is up grows in from nothing, a little past its size and back.</summary>
+        /// <summary>The star pulses after a like is learned; the new like's row in the tray pops in; the flash tray closes by itself.</summary>
         private static void Animate()
         {
-            if (Popping.Count == 0) return;
             var now = Time.realtimeSinceStartup;
-            foreach (var kv in Popping.ToList())
+            if (_likes != null)
             {
-                Image img;
-                if (!LikeIcons.TryGetValue(kv.Key, out img) || img == null) { Popping.Remove(kv.Key); continue; }
-                var t = Mathf.Clamp01((now - kv.Value) / Pop);
-                var k = t < 0.6f ? Mathf.Lerp(0.2f, 1.3f, t / 0.6f) : Mathf.Lerp(1.3f, 1f, (t - 0.6f) / 0.4f);
-                img.rectTransform.localScale = new Vector3(k, k, 1f);
-                if (t >= 1f) { img.rectTransform.localScale = Vector3.one; Popping.Remove(kv.Key); }
+                var t = (now - _pulseAt) / 1.2f;
+                var k = t >= 0f && t < 1f ? 1f + 0.22f * Mathf.Sin(t * Mathf.PI * 3f) * (1f - t) : 1f;
+                _likes.rectTransform.localScale = new Vector3(k, k, 1f);
+            }
+            if (_tray != null && _newLike != null)
+            {
+                var row = _tray.Find("like_" + _newLike);
+                if (row != null)
+                {
+                    var t = Mathf.Clamp01((now - _pulseAt) / Pop);
+                    var k = t < 0.6f ? Mathf.Lerp(0.2f, 1.15f, t / 0.6f) : Mathf.Lerp(1.15f, 1f, (t - 0.6f) / 0.4f);
+                    row.localScale = new Vector3(k, k, 1f);
+                }
+            }
+            if (_tray != null && _flashUntil > 0f && now > _flashUntil)
+            {
+                _flashUntil = 0f;
+                _newLike = null;
+                if (!_pinned && !_hover) HideTray();
             }
         }
 
@@ -162,36 +196,26 @@ namespace Joojkk.CampusLife
             _shownMood = Cfg.MoodsEnabled.Value && gs.Mood != Mood.None && Moods.Known(gs) ? gs.Mood : Mood.None;
             if (_shownMood != Mood.None) _mood.sprite = ConvArt.Badge((int)_shownMood);
             if (_mood.gameObject.activeSelf != (_shownMood != Mood.None)) _mood.gameObject.SetActive(_shownMood != Mood.None);
-            _shownLikes = GirlInfo.LikeIds.Where((l, i) => (gs.KnownLikes & (1 << i)) != 0 && GirlInfo.Likes(h, l)).ToList();
-            // The star moves into the first place when the mood is not known; the likes' own badges follow it.
-            var x = _shownMood != Mood.None ? Size + Gap : 0f;
-            _likes.rectTransform.Place(x, 0f, Size, Size);
-            if (_likes.gameObject.activeSelf != (_shownLikes.Count > 0)) _likes.gameObject.SetActive(_shownLikes.Count > 0);
-            if (_shownLikes.Count > 0) x += Size + Gap;
+            var likes = GirlInfo.LikeIds.Where((l, i) => (gs.KnownLikes & (1 << i)) != 0 && GirlInfo.Likes(h, l)).ToList();
+            // The star moves into the first place when the mood is not known.
+            _likes.rectTransform.Place(_shownMood != Mood.None ? Size + Gap : 0f, 0f, Size, Size);
+            if (_likes.gameObject.activeSelf != (likes.Count > 0)) _likes.gameObject.SetActive(likes.Count > 0);
             var first = _known == null;
             if (first) _known = new HashSet<string>();
-            foreach (var like in GirlInfo.LikeIds)
+            string learned = null;
+            foreach (var like in likes)
+                if (_known.Add(like) && !first) learned = like;
+            var changed = !likes.SequenceEqual(_shownLikes);
+            _shownLikes = likes;
+            if (learned != null)
             {
-                Image img;
-                if (!_shownLikes.Contains(like))
-                {
-                    if (LikeIcons.TryGetValue(like, out img) && img != null && img.gameObject.activeSelf) img.gameObject.SetActive(false);
-                    continue;
-                }
-                img = LikeIcon(like);
-                img.rectTransform.Place(x, (Size - Small) / 2f, Small, Small);
-                // centered pivot, so the pop grows from the middle
-                img.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-                img.rectTransform.anchoredPosition += new Vector2(Small / 2f, -Small / 2f);
-                if (!img.gameObject.activeSelf) img.gameObject.SetActive(true);
-                if (_known.Add(like) && !first)
-                {
-                    Popping[like] = Time.realtimeSinceStartup;
-                    img.rectTransform.localScale = new Vector3(0.2f, 0.2f, 1f);
-                    CampusLifePlugin.Log.LogInfo("Talk badges: " + like + " learned, its badge joins the row under the time bar");
-                }
-                x += Small + Gap;
+                _newLike = learned;
+                _pulseAt = Time.realtimeSinceStartup;
+                _flashUntil = Time.realtimeSinceStartup + Flash;
+                ShowTray();
+                CampusLifePlugin.Log.LogInfo("Talk badges: " + learned + " learned, the likes star pulses and its tray shows it");
             }
+            else if (changed && _tray != null) ShowTray();
         }
 
         internal static string Shown()
@@ -199,66 +223,68 @@ namespace Joojkk.CampusLife
             if (_row == null) return "no row";
             var parts = new List<string>();
             if (_shownMood != Mood.None) parts.Add("mood " + _shownMood);
-            if (_shownLikes.Count > 0) parts.Add("star");
-            parts.AddRange(_shownLikes);
-            return parts.Count == 0 ? "empty" : string.Join(", ", parts.ToArray());
+            if (_shownLikes.Count > 0) parts.Add("star (" + _shownLikes.Count + " likes)");
+            var s = parts.Count == 0 ? "empty" : string.Join(", ", parts.ToArray());
+            if (_tray != null) s += "; tray open" + (_pinned ? " (pinned)" : "") + ": " + string.Join(", ", _shownLikes.ToArray());
+            return s;
         }
 
-        private static void ShowLikeTip(string like)
+        // ---- the tray ----
+
+        private static void ShowTray()
         {
             HideTip();
-            Image img;
-            if (_row == null || !LikeIcons.TryGetValue(like, out img) || img == null) return;
-            var text = GirlInfo.LikeLabel(like);
-            var width = 24f + text.Length * 10.5f;
-            var back = GameUi.Image(_row, "cl_badge_tip", null, GameUi.NoteBack);
-            _tip = back.rectTransform;
-            var left = img.rectTransform.anchoredPosition.x - img.rectTransform.pivot.x * Small;
-            _tip.Place(left, Size + 6f, width, 30f);
-            var t = GameUi.Text(_tip, "text", text, 19f, GameUi.White, TextAlignmentOptions.Midline, false);
-            t.rectTransform.Place(4f, 0f, width - 8f, 30f);
+            HideTray();
+            if (_row == null || _shownLikes.Count == 0) return;
+            var labels = _shownLikes.Select(GirlInfo.LikeLabel).ToList();
+            var width = TrayPad * 2 + TrayIcon + 10f + Mathf.Max(70f, labels.Max(l => l.Length) * 11.5f);
+            var back = GameUi.Image(_row, "cl_likes_tray", null, GameUi.NoteBack);
+            _tray = back.rectTransform;
+            var head = 30f;
+            _tray.Place(_likes.rectTransform.anchoredPosition.x, Size + 8f, width, TrayPad * 2 + head + _shownLikes.Count * RowH);
+            var title = GameUi.Text(_tray, "title", "Likes (" + _shownLikes.Count + ")", 19f, GameUi.Gold, TextAlignmentOptions.MidlineLeft, false);
+            title.rectTransform.Place(TrayPad + 2f, TrayPad - 2f, width - TrayPad * 2, head);
+            var y = TrayPad + head;
+            for (var i = 0; i < _shownLikes.Count; i++)
+            {
+                var like = _shownLikes[i];
+                var row = GameUi.Rect(_tray, "like_" + like);
+                row.Place(TrayPad, y, width - TrayPad * 2, RowH);
+                row.pivot = new Vector2(0f, 0.5f);
+                row.anchoredPosition += new Vector2(0f, -RowH / 2f);
+                var icon = GameUi.Image(row, "icon", null, Color.white);
+                icon.sprite = ConvArt.Badge(IconArt.FirstLike + Array.IndexOf(GirlInfo.LikeIds, like));
+                icon.preserveAspect = true;
+                icon.raycastTarget = false;
+                icon.rectTransform.Place(0f, (RowH - TrayIcon) / 2f, TrayIcon, TrayIcon);
+                var t = GameUi.Text(row, "name", labels[i], 21f, GameUi.White, TextAlignmentOptions.MidlineLeft, false);
+                t.rectTransform.Place(TrayIcon + 10f, 0f, width - TrayPad * 2 - TrayIcon - 10f, RowH);
+                if (like == _newLike) row.localScale = new Vector3(0.2f, 0.2f, 1f);
+                y += RowH;
+            }
+            back.raycastTarget = false;
         }
 
-        // ---- hover note ----
+        private static void HideTray()
+        {
+            if (_tray != null) Object.Destroy(_tray.gameObject);
+            _tray = null;
+        }
 
-        private static void ShowTip(int slot)
+        // ---- the mood's hover note ----
+
+        private static void ShowMoodTip()
         {
             HideTip();
-            if (_row == null) return;
-            var lines = new List<KeyValuePair<Sprite, string>>();
-            if (slot == 0)
-            {
-                if (_shownMood == Mood.None) return;
-                lines.Add(new KeyValuePair<Sprite, string>(null, "Mood: " + Lines.MoodName(_shownMood)));
-            }
-            else
-            {
-                if (_shownLikes.Count == 0) return;
-                lines.Add(new KeyValuePair<Sprite, string>(null, "Likes"));
-                foreach (var l in _shownLikes)
-                    lines.Add(new KeyValuePair<Sprite, string>(ConvArt.Badge(IconArt.FirstLike + Array.IndexOf(GirlInfo.LikeIds, l)), GirlInfo.LikeLabel(l)));
-            }
-            const float lineH = 26f, pad = 8f, icon = 22f;
-            var width = 40f + lines.Max(x => x.Value.Length) * 10.5f + (lines.Any(x => x.Key != null) ? icon + 6f : 0f);
+            if (_row == null || _shownMood == Mood.None) return;
+            var text = "Mood: " + Lines.MoodName(_shownMood);
+            var width = 28f + text.Length * 11f;
             var back = GameUi.Image(_row, "cl_badge_tip", null, GameUi.NoteBack);
             _tip = back.rectTransform;
-            _tip.Place(slot == 0 || _shownMood == Mood.None ? 0f : Size + Gap, Size + 6f, width, pad * 2 + lines.Count * lineH);
-            var y = pad;
-            foreach (var kv in lines)
-            {
-                var x = pad + 2f;
-                if (kv.Key != null)
-                {
-                    var im = GameUi.Image(_tip, "icon", null, Color.white);
-                    im.sprite = kv.Key;
-                    im.preserveAspect = true;
-                    im.rectTransform.Place(x, y + (lineH - icon) / 2f, icon, icon);
-                    x += icon + 6f;
-                }
-                var t = GameUi.Text(_tip, "text", kv.Value, 19f, kv.Key == null && lines.Count > 1 ? GameUi.Gold : GameUi.White, TextAlignmentOptions.MidlineLeft, false);
-                t.rectTransform.Place(x, y, width - x - pad, lineH);
-                y += lineH;
-            }
+            _tip.Place(0f, Size + 8f, width, 34f);
+            back.raycastTarget = false;
+            var t = GameUi.Text(_tip, "text", text, 20f, GameUi.White, TextAlignmentOptions.Midline, false);
+            t.rectTransform.Place(4f, 0f, width - 8f, 34f);
         }
 
         private static void HideTip()
@@ -267,18 +293,25 @@ namespace Joojkk.CampusLife
             _tip = null;
         }
 
+        /// <summary>
+        /// </summary>
         internal static string Hover(int slot)
         {
+            if (_row == null) return "no row";
+            if (slot == 0)
+            {
+                HideTray();
+                ShowMoodTip();
+                return _tip == null ? "no note (mood not known)" : "mood note shown";
+            }
             if (slot >= 2)
             {
-                // 2, 3... = the like badges, in the row's order
-                var i = slot - 2;
-                if (i >= _shownLikes.Count) return "no like badge " + i + " (row: " + Shown() + ")";
-                ShowLikeTip(_shownLikes[i]);
-                return _tip == null ? "no note" : "note shown: " + GirlInfo.LikeLabel(_shownLikes[i]) + " (row: " + Shown() + ")";
+                _pinned = !_pinned;
+                if (_pinned) ShowTray(); else HideTray();
+                return "star clicked: " + Shown();
             }
-            ShowTip(slot);
-            return _tip == null ? "no note (" + (slot == 0 ? "mood not known" : "no likes known") + ")" : "note shown";
+            ShowTray();
+            return _tray == null ? "no tray (no likes known)" : Shown();
         }
     }
 }

@@ -113,7 +113,8 @@ namespace Joojkk.CampusLife
 
         // ---------------- places and girls ----------------
 
-        private static readonly string[] OutdoorWords = { "屋上", "中庭", "グラウンド", "校庭", "運動場", "プール", "門", "裏庭", "校舎裏", "公園", "野原", "駅", "Roof", "Courtyard", "Ground", "Field", "Pool", "Park", "Gate" };
+        // The pool is a hall with a roof.
+        private static readonly string[] OutdoorWords = { "屋上", "中庭", "グラウンド", "校庭", "運動場", "門", "裏庭", "校舎裏", "公園", "野原", "駅", "Roof", "Courtyard", "Ground", "Field", "Park", "Gate" };
         private static readonly Dictionary<int, bool> OutdoorCache = new Dictionary<int, bool>();
 
         public static bool Outdoor(int mapNo)

@@ -27,13 +27,25 @@ namespace Joojkk.CampusLife
             new[] { 1f, 0.86f, 0.45f },     // likes
         };
 
-        private static readonly float[] LikeColor = { 0.5f, 0.88f, 0.78f };
+        // every badge has a gradient (light top, deeper bottom) and a gloss, instead of one flat mint disc for all.
+        private static readonly float[][] LikeColors =
+        {
+            new[] { 0.96f, 0.64f, 0.34f },  // animals: warm orange
+            new[] { 0.56f, 0.84f, 0.42f },  // food: green
+            new[] { 1f, 0.48f, 0.36f },     // cooking: tomato
+            new[] { 0.38f, 0.68f, 1f },     // exercise: blue
+            new[] { 0.62f, 0.54f, 1f },     // study: violet
+            new[] { 1f, 0.52f, 0.78f },     // fashion: pink
+            new[] { 0.78f, 0.6f, 0.44f },   // black coffee: latte brown
+            new[] { 1f, 0.32f, 0.3f },      // spicy: red
+            new[] { 0.42f, 0.88f, 0.86f },  // sweets: mint candy
+        };
 
         /// <summary>A round badge, size x size, RGBA rows from the bottom.</summary>
         public static float[] Badge(int symbol, int size)
         {
             var px = new float[size * size * 4];
-            var c = symbol < BadgeColor.Length ? BadgeColor[symbol] : LikeColor;
+            var c = symbol < BadgeColor.Length ? BadgeColor[symbol] : LikeColors[Math.Min(LikeColors.Length - 1, Math.Max(0, symbol - FirstLike))];
             var unit = size / 2f;
             for (var y = 0; y < size; y++)
             for (var x = 0; x < size; x++)
@@ -43,11 +55,13 @@ namespace Joojkk.CampusLife
                 var disc = Circle(u, v, 0.94f);
                 var fill = Cover(disc, unit);
                 if (fill <= 0f) continue;
-                // a little lighter at the top, like the tiles' glow
-                var lift = Clamp01(0.5f + v * 0.5f) * 0.18f;
-                var r = Lerp(c[0], 1f, lift);
-                var g = Lerp(c[1], 1f, lift);
-                var b = Lerp(c[2], 1f, lift);
+                // gradient: lighter at the top, deeper at the bottom; a soft gloss on the upper left
+                var r = c[0]; var g = c[1]; var b = c[2];
+                if (v > 0f) { var lift = v * 0.3f; r = Lerp(r, 1f, lift); g = Lerp(g, 1f, lift); b = Lerp(b, 1f, lift); }
+                else { var deep = -v * 0.32f; r *= 1f - deep; g *= 1f - deep; b *= 1f - deep; }
+                var gx = (u + 0.3f) / 0.42f; var gy = (v - 0.48f) / 0.24f;
+                var gloss = Clamp01(1f - (gx * gx + gy * gy)) * 0.45f;
+                r = Lerp(r, 1f, gloss); g = Lerp(g, 1f, gloss); b = Lerp(b, 1f, gloss);
                 var rim = Cover(Math.Abs(disc + 0.04f) - 0.05f, unit);
                 r = Lerp(r, Graphite[0], rim); g = Lerp(g, Graphite[1], rim); b = Lerp(b, Graphite[2], rim);
                 var s = Cover(BadgeSymbol(symbol, u / 0.86f, v / 0.86f) * 0.86f, unit);

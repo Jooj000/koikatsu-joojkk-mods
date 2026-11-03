@@ -383,6 +383,15 @@ namespace Joojkk.CampusLife
             Toasts.Show(a.Name + " is now done here (" + Places.MapLabel(map) + ").");
         }
 
+        /// <summary>Puts an activity at a spot on a map (the spot editor's "Here" and "1 body ahead") and moves its icon now.</summary>
+        public static void SetSpot(ActivityDef a, int map, Vector3 pos, float yaw)
+        {
+            Spots.Set("act:" + a.Id, map, pos, yaw);
+            Rebuild(map);
+            Toasts.Show(a.Name + " is now done here (" + Places.MapLabel(map) + ").");
+            CampusLifePlugin.Log.LogInfo(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Activity spot: {0} on map {1} at {2:0.00}, {3:0.00}, {4:0.00} facing {5:0}", a.Id, map, pos.x, pos.y, pos.z, yaw));
+        }
+
         public static void ResetSpot(ActivityDef a)
         {
             var map = G.PlayerMapNo;

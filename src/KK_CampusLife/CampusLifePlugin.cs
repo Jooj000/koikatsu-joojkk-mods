@@ -109,6 +109,7 @@ namespace Joojkk.CampusLife
                     Conversation.Watch();
                     TalkBadges.Update();
                     PositionTool.Update();
+                    SpotEditor.Update();
                     Markers.UpdateMinimap();
                     RadarMap.Update();
                     CafeteriaStore.Update();
@@ -140,6 +141,7 @@ namespace Joojkk.CampusLife
             {
                 if (!Campus.On) return;
                 PositionTool.OnGUI();
+                SpotEditor.OnGUI();
                 NightIcon.OnGUI();
             }
             catch (Exception e) { Log.LogDebug(e); }

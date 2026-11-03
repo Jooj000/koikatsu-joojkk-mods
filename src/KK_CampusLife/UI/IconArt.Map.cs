@@ -186,7 +186,7 @@ namespace Joojkk.CampusLife
                 case "gift": return Gift(u / 0.82f, v / 0.82f) * 0.82f;
                 case "heart": return Heart(u / 0.78f, (v + 0.04f) / 0.78f) * 0.78f;
                 case "pin": return Pin(u, v);
-                default: return Circle(u, v, 0.4f);
+                default: return ItemShape(g, u, v);
             }
         }
 

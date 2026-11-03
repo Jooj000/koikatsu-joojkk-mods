@@ -324,6 +324,8 @@ namespace Joojkk.CampusLife
             var b2 = menu.GetComponent<Button>();
             b2.onClick = new Button.ButtonClickedEvent();
             b2.SetLabel("Campus Life");
+            var lbl = b2.GetComponentInChildren<TextMeshProUGUI>(true);
+            if (lbl != null) { lbl.enableAutoSizing = true; lbl.fontSizeMax = lbl.fontSize; lbl.fontSizeMin = 12f; lbl.enableWordWrapping = false; lbl.margin = new Vector4(6f, 0f, 6f, 0f); }
             b2.onClick.AddListener(() =>
             {
                 try { Sfx.Select(); CampusPanel.Show(PanelTab.Today); }

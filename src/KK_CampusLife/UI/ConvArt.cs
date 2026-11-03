@@ -117,7 +117,7 @@ namespace Joojkk.CampusLife
         {
             Sprite s;
             if (Badges.TryGetValue(symbol, out s) && s != null) return s;
-            const int size = 64;
+            const int size = 96; // drawn at the biggest size it is shown (the tray's 36 px at 2x), never stretched
             s = ToSprite(IconArt.Badge(symbol, size), size, 0, "cl_badge_" + symbol);
             Badges[symbol] = s;
             return s;

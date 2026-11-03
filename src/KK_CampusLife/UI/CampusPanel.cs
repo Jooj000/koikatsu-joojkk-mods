@@ -107,7 +107,8 @@ namespace Joojkk.CampusLife
                 if (_title != null) { _savedTitle = _title.text; }
                 _lastResult = "";
             }
-            if (_title != null) _title.text = tab == PanelTab.Shop ? "Campus Store" : "Campus Life";
+            // letters showed through it), so it is hidden; the tab row and the store's heading already say where you are.
+            if (_title != null) { _title.text = tab == PanelTab.Shop ? "Campus Store" : "Campus Life"; _title.enabled = false; }
             // The store is its own screen: no tabs.
             _tabs.gameObject.SetActive(tab != PanelTab.Shop);
             foreach (var kv in TabButtons)
@@ -120,7 +121,7 @@ namespace Joojkk.CampusLife
             if (_root == null) return;
             if (_tab == PanelTab.Shop) { StatusUi.Close(); return; }
             _root.gameObject.SetActive(false);
-            if (_title != null && _savedTitle != null) _title.text = _savedTitle;
+            if (_title != null) { if (_savedTitle != null) _title.text = _savedTitle; _title.enabled = true; }
             _tab = PanelTab.None;
         }
 
@@ -292,6 +293,7 @@ namespace Joojkk.CampusLife
             foreach (var i in items)
             {
                 var row = GameUi.Row(bag, "row", 42f);
+                Icon(row, ItemIcon(i), 38f);
                 RowText(row, i.Name + " x" + s.Count(i.Id) + (i.Type == ItemType.Gift ? "  <color=" + Hex(GameUi.Dim) + ">(gift)</color>" : ""), 20f);
                 if (i.Id == "energy_drink" || i.Id == "cologne")
                 {
@@ -655,14 +657,14 @@ namespace Joojkk.CampusLife
 
         private static readonly Dictionary<string, Sprite> ItemIcons = new Dictionary<string, Sprite>();
 
+        // and color (IconArt.Items.cs), on a round badge like the board's requests, in the store and in the bag.
         private static Sprite ItemIcon(ItemDef i)
         {
-            var glyph = i.Type == ItemType.Gift ? (i.Intimate ? "lovebook" : "bag") : i.LunchOnly ? "bowl" : "box";
-            var tint = i.Type == ItemType.Gift ? new[] { 1f, 0.45f, 0.62f } : new[] { 0.42f, 0.71f, 1f };
             Sprite sp;
-            if (ItemIcons.TryGetValue(glyph, out sp) && sp != null) return sp;
-            sp = MapSprite.Make(IconArt.Spot(glyph, tint, 72, true), 72, 100f, "cl_item_" + glyph);
-            ItemIcons[glyph] = sp;
+            if (ItemIcons.TryGetValue(i.Id, out sp) && sp != null) return sp;
+            const int size = 96;
+            sp = MapSprite.Make(IconArt.RequestBadge(IconArt.ItemGlyph(i.Id), IconArt.ItemColor(i.Id), size), size, 100f, "cl_item_" + i.Id);
+            ItemIcons[i.Id] = sp;
             return sp;
         }
 
