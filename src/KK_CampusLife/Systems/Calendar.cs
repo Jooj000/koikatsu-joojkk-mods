@@ -132,13 +132,15 @@ namespace Joojkk.CampusLife
         public static void OnPeriodStart(Cycle.Type period)
         {
             _periodStartedAt = Time.realtimeSinceStartup;
+            // A moment of the last period that never found its place is over.
+            if (!(S.LastHappeningDay == S.Day && S.LastHappeningPeriod == (int)period)) S.PendingHappening = "";
             if (!Cfg.HappeningsEnabled.Value || !string.IsNullOrEmpty(S.PendingHappening)) return;
             if (S.LastHappeningDay == S.Day && S.LastHappeningPeriod == (int)period) return;
             S.LastHappeningDay = S.Day;
             S.LastHappeningPeriod = (int)period;
             // An empty board makes something that brings a request likelier to happen at all.
             var chance = Board.Empty ? Mathf.Min(0.9f, Cfg.HappeningChance.Value * 1.6f) : Cfg.HappeningChance.Value;
-            if (Random.value < chance) S.PendingHappening = Happenings.Roll();
+            if (Random.value < chance) S.PendingHappening = Happenings.Later;
         }
 
         /// <summary>
@@ -157,6 +159,7 @@ namespace Joojkk.CampusLife
             Board.RefillIfEmpty();
             Board.CheckErrands();
             Board.KeepTalkTime();
+            Share.TickTrioAsks();
             Rendezvous.Tick();
             Brain.CheckClashes();
             Social.DailySpread();
@@ -217,8 +220,12 @@ namespace Joojkk.CampusLife
         {
             var id = S.PendingHappening;
             if (string.IsNullOrEmpty(id) || !Scenes.CanPlayOnMap) return false;
+            // Picked here, for the map you are on; a set one waits for a map where it fits.
+            if (id == Happenings.Later) id = Happenings.RollHere();
+            else if (!Happenings.Fits(id, G.PlayerMapNo)) return false;
+            if (id == "") return false;   // nothing happens here: maybe on the next map
             if (Happenings.Play(id)) { S.PendingHappening = ""; return true; }
-            S.PendingHappening = ""; // could not build (no suitable girl): drop it
+            if (S.PendingHappening != Happenings.Later) S.PendingHappening = ""; // could not build (no suitable girl): drop it
             return false;
         }
 

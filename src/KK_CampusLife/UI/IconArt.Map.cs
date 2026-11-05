@@ -11,7 +11,7 @@ namespace Joojkk.CampusLife
     internal static partial class IconArt
     {
         /// <summary>Every drawing, for tools\iconpreview.</summary>
-        public static readonly string[] Glyphs = { "bubble", "gift", "heart", "pin", "note", "broom", "book", "lovebook", "magazine", "books", "dumbbell", "ball", "wave", "shoe", "leaf", "paw", "tree", "bowl", "pan", "people", "pen", "lens", "coin", "moon", "mask", "star", "cup", "cross", "cap", "box", "bag" };
+        public static readonly string[] Glyphs = { "bubble", "gift", "heart", "pin", "note", "broom", "book", "lovebook", "magazine", "books", "dumbbell", "ball", "wave", "shoe", "leaf", "paw", "tree", "bowl", "pot", "people", "pen", "lens", "coin", "moon", "mask", "star", "cup", "cross", "cap", "box", "bag", "devil" };
 
         /// <summary>The drawing of each activity (ActivityDef.Id), for <see cref="Spot"/>.</summary>
         public static string GlyphOf(string activityId)
@@ -32,7 +32,7 @@ namespace Joojkk.CampusLife
                 case "feed_cats": return "paw";
                 case "park_walk": return "tree";
                 case "hearty_lunch": return "bowl";
-                case "kitchen_job": return "pan";
+                case "kitchen_job": return "pot";
                 case "club_meeting": return "people";
                 case "club_report": return "pen";
                 case "research_material": return "lens";
@@ -171,6 +171,8 @@ namespace Joojkk.CampusLife
                 case "paw": return Paw(u, v);
                 case "bowl": return Bowl(u, v);
                 case "pan": return Pan(u, v);
+                case "pot": return Pot(u, v);
+                case "devil": return Devil(u, v);
                 case "people": return People(u, v);
                 case "lens": return Lens(u, v);
                 case "coin": return Coin(u, v);

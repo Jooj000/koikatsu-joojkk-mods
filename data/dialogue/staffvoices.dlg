@@ -288,17 +288,20 @@ on greet
 when mood=cheerful
 feel smile
 - [Hi!|Oh, hello!] [It's such a good day!|I'm in a great mood, so you're in luck.]
+- [Good timing!|Hey there!] [Everything's going right today.|Ask me anything, I'll say yes. Probably.]
 
 @rule greet.tired
 on greet
 when mood=sleepy
 - [Mmh... hi.|Oh... hello.] [Sorry, I'm half asleep.|Don't mind the yawning.]
+- [Ah... you.|Hi...] [I need coffee. Lots of it.|Talk slowly, please.]
 
 @rule greet.low
 on greet
 when mood=stressed|upset|lonely
 feel worried
 - [Oh... hi.|Hello...] [Sorry, it's been one of those days.|You caught me at a bad moment, but it's okay.]
+- [Hi... sorry.|Oh, it's you.] [I'm not great company today.|Talk to me about anything else, please.]
 
 @rule greet.teacher
 on greet
@@ -316,12 +319,14 @@ when role=teacher job=nurse pers=0
 on greet
 when role=teacher job=nurse pers=0 rel=friend
 - [There's my favorite frequent visitor.|You again? I'll have to name a bed after you.] [What is it this time?|Sit down, sit down.]
+- [Not sick again, I hope.|Ah, my regular.] [Let me guess: a headache from studying?|The kettle's on.]
 
 @rule greet.lina.gf
 on greet
 when role=teacher job=nurse pers=0 rel=girlfriend|lover
 feel smile
 - [Hello, you. Nobody's looking, so I'll smile properly.|There you are, sweetheart.] [I've missed my favorite patient.|Stay a while.]
+- [Close the door, would you?|You came. Good.] [Doctor's orders: stay ten minutes.|I was hoping you'd drop by.]
 
 @rule greet.reina
 on greet
@@ -333,12 +338,14 @@ when role=teacher job=teacher pers=16
 on greet
 when role=teacher job=teacher pers=16 rel=friend
 - [Ah, you. Did you finish the reading?|You again. Good.] [I'll make time.|I've put you in my schedule.]
+- [Ah. Questions about the lecture?|Sit. Briefly.] [My office hours are for you too.|Make it quick, I have papers to grade.]
 
 @rule greet.reina.gf
 on greet
 when role=teacher job=teacher pers=16 rel=girlfriend|lover
 feel smile
 - [...You're on time. I like that.|There you are. Right on schedule.] [Close your notebook.|I may have cleared my afternoon.]
+- [...You came. Good.|I was waiting. Don't tell anyone.] [The papers can wait.|Lock the door.]
 
 @rule greet.nonoka
 on greet
@@ -350,9 +357,11 @@ when role=teacher job=teacher pers=11
 on greet
 when role=teacher job=teacher pers=11 rel=friend
 - [Oh, it's you, dear!|I was just thinking about you.] [I saved you a little something.|How's your week been?]
+- [Hello, hello!|Oh, my favorite student!] [Tea? I just made some.|Did you sleep well?]
 
 @rule greet.nonoka.gf
 on greet
 when role=teacher job=teacher pers=11 rel=girlfriend|lover
 feel smile
 - [There you are, dear.|Oh, you came to see me.] [Did you eat properly?|I made a little extra today.]
+- [My dear. Come here.|Oh, I was hoping it was you.] [I packed you a lunch.|Sit with me a while.]

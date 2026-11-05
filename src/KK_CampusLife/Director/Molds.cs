@@ -210,7 +210,9 @@ namespace Joojkk.CampusLife
             p.Jealousy = PairState.Clamp(p.Jealousy + 5);
             Arcs.AddBond(K(s.A), K(s.B), -4);
             Pairs.Advance(p, true);
-            return N(s.A) + " and " + N(s.B) + " had an argument in the hallway (" + s.Why + ").";
+            var m = GirlInfo.CurrentMap(s.A);
+            var where = m >= 0 && Places.MapLabel(m) != "unknown" ? "at the " + Places.MapLabel(m).ToLower() : "on campus";
+            return N(s.A) + " and " + N(s.B) + " had an argument " + where + " (" + s.Why + ").";
         }
     }
 

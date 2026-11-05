@@ -897,92 +897,108 @@ on duo3.reply
 when q=good tone=gentle
 feel smile
 - [Ehehe... thank you.|That's sweet...|I'm happy.]
+- [You always say the nicest things...|I'll remember that one.|M-my face is warm...]
 
 @rule duo3.reply.good.energetic
 on duo3.reply
 when q=good tone=energetic
 feel smile
 - [Hehe! You're the best!|Yay!|Aww, I like that!]
+- [Again! Say it again!|That made my whole day!|Hehe, I'm keeping that!]
 
 @rule duo3.reply.good.cool
 on duo3.reply
 when q=good tone=cool
 feel smile
 - [...Thanks.|Not bad.|Hm. Appreciated.]
+- [...I'll take that.|Good answer.|...You're learning.]
 
 @rule duo3.reply.good.teasing
 on duo3.reply
 when q=good tone=teasing
 feel smile
-- [...Thanks.|Not bad.|Hm. Appreciated.]
+- [Aww, trying to win me over?|Hehe, sweet talker.|Is that the best you got? ...I like it.]
+- [Oh? Smooth today.|Keep that up and I might fall for it.|Flatterer~ Don't stop.]
 
 @rule duo3.reply.good.other.gentle
 on duo3.reply
 when q=good otherlikes=yes act!=kiss tone=gentle
 feel shy
 - [Th-thank you... with {other} right here, too...|Ehehe... {other} is looking at us...|...Don't make {other} jealous.]
+- [{Other}, d-don't look at me like that...|...I'm so embarrassed, with {other} here.|{Other} heard that... ehehe.]
 
 @rule duo3.reply.good.other.energetic
 on duo3.reply
 when q=good otherlikes=yes act!=kiss tone=energetic
 feel shy
 - [Hehe! {Other}'s gonna be so jealous!|Look, {other}, he likes me!|Ha! Take that, {other}!]
+- [{Other}! Did you hear that?!|Hehe, sorry {other}, I win this round!|{Other}, write that down!]
 
 @rule duo3.reply.good.other.cool
 on duo3.reply
 when q=good otherlikes=yes act!=kiss tone=cool
 feel shy
 - [...{Other} is watching.|Careful. {Other} is right there.|Bold, with {other} here.]
+- [...Pretend {other} didn't hear that.|{Other} will tease me for weeks.|...Not in front of {other}.]
 
 @rule duo3.reply.good.other.teasing
 on duo3.reply
 when q=good otherlikes=yes act!=kiss tone=teasing
 feel shy
-- [...{Other} is watching.|Careful. {Other} is right there.|Bold, with {other} here.]
+- [Saying that with {other} here? Bold~|Look, {other}. He likes me more.|{Other}, close your ears~]
+- [Hear that, {other}? He picked me~|Jealous, {other}?|Sorry, {other}. He has taste.]
 
 @rule duo3.reply.neutral.gentle
 on duo3.reply
 when q=neutral tone=gentle
 - [Mm... okay.|I guess...|Hehe...?]
+- [Oh... um, thank you, I think.|Ah... I see.|Mm-hm...]
 
 @rule duo3.reply.neutral.energetic
 on duo3.reply
 when q=neutral tone=energetic
 - [Huh. Okay!|Uh, sure!|Hm? Okay!]
+- [Okay! ...Wait, what?|Sure, sure!|Ha, okay!]
 
 @rule duo3.reply.neutral.cool
 on duo3.reply
 when q=neutral tone=cool
 - [...Sure.|If you say so.|Hm.]
+- [...Noted.|Okay.|...And?]
 
 @rule duo3.reply.neutral.teasing
 on duo3.reply
 when q=neutral tone=teasing
-- [...Sure.|If you say so.|Hm.]
+- [Hmm? Is that all?|Okay~ whatever you say.|Hehe. Sure, sure.]
+- [That's it? I expected more.|Hm. A for effort.|Cute. Try harder.]
 
 @rule duo3.reply.bad.gentle
 on duo3.reply
 when q=bad tone=gentle
 feel pout
 - [Ah... um... no...|P-please don't...|That's... no.]
+- [...That wasn't very nice.|Why would you say that...?|I'd rather you didn't...]
 
 @rule duo3.reply.bad.energetic
 on duo3.reply
 when q=bad tone=energetic
 feel pout
 - [Hey! No way!|Not cool!|Ew, no!]
+- [Boo! Bad answer!|Nope! Try again!|Rude!]
 
 @rule duo3.reply.bad.cool
 on duo3.reply
 when q=bad tone=cool
 feel pout
 - [...No.|Don't.|Not happening.]
+- [...Wrong.|That was a mistake.|...Think before you talk.]
 
 @rule duo3.reply.bad.teasing
 on duo3.reply
 when q=bad tone=teasing
 feel pout
-- [...No.|Don't.|Not happening.]
+- [Oh, you did NOT just say that.|Nice try. Zero points.|In your dreams~]
+- [Wow. Really? In front of her?|You're losing points fast.|That's going in my notebook. The bad page.]
 
 # ================= aimed at one, with the other right there =================
 # on duo3.pair.<act> (her answer) and duo3.pair.<act>.other (the other girl). Keys: pair, otherlikes, rel, tone.
@@ -1156,11 +1172,13 @@ on duo3.open.a
 when moment=season evkind=gift
 feel smile
 - [We've been making chocolate together.|We were comparing boxes for {event}.|We're doing {event} as a team this year.]
+- [Don't peek in the bag yet!|We made too many. You have to help.|This one has your name on it. Maybe.]
 
 @rule duo3.open.b.season.gift
 on duo3.open.b
 when moment=season evkind=gift
 - [You're our official taster now.|Tell us the truth. Is it too sweet?|Don't tell anyone how many we burned.]
+- [She did the wrapping. I did the eating.|Be honest. Which one of us did better?|We argued about the ribbon for an hour.]
 
 # ================= the other girl's stock lines =================
 @rule duo3.react.stock.bad.gentle
@@ -1326,72 +1344,96 @@ on duo3.reply
 when act=grope q=bad tone=gentle
 feel pout
 - Kyaa! Wh-what are you doing?!
+- N-no! Not with her watching!
+- Please stop... that's too much...
 
 @rule duo3.reply.grope.bad.energetic
 on duo3.reply
 when act=grope q=bad tone=energetic
 feel pout
 - HEY! Hands off!
+- Whoa! Nope! Not cool!
+- Hands where I can see them, mister!
 
 @rule duo3.reply.grope.bad.cool
 on duo3.reply
 when act=grope q=bad tone=cool
 feel pout
 - ...Remove your hand. Now.
+- ...Try that again and you lose the hand.
+- ...No.
 
 @rule duo3.reply.grope.bad.teasing
 on duo3.reply
 when act=grope q=bad tone=teasing
 feel pout
 - Whoa, buddy. Not in front of her.
+- Not here, genius. She's right there.
+- Bad boy. No.
 
 @rule duo3.reply.grope.neutral.gentle
 on duo3.reply
 when act=grope q=neutral tone=gentle
 feel shy
 - Ah... n-not here... she's watching...
+- Mm... w-wait until we're alone...
+- Ah... you're making me blush in front of her...
 
 @rule duo3.reply.grope.neutral.energetic
 on duo3.reply
 when act=grope q=neutral tone=energetic
 feel shy
 - Eh?! H-hey, not now!
+- Hey! Hehe... later, okay?
+- Eep! Not in front of her!
 
 @rule duo3.reply.grope.neutral.cool
 on duo3.reply
 when act=grope q=neutral tone=cool
 feel shy
 - ...Not here.
+- ...Later. Not with her here.
+- ...Patience.
 
 @rule duo3.reply.grope.neutral.teasing
 on duo3.reply
 when act=grope q=neutral tone=teasing
 feel shy
 - Bold~ but later, okay?
+- Mm~ save it for when we're alone.
+- Someone's impatient~
 
 @rule duo3.reply.grope.good.gentle
 on duo3.reply
 when act=grope q=good tone=gentle
 feel love
 - Mm... you're so bold today...
+- Ah... I don't mind... even with her here...
+- Mm... your hands are warm...
 
 @rule duo3.reply.grope.good.energetic
 on duo3.reply
 when act=grope q=good tone=energetic
 feel love
 - Hehe~ you can't keep your hands off me!
+- Hehe~ she's gonna be so jealous!
+- Mm! Don't stop!
 
 @rule duo3.reply.grope.good.cool
 on duo3.reply
 when act=grope q=good tone=cool
 feel love
 - ...Hm. I don't mind.
+- ...Fine. Just a little.
+- ...Mm. Okay.
 
 @rule duo3.reply.grope.good.teasing
 on duo3.reply
 when act=grope q=good tone=teasing
 feel love
 - Mmm~ right in front of her? Naughty.
+- Mm~ showing her who's yours?
+- Ooh, in front of an audience~
 
 # ================= looking at her in the trio =================
 @rule duo3.reply.look.bold.bad.gentle
@@ -1399,69 +1441,93 @@ on duo3.reply
 when act=look_bold q=bad tone=gentle
 feel pout
 - U-um... my eyes are up here...
+- P-please don't stare like that...
+- Ah... she can see you looking...
 
 @rule duo3.reply.look.bold.bad.energetic
 on duo3.reply
 when act=look_bold q=bad tone=energetic
 feel pout
 - Hey! Where are you looking?!
+- Eyes front, soldier!
+- I saw that! She saw that too!
 
 @rule duo3.reply.look.bold.bad.cool
 on duo3.reply
 when act=look_bold q=bad tone=cool
 feel pout
 - ...Eyes up.
+- ...Stop staring.
+- ...You're not subtle.
 
 @rule duo3.reply.look.bold.bad.teasing
 on duo3.reply
 when act=look_bold q=bad tone=teasing
 feel pout
 - Enjoying the view? Too bad~
+- Look all you want. Touch? Never.
+- Drooling a little there~
 
 @rule duo3.reply.look.bold.ok.gentle
 on duo3.reply
 when act=look_bold q!=bad tone=gentle
 feel shy
 - Ah... you're staring...
+- ...You can look. A little.
+- M-my face is getting hot...
 
 @rule duo3.reply.look.bold.ok.energetic
 on duo3.reply
 when act=look_bold q!=bad tone=energetic
 feel shy
 - Hehe, caught you looking!
+- Hehe, like my new top?
+- Look, look! I wore this today!
 
 @rule duo3.reply.look.bold.ok.cool
 on duo3.reply
 when act=look_bold q!=bad tone=cool
 feel shy
 - ...You're staring.
+- ...Fine. Look.
+- ...Enjoy it while it lasts.
 
 @rule duo3.reply.look.bold.ok.teasing
 on duo3.reply
 when act=look_bold q!=bad tone=teasing
 feel shy
 - Like what you see~?
+- Take a picture, it lasts longer~
+- Careful. She'll notice you staring~
 
 @rule duo3.reply.look.plain.gentle
 on duo3.reply
 when act=look_plain tone=gentle
 feel surprised
 - Um... is there something on my face?
+- Did I do something weird...?
+- Ah... you were looking at me?
 
 @rule duo3.reply.look.plain.energetic
 on duo3.reply
 when act=look_plain tone=energetic
 feel surprised
 - What? What is it?
+- Hm? Something on my face?
+- What? Tell me!
 
 @rule duo3.reply.look.plain.cool
 on duo3.reply
 when act=look_plain tone=cool
 feel surprised
 - ...What?
+- ...Say it.
+- ...Is there a problem?
 
 @rule duo3.reply.look.plain.teasing
 on duo3.reply
 when act=look_plain tone=teasing
 feel surprised
 - Hmm? Lost in my eyes~?
+- Staring again~?
+- Hm? Thinking about me?

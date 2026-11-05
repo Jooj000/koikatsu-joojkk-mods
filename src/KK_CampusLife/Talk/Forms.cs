@@ -675,6 +675,73 @@ namespace Joojkk.CampusLife
         public static string LastResult = "";
 
         public static bool Active { get { return _her != null; } }
+
+        /// <summary>
+        /// e o texto ir fluindo enquanto caminha, passando sozinho, sem fazer parar"): one line at a time under the walk bar
+        /// (WalkHint), each for a few seconds, then the next; nobody stops. "" when nothing is said.
+        /// </summary>
+        public static string Flow { get { return Active && Time.realtimeSinceStartup < _flowUntil ? _flow : ""; } }
+        private static string _flow = "";
+        private static float _flowUntil, _nextChat;
+        private static int _chat;
+        private static float _baseSpeed = -1f;
+
+        private static void SayAsWeWalk(string who, string line, float seconds = 5f)
+        {
+            _flow = (string.IsNullOrEmpty(who) ? "" : who + ": ") + line;
+            _flowUntil = Time.realtimeSinceStartup + seconds;
+            _nextChat = _flowUntil + 4f;
+        }
+
+        /// <summary>A little faster than the game's follow, so she keeps up with you (the follow walks at her own pace).</summary>
+        internal static void KeepPace()
+        {
+            try
+            {
+                var a = _npc != null ? _npc.agent : null;
+                if (a == null || !a.enabled) return;
+                if (_baseSpeed < 0f) _baseSpeed = a.speed;
+                var want = Mathf.Max(_baseSpeed * 1.3f, 2.6f);
+                if (a.speed < want) a.speed = want;
+            }
+            catch { }
+        }
+
+        private static void RestorePace(NPC n)
+        {
+            try { if (n != null && n.agent != null && _baseSpeed > 0f) n.agent.speed = _baseSpeed; } catch { }
+            _baseSpeed = -1f;
+        }
+
+        /// <summary>Small talk on the way, one line every ~9 s, in her tone; your answers now and then.</summary>
+        private static void Chatter()
+        {
+            if (Time.realtimeSinceStartup < _nextChat) return;
+            var h = _her;
+            var name = GirlInfo.FirstName(h);
+            var here = Places.Name(Places.CurrentId == "" ? "" : Places.CurrentId).ToLowerInvariant();
+            var next = Places.Name(NextStop).ToLowerInvariant();
+            var lines = new[]
+            {
+                T("It's nice, walking like this. || I like walking with you... || This is nice. Just walking. || Hehe... it's quiet with you.",
+                  "Come on, keep up! || Walking is more fun with two! || Faster, faster! || Hehe! This is fun!",
+                  "...You walk fast. Good. || ...Don't dawdle. || ...Quiet walk. I like it. || ...This is fine.",
+                  "Stay close. People might think we're on a date~ || Are you matching my pace on purpose? || Walk beside me, not behind. || Hm. You're decent at this."),
+                "You: " + Lines.Pick("So, what's at the " + next + "?", "Do you go this way every day?", "Tell me if I'm walking too fast.", "I like this route."),
+                T("The " + next + " isn't far now. || We're almost at the " + next + ". || Just a little more to the " + next + ". || The " + next + " is close.",
+                  "Next up, the " + next + "! || " + next + ", here we come! || To the " + next + "! || " + next + " next!",
+                  "...The " + next + " is next. || ...Next: the " + next + ". || ...Almost at the " + next + ". || ...The " + next + ".",
+                  "The " + next + " next. Try to keep up~ || Next, the " + next + ". Don't get lost. || " + next + ". Lead the way. || The " + next + ". You know the way?"),
+                T("Do you think people are looking at us...? || Um... thanks for coming with me. || I always walk alone, so this is new. || You're easy to be with.",
+                  "Hey hey, guess what happened in class! || I could walk all day! || Race you! ...Kidding! || Isn't campus pretty today?",
+                  "...Thank you for the company. || ...You're not bad company. || ...Hm. Nice weather. || ...I don't mind this.",
+                  "Admit it, you like walking with me. || Everyone's jealous, I bet. || You'd follow me anywhere, huh~ || Carry my bag next time."),
+            };
+            var line = lines[_chat++ % lines.Length];
+            if (line.StartsWith("You: ", StringComparison.Ordinal)) SayAsWeWalk("You", line.Substring(5), 4f);
+            else SayAsWeWalk(name, line);
+        }
+
         public static SaveData.Heroine Her { get { return _her; } }
         public static string NextStop { get { return Active && _i < Stops.Count ? Stops[_i] : ""; } }
         public static int StopIndex { get { return _i; } }
@@ -719,6 +786,9 @@ namespace Joojkk.CampusLife
                 _lost = -1f;
                 _arrivedAt = -1f;
                 _period = S.Day * 16 + (int)G.CurrentMask;
+                _chat = 0;
+                _baseSpeed = -1f;
+                _nextChat = Time.realtimeSinceStartup + 4f;
                 G.Act.Player.ChaserSet(n);
                 Toasts.Show("Walking with " + GirlInfo.FirstName(_her) + ". Stops: " + string.Join(" > ", Stops.Select(Places.Name).ToArray()) + ". She follows you.");
                 CampusLifePlugin.Log.LogInfo("Walk-and-talk: " + GirlInfo.FirstName(_her) + " route " + string.Join(",", Stops.ToArray()));
@@ -747,6 +817,8 @@ namespace Joojkk.CampusLife
                     return;
                 }
                 _lost = -1f;
+                KeepPace();
+                Chatter();
                 if (Time.realtimeSinceStartup - _started > 420f) { Finish(false, GirlInfo.FirstName(_her) + " laughs: \"We got a little lost, huh?\" and goes on by herself."); return; }
                 if (_i >= Stops.Count) { Finish(true); return; }
                 var map = Places.MapFor(Stops[_i]);
@@ -754,6 +826,8 @@ namespace Joojkk.CampusLife
                 if (_arrivedAt < 0f) { _arrivedAt = Time.realtimeSinceStartup; return; }
                 if (Time.realtimeSinceStartup - _arrivedAt < 2.5f) return; // the map settles, she comes through the door
                 if (_npc.mapNo != G.PlayerMapNo || (_npc.transform.position - act.Player.transform.position).sqrMagnitude > 12f * 12f) return;
+                // A stop on the way is said as you walk; the last one is the scene with her answer.
+                if (_i < Stops.Count - 1) { FlowStop(); return; }
                 if (!Scenes.CanPlayOnMap) return;
                 Beat();
             }
@@ -761,6 +835,18 @@ namespace Joojkk.CampusLife
         }
 
         private static string T(string gentle, string energetic, string cool, string teasing) { return Lines.T(GirlInfo.ToneOf(_her), gentle, energetic, cool, teasing); }
+
+        /// <summary>A stop on the way: what she says about it scrolls by while you keep walking.</summary>
+        private static void FlowStop()
+        {
+            var place = Stops[_i];
+            var line = Conversation.EverydayStop(_her, place);
+            SayAsWeWalk(GirlInfo.FirstName(_her), line, 6f);
+            _good++;
+            CampusLifePlugin.Log.LogInfo("Walk-and-talk: stop at " + place + " (" + (_i + 1) + "/" + Stops.Count + ") said on the way: " + line);
+            _i++;
+            _arrivedAt = -1f;
+        }
 
         private static void Beat()
         {
@@ -837,6 +923,8 @@ namespace Joojkk.CampusLife
         {
             var h = _her;
             var n = _npc;
+            RestorePace(n);
+            _flow = "";
             _her = null;
             _npc = null;
             try { if (G.Act != null && G.Act.Player != null && G.Act.Player.chaser != null && G.Act.Player.chaser == n) G.Act.Player.ChaserEnd(); }

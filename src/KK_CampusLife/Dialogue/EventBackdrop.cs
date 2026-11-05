@@ -26,6 +26,7 @@ namespace Joojkk.CampusLife
         private static int _camMask;
 
         public static string ShownId { get { return _shownId; } }
+        public static bool CharsHidden { get { return _cam != null; } }
 
         private static string Dir { get { return Path.Combine(Path.Combine(Paths.PluginPath, "Joojkk"), "backgrounds"); } }
 

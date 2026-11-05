@@ -425,6 +425,28 @@ namespace Joojkk.CampusLife
 
         public static bool InNoClub(SaveData.Heroine h) { return h != null && h.clubActivities == 0; }
 
+        /// <summary>She joined your Koikatsu Club (the game's staff): club time is in the club room with you now.</summary>
+        public static bool InKoikatsuClub(SaveData.Heroine h) { return h != null && h.isStaff; }
+
+        /// <summary>
+        /// Her own club as a word for the dialogue rules ("swimming", "track_field", "tea_ceremony"...), from the game's
+        /// club name; "none" for the go-home club.
+        /// </summary>
+        public static string ClubId(SaveData.Heroine h)
+        {
+            if (h == null || InNoClub(h)) return "none";
+            string raw = "";
+            try { ClubInfo.Param p; if (Game.ClubInfos.TryGetValue(h.clubActivities, out p) && p != null) raw = p.Name ?? ""; }
+            catch { }
+            // The game's own (Japanese) names, so the word does not depend on the translation.
+            if (raw.Contains("水泳")) return "swim";
+            if (raw.Contains("漫")) return "manga";
+            if (raw.Contains("茶道")) return "tea_ceremony";
+            if (raw.Contains("陸上")) return "track_field";
+            if (raw.Contains("チア")) return "cheerleading";
+            return "club" + h.clubActivities;
+        }
+
         // ---- likes (from the character profile) ----
         public static readonly string[] LikeIds = { "animals", "food", "cooking", "exercise", "study", "fashion", "coffee", "spicy", "sweets" };
         public static readonly string[] LikeLabels = { "animals", "eating", "cooking", "exercise", "studying", "fashion", "black coffee", "spicy food", "sweets" };
@@ -476,19 +498,44 @@ namespace Joojkk.CampusLife
             }
         }
 
+        /// <summary>
+        /// Her NPC of this period, from the scene's own list:
+        /// h.charaBase is not cleared when the game hands her NPC to another girl at a reshuffle, so it could name someone
+        /// else's map, and a girl on another map has her NPC switched off, which read as "not on campus".
+        /// </summary>
+        private static ActionGame.Chara.NPC NpcNow(SaveData.Heroine h)
+        {
+            try
+            {
+                var act = G.Act;
+                if (h == null || act == null || act.npcList == null) return null;
+                foreach (var n in act.npcList) if (n != null && n.heroine == h) return n;
+            }
+            catch { }
+            return null;
+        }
+
         public static int CurrentMap(SaveData.Heroine h)
         {
             try
             {
-                if (h == null || h.charaBase == null) return -1;
-                return h.charaBase.mapNo;
+                if (h == null) return -1;
+                if (G.Act != null) { var n = NpcNow(h); return n != null ? n.mapNo : -1; }
+                return h.charaBase == null ? -1 : h.charaBase.mapNo;
             }
             catch { return -1; }
         }
 
+        /// <summary>She is at school this period (her NPC is loaded and on a map), on any map.</summary>
         public static bool IsSpawned(SaveData.Heroine h)
         {
-            try { return h != null && h.charaBase != null && h.charaBase.isActiveAndEnabled; } catch { return false; }
+            try
+            {
+                if (h == null) return false;
+                if (G.Act != null) { var n = NpcNow(h); return n != null && n.mapNo >= 0; }
+                return h.charaBase != null && h.charaBase.isActiveAndEnabled;
+            }
+            catch { return false; }
         }
     }
 }

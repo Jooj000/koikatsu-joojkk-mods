@@ -24,6 +24,11 @@ namespace Joojkk.CampusLife
 
         private static string FileFor(int map, int slot) { return Path.Combine(Dir, map + "_" + slot + ".jpg"); }
 
+        /// <summary>The photos that come with the mod, under his own.</summary>
+        private static string ShippedFor(int map, int slot) { return Path.Combine(Path.Combine(Path.Combine(BepInEx.Paths.PluginPath, "Joojkk"), "mapshots"), map + "_" + slot + ".jpg"); }
+
+        internal static bool Shipped(int map, int slot) { return TestDir == null && File.Exists(ShippedFor(map, slot)); }
+
         internal static readonly string[] SlotNames = { "day", "evening", "night" };
 
         /// <summary>Why a picture cannot be taken right now (null when it can).</summary>
@@ -142,6 +147,7 @@ namespace Joojkk.CampusLife
             foreach (var s in new[] { slot, 0, 1, 2 })
             {
                 var path = FileFor(map, s);
+                if (!File.Exists(path) && TestDir == null) path = ShippedFor(map, s);
                 Texture2D tex;
                 if (Cache.TryGetValue(path, out tex) && tex != null) return tex;
                 if (!File.Exists(path)) continue;

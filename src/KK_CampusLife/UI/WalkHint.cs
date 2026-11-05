@@ -38,6 +38,7 @@ namespace Joojkk.CampusLife
                 }
                 if (_canvas == null) Build();
                 if (!_canvas.gameObject.activeSelf) _canvas.gameObject.SetActive(true);
+                WalkTalk.KeepPace();   // every frame: the game's follow sets her speed again on its own
                 var stop = WalkTalk.NextStop;
                 var target = Places.MapFor(stop);
                 var here = G.PlayerMapNo;
@@ -47,6 +48,9 @@ namespace Joojkk.CampusLife
                 var name = GirlInfo.FirstName(WalkTalk.Her);
                 var text = "Walking with " + name + "  ·  next stop " + (WalkTalk.StopIndex + 1) + "/" + WalkTalk.StopCount + ": <color=" + gold + ">" + Places.Name(stop) + "</color>"
                            + (here == target ? "  ·  you're here" : _doorTo.Length > 0 ? "  ·  door to " + _doorTo : "");
+                // What is said as you walk, under the bar, one line at a time.
+                var flow = WalkTalk.Flow;
+                if (flow != "") text += "\n<size=24><i>" + flow + "</i></size>";
                 if (text != _shown)
                 {
                     _shown = text;

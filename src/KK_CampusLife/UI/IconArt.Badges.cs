@@ -175,6 +175,38 @@ namespace Joojkk.CampusLife
             return Math.Min(pan, handle);
         }
 
+        /// <summary>
+        /// pot seen from the side: a wide body, a lip a little wider on top, a loop handle each side, three wisps of steam.
+        /// </summary>
+        private static float Pot(float u, float v)
+        {
+            var body = RoundBox(u, v + 0.24f, 0.4f, 0.27f, 0.08f);
+            var lip = RoundBox(u, v - 0.06f, 0.47f, 0.05f, 0.03f);
+            var handles = Math.Max(Math.Abs(Circle(Math.Abs(u) - 0.47f, v + 0.2f, 0.11f)) - 0.04f, 0.4f - Math.Abs(u));
+            var steam = 9f;
+            for (var i = -1; i <= 1; i++)
+            {
+                var x = i * 0.2f;
+                steam = Math.Min(steam, Math.Min(Segment(u, v, x, 0.06f, x + 0.06f, 0.28f, 0.035f), Segment(u, v, x + 0.06f, 0.28f, x, 0.5f, 0.035f)));
+            }
+            return Math.Min(Math.Min(Math.Min(body, lip), handles), steam);
+        }
+
+        /// <summary>
+        /// eyes and a wide grin cut out of it.
+        /// </summary>
+        private static float Devil(float u, float v)
+        {
+            var head = Circle(u, v + 0.1f, 0.4f);
+            var ax = Math.Abs(u);
+            var horns = Triangle(ax, v, 0.14f, 0.2f, 0.36f, 0.08f, 0.46f, 0.6f) - 0.02f;
+            var eyes = Triangle(ax, v, 0.06f, -0.02f, 0.27f, 0.06f, 0.21f, -0.1f) - 0.01f;
+            var grin = Math.Max(Circle(u, v + 0.12f, 0.27f), -Circle(u, v - 0.06f, 0.33f));
+            var tail = Segment(u, v, 0.34f, -0.36f, 0.56f, -0.5f, 0.035f);
+            var tip = Triangle(u, v, 0.5f, -0.44f, 0.66f, -0.42f, 0.6f, -0.6f);
+            return Math.Min(Math.Max(Math.Min(head, horns), -Math.Min(eyes, grin)), Math.Min(tail, tip));
+        }
+
         private static float Dumbbell(float u, float v)
         {
             var bar = RoundBox(u, v, 0.42f, 0.055f, 0.04f);

@@ -96,6 +96,7 @@ namespace Joojkk.CampusLife
         public static string Learned(SaveData.Heroine gf, SaveData.Heroine other, bool saw)
         {
             if (gf == null || other == null || gf == other || !gf.isGirlfriend) return "";
+            if (TrioAsked(gf, other)) return "";   // the trio question between them is open: she knows already
             var stance = Stance(gf, other);
             if (stance == Unknown)
             {
@@ -312,38 +313,108 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Your girlfriend asks the other girl. She says yes when she likes girls and gets along with her (or is lewd),
-        /// becomes a friend when she likes you both but not that way, or says no.
+        /// instantaneamente pelo toast. ela deveria ser consultada após, ou já ter sido consultada pela namorada. e tome
+        /// cuidado para que a terceira não apareça depois e peça a mesma coisa, como se não soubesse."). Nothing is decided
+        /// on the spot: she talks to her first, and the other girl gives you her answer herself, the next time you talk to
+        /// her from the next period on (TrioAnswerDue + Answer). Two days without that talk, your girlfriend tells you
+        /// (TickTrioAsks). From now on neither of them brings the trio up as news.
         /// </summary>
         private static void ProposeTrio(SaveData.Heroine gf, SaveData.Heroine other)
         {
-            var comp = Harem.Compatibility(gf, other);
-            var yes = Pairs.GirlsOk(other) && (comp + other.favor / 3 + other.lewdness / 4 + Random.Range(-10, 11) >= 50);
             var gk = GirlInfo.Key(gf);
             var ok = GirlInfo.Key(other);
+            S.Buffs[AskKey(ok, gk)] = Stamp;
+            var os = S.Girl(ok);
+            if (!os.ShareSaid.Contains(gk)) os.ShareSaid.Add(gk);
+            if ((os.Pending ?? "").StartsWith("Share", StringComparison.Ordinal) && os.Pending.Contains(gk)) os.Pending = "";
+            Toasts.Show(GirlInfo.FirstName(gf) + " will talk to " + GirlInfo.FirstName(other) + " about the three of you.");
+            CampusLifePlugin.Log.LogInfo("Share: " + GirlInfo.FirstName(gf) + " goes to ask " + GirlInfo.FirstName(other) + " about a trio (answer from the next period on).");
+        }
+
+        private static string AskKey(string other, string gf) { return "gfasks:" + other + ":" + gf; }
+        // came in the lesson after lunch). 16 periods a day leaves room for every Cycle.Type.
+        private static int Stamp { get { var p = G.Period; return S.Day * 16 + (p.HasValue ? (int)p.Value + 1 : 0); } }
+
+        /// <summary>The girlfriend who asked her about the three of you and is waiting for her answer (null if none, or
+        /// when it was asked this very period: she has not had the talk with her yet).</summary>
+        public static SaveData.Heroine TrioAnswerDue(SaveData.Heroine other, bool any = false)
+        {
+            if (other == null) return null;
+            var pre = "gfasks:" + GirlInfo.Key(other) + ":";
+            foreach (var kv in S.Buffs.Where(x => x.Key.StartsWith(pre, StringComparison.Ordinal)).ToList())
+            {
+                if (!any && kv.Value >= Stamp) continue;
+                var gf = Social.Get(kv.Key.Substring(pre.Length));
+                if (gf == null) { S.Buffs.Remove(kv.Key); continue; }
+                return gf;
+            }
+            return null;
+        }
+
+        /// <summary>A trio question about these two is still open (asked, not answered): nobody brings it up as news.</summary>
+        public static bool TrioAsked(SaveData.Heroine a, SaveData.Heroine b)
+        {
+            if (a == null || b == null) return false;
+            return S.Buffs.ContainsKey(AskKey(GirlInfo.Key(a), GirlInfo.Key(b))) || S.Buffs.ContainsKey(AskKey(GirlInfo.Key(b), GirlInfo.Key(a)));
+        }
+
+        /// <summary>
+        /// Her answer to your girlfriend's question: yes when she likes girls and gets along with her (or is lewd), a
+        /// friend when she likes you both but not that way, or no. Applied now; both remember it (no one asks again).
+        /// </summary>
+        public static int Answer(SaveData.Heroine gf, SaveData.Heroine other)
+        {
+            var gk = GirlInfo.Key(gf);
+            var ok = GirlInfo.Key(other);
+            S.Buffs.Remove(AskKey(ok, gk));
+            var comp = Harem.Compatibility(gf, other);
+            var score = comp + other.favor / 3 + other.lewdness / 4 + Social.Bond(other, gf) / 5;
+            // Context first; the roll only breaks a tie near the line.
+            var yes = Pairs.GirlsOk(other) && (score > 55 || score >= 45 && Random.Range(-10, 11) + score >= 50);
             var p = Pairs.Of(gf, other);
+            var os = S.Girl(ok);
+            if (!os.ShareSaid.Contains(gk)) os.ShareSaid.Add(gk);
+            int result;
             if (yes)
             {
                 foreach (var h in new[] { gf, other }) if (!S.Harem.Contains(GirlInfo.Key(h))) S.Harem.Add(GirlInfo.Key(h));
                 if (p != null) { p.AddRomance(gk, 20); p.AddRomance(ok, 20); }
                 Arcs.AddBond(gk, ok, 15);
                 Set(gf, other, Trio, "she said yes");
-                S.Girl(ok).Share[gk] = Trio;
-                S.Girl(ok).ShareSaid.Add(gk);
+                os.Share[gk] = Trio;
                 G.AddFavor(other, 5, 4); G.AddFavor(gf, 3, 4);
-                Toasts.Show(GirlInfo.FirstName(other) + " said yes. The three of you are together now.");
                 Anthology.Add("trio", GirlInfo.FirstName(gf) + " and " + GirlInfo.FirstName(other) + " are both with you", 4, gk + "," + ok);
+                result = Trio;
             }
             else if (Social.Bond(gf, other) >= 0)
             {
                 Arcs.AddBond(gk, ok, 8);
                 Set(gf, other, Friends, "she said no to the trio, but they became friends");
-                Toasts.Show(GirlInfo.FirstName(other) + " said no to the three of you... but she and " + GirlInfo.FirstName(gf) + " get along now.");
+                os.Share[gk] = Friends;
+                result = Friends;
             }
             else
             {
                 Set(gf, other, Separate, "she said no to the trio");
-                Toasts.Show(GirlInfo.FirstName(other) + " turned the idea down.");
+                os.Share[gk] = Separate;
+                result = Separate;
+            }
+            CampusLifePlugin.Log.LogInfo("Share: " + GirlInfo.FirstName(other) + " answers " + GirlInfo.FirstName(gf) + " about the trio: " + Name(result) + " (score " + score + ", girls ok " + Pairs.GirlsOk(other) + ")");
+            return result;
+        }
+
+        /// <summary>Two days and you never talked to her: your girlfriend tells you what she said.</summary>
+        public static void TickTrioAsks()
+        {
+            foreach (var kv in S.Buffs.Where(x => x.Key.StartsWith("gfasks:", StringComparison.Ordinal) && Stamp - x.Value >= 32).ToList())
+            {
+                var parts = kv.Key.Split(':');
+                var other = parts.Length > 2 ? Social.Get(parts[1]) : null;
+                var gf = parts.Length > 2 ? Social.Get(parts[2]) : null;
+                if (other == null || gf == null) { S.Buffs.Remove(kv.Key); continue; }
+                var r = Answer(gf, other);
+                var on = GirlInfo.FirstName(other);
+                Toasts.Show(GirlInfo.FirstName(gf) + ": " + (r == Trio ? on + " said yes. The three of us, together." : r == Friends ? on + " said no to the three of us, but we're friends now." : on + " said no."));
             }
         }
 

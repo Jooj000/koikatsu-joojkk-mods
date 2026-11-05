@@ -57,12 +57,13 @@ namespace Joojkk.CampusLife
                     _tray = _tip = null;
                     _scene = ts;
                     _known = null;
-                    _pinned = _hover = false;
+                    _pinned = _hover = _overMood = false;
                     _flashUntil = 0f;
                     if (!Build(ts)) return;
                     _next = 0f;
                 }
                 Animate();
+                PollPointer();
                 if (Time.realtimeSinceStartup < _next) return;
                 _next = Time.realtimeSinceStartup + Refresh;
                 Fill(h);
@@ -125,25 +126,49 @@ namespace Joojkk.CampusLife
             img.raycastTarget = true;
             img.preserveAspect = true;
             img.rectTransform.Place(slot * (Size + Gap), 0f, Size, Size);
-            var trig = img.gameObject.AddComponent<EventTrigger>();
-            if (slot == 0)
-            {
-                Hook(trig, EventTriggerType.PointerEnter, ShowMoodTip);
-                Hook(trig, EventTriggerType.PointerExit, HideTip);
-            }
-            else
-            {
-                Hook(trig, EventTriggerType.PointerEnter, () => { _hover = true; ShowTray(); });
-                Hook(trig, EventTriggerType.PointerExit, () => { _hover = false; if (!_pinned && Time.realtimeSinceStartup > _flashUntil) HideTray(); });
-                Hook(trig, EventTriggerType.PointerClick, () =>
-                {
-                    _pinned = !_pinned;
-                    if (_pinned) ShowTray();
-                    else if (!_hover) HideTray();
-                });
-            }
+            // Hover and click are read from the mouse every frame (PollPointer).
             img.gameObject.SetActive(false);
             return img;
+        }
+
+        private static bool _overMood;
+
+        /// <summary>
+        /// gostos só aparece no momento em que um gosto é descoberto, não quando há hover/clique"): the badges sit in the
+        /// time bar's canvas, where the game's event system does not reach them, so their EventTriggers never fired in
+        /// play. Hover opens the tray, a click pins it, leaving closes it.
+        /// </summary>
+        private static void PollPointer()
+        {
+            if (_row == null) return;
+            var mouse = (Vector2)Input.mousePosition;
+            var overStar = _likes != null && _likes.gameObject.activeInHierarchy && Over(_likes.rectTransform, mouse);
+            var overMood = _mood != null && _mood.gameObject.activeInHierarchy && Over(_mood.rectTransform, mouse);
+            if (overStar != _hover)
+            {
+                _hover = overStar;
+                if (_hover) ShowTray();
+                else if (!_pinned && Time.realtimeSinceStartup > _flashUntil) HideTray();
+            }
+            if (overStar && Input.GetMouseButtonDown(0))
+            {
+                _pinned = !_pinned;
+                if (_pinned) ShowTray();
+                else if (!_hover) HideTray();
+            }
+            if (overMood != _overMood)
+            {
+                _overMood = overMood;
+                if (overMood) ShowMoodTip(); else HideTip();
+            }
+        }
+
+        private static bool Over(RectTransform r, Vector2 mouse)
+        {
+            var c = r.GetComponentInParent<Canvas>();
+            c = c != null ? c.rootCanvas : null;
+            var cam = c == null || c.renderMode == RenderMode.ScreenSpaceOverlay ? null : c.worldCamera;
+            return RectTransformUtility.RectangleContainsScreenPoint(r, mouse, cam);
         }
 
         private static void Hook(EventTrigger t, EventTriggerType type, Action a)

@@ -33,15 +33,58 @@ namespace Joojkk.CampusLife
                 case "stray_cat": return "A stray cat";
                 case "rain": return "Sudden rain";
                 case "drenched": return "Caught in the rain";
+                case Later: return "Something on campus";
                 default: return id;
             }
         }
 
-        public static string Roll()
+        /// <summary>
+        /// mapa ter seus próprios eventos"): the hallway ones in the corridors, the locker ones at the entrance floor, the
+        /// wind and the cat outside, the vending machine where there is one. Chosen when it plays, for the map you are on.
+        /// </summary>
+        public static bool Fits(string id, int map)
+        {
+            if (map < 0) return false;
+            var name = G.MapName(map) ?? "";
+            var place = Places.IdForMap(map);
+            var hall = map == 2 || map == 3 || map == 4 || name.Contains("廊下") || name.Contains("階段") || name.Contains("昇降口") || name.Contains("玄関");
+            var entrance = map == 2 || name.Contains("昇降口") || name.Contains("玄関") || name.Contains("下駄箱");
+            var outside = Weather.Outdoor(map);
+            var indoorRoom = place == "classroom" || place == "library" || place == "cafeteria";
+            switch (id)
+            {
+                case "coin": return hall || outside || place == "cafeteria";
+                case "pop_quiz": return hall;
+                case "carry_boxes": return hall || place == "staffroom" || place == "classroom";
+                case "love_letter":
+                case "locker_note":
+                case "inspection":
+                case "rain": return entrance;
+                case "dropped_notebooks": return hall || indoorRoom;
+                case "gossip": return hall || place == "classroom" || place == "cafeteria";
+                case "vending": return hall || place == "cafeteria" || place == "gym" || place == "courtyard";
+                case "wind":
+                case "stray_cat": return outside;
+                case "rumor": return hall || indoorRoom || place == "courtyard";
+                case "drenched": return !outside && (hall || indoorRoom);
+                default: return true;
+            }
+        }
+
+        /// <summary>"Something will happen this period": the moment itself is picked when it plays, where you are.</summary>
+        public const string Later = "?";
+
+        /// <summary>A moment that fits the map you are on now, "" when none does.</summary>
+        public static string RollHere() { return Roll(G.PlayerMapNo); }
+
+        public static string Roll() { return Roll(-2); }
+
+        private static string Roll(int map)
         {
             // The rain's events only when it rains (Weather): stuck at the entrance after school, soaked any other time.
             var pool = All.Where(id => id == "rain" ? Weather.Raining && G.CurrentMask == PeriodMask.After : id == "drenched" ? Weather.Raining && G.CurrentMask != PeriodMask.After
-                                       : id != "wind" || !Weather.Raining).ToList();
+                                       : id != "wind" || !Weather.Raining).Where(id => map == -2 || Fits(id, map)).ToList();
+            if (pool.Count == 0) return "";
             // The ones that bring a request (a letter, a note, a rumor to check) come more often, much more with the board
             // empty.
             var empty = Board.Empty;
@@ -87,7 +130,7 @@ namespace Joojkk.CampusLife
             switch (id)
             {
                 case "coin":
-                    b.Narr("Something glints on the hallway floor... a 500 yen coin.");
+                    b.Narr("Something glints on the " + (Weather.Outdoor(G.PlayerMapNo) ? "ground" : G.PlayerMapNo >= 2 && G.PlayerMapNo <= 4 ? "hallway floor" : "floor") + "... a 500 yen coin.");
                     b.Choice("Pocket it.", "keep", "Turn it in at the faculty room.", "turn");
                     b.Branch("keep"); b.Narr("Finders keepers."); b.End();
                     b.Branch("turn"); b.Narr("The professor thanks you for your honesty."); b.End();
@@ -227,7 +270,7 @@ namespace Joojkk.CampusLife
                     if (g == null) return false;
                     var name = GirlInfo.FirstName(g);
                     var tone = GirlInfo.ToneOf(g);
-                    b.Narr("A sudden gust of wind sweeps the hallway — and " + name + "'s skirt flips up!");
+                    b.Narr("A sudden gust of wind sweeps across the " + Places.MapLabel(G.PlayerMapNo).ToLower() + " — and " + name + "'s skirt flips up!");
                     var opts = new List<string> { "Look away immediately.", "away", "Pretend you saw nothing.", "nothing" };
                     if (G.Sens >= 30) { opts.Add("\"...Cute.\" [SEN]"); opts.Add("cute"); }
                     b.Choice(opts.ToArray());
@@ -274,7 +317,7 @@ namespace Joojkk.CampusLife
                 {
                     var lewdItems = new[] { "lingerie", "toy", "photo_book" };
                     var carrying = lewdItems.Where(x => S.Count(x) > 0).ToList();
-                    b.Narr("Student union inspection! They're checking everyone's bags at the gate.");
+                    b.Narr("Student union inspection! They're checking everyone's bags at the entrance.");
                     if (carrying.Count == 0)
                     {
                         b.Narr("Your bag is spotless. The council president nods approvingly.");
@@ -286,7 +329,7 @@ namespace Joojkk.CampusLife
                     b.Choice(opts.ToArray());
                     b.Branch("hand"); b.Narr("The council member pulls out your... items. Everyone stares."); b.End();
                     b.Branch("talk"); b.Narr("You explain with a perfectly straight face..."); b.End();
-                    b.Branch("run"); b.Narr("You sprint past the gate before anyone can stop you!"); b.End();
+                    b.Branch("run"); b.Narr("You sprint past them and out the door before anyone can stop you!"); b.End();
                     return Scenes.PlayOnMap(b, c =>
                     {
                         var ok = c == "talk" ? Campus.Check(G.Int, 70, out roll) : c == "run" && Campus.Check(G.Str, 70, out roll);

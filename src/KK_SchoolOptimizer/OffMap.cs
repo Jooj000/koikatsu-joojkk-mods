@@ -70,6 +70,28 @@ namespace Joojkk.SchoolOptimizer
 
         public static bool IsUnloaded(NPC npc) { return npc != null && Unloaded.ContainsKey(npc); }
 
+        private static readonly Dictionary<NPC, float> BackAt = new Dictionary<NPC, float>();
+
+        /// <summary>Seconds since she was loaded back from off-map (-1: not this session). For the hair watch.</summary>
+        public static float LoadedBackAgo(NPC npc)
+        {
+            float t;
+            return npc != null && BackAt.TryGetValue(npc, out t) ? Time.realtimeSinceStartup - t : -1f;
+        }
+
+        /// <summary>
+        /// Her look built again from her card without a full reload (the hair watch): the hair pieces if asked, then what
+        /// KKAPI does after a load (MaterialEditor, overlays, extra accessories), then the colors.
+        /// </summary>
+        public static void ReloadLook(ChaControl cha, bool hair)
+        {
+            if (cha == null) return;
+            if (hair) cha.ChangeHair(true);
+            try { if (_kkapiReload != null) _kkapiReload.Invoke(null, new object[] { cha }); }
+            catch (Exception e) { SchoolOptimizerPlugin.Log.LogDebug("Hair watch reload: " + (e.InnerException ?? e).Message); }
+            OtherMods.Reapply(cha, true);
+        }
+
         private static NPC Owner(ChaControl cha)
         {
             if (Unloaded.Count == 0 || cha == null) return null;
@@ -320,6 +342,8 @@ namespace Joojkk.SchoolOptimizer
                         if (_initMapSe != null) _initMapSe.Invoke(npc, null);
                     }
                     LoadedBack++;
+                    BackAt[npc] = Time.realtimeSinceStartup;
+                    if (BackAt.Count > 200) BackAt.Clear();
                     SchoolOptimizerPlugin.Log.LogDebug("Loaded " + npc.heroine.Name + " back" + (e.Urgent ? " (urgent)" : ""));
                 }
             }

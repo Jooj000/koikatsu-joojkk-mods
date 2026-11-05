@@ -240,6 +240,9 @@ namespace Joojkk.SchoolOptimizer
             finally { _inside = false; }
         }
 
+        /// <summary>Her data back now (the hair watch found her on the map with it still parked).</summary>
+        public static void RestoreNow(ChaFile file, string why) { Restore(file, why); }
+
         /// <summary>Everything back (option switched off, plugin unloading).</summary>
         public static void RestoreAll()
         {

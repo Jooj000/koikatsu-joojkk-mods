@@ -69,6 +69,61 @@ namespace Joojkk.CampusLife
 
         private static void HoverGone(string _kind) { HoverNow = ""; TouchNote("left " + _kind); }
 
+        private static TalkScene _colsOf;
+        private static float _colsAt;
+        private static readonly List<Collider> TouchCols = new List<Collider>();
+
+        /// <summary>
+        /// até passar hover encima de alguma área tocável"). The game ignores the exit when the mouse leaves the body onto
+        /// a button or a panel (its exit waits for "not over UI"), so the hand stayed. Every frame with a hover on: when the
+        /// mouse ray hits none of the talk's touch areas any more (or the talk is gone), the game's own exit runs.
+        /// </summary>
+        internal static void CursorWatch(TalkScene ts)
+        {
+            try
+            {
+                if (HoverNow == "") return;
+                if (ts == null)
+                {
+                    Cursor.SetCursor(null, Vector2.zero, CursorMode.ForceSoftware);
+                    HoverNow = "";
+                    TouchNote("cursor reset: the talk closed under the hand");
+                    return;
+                }
+                if (ts != _colsOf || Time.realtimeSinceStartup > _colsAt)
+                {
+                    _colsOf = ts;
+                    _colsAt = Time.realtimeSinceStartup + 2f;
+                    TouchCols.Clear();
+                    var list = Traverse.Create(ts).Field("lstColDisposable").GetValue() as System.Collections.IEnumerable;
+                    if (list != null)
+                        foreach (var info in list)
+                        {
+                            var c = info == null ? null : Traverse.Create(info).Property("col").GetValue() as Collider;
+                            if (c != null) TouchCols.Add(c);
+                        }
+                    // Ours too (her butt, her lips): they call the same enter and exit.
+                    foreach (var sp in UnityEngine.Object.FindObjectsOfType<TouchSpot>())
+                    {
+                        var c = sp != null ? sp.GetComponent<Collider>() : null;
+                        if (c != null) TouchCols.Add(c);
+                    }
+                }
+                var cam = Camera.main;
+                if (cam == null) return;
+                var ray = cam.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                var over = TouchCols.Any(c => c != null && c.enabled && c.gameObject.activeInHierarchy && c.Raycast(ray, out hit, 10f));
+                if (over && (EventSystem.current == null || !EventSystem.current.IsPointerOverGameObject())) return;
+                var was = HoverNow;
+                if (ExitFuncMethod != null) ExitFuncMethod.Invoke(ts, new object[] { was });
+                else Cursor.SetCursor(null, Vector2.zero, CursorMode.ForceSoftware);
+                HoverNow = "";
+                TouchNote("cursor reset: left " + was + (over ? " onto a button" : ""));
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Cursor watch: " + e.Message); }
+        }
+
         private static void AddSpots(TalkScene __instance)
         {
             try

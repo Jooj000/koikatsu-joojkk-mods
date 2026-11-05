@@ -1,0 +1,663 @@
+# koikatsu, ter falas referentes ao clube antigo no passado, e diálogos personalizados do clube koikatsu no presente, e com
+# sentido."). Slots from Conversation.ClubCtx: {clubid} swim, manga, tea_ceremony, track_field, cheerleading, none; {kclub}
+# yes when she joined your Koikatsu Club; then {club} is "Koikatsu Club", {oldclub}/{oldclubid} the club she left
+# ({hadclub} yes/no), {kmate} another member (a friend first), {kmates} none/some/many.
+# Every rule here has three conditions or more, so the plain "subject=club" lines (one) never play over them.
+
+# ================= the player's openers =================
+
+@rule me.small.kclub
+on me.small
+when subject=club kclub=yes role!=teacher
+- [How are you finding the club?|Is the club treating you okay?|Settling into the club?]
+- [Anything you want to do at the club this week?|Got ideas for the next club activity?]
+- [Do you miss your old club at all?|Was it hard to switch to our club?]
+
+@rule me.small.club.own
+on me.small
+when subject=club kclub=no role!=teacher
+- [How's the {club} going?|Busy at the {club}?|What's new at the {club}?]
+
+# ================= in your Koikatsu Club: the present =================
+
+@rule small.kclub.reports~state
+on small
+when subject=club kclub=yes role!=teacher kmates=some|many
+shape state
+hook kclub_reports
+opens thank,ask,tease
+- {kmate} helped me with the club reports yesterday. I owe her one.
+- {kmate} and I finished the activity report together. It's actually readable this time.
+- {kmate} keeps fixing my handwriting on the reports. It's embarrassing.
+- I did the weekly report with {kmate}. We argued about every single line. Hehe.
+
+@rule me.h.kclub_reports
+on me.small
+when hook=kclub_reports
+- How are the club reports coming along?
+- Did the report get done?
+
+@rule move.h.kclub_reports.thank
+on move.thank
+when hook=kclub_reports
+- Thank her for keeping up with the reports
+
+@rule react.h.kclub_reports.thank
+on react
+when hook=kclub_reports move=thank fit=good|neutral
+- It's my club too now. I want it to look good.
+- Hehe. Tell {kmate} too, she did half.
+- Someone has to. You'd write 'we had fun' and call it done.
+
+@rule move.h.kclub_reports.ask
+on move.ask
+when hook=kclub_reports
+- Ask how {kmate} is doing
+
+@rule react.h.kclub_reports.ask
+on react
+when hook=kclub_reports move=ask fit=good|neutral
+- She's great. Strict about deadlines, though.
+- Busy, but she always makes time for the club.
+- Good! She asked about you, actually.
+
+@rule move.h.kclub_reports.tease
+on move.tease
+when hook=kclub_reports
+- Tease her about needing help
+
+@rule react.h.kclub_reports.tease
+on react
+when hook=kclub_reports move=tease fit=good|neutral
+- Hey! I did my half! ...Mostly.
+- Everyone needs help with paperwork. Everyone.
+- Says the one who never writes them.
+
+@rule react.h.kclub_reports.bad
+on react
+when hook=kclub_reports fit=bad
+feel pout
+- You could help too, you know.
+- Don't make fun of it. It's work.
+
+@rule small.kclub.help~q
+on small
+when subject=club kclub=yes role!=teacher
+shape q
+hook kclub_help
+opens agree,ask,tease
+- Can you help me with the club activity today? I can't set it up alone.
+- Hey, could you give me a hand with the club activity? Just for a bit.
+- I need help with this week's club activity. You're the president, so... please?
+- Will you help me plan the next club activity? I have ideas, but they're a mess.
+
+@rule me.h.kclub_help
+on me.small
+when hook=kclub_help
+- Need anything for the club?
+- Want help with the club activity?
+
+@rule move.h.kclub_help.agree
+on move.agree
+when hook=kclub_help
+- Say you'll help with the activity
+
+@rule react.h.kclub_help.agree
+on react
+when hook=kclub_help move=agree fit=good|neutral
+- Really? Thanks! I'll save you the easy part.
+- Yay. With two of us it'll go twice as fast.
+- I knew I could count on you. Club room after class?
+
+@rule move.h.kclub_help.ask
+on move.ask
+when hook=kclub_help
+- Ask what the activity is
+
+@rule react.h.kclub_help.ask
+on react
+when hook=kclub_help move=ask fit=good|neutral
+- It's a surprise. Mostly because I haven't decided.
+- Something fun. With snacks. Details later.
+- We're redoing the whiteboard and the schedule. Exciting, right?
+
+@rule move.h.kclub_help.tease
+on move.tease
+when hook=kclub_help
+- Tease her for asking the president
+
+@rule react.h.kclub_help.tease
+on react
+when hook=kclub_help move=tease fit=good|neutral
+- Who else would I ask? You're the reason the club exists.
+- You started this club. You take responsibility.
+- I'm asking nicely, aren't I?
+
+@rule react.h.kclub_help.bad
+on react
+when hook=kclub_help fit=bad
+feel pout
+- Forget it. I'll do it myself.
+- Fine. I didn't need you anyway.
+
+@rule small.kclub.room~state
+on small
+when subject=club kclub=yes role!=teacher
+shape state
+hook kclub_room
+opens ask,share,invite
+- The club room feels different now that I come here every day. Cozier.
+- I brought a cushion to the club room. Don't tell anyone it's mine.
+- I like our club time. It's the quietest hour of my day.
+- Somebody wrote something silly on the club whiteboard again. It wasn't me.
+
+@rule me.h.kclub_room
+on me.small
+when hook=kclub_room
+- What do you think of the club room?
+- Getting used to club time?
+
+@rule move.h.kclub_room.ask
+on move.ask
+when hook=kclub_room
+- Ask what she likes about club time
+
+@rule react.h.kclub_room.ask
+on react
+when hook=kclub_room move=ask fit=good|neutral
+- Nobody expects anything from me there. Except you.
+- The people. And the snacks.
+- It feels like our own little place.
+
+@rule move.h.kclub_room.share
+on move.share
+when hook=kclub_room
+- Say club time is your favorite part too
+
+@rule react.h.kclub_room.share
+on react
+when hook=kclub_room move=share fit=good|neutral
+- Then we agree. Good.
+- Hehe. Don't get sappy on me.
+- I had a feeling you'd say that.
+
+@rule move.h.kclub_room.invite
+on move.invite
+when hook=kclub_room
+- Ask her to stay after club time
+
+@rule react.h.kclub_room.invite
+on react
+when hook=kclub_room move=invite fit=good|neutral
+- Just for a bit? Okay.
+- Sure. The room's nice when it's empty.
+- If you're offering... yes.
+
+@rule react.h.kclub_room.bad
+on react
+when hook=kclub_room fit=bad
+feel pout
+- It's just a room.
+- Don't make it weird.
+
+@rule small.kclub.alone~state
+on small
+when subject=club kclub=yes role!=teacher kmates=none
+shape state
+hook kclub_alone
+opens comfort,praise,invite
+- It's just us in the club for now. I don't mind. Really.
+- We need more members. But I kind of like it being only the two of us.
+
+@rule me.h.kclub_alone
+on me.small
+when hook=kclub_alone
+- Do you mind that it's a small club?
+- Should we look for more members?
+
+@rule move.h.kclub_alone.comfort
+on move.comfort
+when hook=kclub_alone
+- Say more people will join soon
+
+@rule react.h.kclub_alone.comfort
+on react
+when hook=kclub_alone move=comfort fit=good|neutral
+- I hope so. But don't rush it.
+- Okay. I trust your eye for people.
+- Just not anyone annoying.
+
+@rule move.h.kclub_alone.praise
+on move.praise
+when hook=kclub_alone
+- Say she makes the club worth it
+
+@rule react.h.kclub_alone.praise
+on react
+when hook=kclub_alone move=praise fit=good|neutral
+- W-what? Don't say things like that so easily.
+- ...Thanks. I'll keep showing up, then.
+- You're such a flatterer.
+
+@rule move.h.kclub_alone.invite
+on move.invite
+when hook=kclub_alone
+- Ask her to help find new members
+
+@rule react.h.kclub_alone.invite
+on react
+when hook=kclub_alone move=invite fit=good|neutral
+- Sure. I'll put up posters.
+- I'll ask around. Discreetly.
+- Okay! Recruitment mission.
+
+@rule react.h.kclub_alone.bad
+on react
+when hook=kclub_alone fit=bad
+feel pout
+- You're not taking it seriously.
+- Whatever.
+
+# ================= in your Koikatsu Club: the club she left, in the past =================
+
+@rule small.kclub.old~state
+on small
+when subject=club kclub=yes role!=teacher hadclub=yes
+shape state
+hook kclub_old
+opens ask,comfort,praise
+- I used to be in the {oldclub}. Feels like a long time ago now.
+- Back when I was in the {oldclub}, I never had a free afternoon.
+- Some of the {oldclub} girls still wave at me in the hallway. That's nice.
+- I don't regret leaving the {oldclub}. I just think about it sometimes.
+
+@rule small.kclub.old.swim~state
+on small
+when subject=club kclub=yes role!=teacher hadclub=yes oldclubid=swim
+shape state
+hook kclub_old
+opens ask,comfort,praise
+- I swam every afternoon in the swim club. My hair smelled like chlorine for a year.
+- I still dream about the pool sometimes. Old swim club habits.
+
+@rule small.kclub.old.manga~state
+on small
+when subject=club kclub=yes role!=teacher hadclub=yes oldclubid=manga
+shape state
+hook kclub_old
+opens ask,comfort,praise
+- In the manga club I drew the same page for a month. I never finished it.
+- I left my sketchbook in the manga club room when I quit. I should get it back.
+
+@rule small.kclub.old.tea_ceremony~state
+on small
+when subject=club kclub=yes role!=teacher hadclub=yes oldclubid=tea_ceremony
+shape state
+hook kclub_old
+opens ask,comfort,praise
+- When I was in the tea ceremony club, I could sit still for an hour. Now look at me.
+- I learned to whisk tea properly in the tea ceremony club. I can still do it.
+
+@rule small.kclub.old.track_field~state
+on small
+when subject=club kclub=yes role!=teacher hadclub=yes oldclubid=track_field
+shape state
+hook kclub_old
+opens ask,comfort,praise
+- I used to run laps after school with the track team. My legs still remember.
+- Back in track and field, I had a best time I was proud of. I wonder if I could still beat it.
+
+@rule small.kclub.old.cheerleading~state
+on small
+when subject=club kclub=yes role!=teacher hadclub=yes oldclubid=cheerleading
+shape state
+hook kclub_old
+opens ask,comfort,praise
+- I was a cheerleader before I joined our club. I still know all the routines.
+- In the cheer club I was always at the front. It was loud. I loved it.
+
+@rule me.h.kclub_old
+on me.small
+when hook=kclub_old
+- Do you miss your old club?
+- What was your old club like?
+
+@rule move.h.kclub_old.ask
+on move.ask
+when hook=kclub_old
+- Ask why she left her old club
+
+@rule react.h.kclub_old.ask
+on react
+when hook=kclub_old move=ask fit=good|neutral
+- I wanted something different. And someone asked me.
+- It stopped being fun. This is fun.
+- You asked me to join yours. Simple as that.
+
+@rule move.h.kclub_old.comfort
+on move.comfort
+when hook=kclub_old
+- Say she can still visit them
+
+@rule react.h.kclub_old.comfort
+on react
+when hook=kclub_old move=comfort fit=good|neutral
+- Yeah. Maybe I will. Sometime.
+- They'd like that, I think.
+- Thanks. It's not like I hate them or anything.
+
+@rule move.h.kclub_old.praise
+on move.praise
+when hook=kclub_old
+- Say she must have been good at it
+
+@rule react.h.kclub_old.praise
+on react
+when hook=kclub_old move=praise fit=good|neutral
+- I was okay. Better than okay, sometimes.
+- Hehe. I'll take that.
+- You never saw me, so you can't know. But thanks.
+
+@rule react.h.kclub_old.bad
+on react
+when hook=kclub_old fit=bad
+feel pout
+- Let's not talk about it.
+- That's in the past.
+
+# ================= her own club, in the present (not in yours) =================
+
+@rule small.club.swim~state
+on small
+when subject=club kclub=no role!=teacher clubid=swim
+shape state
+hook club_swim
+opens ask,praise,invite
+- Swim practice ran long again. I can still feel the water in my ears.
+- Our coach wants us to shave half a second off. Half a second!
+- The pool's freezing in the mornings. We swim anyway.
+
+@rule me.h.club_swim
+on me.small
+when hook=club_swim
+- How's practice at the {club}?
+- Busy at the {club} today?
+
+@rule move.h.club_swim.ask
+on move.ask
+when hook=club_swim
+- Ask what her best stroke is
+
+@rule react.h.club_swim.ask
+on react
+when hook=club_swim move=ask fit=good|neutral
+- Freestyle. But don't tell the coach I hate backstroke.
+- Butterfly, when I'm not tired.
+- Breaststroke. It's relaxing.
+
+@rule move.h.club_swim.praise
+on move.praise
+when hook=club_swim
+- Say she must be fast in the water
+
+@rule react.h.club_swim.praise
+on react
+when hook=club_swim move=praise fit=good|neutral
+- Faster than you, probably. Hehe.
+- Some days. Others I'm a rock.
+- Come time me sometime.
+
+@rule move.h.club_swim.invite
+on move.invite
+when hook=club_swim
+- Ask if you can watch a practice
+
+@rule react.h.club_swim.invite
+on react
+when hook=club_swim move=invite fit=good|neutral
+- Sure, but don't stare.
+- Only from the stands!
+- If you bring a towel.
+
+@rule react.h.club_swim.bad
+on react
+when hook=club_swim fit=bad
+feel pout
+- You don't really care.
+- Never mind.
+
+@rule small.club.manga~state
+on small
+when subject=club kclub=no role!=teacher clubid=manga
+shape state
+hook club_manga
+opens ask,praise,tease
+- We're making a short comic for the festival. My panels are the worst ones.
+- The manga club argued about inking for an hour today.
+- I finally finished a page. One page. It took all week.
+
+@rule me.h.club_manga
+on me.small
+when hook=club_manga
+- How's practice at the {club}?
+- Busy at the {club} today?
+
+@rule move.h.club_manga.ask
+on move.ask
+when hook=club_manga
+- Ask what her comic is about
+
+@rule react.h.club_manga.ask
+on react
+when hook=club_manga move=ask fit=good|neutral
+- It's a secret. ...It's a romance.
+- A girl who fights robots after school.
+- Promise not to laugh? It's about a cat detective.
+
+@rule move.h.club_manga.praise
+on move.praise
+when hook=club_manga
+- Say you'd love to read it
+
+@rule react.h.club_manga.praise
+on react
+when hook=club_manga move=praise fit=good|neutral
+- Really? Don't say that unless you mean it.
+- Okay... maybe when it's done.
+- Then I have to finish it now.
+
+@rule move.h.club_manga.tease
+on move.tease
+when hook=club_manga
+- Tease her about drawing you
+
+@rule react.h.club_manga.tease
+on react
+when hook=club_manga move=tease fit=good|neutral
+- As if! ...Maybe as a background character.
+- You'd be the villain. Obviously.
+- Don't give me ideas.
+
+@rule react.h.club_manga.bad
+on react
+when hook=club_manga fit=bad
+feel pout
+- You don't really care.
+- Never mind.
+
+@rule small.club.tea_ceremony~state
+on small
+when subject=club kclub=no role!=teacher clubid=tea_ceremony
+shape state
+hook club_tea
+opens ask,praise,invite
+- We practiced the tea ceremony today. I finally didn't spill.
+- The tea ceremony club has a guest day soon. I'm nervous.
+- My legs fell asleep during practice again.
+
+@rule me.h.club_tea
+on me.small
+when hook=club_tea
+- How's practice at the {club}?
+- Busy at the {club} today?
+
+@rule move.h.club_tea.ask
+on move.ask
+when hook=club_tea
+- Ask what the hardest part is
+
+@rule react.h.club_tea.ask
+on react
+when hook=club_tea move=ask fit=good|neutral
+- Sitting still. And smiling while my legs scream.
+- The order of everything. There's so much.
+- Not spilling. Honestly.
+
+@rule move.h.club_tea.praise
+on move.praise
+when hook=club_tea
+- Say it sounds elegant
+
+@rule react.h.club_tea.praise
+on react
+when hook=club_tea move=praise fit=good|neutral
+- It looks elegant. It feels like a test.
+- Thank you. I try.
+- You should come taste it.
+
+@rule move.h.club_tea.invite
+on move.invite
+when hook=club_tea
+- Ask her to make you tea sometime
+
+@rule react.h.club_tea.invite
+on react
+when hook=club_tea move=invite fit=good|neutral
+- Properly? That takes a while. ...Okay.
+- If you sit through the whole thing.
+- Sure. Bring sweets.
+
+@rule react.h.club_tea.bad
+on react
+when hook=club_tea fit=bad
+feel pout
+- You don't really care.
+- Never mind.
+
+@rule small.club.track_field~state
+on small
+when subject=club kclub=no role!=teacher clubid=track_field
+shape state
+hook club_track
+opens ask,praise,invite
+- We ran intervals today. I can't feel my legs.
+- Track meet's coming up. I want a new best time.
+- The coach made us run the stairs. All of them.
+
+@rule me.h.club_track
+on me.small
+when hook=club_track
+- How's practice at the {club}?
+- Busy at the {club} today?
+
+@rule move.h.club_track.ask
+on move.ask
+when hook=club_track
+- Ask what event she runs
+
+@rule react.h.club_track.ask
+on react
+when hook=club_track move=ask fit=good|neutral
+- The 400. It's the worst and I love it.
+- Sprints. Short and painful.
+- Long distance. I like the quiet.
+
+@rule move.h.club_track.praise
+on move.praise
+when hook=club_track
+- Say you've seen her train hard
+
+@rule react.h.club_track.praise
+on react
+when hook=club_track move=praise fit=good|neutral
+- You were watching? Ugh, I looked awful.
+- Thanks. It'll pay off at the meet.
+- Then you know I'm not lazy.
+
+@rule move.h.club_track.invite
+on move.invite
+when hook=club_track
+- Offer to cheer at the meet
+
+@rule react.h.club_track.invite
+on react
+when hook=club_track move=invite fit=good|neutral
+- Really? Then I can't lose.
+- Sit where I can see you.
+- Don't be too loud. ...Okay, be loud.
+
+@rule react.h.club_track.bad
+on react
+when hook=club_track fit=bad
+feel pout
+- You don't really care.
+- Never mind.
+
+@rule small.club.cheerleading~state
+on small
+when subject=club kclub=no role!=teacher clubid=cheerleading
+shape state
+hook club_cheer
+opens ask,praise,tease
+- We learned a new routine. I almost dropped someone. Almost.
+- The cheer squad's practicing for the next game. My voice is gone.
+- Our captain wants more jumps. My knees disagree.
+
+@rule me.h.club_cheer
+on me.small
+when hook=club_cheer
+- How's practice at the {club}?
+- Busy at the {club} today?
+
+@rule move.h.club_cheer.ask
+on move.ask
+when hook=club_cheer
+- Ask who they're cheering for next
+
+@rule react.h.club_cheer.ask
+on react
+when hook=club_cheer move=ask fit=good|neutral
+- The basketball team. They need all the help.
+- Whoever's losing, honestly.
+- The track meet. Big crowd.
+
+@rule move.h.club_cheer.praise
+on move.praise
+when hook=club_cheer
+- Say she must be great on the field
+
+@rule react.h.club_cheer.praise
+on react
+when hook=club_cheer move=praise fit=good|neutral
+- I'm the loudest. That counts, right?
+- Come see and tell me.
+- Hehe. Thanks!
+
+@rule move.h.club_cheer.tease
+on move.tease
+when hook=club_cheer
+- Ask her to cheer just for you
+
+@rule react.h.club_cheer.tease
+on react
+when hook=club_cheer move=tease fit=good|neutral
+- Only if you win something.
+- Go, go... no. Too embarrassing.
+- That costs extra.
+
+@rule react.h.club_cheer.bad
+on react
+when hook=club_cheer fit=bad
+feel pout
+- You don't really care.
+- Never mind.

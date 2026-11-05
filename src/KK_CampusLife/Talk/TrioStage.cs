@@ -554,6 +554,9 @@ namespace Joojkk.CampusLife
                     {
                         var r = c as RectTransform;
                         if (r == null || rects.Contains(r) || c.name.StartsWith("cl_", StringComparison.Ordinal) || c.GetComponent<Button>() == null) continue;
+                        // Only the copies (KKAPI names them "...(Clone)"): the game's own End and Talk buttons are siblings
+                        // too and went up with the row.
+                        if (c.name.IndexOf("(Clone)", StringComparison.Ordinal) < 0) continue;
                         rects.Add(r);
                     }
                 // One row: the game stands them as a corner (two over one); at the top center they go

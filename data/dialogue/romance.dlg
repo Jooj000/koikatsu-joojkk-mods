@@ -86,6 +86,8 @@ when act=hand q=yes close>=2 watchers=one|few|crowd tone=gentle
 on romance
 when act=hand q=yes close>=2 watchers=one|few|crowd tone=energetic
 - Look! We're holding hands! Everyone, look!
+- Hehe! Now everyone knows!
+- Swing them! Like this!
 
 @rule romance.hand.yes.close.seen.teasing
 on romance

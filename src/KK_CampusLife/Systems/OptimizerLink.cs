@@ -40,7 +40,9 @@ namespace Joojkk.CampusLife
             if (!Campus.On) return 0f;
             var key = GirlInfo.Key(h);
             var s = 0f;
-            if (Board.ActiveFor(key).Any()) s += 20f;
+            // A request open for today or tomorrow (hidden ones too, and the second girl of one) is a promise that she comes
+            //: far above the other reasons, so the reserved slots go to her first.
+            if (Board.Expects(h)) s += 200f;
             var gs = Campus.S.Girl(key);
             if (gs != null)
             {

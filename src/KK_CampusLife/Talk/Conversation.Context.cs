@@ -115,7 +115,7 @@ namespace Joojkk.CampusLife
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Context weather: " + e.Message); }
             c["interest"] = Interested(h) ? "yes" : "no";
-            c["clubkind"] = GirlInfo.InNoClub(h) ? "none" : GirlInfo.InSportsClub(h) ? "sports" : "culture";
+            ClubCtx(h, c);
             var bff = Social.FriendsOf(h, 45).OrderByDescending(x => Social.Bond(h, x)).FirstOrDefault();
             if (bff != null) c["bff"] = GirlInfo.FirstName(bff);
             var partner = Pairs.PartnerOf(h);
@@ -127,6 +127,44 @@ namespace Joojkk.CampusLife
                 var fav = mine[Math.Abs(GirlInfo.Key(h).GetHashCode()) % mine.Count];
                 c["fav"] = GirlInfo.LikeLabel(fav);
                 c["favdo"] = Do(fav);
+            }
+        }
+
+        /// <summary>
+        /// Her club for the lines: {clubid} her own club as a word, {club} the one she goes to now. A
+        /// girl in your Koikatsu Club ({kclub}=yes) talks of it in the present ({club} "the Koikatsu Club", {clubkind}
+        /// koikatsu) and of her old club in the past ({oldclub}, {oldclubid}); {kmate} is another member (a friend of hers
+        /// first), {kpres} says whether you have a report or a project going, for "X helped me with the reports" and "can
+        /// you help me with the club activity?".
+        /// </summary>
+        internal static void ClubCtx(SaveData.Heroine h, Dictionary<string, string> c)
+        {
+            var own = GirlInfo.InNoClub(h) ? "none" : GirlInfo.InSportsClub(h) ? "sports" : "culture";
+            c["clubid"] = GirlInfo.ClubId(h);
+            if (GirlInfo.InKoikatsuClub(h))
+            {
+                c["kclub"] = "yes";
+                c["club"] = "Koikatsu Club";
+                c["hasclub"] = "yes";
+                c["clubkind"] = "koikatsu";
+                c["oldclubkind"] = own;
+                if (own != "none") { c["oldclub"] = GirlInfo.ClubName(h); c["oldclubid"] = c["clubid"]; c["hadclub"] = "yes"; }
+                else c["hadclub"] = "no";
+                try
+                {
+                    var mates = Board.Students.Where(x => x != null && x != h && x.isStaff && GirlInfo.IsRegular(x)).ToList();
+                    var mate = mates.OrderByDescending(x => Social.Bond(h, x)).FirstOrDefault();
+                    if (mate != null) c["kmate"] = GirlInfo.FirstName(mate);
+                    c["kmates"] = mates.Count >= 3 ? "many" : mates.Count >= 1 ? "some" : "none";
+                }
+                catch { }
+                c["kidentity"] = string.IsNullOrEmpty(S.ClubIdentity) ? "" : S.ClubIdentity;
+            }
+            else
+            {
+                c["kclub"] = "no";
+                c["clubkind"] = own;
+                if (own != "none") { c["club"] = GirlInfo.ClubName(h); c["hasclub"] = "yes"; }
             }
         }
 

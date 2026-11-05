@@ -699,6 +699,7 @@ on react
 when move=invite fit=good mood=hungry|bored|lonely kind=day
 feel smile
 - [Yes! You just saved me from {mything}.|I was about to give up on today.] [Let's go!|Thank you!]
+- [Perfect timing. After {mything}, I need this.|You read my mind.] [Where to?|I'm in.]
 
 @rule react.invite.bad
 on react
@@ -1056,6 +1057,7 @@ when move=defend fit=neutral
 on react
 when move=defend fit=neutral kind=day
 - [People will say what they say about {mything}.|Defending {who} won't stop the talk about {mything}.]
+- [Thanks, but {mything} isn't something you can fix with words.|It's nice of you. It doesn't change {mything}, though.]
 
 @rule react.defend.bad
 on react
@@ -1073,6 +1075,7 @@ when move=defend fit=bad
 on react
 when move=defend fit=bad kind=day
 - [You weren't there for {mything}.|You don't know the first thing about {mything}.]
+- [Stop. You're making {mything} worse.|I didn't ask you to speak for me about {mything}.]
 
 @rule react.laugh.good
 on react

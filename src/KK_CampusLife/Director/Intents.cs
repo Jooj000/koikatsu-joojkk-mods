@@ -376,6 +376,9 @@ namespace Joojkk.CampusLife
                     {
                         if (Stage.Max) return false; // a test: nobody comes to the player on her own
                         if (r.actionNo == 8 || !G.IsFreeRoaming || WalkTalk.Active || Scenes.Running) return false;
+                        // With an empty blue bar she has nothing left to say: she does not come over with the bubble only to
+                        // energia para conversar"). The game's own call-over (action 8) has the same rule.
+                        if (h.talkTime <= 0) return false;
                         // One girl at a time comes looking for you, each at most once a period.
                         var key = GirlInfo.Key(h);
                         int st;

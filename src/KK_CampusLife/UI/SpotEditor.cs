@@ -105,17 +105,19 @@ namespace Joojkk.CampusLife
                     GUILayout.Label(a.Name, GUILayout.Width(190f));
                     if (GUILayout.Button("Here", GUILayout.Width(70f))) Place(a, false);
                     if (GUILayout.Button("1 body ahead", GUILayout.Width(110f))) Place(a, true);
-                    GUI.enabled = an != null && an.Custom;
+                    var mine = Spots.IsUsers("act:" + a.Id, map);
+                    GUI.enabled = mine;
                     if (GUILayout.Button("Default", GUILayout.Width(80f))) ActivitySpots.ResetSpot(a);
                     GUI.enabled = true;
                     GUILayout.EndHorizontal();
-                    GUILayout.Label(an == null ? "no spot on this map yet" : (an.Custom ? "yours: " : "game point: ") + Fmt(an.Pos) + "  facing " + Mathf.RoundToInt(an.Rot.eulerAngles.y) + "°", _small);
+                    GUILayout.Label(an == null ? "no spot on this map yet" : (mine ? "yours: " : an.Custom ? "mod: " : "game point: ") + Fmt(an.Pos) + "  facing " + Mathf.RoundToInt(an.Rot.eulerAngles.y) + "°", _small);
                     GUILayout.EndVertical();
                 }
                 GUILayout.EndScrollView();
                 // atividade". The loading screen's picture of this map is his view, taken here.
                 var slot = EventBackdrop.TimeSlot();
                 var has = MapShots.Has(map, slot);
+                var shipped = !has && MapShots.Shipped(map, slot);
                 GUILayout.BeginVertical(GUI.skin.box);
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Loading screen photo (" + MapShots.SlotNames[slot] + ")", GUILayout.Width(190f));
@@ -124,7 +126,7 @@ namespace Joojkk.CampusLife
                 if (GUILayout.Button("Delete", GUILayout.Width(80f))) { MapShots.Delete(map, slot); _photoMsg = "Photo deleted: the game's picture is used again."; }
                 GUI.enabled = true;
                 GUILayout.EndHorizontal();
-                GUILayout.Label(_photoMsg ?? (has ? "This map has your photo for this time of day." : "No photo yet: the loading screen blurs the game's small picture."), _small);
+                GUILayout.Label(_photoMsg ?? (has ? "This map has your photo for this time of day." : shipped ? "The mod's photo is used here. Take one to replace it." : "No photo yet: the loading screen blurs the game's small picture."), _small);
                 GUILayout.EndVertical();
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(KeyName() + " opens and closes this window.", _small);

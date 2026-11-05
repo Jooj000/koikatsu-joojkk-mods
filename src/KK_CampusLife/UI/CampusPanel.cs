@@ -384,7 +384,8 @@ namespace Joojkk.CampusLife
             if (h != null)
             {
                 var map = GirlInfo.CurrentMap(h);
-                where = GirlInfo.IsSpawned(h) && map >= 0 ? "She is at: " + Places.MapLabel(map) : "She isn't on campus right now.";
+                var doing = GirlInfo.IsSpawned(h) && map >= 0 ? Truth.Doing(h) : "";
+                where = GirlInfo.IsSpawned(h) && map >= 0 ? "She is at: " + Places.MapLabel(map) + (doing != "" ? " (" + doing + ")" : "") : "She isn't on campus right now.";
             }
             else if (r.Source == "miss")
                 where = string.Join("   ", r.Item.Split(Board.MissSep).Select(GirlInfo.Find).Where(g => g != null && GirlInfo.IsSpawned(g) && GirlInfo.CurrentMap(g) >= 0)

@@ -88,6 +88,33 @@ namespace Joojkk.CampusLife
             if (Scene != null) Scene.Unload();
         }
 
+        private static bool _froze;
+
+        /// <summary>
+        /// de prancheta aberto"): the game pauses their clocks behind a menu but not their legs. Its own "no moving" switch
+        /// (ActionScene.Regulate.Move) is on while the clipboard is open, and off when it closes. Run every frame.
+        /// </summary>
+        public static void FreezeWalkers()
+        {
+            try
+            {
+                var act = G.Act;
+                if (act == null) { _froze = false; return; }
+                var want = IsOpen && !AtNight;
+                if (want && !_froze)
+                {
+                    act.regulate |= ActionScene.Regulate.Move;
+                    _froze = true;
+                }
+                else if (!want && _froze)
+                {
+                    act.regulate &= ~ActionScene.Regulate.Move;
+                    _froze = false;
+                }
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Clipboard freeze: " + e.Message); _froze = false; }
+        }
+
         /// <summary>In the room at night: the clipboard opens to plan, with today's information, and nothing leads out of the room.</summary>
         public static bool AtNight
         {

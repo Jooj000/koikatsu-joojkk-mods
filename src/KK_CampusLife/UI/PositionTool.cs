@@ -20,6 +20,7 @@ namespace Joojkk.CampusLife
 
         private static readonly string FilePath = Path.Combine(Paths.ConfigPath, "joojkk.campuslife.spots.txt");
         private static Dictionary<string, Spot> _spots;
+        private static Dictionary<string, Spot> _defaults;
         private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
         private static string Id(string kind, int map) { return kind == "store" ? "store" : kind + ":" + map; }
@@ -33,22 +34,47 @@ namespace Joojkk.CampusLife
                 try
                 {
                     if (!File.Exists(FilePath)) return _spots;
-                    foreach (var raw in File.ReadAllLines(FilePath))
-                    {
-                        var line = raw.Split('#')[0].Trim();
-                        var f = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                        if (f.Length < 5) continue;
-                        int map;
-                        float x, y, z, yaw = 0f;
-                        int anim = -1;
-                        if (!int.TryParse(f[1], NumberStyles.Integer, Inv, out map) || !Num(f[2], out x) || !Num(f[3], out y) || !Num(f[4], out z)) continue;
-                        if (f.Length > 5) Num(f[5], out yaw);
-                        if (f.Length > 6 && !int.TryParse(f[6], NumberStyles.Integer, Inv, out anim)) anim = -1;
-                        _spots[Id(f[0].ToLowerInvariant(), map)] = new Spot { Map = map, Pos = new Vector3(x, y, z), Yaw = yaw, Anim = anim };
-                    }
+                    Parse(File.ReadAllLines(FilePath), _spots);
                 }
                 catch (Exception e) { CampusLifePlugin.Log.LogWarning("Could not read " + FilePath + ": " + e.Message); }
                 return _spots;
+            }
+        }
+
+        private static Dictionary<string, Spot> Defaults
+        {
+            get
+            {
+                if (_defaults != null) return _defaults;
+                _defaults = new Dictionary<string, Spot>();
+                try
+                {
+                    using (var st = typeof(Spots).Assembly.GetManifestResourceStream("CampusLife.spots_default.txt"))
+                    {
+                        if (st == null) return _defaults;
+                        using (var rd = new StreamReader(st))
+                            Parse(rd.ReadToEnd().Split('\n'), _defaults);
+                    }
+                }
+                catch (Exception e) { CampusLifePlugin.Log.LogWarning("Could not read the mod's spots: " + e.Message); }
+                return _defaults;
+            }
+        }
+
+        private static void Parse(IEnumerable<string> lines, Dictionary<string, Spot> into)
+        {
+            foreach (var raw in lines)
+            {
+                var line = raw.Split('#')[0].Trim();
+                var f = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                if (f.Length < 5) continue;
+                int map;
+                float x, y, z, yaw = 0f;
+                int anim = -1;
+                if (!int.TryParse(f[1], NumberStyles.Integer, Inv, out map) || !Num(f[2], out x) || !Num(f[3], out y) || !Num(f[4], out z)) continue;
+                if (f.Length > 5) Num(f[5], out yaw);
+                if (f.Length > 6 && !int.TryParse(f[6], NumberStyles.Integer, Inv, out anim)) anim = -1;
+                into[Id(f[0].ToLowerInvariant(), map)] = new Spot { Map = map, Pos = new Vector3(x, y, z), Yaw = yaw, Anim = anim };
             }
         }
 
@@ -56,10 +82,18 @@ namespace Joojkk.CampusLife
 
         public static bool TryGet(string kind, int map, out Spot spot)
         {
-            return All.TryGetValue(Id(kind, map), out spot) && (kind == "store" || spot.Map == map);
+            var id = Id(kind, map);
+            if (All.TryGetValue(id, out spot) && (kind == "store" || spot.Map == map)) return true;
+            return Defaults.TryGetValue(id, out spot) && (kind == "store" || spot.Map == map);
         }
 
-        public static bool TryGetStore(out Spot spot) { return All.TryGetValue("store", out spot); }
+        /// <summary>Is this spot in his own file (not the mod's default)?</summary>
+        public static bool IsUsers(string kind, int map) { return All.ContainsKey(Id(kind, map)); }
+
+        /// <summary>Is there a mod default for this spot?</summary>
+        public static bool HasDefault(string kind, int map) { return Defaults.ContainsKey(Id(kind, map)); }
+
+        public static bool TryGetStore(out Spot spot) { return All.TryGetValue("store", out spot) || Defaults.TryGetValue("store", out spot); }
 
         public static void Set(string kind, int map, Vector3 pos, float yaw, int anim = -1)
         {

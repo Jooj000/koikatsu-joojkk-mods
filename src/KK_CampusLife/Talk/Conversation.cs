@@ -71,6 +71,7 @@ namespace Joojkk.CampusLife
             TalkScene ts;
             try { ts = G.TalkScene; } catch { ts = null; }
             SleepTease.Watch(ts);
+            CursorWatch(ts);
             if (ts == null) { if (_scene != null) Close(); return; }
             if (ts != _scene || (!_decided && ts.targetHeroine != null)) Attach(ts);
             if (_root == null) return;
@@ -130,9 +131,15 @@ namespace Joojkk.CampusLife
 
         private static bool _decided;   // the heroine was known when we looked (the scene exists a moment before she is set)
 
+        /// <summary>
+        /// The first fact id made after this talk opened: what happened in it (the kiss) is a topic from the next talk on
+        ///.
+        /// </summary>
+        private static int _factsBefore = int.MaxValue;
+
         private static void Attach(TalkScene ts)
         {
-            if (ts != _scene) Close();
+            if (ts != _scene) { Close(); _factsBefore = S != null ? S.NextFactId : int.MaxValue; }
             _scene = ts;
             var h = ts.targetHeroine;
             _decided = h != null;
@@ -354,6 +361,7 @@ namespace Joojkk.CampusLife
             //.
             var meet = Board.MeetHere(h);
             if (meet != null && Board.PlayInTalk(meet, h, () => { s.Turns++; AfterScene(); })) return true;
+            if (TrioAnswerOpening(s, h)) return true;
             if (ShareOpening(s, h)) return true;
             // Conversation by scene: the director may open with a scene (Scene Talk, Quiet, Triangle, Callback, an aside).
             if (SceneTalk.Open(h, d => s.Interest = Mathf.Clamp(s.Interest + d, 0, MaxInterest), () => { s.Turns++; AfterScene(); })) return true;
@@ -1567,7 +1575,9 @@ namespace Joojkk.CampusLife
             if (t == null || string.IsNullOrEmpty(t.Subject)) return null;
             string like = null;
             if (t.Subject.StartsWith("like:", StringComparison.Ordinal)) like = t.Subject.Substring(5);
-            else if (t.Subject.StartsWith("pet:", StringComparison.Ordinal)) like = "animals";
+            // Her pet theme stands for the like it is about (food, sweets...), not for animals: "Ask if she's hungry again"
+            // had the paw.
+            else if (t.Subject.StartsWith("pet:", StringComparison.Ordinal)) like = PetLike(t.Subject.Substring(4));
             return KnownLike(h, like) ? like : null;
         }
 

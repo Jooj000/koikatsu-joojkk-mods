@@ -76,6 +76,7 @@ namespace Joojkk.SchoolOptimizer
         public static ConfigEntry<bool> StripOffMap;
         public static ConfigEntry<bool> OrphanCleanup;
         public static ConfigEntry<bool> ParkAbsent;
+        public static ConfigEntry<bool> HairWatchOn;
 
         /// <summary>
         /// Other plugins add a scoring function here (higher = load her first, 0 = no opinion). Campus Life ranks girls
@@ -189,6 +190,12 @@ namespace Joojkk.SchoolOptimizer
                 "outfit load takes more than one frame, and the first time each student appears, both plugins' own update is " +
                 "run again for her. Their files are not changed.",
                 null, new ConfigurationManagerAttributes { Order = 4, Browsable = has("com.deathweasel.bepinex.materialeditor") || has("com.deathweasel.bepinex.hairaccessorycustomizer") }));
+            HairWatchOn = Config.Bind(m, "Find and fix broken hair on the map", true, new ConfigDescription(
+                "Every second one student near you is looked at: hair without its color or texture, hair pieces missing, strands " +
+                "blown up by the physics, or her mod data still away while she is at school. Each case is fixed once (colors, " +
+                "MaterialEditor and HairAccessoryCustomizer applied again, strands reset) and written to the log as " +
+                "\"Hair watch: ...\" with what was going on around her, to find what breaks it.",
+                null, new ConfigurationManagerAttributes { Order = 3 }));
 
             KsoxLowMemory = Config.Bind(m, "Skin Overlay Mod: compressed overlays at original size", true, new ConfigDescription(
                 "Sets two of KSOX's own options (by ManlyMarco) the way this install runs them: overlay textures compressed in " +
@@ -270,6 +277,8 @@ namespace Joojkk.SchoolOptimizer
             catch (Exception e) { Log.LogDebug("Off-map clothes: " + e.Message); }
             try { OffMap.Update(); }
             catch (Exception e) { Log.LogDebug("Off-map students: " + e.Message); }
+            try { HairWatch.Update(); }
+            catch (Exception e) { Log.LogDebug("Hair watch: " + e.Message); }
             if (Time.realtimeSinceStartup >= _nextOrphans)
             {
                 _nextOrphans = Time.realtimeSinceStartup + 2f;

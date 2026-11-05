@@ -58,7 +58,7 @@ namespace Joojkk.CampusLife
             new ActivityDef { Id = "run", Name = "Go for a run", Place = "field", Energy = 1, Gain = "STR 3", Desc = "Fresh air and a clear head." },
             new ActivityDef { Id = "garden", Name = "Help the gardening committee", Place = "courtyard", Energy = 1, OncePerDay = true, Gain = "REP 2, PAY 300", Desc = "The university likes a helping hand." },
             new ActivityDef { Id = "feed_cats", Name = "Feed the stray cats", Place = "courtyard", Energy = 0, OncePerDay = true, Gain = "REP 1", Desc = "Needs cat food. Animal lovers will hear about it." },
-            new ActivityDef { Id = "park_walk", Name = "Walk around the park", Place = "park", Energy = 0, OncePerDay = true, Gain = "EN 1", Desc = "Clear your head." },
+            new ActivityDef { Id = "park_walk", Name = "Walk around the backyard", Place = "park", Energy = 0, OncePerDay = true, Gain = "EN 1", Desc = "Clear your head." },
             // cafeteria
             new ActivityDef { Id = "hearty_lunch", Name = "Eat a hearty lunch", Place = "cafeteria", Periods = PeriodMask.Lunch, Energy = 0, MoneyCost = 500, OncePerDay = true, Gain = "EN 3, STR 2", Desc = "Katsu curry, large. Fuel for the whole afternoon." },
             new ActivityDef { Id = "kitchen_job", Name = "Kitchen helper shift", Place = "cafeteria", Periods = PeriodMask.Lunch | PeriodMask.After, Energy = 2, OncePerDay = true, IsJob = true, Gain = "PAY 700+8/SEN, SEN 2", Desc = "Part-time job. Tips scale with SEN (charm)." },

@@ -85,6 +85,10 @@ namespace Joojkk.CampusLife
             public Quaternion Rot;
             public Vector3 IconPos;
             public bool Custom;
+            // A desk action done at a moved spot: the game point it belongs to, so its chair moves along.
+            public bool FromDesk;
+            public Vector3 DeskPos;
+            public Quaternion DeskRot;
             public readonly List<ActivityDef> Acts = new List<ActivityDef>();
             public readonly Dictionary<string, int> AnimFor = new Dictionary<string, int>();
         }
@@ -241,8 +245,21 @@ namespace Joojkk.CampusLife
                     var rot = Quaternion.Euler(0f, custom.Yaw, 0f);
                     var c = new Anchor { Key = "c" + a.Id, Pos = custom.Pos, Rot = rot, IconPos = custom.Pos + rot * Vector3.forward * 0.6f, Custom = true };
                     c.Acts.Add(a);
-                    // A desk action moves one specific chair of its own map: away from the game's desk, read standing up.
-                    c.AnimFor[a.Id] = custom.Anim >= 0 ? custom.Anim : (want == Desk ? 0 : want);
+                    // session mas ele parou de usar a animação da mesa e começou a ler em pé". The desk action is kept and its
+                    // chair is carried to the new spot, in the same place relative to him as at the game's desk.
+                    var deskAnim = 0;
+                    if (want == Desk && custom.Anim < 0)
+                    {
+                        var dp = points.FirstOrDefault(p => p.Actions.Any(IsDeskAction));
+                        if (dp != null)
+                        {
+                            deskAnim = dp.Actions.First(IsDeskAction);
+                            c.FromDesk = true;
+                            c.DeskPos = dp.Pos;
+                            c.DeskRot = dp.Rot;
+                        }
+                    }
+                    c.AnimFor[a.Id] = custom.Anim >= 0 ? custom.Anim : (want == Desk ? deskAnim : want);
                     anchors.Add(c);
                     continue;
                 }
@@ -397,7 +414,7 @@ namespace Joojkk.CampusLife
             var map = G.PlayerMapNo;
             if (!Spots.Remove("act:" + a.Id, map)) return;
             Rebuild(map);
-            Toasts.Show(a.Name + ": back to its default spot.");
+            Toasts.Show(a.Name + ": back to the mod's spot.");
         }
 
         public static bool HasCustom(ActivityDef a)
@@ -499,6 +516,7 @@ namespace Joojkk.CampusLife
         private sealed class Playback
         {
             private readonly List<GameObject> _items = new List<GameObject>();
+            private readonly List<Renderer> _hidden = new List<Renderer>();
             private readonly List<KeyValuePair<Transform, KeyValuePair<Vector3, Quaternion>>> _restore = new List<KeyValuePair<Transform, KeyValuePair<Vector3, Quaternion>>>();
             private ActionGame.Chara.Player _player;
             private bool _fps;
@@ -549,9 +567,34 @@ namespace Joojkk.CampusLife
                         var target = act.Map.mapRoot.transform.FindLoop(ga.Target);
                         if (target != null)
                         {
-                            Keep(target.transform);
-                            target.transform.position = ga.Move;
-                            target.transform.eulerAngles = ga.Rot;
+                            var tpos = ga.Move;
+                            var trot = Quaternion.Euler(ga.Rot);
+                            if (at != null && at.FromDesk)
+                            {
+                                // The chair keeps its place relative to him: from the game's desk point to the moved spot.
+                                var inv = Quaternion.Inverse(at.DeskRot);
+                                tpos = at.Pos + at.Rot * (inv * (ga.Move - at.DeskPos));
+                                trot = at.Rot * inv * trot;
+                                HideTwins(target.transform, tpos);
+                            }
+                            // ar na cafeteria": the cafeteria desk action moves isu07 (9), where girls sit to eat). Carried to
+                            // a moved spot or with a girl on it, a copy goes there and the real one stays.
+                            var far = Vector3.Distance(target.transform.position, tpos) > 1.2f;
+                            var sitter = Occupant(target.transform.position);
+                            if (far || sitter != null)
+                            {
+                                var copy = UnityEngine.Object.Instantiate(target.gameObject, tpos, trot, target.transform.parent);
+                                foreach (var col in copy.GetComponentsInChildren<Collider>(true)) UnityEngine.Object.Destroy(col);
+                                foreach (var ob in copy.GetComponentsInChildren<UnityEngine.AI.NavMeshObstacle>(true)) UnityEngine.Object.Destroy(ob);
+                                _items.Add(copy);
+                                CampusLifePlugin.Log.LogInfo("Activity chair: a copy of " + target.name + " at the spot (" + (sitter != null ? GirlInfo.FirstName(sitter) + " sits on the real one" : "the real one stays at its desk") + ").");
+                            }
+                            else
+                            {
+                                Keep(target.transform);
+                                target.transform.position = tpos;
+                                target.transform.rotation = trot;
+                            }
                         }
                     }
                     return true;
@@ -573,6 +616,52 @@ namespace Joojkk.CampusLife
                     if (tps != null) tps.Angle = Quaternion.LookRotation(-_player.cachedTransform.forward).eulerAngles;
                 }
                 catch { }
+            }
+
+            /// <summary>The chair carried to a moved desk spot would sit inside that desk's own chair: chairs of the same mesh
+            /// within 0.8 m of where it goes are hidden while the animation plays.</summary>
+            private void HideTwins(Transform chair, Vector3 at)
+            {
+                try
+                {
+                    var mf = chair.GetComponentInChildren<MeshFilter>();
+                    var mesh = mf != null ? mf.sharedMesh : null;
+                    if (mesh == null) return;
+                    foreach (var other in UnityEngine.Object.FindObjectsOfType<MeshFilter>())
+                    {
+                        if (other == null || other.sharedMesh != mesh || other.transform.IsChildOf(chair)) continue;
+                        var r = other.GetComponent<Renderer>();
+                        if (r == null || !r.enabled || Vector3.Distance(other.transform.position, at) > 0.8f) continue;
+                        if (Occupant(other.transform.position) != null) continue; // a girl sits on it: never hide her chair
+                        r.enabled = false;
+                        _hidden.Add(r);
+                    }
+                }
+                catch { }
+            }
+
+            /// <summary>The girl sitting or standing at this chair (within 0.7 m on the flat), null when it is free.</summary>
+            private static SaveData.Heroine Occupant(Vector3 chair)
+            {
+                try
+                {
+                    var act = G.Act;
+                    if (act == null) return null;
+                    foreach (var n in act.npcList)
+                    {
+                        if (n == null || !n.isActive || n.heroine == null) continue;
+                        var d = n.position - chair; d.y = 0f;
+                        if (d.magnitude < 0.7f) return n.heroine;
+                    }
+                    var fx = act.fixChara;
+                    if (fx != null && fx.isActive && fx.heroine != null)
+                    {
+                        var d = fx.position - chair; d.y = 0f;
+                        if (d.magnitude < 0.7f) return fx.heroine;
+                    }
+                }
+                catch { }
+                return null;
             }
 
             private void Keep(Transform t)
@@ -599,6 +688,8 @@ namespace Joojkk.CampusLife
                 _items.Clear();
                 foreach (var r in _restore) try { if (r.Key != null) r.Key.SetPositionAndRotation(r.Value.Key, r.Value.Value); } catch { }
                 _restore.Clear();
+                foreach (var r in _hidden) try { if (r != null) r.enabled = true; } catch { }
+                _hidden.Clear();
                 _player = null;
             }
         }

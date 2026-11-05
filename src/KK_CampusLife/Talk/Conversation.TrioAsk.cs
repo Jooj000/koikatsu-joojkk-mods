@@ -16,7 +16,7 @@ namespace Joojkk.CampusLife
         private static List<SaveData.Heroine> TrioCandidates(SaveData.Heroine h)
         {
             if (h == null || !h.isGirlfriend) return new List<SaveData.Heroine>();
-            return Social.Students.Where(o => o != null && o != h && o.isGirlfriend && Share.Stance(h, o) != Share.Trio && !AskedTrioToday(h, o)).ToList();
+            return Social.Students.Where(o => o != null && o != h && o.isGirlfriend && Share.Stance(h, o) != Share.Trio && !AskedTrioToday(h, o) && !Share.TrioAsked(h, o)).ToList();
         }
 
         private static bool AskedTrioToday(SaveData.Heroine h, SaveData.Heroine o)

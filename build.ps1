@@ -52,6 +52,8 @@ function Build($name) {
   if ($name -eq 'KK_CampusLife' -and (Test-Path $dlgDir)) {
     Get-ChildItem $dlgDir -Filter *.dlg | ForEach-Object { $cscArgs += "-resource:$($_.FullName),CampusLife.dialogue.$($_.Name)" }
   }
+  $spotsDefault = Join-Path $root "data\spots_default.txt"
+  if ($name -eq 'KK_CampusLife' -and (Test-Path $spotsDefault)) { $cscArgs += "-resource:$spotsDefault,CampusLife.spots_default.txt" }
   & $csc @cscArgs
   if ($LASTEXITCODE -ne 0) { throw "Build failed: $name" }
   Write-Host "Built $dll"
@@ -70,6 +72,11 @@ if ($Install) {
     $bgDest = Join-Path $dest 'backgrounds'
     New-Item -ItemType Directory -Force $bgDest | Out-Null
     Copy-Item (Join-Path $root 'data\backgrounds\*.jpg') $bgDest -Force
+  }
+  if (($names -contains 'KK_CampusLife') -and (Test-Path (Join-Path $root 'data\mapshots'))) {
+    $msDest = Join-Path $dest 'mapshots'
+    New-Item -ItemType Directory -Force $msDest | Out-Null
+    Copy-Item (Join-Path $root 'data\mapshots\*.jpg') $msDest -Force
   }
   Write-Host "Installed to $dest"
 }

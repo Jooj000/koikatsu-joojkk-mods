@@ -26,7 +26,7 @@ namespace Joojkk.CampusLife
             new Place { Id = "classroom", Name = "Lecture Hall", Keywords = new[] { "教室", "Classroom", "Lecture" } },
             new Place { Id = "courtyard", Name = "Courtyard",    Keywords = new[] { "中庭", "Courtyard" } },
             new Place { Id = "field",     Name = "Campus Field", Keywords = new[] { "グラウンド", "校庭", "野原", "運動場", "Field", "Ground" } },
-            new Place { Id = "park",      Name = "Park",         Keywords = new[] { "公園", "Park" } },
+            new Place { Id = "park",      Name = "Backyard",     Keywords = new[] { "裏庭", "公園", "Park", "Backyard" } },
         };
 
         private static readonly Dictionary<string, string> Cache = new Dictionary<string, string>();

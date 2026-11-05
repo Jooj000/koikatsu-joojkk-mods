@@ -187,18 +187,32 @@ namespace Joojkk.CampusLife
             if (S.Buffs.TryGetValue("board_absent", out done) && done == stamp) return;
             S.Buffs["board_absent"] = stamp;
             DropAbsentMissing();
+            var dropped = 0;
             foreach (var r in S.Requests.Where(q => (q.State == RequestState.Active || q.State == RequestState.Hidden) && q.DeadlineDay <= S.Day
-                                                    && (!string.IsNullOrEmpty(q.Girl) && !Truth.AtSchool(q.Girl) || !string.IsNullOrEmpty(q.Other) && !Truth.AtSchool(q.Other))))
+                                                    && (!string.IsNullOrEmpty(q.Girl) && !Truth.AtSchool(q.Girl) || !string.IsNullOrEmpty(q.Other) && !Truth.AtSchool(q.Other))).ToList())
             {
+                // today: it goes away, and a girl who is here gets one instead.
+                if (r.Kind == RequestKind.Talk && r.Source == "board")
+                {
+                    S.Requests.Remove(r);
+                    dropped++;
+                    CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " dropped (" + GirlInfo.FirstName(r.Girl) + " is not on campus; it was only for today)");
+                    continue;
+                }
+                // "qualquer missão até amanhã tem que garantir que ela venha amanhã": OptimizerLink loads her first.
                 r.DeadlineDay = S.Day + 1;
                 var who = !string.IsNullOrEmpty(r.Girl) && !Truth.AtSchool(r.Girl) ? r.Girl : r.Other;
-                CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " waits for tomorrow (" + GirlInfo.FirstName(who) + " is not on campus)");
+                CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " waits for tomorrow (" + GirlInfo.FirstName(who) + " is not on campus; she comes first tomorrow)");
             }
+            if (dropped > 0) Post(dropped);
         }
 
         public static void GenerateDaily()
         {
             if (!Cfg.BoardEnabled.Value || !G.IsSchoolDay) return;
+            // scene knows who came, the board asked girls who stayed home. It waits for the loaded period (EnsureToday,
+            // every second), so every request is for a girl who is here today.
+            if (!Truth.Known) return;
             S.Buffs["board_day"] = S.Day;
             // Clean old finished requests (keep a few days for the journal view)
             S.Requests.RemoveAll(r => r.State != RequestState.Active && r.DeadlineDay < S.Day - 3);
@@ -207,6 +221,15 @@ namespace Joojkk.CampusLife
 
             var already = S.Requests.Count(r => (r.State == RequestState.Active || r.State == RequestState.Hidden) && r.Source == "board" && r.CreatedDay == S.Day);
             Post(TargetCount - already);
+        }
+
+        /// <summary>A request open today or tomorrow is about her (hers, or she is its second girl): she has to come.</summary>
+        public static bool Expects(SaveData.Heroine h)
+        {
+            if (h == null) return false;
+            var key = GirlInfo.Key(h);
+            return S.Requests.Any(r => (r.State == RequestState.Active || r.State == RequestState.Hidden) && r.DeadlineDay >= S.Day
+                                       && (r.Girl == key || r.Other == key || r.Source == "miss" && (r.Item ?? "").Split(MissSep).Contains(key)));
         }
 
         /// <summary>Nothing open on the board (active or still to find out) for today or later.</summary>
@@ -470,6 +493,23 @@ namespace Joojkk.CampusLife
                 TalkKept.Add(r.Girl);
                 CampusLifePlugin.Log.LogDebug(GirlInfo.FullName(h) + ": one talk back for the request '" + r.Title + "'");
             }
+        }
+
+        /// <summary>
+        /// now, the first time you go up to her in a period with it empty, she gets one point back for a short talk: the
+        /// free options only (as the point given back for a request), and the game's goodbye once they are used.
+        /// </summary>
+        public static bool KeepTalkFor(SaveData.Heroine h)
+        {
+            if (h == null || h.talkTime > 0 || !G.InRoamingPeriod) return false;
+            var period = S.Day * 16 + (int)G.CurrentMask;
+            if (period != _talkKeptPeriod) { _talkKeptPeriod = period; TalkKept.Clear(); }
+            var key = GirlInfo.Key(h);
+            if (TalkKept.Contains(key)) return false;
+            h.talkTime = 1;
+            TalkKept.Add(key);
+            CampusLifePlugin.Log.LogInfo(GirlInfo.FullName(h) + ": empty blue bar, one point back for a short talk (free options only).");
+            return true;
         }
 
         /// <summary>She has a request open now (the talk stays open on an empty blue bar, with the free options only).</summary>

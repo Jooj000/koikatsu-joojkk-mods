@@ -1261,15 +1261,26 @@ namespace Joojkk.CampusLife
         // ================= Romance beats =================
 
         /// <summary>Something true you noticed about her (a like you learned, a tradition, her club when you see her at it).</summary>
+        /// <summary>
+        /// What there is to compliment her on, the first one not said to her today: after a compliment the option moves on
+        /// cadê o update depois de ação?").
+        /// </summary>
         private static string[] ComplimentTrait(SaveData.Heroine h, GirlState gs)
         {
-            var like = GirlInfo.LikesOf(h).FirstOrDefault(l => (gs.KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, l))) != 0);
-            if (gs.Traditions.Count > 0) return new[] { "keeping " + gs.Traditions[gs.Traditions.Count - 1] + " going", "trad" };
-            if (like != null) return new[] { "her taste in " + GirlInfo.LikeLabel(like).ToLowerInvariant(), "like:" + like };
-            if (!GirlInfo.InNoClub(h) && Places.CurrentId == "clubroom") return new[] { "how hard she works at " + GirlInfo.ClubName(h), "club" };
-            var m = gs.Moments.Where(x => x.Tone > 0).OrderByDescending(x => x.Id).FirstOrDefault();
-            if (m != null) return new[] { "how she was " + CampusLife.Memories.When(m), "mem:" + m.Id };
-            return null;
+            var c = new List<string[]>();
+            for (var i = gs.Traditions.Count - 1; i >= 0 && i >= gs.Traditions.Count - 2; i--) c.Add(new[] { "keeping " + gs.Traditions[i] + " going", "trad" + (i == gs.Traditions.Count - 1 ? "" : ":" + i) });
+            foreach (var like in GirlInfo.LikesOf(h).Where(l => (gs.KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, l))) != 0))
+                c.Add(new[] { "her taste in " + GirlInfo.LikeLabel(like).ToLowerInvariant(), "like:" + like });
+            if (!GirlInfo.InNoClub(h) && Places.CurrentId == "clubroom") c.Add(new[] { "how hard she works at " + GirlInfo.ClubName(h), "club" });
+            foreach (var m in gs.Moments.Where(x => x.Tone > 0).OrderByDescending(x => x.Id).Take(3)) c.Add(new[] { "how she was " + CampusLife.Memories.When(m), "mem:" + m.Id });
+            return c.FirstOrDefault(x => !UsedToday(h, "compliment:" + x[1]));
+        }
+
+        /// <summary>This beat (its pay key) was already played with her today: the option offers the next thing instead.</summary>
+        private static bool UsedToday(SaveData.Heroine h, string key)
+        {
+            int v;
+            return S.Buffs.TryGetValue(RepKey(h, key), out v) && v / 10 == S.Day && v % 10 > 0;
         }
 
         private static void ComplimentU(SaveData.Heroine h, string[] trait)
@@ -1385,17 +1396,20 @@ namespace Joojkk.CampusLife
         {
             var mood = MoodOf(h);
             if (mood == CampusLife.Mood.Upset || mood == CampusLife.Mood.Stressed || Social.Grudge(h) != null) return null;
-            if (mood == CampusLife.Mood.Sleepy) return new[] { "her sleepy face", "I like your sleepy face. It's very... soft.", "tease.sleepy" };
-            if (mood == CampusLife.Mood.Hungry) return new[] { "her growling stomach", "Was that your stomach? Should I feed you?", "tease.stomach" };
-            if (mood == CampusLife.Mood.Flirty) return new[] { "the way she keeps looking at you", "You keep looking at me. Something on your mind?", "tease.looking" };
+            // Every fitting tease, the first one not used on her today.
+            var c = new List<string[]>();
+            if (mood == CampusLife.Mood.Sleepy) c.Add(new[] { "her sleepy face", "I like your sleepy face. It's very... soft.", "tease.sleepy" });
+            if (mood == CampusLife.Mood.Hungry) c.Add(new[] { "her growling stomach", "Was that your stomach? Should I feed you?", "tease.stomach" });
+            if (mood == CampusLife.Mood.Flirty) c.Add(new[] { "the way she keeps looking at you", "You keep looking at me. Something on your mind?", "tease.looking" });
             switch (Places.CurrentId)
             {
-                case "pool": return new[] { "her swimsuit", "That swimsuit is... really working for you.", "tease.swimsuit" };
-                case "gym": case "field": return new[] { "her gym clothes", "Gym clothes suit you. A little too well.", "tease.gym" };
-                case "library": return new[] { "how close you're sitting", "We're sitting pretty close for a library.", "tease.library" };
-                case "rooftop": return new[] { "being alone up here", "Just the two of us up here... convenient.", "tease.rooftop" };
+                case "pool": c.Add(new[] { "her swimsuit", "That swimsuit is... really working for you.", "tease.swimsuit" }); break;
+                case "gym": case "field": c.Add(new[] { "her gym clothes", "Gym clothes suit you. A little too well.", "tease.gym" }); break;
+                case "library": c.Add(new[] { "how close you're sitting", "We're sitting pretty close for a library.", "tease.library" }); break;
+                case "rooftop": c.Add(new[] { "being alone up here", "Just the two of us up here... convenient.", "tease.rooftop" }); break;
             }
-            return new[] { "how cute she looks right now", "You know you look really cute right now, right?", "tease.cute" };
+            c.Add(new[] { "how cute she looks right now", "You know you look really cute right now, right?", "tease.cute" });
+            return c.FirstOrDefault(x => !UsedToday(h, "tease:" + x[0]));
         }
 
         private static void TeaseU(SaveData.Heroine h, string[] ctx)
@@ -1441,10 +1455,11 @@ namespace Joojkk.CampusLife
         /// <summary>A real intimate memory between you (H together, a secret, a confession, being caught...), or null.</summary>
         private static string[] PrivateMemory(SaveData.Heroine h, GirlState gs)
         {
-            var m = gs.Moments.Where(x => x.Kind == "secret" || x.Kind == "feelings" || x.Kind == "couple" || x.Kind == "caught").OrderByDescending(x => x.Id).FirstOrDefault();
-            if (m != null) return new[] { "that private moment " + CampusLife.Memories.When(m), "mem:" + m.Id, m.Text };
-            if (h.hCount > 0) return new[] { "your last time together", "h:" + h.hCount, null };
-            return null;
+            var c = new List<string[]>();
+            foreach (var m in gs.Moments.Where(x => x.Kind == "secret" || x.Kind == "feelings" || x.Kind == "couple" || x.Kind == "caught").OrderByDescending(x => x.Id).Take(3))
+                c.Add(new[] { "that private moment " + CampusLife.Memories.When(m), "mem:" + m.Id, m.Text });
+            if (h.hCount > 0) c.Add(new[] { "your last time together", "h:" + h.hCount, null });
+            return c.FirstOrDefault(x => !UsedToday(h, "private:" + x[1]));
         }
 
         private static void PrivateMemoryU(SaveData.Heroine h, string[] mem)
@@ -1586,6 +1601,36 @@ namespace Joojkk.CampusLife
             catch (Exception e) { CampusLifePlugin.Log.LogError(e); return false; }
         }
 
+        /// <summary>
+        /// Your girlfriend asked her about the three of you (Share.ProposeTrio): she gives you her answer herself, knowing
+        /// what it is about.
+        /// </summary>
+        private static bool TrioAnswerOpening(Session s, SaveData.Heroine h)
+        {
+            try
+            {
+                var gf = Share.TrioAnswerDue(h);
+                if (gf == null) return false;
+                var r = Share.Answer(gf, h);
+                var g = GirlInfo.FirstName(gf);
+                var b = new SceneBuilder(h, true);
+                b.Face(h, Feel.Shy).Say(h, T(h, g + " talked to me... about you. And about the three of us. || " + g + " came to see me. She told me what you two talked about. || ...So. " + g + " asked me something.",
+                                             g + " told me everything! The three of us, huh?! || " + g + " came to me with a crazy idea. Your idea too, right?! || Okay so, " + g + " asked me a thing!",
+                                             g + " spoke with me. About a trio. || " + g + " brought me a proposal. Yours as well, I assume. || I talked with " + g + ".",
+                                             g + " came to me with a very interesting offer~ || So " + g + " wants to share you. With me. || " + g + " asked me something naughty~"));
+                if (r == Share.Trio)
+                    b.Face(h, Feel.Love).Say(h, T(h, "...I said yes. I want to be with both of you. || ...My answer is yes. If you still want me. || ...Yes. I told her yes.", "And I said YES! Obviously! || I'm in! Totally in! || Yes! I already told her!", "...I accepted. || ...My answer is yes. || ...Yes. We worked it out.", "I said yes, of course~ || How could I say no? Yes~ || Yes. Don't make me regret it~"));
+                else if (r == Share.Friends)
+                    b.Face(h, Feel.Smile).Say(h, T(h, "...I can't. Not like that. But I like her a lot. We're friends now. || ...Not the three of us. But " + g + " and I get along. || ...I said no. But we're friends now, okay?", "Not my thing! But " + g + " is awesome, we're friends now! || No trio! But new best friend! || Nope! But I like her a lot!", "...I declined. We are on good terms, though. || ...No. But we're friends. || ...Declined. Amicably.", "Pass. But she's fun. We'll be friends~ || Not for me. She's cute, though. Friends~ || No. But I like her."));
+                else
+                    b.Face(h, Feel.Worried).Say(h, T(h, "...I said no. I'm sorry. Please don't be weird about it. || ...I can't. I told her no. || ...No. I'm sorry.", "I said no! Sorry! Not happening! || No way! I told her! || Nope! Sorry!", "...I refused. Let's not discuss it further. || ...No. || ...I declined.", "No, thanks. Not my scene. || I told her no. Don't pout. || Pass."));
+                Hide();
+                Scenes.PlayInTalk(b, c => { s.Turns++; AfterScene(); }, false);
+                return true;
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogError(e); return false; }
+        }
+
         internal static bool RunSceneNow(string id)
         {
             var s = Sess;
@@ -1603,6 +1648,7 @@ namespace Joojkk.CampusLife
             // She asked you here (a note, a letter, "meet me at..."): that comes first, with its own scene (user,
             var meet = Board.MeetHere(h);
             if (meet != null && Board.PlayInTalk(meet, h, () => { s.Turns++; AfterScene(); })) return true;
+            if (TrioAnswerOpening(s, h)) return true;
             if (ShareOpening(s, h)) return true;
             // The same for the guilt after a wary H.
             var waiting = S.Girl(GirlInfo.Key(h)).Pending;

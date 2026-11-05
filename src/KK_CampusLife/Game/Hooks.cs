@@ -156,6 +156,22 @@ namespace Joojkk.CampusLife
             if (TeacherTalk.Speaking == __instance) __result = __instance.personality;
         }
 
+        /// <summary>Before the game reads her greeting: an empty blue bar no longer ends the talk at once (Board.KeepTalkFor).</summary>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ActionGame.Communication.Info), nameof(ActionGame.Communication.Info.GetIntroductionADV))]
+        private static void GetIntroductionPrefix(ActionGame.Communication.Info __instance)
+        {
+            try
+            {
+                if (!Campus.On || !Cfg.Enabled.Value || !Cfg.NewConversation.Value) return;
+                var h = Traverse.Create(__instance).Property("heroine").GetValue<SaveData.Heroine>();
+                if (h == null || !GirlInfo.IsRegular(h) || h.isAnger || h.talkTime > 0) return;
+                if (Traverse.Create(__instance).Field("state").GetValue<int>() == 2) return; // asleep: the game's own line
+                Board.KeepTalkFor(h);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Short talk: " + e.Message); }
+        }
+
         /// <summary>Her greeting comes from the dialogue bank.</summary>
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ActionGame.Communication.Info), nameof(ActionGame.Communication.Info.GetIntroductionADV))]

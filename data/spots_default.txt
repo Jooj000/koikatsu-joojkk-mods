@@ -1,0 +1,30 @@
+# Campus Life spots (Joojkk). One per line: <kind> <map> <x> <y> <z> [yaw]
+#   store: where the university store icon stands.   warp: where "Go there" puts you on that map.
+#   act:<activity>: where that activity is done on that map. Optional 7th number: the game's action animation (0 read, 2 loosen up, 3 squats, 4 stretch, 5 shadow boxing, 6 'research' magazine).
+# Easiest way to change them: turn on "11. Position tools > Show position readout" and use its keys in game.
+act:basketball 32 0.00 0.04 -0.10 1   # Gym
+act:class_duty 11 -0.01 0.14 3.69 0   # Lecture Hall
+act:class_duty 8 -0.54 0.14 4.14 97   # Lecture Hall
+act:class_duty 9 0.02 0.14 3.58 360   # Lecture Hall
+act:club_meeting 22 2.19 0.00 1.19 271   # Club Room
+act:club_report 22 -0.10 0.00 1.88 92   # Club Room
+act:feed_cats 33 6.73 -0.70 -37.63 174   # Courtyard
+act:fundraise 22 2.19 0.00 1.97 270   # Club Room
+act:garden 33 -11.00 -0.70 -37.63 174   # Courtyard
+act:gym_job 32 -7.33 0.04 -16.45 270   # Gym
+act:hearty_lunch 38 2.10 0.01 -0.31 281   # Cafeteria
+act:kitchen_job 38 -0.29 0.01 -6.17 184   # Cafeteria
+act:lifeguard 37 9.00 0.01 1.01 90   # Pool
+act:nurse_job 20 1.74 0.03 2.40 270   # Infirmary
+act:practice_lines 36 2.22 0.01 3.72 264   # Rooftop
+act:research_material 22 1.40 0.00 -2.71 179   # Club Room
+act:review_notes 11 -2.64 0.00 -2.08 270   # Lecture Hall
+act:review_notes 8 -2.54 0.00 -2.47 299   # Lecture Hall
+act:review_notes 9 -2.63 0.00 -2.15 269   # Lecture Hall
+act:run 34 45.37 -3.42 13.76 91   # Campus Field
+act:stargaze 36 9.36 0.02 -5.91 179   # Rooftop
+act:study 21 -1.91 0.03 0.26 360   # Library
+act:swim 37 5.85 0.01 6.10 181   # Pool
+act:teacher_errands 17 0.93 0.01 -3.02 89   # Faculty Room
+act:tutoring 17 2.18 0.01 1.77 360   # Faculty Room
+act:workout 32 -0.01 0.04 -12.88 179   # Gym

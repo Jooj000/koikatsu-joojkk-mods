@@ -98,6 +98,7 @@ namespace Joojkk.CampusLife
                 SpotHint.Update();
                 WalkHint.Update();
                 StatusUi.WatchBroken();
+                StatusUi.FreezeWalkers();
                 Weather.Update();
                 if (!Cfg.Enabled.Value) return;
                 if (Campus.On)
@@ -113,6 +114,9 @@ namespace Joojkk.CampusLife
                     Markers.UpdateMinimap();
                     RadarMap.Update();
                     CafeteriaStore.Update();
+                    SleepTease.Update();
+                    StuckWatch.Update();
+                    TalkFirst.Update();
                     ClipboardWarm.Tick();
                 }
                 if (GiftMenu.IsOpen && !G.TalkSceneOpen) GiftMenu.Close();

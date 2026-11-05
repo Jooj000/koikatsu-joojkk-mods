@@ -1017,6 +1017,8 @@ namespace Joojkk.CampusLife
                 catch (Exception e) { CampusLifePlugin.Log.LogDebug("Duo walk: " + e.Message); if (n != null) Arrive(n, spots[i], done, i); }
             }
             var t0 = Time.realtimeSinceStartup;
+            var firstAt = -1f;
+            var speeds = girls.Select(g => g != null && g.agent != null ? g.agent.speed : 0f).ToArray();
             while (Time.realtimeSinceStartup - t0 < 12f + 6f * retargets && !(done[0] && done[1]))
             {
                 // The player changed map: they don't follow him through the door; the scene is off (the director keeps it).
@@ -1028,6 +1030,25 @@ namespace Joojkk.CampusLife
                     anchor = pp;
                     if (retargets >= 6) { _walkAborted = true; Step("the player keeps walking away; they give up"); break; }
                     if (Retarget(girls, spots, done, best, bestAt)) { retargets++; Step("the player moved; new spots in front of him (" + retargets + ")"); }
+                }
+                // já deve começar o diálogo, e então a segunda vem mais rápido, ou teleporta caso muito longe"): the other
+                // hurries (a run), is put at her spot when still far, and gets 2.5 s at most.
+                if (done[0] != done[1] && girls[0] != null && girls[1] != null)
+                {
+                    var late = done[0] ? 1 : 0;
+                    var n = girls[late];
+                    if (firstAt < 0f)
+                    {
+                        firstAt = Time.realtimeSinceStartup;
+                        try { if (n.agent != null) n.agent.speed = Mathf.Max(n.agent.speed * 1.8f, 3.2f); } catch { }
+                        Step(GirlInfo.FirstName(girls[1 - late].heroine) + " is there first; " + GirlInfo.FirstName(n.heroine) + " hurries");
+                    }
+                    var far = (n.transform.position - spots[late]).magnitude;
+                    if (far > 5f || Time.realtimeSinceStartup - firstAt > 2.5f)
+                    {
+                        Step(GirlInfo.FirstName(n.heroine) + (far > 5f ? " was " + far.ToString("0.0") + " m away: put at her spot" : " joins her"));
+                        Arrive(n, spots[late], done, late);
+                    }
                 }
                 for (var i = 0; i < 2; i++)
                 {
@@ -1057,6 +1078,8 @@ namespace Joojkk.CampusLife
             if (!_walkAborted && G.Act != null && G.Act.Player != null)
                 for (var i = 0; i < 2; i++)
                     if (girls[i] != null && (girls[i].transform.position - G.Act.Player.position).sqrMagnitude > 6f * 6f) { _walkAborted = true; Step(GirlInfo.FirstName(girls[i].heroine) + " never caught up; they give up"); }
+            for (var i = 0; i < 2; i++)
+                try { if (girls[i] != null && girls[i].agent != null && speeds[i] > 0f) girls[i].agent.speed = speeds[i]; } catch { }
             for (var i = 0; i < 2; i++)
             {
                 var n = girls[i];

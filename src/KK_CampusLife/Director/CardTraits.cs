@@ -178,9 +178,11 @@ namespace Joojkk.CampusLife
                 if (Raw || _chafile == null || !Campus.On || Cfg.CardTraits == null || !Cfg.CardTraits.Value) return;
                 if (!Unset(_chafile.parameter.attribute)) return;
                 SaveData.Heroine h;
-                if (!ByFile.TryGetValue(_chafile, out h) || h == null || h.charFile != _chafile)
+                // The game's AI reads her through chaCtrl.GetAttribute(), on the ChaControl's own chaFile, which is not always
+                // the heroine's charFile.
+                if (!ByFile.TryGetValue(_chafile, out h) || h == null || (h.charFile != _chafile && (h.chaCtrl == null || h.chaCtrl.chaFile != _chafile)))
                 {
-                    h = G.Heroines.FirstOrDefault(x => x != null && x.charFile == _chafile);
+                    h = G.Heroines.FirstOrDefault(x => x != null && (x.charFile == _chafile || (x.chaCtrl != null && x.chaCtrl.chaFile == _chafile)));
                     ByFile[_chafile] = h;
                 }
                 if (h == null || h.fixCharaID != 0) return;

@@ -114,12 +114,16 @@ on romance
 when act=tease q=yes hook=tease.skirt|tease.swimsuit tone=gentle
 feel shy
 - I chose this for you... um... do you like it?
+- It's new... I wasn't sure it was too short...
+- You noticed? ...I'm glad.
 
 @rule romance.tease.yes.skirt3.gentle
 on romance
 when act=tease q=yes hook=tease.skirt|tease.swimsuit|tease.cute tone=gentle
 feel shy
 - I hoped you'd notice...
+- ...I wore it today because of you.
+- Y-you really like it?
 
 @rule romance.tease.yes.hot.gentle
 on romance
@@ -196,12 +200,16 @@ on romance
 when act=tease q=yes hook=tease.kiss|tease.hot|tease.rooftop tone=teasing
 feel shy
 - Then come here.
+- All talk? Show me.
+- Closer. I don't bite. Much.
 
 @rule romance.tease.yes.kiss3.teasing
 on romance
 when act=tease q=yes hook=tease.kiss|tease.hot|tease.ideas tone=teasing
 feel shy
 - Words, words. Prove it.
+- Less talking, more kissing.
+- Mm. Then what are you waiting for?
 
 @rule romance.tease.yes.skirt.teasing
 on romance
@@ -215,12 +223,16 @@ on romance
 when act=tease q=yes hook=tease.skirt|tease.swimsuit tone=teasing
 feel shy
 - Like it? I chose it to tease you.
+- It worked, then~
+- Eyes up here. ...Or not.
 
 @rule romance.tease.yes.skirt3.teasing
 on romance
 when act=tease q=yes hook=tease.skirt|tease.swimsuit|tease.cute tone=teasing
 feel shy
 - Noticed? That was the point.
+- Took you long enough to notice.
+- I'll wear it again if you behave.
 
 @rule romance.tease.yes.hot.teasing
 on romance
@@ -1186,12 +1198,16 @@ on romance
 when act=sneak q=yes hook=sneak.private tone=teasing
 feel love
 - Somewhere private? You read my mind. Hurry.
+- Lead the way. Quickly.
+- Mm. I was hoping you would ask.
 
 @rule romance.sneak.yes.private2.teasing
 on romance
 when act=sneak q=yes hook=sneak.private tone=teasing
 feel love
 - Private? You read my mind.
+- Finally. I was getting bored.
+- Don't make me wait.
 
 @rule romance.sneak.wary.gentle
 on romance
@@ -1274,6 +1290,8 @@ on romance
 when act=sneak q=no hook=sneak.quiet tone=teasing
 feel pout
 - Sneak off with you? You wish. Try harder.
+- Nice try. Not today.
+- You'll have to earn that.
 
 # ================= a bold line =================
 @rule me.romance.bold.gf

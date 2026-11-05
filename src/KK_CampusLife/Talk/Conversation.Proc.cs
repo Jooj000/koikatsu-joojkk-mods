@@ -69,6 +69,7 @@ namespace Joojkk.CampusLife
                 {
                     if (stranger || f.Valence < 0 || f.Verb == "met" || f.Verb == "talked" || S.Day - f.Day > 14) continue;
                     if (f.Day == S.Day && f.Weight < 2) continue;   // what just happened is not a topic yet
+                    if (f.Id >= _factsBefore) continue;            // made in this very talk: from the next one on
                     ctx.Add(new PTopic { Id = "f:" + f.Id, Kind = "us", Fact = f, Know = k, Label = UsLabel(f), Score = Lore.Salience(k, f) });
                 }
                 else if (you && f.Weight >= 1 && S.Day - k.Day <= 7 && !Confided(f, key))
@@ -423,7 +424,7 @@ namespace Joojkk.CampusLife
             subjects["weekend"] = 0.5f;
             if (!stranger)
             {
-                if (!GirlInfo.InNoClub(h)) subjects["club"] = 0.9f;
+                if (!GirlInfo.InNoClub(h) || GirlInfo.InKoikatsuClub(h)) subjects["club"] = 0.9f;
                 if (Social.FriendsOf(h, 45).Any()) subjects["friend"] = 0.8f;
                 var bd = BirthdayOf(h);
                 if (bd != "no") subjects["birthday"] = 1.5f;
@@ -568,7 +569,7 @@ namespace Joojkk.CampusLife
             var pm = G.CurrentMask;
             c["period"] = pm == PeriodMask.Lunch ? "lunch" : pm == PeriodMask.Club ? "club" : pm == PeriodMask.After ? "after" : "day";
             c["place"] = PlaceName();
-            if (!GirlInfo.InNoClub(h)) { c["club"] = GirlInfo.ClubName(h); c["hasclub"] = "yes"; }
+            ClubCtx(h, c);
             c["exam"] = Calendar.IsExamWeek ? "yes" : "no";
             c["kind"] = t.Kind;
             if (!string.IsNullOrEmpty(t.Subject))
