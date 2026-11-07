@@ -17,6 +17,8 @@ when subject=club kclub=yes role!=teacher
 on me.small
 when subject=club kclub=no role!=teacher
 - [How's the {club} going?|Busy at the {club}?|What's new at the {club}?]
+- [Anything happening at the {club} lately?|How are things at the {club}?] [You never tell me about it.|I'm curious.]
+- [Still busy with the {club}?|The {club} keeping you busy?]
 
 # ================= in your Koikatsu Club: the present =================
 

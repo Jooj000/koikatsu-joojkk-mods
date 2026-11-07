@@ -554,7 +554,8 @@ namespace Joojkk.CampusLife
                 r.DeadlineDay = S.Day + 1; r.LearnedFrom = "her"; r.Button = "Pass on " + name + "'s message";
                 return AskFavor(n, ask, r);
             }
-            if (roll < 0.75f)
+            // One gift request per girl at a time: with one open, she asks another favor.
+            if (roll < 0.75f && !Board.HasGiftOpen(h))
             {
                 kind = "fetch";
                 var like = GirlInfo.LikesOf(h).FirstOrDefault(l => l == "sweets" || l == "coffee" || l == "food" || l == "spicy") ?? "sweets";

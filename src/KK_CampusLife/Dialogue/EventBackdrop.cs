@@ -54,6 +54,60 @@ namespace Joojkk.CampusLife
             { "chapel", new[] { "adv/bg/20.unity3d", "ev_chapel_no", "ev_chapel_ev", "ev_chapel_ev" } },
         };
 
+        /// <summary>
+        /// pictures in UserData\bg (the game's and Studio's backdrops), by place: day, evening and night file. The
+        /// Elegance, Smoke and Outer Space ones are never loaded (<see cref="Banned"/>).
+        /// </summary>
+        private static readonly Dictionary<string, string[]> StudioPlaces = new Dictionary<string, string[]>
+        {
+            { "brpark", new[] { "BRPark_Day", "BRPark_Day", "BRPark_Night" } },
+            { "skyline", new[] { "Night Skyline", "Night Skyline", "Night Skyline" } },
+            { "foodpark", new[] { "bg_01", "bg_02", "bg_02" } },
+            { "cafein", new[] { "bg_03", "bg_04", "bg_04" } },
+            { "cafefront", new[] { "bg_05", "bg_06", "bg_06" } },
+            { "shopping", new[] { "bg_07", "bg_08", "bg_08" } },
+            { "bluesky", new[] { "bg_09", "bg_10", "bg_10" } },
+            { "bigpark", new[] { "Park (Daytime)", "Park Evening)", "Park (Night)" } },
+            { "themepark2", new[] { "Theme Park (Daytime)", "Theme Park (Evening)", "Theme Park (Night)" } },
+            { "station2", new[] { "Train Station Daytime)", "Train Station (Evening)", "Train Station (Night)" } },
+            { "chapel2", new[] { "Chapel (Daytime)", "Chapel (Evening)", "Chapel (Evening)" } },
+        };
+
+        private static string StudioDir { get { return Path.Combine(Path.Combine(Paths.GameRootPath, "UserData"), "bg"); } }
+
+        private static bool Banned(string file)
+        {
+            var f = file.ToLowerInvariant();
+            return f.Contains("elegance") || f.Contains("smoke") || f.Contains("outer space");
+        }
+
+        /// <summary>A UserData\bg picture for "@place" at this time of day (null if missing or banned).</summary>
+        private static Texture2D GetStudio(string place)
+        {
+            string[] e;
+            if (!StudioPlaces.TryGetValue(place, out e)) return null;
+            var name = e[TimeSlot()];
+            if (Banned(name)) return null;
+            var key = "@studio/" + name;
+            Texture2D tex;
+            if (Cache.TryGetValue(key, out tex)) return tex;
+            tex = null;
+            var path = Path.Combine(StudioDir, name + ".png");
+            try
+            {
+                if (File.Exists(path))
+                {
+                    tex = new Texture2D(2, 2, TextureFormat.RGB24, true) { name = "cl_bg_" + place, wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Trilinear, anisoLevel = 4 };
+                    if (!tex.LoadImage(File.ReadAllBytes(path))) { UnityEngine.Object.Destroy(tex); tex = null; }
+                    else UnityEngine.Object.DontDestroyOnLoad(tex);
+                }
+                else CampusLifePlugin.Log.LogDebug("Studio background missing: " + path);
+            }
+            catch (Exception ex) { CampusLifePlugin.Log.LogDebug("Studio background " + key + ": " + ex.Message); tex = null; }
+            Cache[key] = tex;
+            return tex;
+        }
+
         /// <summary>0 day, 1 evening (after school), 2 night.</summary>
         internal static int TimeSlot()
         {
@@ -72,7 +126,7 @@ namespace Joojkk.CampusLife
             if (string.IsNullOrEmpty(id)) return false;
             foreach (var one in id.Split('|'))
             {
-                if (one.StartsWith("@") ? GamePlaces.ContainsKey(one.Substring(1)) : File.Exists(Path.Combine(Dir, one + ".jpg"))) return true;
+                if (one.StartsWith("@") ? GamePlaces.ContainsKey(one.Substring(1)) || StudioPlaces.ContainsKey(one.Substring(1)) : File.Exists(Path.Combine(Dir, one + ".jpg"))) return true;
             }
             return false;
         }
@@ -106,6 +160,18 @@ namespace Joojkk.CampusLife
         /// <summary>A picture by scene id ("@room", "classroom_exam"...), for the loading screen.</summary>
         internal static Texture2D Picture(string id) { return Get(id); }
 
+        internal static string ListStudioPlaces()
+        {
+            var o = new List<string>();
+            foreach (var k in StudioPlaces.Keys)
+            {
+                Texture2D t = null;
+                try { t = GetStudio(k); } catch (Exception e) { o.Add(k + " error " + e.Message); continue; }
+                o.Add(k + (t != null ? " " + t.width + "x" + t.height : " missing"));
+            }
+            return string.Join(", ", o.ToArray());
+        }
+
         private static Texture2D Get(string id)
         {
             if (string.IsNullOrEmpty(id)) return null;
@@ -114,7 +180,7 @@ namespace Joojkk.CampusLife
                 foreach (var one in id.Split('|')) { var t = Get(one); if (t != null) return t; }
                 return null;
             }
-            if (id.StartsWith("@")) return GetGame(id.Substring(1));
+            if (id.StartsWith("@")) return GetGame(id.Substring(1)) ?? GetStudio(id.Substring(1));
             Texture2D tex;
             if (Cache.TryGetValue(id, out tex) && tex != null) return tex;
             var path = Path.Combine(Dir, id + ".jpg");

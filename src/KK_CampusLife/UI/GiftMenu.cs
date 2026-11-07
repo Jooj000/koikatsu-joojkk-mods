@@ -65,12 +65,15 @@ namespace Joojkk.CampusLife
                 // Gifts she is known to like carry the like's icon.
                 var liked = item.Likes.FirstOrDefault(l => Conversation.KnownLike(_target, l));
                 var label = item.Name + " x" + s.Count(item.Id);
-                Add(label, liked, () =>
+                var fits = Board.ActiveFor(GirlInfo.Key(_target)).Any(r => r.Kind == RequestKind.Gift) && Board.WantsGift(_target, item);
+                if (fits) label = "<color=#FF8CCC>\u2605</color> " + label;
+                var go = Add(label, liked, () =>
                 {
                     var h = _target;
                     Close();
                     TalkButtons.GiveGift(h, it);
                 }, true);
+                if (fits && go != null) Border(go);
             }
             if (pages > 1) Add("More... (" + (_page + 1) + "/" + pages + ")", () => { _page = (_page + 1) % pages; Fill(); }, true);
             Add("Back", Close, true);
@@ -78,7 +81,23 @@ namespace Joojkk.CampusLife
 
         private static void Add(string label, Action onClick, bool interactable) { Add(label, null, onClick, interactable); }
 
-        private static void Add(string label, string like, Action onClick, bool interactable)
+        /// <summary>
+        /// frame and strip, gold for Actions, turn pink; no outline is added around it.
+        /// </summary>
+        internal static void Border(GameObject go)
+        {
+            try
+            {
+                var img = go.GetComponent<Image>();
+                if (img == null) return;
+                img.sprite = ConvArt.FitCard();
+                img.type = Image.Type.Sliced;
+                if (!go.name.EndsWith("_fits")) go.name += "_fits";
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Gift border: " + e.Message); }
+        }
+
+        private static GameObject Add(string label, string like, Action onClick, bool interactable)
         {
             var go = Object.Instantiate(_template, _list, false);
             go.name = "cl_gift_option";
@@ -103,6 +122,7 @@ namespace Joojkk.CampusLife
             }
             if (like != null) { go.name = "cl_gift_option_liked"; Conversation.LikeMark(go.transform as RectTransform, like, t); }
             Created.Add(go);
+            return go;
         }
     }
 }

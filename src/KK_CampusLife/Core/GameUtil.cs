@@ -355,6 +355,8 @@ namespace Joojkk.CampusLife
         public static bool IsTeacher(SaveData.Heroine h) { return h != null && h.isTeacher; }
 
         // ---- personality tone ----
+        private static readonly string[] Shy = { "モジモジ", "もじもじ", "内気", "ネガティブ", "不幸", "無口" };
+        private static readonly string[] Proper = { "大和撫子", "正統派", "誠実", "高潔", "几帳面", "お嬢", "意識高い" };
         private static readonly string[] Teasing = { "セクシー", "Ｓ", "S気", "Sッ", "不良", "姉御", "勝ち気", "勝気", "意地っ張り", "ヤンデレ", "艶やか", "小悪魔", "ビッチ" };
         private static readonly string[] Cool = { "クール", "無感情", "お嬢", "高飛車", "意識高い", "ミステリ", "邪気眼", "ものぐさ", "怠惰", "ひねくれ", "無口", "高潔", "几帳面" };
         private static readonly string[] Energetic = { "ギャル", "気さく", "ミーハー", "ワイルド", "野性", "野生", "単純", "チョロ", "方言", "帰国", "電波", "ボーイッシュ", "天真爛漫", "ノリノリ", "ボクっ娘", "元気" };
@@ -391,12 +393,14 @@ namespace Joojkk.CampusLife
             var name = PersonalityName(h);
             if (!string.IsNullOrEmpty(name))
             {
+                if (Shy.Any(name.Contains)) return Tone.Shy;
+                if (Proper.Any(name.Contains)) return Tone.Proper;
                 if (Teasing.Any(name.Contains)) return Tone.Teasing;
                 if (Cool.Any(name.Contains)) return Tone.Cool;
                 if (Energetic.Any(name.Contains)) return Tone.Energetic;
                 if (Gentle.Any(name.Contains)) return Tone.Gentle;
             }
-            return (Tone)(Math.Abs(h.personality) % 4);
+            return (Tone)(Math.Abs(h.personality) % 6);
         }
 
         // ---- club ----

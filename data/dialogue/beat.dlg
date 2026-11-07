@@ -58,18 +58,24 @@ on beat
 when q=bad tone=gentle
 - ...Oh. Okay.
 - ...That's not what I needed.
+- [Ah...|I see...] [Never mind.|It's fine. I think.]
+- ...That's a little sad to hear.
 
 @rule beat.stock.bad.energetic
 on beat
 when q=bad tone=energetic
 - Hey... that's not really what I meant.
 - Ehh? That's not it at all!
+- [Uh... okay?|Wait, what?] [That came out wrong, right?|Not the answer I wanted!]
+- Hmph. Try again later.
 
 @rule beat.stock.bad.cool
 on beat
 when q=bad tone=cool
 - ...That didn't help.
 - ...No.
+- [Hm.|Right.] [That missed.|Not what I needed.]
+- ...Let's just move on.
 
 @rule beat.stock.bad.teasing
 on beat
@@ -564,3 +570,25 @@ when tag=kiss.no.narr
 - You lean in. She puts a hand on your chest and stops you.
 - She leans back out of reach and shakes her head.
 - "No," she says quietly, and turns away.
+
+@rule beat.sleeptease.asleep.out
+on beat
+when tag=sleeptease.asleep.out
+- {name} has dozed off right here, head pillowed on her arms, breathing slow and even.
+- {name} is napping where she sat down, chin dipping every few breaths.
+- {name} fell asleep in a quiet corner, curled up like a cat in the sun.
+- Nobody else is around. {name} is out cold, one hand still holding her phone.
+
+@rule beat.sleeptease.leave.out
+on beat
+when tag=sleeptease.leave.out
+- You leave her to her nap and walk off quietly.
+- You step around her as softly as you can and let her sleep.
+- You drape your jacket over her shoulders and leave her be.
+
+@rule beat.sleeptease.tease.out
+on beat
+when tag=sleeptease.tease.out
+- You crouch beside her and brush the hair from her face, then let your hand wander.
+- You sit down next to her, tuck a strand of hair behind her ear, and let your fingers trail lower.
+- You lean in close enough to hear her breathe, and your hand finds her waist.

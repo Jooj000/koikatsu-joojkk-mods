@@ -8,6 +8,7 @@ on me.you
 - [You look like you want to say something.|Is something on your mind?|What's with that look?]
 - [Did you hear something about me?|People are talking about me, aren't they?]
 - [Something wrong?|You've been looking at me funny.|Did I do something?]
+- [You keep looking at me.|Out with it.] [What is it?|Say what you're thinking.]
 
 @rule me.you.saw
 on me.you
@@ -15,6 +16,7 @@ when how=witness
 - [About {when}... you saw, didn't you?|You were there {when}, weren't you?]
 - [So you saw what happened {when}?|You were watching {when}, right?]
 - [I know you saw {when}.|Don't pretend. You saw {when}.]
+- [You saw that {when}, right?|You were there {when}.] [Don't pretend you weren't.|What did you see?]
 
 @rule me.you.heard
 on me.you
@@ -22,6 +24,7 @@ when how=heard|rumor
 - [What are people saying about me?|What did you hear?|Who's been talking about me?]
 - [Is there a rumor about me?|Someone's been gossiping, huh?|What's going around about me?]
 - [Tell me what they're saying.|Go on, what did you hear?]
+- [Something going around about me?|People talking again?] [What did they say?|Tell me.]
 
 # ---------------- H with another girl: she saw it ----------------
 @rule you.h.saw.raised

@@ -1,0 +1,2237 @@
+
+# ---------------- dreams ----------------
+@rule small.dreams.odd~state
+on small
+when subject=dreams
+shape state
+hook dreams_odd
+opens ask,share,tease
+- I had the strangest dream last night. I was late for an exam in a school with no doors.
+- I dreamed I could fly, but only about this high off the ground. Very useless.
+- Last night I dreamed the cafeteria ran out of everything. I woke up hungry.
+
+@rule small.dreams.tired~state
+on small
+when subject=dreams mood=sleepy
+shape state
+hook dreams_odd
+opens ask,share,tease
+- I barely slept. Every time I closed my eyes I dreamed I was still awake. It's exhausting.
+- My dreams were so busy I'm more tired now than before bed.
+
+@rule small.dreams.you~state
+on small
+when subject=dreams interest=yes rel!=stranger
+shape state
+hook dreams_you
+opens ask,tease,admit
+- ...You were in my dream last night. Don't ask me what we were doing.
+- I dreamed about you. It was a normal dream! Mostly.
+
+@rule me.h.dreams_odd
+on me.small
+when hook=dreams_odd
+- Do you remember your dreams?
+- Have any weird dreams lately?
+
+@rule move.h.dreams_odd.ask
+on move.ask
+when hook=dreams_odd
+- Ask how the dream ended
+
+@rule react.h.dreams_odd.ask
+on react
+when hook=dreams_odd move=ask fit=good|neutral
+- I woke up right before the end. I always do.
+- It ended with me eating the exam paper. Don't analyze that.
+- I found a door. It led to my bedroom. Then the alarm rang.
+
+@rule move.h.dreams_odd.share
+on move.share
+when hook=dreams_odd
+- Tell her one of your strange dreams
+
+@rule react.h.dreams_odd.share
+on react
+when hook=dreams_odd move=share fit=good|neutral
+- Yours is weirder than mine. I feel better now.
+- Okay, that one wins. That's a prize-winning dream.
+- Wait, I think I've had that one too!
+
+@rule move.h.dreams_odd.tease
+on move.tease
+when hook=dreams_odd
+- Say it means she ate too much before bed
+
+@rule react.h.dreams_odd.tease
+on react
+when hook=dreams_odd move=tease fit=good|neutral
+- Rude. ...Accurate, but rude.
+- I had one rice ball! Okay, two.
+- Then my dreams are your fault for talking about food.
+
+@rule react.h.dreams_odd.bad
+on react
+when hook=dreams_odd fit=bad
+feel pout
+- It sounded funnier in my head.
+- Never mind. Dreams are boring to hear about.
+
+@rule me.h.dreams_you
+on me.small
+when hook=dreams_you
+- Did you sleep well?
+- Any good dreams last night?
+
+@rule move.h.dreams_you.ask
+on move.ask
+when hook=dreams_you
+- Ask what you were doing in it
+
+@rule react.h.dreams_you.ask
+on react
+when hook=dreams_you move=ask fit=good|neutral
+- Walking. Somewhere with lanterns. That's all you're getting.
+- You were holding an umbrella over me. It wasn't even raining.
+- ...Nothing weird! You were just there. Near me.
+
+@rule move.h.dreams_you.tease
+on move.tease
+when hook=dreams_you
+- Ask if you were a good dream or a bad one
+
+@rule react.h.dreams_you.tease
+on react
+when hook=dreams_you move=tease fit=good|neutral
+- Good. Obviously. Don't make that face.
+- A good one. Annoyingly good.
+- Ask me again and it'll be a nightmare.
+
+@rule move.h.dreams_you.admit
+on move.admit
+when hook=dreams_you
+- Admit she has been in yours too
+
+@rule react.h.dreams_you.admit
+on react
+when hook=dreams_you move=admit fit=good|neutral
+- ...Really? Then we're even.
+- Ah... okay. That's... okay. My face is hot.
+- Then let's not tell each other the details. Deal?
+
+@rule react.h.dreams_you.bad
+on react
+when hook=dreams_you fit=bad
+feel pout
+- Forget it. It was just a dream.
+- Why did I tell you that...
+
+# ---------------- family ----------------
+@rule small.family.normal~state
+on small
+when subject=family
+shape state
+hook family_home
+opens ask,share,tease
+- My family's pretty normal. Loud at dinner, quiet in the morning.
+- My mom texts me every day to ask if I ate. Every single day.
+- My dad tells the same three jokes. We laugh every time anyway.
+
+@rule small.family.evening~state
+on small
+when subject=family period=after
+shape state
+hook family_home
+opens ask,share,tease
+- I should get home soon. My mom gets worried if dinner goes cold.
+- It's my turn to cook dinner tonight. My family is very brave.
+
+@rule small.family.ask~state
+on small
+when subject=family rel=girlfriend|lover
+shape state
+hook family_you
+opens ask,tease,agree
+- My mom asked about you. I may have said too much.
+- My little sister found your photo on my phone. She has questions.
+
+@rule me.h.family_home
+on me.small
+when hook=family_home
+- How's your family?
+- What's your family like?
+
+@rule move.h.family_home.ask
+on move.ask
+when hook=family_home
+- Ask who she gets along with best
+
+@rule react.h.family_home.ask
+on react
+when hook=family_home move=ask fit=good|neutral
+- My grandma. She sneaks me snacks and takes my side.
+- My mom, mostly. We fight like sisters, though.
+- My dad. We watch bad movies together and say nothing.
+
+@rule move.h.family_home.share
+on move.share
+when hook=family_home
+- Tell her about your own family
+
+@rule react.h.family_home.share
+on react
+when hook=family_home move=share fit=good|neutral
+- Your family sounds fun. I'd like to meet them someday.
+- So everyone's family is a little weird. Good.
+- Ha, your dad and mine would get along.
+
+@rule move.h.family_home.tease
+on move.tease
+when hook=family_home
+- Say she sounds spoiled
+
+@rule react.h.family_home.tease
+on react
+when hook=family_home move=tease fit=good|neutral
+- I am not! ...Maybe a little.
+- Spoiled with love. That's different.
+- Says you. I bet you still get your lunch made.
+
+@rule react.h.family_home.bad
+on react
+when hook=family_home fit=bad
+feel pout
+- Let's not talk about my family.
+- It's complicated. Another time.
+
+@rule me.h.family_you
+on me.small
+when hook=family_you
+- Does your family know about us?
+- What did your family say?
+
+@rule move.h.family_you.ask
+on move.ask
+when hook=family_you
+- Ask what she told them
+
+@rule react.h.family_you.ask
+on react
+when hook=family_you move=ask fit=good|neutral
+- That you're kind. And that you're mine. Mostly the second part.
+- Only good things. I edited a little.
+- That you walk me home. My mom liked that.
+
+@rule move.h.family_you.tease
+on move.tease
+when hook=family_you
+- Ask if they approve of you
+
+@rule react.h.family_you.tease
+on react
+when hook=family_you move=tease fit=good|neutral
+- They want to meet you first. Be scared.
+- My dad hasn't decided. He's polishing his glare.
+- My mom approves. My sister wants proof you're real.
+
+@rule move.h.family_you.agree
+on move.agree
+when hook=family_you
+- Say you would like to meet them
+
+@rule react.h.family_you.agree
+on react
+when hook=family_you move=agree fit=good|neutral
+- Really? Then wear something nice. Not that.
+- Okay... I'll ask. Don't back out.
+- You say that now. Wait until my dad asks about your grades.
+
+@rule react.h.family_you.bad
+on react
+when hook=family_you fit=bad
+feel pout
+- Never mind. I shouldn't have said anything.
+- Let's keep it between us for now.
+
+# ---------------- hometown ----------------
+@rule small.hometown.small~state
+on small
+when subject=hometown
+shape state
+hook hometown_home
+opens ask,share,invite
+- I grew up near the sea. I still can't sleep without some noise.
+- Where I grew up, the convenience store closed at nine. Nine!
+- My hometown has one famous thing: a very large radish festival.
+
+@rule small.hometown.rain~state
+on small
+when subject=hometown wet=yes
+shape state
+hook hometown_home
+opens ask,share,invite
+- Rain like this reminds me of home. It rained all summer there.
+- Back home, a day like this meant no school. Here it just means wet socks.
+
+@rule small.hometown.miss~state
+on small
+when subject=hometown mood=lonely|upset
+shape state
+hook hometown_miss
+opens ask,comfort,share
+- Sometimes I miss my hometown. Everyone knew my name there.
+- I called home last night. It made me miss it more.
+
+@rule me.h.hometown_home
+on me.small
+when hook=hometown_home
+- Where did you grow up?
+- Are you from around here?
+
+@rule move.h.hometown_home.ask
+on move.ask
+when hook=hometown_home
+- Ask what she misses most about it
+
+@rule react.h.hometown_home.ask
+on react
+when hook=hometown_home move=ask fit=good|neutral
+- The food stalls by the station. Nothing here tastes the same.
+- The quiet. You can hear the trains from far away.
+- My old friends. And the cat that lived at the shrine.
+
+@rule move.h.hometown_home.share
+on move.share
+when hook=hometown_home
+- Tell her where you grew up
+
+@rule react.h.hometown_home.share
+on react
+when hook=hometown_home move=share fit=good|neutral
+- That sounds nice. Busier than mine, at least.
+- We should trade hometowns for a week.
+- So you're a city kid. I could tell.
+
+@rule move.h.hometown_home.invite
+on move.invite
+when hook=hometown_home
+- Say she should show you around it someday
+
+@rule react.h.hometown_home.invite
+on react
+when hook=hometown_home move=invite fit=good|neutral
+- You'd be bored in an hour. ...But okay.
+- Only if you try the local snack. It's an acquired taste.
+- Really? Then I'll be your guide. A strict one.
+
+@rule react.h.hometown_home.bad
+on react
+when hook=hometown_home fit=bad
+feel pout
+- It's not that interesting.
+- There's not much to say about it.
+
+@rule me.h.hometown_miss
+on me.small
+when hook=hometown_miss
+- Do you miss home?
+- Do you ever go back home?
+
+@rule move.h.hometown_miss.ask
+on move.ask
+when hook=hometown_miss
+- Ask when she last went back
+
+@rule react.h.hometown_miss.ask
+on react
+when hook=hometown_miss move=ask fit=good|neutral
+- New Year's. It feels like years ago.
+- Last summer. My room was turned into storage.
+- Too long. I keep saying next month.
+
+@rule move.h.hometown_miss.comfort
+on move.comfort
+when hook=hometown_miss
+- Say she's got people here too now
+
+@rule react.h.hometown_miss.comfort
+on react
+when hook=hometown_miss move=comfort fit=good|neutral
+- ...Yeah. I guess I do. You're one of them.
+- That helps more than you think.
+- Thanks. Here's starting to feel like home a little.
+
+@rule move.h.hometown_miss.share
+on move.share
+when hook=hometown_miss
+- Say you get homesick too
+
+@rule react.h.hometown_miss.share
+on react
+when hook=hometown_miss move=share fit=good|neutral
+- Really? You don't look like it.
+- Then we can be homesick together.
+- That's comforting. In a sad way.
+
+@rule react.h.hometown_miss.bad
+on react
+when hook=hometown_miss fit=bad
+feel pout
+- I'm fine. Forget I said that.
+- Let's talk about something else.
+
+# ---------------- childhood ----------------
+@rule small.childhood.kid~state
+on small
+when subject=childhood
+shape state
+hook childhood_kid
+opens ask,share,tease
+- When I was little I wanted to be a bus driver. I liked the buttons.
+- As a kid I hid in the closet at every family party. Every one.
+- I used to collect rocks. I named all of them. I still have three.
+
+@rule small.childhood.energetic~state
+on small
+when subject=childhood energy>=0.7
+shape state
+hook childhood_kid
+opens ask,share,tease
+- I was a terror as a kid. I climbed everything. Trees, fences, my dad.
+- I broke my arm twice before I was ten. Both times showing off.
+
+@rule small.childhood.shy~state
+on small
+when subject=childhood shy>=0.6
+shape state
+hook childhood_shy
+opens ask,comfort,share
+- I was so shy as a kid I'd whisper my answers to the teacher. I'm better now. A little.
+- I didn't talk to anyone in my class until third grade.
+
+@rule me.h.childhood_kid
+on me.small
+when hook=childhood_kid
+- What were you like as a kid?
+- Were you a good kid?
+
+@rule move.h.childhood_kid.ask
+on move.ask
+when hook=childhood_kid
+- Ask what she wanted to be back then
+
+@rule react.h.childhood_kid.ask
+on react
+when hook=childhood_kid move=ask fit=good|neutral
+- A princess, then a vet, then a ninja. In that order.
+- An astronaut. Then I learned about the math.
+- A baker. I still might.
+
+@rule move.h.childhood_kid.share
+on move.share
+when hook=childhood_kid
+- Tell her something embarrassing from your childhood
+
+@rule react.h.childhood_kid.share
+on react
+when hook=childhood_kid move=share fit=good|neutral
+- No way. I'm never forgetting that.
+- That's adorable. I'm telling everyone.
+- Okay, that's worse than mine. Thank you.
+
+@rule move.h.childhood_kid.tease
+on move.tease
+when hook=childhood_kid
+- Say she hasn't changed at all
+
+@rule react.h.childhood_kid.tease
+on react
+when hook=childhood_kid move=tease fit=good|neutral
+- Hey! ...I'll take that as a compliment.
+- I've grown! A little. Upward.
+- You didn't even know me then!
+
+@rule react.h.childhood_kid.bad
+on react
+when hook=childhood_kid fit=bad
+feel pout
+- I don't remember much.
+- That's enough about me as a kid.
+
+@rule me.h.childhood_shy
+on me.small
+when hook=childhood_shy
+- Were you always this quiet?
+- What were you like in grade school?
+
+@rule move.h.childhood_shy.ask
+on move.ask
+when hook=childhood_shy
+- Ask who her first friend was
+
+@rule react.h.childhood_shy.ask
+on react
+when hook=childhood_shy move=ask fit=good|neutral
+- A girl who shared her crayons without asking. She just slid them over.
+- The class rabbit. Then the girl who fed it with me.
+- My neighbor. She did all the talking for both of us.
+
+@rule move.h.childhood_shy.comfort
+on move.comfort
+when hook=childhood_shy
+- Say she talks to you just fine
+
+@rule react.h.childhood_shy.comfort
+on react
+when hook=childhood_shy move=comfort fit=good|neutral
+- ...That's because you're easy to talk to.
+- I do, don't I? I didn't notice.
+- Don't point it out, or I'll get shy again.
+
+@rule move.h.childhood_shy.share
+on move.share
+when hook=childhood_shy
+- Say you were shy too, once
+
+@rule react.h.childhood_shy.share
+on react
+when hook=childhood_shy move=share fit=good|neutral
+- You? I don't believe it.
+- Then we would've been quiet together.
+- What changed? ...Teach me.
+
+@rule react.h.childhood_shy.bad
+on react
+when hook=childhood_shy fit=bad
+feel pout
+- I'd rather not remember.
+- It's in the past.
+
+# ---------------- movies ----------------
+@rule small.movies.seen~state
+on small
+when subject=movies
+shape state
+hook movies_seen
+opens ask,share,invite
+- I watched a horror movie last night. Bad idea. I slept with the light on.
+- I cried at an animated movie about a lost umbrella. It was very sad.
+- I fell asleep during the action movie everyone loves. Twice.
+
+@rule small.movies.date~state
+on small
+when subject=movies interest=yes
+shape state
+hook movies_seen
+opens ask,share,invite
+- There's a new movie out. It'd be more fun to see with someone.
+- I keep waiting for someone to ask me to the movies. Hint, hint.
+
+@rule small.movies.rain~state
+on small
+when subject=movies weather=rain|storm
+shape state
+hook movies_seen
+opens ask,share,invite
+- Weather like this is made for staying in with a movie and a blanket.
+- On rainy days I watch old movies. They feel cozier.
+
+@rule me.h.movies_seen
+on me.small
+when hook=movies_seen
+- Seen any good movies?
+- What kind of movies do you like?
+
+@rule move.h.movies_seen.ask
+on move.ask
+when hook=movies_seen
+- Ask what she likes to watch
+
+@rule react.h.movies_seen.ask
+on react
+when hook=movies_seen move=ask fit=good|neutral
+- Mysteries. I like guessing the ending before anyone.
+- Anything with animals. If the dog dies, I leave.
+- Romance. Don't laugh. ...You're laughing.
+
+@rule move.h.movies_seen.share
+on move.share
+when hook=movies_seen
+- Tell her the last movie you saw
+
+@rule react.h.movies_seen.share
+on react
+when hook=movies_seen move=share fit=good|neutral
+- I wanted to see that one! Was it good?
+- You liked that? We need to talk.
+- Okay, now I want to see it.
+
+@rule move.h.movies_seen.invite
+on move.invite
+when hook=movies_seen
+- Ask if she wants to see one together
+
+@rule react.h.movies_seen.invite
+on react
+when hook=movies_seen move=invite fit=good|neutral
+- ...Are you asking me out? Fine. Yes.
+- Only if you buy the popcorn.
+- Okay. But I pick the movie.
+
+@rule react.h.movies_seen.bad
+on react
+when hook=movies_seen fit=bad
+feel pout
+- Never mind. I'm picky.
+- We clearly have different taste.
+
+# ---------------- games ----------------
+@rule small.games.play~state
+on small
+when subject=games
+shape state
+hook games_play
+opens ask,share,tease
+- I stayed up playing a game last night. I lost every round and kept going.
+- My little brother beat me at a racing game. I'm demanding a rematch.
+- I'm stuck on a puzzle game. It's been three days. It's personal now.
+
+@rule small.games.cool~state
+on small
+when subject=games tone=cool|proper
+shape state
+hook games_play
+opens ask,share,tease
+- I don't play games much. Chess, sometimes. I win.
+- Board games only. I like seeing the other person lose.
+
+@rule small.games.arcade~state
+on small
+when subject=games period=after rel!=stranger
+shape state
+hook games_arcade
+opens ask,invite,tease
+- There's an arcade near the station. I'm unbeatable at the claw machine.
+- I want to go to the arcade after school. I've been practicing a rhythm game.
+
+@rule me.h.games_play
+on me.small
+when hook=games_play
+- Do you play any games?
+- Into video games at all?
+
+@rule move.h.games_play.ask
+on move.ask
+when hook=games_play
+- Ask what game it was
+
+@rule react.h.games_play.ask
+on react
+when hook=games_play move=ask fit=good|neutral
+- A cute farming game. I'm a terrible farmer.
+- A fighting game. I just press everything.
+- One with puzzles and a cat. The cat judges me.
+
+@rule move.h.games_play.share
+on move.share
+when hook=games_play
+- Say you play too
+
+@rule react.h.games_play.share
+on react
+when hook=games_play move=share fit=good|neutral
+- Really? Then we're playing together. No mercy.
+- What do you play? If you say the boring one, I'll leave.
+- Finally, someone normal.
+
+@rule move.h.games_play.tease
+on move.tease
+when hook=games_play
+- Say you could beat her easily
+
+@rule react.h.games_play.tease
+on react
+when hook=games_play move=tease fit=good|neutral
+- Oh? Say that to me with a controller in your hand.
+- Big words. Prove it.
+- You're on. Loser buys juice.
+
+@rule react.h.games_play.bad
+on react
+when hook=games_play fit=bad
+feel pout
+- You wouldn't get it.
+- It's not that kind of game. Never mind.
+
+@rule me.h.games_arcade
+on me.small
+when hook=games_arcade
+- Ever go to the arcade?
+- Are you any good at the arcade?
+
+@rule move.h.games_arcade.ask
+on move.ask
+when hook=games_arcade
+- Ask what she wins at the claw machine
+
+@rule react.h.games_arcade.ask
+on react
+when hook=games_arcade move=ask fit=good|neutral
+- A frog plush. I have six. They're a family now.
+- Mostly nothing. But once a giant bear. Once.
+- Keychains. I give them away to people I like.
+
+@rule move.h.games_arcade.invite
+on move.invite
+when hook=games_arcade
+- Ask her to go after school
+
+@rule react.h.games_arcade.invite
+on react
+when hook=games_arcade move=invite fit=good|neutral
+- Okay! Bring coins. Lots of coins.
+- You're on. Prepare to watch a master.
+- Fine. But you hold my bag.
+
+@rule move.h.games_arcade.tease
+on move.tease
+when hook=games_arcade
+- Say those machines are rigged
+
+@rule react.h.games_arcade.tease
+on react
+when hook=games_arcade move=tease fit=good|neutral
+- Not for me. I know their secrets.
+- That's what losers say.
+- Rigged in my favor, maybe.
+
+@rule react.h.games_arcade.bad
+on react
+when hook=games_arcade fit=bad
+feel pout
+- Forget it. You'd be bored.
+- I go alone, usually.
+
+# ---------------- season ----------------
+@rule small.season.now~state
+on small
+when subject=season
+shape state
+hook season_now
+opens ask,share,tease
+- The seasons change so fast here. I never have the right clothes.
+- This time of year makes me want to go somewhere. Anywhere.
+- I like this season. Everything smells different in the morning.
+
+@rule small.season.out~state
+on small
+when subject=season outside=yes weather=clear
+shape state
+hook season_now
+opens ask,share,tease
+- Look at the sky today. It's the kind of blue you only get this time of year.
+- It's so nice out. It feels wasted on classes.
+
+@rule small.season.birthday~state
+on small
+when subject=season birthday=week|soon
+shape state
+hook season_bday
+opens ask,tease,invite
+- My favorite time of year is coming. Not because of my birthday. ...Okay, a little because of my birthday.
+- Did you know my birthday's around now? Not that I'm hinting.
+
+@rule me.h.season_now
+on me.small
+when hook=season_now
+- What's your favorite season?
+- Nice time of year, huh?
+
+@rule move.h.season_now.ask
+on move.ask
+when hook=season_now
+- Ask what her favorite season is
+
+@rule react.h.season_now.ask
+on react
+when hook=season_now move=ask fit=good|neutral
+- Autumn. Sweet potatoes and no sweating.
+- Spring. Everyone looks happier.
+- Winter. I like being cold and then warm.
+
+@rule move.h.season_now.share
+on move.share
+when hook=season_now
+- Say which one you like best
+
+@rule react.h.season_now.share
+on react
+when hook=season_now move=share fit=good|neutral
+- Summer? You're brave. I melt.
+- Same! We have good taste.
+- Hm. I'll allow it.
+
+@rule move.h.season_now.tease
+on move.tease
+when hook=season_now
+- Say she complains every season
+
+@rule react.h.season_now.tease
+on react
+when hook=season_now move=tease fit=good|neutral
+- I do not! ...I complain about the weather, not the season.
+- Every season has its problems. I'm just honest.
+- And you'll listen every season. Lucky you.
+
+@rule react.h.season_now.bad
+on react
+when hook=season_now fit=bad
+feel pout
+- Seasons are seasons.
+- I don't really care either way.
+
+@rule me.h.season_bday
+on me.small
+when hook=season_bday
+- Isn't your birthday coming up?
+- What do you want for your birthday?
+
+@rule move.h.season_bday.ask
+on move.ask
+when hook=season_bday
+- Ask what she wants for her birthday
+
+@rule react.h.season_bday.ask
+on react
+when hook=season_bday move=ask fit=good|neutral
+- Surprise me. A good surprise.
+- Something sweet. And someone to eat it with.
+- I don't need much. Just remember it.
+
+@rule move.h.season_bday.tease
+on move.tease
+when hook=season_bday
+- Pretend you forgot when it is
+
+@rule react.h.season_bday.tease
+on react
+when hook=season_bday move=tease fit=good|neutral
+- You what?! ...You're joking. You're joking, right?
+- Cruel. I'm writing it on your hand.
+- Then I'll remind you every hour.
+
+@rule move.h.season_bday.invite
+on move.invite
+when hook=season_bday
+- Offer to celebrate it together
+
+@rule react.h.season_bday.invite
+on react
+when hook=season_bday move=invite fit=good|neutral
+- Really? Then it's a promise.
+- Okay. Cake is mandatory.
+- ...That would make it the best one.
+
+@rule react.h.season_bday.bad
+on react
+when hook=season_bday fit=bad
+feel pout
+- Don't make a fuss.
+- It's not a big deal.
+
+# ---------------- phone ----------------
+@rule small.phone.scroll~state
+on small
+when subject=phone
+shape state
+hook phone_scroll
+opens ask,share,tease
+- I spent an hour looking at cat videos last night. I regret nothing.
+- My phone says I used it six hours yesterday. My phone is a liar.
+- Someone in my class posts photos of every meal. I know her lunch better than mine.
+
+@rule small.phone.bff~state
+on small
+when subject=phone bff=*
+shape state
+hook phone_scroll
+opens ask,share,tease
+- {bff} sends me forty messages a day. I answer three.
+- {bff} keeps sending me memes in class. I almost got caught laughing.
+
+@rule small.phone.number~state
+on small
+when subject=phone rel=acquaintance|friend interest=yes
+shape state
+hook phone_number
+opens ask,admit,tease
+- We don't even have each other's numbers, do we? That's weird.
+- Everyone's in our class group chat except you. You should join.
+
+@rule me.h.phone_scroll
+on me.small
+when hook=phone_scroll
+- What do you do on your phone all day?
+- Anything good online lately?
+
+@rule move.h.phone_scroll.ask
+on move.ask
+when hook=phone_scroll
+- Ask what the best thing she saw was
+
+@rule react.h.phone_scroll.ask
+on react
+when hook=phone_scroll move=ask fit=good|neutral
+- A cat that falls asleep standing up. I watched it fifty times.
+- A video of a duck chasing a man. Justice.
+- A recipe I'll never make. It looked beautiful.
+
+@rule move.h.phone_scroll.share
+on move.share
+when hook=phone_scroll
+- Show her something funny on your phone
+
+@rule react.h.phone_scroll.share
+on react
+when hook=phone_scroll move=share fit=good|neutral
+- Ha! Send me that. Now.
+- Okay, that's actually funny.
+- Why is that so funny? I can't stop.
+
+@rule move.h.phone_scroll.tease
+on move.tease
+when hook=phone_scroll
+- Say she should spend less time on it
+
+@rule react.h.phone_scroll.tease
+on react
+when hook=phone_scroll move=tease fit=good|neutral
+- Says the guy who checks his phone every minute.
+- You're not my mom. ...Okay, maybe a little less.
+- I'll put it down when you're more interesting.
+
+@rule react.h.phone_scroll.bad
+on react
+when hook=phone_scroll fit=bad
+feel pout
+- You don't get it.
+- Whatever. It's my phone.
+
+@rule me.h.phone_number
+on me.small
+when hook=phone_number
+- Can I have your number?
+- Want to swap contacts?
+
+@rule move.h.phone_number.ask
+on move.ask
+when hook=phone_number
+- Ask for her number
+
+@rule react.h.phone_number.ask
+on react
+when hook=phone_number move=ask fit=good|neutral
+- ...Fine. Don't send me anything weird.
+- Here. Don't lose it.
+- Okay. But I answer when I want.
+
+@rule move.h.phone_number.admit
+on move.admit
+when hook=phone_number
+- Admit you've wanted to ask for a while
+
+@rule react.h.phone_number.admit
+on react
+when hook=phone_number move=admit fit=good|neutral
+- You could've just asked. ...I would've said yes.
+- Really? That's kind of cute.
+- Then why'd you wait so long?
+
+@rule move.h.phone_number.tease
+on move.tease
+when hook=phone_number
+- Say she's the one who wants yours
+
+@rule react.h.phone_number.tease
+on react
+when hook=phone_number move=tease fit=good|neutral
+- Excuse me? ...Okay, maybe.
+- In your dreams. ...Give it to me anyway.
+- Confident. Annoying, but confident.
+
+@rule react.h.phone_number.bad
+on react
+when hook=phone_number fit=bad
+feel pout
+- Maybe some other time.
+- Let's not rush.
+
+# ---------------- parttime ----------------
+@rule small.parttime.job~state
+on small
+when subject=parttime
+shape state
+hook parttime_job
+opens ask,share,tease
+- I'm thinking about getting a part-time job. I want my own money.
+- My friend works at a café. She gets free cake. I'm so jealous.
+- I applied at the bookstore. I'd mostly just read, honestly.
+
+@rule small.parttime.club~state
+on small
+when subject=parttime hasclub=yes
+shape state
+hook parttime_job
+opens ask,share,tease
+- With the {club}, I don't have time for a job. My wallet is crying.
+- I'd work a part-time job, but the {club} eats all my evenings.
+
+@rule small.parttime.broke~state
+on small
+when subject=parttime mood=hungry|bored
+shape state
+hook parttime_broke
+opens ask,comfort,invite
+- I'm broke until the end of the month. I'm living on bread crusts.
+- I spent all my allowance already. It's only the middle of the month.
+
+@rule me.h.parttime_job
+on me.small
+when hook=parttime_job
+- Do you work anywhere?
+- Ever thought about a part-time job?
+
+@rule move.h.parttime_job.ask
+on move.ask
+when hook=parttime_job
+- Ask where she would want to work
+
+@rule react.h.parttime_job.ask
+on react
+when hook=parttime_job move=ask fit=good|neutral
+- Somewhere with a cute uniform. Is that shallow?
+- A flower shop. It smells nice all day.
+- Anywhere I don't have to talk on the phone.
+
+@rule move.h.parttime_job.share
+on move.share
+when hook=parttime_job
+- Tell her about a job you had or want
+
+@rule react.h.parttime_job.share
+on react
+when hook=parttime_job move=share fit=good|neutral
+- You'd be good at that, actually.
+- I can't picture you doing that. I want to see it.
+- Then we can complain about bosses together.
+
+@rule move.h.parttime_job.tease
+on move.tease
+when hook=parttime_job
+- Say she'd quit in a week
+
+@rule react.h.parttime_job.tease
+on react
+when hook=parttime_job move=tease fit=good|neutral
+- One week? I'd last at least... ten days.
+- Rude. Accurate, maybe, but rude.
+- And you'd last three, so.
+
+@rule react.h.parttime_job.bad
+on react
+when hook=parttime_job fit=bad
+feel pout
+- Never mind. It's just an idea.
+- Let's not talk about money.
+
+@rule me.h.parttime_broke
+on me.small
+when hook=parttime_broke
+- Are you broke too?
+- End of the month, huh?
+
+@rule move.h.parttime_broke.ask
+on move.ask
+when hook=parttime_broke
+- Ask what she spent it on
+
+@rule react.h.parttime_broke.ask
+on react
+when hook=parttime_broke move=ask fit=good|neutral
+- Snacks. Mostly snacks. And one very cute pen.
+- A concert ticket. Worth it.
+- I honestly don't know. It just disappeared.
+
+@rule move.h.parttime_broke.comfort
+on move.comfort
+when hook=parttime_broke
+- Say payday is close
+
+@rule react.h.parttime_broke.comfort
+on react
+when hook=parttime_broke move=comfort fit=good|neutral
+- Twelve more days. I'm counting.
+- Close isn't close enough.
+- Thanks. I'll survive on hope.
+
+@rule move.h.parttime_broke.invite
+on move.invite
+when hook=parttime_broke
+- Offer to buy her something to eat
+
+@rule react.h.parttime_broke.invite
+on react
+when hook=parttime_broke move=invite fit=good|neutral
+- Really?! You're my hero today.
+- I'll pay you back. Probably.
+- You don't have to... but I'm not saying no.
+
+@rule react.h.parttime_broke.bad
+on react
+when hook=parttime_broke fit=bad
+feel pout
+- I'm fine. Really.
+- Don't pity me.
+
+# ---------------- fears ----------------
+@rule small.fears.scared~state
+on small
+when subject=fears
+shape state
+hook fears_scared
+opens ask,share,tease
+- I'm scared of the dark hallway by the old gym. Everyone says it's haunted.
+- Spiders. I don't care how small. Spiders.
+- Thunder. I pretend I'm fine, but I'm not.
+
+@rule small.fears.storm~state
+on small
+when subject=fears weather=storm
+shape state
+hook fears_scared
+opens ask,share,tease
+- I-is it thundering? I'm not scared. I'm just standing near you on purpose.
+- I hate storms. The windows rattle and I can't think.
+
+@rule small.fears.serious~state
+on small
+when subject=fears rel=friend|lover|girlfriend
+shape state
+hook fears_deep
+opens ask,comfort,share
+- You know what really scares me? Being forgotten. People just moving on.
+- I'm afraid of not knowing what I want to do. Everyone else seems so sure.
+
+@rule me.h.fears_scared
+on me.small
+when hook=fears_scared
+- What scares you?
+- Are you scared of anything?
+
+@rule move.h.fears_scared.ask
+on move.ask
+when hook=fears_scared
+- Ask how she deals with it
+
+@rule react.h.fears_scared.ask
+on react
+when hook=fears_scared move=ask fit=good|neutral
+- I run. Very fast.
+- I sing loudly. It doesn't help, but it's loud.
+- I call someone. Usually my mom. Don't tell anyone.
+
+@rule move.h.fears_scared.share
+on move.share
+when hook=fears_scared
+- Tell her what you're scared of
+
+@rule react.h.fears_scared.share
+on react
+when hook=fears_scared move=share fit=good|neutral
+- You? Scared of that? That's kind of cute.
+- Then we'll protect each other.
+- Okay, I won't laugh. Much.
+
+@rule move.h.fears_scared.tease
+on move.tease
+when hook=fears_scared
+- Say you could scare her right now
+
+@rule react.h.fears_scared.tease
+on react
+when hook=fears_scared move=tease fit=good|neutral
+- Don't you dare. I'll scream and they'll blame you.
+- Try it and I'll never speak to you again.
+- ...You wouldn't. Right?
+
+@rule react.h.fears_scared.bad
+on react
+when hook=fears_scared fit=bad
+feel pout
+- It's not funny.
+- I don't want to talk about it.
+
+@rule me.h.fears_deep
+on me.small
+when hook=fears_deep
+- What are you really afraid of?
+- Does anything ever worry you?
+
+@rule move.h.fears_deep.ask
+on move.ask
+when hook=fears_deep
+- Ask when she started feeling that way
+
+@rule react.h.fears_deep.ask
+on react
+when hook=fears_deep move=ask fit=good|neutral
+- When my best friend moved away. She stopped writing after a month.
+- Since this year. Everyone's talking about the future.
+- I don't know. It just sits there.
+
+@rule move.h.fears_deep.comfort
+on move.comfort
+when hook=fears_deep
+- Say you won't forget her
+
+@rule react.h.fears_deep.comfort
+on react
+when hook=fears_deep move=comfort fit=good|neutral
+- ...You'd better not. I'm holding you to that.
+- That's an easy thing to say. But thank you.
+- Okay. I believe you. A little.
+
+@rule move.h.fears_deep.share
+on move.share
+when hook=fears_deep
+- Admit you worry about the same thing
+
+@rule react.h.fears_deep.share
+on react
+when hook=fears_deep move=share fit=good|neutral
+- Really? I thought it was just me.
+- Then we're both a little lost. That's okay.
+- Strange. That makes me feel better.
+
+@rule react.h.fears_deep.bad
+on react
+when hook=fears_deep fit=bad
+feel pout
+- Forget it. That got too serious.
+- Sorry. That's heavy.
+
+# ---------------- peeves ----------------
+@rule small.peeves.annoy~state
+on small
+when subject=peeves
+shape state
+hook peeves_annoy
+opens ask,agree,tease
+- You know what I can't stand? People who walk slowly in the hallway. Three across.
+- People who chew loudly in the library. I hear everything.
+- When someone says 'calm down.' I was calm until then.
+
+@rule small.peeves.rival~state
+on small
+when subject=peeves rivalnear=*
+shape state
+hook peeves_annoy
+opens ask,agree,tease
+- {rivalnear} is here. Of course. She laughs like a car alarm.
+- Can we talk somewhere {rivalnear} can't hear? She gets on my nerves.
+
+@rule small.peeves.upset~state
+on small
+when subject=peeves mood=upset|stressed
+shape state
+hook peeves_today
+opens ask,comfort,agree
+- Everything's annoying me today. The bell, the stairs, the air.
+- Someone took my umbrella this morning. Today's ruined.
+
+@rule me.h.peeves_annoy
+on me.small
+when hook=peeves_annoy
+- What annoys you?
+- Anything get on your nerves lately?
+
+@rule move.h.peeves_annoy.ask
+on move.ask
+when hook=peeves_annoy
+- Ask what else drives her crazy
+
+@rule react.h.peeves_annoy.ask
+on react
+when hook=peeves_annoy move=ask fit=good|neutral
+- Wet sleeves. Unforgivable.
+- When a song gets stuck in my head and I only know one line.
+- Group projects. Where one person does everything. Me.
+
+@rule move.h.peeves_annoy.agree
+on move.agree
+when hook=peeves_annoy
+- Say that drives you crazy too
+
+@rule react.h.peeves_annoy.agree
+on react
+when hook=peeves_annoy move=agree fit=good|neutral
+- Right?! Finally, someone understands.
+- We should start a club. A very angry club.
+- See? I'm not unreasonable.
+
+@rule move.h.peeves_annoy.tease
+on move.tease
+when hook=peeves_annoy
+- Say she's a little picky
+
+@rule react.h.peeves_annoy.tease
+on react
+when hook=peeves_annoy move=tease fit=good|neutral
+- Picky? I have standards.
+- ...Maybe. A little. Don't spread it.
+- And you're one of the things I put up with.
+
+@rule react.h.peeves_annoy.bad
+on react
+when hook=peeves_annoy fit=bad
+feel pout
+- Forget it, you don't get it.
+- Never mind.
+
+@rule me.h.peeves_today
+on me.small
+when hook=peeves_today
+- Rough day?
+- Something bugging you?
+
+@rule move.h.peeves_today.ask
+on move.ask
+when hook=peeves_today
+- Ask what started it
+
+@rule react.h.peeves_today.ask
+on react
+when hook=peeves_today move=ask fit=good|neutral
+- I tripped on the stairs in front of everyone.
+- My alarm didn't ring. Then everything after that.
+- A teacher called me out for something I didn't do.
+
+@rule move.h.peeves_today.comfort
+on move.comfort
+when hook=peeves_today
+- Say tomorrow will be better
+
+@rule react.h.peeves_today.comfort
+on react
+when hook=peeves_today move=comfort fit=good|neutral
+- It has to be. It can't get worse.
+- Promise? I'll hold you to that.
+- ...Thanks. That helps a little.
+
+@rule move.h.peeves_today.agree
+on move.agree
+when hook=peeves_today
+- Say some days are just like that
+
+@rule react.h.peeves_today.agree
+on react
+when hook=peeves_today move=agree fit=good|neutral
+- Yeah. This is one of them.
+- At least you get it.
+- Exactly. Let me be grumpy.
+
+@rule react.h.peeves_today.bad
+on react
+when hook=peeves_today fit=bad
+feel pout
+- Just leave me alone for a bit.
+- I don't want to talk.
+
+# ---------------- wish ----------------
+@rule small.wish.one~state
+on small
+when subject=wish
+shape state
+hook wish_one
+opens ask,share,tease
+- If I could have one wish, I'd wish for a day with no homework. Forever.
+- I'd wish to be able to teleport. No more trains in the morning.
+- One wish? A house with a big window and a cat in it.
+
+@rule small.wish.star~state
+on small
+when subject=wish period=after
+shape state
+hook wish_one
+opens ask,share,tease
+- When I walk home this late, I look for the first star and make a wish. Silly, right?
+- The sky's getting dark. I always wish on the first star.
+
+@rule small.wish.sign~state
+on small
+when subject=wish sign=*
+shape state
+hook wish_sign
+opens ask,tease,share
+- My horoscope says a wish of mine comes true this week. I'm a {sign}, so it must be true.
+- As a {sign}, I'm supposed to get what I wish for. Eventually.
+
+@rule me.h.wish_one
+on me.small
+when hook=wish_one
+- If you had one wish, what would it be?
+- What would you wish for?
+
+@rule move.h.wish_one.ask
+on move.ask
+when hook=wish_one
+- Ask what she wished for last time
+
+@rule react.h.wish_one.ask
+on react
+when hook=wish_one move=ask fit=good|neutral
+- To pass the math test. It worked. Barely.
+- That's a secret. Wishes don't work if you tell.
+- For it not to rain on the festival. It rained.
+
+@rule move.h.wish_one.share
+on move.share
+when hook=wish_one
+- Tell her your wish
+
+@rule react.h.wish_one.share
+on react
+when hook=wish_one move=share fit=good|neutral
+- That's sweet. Wait, really?
+- Ha, that's so you.
+- Okay, I'll wish for that too. Double power.
+
+@rule move.h.wish_one.tease
+on move.tease
+when hook=wish_one
+- Say she'd waste it on food
+
+@rule react.h.wish_one.tease
+on react
+when hook=wish_one move=tease fit=good|neutral
+- ...I'm not saying you're wrong.
+- A good wish is a delicious wish.
+- Better than whatever you'd wish for.
+
+@rule react.h.wish_one.bad
+on react
+when hook=wish_one fit=bad
+feel pout
+- Wishes are silly anyway.
+- Forget it.
+
+@rule me.h.wish_sign
+on me.small
+when hook=wish_sign
+- Do you believe in horoscopes?
+- What's your sign again?
+
+@rule move.h.wish_sign.ask
+on move.ask
+when hook=wish_sign
+- Ask what her horoscope said exactly
+
+@rule react.h.wish_sign.ask
+on react
+when hook=wish_sign move=ask fit=good|neutral
+- A meeting with someone important. Hm.
+- To avoid red today. I'm wearing red socks. I'm doomed.
+- Something about luck and patience. Mostly patience.
+
+@rule move.h.wish_sign.tease
+on move.tease
+when hook=wish_sign
+- Say it's all made up
+
+@rule react.h.wish_sign.tease
+on react
+when hook=wish_sign move=tease fit=good|neutral
+- Says the person who reads his anyway.
+- Then why does mine keep being right?
+- Rude. The stars are listening.
+
+@rule move.h.wish_sign.share
+on move.share
+when hook=wish_sign
+- Tell her your sign
+
+@rule react.h.wish_sign.share
+on react
+when hook=wish_sign move=share fit=good|neutral
+- Hm, that goes well with mine. Supposedly.
+- Oh no. That's a dangerous match.
+- That explains so much about you.
+
+@rule react.h.wish_sign.bad
+on react
+when hook=wish_sign fit=bad
+feel pout
+- You wouldn't understand.
+- Never mind.
+
+# ---------------- memory ----------------
+@rule small.memory.best~state
+on small
+when subject=memory
+shape state
+hook memory_best
+opens ask,share,tease
+- My best memory here? The first day. I got lost and someone walked me to class.
+- Last year's festival. We stayed late and the whole school smelled like takoyaki.
+- The day it snowed and nobody could focus. Even the teacher looked out the window.
+
+@rule small.memory.days~state
+on small
+when subject=memory days=many
+shape state
+hook memory_us
+opens ask,share,admit
+- We've talked a lot, haven't we? I remember the first time. You were so awkward.
+- Some of my favorite memories this year have you in them. That's weird to say.
+
+@rule small.memory.kclub~state
+on small
+when subject=memory kclub=yes
+shape state
+hook memory_best
+opens ask,share,tease
+- My best memory this year is the club. Even the weird parts. Especially the weird parts.
+- Joining the {club} was the best thing I did this year. Don't tell anyone I said that.
+
+@rule me.h.memory_best
+on me.small
+when hook=memory_best
+- What's your best memory here?
+- Got a favorite school memory?
+
+@rule move.h.memory_best.ask
+on move.ask
+when hook=memory_best
+- Ask what made it so special
+
+@rule react.h.memory_best.ask
+on react
+when hook=memory_best move=ask fit=good|neutral
+- I don't know. Everyone was happy at the same time.
+- It was the first time I felt like I belonged here.
+- The food. And the people. Mostly the food.
+
+@rule move.h.memory_best.share
+on move.share
+when hook=memory_best
+- Share your own favorite memory
+
+@rule react.h.memory_best.share
+on react
+when hook=memory_best move=share fit=good|neutral
+- I remember that day too! You were there?
+- That's a good one. Better than mine.
+- Hm. I'll have to make a better one with you.
+
+@rule move.h.memory_best.tease
+on move.tease
+when hook=memory_best
+- Say she's getting nostalgic like an old lady
+
+@rule react.h.memory_best.tease
+on react
+when hook=memory_best move=tease fit=good|neutral
+- I'm allowed! Memories are free.
+- An old lady with great memories, thank you.
+- ...You're making a bad memory right now.
+
+@rule react.h.memory_best.bad
+on react
+when hook=memory_best fit=bad
+feel pout
+- It's not that special.
+- Never mind.
+
+@rule me.h.memory_us
+on me.small
+when hook=memory_us
+- Do you remember when we first talked?
+- We've been talking a lot lately, huh?
+
+@rule move.h.memory_us.ask
+on move.ask
+when hook=memory_us
+- Ask what she remembers about it
+
+@rule react.h.memory_us.ask
+on react
+when hook=memory_us move=ask fit=good|neutral
+- You asked me something dumb, and I laughed. That's all. It stuck.
+- You were nervous. Your voice cracked. I liked that.
+- I remember thinking you'd never talk to me again.
+
+@rule move.h.memory_us.share
+on move.share
+when hook=memory_us
+- Say you remember it well too
+
+@rule react.h.memory_us.share
+on react
+when hook=memory_us move=share fit=good|neutral
+- Really? I thought it was just me.
+- Then we both remember it. Good.
+- Okay, now I'm embarrassed.
+
+@rule move.h.memory_us.admit
+on move.admit
+when hook=memory_us
+- Admit you were nervous that day
+
+@rule react.h.memory_us.admit
+on react
+when hook=memory_us move=admit fit=good|neutral
+- I knew it! ...It was cute, though.
+- You hid it badly.
+- Me too. Don't tell.
+
+@rule react.h.memory_us.bad
+on react
+when hook=memory_us fit=bad
+feel pout
+- Let's not get sappy.
+- Forget it.
+
+# ---------------- commute ----------------
+@rule small.commute.train~state
+on small
+when subject=commute
+shape state
+hook commute_train
+opens ask,share,tease
+- My train was so packed this morning I couldn't reach my phone.
+- I walk to school. Twenty minutes uphill. Both ways, somehow.
+- I take the bus. The driver knows me now. He waves.
+
+@rule small.commute.rain~state
+on small
+when subject=commute wet=yes rainlover=no
+shape state
+hook commute_train
+opens ask,share,tease
+- I walked here in this rain. My shoes are still squishing.
+- The bus was late because of the rain. Everyone was wet and grumpy.
+
+@rule small.commute.late~state
+on small
+when subject=commute energy<=0.35
+shape state
+hook commute_late
+opens ask,tease,comfort
+- I almost missed the bell again. I ran from the station. I'm still sweaty.
+- I overslept and caught the last train that gets me here on time. Barely.
+
+@rule me.h.commute_train
+on me.small
+when hook=commute_train
+- How do you get to school?
+- Long commute?
+
+@rule move.h.commute_train.ask
+on move.ask
+when hook=commute_train
+- Ask what she does on the way
+
+@rule react.h.commute_train.ask
+on react
+when hook=commute_train move=ask fit=good|neutral
+- Music. Loud. It's my only alone time.
+- I people-watch. Everyone looks so tired.
+- I study. Or pretend to. Mostly I nap.
+
+@rule move.h.commute_train.share
+on move.share
+when hook=commute_train
+- Tell her how you get here
+
+@rule react.h.commute_train.share
+on react
+when hook=commute_train move=share fit=good|neutral
+- Oh, then we take the same line! I've never seen you.
+- That sounds easier than mine.
+- We should go together sometime.
+
+@rule move.h.commute_train.tease
+on move.tease
+when hook=commute_train
+- Say she must leave at dawn
+
+@rule react.h.commute_train.tease
+on react
+when hook=commute_train move=tease fit=good|neutral
+- Practically. I see the sunrise. It's not romantic.
+- Five forty-five. Feel sorry for me.
+- You'd never survive it.
+
+@rule react.h.commute_train.bad
+on react
+when hook=commute_train fit=bad
+feel pout
+- It's boring.
+- Not much to say about it.
+
+@rule me.h.commute_late
+on me.small
+when hook=commute_late
+- Did you oversleep?
+- Running late again?
+
+@rule move.h.commute_late.ask
+on move.ask
+when hook=commute_late
+- Ask why she was late
+
+@rule react.h.commute_late.ask
+on react
+when hook=commute_late move=ask fit=good|neutral
+- I pressed snooze. Five times.
+- I was up late. Don't ask doing what.
+- My cat sat on my alarm. Not my fault.
+
+@rule move.h.commute_late.tease
+on move.tease
+when hook=commute_late
+- Say she'll get detention one day
+
+@rule react.h.commute_late.tease
+on react
+when hook=commute_late move=tease fit=good|neutral
+- One day. Not today.
+- Then you'll visit me in detention, right?
+- Only if you tell on me.
+
+@rule move.h.commute_late.comfort
+on move.comfort
+when hook=commute_late
+- Say at least she made it
+
+@rule react.h.commute_late.comfort
+on react
+when hook=commute_late move=comfort fit=good|neutral
+- Barely. But yes.
+- Thanks. My lungs disagree.
+- I always make it. Somehow.
+
+@rule react.h.commute_late.bad
+on react
+when hook=commute_late fit=bad
+feel pout
+- Don't lecture me.
+- I know, I know.
+
+# ---------------- travel ----------------
+@rule small.travel.go~state
+on small
+when subject=travel
+shape state
+hook travel_go
+opens ask,share,invite
+- I want to go somewhere far. Somewhere with snow and hot springs.
+- I've never been on a plane. I want to, but I'm a little scared.
+- If I could go anywhere, I'd go to the sea in winter. Nobody's there.
+
+@rule small.travel.exam~state
+on small
+when subject=travel exam=yes
+shape state
+hook travel_go
+opens ask,share,invite
+- After these exams I'm going on a trip. In my head. I'm already packing.
+- When the exams are over, I want to go somewhere and do nothing.
+
+@rule small.travel.partner~state
+on small
+when subject=travel partner=*
+shape state
+hook travel_pair
+opens ask,tease,share
+- {partner} and I keep planning a trip. We never actually go.
+- {partner} wants to go to the mountains. I want the beach. We're stuck.
+
+@rule me.h.travel_go
+on me.small
+when hook=travel_go
+- Where would you like to travel?
+- Been anywhere fun?
+
+@rule move.h.travel_go.ask
+on move.ask
+when hook=travel_go
+- Ask what she would do there
+
+@rule react.h.travel_go.ask
+on react
+when hook=travel_go move=ask fit=good|neutral
+- Eat. Sleep. Walk. Repeat.
+- Take pictures of everything. Even the boring stuff.
+- Sit in a hot spring until I turn into soup.
+
+@rule move.h.travel_go.share
+on move.share
+when hook=travel_go
+- Tell her where you want to go
+
+@rule react.h.travel_go.share
+on react
+when hook=travel_go move=share fit=good|neutral
+- That sounds amazing. Take me with you.
+- Hm, I'd go there too.
+- You have good taste. Surprisingly.
+
+@rule move.h.travel_go.invite
+on move.invite
+when hook=travel_go
+- Say you should take a trip together someday
+
+@rule react.h.travel_go.invite
+on react
+when hook=travel_go move=invite fit=good|neutral
+- Someday... I'll remember you said that.
+- Only if you plan it. I'm bad at plans.
+- Okay. But I get the window seat.
+
+@rule react.h.travel_go.bad
+on react
+when hook=travel_go fit=bad
+feel pout
+- I'll never go anywhere anyway.
+- It's just a dream.
+
+@rule me.h.travel_pair
+on me.small
+when hook=travel_pair
+- Going on any trips?
+- Got plans for the holidays?
+
+@rule move.h.travel_pair.ask
+on move.ask
+when hook=travel_pair
+- Ask where they want to go
+
+@rule react.h.travel_pair.ask
+on react
+when hook=travel_pair move=ask fit=good|neutral
+- She says Kyoto. I say anywhere with good food. So, Kyoto.
+- We can't agree. That's half the fun.
+- Somewhere neither of us has been.
+
+@rule move.h.travel_pair.tease
+on move.tease
+when hook=travel_pair
+- Say they'll argue the whole trip
+
+@rule react.h.travel_pair.tease
+on react
+when hook=travel_pair move=tease fit=good|neutral
+- Probably. And still have fun.
+- That's how we know it's a good trip.
+- Don't jinx it.
+
+@rule move.h.travel_pair.share
+on move.share
+when hook=travel_pair
+- Recommend somewhere you went
+
+@rule react.h.travel_pair.share
+on react
+when hook=travel_pair move=share fit=good|neutral
+- Really? I'll tell her. She'll pretend it was her idea.
+- That's a good idea. Thanks.
+- Hm, maybe we'll try that.
+
+@rule react.h.travel_pair.bad
+on react
+when hook=travel_pair fit=bad
+feel pout
+- We'll see.
+- Forget it.
+
+# ---------------- classmates ----------------
+@rule small.classmates.class~state
+on small
+when subject=classmates
+shape state
+hook class_mates
+opens ask,share,tease
+- Someone in my class brought a fish tank. Just a fish tank. Nobody knows why.
+- The boy behind me draws dragons in every notebook. They're getting good.
+- Two people in my class are definitely dating and pretending they're not.
+
+@rule small.classmates.bff~state
+on small
+when subject=classmates bff=*
+shape state
+hook class_bff
+opens ask,share,tease
+- {bff} and I sit next to each other. We pass notes like kids.
+- Have you met {bff}? She's my best friend. She talks about you, by the way.
+
+@rule small.classmates.fight~state
+on small
+when subject=classmates fight=yes
+shape state
+hook class_fight
+opens ask,comfort,defend
+- Things are weird with {fightwho} right now. Everyone in class can tell.
+- {fightwho} won't look at me since we argued. The whole room feels heavy.
+
+@rule me.h.class_mates
+on me.small
+when hook=class_mates
+- How's your class?
+- Anyone interesting in your class?
+
+@rule move.h.class_mates.ask
+on move.ask
+when hook=class_mates
+- Ask who she thinks is dating
+
+@rule react.h.class_mates.ask
+on react
+when hook=class_mates move=ask fit=good|neutral
+- I won't name names. ...Okay, one name.
+- I'll tell you if you guess right.
+- Two by the window. Watch them at lunch. Obvious.
+
+@rule move.h.class_mates.share
+on move.share
+when hook=class_mates
+- Tell her something funny from your class
+
+@rule react.h.class_mates.share
+on react
+when hook=class_mates move=share fit=good|neutral
+- No way. Our classes are both weird.
+- Ha! I need to see that.
+- Your class sounds more fun than mine.
+
+@rule move.h.class_mates.tease
+on move.tease
+when hook=class_mates
+- Say she's the weird one in her class
+
+@rule react.h.class_mates.tease
+on react
+when hook=class_mates move=tease fit=good|neutral
+- I'm the normal one! Probably.
+- Every class needs one. I volunteered.
+- ...I'll let that slide. Once.
+
+@rule react.h.class_mates.bad
+on react
+when hook=class_mates fit=bad
+feel pout
+- I don't really know them well.
+- Never mind.
+
+@rule me.h.class_bff
+on me.small
+when hook=class_bff
+- How's your best friend?
+- You two are always together, huh?
+
+@rule move.h.class_bff.ask
+on move.ask
+when hook=class_bff
+- Ask what she says about you
+
+@rule react.h.class_bff.ask
+on react
+when hook=class_bff move=ask fit=good|neutral
+- ...That's classified.
+- Only good things. Mostly.
+- That you're 'not bad.' High praise, from her.
+
+@rule move.h.class_bff.share
+on move.share
+when hook=class_bff
+- Say she seems really nice
+
+@rule react.h.class_bff.share
+on react
+when hook=class_bff move=share fit=good|neutral
+- She is. Don't steal her.
+- She'll be happy to hear that.
+- Yeah. She's my favorite person. One of them.
+
+@rule move.h.class_bff.tease
+on move.tease
+when hook=class_bff
+- Say you should ask her about you
+
+@rule react.h.class_bff.tease
+on react
+when hook=class_bff move=tease fit=good|neutral
+- Don't you dare.
+- She'd tell you everything. Please don't.
+- You'd regret it.
+
+@rule react.h.class_bff.bad
+on react
+when hook=class_bff fit=bad
+feel pout
+- Let's not talk about her behind her back.
+- Forget it.
+
+@rule me.h.class_fight
+on me.small
+when hook=class_fight
+- Is everything okay in class?
+- Did something happen with your friends?
+
+@rule move.h.class_fight.ask
+on move.ask
+when hook=class_fight
+- Ask what the fight was about
+
+@rule react.h.class_fight.ask
+on react
+when hook=class_fight move=ask fit=good|neutral
+- Something small that got big. As usual.
+- I said something I didn't mean. She said something she did.
+- I'm not even sure anymore.
+
+@rule move.h.class_fight.comfort
+on move.comfort
+when hook=class_fight
+- Say she'll come around
+
+@rule react.h.class_fight.comfort
+on react
+when hook=class_fight move=comfort fit=good|neutral
+- You think so? I hope.
+- Maybe. If I say sorry first.
+- ...Thanks. I needed to hear that.
+
+@rule move.h.class_fight.defend
+on move.defend
+when hook=class_fight
+- Say it doesn't sound like her fault
+
+@rule react.h.class_fight.defend
+on react
+when hook=class_fight move=defend fit=good|neutral
+- That's nice of you, but it's a little my fault.
+- Thanks for taking my side.
+- Don't say that to her, though.
+
+@rule react.h.class_fight.bad
+on react
+when hook=class_fight fit=bad
+feel pout
+- I don't want to talk about it.
+- It's between us.
+
+# ---------------- talent ----------------
+@rule small.talent.hidden~state
+on small
+when subject=talent
+shape state
+hook talent_hidden
+opens ask,share,tease
+- I have a secret talent. I can fold paper cranes with my eyes closed.
+- I can whistle any song after hearing it once. It's useless, but impressive.
+- Don't laugh, but I'm really good at drawing horses. Only horses.
+
+@rule small.talent.tall~state
+on small
+when subject=talent height=tall
+shape state
+hook talent_hidden
+opens ask,share,tease
+- My one talent is reaching the top shelf in the library. Everyone asks me.
+- Being tall is my talent, apparently. That's all anyone asks me about.
+
+@rule small.talent.short~state
+on small
+when subject=talent height=short
+shape state
+hook talent_hidden
+opens ask,share,tease
+- I can fit anywhere. Hide and seek champion, five years running.
+- Being small is great at concerts. I just slip to the front.
+
+@rule me.h.talent_hidden
+on me.small
+when hook=talent_hidden
+- Got any hidden talents?
+- What are you secretly good at?
+
+@rule move.h.talent_hidden.ask
+on move.ask
+when hook=talent_hidden
+- Ask her to show you
+
+@rule react.h.talent_hidden.ask
+on react
+when hook=talent_hidden move=ask fit=good|neutral
+- Not here! ...Okay, a quick one.
+- Later. With fewer people watching.
+- You have to pay first. In snacks.
+
+@rule move.h.talent_hidden.share
+on move.share
+when hook=talent_hidden
+- Tell her your own weird talent
+
+@rule react.h.talent_hidden.share
+on react
+when hook=talent_hidden move=share fit=good|neutral
+- That's amazing. And very weird.
+- Show me right now.
+- Okay, yours is better. I'm jealous.
+
+@rule move.h.talent_hidden.tease
+on move.tease
+when hook=talent_hidden
+- Say that's not a real talent
+
+@rule react.h.talent_hidden.tease
+on react
+when hook=talent_hidden move=tease fit=good|neutral
+- It's a real talent! It's just a small one.
+- Rude. Do it yourself, then.
+- Every talent is real if you believe.
+
+@rule react.h.talent_hidden.bad
+on react
+when hook=talent_hidden fit=bad
+feel pout
+- Never mind, it's dumb.
+- Forget I said anything.
+
+# ---------------- advice ----------------
+@rule small.advice.ask~state
+on small
+when subject=advice
+shape state
+hook advice_need
+opens ask,share,thank
+- You look like you want to ask me something. Go on, I give good advice.
+- People come to me with their problems. I don't know why. I'm a mess.
+- If you need advice, I'm here. Free of charge. This week only.
+
+@rule small.advice.warm~state
+on small
+when subject=advice warm>=0.7
+shape state
+hook advice_need
+opens ask,share,thank
+- Is something on your mind? You can tell me. I'm a good listener.
+- You seem like you're thinking hard about something. Want to talk it out?
+
+@rule small.advice.blunt~state
+on small
+when subject=advice blunt>=0.6
+shape state
+hook advice_blunt
+opens ask,laugh,thank
+- Want advice? Here's my advice: stop overthinking. That's it. You're welcome.
+- If you're going to ask me for advice, expect honesty. Brutal honesty.
+
+@rule me.h.advice_need
+on me.small
+when hook=advice_need
+- Can I ask your advice on something?
+- You're good at advice, right?
+
+@rule move.h.advice_need.ask
+on move.ask
+when hook=advice_need
+- Ask how to make friends in a new club
+
+@rule react.h.advice_need.ask
+on react
+when hook=advice_need move=ask fit=good|neutral
+- Show up. Then show up again. Then they're stuck with you.
+- Bring snacks. Works every time.
+- Ask them about themselves. People love that.
+
+@rule move.h.advice_need.share
+on move.share
+when hook=advice_need
+- Tell her something that's been bothering you
+
+@rule react.h.advice_need.share
+on react
+when hook=advice_need move=share fit=good|neutral
+- Hm. I think you already know what to do. You just want someone to say it.
+- That's tough. But you're tougher.
+- Thank you for telling me. Really.
+
+@rule move.h.advice_need.thank
+on move.thank
+when hook=advice_need
+- Thank her for always listening
+
+@rule react.h.advice_need.thank
+on react
+when hook=advice_need move=thank fit=good|neutral
+- Anytime. I mean it.
+- You're welcome. You can listen to me next time.
+- Stop, you'll make me blush.
+
+@rule react.h.advice_need.bad
+on react
+when hook=advice_need fit=bad
+feel pout
+- Maybe I'm not the right person.
+- I don't really know what to say.
+
+@rule me.h.advice_blunt
+on me.small
+when hook=advice_blunt
+- Got any advice for me?
+- What would you do in my place?
+
+@rule move.h.advice_blunt.ask
+on move.ask
+when hook=advice_blunt
+- Ask what you should do about exams
+
+@rule react.h.advice_blunt.ask
+on react
+when hook=advice_blunt move=ask fit=good|neutral
+- Study. Shocking, I know.
+- Sleep, eat, study. In that order.
+- Stop asking me and open a book.
+
+@rule move.h.advice_blunt.laugh
+on move.laugh
+when hook=advice_blunt
+- Laugh and say that was very helpful
+
+@rule react.h.advice_blunt.laugh
+on react
+when hook=advice_blunt move=laugh fit=good|neutral
+- You asked. I delivered.
+- I'm always helpful. You're always surprised.
+- Next time I'll charge.
+
+@rule move.h.advice_blunt.thank
+on move.thank
+when hook=advice_blunt
+- Thank her for being honest
+
+@rule react.h.advice_blunt.thank
+on react
+when hook=advice_blunt move=thank fit=good|neutral
+- Somebody has to be.
+- ...You're welcome. That's rare.
+- Don't get used to it.
+
+@rule react.h.advice_blunt.bad
+on react
+when hook=advice_blunt fit=bad
+feel pout
+- Then don't ask me.
+- Fine. Figure it out yourself.

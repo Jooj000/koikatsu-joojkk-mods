@@ -383,12 +383,16 @@ on me.romance
 when act=flirt close>=2
 hook flirt.praise
 - You look cute when you're thinking hard about something.
+- You're cute when you concentrate, you know.
+- That serious face of yours? Adorable.
 
 @rule me.romance.flirt.far.spend
 on me.romance
 when act=flirt close<=1
 hook flirt.spend
 - I really like spending time with you.
+- Time goes fast when I'm with you.
+- I like being around you. A lot.
 
 @rule me.romance.flirt.far.praise
 on me.romance
@@ -396,6 +400,8 @@ when act=flirt close<=1
 hook flirt.praise
 - You're kind of amazing, you know that?
 - Your laugh is really cute.
+- You're kind of incredible.
+- Has anyone told you how amazing you are?
 
 @rule me.romance.flirt.far.share
 on me.romance

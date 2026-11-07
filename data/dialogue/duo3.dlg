@@ -321,18 +321,21 @@ on duo3.callback
 when tone=gentle
 - [Ah, sorry, we left you out...|Hehe, sorry, we got carried away...|You've been so quiet...]
 - [Sorry... what do you think?|We didn't mean to leave you out.]
+- [Sorry, we kept talking...|Are you bored?] [What were you going to say?|Please, join us.]
 
 @rule duo3.callback.energetic
 on duo3.callback
 when tone=energetic
 - [Hey, you're quiet! Say something!|Earth to you! Hello?|Don't just stand there, join in!]
 - [Your turn! Talk!|Don't zone out on us!]
+- [Hey! You're part of this too!|Don't go quiet on us!] [Pick a side!|What do you think?]
 
 @rule duo3.callback.cool
 on duo3.callback
 when tone=cool
 - [...You've been quiet.|Say something.|You're thinking about something.]
 - [Your opinion. Now.|You're awfully quiet today.]
+- [You're just listening?|Not joining in?] [Fine. Ask something.|We don't bite.]
 
 @rule duo3.callback.teasing
 on duo3.callback

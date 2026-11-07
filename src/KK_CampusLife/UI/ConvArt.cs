@@ -37,6 +37,19 @@ namespace Joojkk.CampusLife
             return s;
         }
 
+        /// que já existe", not a second border around it).</summary>
+        public static Sprite FitCard()
+        {
+            Sprite s;
+            if (Made.TryGetValue(200, out s) && s != null) return s;
+            int border;
+            var c = Board.FitColor;
+            var px = IconArt.Card(new[] { c.r, c.g, c.b }, true, CardSize, out border);
+            s = ToSprite(px, CardSize, border, "cl_option_card_fit");
+            Made[200] = s;
+            return s;
+        }
+
         /// <summary>
         /// The inside of an option card in the card's own units (left, top, right, bottom): past the color strip and the
         /// frame plus a few pixels (user, 2026-10-26: the text "must stay only inside the colored border, with a margin of a

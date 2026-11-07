@@ -306,9 +306,11 @@ namespace Joojkk.CampusLife
                     b.Narr("Two classmates whisper as you pass: \"I heard " + name + " has a crush on him...\"");
                     return Scenes.PlayOnMap(b, _ =>
                     {
-                        var r = Board.Make(RequestKind.Talk, g, "Is the rumor true?", "People say " + name + " likes you. Go talk to her today.", 6);
+                        var r = Board.Make(RequestKind.Talk, g, Board.RumorTitle, "People say " + name + " likes you. Go talk to her today.", 6);
                         r.Source = "happening";
+                        r.Button = "Ask about the rumor";
                         Board.Add(r);
+                        S.Buffs["rumor:" + GirlInfo.Key(g)] = S.Day;   // the director: what people say about her and you
                         Toasts.Show("New request: talk to " + name + ".");
                     });
                 }

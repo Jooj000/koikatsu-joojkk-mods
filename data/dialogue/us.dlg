@@ -42,6 +42,7 @@ when realverb=dated
 - [I had fun on our date.|About our date {when}...] [Did you?|Was it okay?]
 - [I keep thinking about our date.|Our date {when} was the best.] [Let's go again.|What was your favorite part?]
 - [Did you have fun {when}?|I hope you liked our date.] [I did.|I want a second one.]
+- [Our date {when}...|About the other day...] [Did you have fun?|I hope it wasn't boring.]
 
 @rule me.us.romance
 on me.us
@@ -70,6 +71,7 @@ when realverb=started_dating speed=same_day|fast
 - We started going out [really fast|pretty much right away], huh?
 - [We said yes really quickly, huh?|We didn't exactly take it slow.] [No regrets, though.|I'm glad we didn't wait.]
 - [Fastest couple on campus, maybe?|We went from hello to dating in no time.] [Hehe.|Is that weird?]
+- We got together [so fast|in no time], didn't we?
 
 # ---------------- her side ----------------
 @rule us.plain
@@ -82,7 +84,7 @@ opens share,tease,ask
 
 @rule us.gift.liked
 on us
-when realverb=gave_gift opinion>=1
+when realverb=gave_gift opinion>=1 giftkind!=food
 feel smile
 hook f_us_gift_liked
 opens share,tease,invite
@@ -90,9 +92,28 @@ opens share,tease,invite
 - [{Thing}? Of course I liked it!|I'm using it right now, actually.] [You've got good taste.|How did you know?]
 - [I treasure {thing}, you know.|{Thing} is on my bag now.] [It's my favorite thing.|Everyone asks where I got it.]
 
+@rule us.gift.food
+on us
+when realverb=gave_gift opinion>=1 giftkind=food
+feel smile
+hook f_us_gift_food
+opens share,tease,invite
+- [{Thing}? Gone in one sitting.|I finished {thing} the same day, sorry.] [Really good.|You've got good taste.]
+- [{Thing}? Delicious.|I still think about {thing}.] [I shared one bite. Just one.|How did you know I'd like it?]
+- {student}[I ate {thing} between classes.|{Thing} saved my afternoon.] [Thank you, really.|Now I want more, you know.]
+
+@rule us.gift.food.meh
+on us
+when realverb=gave_gift opinion<=0 giftkind=food
+hook f_us_gift_food_meh
+opens ask,share,thank
+- [Ah, {thing}...|Yeah, {thing}.] [I ate every bit. Fine, I guess.|Not really my taste, but thanks.]
+- [About {thing}...|{Thing}, right.] [I gave half to a friend.|Maybe something less sweet next time?]
+- [{Thing}, right...|About {thing}...] [I finished it. Mostly.|It was okay. Just not for me.]
+
 @rule us.gift.meh
 on us
-when realverb=gave_gift opinion<=0
+when realverb=gave_gift opinion<=0 giftkind!=food
 hook f_us_gift_meh
 opens ask,share,thank
 - [Ah, {thing}...|Yeah, {thing}.] [It was... nice of you.|It's the thought that counts, right?|I put it somewhere safe.]

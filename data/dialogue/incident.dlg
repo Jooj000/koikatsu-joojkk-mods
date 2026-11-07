@@ -395,6 +395,7 @@ when inc=broke self=no tone=gentle
 - {about} was disappointed. You promised.
 - You let {about} down...
 - {about} trusted your promise...
+- [{about} looked really hurt.|I heard you forgot your promise to {about}.] [Maybe talk to her?|She was waiting for you.]
 
 @rule incident.brokepromise.self_no.energetic
 on incident
@@ -403,6 +404,7 @@ when inc=broke self=no tone=energetic
 - You bailed on {about}!
 - You ditched {about}!
 - {about}'s upset with you!
+- [Seriously? You ditched {about}?|Everyone's saying you flaked on {about}!] [Not cool!|You'd better fix that!]
 
 @rule incident.brokepromise.self_no.cool
 on incident
@@ -411,6 +413,7 @@ when inc=broke self=no tone=cool
 - You broke your word to {about}.
 - {about}. Promise broken.
 - Not kept with {about}.
+- [Word is you broke a promise to {about}.|{about} says you didn't show.] [Not a good look.|People notice that.]
 
 @rule incident.brokepromise.self_no.teasing
 on incident

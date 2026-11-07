@@ -217,18 +217,21 @@ namespace Joojkk.CampusLife
         /// (2026-10-31): a tail is another subject, and it stood between her line and your options. No opener later in the
         /// exchange either: they greet you ("Hi, you."), which made no sense as an answer.
         /// </summary>
-        private static string Compose(string line, Dictionary<string, string> c)
+        /// <summary>
+        /// simple-context pieces reach every area; an opener comes before the line, so the options still answer it).
+        /// </summary>
+        private static string Compose(string line, Dictionary<string, string> c, bool hooked = false)
         {
             if (string.IsNullOrEmpty(line)) return line;
-            var open = Random.value < (Heavy(c) ? 0.2f : 0.4f) ? Bank.Piece("open", c, 1) : "";
+            var open = Random.value < (Heavy(c) ? 0.2f : hooked ? 0.28f : 0.4f) ? Bank.Piece("open", c, 1) : "";
             // Openers end in a stop ("Mm, babe...", "Sensei!"), so her line keeps its capital and names stay whole.
             return open == "" ? line : open.Trim() + " " + line;
         }
 
         /// <summary>The last line of an exchange that went well takes a tail now and then: nothing comes after it to answer.</summary>
-        private static string Close(string line, Dictionary<string, string> c)
+        private static string Close(string line, Dictionary<string, string> c, bool hooked = false)
         {
-            if (string.IsNullOrEmpty(line) || Heavy(c) || Random.value >= 0.35f) return line;
+            if (string.IsNullOrEmpty(line) || Heavy(c) || Random.value >= (hooked ? 0.25f : 0.35f)) return line;
             var tail = Bank.Piece("tail", c, 1);
             return tail == "" ? line : line.TrimEnd() + " " + tail.Trim();
         }

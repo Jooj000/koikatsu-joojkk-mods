@@ -267,6 +267,7 @@ on @errand
 when errandat=cafeteria reqsrc=board
 - [Could you get me a melon bread before they sell out?|The cafeteria melon bread. I need one. Before it's gone.|Grab me a melon bread? They always run out.]
 - [One melon bread from the cafeteria. Just one. Please?|If you're near the cafeteria, a melon bread would save my day.|They only bake a few melon breads. Could you get one for me?]
+- [Melon bread. Cafeteria. Before the rush. Please.|If the cafeteria still has melon bread, get me one?] [I'll pay you back.|You're a lifesaver.]
 
 @rule errand.staffroom
 on @errand
@@ -309,11 +310,13 @@ on @errand
 when reqsrc=arc
 - [I lost my charm. Someone saw one at the {place}.|My charm's gone. Someone said it's at the {place}.|My little charm... it might be at the {place}.]
 - [My good-luck charm fell off my bag. Someone saw it at the {place}.|I had a charm on my bag... someone found one at the {place}.|My charm! It might be at the {place}. Please?]
+- [My good-luck charm is missing. Maybe at the {place}?|I think I left my charm at the {place}.] [Could you look?|I feel naked without it.]
 
 @rule errand.any
 on @errand
 - [Could you go to the {place} for me?|There's something at the {place} I need.|I need something done at the {place}.]
 - [Could you run over to the {place}? I'd owe you.|There's something at the {place} I need. Could you go?|Do you have time to go to the {place} for me?]
+- [Would you stop by the {place} for me?|Could you check the {place}? I can't get away.] [I'll owe you one.|It won't take long.]
 
 @rule board.first.other.gentle
 on board

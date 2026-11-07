@@ -42,6 +42,9 @@ namespace Joojkk.CampusLife
 
         public static Sprite StoryBadge() { return Badge("star", Gold); }
 
+        /// <summary>A round badge with any drawing (IconArt's glyphs), for the panel's rows.</summary>
+        public static Sprite Glyph(string glyph, Color c) { return Badge(glyph, new[] { c.r, c.g, c.b }); }
+
         internal static string Describe(Request r)
         {
             var g = GlyphOf(r);
@@ -87,6 +90,34 @@ namespace Joojkk.CampusLife
         }
 
         private static readonly float[] Gold = { 0.98f, 0.76f, 0.26f };
+
+        /// <summary>The badge's color as a Color (the board block paints its kind label with it).</summary>
+        public static Color TintOf(Request r)
+        {
+            var c = ColorOf(r, GlyphOf(r));
+            return new Color(c[0], c[1], c[2], 1f);
+        }
+
+        /// <summary>What kind of request it is, in one or two words (the colored label on the board).</summary>
+        public static string KindLabel(Request r)
+        {
+            if (r.Source == "arc") return "Story";
+            if (r.Lewd || r.Kind == RequestKind.Intimate) return "Private";
+            switch (r.Kind)
+            {
+                case RequestKind.Talk: return "Talk";
+                case RequestKind.MeetAt: return "Meet up";
+                case RequestKind.Lunch: return "Lunch";
+                case RequestKind.Study: return "Study";
+                case RequestKind.Exercise: return "Workout";
+                case RequestKind.Club: return "Club";
+                case RequestKind.WalkHome: return "Walk home";
+                case RequestKind.Gift: return "Gift";
+                case RequestKind.Errand: return "Errand";
+                case RequestKind.Activity: return "Activity";
+                default: return "Request";
+            }
+        }
 
         private static float[] KindColor(Request r)
         {

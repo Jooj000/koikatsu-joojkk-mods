@@ -88,6 +88,39 @@ namespace Joojkk.CampusLife
             return S == null ? 0 : S.Lore.Count(f => f.Verb == verb && f.Subject == Lore.Player);
         }
 
+        private static int SumH()
+        {
+            try { return G.Heroines.Where(h => h != null).Sum(h => h.hCount); }
+            catch { return 0; }
+        }
+
+        private static int MaxH()
+        {
+            try { return G.Heroines.Where(h => h != null).Select(h => h.hCount).DefaultIfEmpty(0).Max(); }
+            catch { return 0; }
+        }
+
+        /// <summary>Two students (not you) who did it, as far as the school's lore knows.</summary>
+        private static int OthersH()
+        {
+            return S == null ? 0 : S.Lore.Count(f => f.Verb == "had_h" && f.Subject != Lore.Player && f.Obj != Lore.Player);
+        }
+
+        /// <summary>Your girlfriends who are also with someone else: in a couple, or kissing or sleeping with another.</summary>
+        private static int CheatedOn()
+        {
+            try
+            {
+                var gfs = G.Heroines.Where(h => h != null && h.isGirlfriend).ToList();
+                var n = gfs.Count(h => { var p = Pairs.PairOf(h); return p != null && (p.Stage == PairStage.Couple || p.Stage == PairStage.Strained); });
+                var keys = new HashSet<string>(gfs.Select(GirlInfo.Key));
+                n += S.Lore.Where(f => (f.Verb == "had_h" || f.Verb == "kissed" || f.Verb == "cheated") && f.Subject != Lore.Player && f.Obj != Lore.Player && (keys.Contains(f.Subject) || keys.Contains(f.Obj)))
+                    .Select(f => keys.Contains(f.Subject) ? f.Subject : f.Obj).Distinct().Count();
+                return n;
+            }
+            catch { return 0; }
+        }
+
         private static int ClubContents()
         {
             try { return Singleton<Manager.Game>.Instance.saveData.clubContents.Values.Sum(x => x != null ? x.Count : 0); }
@@ -158,6 +191,15 @@ namespace Joojkk.CampusLife
                 St(1, "Next Chapter", "Finish a chapter of your story with your girlfriend."),
                 St(2, "Turning Pages", "Finish two chapters with one girlfriend."),
                 St(3, "Happily Ever After", "Finish all three chapters with one girlfriend.") } },
+            new Def { Id = "h:outdoor", Cat = "Romance", Tier = 2, Name = "Fresh Air", Goal = "Go all the way outdoors." },
+            new Def { Id = "h_one", Cat = "Romance", Tier = 3, Name = "Made for Each Other", Progress = MaxH, Stages = new[] {
+                St(5, "Familiar Touch", "Go all the way 5 times with the same girl."),
+                St(15, "Second Nature", "Go all the way 15 times with the same girl."),
+                St(40, "Made for Each Other", "Go all the way 40 times with the same girl.") } },
+            new Def { Id = "h_total", Cat = "Romance", Tier = 3, Name = "Passion", Progress = SumH, Stages = new[] {
+                St(5, "Regulars", "Go all the way 5 times."),
+                St(25, "Insatiable", "Go all the way 25 times."),
+                St(75, "Campus Legend", "Go all the way 75 times.") } },
             new Def { Id = "harem", Cat = "Romance", Tier = 3, Name = "Shared Heart", Goal = "Have two girlfriends who agreed to share you.", Target = 2, Progress = () => S.Harem.Count },
             new Def { Id = "all_dates", Cat = "Romance", Tier = 3, Name = "Everyone's Sweetheart", Goal = "Date every student on campus.", Roster = true, Goal2 = () => Students(h => true), Progress = () => Students(h => h.isGirlfriend) },
 
@@ -219,6 +261,16 @@ namespace Joojkk.CampusLife
             new Def { Id = "settle:side", Cat = "Trouble", Tier = 2, Name = "Picking Sides", Progress = () => C("settle:a") + C("settle:b"), Stages = new[] {
                 St(1, "Picking Sides", "Two girls disagree: side with one of them."),
                 St(3, "Partisan", "Side with one girl in 3 disagreements.") } },
+            new Def { Id = "h:cheat", Cat = "Trouble", Tier = 2, Name = "Two-Timer", Stages = new[] {
+                St(1, "Two-Timer", "Go all the way with a girl while another girl is your girlfriend."),
+                St(5, "Serial Cheater", "Cheat on your girlfriend 5 times.") } },
+            new Def { Id = "h:taken", Cat = "Trouble", Tier = 2, Name = "Homewrecker", Stages = new[] {
+                St(1, "Homewrecker", "Go all the way with a girl who is with someone else."),
+                St(5, "Forbidden Fruit", "Do it 5 times with girls who are taken.") } },
+            new Def { Id = "cheated_on", Cat = "Trouble", Tier = 2, Name = "Not the Only One", Goal = "Find out your girlfriend is with someone else.", Progress = CheatedOn },
+            new Def { Id = "h:seen", Cat = "Trouble", Tier = 2, Name = "Exhibition", Stages = new[] {
+                St(1, "Exhibition", "Get seen while going all the way."),
+                St(5, "No Shame", "Get seen 5 times while going all the way.") } },
             new Def { Id = "broke_up", Cat = "Trouble", Tier = 2, Name = "It's Over", Goal = "Break up with a girlfriend.", Progress = () => LoreCount("broke_up") },
             new Def { Id = "walked_in", Cat = "Trouble", Tier = 3, Name = "Wrong Door", Progress = () => SumGirl(g => g.Caught), Stages = new[] {
                 St(1, "Oops", "Walk in on a girl with someone else."),
@@ -242,6 +294,11 @@ namespace Joojkk.CampusLife
             new Def { Id = "duo:trisal", Cat = "Secrets", Tier = 2, Name = "Two Hearts", Secret = true, Goal = "Both your girlfriends come to see you together.", Hint = "When two hearts agree, they come as one." },
             new Def { Id = "trio:h3", Cat = "Secrets", Tier = 2, Name = "Three's Company", Secret = true, Goal = "Go somewhere private with two girls at once.", Hint = "Some invitations work better for three." },
             new Def { Id = "diplomat", Cat = "Secrets", Tier = 3, Name = "Diplomat", Secret = true, Goal = "Settle 3 disagreements without picking a side.", Target = 3, Progress = () => C("settle:middle") + C("settle:change"), Hint = "Sometimes nobody has to win." },
+            new Def { Id = "others_h", Cat = "Secrets", Tier = 2, Name = "Thin Walls", Secret = true, Progress = OthersH, Hint = "Walls are thin, and students talk.", Stages = new[] {
+                St(1, "Thin Walls", "Learn that two students went all the way."),
+                St(5, "Campus Heat", "Learn of 5 times students went all the way."),
+                St(15, "Everyone's Doing It", "Learn of 15 times students went all the way.") } },
+            new Def { Id = "h:rain", Cat = "Secrets", Tier = 2, Name = "Singing in the Rain", Secret = true, Goal = "Go all the way outdoors in the rain.", Hint = "Some don't run from the rain." },
             new Def { Id = "kissed_five", Cat = "Secrets", Tier = 3, Name = "Heartbreaker", Secret = true, Goal = "Kiss 5 different girls.", Target = 5, Progress = KissedGirls, Hint = "Count the lips, not the days." },
         };
 
@@ -451,6 +508,27 @@ namespace Joojkk.CampusLife
                 Check(with);
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Achievement count " + key + ": " + e.Message); }
+        }
+
+        /// <summary>
+        /// taken, outdoors, in the rain. Being seen comes from Lore.FromH.
+        /// </summary>
+        public static void AfterH(SaveData.Heroine h, List<SaveData.Heroine> all)
+        {
+            try
+            {
+                if (h == null) return;
+                if (G.Heroines.Any(x => x != null && x.isGirlfriend && x != h && (all == null || !all.Contains(x)))) Count("h:cheat", h);
+                var p = Pairs.PairOf(h);
+                if (p != null && (p.Stage == PairStage.Couple || p.Stage == PairStage.Strained || p.Stage == PairStage.Talking)) Count("h:taken", h);
+                if (Weather.Outdoor(G.PlayerMapNo))
+                {
+                    Count("h:outdoor", h);
+                    if (Weather.Raining) Count("h:rain", h);
+                }
+                Check(h);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Achievements after H: " + e.Message); }
         }
 
         /// <summary>A kiss (touch or option): first kiss, the wary one, the rain.</summary>

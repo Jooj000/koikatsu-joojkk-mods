@@ -17,6 +17,7 @@ when idle=1 tone=energetic
 - [Helloooo? Earth to {you}!|Hey, you zoning out?|Uh, hello?] [Say something!|I'm getting bored here!]
 - [Did you fall asleep standing up?|Wow, riveting conversation.] [Come on, talk to me!|Okay, I'll just stare back then.]
 - [Boooored!|Hey hey!] [Tell me a joke!|Quick, say the first thing you think of!]
+- [Hey! Hellooo?|You froze!] [Are you even listening?|Talk to me!]
 
 @rule idle.1.cool
 on idle
@@ -24,6 +25,7 @@ when idle=1 tone=cool
 - [...|...Well?|Hm.] [Take your time.|If you have nothing to say, that's fine.]
 - [Are you going to say something?|...] [I'm not in a hurry.|Silence suits me.]
 - [...You're quiet.|Hm.] [I respect that.|Thinking is underrated.]
+- [...You're quiet.|Silence is fine too.] [I'll wait.|Say it when you're ready.]
 
 @rule idle.1.teasing
 on idle
@@ -72,15 +74,15 @@ when idle=3
 feel serious
 - [Well... if you don't have anything to say...|Okay.|Alright then.] [I'll be around.|Talk to me when you're ready.]
 - [I guess I'll just wait.|Hmm.] [You're a mystery, you know that?|Whenever you're ready.]
-- [Alright...|Hm.] [I'll leave you be.|Find me later, okay?]
+- [Alright...|Hm.] [I'll just stand here, then.|I'm not going anywhere, you know.]
 
 @rule idle.3.leave
 on idle
 when idle=3 rel=stranger|acquaintance dating=no
 feel pout
-- [Um... I'm going to go now.|Okay, this is weird. Bye.|I have things to do.] [See you around, I guess.|Bye.]
-- [Sorry, I have to go.|Right... well, bye.] [Maybe talk next time?|That was... something.]
-- [This is getting awkward.|Well...] [I'm heading out.|Bye, I guess?]
+- [Um... are you okay?|Okay, this is a little weird.|Hello?] [You keep spacing out.|Did you want something?]
+- [Right... well...|Um.] [Do you always stare like this?|I'll wait, I guess.]
+- [This is getting awkward.|Well...] [Say something, or I'll start talking about the weather.|Is there something on my face?]
 
 @rule idle.3.gf
 on idle
@@ -113,6 +115,7 @@ when idle=1 rel=friend
 - [So... what's up?|You seem distracted.|Hey, you in there?] [Did something happen?|You can talk to me, you know.]
 - [This is comfortable, honestly.|Hehe.] [Not every friend can just sit in silence.|Want to just hang out?]
 - [So... got any plans?|Hey.] [We could just hang out.|You look like you need a break.]
+- [Earth to you.|Hey, still with me?] [Something on your mind?|Tell me what's up.]
 
 @rule idle.2.gf
 on idle

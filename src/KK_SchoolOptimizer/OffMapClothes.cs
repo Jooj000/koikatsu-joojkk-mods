@@ -33,6 +33,14 @@ namespace Joojkk.SchoolOptimizer
         private static readonly HashSet<NPC> Dressing = new HashSet<NPC>();
         private static readonly HashSet<NPC> WantShown = new HashSet<NPC>();
         private static readonly Dictionary<NPC, float> LastNeeded = new Dictionary<NPC, float>();
+        // When each release or rebuild started, and which run is hers now: a run that died (its coroutine stopped) or
+        // took too long is dropped and she is dressed at once; a late end of a dropped run then does nothing.
+        private static readonly Dictionary<NPC, float> Started = new Dictionary<NPC, float>();
+        private static readonly Dictionary<NPC, int> RunOf = new Dictionary<NPC, int>();
+        private static readonly Dictionary<NPC, Coroutine> Running = new Dictionary<NPC, Coroutine>();
+        private static int _runs;
+        private const float Stuck = 20f;    // seconds a release or rebuild may take before it counts as dead
+        private const float NeededWait = 3f; // a release still running when she is needed: this long to end on its own
         private static readonly HashSet<int> NearMaps = new HashSet<int>();
         private static readonly HashSet<int> NeededMaps = new HashSet<int>();
         private const float Away = 15f;     // seconds not needed before her clothes go
@@ -41,7 +49,7 @@ namespace Joojkk.SchoolOptimizer
         private static int _sinceCleanup, _lastMap = -1;
         private static float _next;
 
-        public static int StrippedTotal, DressedTotal, DressedUrgent, RebuiltByGame, KeptReleased, WaitedHidden;
+        public static int StrippedTotal, DressedTotal, DressedUrgent, RebuiltByGame, KeptReleased, WaitedHidden, StuckRecovered;
         public static float DressSecondsMax, DressSecondsSum, UrgentSecondsMax;
 
         private static bool On { get { return SchoolOptimizerPlugin.Enabled.Value && SchoolOptimizerPlugin.StripOffMap.Value; } }
@@ -111,12 +119,15 @@ namespace Joojkk.SchoolOptimizer
             if (Stripped.Count == 0 && Dressing.Count == 0 && Stripping.Count == 0 && !On) return;
             if (!Singleton<Game>.IsInstance() || Singleton<Game>.Instance.actScene == null)
             {
-                Stripped.Clear(); Stripping.Clear(); Dressing.Clear(); WantShown.Clear(); LastNeeded.Clear(); _lastMap = -1;
+                Stripped.Clear(); Stripping.Clear(); Dressing.Clear(); WantShown.Clear(); LastNeeded.Clear(); Started.Clear(); RunOf.Clear(); Running.Clear(); _lastMap = -1;
                 return;
             }
             var act = Singleton<Game>.Instance.actScene;
             if (act.Map == null || act.npcList == null || act.Player == null) return;
             var map = act.Map.no;
+
+            // for minutes), or a release still running while she is needed now: dropped, and she is dressed in this frame.
+            if (Stripping.Count > 0 || Dressing.Count > 0) Unstick(map);
 
             // Every frame: she is on the player's map, shown, or someone tried to show her.
             if (Stripped.Count > 0)
@@ -176,6 +187,29 @@ namespace Joojkk.SchoolOptimizer
                 foreach (var k in LastNeeded.Keys.Where(k => k == null || !act.npcList.Contains(k)).ToList()) LastNeeded.Remove(k);
         }
 
+        private static void Unstick(int map)
+        {
+            var now = Time.realtimeSinceStartup;
+            foreach (var npc in Stripping.Concat(Dressing).ToList())
+            {
+                float t0;
+                if (!Started.TryGetValue(npc, out t0)) Started[npc] = t0 = now;
+                var dead = npc == null || npc.chaCtrl == null || !npc.chaCtrl.gameObject.activeInHierarchy;
+                var needed = npc != null && (npc.isActive || npc.mapNo == map || WantShown.Contains(npc));
+                var stripping = Stripping.Contains(npc);
+                if (!dead && now - t0 < Stuck && !(stripping && needed && now - t0 >= NeededWait)) continue; // a live run is stopped mid-load only when it has to
+                Stripping.Remove(npc); Dressing.Remove(npc);
+                Drop(npc);
+                if (npc == null || npc.chaCtrl == null) continue;
+                OutfitDefer.Leave(npc, npc.chaCtrl);
+                StuckRecovered++;
+                SchoolOptimizerPlugin.Log.LogInfo("Off-map clothes: the " + (stripping ? "release" : "rebuild") + " of " + Name(npc) + "'s clothes " +
+                    (dead ? "stopped" : now - t0 >= Stuck ? "took over " + Stuck.ToString("0") + " s" : "was still running (over " + NeededWait.ToString("0") + " s) while she is needed") + "; dressed now");
+                if (npc.chaCtrl.gameObject.activeInHierarchy) Dress(npc, true);
+                else Stripped[npc.chaCtrl] = npc; // her body is off: dressed when it is back
+            }
+        }
+
         // ---------- release and rebuild ----------
 
         private static void Strip(NPC npc)
@@ -186,7 +220,9 @@ namespace Joojkk.SchoolOptimizer
                 OutfitDefer.Forget(npc); // a queued outfit change becomes data only
                 Empty(cha);
                 Stripping.Add(npc);
-                cha.StartCoroutine(StripRun(npc, cha));
+                Started[npc] = Time.realtimeSinceStartup;
+                RunOf[npc] = ++_runs;
+                Running[npc] = cha.StartCoroutine(StripRun(npc, cha, _runs));
             }
             catch (Exception e)
             {
@@ -198,10 +234,31 @@ namespace Joojkk.SchoolOptimizer
             }
         }
 
-        private static IEnumerator StripRun(NPC npc, ChaControl cha)
+        /// <summary>Her running release or rebuild no longer counts (and is stopped, if its coroutine still runs).</summary>
+        private static void Drop(NPC npc)
+        {
+            if (npc == null) return;
+            Started.Remove(npc); RunOf.Remove(npc);
+            Coroutine co;
+            if (Running.TryGetValue(npc, out co))
+            {
+                Running.Remove(npc);
+                try { if (co != null && npc.chaCtrl != null) npc.chaCtrl.StopCoroutine(co); } catch { }
+            }
+        }
+
+        private static bool Current(NPC npc, int run)
+        {
+            int now;
+            return npc != null && RunOf.TryGetValue(npc, out now) && now == run;
+        }
+
+        private static IEnumerator StripRun(NPC npc, ChaControl cha, int run)
         {
             var inner = OutfitDefer.ReloadOutfit(npc, cha);
             while (inner.MoveNext()) yield return inner.Current;
+            if (!Current(npc, run)) yield break; // dropped as stuck: she was dressed meanwhile
+            RunOf.Remove(npc); Started.Remove(npc); Running.Remove(npc);
             Stripping.Remove(npc);
             if (cha != null) Stripped[cha] = npc;
             OutfitDefer.Leave(npc, cha);
@@ -243,6 +300,7 @@ namespace Joojkk.SchoolOptimizer
         {
             var cha = npc.chaCtrl;
             Stripped.Remove(cha);
+            if (Stripping.Remove(npc) || Dressing.Remove(npc)) { Drop(npc); OutfitDefer.Leave(npc, cha); } // a release or rebuild still running for her no longer counts
             try
             {
                 OutfitDefer.Forget(npc);
@@ -252,7 +310,9 @@ namespace Joojkk.SchoolOptimizer
             if (!urgent)
             {
                 Dressing.Add(npc);
-                cha.StartCoroutine(DressRun(npc, cha, false));
+                Started[npc] = Time.realtimeSinceStartup;
+                RunOf[npc] = ++_runs;
+                Running[npc] = cha.StartCoroutine(DressRun(npc, cha, false, _runs));
                 return;
             }
             var t0 = Time.realtimeSinceStartup;
@@ -291,11 +351,13 @@ namespace Joojkk.SchoolOptimizer
             if (npc != null) SchoolOptimizerPlugin.Log.LogDebug("Dressed " + Name(npc) + " in " + s.ToString("0.00") + " s" + (urgent ? " (needed now, in one frame)" : ""));
         }
 
-        private static IEnumerator DressRun(NPC npc, ChaControl cha, bool urgent)
+        private static IEnumerator DressRun(NPC npc, ChaControl cha, bool urgent, int run)
         {
             var t0 = Time.realtimeSinceStartup;
             var inner = OutfitDefer.ReloadOutfit(npc, cha);
             while (inner.MoveNext()) yield return inner.Current;
+            if (!Current(npc, run)) yield break; // dropped as stuck: dressed again meanwhile
+            RunOf.Remove(npc); Started.Remove(npc); Running.Remove(npc);
             Dressing.Remove(npc);
             Shown(npc, cha, WantShown.Remove(npc));
             OutfitDefer.Leave(npc, cha);

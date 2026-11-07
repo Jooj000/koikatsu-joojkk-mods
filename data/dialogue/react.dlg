@@ -935,6 +935,7 @@ when move=admit profile=open kind=day
 feel smile
 - [So {mything} was really you.|Ha, {mything}! I knew you had it in you.] [Nice.|Good for you.]
 - [You don't even blush about {mything}.|Saying that with a straight face? {Mything}?] [I like it.|Ha.]
+- [{Mything}, really? That was you?|Ha! So you did it, {mything} and all.] [Respect.|Bold.]
 
 @rule react.hush.good
 on react
@@ -1026,6 +1027,7 @@ when move=agree fit=bad kind=day
 feel worried
 - [Don't just agree with me about {mything}.|You didn't have to go that far about {mything}.]
 - [Now I feel bad for bringing up {mything}.|I wish I hadn't said anything about {mything}.]
+- [Agreeing won't fix {mything}.|You don't have to say yes to everything about {mything}.]
 
 @rule react.defend.good
 on react

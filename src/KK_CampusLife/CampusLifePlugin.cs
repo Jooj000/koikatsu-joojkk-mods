@@ -42,6 +42,7 @@ namespace Joojkk.CampusLife
                 try { Consent.Install(harmony); }
                 catch (Exception e) { Log.LogWarning("Director answers not installed, the game answers: " + e.Message); }
                 Conversation.InstallReact(harmony);
+                TalkBacklog.Install(harmony);
                 Conversation.InstallTouchMore(harmony);
                 RadarMap.Install(harmony);
                 try { Reactions.Install(harmony); }

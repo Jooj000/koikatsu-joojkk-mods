@@ -80,6 +80,8 @@ namespace Joojkk.CampusLife
                 case Tone.Gentle: v.Set(0.75f, 0.4f, 0.5f, 0.2f, 0.5f, 0.3f, 0.5f); v.Kind = "gentle"; break;
                 case Tone.Energetic: v.Set(0.7f, 0.85f, 0.25f, 0.35f, 0.15f, 0.5f, 0.6f); v.Kind = "energetic"; break;
                 case Tone.Cool: v.Set(0.3f, 0.3f, 0.6f, 0.25f, 0.3f, 0.6f, 0.3f); v.Kind = "cool"; break;
+                case Tone.Shy: v.Set(0.7f, 0.25f, 0.55f, 0.1f, 0.85f, 0.15f, 0.3f); v.Kind = "shy"; break;
+                case Tone.Proper: v.Set(0.6f, 0.4f, 0.85f, 0.15f, 0.3f, 0.45f, 0.55f); v.Kind = "proper"; break;
                 default: v.Set(0.5f, 0.6f, 0.3f, 0.85f, 0.1f, 0.6f, 0.5f); v.Kind = "teasing"; break;
             }
             var name = GirlInfo.PersonalityName(h) ?? "";

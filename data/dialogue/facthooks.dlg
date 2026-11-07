@@ -7520,3 +7520,84 @@ when hook=f_you_peep_teacher fit=bad
 feel pout
 - That attitude won't help you.
 - I'll be calling student affairs.
+
+
+@rule move.h.f_us_gift_food.share
+on move.share
+when hook=f_us_gift_food
+- Say you almost ate it yourself on the way
+
+@rule react.h.f_us_gift_food.share
+on react
+when hook=f_us_gift_food move=share fit=good|neutral
+- Then I'm glad you held out.
+- Hehe. I'd have forgiven you. Maybe.
+
+@rule move.h.f_us_gift_food.tease
+on move.tease
+when hook=f_us_gift_food
+- Tease her for finishing it in one day
+
+@rule react.h.f_us_gift_food.tease
+on react
+when hook=f_us_gift_food move=tease fit=good|neutral
+- It was good! What was I supposed to do, wait?
+- Don't count how fast I eat.
+
+@rule move.h.f_us_gift_food.invite
+on move.invite
+when hook=f_us_gift_food
+- Say you know where they sell more
+
+@rule react.h.f_us_gift_food.invite
+on react
+when hook=f_us_gift_food move=invite fit=good|neutral
+- Take me there, then.
+- Hm! Is that an invitation to go eat together?
+
+@rule react.h.f_us_gift_food.bad
+on react
+when hook=f_us_gift_food fit=bad
+feel pout
+- You don't have to spoil it.
+- It was a nice snack. Leave it at that.
+
+@rule move.h.f_us_gift_food_meh.ask
+on move.ask
+when hook=f_us_gift_food_meh
+- Ask what she'd rather eat
+
+@rule react.h.f_us_gift_food_meh.ask
+on react
+when hook=f_us_gift_food_meh move=ask fit=good|neutral
+- Something less sweet, maybe. Or salty!
+- Honestly? Anything from the bakery by the station.
+
+@rule move.h.f_us_gift_food_meh.share
+on move.share
+when hook=f_us_gift_food_meh
+- Admit you just grabbed what looked good
+
+@rule react.h.f_us_gift_food_meh.share
+on react
+when hook=f_us_gift_food_meh move=share fit=good|neutral
+- I could tell. It's okay, really.
+- At least it wasn't spicy.
+
+@rule move.h.f_us_gift_food_meh.thank
+on move.thank
+when hook=f_us_gift_food_meh
+- Thank her for eating it anyway
+
+@rule react.h.f_us_gift_food_meh.thank
+on react
+when hook=f_us_gift_food_meh move=thank fit=good|neutral
+- I wasn't going to waste it.
+- You're welcome. I think.
+
+@rule react.h.f_us_gift_food_meh.bad
+on react
+when hook=f_us_gift_food_meh fit=bad
+feel pout
+- I said it was fine.
+- Why are you making this awkward?

@@ -116,13 +116,13 @@ namespace Joojkk.CampusLife
             var likes = GirlInfo.LikesOf(h);
             var l = new List<Plan>
             {
-                new Plan { Like = "sweets", Idea = "a new crepe stand by the station", Place = "the crepe stand", Bg = "@sweets|tanabata_street", Back = "@street|festival_stalls_night" },
-                new Plan { Like = "food", Idea = "an all-you-can-eat place downtown", Place = "the restaurant", Bg = "@street|tanabata_street", Back = "@cafe|festival_stalls_night" },
-                new Plan { Like = "study", Idea = "the big bookstore two stations away", Place = "the bookstore", Bg = "@station|train", Back = "@street|kyoto_temple" },
-                new Plan { Like = "animals", Idea = "the cat café that just opened", Place = "the cat café", Bg = "@cafe|tanabata_street", Back = "@parkway|snow_park_night" },
-                new Plan { Like = "fashion", Idea = "window shopping in the mall", Place = "the mall", Bg = "@station|train", Back = "@shop|tanabata_street" },
-                new Plan { Like = "exercise", Idea = "a hike up to the shrine on the hill", Place = "the shrine", Bg = "kyoto_temple", Back = "@park|inn_room_day" },
-                new Plan { Like = "coffee", Idea = "a quiet café she's been wanting to try", Place = "the café", Bg = "@cafe|tanabata_street", Back = "@street|inn_room_day" },
+                new Plan { Like = "sweets", Idea = "a new crepe stand by the station", Place = "the crepe stand", Bg = "@sweets|tanabata_street", Back = "@shopping|@street|festival_stalls_night" },
+                new Plan { Like = "food", Idea = "an all-you-can-eat place downtown", Place = "the restaurant", Bg = "@street|tanabata_street", Back = "@foodpark|@cafe|festival_stalls_night" },
+                new Plan { Like = "study", Idea = "the big bookstore two stations away", Place = "the bookstore", Bg = "@station|train", Back = "@shopping|@street|kyoto_temple" },
+                new Plan { Like = "animals", Idea = "the cat café that just opened", Place = "the cat café", Bg = "@cafefront|@cafe|tanabata_street", Back = "@bigpark|@parkway|snow_park_night" },
+                new Plan { Like = "fashion", Idea = "window shopping in the mall", Place = "the mall", Bg = "@shopping|@station|train", Back = "@shop|tanabata_street" },
+                new Plan { Like = "exercise", Idea = "a hike up to the shrine on the hill", Place = "the shrine", Bg = "kyoto_temple", Back = "@brpark|@park|inn_room_day" },
+                new Plan { Like = "coffee", Idea = "a quiet café she's been wanting to try", Place = "the café", Bg = "@cafe|tanabata_street", Back = "@cafefront|@street|inn_room_day" },
                 new Plan { Like = "cooking", Idea = "the morning market for ingredients", Place = "the market", Bg = "@shop|festival_stalls_night", Back = "@street|inn_room_day" },
             };
             var mine = l.Where(p => likes.Contains(p.Like)).ToList();
@@ -159,7 +159,7 @@ namespace Joojkk.CampusLife
             var trad = kind == "tradition" ? Seasons.Tradition(h) : null;
 
             // Part 1: The Meeting
-            b.Bg(kind == "quiet" ? "inn_room_day" : plan.Bg);
+            b.Bg(kind == "quiet" ? "@room|inn_room_day" : plan.Bg);
             b.Narr(kind == "quiet" ? "Sunday Story: \"A Day for Doing Nothing\"" : kind == "tradition" ? "Sunday Story: \"Our Usual\"" : kind == "friend" ? "Sunday Story: \"Party of Three\"" : "Sunday Story: \"The Plan That Went Wrong\"");
             b.Narr("Part 1: The Meeting.");
             if (kind == "quiet")
@@ -183,7 +183,7 @@ namespace Joojkk.CampusLife
             }
 
             // Part 2: Unexpected Trouble
-            b.Bg(kind == "quiet" ? "inn_room_day" : plan.Back);
+            b.Bg(kind == "quiet" ? "@room|inn_room_day" : plan.Back);
             b.Narr("Part 2: Unexpected Trouble.");
             var trouble = Random.Range(0, 3);
             if (kind == "quiet") b.Narr("The plan was nothing. Then the power goes out, and nothing becomes candles, a deck of cards and a thunderstorm outside.");

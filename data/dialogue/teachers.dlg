@@ -41,12 +41,14 @@ on move.comfort
 when kind=day role=teacher
 - {classes}[Tell her she's a good professor|Say the class is lucky to have her|Tell her she works too hard|Offer to help with something]
 - {classes}[Say her lectures are the clearest you've had|Tell her to take a real break today|Say the students talk well of her]
+- {classes}[Say her lectures are the best|Tell her to take a break|Say the students respect her]
 
 @rule move.tease.teacher
 on move.tease
 when kind=day role=teacher
 - {classes}[Joke about professors' lives|Ask for easier assignments|Tease her, sensei or not|Ask if that means no test]
 - {classes}[Ask if professors get assignments too|Say she'd fail her own pop quiz|Ask what she does when nobody's grading]
+- {classes}[Ask if professors get homework too|Joke about the coffee in the staff room|Tease her about grading]
 
 # ================= when you ask her why =================
 @rule react.comfort.teacher

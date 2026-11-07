@@ -344,6 +344,8 @@ when amood=none close=0 tone=cool
 - Fine.
 - Fine, thanks.
 - Alright.
+- Nothing to report.
+- [Same as always.|Normal.] [Why?|Is that a problem?]
 
 @rule ask.mood.none.0.teasing
 on ask
@@ -1191,6 +1193,8 @@ when close=0
 - Hi. How's your day going?
 - Hey, how are you today?
 - Hello. Having a good day?
+- [Hello. Having a good day?|Hi. Busy day?]
+- [Excuse me, hi. How's it going?|Hey. Everything okay?]
 
 @rule me.ask.close
 on me.ask
@@ -1198,3 +1202,5 @@ when close!=0
 - How are you today?
 - How's your day going?
 - You okay? How are you feeling today?
+- [Hey. How are you really?|So how's today treating you?]
+- [You look good today. Are you?|How are you holding up?]

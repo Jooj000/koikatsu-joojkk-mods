@@ -2512,38 +2512,38 @@ when hook=coffee_yes_craft
 @rule move.h.coffee_yes_craft.ask
 on move.ask
 when hook=coffee_yes_craft
-- Ask how you'd tell a good cup from a bad one
+- Ask how she can tell
 
 @rule react.h.coffee_yes_craft.ask
 on react
 when hook=coffee_yes_craft move=ask fit=good|neutral
-- A good one leaves you tasting something after it's gone.
-- If you want sugar, it's a bad one.
-- Smell it first. If it smells like a burnt pot, run.
+- You said "coffee" like it was a flavor of vending machine.
+- You looked at the café menu like it was in another language.
+- Nobody who's had a real one asks for five sugars.
 
-@rule move.h.coffee_yes_craft.praise
-on move.praise
+@rule move.h.coffee_yes_craft.admit
+on move.admit
 when hook=coffee_yes_craft
-- Say she knows more than most café owners
+- Admit it, and ask her to show you a real one
 
-@rule react.h.coffee_yes_craft.praise
+@rule react.h.coffee_yes_craft.admit
 on react
-when hook=coffee_yes_craft move=praise fit=good|neutral
-- Don't flatter me... Go on, though.
-- I've made a lot of bad cups to know this.
-- That's the nicest thing anyone's said about my kitchen.
+when hook=coffee_yes_craft move=admit fit=good|neutral
+- Then I'm taking you. No excuses.
+- Finally, some honesty. I know a place.
+- Your first real cup is on me. The second one is on you.
 
 @rule move.h.coffee_yes_craft.tease
 on move.tease
 when hook=coffee_yes_craft
-- Ask if she can taste the bean's childhood too
+- Say you've had plenty, from the vending machine
 
 @rule react.h.coffee_yes_craft.tease
 on react
 when hook=coffee_yes_craft move=tease fit=good|neutral
-- It had a hard childhood, and a soft finish.
-- Laugh all you want, I can taste your attitude.
-- Mock me after you've tried a real one.
+- That's not coffee. That's brown water with a button.
+- I'm going to pretend you didn't say that.
+- ...We need to fix you. Today.
 
 @rule react.h.coffee_yes_craft.bad
 on react
@@ -8351,8 +8351,8 @@ when hook=school_staff
 @rule react.h.school_staff.ask
 on react
 when hook=school_staff move=ask fit=good|neutral
-- Someone's phone rang. It was his.
-- I can't do the voice, but I'll try.
+- Someone forgot the homework. Then everyone had forgotten it. He sighed like the world ended.
+- I can't do the voice, but I'll try. "Is this what you call studying?"
 - It's a long story, and I come out of it badly.
 
 @rule move.h.school_staff.share
@@ -8385,6 +8385,203 @@ when hook=school_staff fit=bad
 feel pout
 - Keep your voice down.
 - Don't get me in trouble.
+
+
+@rule me.h.school_phone
+on me.small
+when hook=school_phone
+- How are classes?
+- How's it going with the professors?
+
+@rule move.h.school_phone.ask
+on move.ask
+when hook=school_phone
+- Ask if he answered it
+
+@rule react.h.school_phone.ask
+on react
+when hook=school_phone move=ask fit=good|neutral
+- He did! "One moment, class." In the middle of the lecture!
+- He looked at it, sighed, and put it on silent. Then it rang again.
+- He tried to pretend it wasn't his. It played his favorite song.
+
+@rule move.h.school_phone.share
+on move.share
+when hook=school_phone
+- Say yours forgot to mute it once too
+
+@rule react.h.school_phone.share
+on react
+when hook=school_phone move=share fit=good|neutral
+- Your phone or your professor's? Both are funny.
+- So it's a campus tradition. Good to know.
+- Then I'll know who to blame next time.
+
+@rule move.h.school_phone.tease
+on move.tease
+when hook=school_phone
+- Say she should have called him back
+
+@rule react.h.school_phone.tease
+on react
+when hook=school_phone move=tease fit=good|neutral
+- And fail the class? Tempting.
+- You'd do it, wouldn't you.
+- Only if you dial.
+
+@rule react.h.school_phone.bad
+on react
+when hook=school_phone fit=bad
+feel pout
+- It wasn't that funny, I guess.
+- You had to be there.
+
+@rule me.h.school_dean
+on me.small
+when hook=school_dean
+- Anything happen at school today?
+- How was the morning assembly?
+
+@rule move.h.school_dean.ask
+on move.ask
+when hook=school_dean
+- Ask what the speech was even about
+
+@rule react.h.school_dean.ask
+on react
+when hook=school_dean move=ask fit=good|neutral
+- Spirit. School spirit, team spirit, the spirit of spring. I lost count.
+- I think it was about being on time. It made us late.
+- No idea. I counted the ceiling tiles. Three hundred and twelve.
+
+@rule move.h.school_dean.share
+on move.share
+when hook=school_dean
+- Say you slept through it
+
+@rule react.h.school_dean.share
+on react
+when hook=school_dean move=share fit=good|neutral
+- Standing up? Teach me.
+- Lucky. I was in the front row.
+- Then you missed nothing. Well, the spirit.
+
+@rule move.h.school_dean.tease
+on move.tease
+when hook=school_dean
+- Do your best dean impression
+
+@rule react.h.school_dean.tease
+on react
+when hook=school_dean move=tease fit=good|neutral
+- Stop, stop, he'll hear you! ...Do it again.
+- That's too good. That's scary good.
+- Ahem. "Spirit." You forgot the spirit.
+
+@rule react.h.school_dean.bad
+on react
+when hook=school_dean fit=bad
+feel pout
+- He's not that bad.
+- Let's not make fun of him here.
+
+@rule me.h.school_desk
+on me.small
+when hook=school_desk
+- How are classes?
+- How's your seat this term?
+
+@rule move.h.school_desk.ask
+on move.ask
+when hook=school_desk
+- Ask where she ended up sitting
+
+@rule react.h.school_desk.ask
+on react
+when hook=school_desk move=ask fit=good|neutral
+- Front row, under the projector. It hums at me.
+- By the window. Good view, bad desk.
+- Right next to the door. Everyone who comes late says hi to me.
+
+@rule move.h.school_desk.share
+on move.share
+when hook=school_desk
+- Say your chair squeaks every time you move
+
+@rule react.h.school_desk.share
+on react
+when hook=school_desk move=share fit=good|neutral
+- So the furniture is against both of us.
+- We should swap complaints. And chairs.
+- At least yours talks back. Mine just wobbles.
+
+@rule move.h.school_desk.tease
+on move.tease
+when hook=school_desk
+- Offer to trade desks
+
+@rule react.h.school_desk.tease
+on react
+when hook=school_desk move=tease fit=good|neutral
+- Deal. You get the wobble, I get the squeak.
+- You'd do that for me? Suspicious.
+- And sit through my classes? Brave.
+
+@rule react.h.school_desk.bad
+on react
+when hook=school_desk fit=bad
+feel pout
+- It's not funny when it's your desk.
+- Never mind.
+
+@rule me.h.school_walk
+on me.small
+when hook=school_walk
+- How are classes?
+- How's it going with the professors?
+
+@rule move.h.school_walk.ask
+on move.ask
+when hook=school_walk
+- Ask what she likes about the walk home
+
+@rule react.h.school_walk.ask
+on react
+when hook=school_walk move=ask fit=good|neutral
+- Nobody's grading it. And the bakery on the corner is still open.
+- The light, I think. Everything's orange and nobody's in a hurry.
+- It's the only time of day nobody wants anything from me.
+
+@rule move.h.school_walk.share
+on move.share
+when hook=school_walk
+- Say the walk home is your favorite part too
+
+@rule react.h.school_walk.share
+on react
+when hook=school_walk move=share fit=good|neutral
+- Then we're both bad students. Good.
+- Maybe we take the same road and never noticed.
+- Our secret, then.
+
+@rule move.h.school_walk.tease
+on move.tease
+when hook=school_walk
+- Promise not to tell the professors, for a price
+
+@rule react.h.school_walk.tease
+on react
+when hook=school_walk move=tease fit=good|neutral
+- A price? ...Fine. One melon bread.
+- Blackmail already? I like you less. A little.
+- What's your price? Careful how you answer.
+
+@rule react.h.school_walk.bad
+on react
+when hook=school_walk fit=bad
+feel pout
+- Forget I said anything.
+- It was a joke. Mostly.
 
 @rule me.h.school_slack
 on me.small

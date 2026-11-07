@@ -114,6 +114,11 @@ namespace Joojkk.CampusLife
                     // No floor of days (user, 2026-10-30): the daily curve of favor (G.AddFavor) makes it take ~5 days
                     // for a reserved girl, 4 for a normal one, 2-3 for an open one (pacesim).
                     c = (favor - 50f) / 40f;
+                    // H, confessar não deu certo"): a rumor that she likes you, and H you already had, are part of it.
+                    int rumorDay;
+                    if (S.Buffs.TryGetValue("rumor:" + GirlInfo.Key(h), out rumorDay) && S.Day - rumorDay <= 4) { c += 0.4f; r.Add("the rumor is true"); }
+                    if (h.hCount > 0) { c += Mathf.Min(0.25f, 0.1f + h.hCount * 0.05f); r.Add("H " + h.hCount + "x"); }
+                    if (lewd >= 50f) { c += 0.1f; r.Add("lewd " + (int)lewd); }
                     break;
                 // upset girlfriend under a friend who likes you a lot, and she never held your hand).
                 case Ask.Date:

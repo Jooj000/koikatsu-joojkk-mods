@@ -11,6 +11,23 @@ namespace Joojkk.CampusLife
     /// <summary>Harmony patches. Every patch is wrapped so a failure never breaks the game's own code.</summary>
     internal static class Hooks
     {
+        /// <summary>
+        /// back. A girl the guard had to show twice is watched; whoever hides her body next is logged with the call stack.
+        /// </summary>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ChaControl), "SetActiveTop")]
+        private static void SetActiveTopWatch(ChaControl __instance, bool active)
+        {
+            try
+            {
+                if (active || __instance == null || Stage.Watched == null || __instance != Stage.Watched) return;
+                if (UnityEngine.Time.realtimeSinceStartup < Stage.WatchNext) return;
+                Stage.WatchNext = UnityEngine.Time.realtimeSinceStartup + 10f;
+                CampusLifePlugin.Log.LogInfo("Stage watch: body hidden again by\n" + Environment.StackTrace);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug(e); }
+        }
+
         /// <summary>A talk scene was created: remember it (saves G.TalkScene a search over the whole scene).</summary>
         [HarmonyPostfix]
         [HarmonyPatch(typeof(TalkScene), "Awake")]

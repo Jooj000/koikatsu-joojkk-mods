@@ -495,8 +495,8 @@ namespace Joojkk.CampusLife
             // Weight: she walks off after the third silence if she barely knows you; a crowd watching you
             // touch her gets talked about; a rival watching remembers.
             Action after = p.PartName != null ? SpotAfter(p) : null;
-            if (p.PartName == null && on == "idle" && c["idle"] == "3" && h.relation <= 0 && !h.isGirlfriend) after = () => { _endNext = true; };
-            else if (p.PartName == null && on == "touch" && c.ContainsKey("wrel"))
+            // walks off after the third one, whoever she is. Only the empty blue bar or your goodbye closes the talk.
+            if (p.PartName == null && on == "touch" && c.ContainsKey("wrel"))
             {
                 var near = Onlookers(h);
                 if (c["wrel"] == "rival" && near.Count > 0) after = () => { foreach (var x in near.Where(x => Social.Bond(h, x) <= -30)) Arcs.AddBond(key, GirlInfo.Key(x), -2); };

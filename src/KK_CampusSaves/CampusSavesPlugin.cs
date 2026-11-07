@@ -82,6 +82,8 @@ namespace Joojkk.CampusSaves
     {
         public static string SaveNow(string kind) { return SaveFlow.SaveNow(string.IsNullOrEmpty(kind) ? "manual" : kind, "test"); }
 
+        public static string Pics(string unused) { return SavesPanel.PicState(); }
+
         public static string Info(string unused)
         {
             var s = "";

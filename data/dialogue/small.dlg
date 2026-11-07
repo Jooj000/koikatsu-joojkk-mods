@@ -761,12 +761,16 @@ when subject=school
 shape state
 hook school_staff
 opens ask,share,tease
-- {student}Campus is campus. One professor's phone rang in the middle of his own lecture.
+- {hook:school_phone}{student}Campus is campus. One professor's phone rang in the middle of his own lecture.
+- {hook:school_phone}{student}A phone went off in the lecture hall today. It was the professor's.
 - {student}Our professor was in a mood today. I almost laughed.
-- {student}The dean gave another long speech. Nobody listened.
-- The professor made the seating chart, and it hates me.
-- {student}My desk wobbles, and the professor calls it character-building.
-- {student}I like the walk home more than the classes. Don't tell the professors.
+- {student}The professor sighed at us for ten minutes straight. I almost laughed.
+- {hook:school_dean}{student}The dean gave another long speech. Nobody listened.
+- {hook:school_dean}{student}The dean talked through half of first period again. About "spirit."
+- {hook:school_desk}The professor made the seating chart, and it hates me.
+- {hook:school_desk}{student}My desk wobbles, and the professor calls it character-building.
+- {hook:school_walk}{student}I like the walk home more than the classes. Don't tell the professors.
+- {hook:school_walk}{student}Honestly? The best part of class is the walk home after it. Keep that between us.
 
 @rule small.school.slack~state
 on small

@@ -459,6 +459,29 @@ namespace Joojkk.CampusLife
 
         private static int _frame = -1;
         private Collider _col;
+        private static int _hoverFrame = -1;
+        private static bool _bHover;
+        internal static bool BHovering { get { return _bHover; } }
+
+        /// <summary>
+        /// cursor waited for Unity's OnMouseEnter, which the player's triggers in front of her never let through, so she
+        /// looked untouchable. Once a frame, the same ray decides the hover: the game's enter and exit, as on the first girl.
+        /// </summary>
+        private static void BHover(Camera cam)
+        {
+            if (_hoverFrame == Time.frameCount) return;
+            _hoverFrame = Time.frameCount;
+            var over = false;
+            foreach (var hit in Physics.RaycastAll(cam.ScreenPointToRay(Input.mousePosition), 30f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
+            {
+                var spot = hit.collider != null ? hit.collider.GetComponent<TouchSpot>() : null;
+                if (spot != null && spot.ForB && hit.collider.enabled) { over = true; break; }
+            }
+            if (over && EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) over = false;
+            if (over == _bHover) return;
+            _bHover = over;
+            Conversation.SpotHover(over);
+        }
 
         /// <summary>
         /// The first girl's area stays on her body between talks: it is on only in a talk with her (off in the map, in H and in
@@ -494,9 +517,11 @@ namespace Joojkk.CampusLife
             try
             {
                 if (!ForB) YieldToHand();
-                if (!ForB || !Input.GetMouseButtonDown(0) || _frame == Time.frameCount) return;
+                if (!ForB) return;
                 var cam = Camera.main;
                 if (cam == null) return;
+                BHover(cam);
+                if (!Input.GetMouseButtonDown(0) || _frame == Time.frameCount) return;
                 TouchSpot best = null;
                 var near = float.MaxValue;
                 foreach (var hit in Physics.RaycastAll(cam.ScreenPointToRay(Input.mousePosition), 30f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))

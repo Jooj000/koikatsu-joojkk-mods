@@ -890,6 +890,8 @@ on me.romance
 when act=memories lvl=again
 hook memories.again
 - When can we do that again?
+- Can we do that again soon?
+- I keep thinking about last time. Again?
 
 @rule romance.memories.yes.first.gentle
 on romance
@@ -1298,11 +1300,15 @@ feel pout
 on me.romance
 when act=bold lvl=gf
 - I can't stop thinking about you. All of you.
+- You're all I think about. Every part of you.
+- I want you. More than I can say here.
 
 @rule me.romance.bold.notgf
 on me.romance
 when act=bold lvl=notgf
 - Honestly? I've been wanting to get a lot closer to you.
+- I'd like us to be a lot closer. Honestly.
+- Can I be honest? I want more than just talking.
 
 @rule romance.bold.yes.gentle
 on romance

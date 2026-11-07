@@ -41,6 +41,18 @@ namespace Joojkk.CampusLife
         /// <summary>Last topics built.</summary>
         internal static readonly List<string> LastTopics = new List<string>();
 
+        /// <summary>"food" for a gift she eats or drinks (by the item named in the fact's note), else "thing".</summary>
+        internal static string GiftKind(string note)
+        {
+            if (string.IsNullOrEmpty(note)) return "thing";
+            var n = note.ToLowerInvariant();
+            var item = Items.All.Where(x => x.Type == ItemType.Gift && !string.IsNullOrEmpty(x.Name)).FirstOrDefault(x => n.EndsWith(x.Name.ToLowerInvariant(), StringComparison.Ordinal));
+            if (item == null) return "thing";
+            var eats = item.Likes.Any(l => l == "sweets" || l == "food" || l == "coffee" || l == "spicy" || l == "tea")
+                       || new[] { "drink", "juice", "soda", "milk", "tea", "coffee", "can" }.Any(w => item.Name.ToLowerInvariant().Contains(w));
+            return eats ? "food" : "thing";
+        }
+
         private static bool TopicDone(string girl, string id) { return S.TopicsDone.Any(x => x.StartsWith(girl + "|" + id + "|", StringComparison.Ordinal)); }
 
         private static void MarkTopic(string girl, string id)
@@ -138,6 +150,13 @@ namespace Joojkk.CampusLife
                 }
                 t.Score = 2.5f;
             }
+            // so it plays the club small talk (club.dlg), not the lines about her day.
+            else if (t.Label.StartsWith("Ask how ", StringComparison.Ordinal) && t.Label.EndsWith(" went today", StringComparison.Ordinal))
+            {
+                t.Kind = "small";
+                t.Subject = "club";
+                t.Id = "day:" + S.Day;   // done for today like the day question it replaces
+            }
             return t;
         }
 
@@ -146,7 +165,7 @@ namespace Joojkk.CampusLife
             var when = Lore.When(f);
             switch (f.Verb)
             {
-                case "gave_gift": return "Ask if she liked " + (string.IsNullOrEmpty(f.Note) ? "your present" : "the " + f.Note.Replace("a ", "").Replace("an ", ""));
+                case "gave_gift": return "Ask if she liked " + (string.IsNullOrEmpty(f.Note) ? "your present" : "the " + f.Note.Replace("some ", "").Replace("a ", "").Replace("an ", ""));
                 case "helped": return "Bring up helping her " + when;
                 case "stood_up_for": return "Bring up standing up for her";
                 case "kept_promise": return "Bring up the promise you kept";
@@ -432,7 +451,12 @@ namespace Joojkk.CampusLife
                 if (Teachers.IsTeacherVoice(h)) subjects[Teachers.Job(h) == "nurse" ? "nursing" : "teaching"] = 1f;
                 if (h.relation >= 1) subjects["future"] = 0.4f;
             }
+            NewSubjects(h, gs, subjects, stranger);
             var open = subjects.Where(x => !TopicDone(key, "st:" + x.Key)).ToList();
+            // are other subjects; with nothing else left, likes fill it.
+            var likesOpen = open.Where(x => x.Key.StartsWith("like:", StringComparison.Ordinal)).OrderByDescending(x => x.Value + Random.value * 0.9f).ToList();
+            if (count > 1 && open.Count - likesOpen.Count >= count - 1)
+                open = open.Where(x => !x.Key.StartsWith("like:", StringComparison.Ordinal) || likesOpen.Count > 0 && x.Key == likesOpen[0].Key).ToList();
             // The same subjects while the talk lasts: drawn anew, the labels changed each time the list was rebuilt.
             var s = SessFor(h);
             var picked = (s != null ? s.SmallPicked : new List<string>()).Where(p => open.Any(x => x.Key == p)).Take(count).ToList();
@@ -441,8 +465,56 @@ namespace Joojkk.CampusLife
             return picked.Select(p => new PTopic { Id = "st:" + p, Kind = "small", Subject = p, Label = stranger ? StrangerLabel(p) : SmallLabel(p), Score = 0.5f }).ToList();
         }
 
+        /// <summary>
+        /// her (a dream when she slept badly, her fears in a storm, travel in exam week, her class when she fought with a
+        /// friend). Strangers get the light ones; a teacher does not talk about her class, her commute or a part-time job.
+        /// </summary>
+        private static void NewSubjects(SaveData.Heroine h, GirlState gs, Dictionary<string, float> subjects, bool stranger)
+        {
+            try
+            {
+                var mood = gs.Mood;
+                var teacher = Teachers.IsTeacherVoice(h);
+                subjects["movies"] = Weather.Raining ? 1.2f : 0.9f;
+                subjects["games"] = G.CurrentMask == PeriodMask.After ? 1.1f : 0.85f;
+                subjects["season"] = Weather.Now == "clear" && Weather.Outdoor(G.PlayerMapNo) ? 1.1f : 0.8f;
+                subjects["phone"] = 0.85f;
+                subjects["travel"] = Calendar.IsExamWeek ? 1.3f : 0.85f;
+                subjects["peeves"] = mood == CampusLife.Mood.Upset || mood == CampusLife.Mood.Stressed ? 1.3f : 0.8f;
+                if (!teacher) subjects["commute"] = Weather.Raining ? 1.2f : 0.8f;
+                if (stranger) return;
+                subjects["dreams"] = mood == CampusLife.Mood.Sleepy ? 1.4f : Interested(h) ? 1.1f : 0.85f;
+                subjects["family"] = h.isGirlfriend || h.relation >= 2 ? 1.2f : 0.9f;
+                subjects["hometown"] = mood == CampusLife.Mood.Lonely ? 1.3f : Weather.Raining ? 1.0f : 0.8f;
+                subjects["childhood"] = h.relation >= 1 ? 1.0f : 0.75f;
+                subjects["fears"] = Weather.Now == "storm" ? 1.5f : h.relation >= 1 ? 0.95f : 0.7f;
+                subjects["wish"] = G.CurrentMask == PeriodMask.After ? 1.1f : 0.8f;
+                subjects["memory"] = gs.TalkDays.Count >= 8 ? 1.2f : 0.8f;
+                subjects["talent"] = 0.85f;
+                subjects["advice"] = 0.8f;
+                if (!teacher)
+                {
+                    subjects["parttime"] = mood == CampusLife.Mood.Hungry || mood == CampusLife.Mood.Bored ? 1.1f : 0.8f;
+                    var ctx = new Dictionary<string, string>();
+                    FightCtx(h, ctx);
+                    subjects["classmates"] = ctx.ContainsKey("fight") ? 1.4f : 0.9f;
+                }
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("New subjects: " + e.Message); }
+        }
+
         private static string StrangerLabel(string subject)
         {
+            switch (subject)
+            {
+                case "movies": return "Ask if she's seen any good movies";
+                case "games": return "Ask if she plays games";
+                case "season": return "Say something about the season";
+                case "phone": return "Ask what she's looking at on her phone";
+                case "travel": return "Ask if she's been anywhere fun";
+                case "peeves": return "Grumble about the crowded hallways";
+                case "commute": return "Ask how she gets to school";
+            }
             if (subject.StartsWith("place:", StringComparison.Ordinal)) return "Say something about this place";
             if (subject == "weather") return Weather.Raining ? "Say something about the rain" : "Make small talk about the weather";
             if (subject == "lunch") return "Ask if she's had lunch";
@@ -501,6 +573,24 @@ namespace Joojkk.CampusLife
                 case "teaching": return "Ask what teaching is like";
                 case "nursing": return "Ask about the infirmary";
                 case "future": return "Ask about her plans after graduation";
+                case "dreams": return "Ask if she had any dreams last night";
+                case "family": return "Ask about her family";
+                case "hometown": return "Ask where she grew up";
+                case "childhood": return "Ask what she was like as a kid";
+                case "movies": return "Chat about movies";
+                case "games": return "Ask if she plays games";
+                case "season": return "Chat about the season";
+                case "phone": return "Ask what's new on her phone";
+                case "parttime": return "Ask about part-time jobs";
+                case "fears": return "Ask what scares her";
+                case "peeves": return "Ask what gets on her nerves";
+                case "wish": return "Ask what she'd wish for";
+                case "memory": return "Ask about her best school memory";
+                case "commute": return "Ask how she gets to school";
+                case "travel": return "Ask where she'd like to travel";
+                case "classmates": return "Chat about her classmates";
+                case "talent": return "Ask if she has a hidden talent";
+                case "advice": return "Ask her for some advice";
                 default: return "Make small talk";
             }
         }
@@ -605,6 +695,7 @@ namespace Joojkk.CampusLife
                 var distort = k != null ? k.Distort : 0;
                 c["verb"] = distort > 0 && Lore.Verb(f.Verb).Distort != "" ? Lore.Verb(f.Verb).Distort : f.Verb;
                 c["realverb"] = f.Verb;
+                if (f.Verb == "gave_gift") c["giftkind"] = GiftKind(f.Note);
                 c["how"] = k != null ? k.How.ToString().ToLowerInvariant() : "participant";
                 c["deed"] = Lore.Render(f, key, distort);
                 c["when"] = Lore.When(f);
@@ -665,6 +756,24 @@ namespace Joojkk.CampusLife
                 case "teaching": return "teaching";
                 case "nursing": return "the infirmary";
                 case "future": return "her plans";
+                case "dreams": return "dreams";
+                case "family": return "her family";
+                case "hometown": return "her hometown";
+                case "childhood": return "when she was little";
+                case "movies": return "movies";
+                case "games": return "games";
+                case "season": return "the season";
+                case "phone": return "her phone";
+                case "parttime": return "part-time jobs";
+                case "fears": return "what scares her";
+                case "peeves": return "what annoys her";
+                case "wish": return "wishes";
+                case "memory": return "her memories here";
+                case "commute": return "the commute";
+                case "travel": return "traveling";
+                case "classmates": return "her classmates";
+                case "talent": return "hidden talents";
+                case "advice": return "advice";
                 default: return "school";
             }
         }
@@ -685,7 +794,7 @@ namespace Joojkk.CampusLife
                 case "had_h": return f.Involves(viewer) ? "what you two did" : "what she saw in the " + (string.IsNullOrEmpty(f.Place) ? "hallway" : f.Place);
                 case "seen_girls_room": return "the girls' restroom thing";
                 case "seen_lockers": return "the changing room thing";
-                case "gave_gift": return string.IsNullOrEmpty(f.Note) ? "the present" : "the " + f.Note.Replace("a ", "").Replace("an ", "");
+                case "gave_gift": return string.IsNullOrEmpty(f.Note) ? "the present" : "the " + f.Note.Replace("some ", "").Replace("a ", "").Replace("an ", "");
                 case "fought": case "insulted": return on != "" ? "the fight with " + on : "the fight";
                 case "started_dating": case "engaged": return on != "" ? on + "'s new relationship" : "the new couple";
                 case "broke_up": return on != "" ? on + "'s breakup" : "the breakup";
@@ -729,7 +838,7 @@ namespace Joojkk.CampusLife
             var her = Bank.Pick(t.Kind, ctx, key, out rule) ?? Fallback(h, t);
             // A line with a hook has one subject, so nothing is glued to it (2026-10-31, the fifth complaint: a tail on another
             // subject and a like after it left the options answering neither).
-            if (rule != null && rule.Hook != "") ctx["hook"] = rule.Hook;
+            if (rule != null && rule.Hook != "") { ctx["hook"] = rule.Hook; her = Compose(her, ctx, true); }   // only an opener, now and then
             else her = Compose(her, ctx);
             // Your line comes after hers is drawn, though you say it first: with a hook, you ask what she's about to answer.
             var me = t.Opening ? null : ComposeMe(Bank.Pick("me." + t.Kind, ctx, "player", out _ignored), ctx);
@@ -824,7 +933,7 @@ namespace Joojkk.CampusLife
                 DlgRule rr;
                 var react = Bank.Pick("react", ctx, key, out rr);
                 var goesOn = step < 3 && m.Q != Q.Bad && rr != null && rr.Opens.Length > 0;
-                react = react == null ? BeatSay(h, "", QWord(m.Q)) ?? "..." : !goesOn && m.Q == Q.Good && !ctx.ContainsKey("hook") ? Close(react, ctx) : react;
+                react = react == null ? BeatSay(h, "", QWord(m.Q)) ?? "..." : !goesOn && m.Q == Q.Good ? Close(react, ctx, ctx.ContainsKey("hook")) : react;
                 var mine = PlayerLine(h, ctx, m);
                 CampusLifePlugin.Log.LogInfo("Talk move: " + GirlInfo.FirstName(h) + " step " + step + " " + m.Id + " '" + m.Label + "' -> " + m.Q + ", rule " + (rr != null ? rr.Id : "(stock)") + ": you '" + mine + "', she '" + react + "'");
                 if (goesOn) { Step(h, t, ctx, step + 1, mine, react, rr); return; }
@@ -989,7 +1098,22 @@ namespace Joojkk.CampusLife
                 case "deny": score = c.ContainsKey("how") && c["how"] == "witness" ? -1f : c.ContainsKey("distorted") && c["distorted"] == "yes" ? 0.8f : -0.2f; break;
                 case "thank": score = 0.7f + v.Warm * 0.4f; break;
             }
-            return score >= 0.8f ? Q.Good : score >= 0f ? Q.Neutral : Q.Bad;
+            var q = score >= 0.8f ? Q.Good : score >= 0f ? Q.Neutral : Q.Bad;
+            // bem, porque ela falaria de forma convidativa?"): what her own warm line invited never lands badly. An invite she
+            // asked for herself (a question, smiling) is a yes; anything else she opened is at worst lukewarm.
+            if (opened && WarmFeel(rule))
+            {
+                if (move == "invite" && (rule.Shape == "q" || rule.Shape == "")) return Q.Good;
+                if (q == Q.Bad) q = Q.Neutral;
+            }
+            return q;
+        }
+
+        private static bool WarmFeel(DlgRule rule)
+        {
+            if (rule == null) return false;
+            var f = rule.Feel ?? "";
+            return f == "smile" || f == "laugh" || f == "love" || f == "shy" || f == "surprised";
         }
 
 
@@ -1049,6 +1173,52 @@ namespace Joojkk.CampusLife
             if (on == "react") { ctx["move"] = move; ctx["fit"] = fit; ctx["step"] = "1"; }
             if (on == "tell") ctx["told"] = fit;
             return GirlInfo.FirstName(h) + " " + Bank.Variety(on, ctx, tries);
+        }
+
+        /// <summary>
+        /// (the same-day and same-talk filters left out): the note, the gift kind, the rule picked, her line and how many
+        /// different lines it has.
+        /// </summary>
+        /// <summary>
+        /// every warm line of hers that opens a move, answered with that move in the worst context (a bad day, her opinion
+        /// against). None may land badly unless the rule says so itself.
+        /// </summary>
+        internal static string RuleFitReport(SaveData.Heroine h)
+        {
+            if (h == null) return "no girl";
+            var worst = new Dictionary<string, string> { { "low", "yes" }, { "opinion", "-1" } };
+            int rules = 0, moves = 0, bad = 0, invites = 0, goodInvites = 0;
+            var ex = new List<string>();
+            foreach (var r in Bank.All)
+            {
+                if (r == null || r.Opens.Length == 0 || !WarmFeel(r)) continue;
+                rules++;
+                foreach (var m in r.Opens)
+                {
+                    if (r.Fit.ContainsKey(m)) continue;
+                    moves++;
+                    var q = Fit(h, m, worst, r);
+                    if (m == "invite") { invites++; if (q == Q.Good) goodInvites++; }
+                    if (q == Q.Bad) { bad++; if (ex.Count < 5) ex.Add(r.Id + "/" + m); }
+                }
+            }
+            return GirlInfo.FirstName(h) + ": " + rules + " warm rules that open a move, " + moves + " opened moves in the worst context, " + bad + " land badly" +
+                   (ex.Count > 0 ? " (" + string.Join(", ", ex.ToArray()) + ")" : "") + "; invites " + goodInvites + "/" + invites + " good";
+        }
+
+        internal static string UsGiftNow(SaveData.Heroine h)
+        {
+            if (h == null) return "no girl";
+            var key = GirlInfo.Key(h);
+            var kv = Lore.Of(key).Where(x => x.Value.Verb == "gave_gift" && x.Value.Between(Lore.Player, key)).OrderByDescending(x => x.Value.Id).FirstOrDefault();
+            if (kv.Value == null) return GirlInfo.FirstName(h) + ": no gift memory";
+            var f = kv.Value;
+            var t = new PTopic { Id = "f:" + f.Id, Kind = "us", Fact = f, Know = kv.Key, Label = UsLabel(f) };
+            var ctx = Ctx(h, S.Girl(key), t);
+            DlgRule used;
+            var line = Bank.Pick("us", ctx, key, out used);
+            return GirlInfo.FirstName(h) + ": note '" + f.Note + "', giftkind " + (ctx.ContainsKey("giftkind") ? ctx["giftkind"] : "-") +
+                   ", rule " + (used == null ? "none" : used.Id) + ", hook " + (used == null ? "-" : used.Hook) + ": " + line + " || " + Bank.Variety("us", ctx, 60);
         }
 
         internal static bool PlayTopicNow(string kind)

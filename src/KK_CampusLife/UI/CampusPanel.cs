@@ -89,6 +89,7 @@ namespace Joojkk.CampusLife
             _root = null;
             _title = null;
             _tab = PanelTab.None;
+            _drawnTab = PanelTab.None;
             TabButtons.Clear();
         }
 
@@ -123,11 +124,19 @@ namespace Joojkk.CampusLife
             _root.gameObject.SetActive(false);
             if (_title != null) { if (_savedTitle != null) _title.text = _savedTitle; _title.enabled = true; }
             _tab = PanelTab.None;
+            _drawnTab = PanelTab.None;
         }
 
         public static void Refresh()
         {
             if (_root == null || !_root.gameObject.activeSelf) return;
+            // page (a purchase, a button) keeps where you were; a new page starts at the top.
+            var same = _drawnTab == _tab;
+            var leftPos = _leftScroll != null ? _leftScroll.verticalNormalizedPosition : 1f;
+            var rightPos = _rightScroll != null ? _rightScroll.verticalNormalizedPosition : 1f;
+            var leftH = _leftScroll != null && _leftScroll.content != null ? _leftScroll.content.rect.height : 0f;
+            var rightH = _rightScroll != null && _rightScroll.content != null ? _rightScroll.content.rect.height : 0f;
+            _drawnTab = _tab;
             GameUi.Clear(_left);
             GameUi.Clear(_right);
             try
@@ -147,8 +156,49 @@ namespace Joojkk.CampusLife
                 CampusLifePlugin.Log.LogError(e);
                 GameUi.Para(_right, "Something went wrong drawing this page: " + e.Message, 20f, GameUi.Warn);
             }
-            _leftScroll.verticalNormalizedPosition = 1f;
-            _rightScroll.verticalNormalizedPosition = 1f;
+            if (!same)
+            {
+                _leftScroll.verticalNormalizedPosition = 1f;
+                _rightScroll.verticalNormalizedPosition = 1f;
+                return;
+            }
+            KeepScroll(_leftScroll, leftPos, leftH);
+            KeepScroll(_rightScroll, rightPos, rightH);
+        }
+
+        private static PanelTab _drawnTab = PanelTab.None;
+
+        /// <summary>
+        /// Buy button does, and says where the list is after the page is drawn again.
+        /// </summary>
+        internal static string TestBuy()
+        {
+            if (_root == null || !_root.gameObject.activeSelf || _tab != PanelTab.Shop || _rightScroll == null) return "the shop is not open";
+            Canvas.ForceUpdateCanvases();
+            _rightScroll.verticalNormalizedPosition = 0.5f;
+            var before = _rightScroll.verticalNormalizedPosition;
+            var item = Items.All.Where(x => x.Type == ItemType.Gift || x.Type == ItemType.Consumable).Where(x => !x.LunchOnly).OrderBy(Items.PriceOf).FirstOrDefault();
+            if (item == null) return "no item";
+            if (Campus.S.Money < Items.PriceOf(item)) Campus.S.Money += Items.PriceOf(item);
+            var ok = Campus.Buy(item);
+            Refresh();
+            Canvas.ForceUpdateCanvases();
+            return "bought " + item.Name + " " + ok + ", list at " + before.ToString("0.00") + " before, " + _rightScroll.verticalNormalizedPosition.ToString("0.00") + " after";
+        }
+
+        /// <summary>The same distance from the top as before the page was drawn again.</summary>
+        private static void KeepScroll(ScrollRect sc, float pos, float oldHeight)
+        {
+            try
+            {
+                if (sc == null || sc.content == null) return;
+                LayoutRebuilder.ForceRebuildLayoutImmediate(sc.content);
+                var view = sc.viewport != null ? sc.viewport.rect.height : ((RectTransform)sc.transform).rect.height;
+                var oldTop = (1f - pos) * Mathf.Max(0f, oldHeight - view);
+                var range = Mathf.Max(0f, sc.content.rect.height - view);
+                sc.verticalNormalizedPosition = range <= 0f ? 1f : Mathf.Clamp01(1f - oldTop / range);
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Keep scroll: " + e.Message); }
         }
 
         // ---------------- helpers ----------------
@@ -223,6 +273,39 @@ namespace Joojkk.CampusLife
 
         private static string Hex(Color c) { return "#" + ColorUtility.ToHtmlStringRGB(c); }
 
+        // each girl or entry is a row with a round icon, the name in gold, a gauge of squares and the rest dimmed.
+        private static readonly Color Pink = new Color(1f, 0.55f, 0.75f, 1f);
+        private static readonly Color Blue = new Color(0.45f, 0.72f, 1f, 1f);
+
+        private static string C(Color c, string text) { return "<color=" + Hex(c) + ">" + text + "</color>"; }
+
+        /// <summary>A gauge of squares, "■■■□□".</summary>
+        private static string Squares(int have, int max, int cells)
+        {
+            if (max <= 0) max = 1;
+            var full = Mathf.Clamp(Mathf.RoundToInt((float)have * cells / max), 0, cells);
+            return new string('\u25A0', full) + new string('\u25A1', cells - full);
+        }
+
+        /// <summary>One row: a round icon and a line of text.</summary>
+        private static RectTransform IconRow(Transform block, string glyph, Color tint, string text, float size = 20f, float height = 36f)
+        {
+            var row = GameUi.Row(block, "row", height);
+            Icon(row, Markers.Glyph(glyph, tint), height - 4f);
+            RowText(row, text, size);
+            return row;
+        }
+
+        /// <summary>Where she is now and how she feels, for a row.</summary>
+        private static string WhereNow(SaveData.Heroine h)
+        {
+            if (h == null) return "";
+            var map = GirlInfo.CurrentMap(h);
+            var where = GirlInfo.IsSpawned(h) && map >= 0 ? Places.MapLabel(map) : "not on campus";
+            var mood = Campus.S.Girl(GirlInfo.Key(h)).Mood;
+            return where + (mood != Mood.None ? ", " + Lines.MoodName(mood).ToLowerInvariant() : "");
+        }
+
         // ---------------- Today ----------------
 
         private static void TodayLeft()
@@ -261,7 +344,18 @@ namespace Joojkk.CampusLife
                 {
                     var d = GameUi.Block(_left, "devotion");
                     Header(d, "Devotion");
-                    Line(d, string.Join(", ", top.Select(g => GirlInfo.FirstName(g.Key) + " (" + Devotion.Label(g) + ")").ToArray()), 19f);
+                    foreach (var g in top)
+                    {
+                        var lv = Devotion.Level(g);
+                        var max = lv >= Devotion.MaxLevel;
+                        var into = max ? Devotion.PerLevel : g.Devotion - lv * Devotion.PerLevel;
+                        IconRow(d, "heart", Pink, C(GameUi.Gold, GirlInfo.FirstName(g.Key)) + "  " + (lv == 0 ? C(GameUi.Dim, "on her way") : "Lv " + lv + " " + Devotion.LevelNames[lv]) +
+                            "   " + C(Pink, Squares(into, Devotion.PerLevel, 8)) + " " + C(GameUi.Dim, max ? "max" : into + "/" + Devotion.PerLevel));
+                    }
+                    var first = top[0];
+                    var next = Devotion.Level(first) + 1;
+                    if (next <= Devotion.MaxLevel)
+                        Line(d, C(GameUi.Dim, "Next for " + GirlInfo.FirstName(first.Key) + ": " + Devotion.PerkText[next]), 17f);
                 }
             }
 
@@ -273,11 +367,21 @@ namespace Joojkk.CampusLife
                 foreach (var a in arcs) Line(st, a, 19f);
             }
 
-            if (Spotlight.IsActive && s.Spotlight.Count > 0)
+            if (Cfg.SpotlightEnabled.Value && s.Spotlight.Count > 0)
             {
                 var sp = GameUi.Block(_left, "spotlight");
                 Header(sp, "This week's spotlight");
-                Line(sp, string.Join(", ", s.Spotlight.Select(GirlInfo.FirstName).ToArray()), 20f);
+                Line(sp, C(GameUi.Dim, Spotlight.IsActive ? "Stories, outings and requests come from them first this week." : "This week's outings and stories star them."), 17f);
+                foreach (var key in s.Spotlight)
+                {
+                    var h = GirlInfo.Find(key);
+                    var row = IconRow(sp, "star", GameUi.Gold, C(GameUi.Gold, GirlInfo.FirstName(key)) + (h != null ? "   " + C(GameUi.Dim, WhereNow(h)) : ""), 20f, 40f);
+                    if (h != null && !StatusUi.AtNight && GirlInfo.IsSpawned(h) && GirlInfo.CurrentMap(h) >= 0 && GirlInfo.CurrentMap(h) != G.PlayerMapNo)
+                    {
+                        var girl = h;
+                        SmallButton(row, "Go to her", () => StatusUi.WarpToGirl(girl), 150f);
+                    }
+                }
             }
 
             Bag(_left);
@@ -329,7 +433,15 @@ namespace Joojkk.CampusLife
                 var b = GameUi.Block(_right, "recent");
                 Header(b, "Recently closed", false);
                 foreach (var r in recent.Take(5))
-                    Line(b, (r.State == RequestState.Done ? "Done: " : "Missed: ") + r.Title, 19f, r.State == RequestState.Done ? GameUi.Green : GameUi.Warn);
+                {
+                    var done = r.State == RequestState.Done;
+                    var who = GirlInfo.Find(r.Girl);
+                    var row = GameUi.Row(b, "row", 36f);
+                    Icon(row, done ? Markers.Badge(r) : Markers.Glyph("cross", GameUi.Warn), 32f);
+                    RowText(row, C(done ? GameUi.Green : GameUi.Warn, done ? "Done" : "Missed") + "   " + r.Title +
+                        (who != null ? "  " + C(GameUi.Dim, "- " + GirlInfo.FirstName(who)) : "") +
+                        (done ? "  " + C(GameUi.Dim, "(" + r.Reward.Describe() + ")") : ""), 19f);
+                }
                 if (recent.Count > 5) Line(b, "+" + (recent.Count - 5) + " more in the Calendar tab.", 18f, GameUi.Dim);
             }
         }
@@ -379,7 +491,21 @@ namespace Joojkk.CampusLife
                 if (mapNo >= 0 && !StatusUi.AtNight && Places.CurrentId != a.Place) SmallButton(row, Places.Name(a.Place), () => StatusUi.Warp(mapNo), 190f);
             }
 
-            Line(b, r.Text, 20f);
+            // her name picked out, her mood of now, and the deadline colored by how close it is.
+            var text = Board.TextOf(r);
+            if (h != null)
+            {
+                var first = GirlInfo.FirstName(h);
+                if (!string.IsNullOrEmpty(first) && text.Contains(first))
+                {
+                    var at = text.IndexOf(first, StringComparison.Ordinal);
+                    text = text.Substring(0, at) + "<color=" + Hex(GameUi.Gold) + ">" + first + "</color>" + text.Substring(at + first.Length);
+                }
+            }
+            var label = "<color=" + Hex(Markers.TintOf(r)) + "><b>" + Markers.KindLabel(r) + "</b></color>";
+            var mood = h != null ? Campus.S.Girl(r.Girl).Mood : Mood.None;
+            var moodTag = mood != Mood.None ? "  <color=" + Hex(GameUi.Dim) + ">(" + Lines.MoodName(mood).ToLowerInvariant() + ")</color>" : "";
+            Line(b, label + "   " + text + moodTag, 20f);
             var where = "";
             if (h != null)
             {
@@ -394,7 +520,9 @@ namespace Joojkk.CampusLife
             var dim = "<color=" + Hex(GameUi.Dim) + ">";
             var facts = new List<string>();
             if (r.Kind != RequestKind.Talk || r.Source == "arc") facts.Add(dim + "How:</color> " + Board.HowTo(r));
-            facts.Add(dim + "When:</color> " + StatusUi.DueLabel(r));
+            var due = StatusUi.DueLabel(r);
+            var dueColor = r.DeadlineDay <= Campus.S.Day ? GameUi.Warn : r.DeadlineDay == Campus.S.Day + 1 ? GameUi.Gold : GameUi.Green;
+            facts.Add(dim + "When:</color> <color=" + Hex(dueColor) + ">" + due + "</color>");
             facts.Add(dim + "Reward:</color> " + r.Reward.Describe());
             if (where != "") facts.Add(dim + where + "</color>");
             Line(b, string.Join("   ", facts.ToArray()), 18f);
@@ -412,25 +540,32 @@ namespace Joojkk.CampusLife
             foreach (var u in list)
             {
                 var row = GameUi.Row(b, "row", 38f);
-                RowText(row, u.Name, 22f, u.Days == 0 ? GameUi.Gold : Color.white);
-                var when = GameUi.Text(row, "when", u.When, 20f, GameUi.Dim, TextAlignmentOptions.MidlineRight, false);
+                Icon(row, Markers.Glyph(u.Days == 0 ? "star" : "pin", u.Days == 0 ? GameUi.Gold : u.Days <= 3 ? Pink : Blue), 34f);
+                RowText(row, u.Days == 0 ? "<b>" + u.Name + "</b>" : u.Name, 22f, u.Days == 0 ? GameUi.Gold : Color.white);
+                var when = GameUi.Text(row, "when", u.When, 20f, u.Days == 0 ? GameUi.Gold : u.Days <= 3 ? Pink : GameUi.Dim, TextAlignmentOptions.MidlineRight, false);
                 when.Size(300f, -1f);
             }
 
             var ex = GameUi.Block(_left, "exams");
             Header(ex, "Exams");
-            Line(ex, s.ExamScores.Count == 0 ? "No exams yet. Study (INT) before exam week." : "Scores: " + string.Join(", ", s.ExamScores.Select(x => x.ToString()).ToArray()), 20f);
+            if (s.ExamScores.Count == 0) IconRow(ex, "pen", Blue, "No exams yet. " + C(GameUi.Dim, "Study (INT) before exam week."));
+            else
+            {
+                Func<int, string> grade = x => C(x >= 80 ? GameUi.Green : x >= 50 ? GameUi.Gold : GameUi.Warn, x.ToString());
+                IconRow(ex, "pen", Blue, "Scores: " + string.Join("   ", s.ExamScores.Select(grade).ToArray()));
+                Line(ex, C(GameUi.Dim, "Average " + Mathf.RoundToInt((float)s.ExamScores.Average()) + ", best " + s.ExamScores.Max() + ". 80 or more is the honor roll."), 17f);
+            }
 
             if (Cfg.DirectorEnabled.Value)
             {
                 var se = GameUi.Block(_left, "season");
                 Header(se, "Season " + s.Season);
-                Line(se, ClubProjects.Status(), 19f);
-                Line(se, Council.Status(), 19f);
+                IconRow(se, "people", GameUi.Green, ClubProjects.Status(), 19f);
+                IconRow(se, "pen", Blue, Council.Status(), 19f);
                 var rumor = Rumors.Main;
-                if (rumor != null && rumor.Step >= 1) Line(se, "Rumor: " + Rumors.What(rumor, 1), 19f, GameUi.Dim);
+                if (rumor != null && rumor.Step >= 1) IconRow(se, "bubble", GameUi.Dim, C(GameUi.Dim, "Rumor: ") + Rumors.What(rumor, 1), 19f);
                 var couples = Pairs.Couples.Count();
-                if (couples > 0) Line(se, couples + " couple" + (couples == 1 ? "" : "s") + " among the students.", 19f, GameUi.Dim);
+                if (couples > 0) IconRow(se, "heart", Pink, couples + " couple" + (couples == 1 ? "" : "s") + C(GameUi.Dim, " among the students."), 19f);
                 var srow = GameUi.Row(se, "row", 44f);
                 SmallButton(srow, "Class anthology", () => ReportUi.Show(Anthology.PageLines()), 220f);
             }
@@ -439,34 +574,167 @@ namespace Joojkk.CampusLife
             Header(wk, "Last week");
             var stats = s.LastWeekStats;
             Func<string, int> n = k => { int v; return stats.TryGetValue(k, out v) ? v : 0; };
-            Line(wk, stats.Count == 0 ? "-" : "Talks " + n("talks") + ", requests " + n("requests") + ", missed " + n("missed") + ", activities " + n("activities") + ", gifts " + n("gifts"), 19f);
+            if (stats.Count == 0) Line(wk, C(GameUi.Dim, "Your first week is still going."), 19f);
+            else
+            {
+                IconRow(wk, "bubble", Blue, "Talks " + C(GameUi.Gold, n("talks").ToString()) + "    Gifts " + C(GameUi.Gold, n("gifts").ToString()) + "    H " + C(Pink, n("h").ToString()), 19f);
+                IconRow(wk, "note", GameUi.Green, "Requests " + C(GameUi.Green, n("requests").ToString()) + "    Missed " + C(n("missed") > 0 ? GameUi.Warn : GameUi.Dim, n("missed").ToString()) +
+                    "    Activities " + C(GameUi.Gold, n("activities").ToString()), 19f);
+            }
             var row2 = GameUi.Row(wk, "row", 44f);
             SmallButton(row2, "Weekly report", () => ReportUi.Show(Report.BuildNow()), 220f);
         }
 
-        /// <summary>Journal, newest first (days and entries all in the same direction).</summary>
+        /// <summary>
+        /// each entry is one short row with an icon and a color for its kind instead of the written prefix ("Done:",
+        /// "Missed:", "Achievement:"...); the reward is a small colored tag; a day's misses are one row; the news goes last,
+        /// small and dimmed; days before yesterday are folded into one summary row with a button to open them.
+        /// </summary>
         private static void CalendarRight()
         {
             var s = Campus.S;
             var head = GameUi.Block(_right, "journal", false);
             Header(head, "Journal");
             if (s.Journal.Count == 0) { Line(head, "Nothing yet.", 20f, GameUi.Dim); return; }
-            RectTransform day = null;
-            var lastDay = -1;
-            var shown = 0;
-            for (var i = s.Journal.Count - 1; i >= 0 && shown < 150; i--, shown++)
+            var days = s.Journal.Select(e => e.Day).Distinct().OrderByDescending(d => d).Take(30).ToList();
+            foreach (var d in days)
             {
-                var e = s.Journal[i];
-                if (e.Day != lastDay || day == null)
+                var day = d;
+                var entries = s.Journal.Where(e => e.Day == day).Reverse().Select(e => JournalEntryOf(e.Text)).ToList();
+                var block = GameUi.Block(_right, "day" + day);
+                Header(block, "Day " + day + (day == s.Day ? " (today)" : day == s.Day - 1 ? " (yesterday)" : "") + " - " + DayOf(day), day == s.Day);
+                var open = day >= s.Day - 1 || OpenDays.Contains(day);
+                if (!open)
                 {
-                    day = GameUi.Block(_right, "day" + e.Day);
-                    var label = "Day " + e.Day + (e.Day == s.Day ? " (today)" : "") + " - " + DayOf(e.Day);
-                    Header(day, label, false);
-                    lastDay = e.Day;
+                    var row = GameUi.Row(block, "row", 40f);
+                    Icon(row, Markers.Glyph("note", GameUi.Dim), 30f);
+                    RowText(row, JournalSummary(entries), 19f);
+                    SmallButton(row, "Open", () => { OpenDays.Add(day); Refresh(); }, 120f);
+                    continue;
                 }
-                var news = e.Text.StartsWith("News:", StringComparison.Ordinal);
-                Line(day, e.Text, news ? 18f : 20f, news ? GameUi.Dim : Color.white);
+                foreach (var e in entries.Where(x => x.Kind != JKind.Missed && x.Kind != JKind.News))
+                    JournalRow(block, e.Glyph, e.Tint, e.Text + (e.Tag.Length > 0 ? "  " + e.Tag : ""), 19f);
+                var missed = entries.Where(x => x.Kind == JKind.Missed).Select(x => x.Text).ToList();
+                if (missed.Count > 0)
+                    JournalRow(block, "cross", GameUi.Warn, C(GameUi.Warn, "Missed" + (missed.Count > 1 ? " " + missed.Count : "")) + C(GameUi.Dim, ": ") + MergeTitles(missed), 18f);
+                foreach (var e in entries.Where(x => x.Kind == JKind.News))
+                    JournalRow(block, "bubble", GameUi.Dim, C(GameUi.Dim, e.Text), 16f);
+                if (day < s.Day - 1)
+                {
+                    var row = GameUi.Row(block, "row", 40f);
+                    RowText(row, "", 16f);
+                    SmallButton(row, "Fold", () => { OpenDays.Remove(day); Refresh(); }, 120f);
+                }
             }
+        }
+
+        /// <summary>The older days the player opened (until the game is closed).</summary>
+        private static readonly HashSet<int> OpenDays = new HashSet<int>();
+
+        private enum JKind { Other, Done, Missed, News, Story, Achievement, Learned, Life, Money }
+
+        private struct JEntry
+        {
+            public JKind Kind;
+            public string Glyph, Text, Tag;
+            public Color Tint;
+        }
+
+        /// <summary>"(+7 favor, +1 reputation, -2 devotion)" at the end of an entry.</summary>
+        private static readonly System.Text.RegularExpressions.Regex RewardTail =
+            new System.Text.RegularExpressions.Regex(@"\s*\(([^()]*[+-]\s?\d[^()]*)\)\s*\.?\s*$");
+
+        /// <summary>"Gave X to Nonaka (she loved it): +16 favor, +7 devotion": the reward after a colon (gifts).</summary>
+        private static readonly System.Text.RegularExpressions.Regex RewardAfterColon =
+            new System.Text.RegularExpressions.Regex(@":\s*([+-]\s?\d[^:()]*?)\s*\.?\s*$");
+
+        /// <summary>What an entry is, by the words the systems log it with (Board, Arcs, Achievements, Spotlight...).</summary>
+        private static JEntry JournalEntryOf(string raw)
+        {
+            var e = new JEntry { Kind = JKind.Other, Glyph = "pin", Tint = Blue, Text = raw ?? "", Tag = "" };
+            var t = e.Text;
+            Func<string, bool> cut = pre =>
+            {
+                if (!t.StartsWith(pre, StringComparison.Ordinal)) return false;
+                t = t.Substring(pre.Length).Trim();
+                return true;
+            };
+            if (cut("News:")) { e.Kind = JKind.News; e.Glyph = "bubble"; e.Tint = GameUi.Dim; }
+            else if (cut("Missed:")) { e.Kind = JKind.Missed; t = t.TrimEnd('.'); }
+            else if (cut("You missed ")) { e.Kind = JKind.Missed; t = t.TrimEnd('.'); }
+            else if (cut("Done:")) { e.Kind = JKind.Done; e.Glyph = "note"; e.Tint = GameUi.Green; }
+            else if (cut("Achievement:")) { e.Kind = JKind.Achievement; e.Glyph = "star"; e.Tint = GameUi.Gold; }
+            else if (cut("A new story begins:")) { e.Kind = JKind.Story; e.Glyph = "book"; e.Tint = GameUi.Gold; t = C(GameUi.Dim, "New story ") + t; }
+            else if (cut("Story finished:")) { e.Kind = JKind.Story; e.Glyph = "book"; e.Tint = GameUi.Gold; t = C(GameUi.Gold, "Story done ") + t; }
+            else if (cut("Story dropped:")) { e.Kind = JKind.Story; e.Glyph = "book"; e.Tint = GameUi.Dim; t = C(GameUi.Dim, "Story dropped ") + t; }
+            else if (cut("Learned:")) { e.Kind = JKind.Learned; e.Glyph = "heart"; e.Tint = Pink; t = C(GameUi.Dim, "Learned ") + t; }
+            else if (cut("Campus life:")) { e.Kind = JKind.Life; e.Glyph = "people"; e.Tint = Blue; }
+            else if (cut("This week's spotlight:")) { e.Kind = JKind.Life; e.Glyph = "star"; e.Tint = Pink; t = C(Pink, "Spotlight ") + t.TrimEnd('.'); }
+            else if (cut("Weekly allowance:")) { e.Kind = JKind.Money; e.Glyph = "coin"; e.Tint = GameUi.Gold; t = C(GameUi.Gold, t.TrimEnd('.')) + C(GameUi.Dim, " allowance"); }
+            else if (t.Contains("confession")) { e.Glyph = "heart"; e.Tint = Pink; }
+            var m = RewardTail.Match(t);
+            if (!m.Success) m = RewardAfterColon.Match(t);
+            if (m.Success)
+            {
+                t = t.Substring(0, m.Index).TrimEnd('.', ' ');
+                e.Tag = RewardTag(m.Groups[1].Value);
+            }
+            if (e.Kind == JKind.Achievement) t = C(GameUi.Gold, t);
+            e.Text = t;
+            return e;
+        }
+
+        /// <summary>"+7 favor, -1 reputation" as a small tag: gains green, losses red.</summary>
+        private static string RewardTag(string inner)
+        {
+            var parts = inner.Split(',').Select(x => x.Trim()).Where(x => x.Length > 0)
+                .Select(x => C(x.StartsWith("-", StringComparison.Ordinal) ? GameUi.Warn : x.StartsWith("+", StringComparison.Ordinal) ? GameUi.Green : GameUi.Dim, x));
+            return "<size=15>" + string.Join(C(GameUi.Dim, " · "), parts.ToArray()) + "</size>";
+        }
+
+        /// <summary>"Say hi to Asuka", "Say hi to Mei" -> "Say hi to Asuka, Mei"; other titles as they are.</summary>
+        private static string MergeTitles(List<string> titles)
+        {
+            var keys = new List<string>();
+            var names = new Dictionary<string, List<string>>();
+            foreach (var t in titles)
+            {
+                var k = t.LastIndexOf(' ');
+                var grouped = k > 0 && t.Split(' ').Length >= 3;
+                var key = grouped ? t.Substring(0, k) : t;
+                if (!names.ContainsKey(key)) { names[key] = new List<string>(); keys.Add(key); }
+                if (grouped && !names[key].Contains(t.Substring(k + 1))) names[key].Add(t.Substring(k + 1));
+            }
+            return string.Join(C(GameUi.Dim, "; "), keys.Select(k => names[k].Count > 0 ? k + " " + string.Join(", ", names[k].ToArray()) : k).ToArray());
+        }
+
+        /// <summary>A folded day in one row: "3 done · 2 missed · 1 story · 4 news".</summary>
+        private static string JournalSummary(List<JEntry> entries)
+        {
+            Func<JKind, int> n = k => entries.Count(x => x.Kind == k);
+            var parts = new List<string>();
+            if (n(JKind.Achievement) > 0) parts.Add(C(GameUi.Gold, n(JKind.Achievement) + " achievement" + (n(JKind.Achievement) > 1 ? "s" : "")));
+            if (n(JKind.Story) > 0) parts.Add(C(GameUi.Gold, n(JKind.Story) + " stor" + (n(JKind.Story) > 1 ? "ies" : "y")));
+            if (n(JKind.Done) > 0) parts.Add(C(GameUi.Green, n(JKind.Done) + " done"));
+            if (n(JKind.Missed) > 0) parts.Add(C(GameUi.Warn, n(JKind.Missed) + " missed"));
+            var other = n(JKind.Other) + n(JKind.Life) + n(JKind.Learned) + n(JKind.Money);
+            if (other > 0) parts.Add(other + " other");
+            if (n(JKind.News) > 0) parts.Add(C(GameUi.Dim, n(JKind.News) + " news"));
+            return string.Join(C(GameUi.Dim, " · "), parts.ToArray());
+        }
+
+        /// <summary>A row with an icon whose text wraps (the row grows with it).</summary>
+        private static void JournalRow(Transform block, string glyph, Color tint, string text, float size)
+        {
+            var row = GameUi.Row(block, "entry", 28f);
+            var le = row.GetComponent<LayoutElement>();
+            le.preferredHeight = -1f;
+            var h = row.GetComponent<HorizontalLayoutGroup>();
+            h.childForceExpandHeight = false;
+            h.childAlignment = TextAnchor.UpperLeft;
+            Icon(row, Markers.Glyph(glyph, tint), 26f);
+            var t = GameUi.Text(row, "text", GameUi.StatColors(text), size, null, TextAlignmentOptions.TopLeft, true);
+            t.Size(-1f, -1f, 1f);
         }
 
         // ---------------- Activities ----------------
@@ -603,7 +871,8 @@ namespace Joojkk.CampusLife
                 var d = GameUi.Block(_left, "devotion");
                 Header(d, "Devotion");
                 Line(d, "Grows past 100 favor. A level every " + Devotion.PerLevel + " points.", 18f, GameUi.Dim);
-                for (var i = 1; i <= Devotion.MaxLevel; i++) Para(d, i + ". " + Devotion.LevelNames[i], Devotion.PerkText[i]);
+                for (var i = 1; i <= Devotion.MaxLevel; i++)
+                    IconRow(d, "heart", Pink, C(GameUi.Gold, "Lv " + i + " " + Devotion.LevelNames[i]) + "   " + C(GameUi.Dim, Devotion.PerkText[i]), 18f);
             }
         }
 
@@ -653,6 +922,8 @@ namespace Joojkk.CampusLife
             RowText(money, "<color=" + Hex(GameUi.Gold) + "><size=30>" + s.Money.ToString("N0") + "</size></color> yen", 24f);
             SmallButton(money, "Leave", StatusUi.Close, 160f);
             Line(b, "<size=18><color=" + Hex(GameUi.Dim) + ">A gift she likes beats any chat. The round icons are the likes it is for; the names, girls you know love it.</color></size>");
+            var anyGift = Board.AnyGiftFor();
+            if (anyGift.Count > 0) Line(b, "<size=19><color=" + Hex(Board.FitColor) + ">\u2605 " + string.Join(", ", anyGift.ToArray()) + (anyGift.Count > 1 ? " each want" : " wants") + " a gift: any of these will do.</color></size>");
             Bag(_left);
         }
 
@@ -681,6 +952,7 @@ namespace Joojkk.CampusLife
                 {
                     if (i.Intimate && !Cfg.LewdRequests.Value) continue;
                     var b = GameUi.Block(_right, i.Id);
+                    var fitsFor = type == ItemType.Gift ? Board.GiftFitsFor(i) : new List<string>();
                     var r = GameUi.Row(b, "row", 46f);
                     Icon(r, ItemIcon(i), 42f);
                     var have = s.Count(i.Id) > 0 ? "  <size=18><color=" + Hex(GameUi.Green) + ">x" + s.Count(i.Id) + "</color></size>" : "";
@@ -696,7 +968,8 @@ namespace Joojkk.CampusLife
                     var can = s.Money >= Items.PriceOf(i) && (!i.LunchOnly || lunch);
                     SmallButton(r, "Buy", () => { if (Campus.Buy(item)) Sfx.Ok(); Refresh(); }, 120f, can);
                     var fans = i.Likes.Length == 0 ? new List<string>() : Social.Students.Where(h => h != null && i.Likes.Any(l => Conversation.KnownLike(h, l))).Select(GirlInfo.FirstName).Distinct().Take(5).ToList();
-                    var note = i.Desc + (i.LunchOnly ? " <color=" + Hex(GameUi.Warn) + ">Lunch only.</color>" : "")
+                    var note = (fitsFor.Count > 0 ? "<color=" + Hex(Board.FitColor) + ">\u2605 For " + string.Join(", ", fitsFor.ToArray()) + "'s request.</color> " : "")
+                               + i.Desc + (i.LunchOnly ? " <color=" + Hex(GameUi.Warn) + ">Lunch only.</color>" : "")
                                + (fans.Count > 0 ? "  <color=" + Hex(GameUi.Gold) + ">" + string.Join(", ", fans.ToArray()) + "</color>" : "");
                     Line(b, note, 19f, GameUi.Dim);
                 }

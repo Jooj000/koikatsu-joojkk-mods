@@ -1,5 +1,8 @@
 # School Optimizer changelog
 
+## Unreleased
+- A clothes release or rebuild that got stuck (its coroutine stopped) no longer keeps a student hidden: after 20 s, or at once when she is needed on the player's map, the run is dropped and she is dressed in that frame.
+
 ## 1.7.0 (2026-10-09)
 - A new install starts at the maximum optimization: the defaults are the values used on the author's own game, compressed Skin Overlay Mod textures included. Values already in your config are kept.
 

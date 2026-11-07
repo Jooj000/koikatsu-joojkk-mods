@@ -27,6 +27,8 @@ namespace Joojkk.CampusLife
         {
             public SaveData.Heroine A, B;
             public NPC NB;
+            /// <summary>What you already asked her or both of them in this talk.</summary>
+            public readonly HashSet<string> Used = new HashSet<string>();
             public string Moment = "hangout";
             public TrioWho Target = TrioWho.A;
             public int Beats, Max = 5, SlightA, SlightB, Idles, Kisses;
@@ -408,11 +410,27 @@ namespace Joojkk.CampusLife
                 c5.Add(E("Tease them both", () => BothTalk("tease")));
                 c5.Add(E("Suggest somewhere private, the three of you", TrioH3));
             }
+            // Asked once, gone (like with one girl): goodbye and settling an argument stay until they are done.
+            var who = t.Target == TrioWho.B ? "b:" : "both:";
+            foreach (var list in new[] { c1, c2, c3, c4, c5 })
+            {
+                list.RemoveAll(e => t.Used.Contains(who + e.Label));
+                foreach (var e in list)
+                {
+                    if (!Repeatable(e.Label)) { var run = e.Run; var key = who + e.Label; e.Run = () => { t.Used.Add(key); run(); }; }
+                }
+            }
             return new List<KeyValuePair<string, List<UEntry>>>
             {
                 Cat(CatNames[0], c1, noTime), Cat(CatNames[1], c2, noTime), Cat(CatNames[2], c3, noTime),
                 Cat(CatNames[3], c4, noTime), Cat(CatNames[4], c5, noTime)
             }.Where(c => c.Value.Count > 0).ToList();
+        }
+
+        private static bool Repeatable(string label)
+        {
+            return label == "Say goodbye to both" || label.StartsWith("Side with ", StringComparison.Ordinal) || label == "Stay in the middle" || label == "Change the subject"
+                   || label.StartsWith("Suggest somewhere private", StringComparison.Ordinal);
         }
 
         private static string MomentSubject(string m)

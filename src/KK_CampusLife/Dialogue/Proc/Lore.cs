@@ -422,6 +422,7 @@ namespace Joojkk.CampusLife
             var f = Record("had_h", Player, GirlInfo.Key(h), witnesses: near);
             _lastH = f;
             _lastHAt = Time.realtimeSinceStartup;
+            if (near.Count > 0) Achievements.Count("h:seen", h);
             if (near.Count > 0) CampusLifePlugin.Log.LogInfo("Lore: H seen by " + string.Join(", ", near.Select(GirlInfo.FirstName).ToArray()));
         }
 

@@ -15,6 +15,8 @@ namespace Joojkk.CampusLife
     {
         public string Key, Op;
         public string[] Values;
+        /// <summary>A tone condition that names one of the new voices itself (shy, proper): it beats the fallback lines.</summary>
+        public bool NewVoice;
         public float Num;
 
         public bool Holds(Dictionary<string, string> ctx)
@@ -73,6 +75,8 @@ namespace Joojkk.CampusLife
 
         public static int Count { get { Ensure(); return _rules.Count; } }
 
+        internal static IEnumerable<DlgRule> All { get { Ensure(); return _rules; } }
+
         private static void Ensure() { if (_rules == null) Load(); }
 
         public static void Load()
@@ -101,10 +105,48 @@ namespace Joojkk.CampusLife
             foreach (var kv in files)
                 try { Parse(kv.Value, kv.Key); }
                 catch (Exception e) { CampusLifePlugin.Log.LogWarning("Dialogue bank " + kv.Key + ": " + e.Message); }
-            foreach (var r in _rules) r.Score = r.When.Sum(c => WeightOf(r.On, c.Key));
+            SplitLineHooks();
+            foreach (var r in _rules) r.Score = r.When.Sum(c => WeightOf(r.On, c.Key)) + (r.When.Any(c => c.NewVoice) ? 0.5f : 0f);
             _byOn = _rules.GroupBy(r => r.On).ToDictionary(g => g.Key, g => g.ToList(), StringComparer.OrdinalIgnoreCase);
             LoadedFrom = files.Count + " files (" + over + " from the folder)";
             CampusLifePlugin.Log.LogInfo("Dialogue bank: " + _rules.Count + " rules, " + _rules.Sum(r => r.Say.Count) + " lines, " + _lists.Count + " lists, " + LoadedFrom);
+        }
+
+        /// <summary>
+        /// more than the classes" "ask what happened with that professor": one hook for six different lines). A line that
+        /// starts "{hook:name}" becomes a rule of its own, the same conditions with that hook, so your options and her
+        /// answers follow that very line.
+        /// </summary>
+        private static void SplitLineHooks()
+        {
+            const string tag = "{hook:";
+            var added = new List<DlgRule>();
+            foreach (var r in _rules)
+            {
+                if (!r.Say.Any(l => l.StartsWith(tag, StringComparison.Ordinal))) continue;
+                var byHook = new Dictionary<string, DlgRule>();
+                for (var i = r.Say.Count - 1; i >= 0; i--)
+                {
+                    var l = r.Say[i];
+                    if (!l.StartsWith(tag, StringComparison.Ordinal)) continue;
+                    var end = l.IndexOf('}');
+                    if (end < 0) continue;
+                    var hook = l.Substring(tag.Length, end - tag.Length).Trim();
+                    r.Say.RemoveAt(i);
+                    DlgRule c;
+                    if (!byHook.TryGetValue(hook, out c))
+                    {
+                        c = new DlgRule { Id = r.Id + "~" + hook, On = r.On, File = r.File, Opens = r.Opens, Feel = r.Feel, Hook = hook, Shape = r.Shape };
+                        c.When.AddRange(r.When);
+                        foreach (var kv in r.Fit) c.Fit[kv.Key] = kv.Value;
+                        byHook[hook] = c;
+                        added.Add(c);
+                    }
+                    c.Say.Insert(0, l.Substring(end + 1).TrimStart());
+                }
+            }
+            _rules.AddRange(added);
+            _rules.RemoveAll(r => r.Say.Count == 0 && added.Any(a => a.Id.StartsWith(r.Id + "~", StringComparison.Ordinal)));
         }
 
         private static void Parse(string text, string file)
@@ -193,6 +235,14 @@ namespace Joojkk.CampusLife
                 var key = c.Substring(0, i);
                 var val = c.Substring(i + op.Length);
                 var d = new DlgCond { Key = key, Op = op, Values = val.Split('|') };
+                if (key == "tone" && (op == "=" || op == "!="))
+                {
+                    var vs = d.Values.ToList();
+                    d.NewVoice = op == "=" && (vs.Contains("shy") || vs.Contains("proper"));
+                    if (vs.Contains("gentle") && !vs.Contains("shy")) vs.Add("shy");
+                    if (vs.Contains("cool") && !vs.Contains("proper")) vs.Add("proper");
+                    d.Values = vs.ToArray();
+                }
                 if (op == ">=" || op == "<=") float.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out d.Num);
                 return d;
             }
@@ -407,7 +457,8 @@ namespace Joojkk.CampusLife
             var all = Matching("@" + name, ctx).Where(r => r.Say.Count > 0).ToList();
             if (all.Count == 0) return "";
             var top = all.Max(r => r.Score);
-            var pool = all.Where(r => r.Score >= top - 1).ToList();
+            // the weak ones (her sign, her height, the weather) are heard too and not only who she is to you.
+            var pool = all;
             for (var tries = 0; tries < 6 && pool.Count > 0; tries++)
             {
                 var total = pool.Sum(r => Weight(r, top) * r.Say.Count);

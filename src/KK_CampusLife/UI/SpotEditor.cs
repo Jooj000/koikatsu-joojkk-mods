@@ -11,7 +11,8 @@ namespace Joojkk.CampusLife
     /// controlador simples (tela de plugin mesmo), em que eu abro por atalho, e aparecem as atividades do mapa atual, e eu
     /// defino a posição de onde eu estou, ou a um corpo de distância na minha frente"). Alt+F7 opens and closes it. Each
     /// activity of this map has "Here" (where you stand, facing your way), "1 body ahead" (one body length in front of you)
-    /// and "Default" (back to the game's point). The spot is kept in BepInEx\config\joojkk.campuslife.spots.txt (the same
+    /// and "Default" (back to the game's point). They move the icon only: the animation plays at the game's point with its
+    /// own chair, except on a map without game points (the park), where it plays at the spot. The spot is kept in BepInEx\config\joojkk.campuslife.spots.txt (the same
     /// file as the Campus Life menu's "Spot here") and the map's icons move at once. Below the list, the loading screen's
     /// photo of this map: he stands where he likes and takes it (MapShots), or deletes it.
     /// </summary>
@@ -110,10 +111,12 @@ namespace Joojkk.CampusLife
                     if (GUILayout.Button("Default", GUILayout.Width(80f))) ActivitySpots.ResetSpot(a);
                     GUI.enabled = true;
                     GUILayout.EndHorizontal();
-                    GUILayout.Label(an == null ? "no spot on this map yet" : (mine ? "yours: " : an.Custom ? "mod: " : "game point: ") + Fmt(an.Pos) + "  facing " + Mathf.RoundToInt(an.Rot.eulerAngles.y) + "°", _small);
+                    GUILayout.Label(an == null ? "no spot on this map yet" : an.Key.StartsWith("c") ? "yours (no game point here): " + Fmt(an.Pos) + "  facing " + Mathf.RoundToInt(an.Rot.eulerAngles.y) + "°" :
+                        (mine ? "icon yours: " : "icon: ") + Fmt(an.IconPos) + "   animation at the game's point", _small);
                     GUILayout.EndVertical();
                 }
                 GUILayout.EndScrollView();
+                TeaseRow(map);
                 // atividade". The loading screen's picture of this map is his view, taken here.
                 var slot = EventBackdrop.TimeSlot();
                 var has = MapShots.Has(map, slot);
@@ -126,7 +129,8 @@ namespace Joojkk.CampusLife
                 if (GUILayout.Button("Delete", GUILayout.Width(80f))) { MapShots.Delete(map, slot); _photoMsg = "Photo deleted: the game's picture is used again."; }
                 GUI.enabled = true;
                 GUILayout.EndHorizontal();
-                GUILayout.Label(_photoMsg ?? (has ? "This map has your photo for this time of day." : shipped ? "The mod's photo is used here. Take one to replace it." : "No photo yet: the loading screen blurs the game's small picture."), _small);
+                var used = has || shipped ? null : MapShots.Source(map);
+                GUILayout.Label(_photoMsg ?? (has ? "This map has your photo for this time of day." : shipped ? "The mod's photo is used here. Take one to replace it." : used != null ? "Loading screen uses " + used + ". Take one for this time of day." : "No photo yet: the loading screen blurs the game's small picture."), _small);
                 GUILayout.EndVertical();
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(KeyName() + " opens and closes this window.", _small);
@@ -137,14 +141,45 @@ namespace Joojkk.CampusLife
             GUI.DragWindow();
         }
 
+        /// <summary>
+        /// when a girl sleeps here. "Here" and "1 body ahead" as for the activities; "Default" goes back to the floor next to
+        /// her that the player can reach.
+        /// </summary>
+        private static void TeaseRow(int map)
+        {
+            Spots.Spot sp;
+            var mine = Spots.IsUsers(SleepTease.SpotKind, map);
+            var has = Spots.TryGet(SleepTease.SpotKind, map, out sp);
+            GUILayout.BeginVertical(GUI.skin.box);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Sleep tease (imp)", GUILayout.Width(190f));
+            var p = G.Act.Player;
+            if (GUILayout.Button("Here", GUILayout.Width(70f))) SleepTease.SetSpot(Floor(p.position), p.rotation.eulerAngles.y);
+            if (GUILayout.Button("1 body ahead", GUILayout.Width(110f))) SleepTease.SetSpot(Floor(p.position + p.rotation * Vector3.forward * BodyLength), p.rotation.eulerAngles.y);
+            GUI.enabled = mine;
+            if (GUILayout.Button("Default", GUILayout.Width(80f))) SleepTease.ResetSpot();
+            GUI.enabled = true;
+            GUILayout.EndHorizontal();
+            GUILayout.Label((has ? (mine ? "yours: " : "mod: ") + Fmt(sp.Pos) : "next to the girl asleep, where you can walk") + "  |  " + SleepTease.State(), _small);
+            GUILayout.EndVertical();
+        }
+
+        private static Vector3 Floor(Vector3 pos)
+        {
+            NavMeshHit hit;
+            try { if (NavMesh.SamplePosition(pos, out hit, 1f, NavMesh.AllAreas)) return hit.position; }
+            catch { }
+            return pos;
+        }
+
         internal static string Describe()
         {
             var map = G.PlayerMapNo;
             return (_open ? "open" : "closed") + " on " + Places.MapLabel(map) + ": " + string.Join(" | ", Here().Select(a =>
             {
                 var an = ActivitySpots.AnchorOf(a, map);
-                return a.Id + (an == null ? " (none)" : (an.Custom ? " custom " : " game ") + Fmt(an.Pos));
-            }).ToArray());
+                return a.Id + (an == null ? " (none)" : (an.Custom ? " custom " : " game ") + Fmt(an.Pos) + " icon " + Fmt(an.IconPos));
+            }).ToArray()) + " | tease " + (Spots.IsUsers(SleepTease.SpotKind, map) ? "yours" : "auto") + ": " + SleepTease.State();
         }
     }
 }

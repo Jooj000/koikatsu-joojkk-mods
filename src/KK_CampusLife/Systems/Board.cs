@@ -243,6 +243,8 @@ namespace Joojkk.CampusLife
             if (!Cfg.BoardEnabled.Value || !G.IsSchoolDay || !G.InRoamingPeriod) return;
             int day;
             if (!S.Buffs.TryGetValue("board_day", out day) || day != S.Day) return; // the first period: the daily board
+            // is the last period of the day, with nothing left to do them in. The refill is for lunch and club time only.
+            if (G.CurrentMask == PeriodMask.After) return;
             var stamp = S.Day * 16 + (int)G.CurrentMask;
             int done;
             if (S.Buffs.TryGetValue("board_refill", out done) && done == stamp) return;
@@ -274,6 +276,9 @@ namespace Joojkk.CampusLife
                     r.State = RequestState.Hidden;
                     r.DeadlineDay = S.Day + 1;
                 }
+                // Posted after class (a save loaded then, a dropped talk replaced): it is for tomorrow, never a miss tonight.
+                if (G.CurrentMask == PeriodMask.After && r.Kind != RequestKind.Talk && r.DeadlineDay <= S.Day) r.DeadlineDay = S.Day + 1;
+                if (G.CurrentMask == PeriodMask.After && r.Kind == RequestKind.Talk) continue;
                 Add(r);
                 made++;
             }
@@ -307,6 +312,11 @@ namespace Joojkk.CampusLife
 
         public static void Add(Request r)
         {
+            if (r.Kind == RequestKind.Gift && !string.IsNullOrEmpty(r.Girl) && Active.Any(x => x.Kind == RequestKind.Gift && x.Girl == r.Girl))
+            {
+                CampusLifePlugin.Log.LogInfo("Board: " + GirlInfo.FirstName(r.Girl) + " already has a gift request open; '" + r.Title + "' not posted.");
+                return;
+            }
             r.Id = S.NextRequestId++;
             r.CreatedDay = S.Day;
             if (r.DeadlineDay < S.Day) r.DeadlineDay = S.Day;
@@ -337,8 +347,8 @@ namespace Joojkk.CampusLife
                 case Mood.Upset: options.Add(RequestKind.Gift); break;
                 default: options.AddRange(new[] { RequestKind.Errand, RequestKind.MeetAt, RequestKind.Talk, RequestKind.Lunch, RequestKind.Study, RequestKind.Exercise }); break;
             }
-            // Already got her gift today: no request for another one.
-            if (gs.LastGiftDay == S.Day) { options.RemoveAll(k => k == RequestKind.Gift); if (options.Count == 0) options.Add(RequestKind.Talk); }
+            // treat" and "X asked you to bring her something" at once): no request for another one.
+            if (gs.LastGiftDay == S.Day || OpenFor(gs.Key).Any(q => q.Kind == RequestKind.Gift)) { options.RemoveAll(k => k == RequestKind.Gift); if (options.Count == 0) options.Add(RequestKind.Talk); }
             if (Random.value < 0.25f) options.Add(RequestKind.Errand);
             // Asking to meet somewhere is for a girl who knows you.
             if (!Social.KnowsYou(h)) { options.RemoveAll(k => k == RequestKind.MeetAt || k == RequestKind.WalkHome); if (options.Count == 0) options.Add(RequestKind.Talk); }
@@ -364,7 +374,7 @@ namespace Joojkk.CampusLife
                     var like = gs.Mood == Mood.Hungry ? "food" : gs.Mood == Mood.Stressed ? "sweets" : gs.Mood == Mood.Sleepy ? "coffee" : "";
                     if (like == "" && likes.Count > 0 && Random.value < 0.5f) like = likes[Random.Range(0, likes.Count)];
                     var what = like == "" ? "a little present" : "something (" + GirlInfo.LikeLabel(like) + ")";
-                    var why = gs.Mood == Mood.Upset ? " is in a bad mood. Cheer her up:" : " could use a treat:";
+                    var why = gs.Mood == Mood.Upset ? BadMoodWhy : TreatWhy;
                     var r = Make(kind, h, "A gift for " + name, name + why + " give her " + what + ". The university store is in the cafeteria.", 6);
                     r.Item = like;
                     return r;
@@ -449,7 +459,7 @@ namespace Joojkk.CampusLife
                 case RequestKind.WalkHome: return result == ResultEnum.GoHome;
                 case RequestKind.Intimate: return result == ResultEnum.H;
                 // Plain board talks complete on any conversation; arc talks need their scene (talk button).
-                case RequestKind.Talk: return r.Source != "arc" && !(r.Source == "favor" && !string.IsNullOrEmpty(r.Other)); // a message completes with the friend
+                case RequestKind.Talk: return r.Source != "arc" && !IsRumor(r) && !(r.Source == "favor" && !string.IsNullOrEmpty(r.Other)); // a message completes with the friend; the rumor with its scene
                 case RequestKind.MeetAt: return r.Source != "arc" && Places.CurrentId == r.Place;
                 case RequestKind.Errand: return r.Source != "arc" && r.Progress > 0;
                 default: return false;
@@ -533,6 +543,26 @@ namespace Joojkk.CampusLife
                                                        && (string.IsNullOrEmpty(r.Item) || Items.MatchesCategory(item, r.Item) || r.Item == item.Id));
         }
 
+        /// <summary>Who has an open gift request (on the board) that this item fulfils: their first names.</summary>
+        public static List<string> GiftFitsFor(ItemDef item)
+        {
+            // Only requests for a kind or an item: one for any gift would mark the whole store.
+            if (item == null) return new List<string>();
+            return Active.Where(r => r.Kind == RequestKind.Gift && r.DeadlineDay >= S.Day && !string.IsNullOrEmpty(r.Girl)
+                                     && !string.IsNullOrEmpty(r.Item) && (Items.MatchesCategory(item, r.Item) || r.Item == item.Id))
+                .Select(r => GirlInfo.FirstName(r.Girl)).Distinct().ToList();
+        }
+
+        /// <summary>Girls who asked for a gift of any kind (the store says so once, at the top).</summary>
+        public static List<string> AnyGiftFor()
+        {
+            return Active.Where(r => r.Kind == RequestKind.Gift && r.DeadlineDay >= S.Day && !string.IsNullOrEmpty(r.Girl) && string.IsNullOrEmpty(r.Item))
+                .Select(r => GirlInfo.FirstName(r.Girl)).Distinct().ToList();
+        }
+
+        /// <summary>The color of "this fulfils a request".</summary>
+        public static readonly Color FitColor = new Color(1f, 0.55f, 0.8f, 1f);
+
         public static void OnGift(SaveData.Heroine h, ItemDef item)
         {
             var key = GirlInfo.Key(h);
@@ -555,7 +585,7 @@ namespace Joojkk.CampusLife
         {
             var key = GirlInfo.Key(h);
             return ActiveFor(key).FirstOrDefault(r =>
-                r.Source == "arc" && r.DeadlineDay >= S.Day && (r.Periods & G.CurrentMask) != 0 &&
+                (r.Source == "arc" || IsRumor(r)) && r.DeadlineDay >= S.Day && (r.Periods & G.CurrentMask) != 0 &&
                 (r.Kind == RequestKind.Talk ||
                  (r.Kind == RequestKind.MeetAt && Places.CurrentId == r.Place) ||
                  (r.Kind == RequestKind.Errand && r.Progress > 0)));
@@ -595,6 +625,7 @@ namespace Joojkk.CampusLife
             {
                 Arcs.BuildTalkScene(r, h, b);
             }
+            else if (r.Source == "happening" && r.Title == RumorTitle) RumorScene(b, h, tone);
             else
             {
                 switch (r.Kind)
@@ -632,6 +663,7 @@ namespace Joojkk.CampusLife
                 if (r.Source == "arc") Arcs.OnTalkSceneDone(r, h, choice);
                 else Complete(r, h);
                 if (r.Source == "note") NoteAfter(h, choice);
+                if (r.Source == "happening" && r.Title == RumorTitle) RumorAfter(h, choice);
                 if (after != null) after();
             });
         }
@@ -662,6 +694,114 @@ namespace Joojkk.CampusLife
             b.Me(Lines.Pick("Just \"" + name.Substring(0, 1).ToUpper() + ".\"? Very mysterious.", "A single letter. Were you going for spy novel?"));
             b.Her_(Lines.T(tone, "T-that was... I was embarrassed! Please don't make it worse... || D-don't tease me... I was so embarrassed! || P-please, I was mortified... don't make it worse. || Ah... I wanted to hide forever...", "Ahaha, busted! I panicked, okay?! || Haha, busted! I freaked out, okay?! || Ugh, caught! I panicked! || Okay, okay, I chickened out! Don't laugh!", "...I didn't want my name on it. Drop it. || ...I didn't want my name on it. Drop it. || ...Anonymous was intentional. Leave it. || ...It wasn't meant to be traced. Forget it.", "Mysterious is my brand. Now, help me, spy. || A girl needs her mysteries. Now help me, detective. || Mystery suits me. So, helping or not? || Caught me. Now you have to help."));
             b.End();
+        }
+
+        public const string RumorTitle = "Is the rumor true?";
+
+        /// <summary>The rumor that she likes you: done with its own scene (the talk button), not by any chat.</summary>
+        public static bool IsRumor(Request r) { return r != null && r.Source == "happening" && r.Title == RumorTitle; }
+
+        /// <summary>Her answer to the rumor, from the director's confession score: yes, a shy yes, a shy no, no.</summary>
+        private static string RumorAnswer(SaveData.Heroine h)
+        {
+            string why;
+            var c = Consent.Chance(h, Ask.Confess, out why);
+            var a = c >= 0.6f ? "yes" : c >= 0.3f ? "wary_yes" : c >= 0f ? "wary_no" : "no";
+            CampusLifePlugin.Log.LogInfo("Board: rumor talk with " + GirlInfo.FirstName(h) + " -> " + a + " (score " + c.ToString("0.00") + ": " + why + ")");
+            return a;
+        }
+
+        /// <summary>
+        /// The rumor that she likes you:
+        /// you bring it up, she answers as the director has her (sure, flustered, dodging, flat no), and you choose what
+        /// to say back; telling her you like her too leads into the game's own confession when she is open to it.
+        /// </summary>
+        private static void RumorScene(SceneBuilder b, SaveData.Heroine h, Tone tone)
+        {
+            var name = GirlInfo.FirstName(h);
+            var a = RumorAnswer(h);
+            _rumorAnswer = a;
+            b.Narr(Lines.Pick("A couple of girls nearby go quiet the moment you walk up to " + name + ".", name + " sees you coming and starts fixing her hair.", "Someone behind you whispers \"that's him\" as you reach " + name + "."));
+            b.Me(Lines.Pick("So... I heard a rumor about you. About you and me.", "People are saying something about you. About how you feel about me.", "I keep hearing a rumor. That you like me. Is it true?"));
+            switch (a)
+            {
+                case "yes":
+                    b.Face(h, Feel.Love).Her_(Lines.T(tone, "...It's true. I didn't want you to hear it from them, but... it's true. I like you. || ...I wanted to tell you myself. Yes. I like you. || ...It's true. I've liked you for a while now.",
+                        "Ugh, they told you?! ...Okay, fine, yes! I like you! A lot! || They blabbed?! ...Yes. Yes, I like you! || ...Yeah. It's true. Don't laugh!",
+                        "...Yes. It's true. I wasn't going to deny it. || ...It's true. I like you. There. || ...I won't pretend. It's true.",
+                        "And if it is? ...It is. I like you. Your move. || So the secret's out. Yes, I like you. Now what? || True. Surprised? You shouldn't be."));
+                    break;
+                case "wary_yes":
+                    b.Face(h, Feel.Shy).Her_(Lines.T(tone, "W-who told you that?! ...I mean... maybe it's a little true... || I... um... it's not... okay, maybe it's a little true. || Don't look at me like that... it might be true.",
+                        "WHAT?! Who said that?! ...Okay, maybe. A little. Don't make it weird! || Th-that's... ugh, maybe! A little! || Who's spreading that?! ...It's not totally wrong.",
+                        "...People talk too much. ...It isn't entirely wrong. || ...I didn't say it wasn't true. || ...It's possible. Don't push it.",
+                        "Oh? And you came running to check? ...Maybe I do. Maybe. || You want it to be true, don't you? ...It might be. || Hmm. Maybe it is. You'll have to earn the rest."));
+                    break;
+                case "wary_no":
+                    b.Face(h, Feel.Shy).Her_(Lines.T(tone, "P-people say all kinds of things... I like talking to you, that's all. || I... I don't know. I like being around you. Isn't that enough for now? || It's... complicated. I like you as a friend. I think.",
+                        "Ehh?! People say weird stuff! I mean, you're fun, but... || Whoa, slow down! You're cool, okay? That's all I'm saying! || Rumors are rumors! ...You're nice, though.",
+                        "...It's a rumor. Treat it like one. I don't dislike you. || ...I haven't decided anything. || ...Don't read too much into it.",
+                        "Getting ahead of yourself? I didn't say anything like that. Yet. || Cute that you believed it. Maybe someday. || Rumors move faster than I do. Patience."));
+                    break;
+                default:
+                    b.Face(h, Feel.Serious).Her_(Lines.T(tone, "I'm sorry... that's just gossip. I don't feel that way. || It isn't true. I'm sorry if they got your hopes up. || I don't know who started it, but it isn't true.",
+                        "No way! Somebody's messing with you! || Nope! Not true! Who's spreading this?! || Ha, no. Sorry! Somebody got it wrong!",
+                        "No. It isn't true. || Gossip. Nothing more. || I don't. Sorry.",
+                        "Oh, please. Someone's playing a prank on you. || You believed that? No. || Not even close. Nice try."));
+                    break;
+            }
+            var warm = a == "yes" || a == "wary_yes";
+            b.Choice("Tell her you like her too.", "confess", warm ? "Say you're glad you heard it." : "Say you're glad you can still be friends.", "warm", "Laugh it off.", "laugh");
+            b.Branch("confess");
+            b.Me(Lines.Pick("I like you too. I wanted to say it properly.", "Then let me say it too. I like you.", "For what it's worth... I like you. Really."));
+            if (warm)
+            {
+                b.Face(h, Feel.Love).Her_(Lines.T(tone, "...Then say it properly. I want to hear it right. || ...Really? Then... say it again, properly. || ...Ask me properly. I'll answer.",
+                    "R-really?! Then do it right! Like, properly properly! || Seriously?! Then say it for real! || Wait wait wait, say it right! I want to remember it!",
+                    "...Then ask me. Properly. || ...Say it right, then. I'm listening. || ...Then do it properly.",
+                    "Oh? Then go on. Make it a real confession. || Then say it properly. I'm waiting~ || Finally. Now do it right."));
+            }
+            else
+            {
+                b.Face(h, Feel.Shy).Her_(Lines.T(tone, "...Thank you. I'm not ready for that. Can we just... stay like this a while? || ...I'm glad. But I need more time. || ...That's sweet. Not yet, okay?",
+                    "Whoa! That's... that's a lot! Can I think about it?! || Ah... you're sweet! But not yet, okay?! || Eh?! Give me some time!",
+                    "...I heard you. Give me time. || ...Not now. Ask me again when we know each other better. || ...I'll think about it.",
+                    "Bold. I like bold. But no. Not yet. || Look at you. Ask me again later~ || That was cute. The answer's still not yet."));
+            }
+            b.End();
+            b.Branch("warm");
+            b.Me(warm ? Lines.Pick("I'm glad I heard it. Really.", "Honestly? That made my day.") : Lines.Pick("That's fine. I like talking to you too.", "Then we're good. No pressure."));
+            b.Face(h, warm ? Feel.Love : Feel.Smile).Her_(warm ? Lines.T(tone, "...Me too. I'm glad it's out. || ...Hehe. Okay. Good. || ...Then I'm glad they talked.", "Good! Because I'm not taking it back! || Yay! Okay, okay, I'm happy! || Then it's a good rumor!", "...Good. || ...Then it worked out. || ...I'm glad too.", "Of course you are~ || Good answer. || Then the rumor did its job.")
+                : Lines.T(tone, "...Thank you for being kind about it. || ...Thanks. Really. || ...You're nice, you know.", "Phew! Okay, good! Friends! || You're the best! Friends! || Ahaha, okay! Good!", "...Good. || ...Fine by me. || ...Thanks.", "Smart answer. || Look at you, all mature. || Good. Keep it that way. For now~"));
+            b.End();
+            b.Branch("laugh");
+            b.Me(Lines.Pick("Ha, people will say anything.", "Right, as if. Funny rumor."));
+            b.Face(h, warm ? Feel.Sad : Feel.Smile).Her_(warm ? Lines.T(tone, "...Yeah. Anything. || ...Right. Funny. || ...Ha. Yeah.", "...Ha. Yeah. Totally. || ...Haha... right. || ...Yeah, so funny.", "...Right. || ...Of course. || ...Sure.", "...Wow. Okay. || ...You're laughing? Noted. || ...Funny, sure.")
+                : Lines.T(tone, "Hehe, right? People are silly. || Right? So silly. || I know, right?", "Right?! So dumb! || Hahaha, I know! || Gossip, ugh!", "...Agreed. || ...Exactly. || ...Ridiculous.", "Right? As if~ || So silly. || Please, as if~"));
+            b.End();
+        }
+
+        private static string _rumorAnswer = "";
+
+        private static void RumorAfter(SaveData.Heroine h, string choice)
+        {
+            try
+            {
+                if (h == null) return;
+                var warm = _rumorAnswer == "yes" || _rumorAnswer == "wary_yes";
+                if (choice == "confess")
+                {
+                    if (warm && !h.isGirlfriend) Conversation.QueueConfession();   // the game's confession, answered by the director
+                    else if (!warm) { Social.AddTrust(h, 1); }
+                }
+                else if (choice == "warm") { G.AddFavor(h, warm ? 4 : 2, 0); Social.AddTrust(h, 2); }
+                else if (choice == "laugh")
+                {
+                    if (warm) { G.AddFavor(h, -4, 0); Social.AddTrust(h, -3); Toasts.Show(GirlInfo.FirstName(h) + " looks hurt. (-4 favor)"); }
+                    else G.AddFavor(h, 1, 0);
+                }
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Rumor after: " + e.Message); }
         }
 
         private static void NoteAfter(SaveData.Heroine h, string choice)
@@ -780,6 +920,28 @@ namespace Joojkk.CampusLife
                 return;
             }
             foreach (var r in Active.Where(x => x.DeadlineDay == S.Day && (x.Periods & remaining) == 0).ToList()) Fail(r);
+        }
+
+        private const string BadMoodWhy = " is in a bad mood. Cheer her up:";
+        private const string TreatWhy = " could use a treat:";
+
+        /// <summary>A gift request of hers is open (board or a favor she asked): one at a time.</summary>
+        public static bool HasGiftOpen(SaveData.Heroine h)
+        {
+            return h != null && OpenFor(GirlInfo.Key(h)).Any(q => q.Kind == RequestKind.Gift);
+        }
+
+        /// <summary>
+        /// dizendo que está em bad mood"): the reason written when it was posted follows her mood of this moment.
+        /// </summary>
+        public static string TextOf(Request r)
+        {
+            var t = r.Text ?? "";
+            if (r.Kind != RequestKind.Gift || string.IsNullOrEmpty(r.Girl)) return t;
+            var upset = S.Girl(r.Girl).Mood == Mood.Upset;
+            if (!upset && t.Contains(BadMoodWhy)) return t.Replace(BadMoodWhy, TreatWhy);
+            if (upset && t.Contains(TreatWhy)) return t.Replace(TreatWhy, BadMoodWhy);
+            return t;
         }
 
         public static string HowTo(Request r)

@@ -21,9 +21,11 @@ namespace Joojkk.CampusLife
         {
             S.Spotlight.Clear();
             S.SpotlightWeek = S.Week;
-            if (!IsActive) return;
             var students = Board.Students;
-            var size = Mathf.Clamp(Cfg.SpotlightSize.Value, 1, students.Count);
+            // had one, so Today had nothing to show. Now it has 2 or 3 girls too; there they only star the week's
+            // outings and stories (Episodes.Cast), while requests and arcs stay spread over everyone (IsActive is false).
+            if (!Cfg.SpotlightEnabled.Value || students.Count == 0) return;
+            var size = IsActive ? Mathf.Clamp(Cfg.SpotlightSize.Value, 1, students.Count) : Mathf.Clamp(students.Count / 3, Mathf.Min(2, students.Count), 3);
             var picked = new List<SaveData.Heroine>();
 
             // Girls out of the spotlight for 3+ weeks go first.

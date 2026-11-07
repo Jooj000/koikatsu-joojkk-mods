@@ -47,19 +47,23 @@ namespace Joojkk.CampusLife
 
         public enum Kind { Int, Str, Sens, Job, Rest }
 
-        /// <summary>Animation (game action number, Desk or Dark) and icon kind of every activity.</summary>
+        /// <summary>
+        /// preta na atividade, coloque a animação"): none uses the black screen any more; chores and jobs take the game's
+        /// closest move (0 reading standing, 2 warming up the hands, 3 squatting, 4 stretching, Desk sitting at the desk).
+        /// The black screen stays only for when the game's actions can't be read.
+        /// </summary>
         private static readonly Dictionary<string, KeyValuePair<int, Kind>> Look = new Dictionary<string, KeyValuePair<int, Kind>>
         {
-            { "review_notes", P(Desk, Kind.Int) }, { "class_duty", P(Dark, Kind.Str) },
-            { "study", P(Desk, Kind.Int) }, { "romance_novel", P(0, Kind.Sens) }, { "browse_magazines", P(0, Kind.Int) }, { "library_job", P(Dark, Kind.Job) },
-            { "workout", P(3, Kind.Str) }, { "basketball", P(Dark, Kind.Str) }, { "gym_job", P(Dark, Kind.Job) },
-            { "swim", P(Dark, Kind.Str) }, { "lifeguard", P(Dark, Kind.Job) },
-            { "run", P(4, Kind.Str) }, { "garden", P(Dark, Kind.Job) }, { "feed_cats", P(Dark, Kind.Rest) }, { "park_walk", P(Dark, Kind.Rest) },
-            { "hearty_lunch", P(Dark, Kind.Rest) }, { "kitchen_job", P(Dark, Kind.Job) },
-            { "club_meeting", P(Desk, Kind.Int) }, { "club_report", P(Desk, Kind.Int) }, { "research_material", P(6, Kind.Sens) }, { "fundraise", P(Dark, Kind.Job) },
-            { "nap", P(Dark, Kind.Rest) }, { "practice_lines", P(2, Kind.Sens) }, { "stargaze", P(Dark, Kind.Sens) },
-            { "rest", P(Dark, Kind.Rest) }, { "nurse_job", P(Dark, Kind.Job) },
-            { "tutoring", P(Desk, Kind.Int) }, { "teacher_errands", P(Dark, Kind.Job) },
+            { "review_notes", P(Desk, Kind.Int) }, { "class_duty", P(2, Kind.Str) },
+            { "study", P(Desk, Kind.Int) }, { "romance_novel", P(0, Kind.Sens) }, { "browse_magazines", P(0, Kind.Int) }, { "library_job", P(0, Kind.Job) },
+            { "workout", P(3, Kind.Str) }, { "basketball", P(2, Kind.Str) }, { "gym_job", P(4, Kind.Job) },
+            { "swim", P(4, Kind.Str) }, { "lifeguard", P(2, Kind.Job) },
+            { "run", P(4, Kind.Str) }, { "garden", P(3, Kind.Job) }, { "feed_cats", P(3, Kind.Rest) }, { "park_walk", P(4, Kind.Rest) },
+            { "hearty_lunch", P(Desk, Kind.Rest) }, { "kitchen_job", P(2, Kind.Job) },
+            { "club_meeting", P(Desk, Kind.Int) }, { "club_report", P(Desk, Kind.Int) }, { "research_material", P(6, Kind.Sens) }, { "fundraise", P(2, Kind.Job) },
+            { "nap", P(Desk, Kind.Rest) }, { "practice_lines", P(2, Kind.Sens) }, { "stargaze", P(4, Kind.Sens) },
+            { "rest", P(Desk, Kind.Rest) }, { "nurse_job", P(0, Kind.Job) },
+            { "tutoring", P(Desk, Kind.Int) }, { "teacher_errands", P(0, Kind.Job) },
         };
 
         private static KeyValuePair<int, Kind> P(int anim, Kind kind) { return new KeyValuePair<int, Kind>(anim, kind); }
@@ -240,26 +244,14 @@ namespace Joojkk.CampusLife
             {
                 var want = AnimOf(a);
                 Spots.Spot custom;
-                if (Spots.TryGet("act:" + a.Id, map, out custom))
+                var mine = Spots.TryGet("act:" + a.Id, map, out custom);
+                if (mine && points.Count == 0)
                 {
+                    // A map without the game's action points (the park): the animation plays where he put it.
                     var rot = Quaternion.Euler(0f, custom.Yaw, 0f);
-                    var c = new Anchor { Key = "c" + a.Id, Pos = custom.Pos, Rot = rot, IconPos = custom.Pos + rot * Vector3.forward * 0.6f, Custom = true };
+                    var c = new Anchor { Key = "c" + a.Id, Pos = custom.Pos, Rot = rot, IconPos = custom.Pos, Custom = true };
                     c.Acts.Add(a);
-                    // session mas ele parou de usar a animação da mesa e começou a ler em pé". The desk action is kept and its
-                    // chair is carried to the new spot, in the same place relative to him as at the game's desk.
-                    var deskAnim = 0;
-                    if (want == Desk && custom.Anim < 0)
-                    {
-                        var dp = points.FirstOrDefault(p => p.Actions.Any(IsDeskAction));
-                        if (dp != null)
-                        {
-                            deskAnim = dp.Actions.First(IsDeskAction);
-                            c.FromDesk = true;
-                            c.DeskPos = dp.Pos;
-                            c.DeskRot = dp.Rot;
-                        }
-                    }
-                    c.AnimFor[a.Id] = custom.Anim >= 0 ? custom.Anim : (want == Desk ? deskAnim : want);
+                    c.AnimFor[a.Id] = custom.Anim >= 0 ? custom.Anim : (want == Desk ? 0 : want);
                     anchors.Add(c);
                     continue;
                 }
@@ -282,13 +274,16 @@ namespace Joojkk.CampusLife
                 if (gp == null)
                 {
                     // Chores and jobs (and anything without a matching point): the point with the fewest activities so far.
-                    gp = points.OrderBy(p => anchors.Count(x => !x.Custom && x.Key.StartsWith("p" + p.No + ":"))).First();
+                    gp = points.OrderBy(p => anchors.Count(x => x.Key.StartsWith("p" + p.No + ":"))).First();
                 }
-                // Every activity has its own icon (and anchor), even when several are done at the same game point.
-                var anchor = new Anchor { Key = "p" + gp.No + ":" + a.Id, Pos = gp.Pos, Rot = gp.Rot };
+                // Every activity has its own icon (and anchor), even when several are done at the same game point. The
+                // animation always plays at the game's point, with its own chair. A spot set in the Alt+F7 window moves only
+                // animação no lugar, é só o ícone que deve mudar com o alt f7").
+                var anchor = new Anchor { Key = "p" + gp.No + ":" + a.Id, Pos = gp.Pos, Rot = gp.Rot, Custom = mine };
+                if (mine) anchor.IconPos = custom.Pos;
                 anchors.Add(anchor);
                 anchor.Acts.Add(a);
-                anchor.AnimFor[a.Id] = anim;
+                anchor.AnimFor[a.Id] = mine && custom.Anim >= 0 ? custom.Anim : anim;
             }
 
             foreach (var an in anchors.Where(x => !x.Custom))
@@ -397,15 +392,23 @@ namespace Joojkk.CampusLife
             var map = G.PlayerMapNo;
             Spots.Set("act:" + a.Id, map, p.position, p.rotation.eulerAngles.y);
             Rebuild(map);
-            Toasts.Show(a.Name + " is now done here (" + Places.MapLabel(map) + ").");
+            Toasts.Show(MovedText(a, map));
         }
 
-        /// <summary>Puts an activity at a spot on a map (the spot editor's "Here" and "1 body ahead") and moves its icon now.</summary>
+        /// <summary>What moved: on a map with the game's points only the icon (the animation stays at its chair).</summary>
+        private static string MovedText(ActivityDef a, int map)
+        {
+            var an = AnchorOf(a, map);
+            return an != null && an.Key.StartsWith("c") ? a.Name + " is now done here (" + Places.MapLabel(map) + ")." : a.Name + ": icon moved here; the animation stays at its spot.";
+        }
+
+        /// <summary>Puts an activity's icon at a spot on a map (the spot editor's "Here" and "1 body ahead"); the animation stays at
+        /// the game's point, except on a map without one.</summary>
         public static void SetSpot(ActivityDef a, int map, Vector3 pos, float yaw)
         {
             Spots.Set("act:" + a.Id, map, pos, yaw);
             Rebuild(map);
-            Toasts.Show(a.Name + " is now done here (" + Places.MapLabel(map) + ").");
+            Toasts.Show(MovedText(a, map));
             CampusLifePlugin.Log.LogInfo(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Activity spot: {0} on map {1} at {2:0.00}, {3:0.00}, {4:0.00} facing {5:0}", a.Id, map, pos.x, pos.y, pos.z, yaw));
         }
 
@@ -448,6 +451,8 @@ namespace Joojkk.CampusLife
             var anchor = G.IsFreeRoaming ? AnchorOf(a, G.PlayerMapNo) : null;
             var anim = -1;
             if (anchor != null) anchor.AnimFor.TryGetValue(a.Id, out anim);
+            // where he stands instead of the black screen.
+            else if (G.IsFreeRoaming) { anim = AnimOf(a); if (anim == Desk) anim = 0; }
             var ga = ActionNo(anim);
             var block = OwnBlocker(a);
             if (block != null) { Busy = false; Toasts.Show(a.Name + ": " + block); yield break; }

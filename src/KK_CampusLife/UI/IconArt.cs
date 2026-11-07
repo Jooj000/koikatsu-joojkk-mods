@@ -77,9 +77,15 @@ namespace Joojkk.CampusLife
         /// </summary>
         public static float[] Card(int kind, int size, out int border)
         {
+            return Card(kind >= 0 ? Accent[kind] : new[] { 0.85f, 0.85f, 0.9f }, kind >= 0, size, out border);
+        }
+
+        /// gift that fulfils her request has its own frame turned pink instead of the category's gold.</summary>
+        public static float[] Card(float[] a, bool strip, int size, out int border)
+        {
             border = size * 3 / 8;
             var px = new float[size * size * 4];
-            var a = kind >= 0 ? Accent[kind] : new[] { 0.85f, 0.85f, 0.9f };
+            var kind = strip ? 0 : -1;
             var unit = size / 2f;
             for (var y = 0; y < size; y++)
             for (var x = 0; x < size; x++)
@@ -94,8 +100,8 @@ namespace Joojkk.CampusLife
                 r = Lerp(r, a[0], ring); g = Lerp(g, a[1], ring); b = Lerp(b, a[2], ring);
                 if (kind >= 0)
                 {
-                    var strip = Cover(Math.Max(box + 0.1f, u + 0.62f), unit);
-                    r = Lerp(r, a[0], strip); g = Lerp(g, a[1], strip); b = Lerp(b, a[2], strip);
+                    var band = Cover(Math.Max(box + 0.1f, u + 0.62f), unit);
+                    r = Lerp(r, a[0], band); g = Lerp(g, a[1], band); b = Lerp(b, a[2], band);
                 }
                 var i = (y * size + x) * 4;
                 px[i] = r; px[i + 1] = g; px[i + 2] = b; px[i + 3] = fill * 0.9f;

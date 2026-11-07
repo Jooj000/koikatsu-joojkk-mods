@@ -1253,6 +1253,8 @@ when tone=cool
 - Later.
 - Bye.
 - Until next time.
+- See you.
+- I'll go now.
 
 @rule duo3.bye.a.teasing
 on duo3.bye.a
@@ -1276,6 +1278,7 @@ when tone=energetic
 - See ya!
 - Bye bye!
 - Later!
+- Catch you later!
 
 @rule duo3.bye.b.cool
 on duo3.bye.b
@@ -1283,6 +1286,8 @@ when tone=cool
 - ...Bye.
 - ...Later.
 - ...Farewell.
+- Later, then.
+- ...I'll go too.
 
 @rule duo3.bye.b.teasing
 on duo3.bye.b

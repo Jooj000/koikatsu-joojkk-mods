@@ -21,6 +21,7 @@ hook f_day_t_lina_up
 opens ask,praise,tease
 - [I'm in a good mood today.|Somebody's smiling, and it's me.] [Don't ask why. Guess.|Quiet ward and good coffee.]
 - [You've caught me at a good moment.|Lucky you, I'm feeling generous.] [Ask me anything.|Free bandages for everyone.]
+- [Good day today.|The ward is quiet and the sun is out.] [I'm humming. Don't comment.|Even the paperwork feels light.]
 
 @rule day.t.lina.low
 on day
@@ -30,6 +31,7 @@ hook f_day_t_lina_low
 opens comfort,ask,share
 - [Long night. I'm the one who should be lying down.|I've been on my feet since dawn.] [Don't tell the patients.|Even nurses need a bed.]
 - [Today I'd like someone to take MY temperature.|Everyone wants something from me today.] [Hah.|I'd trade a lot for five quiet minutes.]
+- [I've seen twelve patients and it's not noon.|Everyone has a headache today.] [Including me.|Let me sit for a minute.]
 
 @rule day.t.lina.close
 on day
@@ -39,6 +41,7 @@ hook f_day_t_lina_close
 opens tease,share,ask
 - [There you are.|You took your time.] [I saved the chair by the window for you.|I've been pretending to do inventory.]
 - [Come here, let me look at you.|You look tired, sweetheart.] [Doctor's orders: stay a while.|I'm prescribing a long lunch. With me.]
+- [Finally.|Took you long enough.] [Your chair's warm. I kept it that way.|I made two cups of tea. Don't let one go cold.]
 
 @rule small.t.lina.school
 on small

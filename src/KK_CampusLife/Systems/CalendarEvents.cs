@@ -551,6 +551,7 @@ namespace Joojkk.CampusLife
                 else b.Say(g, T(g, "Don't read it! Please! || Don't read it! || Please, no! || Not mine!", "Mine! Give it! No peeking! || Mine! No peeking! || Give it! || Nope!", "Hand it over. Now. || Hand it over. || Give. || Now.", "Curious? Earn it first~ || Earn it. || Curious? Pay. || Not free."));
                 b.Narr("She ties it back up, higher this time.");
             }
+            b.Bg("@skyline|tanabata_street");
             b.Narr("Above the street, the Milky Way is clear tonight. Somewhere up there, two lovers are meeting.");
 
             return Scenes.PlayOnMap(b, _ =>
@@ -671,8 +672,9 @@ namespace Joojkk.CampusLife
             var tops = TopGirls(2);
             var b = new SceneBuilder(null, false);
 
-            b.Bg("train");
+            b.Bg("@station2|@station|train");
             b.Narr("Field trip day! The whole class boards the bullet train to " + (kyoto ? "Kyoto" : "a hot spring town in the mountains") + ".");
+            b.Bg("train");
             b.Narr("Rice fields fly past the window. Somebody already opened the snacks. The professor has given up.");
             b.Narr("There's a free seat next to you.");
             var opts = new List<string>();

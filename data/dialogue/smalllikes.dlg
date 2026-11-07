@@ -994,8 +994,9 @@ when likeid=coffee likes=yes
 feel smile
 shape q
 hook coffee_yes_craft
-opens ask,praise,tease
+opens ask,admit,tease
 - You've never had a real cup, have you? I can tell.
+- Be honest. The coffee you drink comes out of a machine, doesn't it?
 
 @rule small.coffee.yes.general~offer
 on small

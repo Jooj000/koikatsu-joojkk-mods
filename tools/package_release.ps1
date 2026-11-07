@@ -21,6 +21,9 @@ foreach ($mod in $Mods) {
   if ($mod -eq 'KK_CampusLife') {
     New-Item -ItemType Directory -Force (Join-Path $dest 'backgrounds') | Out-Null
     Copy-Item (Join-Path $root 'data\backgrounds\*.jpg') (Join-Path $dest 'backgrounds')
+    # his map photos go in the zip; the activity points are already inside the DLL (spots_default.txt).
+    New-Item -ItemType Directory -Force (Join-Path $dest 'mapshots') | Out-Null
+    Copy-Item (Join-Path $root 'data\mapshots\*.jpg') (Join-Path $dest 'mapshots')
   }
   Copy-Item (Join-Path $root "src\$mod\README.md"), (Join-Path $root "src\$mod\CHANGELOG.md") $stage
   $zip = Join-Path $out "$mod-$version.zip"

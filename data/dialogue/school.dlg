@@ -203,6 +203,7 @@ when school=event evkind=sports clubkind=sports role!=teacher
 hook f_school_sports_club
 opens ask,praise,invite
 - [The {club} is expected to win at {event}.|The whole {club} is entered at {event}.] [No pressure at all.|We've doubled practice.]
+- [Everyone expects the {club} to win {event}.|The {club} is all in for {event}.] [We've trained for weeks.|If we lose, it's on me.]
 
 @rule school.sports.staff
 on school
@@ -268,6 +269,7 @@ when school=event evkind=fair job=nurse
 hook f_school_fair_nurse
 opens ask,tease,share
 - [At {event} I treat burns from the takoyaki stall.|{Event} is all cuts from cardboard and hot oil.] [Every year.|Be careful with the stall tools.]
+- [{Event} means burns and paper cuts.|Every {event} I go through a box of bandages.] [The takoyaki stall is the worst.|Bring me something sweet if you pass by.]
 
 # ---------------- field trip ----------------
 @rule school.trip.up
@@ -343,6 +345,7 @@ when school=event evkind=costume low=yes role!=teacher
 hook f_school_costume_low
 opens comfort,invite,tease
 - [I don't have a costume for {event}.|{Event}, huh.] [I'll go as a tired person.|Everyone else looks so good.]
+- [No costume for {event} yet.|{Event} snuck up on me.] [Maybe a ghost. A sheet is easy.|Everyone planned theirs weeks ago.]
 
 @rule school.costume.staff
 on school

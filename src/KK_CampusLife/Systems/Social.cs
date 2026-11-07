@@ -157,7 +157,12 @@ namespace Joojkk.CampusLife
         private static bool Merges(string kind) { return kind == Kinds.SeenGirlsRoom || kind == Kinds.SeenLockers || kind == Kinds.HerBoysRoom; }
 
         /// <summary>The same story: same kind, about the same girl, within a couple of days.</summary>
-        private static bool SameStory(Incident a, Incident b) { return a != null && b != null && a.Kind == b.Kind && a.Girl == b.Girl && Math.Abs(a.Day - b.Day) <= 2; }
+        private static bool SameStory(Incident a, Incident b)
+        {
+            if (a == null || b == null || a.Kind != b.Kind || a.Girl != b.Girl) return false;
+            // request for the same girl that week is the same story, not a new thing to clear again.
+            return Math.Abs(a.Day - b.Day) <= (a.Kind == Kinds.BrokePromise ? 6 : 2);
+        }
 
         /// <summary>She was already told the truth about this story (an incident of it is cleared for her).</summary>
         private static bool AlreadyExplained(GirlState gs, Incident inc)
@@ -346,7 +351,7 @@ namespace Joojkk.CampusLife
         {
             var gs = S.Girl(GirlInfo.Key(h));
             return gs.Known.Select(id => S.Incidents.FirstOrDefault(i => i.Id == id))
-                .Where(i => i != null && S.Day - i.Day <= 6 && Effect(h, i) < -1 && !gs.Cleared.Contains(i.Id))
+                .Where(i => i != null && S.Day - i.Day <= 6 && Effect(h, i) < -1 && !gs.Cleared.Contains(i.Id) && !AlreadyExplained(gs, i))
                 .OrderByDescending(i => i.Day).ToList();
         }
 
@@ -360,7 +365,7 @@ namespace Joojkk.CampusLife
             if (g != null && Get(g.Girl) == h) return g;
             var gs = S.Girl(GirlInfo.Key(h));
             return gs.Known.Select(id => S.Incidents.FirstOrDefault(i => i.Id == id))
-                .Where(i => i != null && Get(i.Girl) == h && S.Day - i.Day <= 6 && Effect(h, i) < -1 && !gs.Cleared.Contains(i.Id))
+                .Where(i => i != null && Get(i.Girl) == h && S.Day - i.Day <= 6 && Effect(h, i) < -1 && !gs.Cleared.Contains(i.Id) && !AlreadyExplained(gs, i))
                 .OrderByDescending(i => i.Day).FirstOrDefault();
         }
 
@@ -413,7 +418,12 @@ namespace Joojkk.CampusLife
             }
             if (!gs.Cleared.Contains(inc.Id)) gs.Cleared.Add(inc.Id);
             gs.Unmentioned.Remove(inc.Id);
-            if (gs.Cleared.Count > 40) gs.Cleared.RemoveRange(0, gs.Cleared.Count - 40);
+            // Trimmed from the oldest, but never a story she still knows: dropped, it came back as a grudge to clear again.
+            while (gs.Cleared.Count > 40)
+            {
+                var idx = gs.Cleared.FindIndex(id => !gs.Known.Contains(id));
+                gs.Cleared.RemoveAt(idx >= 0 ? idx : 0);
+            }
         }
 
         // ---------------- talks and friendship jealousy ----------------

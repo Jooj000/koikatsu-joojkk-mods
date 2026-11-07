@@ -151,7 +151,8 @@ namespace Joojkk.CampusLife
             }
             {
                 var art = item.Name ?? "";
-                art = art.Length > 0 && "aeiouAEIOU".IndexOf(art[0]) >= 0 ? "an " + art.ToLowerInvariant() : "a " + art.ToLowerInvariant();
+                var plural = art.EndsWith("s", StringComparison.OrdinalIgnoreCase) && !art.EndsWith("ss", StringComparison.OrdinalIgnoreCase);
+                art = plural ? "some " + art.ToLowerInvariant() : art.Length > 0 && "aeiouAEIOU".IndexOf(art[0]) >= 0 ? "an " + art.ToLowerInvariant() : "a " + art.ToLowerInvariant();
                 Lore.Record("gave_gift", Lore.Player, GirlInfo.Key(h), note: art);
             }
 

@@ -10,6 +10,28 @@ Until 2.5 the plugin's own version (`CampusLifePlugin.Version`) stayed at 2.0.0 
 - Details is shorter and split into blocks. Album comes before it.
 - Girls who miss you appear on the board, all in one entry. Talking takes a name off, and missing it costs nothing.
 - A guard against an empty map at the end of a talk, when an object of the map is gone from the game's list.
+- Map photos for every loading screen ship with the mod; maps without a photo of their own use a twin room's. The default loading screen is the school entrance, and your room at night.
+- No requests are made at night, and a girl gets one request at a time.
+- In the talk's gift menu, a gift that fulfils her request has its card framed in pink; the store only names who wants a gift. Buying no longer scrolls the store back to the top.
+- Requests say a girl's mood as she is now, with icons and colors.
+- The rumor that a girl likes you has its own scene: she answers as she feels, and you can confess from it.
+- 18 new talk subjects, each with its own lines by context, and two more voices.
+- The talk log covers the whole conversation, and the talk no longer closes when you stop pressing keys.
+- Options asked to both girls in a duo leave the list; options follow what she just said.
+- Game backgrounds (Studio pictures included) in Sunday stories and trips.
+- Activities play an animation instead of a black screen.
+- New achievements for H: with or without a girlfriend's knowledge, outdoors, in the rain, seen by others.
+- A girl brought to you by the director always has her body and can be touched (she could stay invisible).
+- A girl napping anywhere can be teased awake, not only in the infirmary; the imp icon stands where you can reach it and stays if you let her sleep.
+- This week's spotlight shows on Today in small classes too.
+- The Journal is lighter: one short row per entry with an icon and color by kind, rewards as small tags, a day's misses in one row, news last and dimmed, and older days folded.
+- The second girl in a talk with two can be touched again (the hand cursor shows over her).
+- The Album has an icon and a color for every category, the latest ones done on the left, and cards with a badge, the name in gold and gauges for stages and progress.
+- A gift she ate or drank is remembered as food ("Gone in one sitting"), not as a thing she is using. Gifts in the plural read "some bakery cookies".
+- The Alt+F7 window has a row for the sleep tease: put the imp where you stand or one body ahead on this map, or go back to the default spot next to her.
+- The imp icon hides while the tease scene plays and comes back after it if she is still asleep.
+- The Alt+F7 photo line says which picture the loading screen uses on this map (yours, the one the mod ships, or a twin map's) instead of "No photo yet".
+- About 75 new procedural lines in 20 areas: how are you, an answer that did not land, errands, her conditions, two girls and you, gossip, silence, broken promises, flirting, school events, the nurse, touch after a no, and lines about you.
 
 ## 3.5.1 (2026-10-12)
 - The small talk subjects stay the same for the whole conversation, instead of changing each time you leave a category and come back.

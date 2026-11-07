@@ -33,7 +33,7 @@ namespace Joojkk.CampusLife
             EnsureStarted();
             // A save that never had this mod: its day already went by, so nothing can be missed in it.
             if (entering && S.Started) S.Buffs[Board.EntryKey] = S.Day;
-            if (Spotlight.IsActive && S.Spotlight.Count == 0) Spotlight.Rotate();
+            if (Cfg.SpotlightEnabled.Value && S.Spotlight.Count == 0) Spotlight.Rotate();
         }
 
         public static void Reset()
@@ -214,6 +214,7 @@ namespace Joojkk.CampusLife
                 Director.Changed(h, "H");
                 Board.OnIntimate(h);
                 try { Pairs.OnHWithPlayer(h); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
+                try { Achievements.AfterH(h, heroines); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
                 try { Lore.FromH(h); } catch (Exception e) { CampusLifePlugin.Log.LogError(e); }
                 Consent.AfterH(h);   // a wary yes leaves her guilty
                 if (gs.Mood == Mood.Flirty) { G.AddFavor(h, Mathf.RoundToInt(5 * Cfg.MoodBonusMultiplier.Value), 0); gs.Mood = Mood.Cheerful; }

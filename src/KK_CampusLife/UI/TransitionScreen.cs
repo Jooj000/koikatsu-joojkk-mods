@@ -128,17 +128,28 @@ namespace Joojkk.CampusLife
                     _photo.enabled = false;
                     // gray. At night or from your room it is your room that shows (the game's own picture of it); otherwise
                     // the picture of the map you are on, when it has one.
-                    if (_played && G.Act != null)
+                    // (loading the game, or a map with no picture yet) it is your room.
                     {
-                        var room = EventBackdrop.TimeSlot() == 2 || G.PlayerMapNo == 0;
-                        var pic = room ? EventBackdrop.Picture("@room") : MapShots.For(G.PlayerMapNo);
+                        // quarto que eu pedi. coloque o 33_1 no lugar, que é a entrada." The default is his photo 33_1; your
+                        // room (at night, or map 0) is his photo of it (0_2), the game's picture only without it.
+                        var inAct = _played && G.Act != null;
+                        var room = inAct && (EventBackdrop.TimeSlot() == 2 || G.PlayerMapNo == 0);
+                        Texture pic = null;
+                        var what = "";
+                        try
+                        {
+                            if (room) { pic = MapShots.For(0); what = "your room (his photo, "; if (pic == null) { pic = EventBackdrop.Picture("@room"); what = "your room (the game's picture, "; } }
+                            else if (inAct) { pic = MapShots.For(G.PlayerMapNo); what = "the map you are on ("; }
+                        }
+                        catch { }
+                        if (pic == null) { try { pic = DefaultPicture(); what = "the default, the entrance 33_1 ("; } catch { } }
                         if (pic != null)
                         {
                             _photo.enabled = true;
                             _photo.texture = pic;
                             _photo.uvRect = new Rect(0f, 0f, 1f, 1f);
                             _photoFit.aspectRatio = (float)pic.width / Mathf.Max(1, pic.height);
-                            CampusLifePlugin.Log.LogInfo("Loading screen: " + (room ? "your room (the game's own picture, " : "the map you are on (") + pic.width + "x" + pic.height + ")");
+                            CampusLifePlugin.Log.LogInfo("Loading screen: " + what + pic.width + "x" + pic.height + ")");
                         }
                     }
                 }
@@ -223,6 +234,12 @@ namespace Joojkk.CampusLife
                     sr += add.r - sub.r; sg += add.g - sub.g; sb += add.b - sub.b;
                 }
             }
+        }
+
+        /// <summary>The loading screen's picture when there is no map to show: his 33_1, any 33 next, the room last.</summary>
+        private static Texture DefaultPicture()
+        {
+            return (Texture)MapShots.Exact(33, 1) ?? (Texture)MapShots.For(33) ?? EventBackdrop.Picture("@room");
         }
 
         /// <summary>The game's ADV picture of a map the player never roams (his room), null for the others.</summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -45,6 +45,7 @@ namespace Joojkk.CampusLife
         private static TalkScene _scene;
         private static Session _s;
         private static Button _template, _talk, _listen, _event;
+        internal static Button TalkTab { get { return _talk; } }
         private static Button[] _eventContents;
         private static Sprite[] _sprites;
         private static GameObject _root, _eventRoot, _holder;
@@ -631,7 +632,7 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var h = s.Her;
             var req = Board.CompletableInTalk(h);
-            if (req != null) Add("<color=#FFD27A>★</color> " + Board.ButtonLabel(req), () => { var r = Board.CompletableInTalk(h); if (r != null) { Hide(); Board.PlayInTalk(r, h); } });
+            if (req != null) Add("<color=#FFD27A>★</color> " + Board.ButtonLabel(req), () => { var r = Board.CompletableInTalk(h); if (r != null) { Hide(); Board.PlayInTalk(r, h, () => AfterScene()); } });
             var msg = MessageFor(h);
             if (msg != null) Add("<color=#FFD27A>★</color> " + msg.Button, () => { var r = MessageFor(h); if (r != null) { Hide(); PassMessage(r, h); } });
             if (NeedsClearing(h, s)) Add("<color=#ff9b6a>Clear the air...</color>", () => ShowSub(ClearPage));

@@ -428,7 +428,7 @@ namespace Joojkk.CampusLife
             if (Cfg.GiftsEnabled.Value && CanGift(h, gs))
                 l.Add(E("Give a gift", () => { var t = Created.Select(c => c.GetComponent<Button>()).FirstOrDefault(b => b != null && b.interactable); if (t == null) return; GiftMenu.Open(t, h); }, false));
             var req = Board.CompletableInTalk(h);
-            if (req != null) l.Add(E("<color=#FFD27A>★</color> " + Board.ButtonLabel(req), () => { var r = Board.CompletableInTalk(h); if (r != null) { Hide(); Board.PlayInTalk(r, h); } }, false));
+            if (req != null) l.Add(E("<color=#FFD27A>★</color> " + Board.ButtonLabel(req), () => { var r = Board.CompletableInTalk(h); if (r != null) { Hide(); Board.PlayInTalk(r, h, () => AfterScene()); } }, false));
             var msg = MessageFor(h);
             if (msg != null) l.Add(E("<color=#FFD27A>★</color> " + msg.Button, () => { var r = MessageFor(h); if (r != null) { Hide(); PassMessage(r, h); } }, false));
             JobActions(s, h, l);

@@ -157,6 +157,8 @@ namespace Joojkk.CampusLife
                     n.position = g2.pos;
                 }
                 Note(GirlInfo.FirstName(n.heroine) + " brought to the door of map " + map + " (from " + from + ", now " + n.mapNo + ")");
+                // on only when the map changes, so one we put through a door had the player's map number and no body.
+                Show(n, "brought");
                 OutOfSwimsuit(act, n, map);
                 return true;
             }
@@ -255,9 +257,66 @@ namespace Joojkk.CampusLife
 
         private static string _globalWhy;
 
+        /// <summary>
+        /// Her body and touch collider on when she is on the player's map with her AI running. The
+        /// game's flag can say on while the body is off (SetActive then does nothing), so both are looked at.
+        /// </summary>
+        internal static bool Show(NPC n, string why)
+        {
+            try
+            {
+                var act = G.Act;
+                if (n == null || act == null || act.Map == null || !n.initialized || n.mapNo != act.Map.no || !n.isPopOK) return false;
+                var c = n.chaCtrl;
+                var fixedIt = "";
+                if (!n.isActive) { n.SetActive(true); fixedIt = "switched on"; }
+                // The body alone off: SchoolOptimizer may be building it (hidden until done), so only when it is loaded and
+                // was still off at the last look too (a second apart). SchoolOptimizer shows it only when the flag is on.
+                var off = c != null && !c.GetActiveTop() && c.loadEnd;
+                if (off && (fixedIt.Length > 0 || _hiddenBefore.Contains(n))) { c.SetActiveTop(true); fixedIt += (fixedIt.Length > 0 ? ", " : "") + "body shown"; }
+                if (off && fixedIt.Contains("body shown"))
+                {
+                    int times;
+                    _bodyTimes[n] = times = (_bodyTimes.ContainsKey(n) ? _bodyTimes[n] : 0) + 1;
+                    if (times == 2) { Watched = c; CampusLifePlugin.Log.LogInfo("Stage watch: " + GirlInfo.FirstName(n.heroine) + "'s body went off twice; watching who hides it" + (c.GetActiveTop() ? "" : " (still off right after showing: a SetActiveTop prefix kept it hidden)")); }
+                }
+                if (off) _hiddenBefore.Add(n); else _hiddenBefore.Remove(n);
+                if (n.baseCollider != null && !n.baseCollider.enabled) { n.baseCollider.enabled = true; fixedIt += (fixedIt.Length > 0 ? ", " : "") + "collider on"; }
+                if (fixedIt.Length == 0) return false;
+                Shown++;
+                CampusLifePlugin.Log.LogInfo("Stage: " + GirlInfo.FirstName(n.heroine) + " on map " + n.mapNo + " had no body (" + why + "): " + fixedIt);
+                return true;
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Stage show: " + e.Message); return false; }
+        }
+
+        internal static int Shown;
+        /// <summary>For the diagnostic hook: the body the guard gave back twice, and when the next stack may be logged.</summary>
+        internal static ChaControl Watched;
+        internal static float WatchNext;
+        private static readonly Dictionary<NPC, int> _bodyTimes = new Dictionary<NPC, int>();
+        private static readonly HashSet<NPC> _hiddenBefore = new HashSet<NPC>();
+        private static float _nextGuard;
+
+        /// <summary>Once a second while roaming: any girl on the player's map with her AI running gets her body back.</summary>
+        private static void Guard()
+        {
+            if (Time.realtimeSinceStartup < _nextGuard) return;
+            _nextGuard = Time.realtimeSinceStartup + 1f;
+            try
+            {
+                var act = G.Act;
+                if (act == null || act.Map == null || act.npcList == null || !G.IsFreeRoaming || Scenes.Running || G.TalkSceneOpen || Duo.Busy) return;
+                foreach (var n in act.npcList)
+                    if (n != null && n.heroine != null && n.mapNo == act.Map.no && n.AI != null && n.AI.isRunning && !n.isPause) Show(n, "guard");
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Stage guard: " + e.Message); }
+        }
+
         /// <summary>Every frame from the plugin; works twice a second. Held girls who are elsewhere walk to the player.</summary>
         public static void Tick()
         {
+            Guard();
             if (_held.Count == 0 || Time.realtimeSinceStartup < _next) return;
             _next = Time.realtimeSinceStartup + 0.5f;
             try
@@ -272,7 +331,7 @@ namespace Joojkk.CampusLife
                     var n = act.npcList.FirstOrDefault(x => x != null && x.heroine == h);
                     // The game only switches bodies on when the map changes (ActionMap, IsPop): one we put through a door
                     // has the right map number and stays off, unseen and out of the scenes.
-                    if (n != null && !n.isActive && act.Map.IsPop(n)) n.SetActive(true);
+                    if (n != null && act.Map.IsPop(n)) Show(n, "held");
                     var skip = Skip(act, h, n, map);
                     if (skip != null) { Why(h, skip); continue; }
                     float last;

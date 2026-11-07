@@ -20,7 +20,8 @@ namespace Joojkk.CampusLife
         /// que estava boa a foto da sala 2-1 antes", a test's reset had deleted it).</summary>
         internal static string TestDir;
 
-        private static string Dir { get { return TestDir ?? Path.Combine(Path.Combine(BepInEx.Paths.ConfigPath, "joojkk_campuslife"), "mapshots"); } }
+        private static string UserDir { get { return Path.Combine(Path.Combine(BepInEx.Paths.ConfigPath, "joojkk_campuslife"), "mapshots"); } }
+        private static string Dir { get { return TestDir ?? UserDir; } }
 
         private static string FileFor(int map, int slot) { return Path.Combine(Dir, map + "_" + slot + ".jpg"); }
 
@@ -56,6 +57,17 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>Does this map have his picture for this time of day?</summary>
+        internal static string SlotsOf(int map)
+        {
+            var o = new List<string>();
+            for (var s = 0; s < 3; s++)
+            {
+                if (File.Exists(Path.Combine(UserDir, map + "_" + s + ".jpg"))) o.Add(SlotNames[s] + " (his)");
+                else if (File.Exists(ShippedFor(map, s))) o.Add(SlotNames[s] + " (shipped)");
+            }
+            return o.Count == 0 ? "none" : string.Join(", ", o.ToArray());
+        }
+
         internal static bool Has(int map, int slot) { return File.Exists(FileFor(map, slot)); }
 
         /// <summary>Deletes this map's picture for this time of day (the loading screen goes back to the game's thumbnail).</summary>
@@ -143,11 +155,51 @@ namespace Joojkk.CampusLife
         /// <summary>The full-size picture of a map at this time of day (another time's if this one has none; null if none yet).</summary>
         public static Texture2D For(int map)
         {
-            var slot = EventBackdrop.TimeSlot();
-            foreach (var s in new[] { slot, 0, 1, 2 })
+            var slots = new[] { EventBackdrop.TimeSlot(), 0, 1, 2 };
+            int twin;
+            return For(map, slots) ?? (Twins.TryGetValue(map, out twin) ? For(twin, slots) : null);
+        }
+
+        /// <summary>
+        /// the photo of a map built the same (classroom 2-1, the 2F toilet) until one of their own is taken.
+        /// </summary>
+        private static readonly Dictionary<int, int> Twins = new Dictionary<int, int> { { 5, 8 }, { 6, 8 }, { 7, 8 }, { 10, 9 }, { 11, 8 }, { 12, 9 }, { 13, 8 }, { 14, 15 } };
+
+        /// <summary>
+        /// For the Alt+F7 window:
+        /// which picture the loading screen of this map uses now, found the way For finds it. Null when there is none.
+        /// </summary>
+        internal static string Source(int map)
+        {
+            var slots = new[] { EventBackdrop.TimeSlot(), 0, 1, 2 };
+            var s = SourceOf(map, slots);
+            int twin;
+            if (s == null && Twins.TryGetValue(map, out twin)) { s = SourceOf(twin, slots); if (s != null) s += " of " + Places.MapLabel(twin); }
+            return s;
+        }
+
+        private static string SourceOf(int map, int[] slots)
+        {
+            foreach (var s in slots)
+            {
+                if (File.Exists(FileFor(map, s)) || File.Exists(Path.Combine(UserDir, map + "_" + s + ".jpg"))) return "your photo (" + SlotNames[s] + ")";
+                if (File.Exists(ShippedFor(map, s))) return "the mod's photo (" + SlotNames[s] + ")";
+            }
+            return null;
+        }
+
+        /// <summary>The picture of a map at exactly this time of day.</summary>
+        public static Texture2D Exact(int map, int slot) { return For(map, new[] { slot }); }
+
+        private static Texture2D For(int map, int[] slots)
+        {
+            foreach (var s in slots)
             {
                 var path = FileFor(map, s);
-                if (!File.Exists(path) && TestDir == null) path = ShippedFor(map, s);
+                // certo"): a test writes its pictures in its own folder, but reads his and the shipped ones too (never
+                // writing there), so a test's loading screen shows the pool as he sees it.
+                if (!File.Exists(path) && TestDir != null) path = Path.Combine(UserDir, map + "_" + s + ".jpg");
+                if (!File.Exists(path)) path = ShippedFor(map, s);
                 Texture2D tex;
                 if (Cache.TryGetValue(path, out tex) && tex != null) return tex;
                 if (!File.Exists(path)) continue;

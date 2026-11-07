@@ -1,0 +1,430 @@
+# (ask.dlg) for the two new voices. Shy: timid, stammers, trails off, apologizes. Proper: polite, formal, composed.
+# Same keys as ask.dlg: amood (her real mood), close (0 stranger/acquaintance, 1 friend, 2 girlfriend), tone.
+
+# ================= shy =================
+@rule ask.mood.cheerful.0.shy
+on ask
+when amood=cheerful close=0 tone=shy
+- O-oh! I'm... I'm fine. Good, actually. Thank you for asking...
+- U-um, good. Today's been... nice. Sorry, I'm not used to people asking.
+- I'm okay... better than okay. Is that weird to say?
+
+@rule ask.mood.cheerful.1.shy
+on ask
+when amood=cheerful close=1 tone=shy
+- I'm happy today... a little. Okay, a lot. Please don't stare.
+- It's been a good day. I-I wanted to tell someone, and... you're here.
+- Good! I mean... good. Something nice happened. I'll tell you if you want.
+
+@rule ask.mood.cheerful.2.shy
+on ask
+when amood=cheerful close=2 tone=shy
+- Now that you're here? Even better... I-I said that out loud, didn't I.
+- Really good. I kept smiling all morning and everyone noticed...
+- Happy. Because of you, mostly. Don't make me say it again...
+
+@rule ask.mood.hungry.0.shy
+on ask
+when amood=hungry close=0 tone=shy
+- I'm fine... *growl* ...p-please pretend you didn't hear that.
+- U-um, okay. A little hungry. Sorry, that's not interesting.
+- Fine! Just... I skipped breakfast. It's nothing.
+
+@rule ask.mood.hungry.1.shy
+on ask
+when amood=hungry close=1 tone=shy
+- Hungry... I forgot my lunch and I was too embarrassed to buy bread in front of everyone.
+- My stomach keeps making noises in class. I want to disappear.
+- I'm so hungry... could we maybe... eat something? Only if you want.
+
+@rule ask.mood.hungry.2.shy
+on ask
+when amood=hungry close=2 tone=shy
+- Starving... w-would you eat with me? I didn't want to eat alone.
+- Hungry. And I was waiting to see if you'd ask me to lunch...
+- My stomach is louder than me today. Sorry.
+
+@rule ask.mood.bored.0.shy
+on ask
+when amood=bored close=0 tone=shy
+- I'm okay... nothing much is happening. Sorry, that's a boring answer.
+- Um... it's a slow day. I've just been sitting here.
+- Fine. A little bored. I didn't want to bother anyone.
+
+@rule ask.mood.bored.1.shy
+on ask
+when amood=bored close=1 tone=shy
+- Bored... I was hoping someone would talk to me. And then you did.
+- Nothing to do. I've read the same page four times.
+- It's so quiet today. I don't mind... but I'm glad you came.
+
+@rule ask.mood.bored.2.shy
+on ask
+when amood=bored close=2 tone=shy
+- Bored without you. Th-that's not too clingy, is it?
+- I was counting the minutes until I could see you. That's how bored.
+- Could we... do something? Anything. Together.
+
+@rule ask.mood.stressed.0.shy
+on ask
+when amood=stressed close=0 tone=shy
+- I-I'm fine! Just... a lot to do. Sorry, I'm a bit scattered.
+- Um... nervous. There's a lot going on. It's okay, though.
+- I'm alright... I think. My head is full.
+
+@rule ask.mood.stressed.1.shy
+on ask
+when amood=stressed close=1 tone=shy
+- Honestly? I'm panicking a little. Everything is due at once.
+- I keep thinking I forgot something important. My stomach hurts.
+- Stressed... can I just stand here with you for a minute? It helps.
+
+@rule ask.mood.stressed.2.shy
+on ask
+when amood=stressed close=2 tone=shy
+- Not great... could you stay close for a while? I feel calmer when you do.
+- Everything's piling up. I-I didn't want to worry you...
+- I'm a mess today. Please don't look at me like that, I'll cry.
+
+@rule ask.mood.lonely.0.shy
+on ask
+when amood=lonely close=0 tone=shy
+- I'm okay... I've just been by myself today. It's fine. I'm used to it.
+- Fine... um, thank you for talking to me. Really.
+- Quiet day. Nobody said hi until you. Sorry, that sounded sad.
+
+@rule ask.mood.lonely.1.shy
+on ask
+when amood=lonely close=1 tone=shy
+- A little lonely... everyone was busy. I'm glad you're here.
+- I ate lunch by myself today. It's okay. It's better now.
+- C-could you stay a bit? I haven't really talked to anyone today.
+
+@rule ask.mood.lonely.2.shy
+on ask
+when amood=lonely close=2 tone=shy
+- I missed you. A lot. Is that okay to say?
+- I was looking for you all day... I didn't want to text too much.
+- Lonely. Until right now.
+
+@rule ask.mood.flirty.0.shy
+on ask
+when amood=flirty close=0 tone=shy
+- I-I'm fine! Why are you so close? I mean, it's fine...
+- Good! Um... you look nice today. Forget I said that!
+- Okay... my face is hot. It's the weather. It's definitely the weather.
+
+@rule ask.mood.flirty.1.shy
+on ask
+when amood=flirty close=1 tone=shy
+- I've been... thinking about things. About someone. Don't ask who!
+- I'm in a weird mood. A nice weird. My heart keeps doing things.
+- Fine... you're really close, you know. I don't mind. I-I just noticed.
+
+@rule ask.mood.flirty.2.shy
+on ask
+when amood=flirty close=2 tone=shy
+- I wanted to see you... and hold your hand. Can I? Just a little.
+- I keep thinking about you today. About... us. Ah, my face!
+- Could you... stand a little closer? Like that. That's nice.
+
+@rule ask.mood.sleepy.0.shy
+on ask
+when amood=sleepy close=0 tone=shy
+- Mm... sorry, I'm a bit sleepy. I'm listening, I promise.
+- I stayed up too late... please don't tell anyone I yawned.
+- Okay... just tired. Sorry if I'm slow.
+
+@rule ask.mood.sleepy.1.shy
+on ask
+when amood=sleepy close=1 tone=shy
+- I couldn't sleep... I was worrying about nothing again.
+- So sleepy. I almost fell asleep standing up in the hallway.
+- Mm... tired. If I nod off, please wake me gently.
+
+@rule ask.mood.sleepy.2.shy
+on ask
+when amood=sleepy close=2 tone=shy
+- Sleepy... could I lean on you for just a second? Just one.
+- I was up late thinking about you. That's... why I'm tired.
+- Mm... your voice is making me sleepier. That's a compliment.
+
+@rule ask.mood.upset.0.shy
+on ask
+when amood=upset close=0 tone=shy
+- I-I'm fine. Really. Please don't worry about me.
+- Um... not a great day. It's okay. It's not your fault.
+- I'd rather not talk about it... sorry.
+
+@rule ask.mood.upset.1.shy
+on ask
+when amood=upset close=1 tone=shy
+- Not good... something happened and I can't stop thinking about it.
+- I'm trying not to cry, so... please talk about something else?
+- I'm upset. I don't want to be. I'm sorry.
+
+@rule ask.mood.upset.2.shy
+on ask
+when amood=upset close=2 tone=shy
+- Bad... could you just stay with me? You don't have to say anything.
+- I had a bad day. Seeing you helps a little. A lot, actually.
+- I'm upset... I-I'll tell you later. Hold my hand for now?
+
+@rule ask.mood.none.0.shy
+on ask
+when amood=none close=0 tone=shy
+- I'm... okay. Normal. Thank you for asking.
+- Um, fine! Nothing special. Sorry.
+- Okay, I think. Same as always.
+
+@rule ask.mood.none.1.shy
+on ask
+when amood=none close=1 tone=shy
+- Normal day. Better now that someone's talking to me.
+- I'm fine. A little nervous, but that's just me.
+- Okay! Um... what about you? I-I want to know.
+
+@rule ask.mood.none.2.shy
+on ask
+when amood=none close=2 tone=shy
+- Fine. Happier now. Don't laugh.
+- Good. I was hoping I'd run into you.
+- Okay... I always get a little shy when you ask. Even now.
+
+@rule ask.again.0.shy
+on ask
+when amood=again close=0 tone=shy
+- U-um... I just answered. Did I say it too quietly?
+- The same as a minute ago... sorry.
+- I already said... was it a bad answer?
+- S-still fine... I think.
+- [Um, same as before...|Did I sound unsure?] [I'm okay. Really.|Thank you for asking again...]
+
+@rule ask.again.1.shy
+on ask
+when amood=again close=1 tone=shy
+- You asked already... it's okay, I don't mind saying it again.
+- Still the same. You're worrying about me? That's... nice.
+- Nothing's changed. I promise.
+
+@rule ask.again.2.shy
+on ask
+when amood=again close=2 tone=shy
+- Again? Hehe... you really care, huh. Same as before.
+- You keep asking... I like it, a little.
+- Still the same. Still happy you're here.
+
+# ================= proper =================
+@rule ask.mood.cheerful.0.proper
+on ask
+when amood=cheerful close=0 tone=proper
+- Very well, thank you. It has been a pleasant day.
+- I'm in good spirits today. Thank you for asking.
+- Quite well. The day has treated me kindly so far.
+
+@rule ask.mood.cheerful.1.proper
+on ask
+when amood=cheerful close=1 tone=proper
+- Wonderfully, thank you. Something nice happened this morning, and I can't stop smiling.
+- I'm in a splendid mood. I hope it's catching.
+- Very well. Your company only improves it.
+
+@rule ask.mood.cheerful.2.proper
+on ask
+when amood=cheerful close=2 tone=proper
+- Better than well. I'll admit that you're part of the reason.
+- I'm happy. And now that you're here, I see no reason to hide it.
+- Delighted. I was hoping to see you today.
+
+@rule ask.mood.hungry.0.proper
+on ask
+when amood=hungry close=0 tone=proper
+- I'm well, thank you. Though I confess I've yet to eat.
+- Fine, thank you. Lunch can't come soon enough, if I'm honest.
+- Quite well. A little peckish, which is unbecoming to mention.
+
+@rule ask.mood.hungry.1.proper
+on ask
+when amood=hungry close=1 tone=proper
+- I'm famished, I'm afraid. I skipped breakfast to finish my notes.
+- Hungry. Please excuse me if my mind wanders toward the cafeteria.
+- I've been looking forward to lunch since first period. Would you care to join me?
+
+@rule ask.mood.hungry.2.proper
+on ask
+when amood=hungry close=2 tone=proper
+- Hungry. I was hoping you'd invite me to eat. It would be lovely.
+- I've hardly eaten. Would you share a meal with me?
+- Starving, frankly. And I'd rather not eat alone.
+
+@rule ask.mood.bored.0.proper
+on ask
+when amood=bored close=0 tone=proper
+- I'm well. The day is rather uneventful, though.
+- Fine, thank you. It's a quiet sort of day.
+- Well enough. Nothing of note has happened.
+
+@rule ask.mood.bored.1.proper
+on ask
+when amood=bored close=1 tone=proper
+- A little restless, to be honest. I've finished everything and have nothing to do.
+- Bored, I'm afraid. I would welcome a diversion.
+- The day is dragging. Perhaps you could rescue it.
+
+@rule ask.mood.bored.2.proper
+on ask
+when amood=bored close=2 tone=proper
+- Bored. Shall we find something to do together?
+- The day has been dull. You're the first interesting thing in it.
+- Restless. I'd be glad to spend the afternoon with you.
+
+@rule ask.mood.stressed.0.proper
+on ask
+when amood=stressed close=0 tone=proper
+- I'm managing, thank you. There's a great deal to attend to.
+- Busy. I'll be fine once things are in order.
+- Well enough. My schedule is rather full.
+
+@rule ask.mood.stressed.1.proper
+on ask
+when amood=stressed close=1 tone=proper
+- Frankly, overwhelmed. I've taken on more than I should have.
+- Stressed. I keep a list, and the list keeps growing.
+- Not my best. I'd appreciate a moment of calm, if you can spare one.
+
+@rule ask.mood.stressed.2.proper
+on ask
+when amood=stressed close=2 tone=proper
+- Strained. I shouldn't burden you, but I'm glad you asked.
+- Everything is due at once. Your being here helps more than you know.
+- Tired of being composed, honestly. May I just rest a moment with you?
+
+@rule ask.mood.lonely.0.proper
+on ask
+when amood=lonely close=0 tone=proper
+- I'm well, thank you. It's been a rather solitary day.
+- Fine. Few people have spoken to me today; I appreciate that you did.
+- Well enough. Quiet. Thank you for stopping.
+
+@rule ask.mood.lonely.1.proper
+on ask
+when amood=lonely close=1 tone=proper
+- A little lonely, if I'm being truthful. Your company is welcome.
+- Everyone seems busy today. I'm glad you aren't.
+- I've been on my own all morning. Would you stay and talk awhile?
+
+@rule ask.mood.lonely.2.proper
+on ask
+when amood=lonely close=2 tone=proper
+- I missed you. I find I'm not ashamed to say it.
+- Lonely, until now. Please stay a little longer today.
+- I've been waiting for you. That's my honest answer.
+
+@rule ask.mood.flirty.0.proper
+on ask
+when amood=flirty close=0 tone=proper
+- Quite well. You look rather sharp today, if I may say so.
+- I'm in a good mood. A curious one, too.
+- Well, thank you. ...You're standing rather close.
+
+@rule ask.mood.flirty.1.proper
+on ask
+when amood=flirty close=1 tone=proper
+- I find myself in an unusually romantic frame of mind. How improper.
+- Well. Distracted, though. By whom, I won't say.
+- In a strange mood. A pleasant one. Do keep me company.
+
+@rule ask.mood.flirty.2.proper
+on ask
+when amood=flirty close=2 tone=proper
+- I've been thinking of you more than is appropriate for class hours.
+- I'd like you closer today. Is that an unseemly request?
+- Rather affectionate, I'm afraid. You'll have to bear with me.
+
+@rule ask.mood.sleepy.0.proper
+on ask
+when amood=sleepy close=0 tone=proper
+- Well, thank you. Forgive me if I seem drowsy.
+- A little tired. I stayed up reading longer than I intended.
+- Fine. I could use a cup of tea, though.
+
+@rule ask.mood.sleepy.1.proper
+on ask
+when amood=sleepy close=1 tone=proper
+- Exhausted. I was up late finishing an assignment.
+- Sleepy, I'm afraid. Please excuse any yawning.
+- Tired. I'm trying very hard to look awake.
+
+@rule ask.mood.sleepy.2.proper
+on ask
+when amood=sleepy close=2 tone=proper
+- Drowsy. If I lean on you, please don't think less of me.
+- Tired. I'd love a quiet moment with you somewhere.
+- Half asleep. Your voice is rather soothing, you know.
+
+@rule ask.mood.upset.0.proper
+on ask
+when amood=upset close=0 tone=proper
+- I'm fine, thank you. I'd rather not discuss it.
+- Not especially well. But I won't trouble you with it.
+- I've had better days. Excuse me if I'm short.
+
+@rule ask.mood.upset.1.proper
+on ask
+when amood=upset close=1 tone=proper
+- Poorly, to be honest. Something upset me and I can't set it aside.
+- I'm displeased about something. It isn't you. I'll be alright.
+- Not well. Thank you for noticing; most people don't.
+
+@rule ask.mood.upset.2.proper
+on ask
+when amood=upset close=2 tone=proper
+- Badly. I'd like to tell you about it later, when I've calmed down.
+- I'm upset. Please stay. That alone would help.
+- Not well at all. But seeing you is a comfort.
+
+@rule ask.mood.none.0.proper
+on ask
+when amood=none close=0 tone=proper
+- Well, thank you. And yourself?
+- Fine, thank you for asking. A perfectly ordinary day.
+- I'm well. Nothing remarkable to report.
+
+@rule ask.mood.none.1.proper
+on ask
+when amood=none close=1 tone=proper
+- Quite well. It's good to see you.
+- Fine, thank you. How has your day been?
+- Well. The day is going as planned, which I appreciate.
+
+@rule ask.mood.none.2.proper
+on ask
+when amood=none close=2 tone=proper
+- Well. Better for seeing you, I'd say.
+- Fine, thank you. I'd hoped we would meet today.
+- Content. I always am, a little more, when you're near.
+
+@rule ask.again.0.proper
+on ask
+when amood=again close=0 tone=proper
+- I believe I just answered that. But thank you.
+- The same as a moment ago, thank you.
+- Nothing has changed since you last asked.
+- Twice in one conversation? I'm fine, truly.
+- [You already asked.|Again?] [My answer has not changed.|Still well, thank you.]
+
+@rule ask.again.1.proper
+on ask
+when amood=again close=1 tone=proper
+- You've asked already. Are you worried about me?
+- Still the same, I assure you.
+- Unchanged. Though it's kind of you to check.
+- [Again?|Twice now.] [Do I look unwell?|Is something about me worrying you?]
+- Your concern is noted. I am fine.
+
+@rule ask.again.2.proper
+on ask
+when amood=again close=2 tone=proper
+- Again? You're very attentive today. I don't mind.
+- The same. Still glad you're here.
+- You needn't keep asking. ...Though I rather like that you do.

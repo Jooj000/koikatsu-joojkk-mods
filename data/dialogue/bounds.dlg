@@ -155,6 +155,7 @@ when hbound=all tone=gentle
 - [Um... I'm... not ready for a lot of things.|I'm really nervous...|It's my first time being this...] [Please go slow. And be careful.|No kissing, no... strange things. And protection.|Can we keep it really simple?]
 - [I want to, but...|Promise me...] [we go slowly. I'll tell you when it's too much.|you'll stop if I say so. And protection.]
 - [Okay...|I'm ready... I think...] [just... gentle. Very gentle.|let's not try too many things.]
+- [I want to, but...|Can I ask for something first?] [Please be careful with me.|Nothing too much. And protection, please.]
 
 @rule bounds.all.energetic
 on bounds
@@ -162,6 +163,7 @@ when hbound=all tone=energetic
 - [Okay! But! Rules!|Wait, ground rules first!|Yes! But slow down!] [No kissing, no weird stuff, protection!|Keep it super simple, okay?!|Baby steps!]
 - [Hehe, I'm nervous!|I'm in! But...] [let's not go crazy!|I have like a hundred rules!]
 - [Let's go! Just...|Alright!] [simple stuff only!|protection, no kisses, no gadgets, got it?!]
+- [Wait wait wait! Rules first!|Okay, but listen!] [Protection! No kissing! Nothing weird!|Slow, safe, and normal, got it?]
 
 @rule bounds.all.cool
 on bounds
@@ -169,6 +171,7 @@ when hbound=all tone=cool
 - [...I have conditions.|Fine. But.|Understood.] [Protection. No kissing. Nothing unusual.|Keep it simple. I'll stop you otherwise.|Slowly. And on my terms.]
 - [...|Very well.] [I'll tell you what's off limits.|Don't push your luck.]
 - [I'll go.|Agreed.] [But most things are off the table.|Simple. Careful. Quiet.]
+- [Before anything: rules.|Listen first.] [Protection, no kissing, nothing strange.|Simple, careful, and you stop when I say.]
 
 @rule bounds.all.teasing
 on bounds

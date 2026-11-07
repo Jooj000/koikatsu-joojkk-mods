@@ -42,6 +42,7 @@ opens ask,defend,agree
 - [{Who} and {who2} broke up.|It's over between {who} and {who2}.] [{Who} cried all through lunch.|I feel bad for them.|I saw it coming, honestly.]
 - [{Who} and {who2} split up {when}.|Did you hear? {Who} dumped {who2}.] [Brutal.|Nobody's sure who ended it.]
 - [So... {who} is single again.|Bad news about {who} and {who2}.] [Be nice to her for a while.|They didn't even last a month.]
+- [Did you hear? {Who} and {who2} are done.|{Who} and {who2} split up {when}.] [Nobody saw it coming.|It got awkward in class.]
 
 @rule gossip.fight
 on gossip
@@ -101,6 +102,7 @@ opens laugh,defend,hush
 - [So {who} got caught in the boys' restroom {when}.|Okay, this is embarrassing for her, but... {deed}.] [{laugh}|She says she got lost.|I'd never live it down.]
 - [Did you hear about {who} and the boys' restroom?|Poor {who}. {Deed}.] [She swears it was an accident.|She's been hiding all day.]
 - [{Who} walked into the wrong restroom {when}.|The boys are still talking about {who}.] [Red as a tomato.|It's legendary now.]
+- [You won't believe where {who} got caught {when}.|So, {deed}.] [The boys' restroom, of all places!|She's never living it down.]
 
 # ---------------- how she knows ----------------
 @rule gossip.heard
@@ -160,6 +162,7 @@ opens ask,agree
 - [I don't usually spread rumors, but {deed}.|For what it's worth, {deed}.] [Do what you want with that.|I thought you should know.]
 - [I'll say it once: {deed}.|Fact, not rumor: {deed}.] [Don't repeat it.|That's all.]
 - [I happened to hear that {deed}.|You'll find out anyway, so: {deed}.] [I don't judge.|No need to make a fuss.]
+- [Not that it matters, but {deed}.|Facts only: {deed}.] [Make of it what you will.|Don't quote me.]
 
 @rule gossip.gyaru
 on gossip

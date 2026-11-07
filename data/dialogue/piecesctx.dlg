@@ -1,0 +1,1320 @@
+
+@rule open.ctx.favor.high
+on @open
+when favor>=80
+- [Ah, it's you. Good.|Oh, you! Perfect timing.|Mm, I was hoping you'd stop by.]
+- [You always cheer me up, you know.|Hi! You came at the right moment.]
+
+@rule open.ctx.favor.low
+on @open
+when favor<=20
+- [...Oh. You.|Hm. What is it?|...Yes?]
+- [Make it quick.|...Fine. I'm listening.]
+
+@rule open.ctx.lewd.high
+on @open
+when lewd>=60
+- [Mm~ Hi there.|Oh, it's you~ Hello.|Hey... come a little closer.]
+- [You've got that look again. Hehe.|My, my. Hello.]
+
+@rule open.ctx.mood.cheerful
+on @open
+when mood=cheerful
+- [Hehe, hi!|Oh, good timing!|Today's a good day, you know.]
+- [I'm in a great mood, so ask me anything.|Hi! Everything's going right today.]
+
+@rule open.ctx.mood.hungry
+on @open
+when mood=hungry
+- [Sorry, my stomach's growling.|Ugh, I'm starving.|Excuse me, I haven't eaten.]
+- [Talk fast, I need food.|Mm, I can smell the cafeteria from here.]
+
+@rule open.ctx.mood.bored
+on @open
+when mood=bored
+- [Finally, something to do.|Oh, thank goodness, a person.|I was dying of boredom.]
+- [Rescue me from this day.|You're the most interesting thing that's happened all day.]
+
+@rule open.ctx.mood.stressed
+on @open
+when mood=stressed
+- [Sorry, I'm a little frazzled.|Ah, sorry, my head's everywhere.|Hah... okay. Hi.]
+- [I have a million things to do, but okay.|Give me a second to breathe.]
+
+@rule open.ctx.mood.lonely
+on @open
+when mood=lonely
+- [Oh... hi. I'm glad you're here.|You came over. Thank you.|Ah, a friendly face.]
+- [I haven't talked to anyone all day.|Stay a little, okay?]
+
+@rule open.ctx.mood.flirty
+on @open
+when mood=flirty
+- [Oh, hello there.|Hey, you~|Mm, look who it is.]
+- [You look good today, you know.|I was just thinking about you. Funny.]
+
+@rule open.ctx.mood.sleepy
+on @open
+when mood=sleepy
+- [*yawn* Sorry.|Mm... hi.|Ah, sorry, I'm half asleep.]
+- [Don't mind me if I nod off.|I barely slept, so be gentle.]
+
+@rule open.ctx.mood.upset
+on @open
+when mood=upset
+- [...Hi.|Sorry, I'm not in a great mood.|Hm.]
+- [Don't take it personally if I'm short.|It's been a day.]
+
+@rule open.ctx.period.lunch
+on @open
+when period=lunch
+- [Mm, lunch break at last.|Ah, finally a break.|Lunchtime is the best time.]
+- [I only have a few minutes before class.|Let me finish this bite.]
+
+@rule open.ctx.period.after
+on @open
+when period=after
+- [Ah, school's finally over.|Phew, the day's done.|Hey, you're still here?]
+- [I should be heading home, but okay.|The hallways are so quiet after class.]
+
+@rule open.ctx.period.club
+on @open
+when period=club
+- [Oh, hey, during club time?|Ah, I'm supposed to be at club.]
+- [Just a minute, then I have to go.|Club can wait a little.]
+
+@rule open.ctx.place.library
+on @open
+when placeid=library
+- [Shh, we're in the library.|Psst. Quietly.]
+- [Keep your voice down, okay?|The librarian is watching us.]
+
+@rule open.ctx.place.rooftop
+on @open
+when placeid=rooftop
+- [The wind up here is nice.|Ah, the rooftop. I love it here.]
+- [You can see the whole town from here.|Hold on, my hair is everywhere.]
+
+@rule open.ctx.place.cafeteria
+on @open
+when placeid=cafeteria
+- [It's so loud in here.|Mm, smells like curry today.]
+- [Sorry, it's hard to hear in here.|Let me just put my tray down.]
+
+@rule open.ctx.place.gym
+on @open
+when placeid=gym|field|pool
+- [Phew, give me a second.|Ah, sorry, I'm all sweaty.]
+- [Let me catch my breath.|Hah... okay. Hi.]
+
+@rule open.ctx.place.infirmary
+on @open
+when placeid=infirmary
+- [Shh, someone's resting.|Ah, the infirmary smells like medicine.]
+- [Let's keep it down.|It's so quiet in here.]
+
+@rule open.ctx.place.classroom
+on @open
+when placeid=classroom
+- [Oh, hey. Class is over?|Ah, the classroom's empty now.]
+- [I was just packing up.|Everyone left so fast.]
+
+@rule open.ctx.weather.storm
+on @open
+when weather=storm
+- [Whoa, did you hear that thunder?|Ugh, this storm.]
+- [I hope it stops before I go home.|The windows keep rattling.]
+
+@rule open.ctx.weather.clear
+on @open
+when weather=clear outside=yes
+- [What a nice day.|The sun feels so good.]
+- [It's too nice to be inside.|I could stay out here all day.]
+
+@rule open.ctx.rainlater
+on @open
+when rainlater=yes
+- [It looks like it's going to rain.|Those clouds look heavy.]
+- [I hope I brought my umbrella.|It's going to pour later, isn't it?]
+
+@rule open.ctx.outside
+on @open
+when outside=yes
+- [Mm, fresh air.|It's nice to be outside.]
+- [Way better than the classroom.|I like talking out here.]
+
+@rule open.ctx.rainlover
+on @open
+when rainlover=yes wet=yes
+- [I love this rain.|Listen to that rain. Isn't it nice?]
+- [Rain makes everything quieter.|Don't tell anyone, but I love days like this.]
+
+@rule open.ctx.voice.gyaru
+on @open
+when voice=gyaru
+- [Omg, hiii.|Heyyy.|Okay, so.]
+- [Like, literally, listen.|No but seriously.]
+
+@rule open.ctx.voice.chuuni
+on @open
+when voice=chuuni
+- [Ah, mortal, you appear.|Hmph. Our fates cross again.]
+- [The stars foretold this meeting.|My left eye sensed your approach.]
+
+@rule open.ctx.voice.lazy
+on @open
+when voice=lazy
+- [Mm... hey.|Ugh, moving is hard. Hi.]
+- [Can we talk sitting down?|I'm conserving energy.]
+
+@rule open.ctx.voice.ojou
+on @open
+when voice=ojou
+- [Oh-ho, it's you.|My, how unexpected.]
+- [You may speak.|I suppose I have a moment for you.]
+
+@rule open.ctx.tone.shy
+on @open
+when tone=shy
+- [U-um...|Ah, h-hi...|Oh! S-sorry, you surprised me.]
+- [I-I wasn't expecting you.|Um, h-hello...]
+
+@rule open.ctx.tone.proper
+on @open
+when tone=proper
+- [Good day.|Ah, hello. A pleasure, as always.|Oh, good timing.]
+- [Please, go ahead.|I'm glad you came by.]
+
+@rule open.ctx.warm
+on @open
+when warm>=0.75
+- [Oh, hi! It's so nice to see you.|Hello, you.]
+- [How are you holding up?|Come, sit with me.]
+
+@rule open.ctx.warm.low
+on @open
+when warm<=0.3
+- [What.|...Hm.]
+- [Say it.|I'm busy, but go on.]
+
+@rule open.ctx.energy.high
+on @open
+when energy>=0.8
+- [Hey hey hey!|Oh! Oh! It's you!]
+- [I've got so much energy today!|Okay, okay, okay!]
+
+@rule open.ctx.energy.low
+on @open
+when energy<=0.25
+- [Mm.|...Oh, hey.]
+- [Sorry, I'm slow today.|Let me sit down first.]
+
+@rule open.ctx.tease
+on @open
+when tease>=0.75
+- [Oh? Look who it is.|Well, well.]
+- [Come to bother me again?|You're so predictable.]
+
+@rule open.ctx.shy
+on @open
+when shy>=0.75
+- [Ah... um.|O-oh.]
+- [I-I'm not good at this.|Sorry, I get nervous.]
+
+@rule open.ctx.blunt
+on @open
+when blunt>=0.75
+- [Okay. What.|Yeah?]
+- [I'll be honest with you.|Let's skip the small talk.]
+
+@rule open.ctx.profile.reserved
+on @open
+when profile=reserved
+- [...Oh. Hello.|Ah. Hi.]
+- [I'm not much of a talker.|Sorry, I'm quiet.]
+
+@rule open.ctx.profile.open
+on @open
+when profile=open
+- [Oh hey! Sit, sit!|Hiii! I was hoping someone would come by.]
+- [I'll talk your ear off, I warn you.|Okay, I've got stories.]
+
+@rule open.ctx.sign
+on @open
+when sign=*
+- [My horoscope said I'd meet someone today.|The stars are on my side today, apparently.|My sign is supposed to be lucky this week.]
+- [My horoscope told me to be honest today, so...|Typical me, according to my horoscope.]
+
+@rule open.ctx.birthday.today
+on @open
+when birthday=today
+- [Guess what day it is!|Today's my day, you know.]
+- [It's my birthday, so be nice.|Hehe, I'm a year older today.]
+
+@rule open.ctx.birthday.week
+on @open
+when birthday=week|soon
+- [My birthday's coming up, did you know?|Ah, it's almost my birthday.]
+- [Not that I'm counting the days.|Just saying.]
+
+@rule open.ctx.height.tall
+on @open
+when height=tall
+- [Ah, sorry, let me bend down.|Up here.]
+- [I always have to look down at people.|Mind the door frame. Kidding.]
+
+@rule open.ctx.height.short
+on @open
+when height=short
+- [Hey, down here!|Ugh, everyone's so tall.]
+- [Don't pat my head.|I'm standing on my toes, by the way.]
+
+@rule open.ctx.bust.big
+on @open
+when bust=big lewd>=30
+- [Ugh, this uniform is tight today.|Sorry, let me fix my blouse.]
+- [These buttons are going to give up someday.|Don't stare, okay?]
+
+@rule open.ctx.bust.small
+on @open
+when bust=small lewd>=30
+- [Hmph. Hi.|Ah, hello.]
+- [Don't look at me like that.|I know what you're thinking. Stop.]
+
+@rule open.ctx.interest
+on @open
+when interest=yes
+- [Oh! H-hi.|Ah, you came to see me?]
+- [I was just thinking about you. Coincidence.|You always find me, huh?]
+
+@rule open.ctx.clubkind.sports
+on @open
+when clubkind=sports
+- [Phew, practice was rough.|My legs are still sore.]
+- [I've been running all day.|Coach worked us hard.]
+
+@rule open.ctx.clubkind.culture
+on @open
+when clubkind=culture
+- [Ah, I just came from the club room.|Mm, sorry, my hands are full of club stuff.]
+- [The club's been busy lately.|We have a project going.]
+
+@rule open.ctx.kclub
+on @open
+when kclub=yes
+- [Ah, my fellow club member.|Oh, the club president himself.]
+- [Anything for the club today?|The Koikatsu Club never rests.]
+
+@rule open.ctx.hasclub
+on @open
+when hasclub=yes
+- [I was on my way to the {club}.|Ah, the {club} can wait a bit.]
+- [The {club} keeps me busy.|Everyone at the {club} says hi. Probably.]
+
+@rule open.ctx.exam
+on @open
+when exam=yes
+- [Ugh, exams.|Sorry, my head is full of formulas.]
+- [I should be studying right now.|Just one minute, then back to the books.]
+
+@rule open.ctx.fight
+on @open
+when fight=yes
+- [Sorry, I'm still upset about {fightwho}.|Ah... don't mention {fightwho}, okay?]
+- [Things with {fightwho} are weird right now.|I'm a little on edge today.]
+
+@rule open.ctx.rivalnear
+on @open
+when rivalnear=*
+- [Ugh, {rivalnear} is here.|Let's talk quietly. {rivalnear} is nearby.]
+- [Don't look, but {rivalnear} is staring.|Of all people, {rivalnear} is here.]
+
+@rule open.ctx.bff
+on @open
+when bff=*
+- [{bff} just left, you missed her.|Oh, I thought you were {bff}.]
+- [{bff} says hi. Probably.|I was just texting {bff}.]
+
+@rule open.ctx.partner
+on @open
+when partner=*
+- [I was just with {partner}.|Ah, {partner} went to buy drinks.]
+- [{partner} will be back soon.|Don't tell {partner} I said this.]
+
+@rule open.ctx.days.many
+on @open
+when days=many
+- [You again! Hehe.|Our daily chat, huh?]
+- [I've gotten used to you coming by.|It wouldn't feel like a day without this.]
+
+@rule open.ctx.days.few
+on @open
+when days=few rel!=stranger
+- [Oh, hi. We don't talk much, huh?|Ah, hello.]
+- [It's nice to talk for once.|I don't think we've chatted much.]
+
+@rule open.ctx.club
+on @open
+when club=* hasclub=yes
+- [The {club} has a meeting later.|Ah, sorry, {club} stuff on my mind.]
+- [Have you ever visited the {club}?|The {club} is my second home.]
+
+@rule open.ctx.rel.stranger.new
+on @open
+when rel=stranger tone=shy|proper
+- [Oh, um, hello.|Ah, good day.]
+- [I don't think we've met.|Pardon me, have we met?]
+
+@rule open.ctx.role.story
+on @open
+when role=story|exstory
+- [Ah, it's you.|Hey.]
+- [It's been a while since we really talked.|You know me better than most.]
+
+@rule open.ctx.verb.romance
+on @open
+when verb=kissed|had_h|dated|flirted
+- [About that...|Ahem. So.|Mm, about the other day...]
+- [My face is already hot.|Don't look at me like that.]
+
+@rule open.ctx.verb.conflict
+on @open
+when verb=fought|insulted|cheated|broke_promise
+- [Okay, about that...|Let's talk about it.]
+- [I've been thinking about it.|It's been bothering me.]
+
+@rule open.ctx.how.witness
+on @open
+when how=witness
+- [I saw it, you know.|I was there.]
+- [With my own eyes.|I'm not making this up.]
+
+@rule open.ctx.how.heard
+on @open
+when how=heard|rumor
+- [I heard something.|People are talking.]
+- [I don't know if it's true.|Someone told me.]
+
+@rule open.ctx.deed
+on @open
+when deed=*
+- [About what happened...|So, that thing...]
+- [I keep thinking about it.|I wanted to ask you.]
+
+@rule open.ctx.valence.good
+on @open
+when valence>=1
+- [Hehe, about that...|Ah, I wanted to say something nice.]
+- [It made me happy.|I still smile about it.]
+
+@rule open.ctx.valence.bad
+on @open
+when valence<=-1
+- [I need to say something.|Listen.]
+- [It's not easy to say.|I'm not happy about it.]
+
+@rule open.ctx.weight
+on @open
+when weight>=2
+- [This is serious.|I've been thinking about this a lot.]
+- [I couldn't sleep over it.|It's a big deal to me.]
+
+@rule open.ctx.distorted
+on @open
+when distorted=yes
+- [I heard a version of this...|The story I heard was wild.]
+- [It's probably exaggerated.|People change things when they tell them.]
+
+@rule open.ctx.exposure.secret
+on @open
+when exposure=secret
+- [Keep this between us.|Not so loud.]
+- [Nobody else knows, right?|This stays here.]
+
+@rule open.ctx.exposure.rumored
+on @open
+when exposure=rumored|known
+- [Everyone's talking about it.|You know what people are saying?]
+- [The whole class knows.|It's all over the school.]
+
+@rule open.ctx.subj.player
+on @open
+when subj=player
+- [So, you.|About what you did...]
+- [I have to ask you about it.|You know what I mean.]
+
+@rule open.ctx.obj.her
+on @open
+when obj=her
+- [About what happened to me...|You know what happened, right?]
+- [I still feel it.|It was about me, after all.]
+
+@rule open.ctx.aboutplayer
+on @open
+when aboutplayer=yes
+- [It's about you, you know.|It's about you.]
+- [Don't pretend you don't know.|I heard your name in it.]
+
+@rule open.ctx.who
+on @open
+when who=*
+- [About {who}...|So, {who}.]
+- [{who}, of all people.|You know {who}, right?]
+
+@rule open.ctx.whorel.friend
+on @open
+when whorel=friend
+- [It's about my friend.|{who} is my friend, so...]
+- [I care about her.|I'm on her side, you know.]
+
+@rule open.ctx.whorel.rival
+on @open
+when whorel=rival
+- [Ugh. {who}.|Of course it's {who}.]
+- [I don't like her, I'll say it.|Typical {who}.]
+
+@rule open.ctx.whorel.crush
+on @open
+when whorel=crush
+- [Um. About {who}...|Ah... {who}.]
+- [Don't read too much into how I say her name.|She's... important to me.]
+
+@rule open.ctx.src
+on @open
+when src=*
+- [{src} told me.|I heard it from {src}.]
+- [{src} wouldn't lie about this.|Don't tell {src} I told you.]
+
+@rule open.ctx.speed
+on @open
+when speed=same_day|fast
+- [That was fast, wasn't it?|Things moved quickly, huh?]
+- [Everyone noticed how fast.|I'm still catching up.]
+
+@rule open.ctx.romance
+on @open
+when romance=yes
+- [This is about love stuff, isn't it.|Ah, romance talk.]
+- [My heart's not ready.|Hehe, I love this kind of story.]
+
+@rule open.ctx.public.no
+on @open
+when public=no
+- [Somewhere private, huh.|Behind closed doors, I heard.]
+- [Nobody was supposed to see.|Not exactly in public.]
+
+@rule open.ctx.opinion.good
+on @open
+when opinion>=1
+- [Honestly? I think it's nice.|I don't mind it at all.]
+- [Good for you, really.|I'm happy about it.]
+
+@rule open.ctx.opinion.bad
+on @open
+when opinion<=-1
+- [Honestly? I don't like it.|I'll be frank.]
+- [I'm not okay with it.|It bothers me.]
+
+@rule open.ctx.fplace
+on @open
+when fplace=*
+- [At the {fplace}, of all places.|In the {fplace}, right?]
+- [I can't stop picturing the {fplace}.|The {fplace}...]
+
+@rule open.ctx.since
+on @open
+when since<=2
+- [So soon after...|Right after, huh?]
+- [It hasn't even been long.|That quick.]
+
+@rule tail.ctx.favor.high
+on @tail
+when favor>=80
+- [I like talking with you.|You're easy to talk to.|This was nice.]
+- [Come find me again, okay?|Let's do this more.]
+
+@rule tail.ctx.favor.low
+on @tail
+when favor<=20
+- [...That's all.|Anyway.]
+- [Don't get the wrong idea.|We're done here.]
+
+@rule tail.ctx.tone.gentle
+on @tail
+when tone=gentle
+- [Thank you for listening.|Hehe, I'm glad.]
+- [You're kind, you know.|That made me happy.]
+
+@rule tail.ctx.tone.energetic
+on @tail
+when tone=energetic
+- [Okay, I feel great now!|Yes! Let's go!]
+- [Hehe, you're fun!|That was awesome!]
+
+@rule tail.ctx.tone.cool
+on @tail
+when tone=cool
+- [...Not bad.|Fine.]
+- [I'll remember that.|Good talk. I mean it.]
+
+@rule tail.ctx.tone.teasing
+on @tail
+when tone=teasing
+- [You're cute when you try~|Hehe, gotcha.]
+- [I'll let you off easy this time~|Don't get cocky.]
+
+@rule tail.ctx.tone.shy
+on @tail
+when tone=shy
+- [Th-thank you for talking to me...|Um... that was nice.]
+- [S-sorry if I was weird.|I-I liked that.]
+
+@rule tail.ctx.tone.proper
+on @tail
+when tone=proper
+- [Thank you. A pleasant talk.|I enjoyed that, truly.]
+- [Let's speak again soon.|You have my gratitude.]
+
+@rule tail.ctx.warm
+on @tail
+when warm>=0.75
+- [Take care of yourself, okay?|I'm glad you're here.]
+- [Don't push yourself too hard.|You can always talk to me.]
+
+@rule tail.ctx.warm.low
+on @tail
+when warm<=0.3
+- [Whatever.|Hm. Okay.]
+- [That's enough chatting.|Don't make it a habit.]
+
+@rule tail.ctx.energy.high
+on @tail
+when energy>=0.8
+- [Okay, I'm pumped!|Let's do something fun next!]
+- [I could talk all day!|Woo!]
+
+@rule tail.ctx.energy.low
+on @tail
+when energy<=0.25
+- [Mm... that was nice.|I'm tired, but that was nice.]
+- [I need a nap now.|Okay... good.]
+
+@rule tail.ctx.tease
+on @tail
+when tease>=0.75
+- [You're too easy to tease.|Hehe, your face.]
+- [I'll get you next time.|That was fun. For me.]
+
+@rule tail.ctx.shy
+on @tail
+when shy>=0.75
+- [...I talked a lot, huh.|Ah... sorry, I'm blushing.]
+- [Don't look at me.|That was embarrassing. Nice, though.]
+
+@rule tail.ctx.blunt
+on @tail
+when blunt>=0.75
+- [That's my honest opinion.|Take it or leave it.]
+- [I don't sugarcoat things.|Anyway, that's that.]
+
+@rule tail.ctx.kclub
+on @tail
+when kclub=yes
+- [See you at the club.|The club room later, right?]
+- [Don't skip the club today.|Club president's orders. Kidding.]
+
+@rule tail.ctx.exam
+on @tail
+when exam=yes
+- [Okay, back to studying.|Now I really have to study.]
+- [Good luck on the exams.|Let's both pass, okay?]
+
+@rule tail.ctx.rivalnear
+on @tail
+when rivalnear=*
+- [And {rivalnear} can mind her own business.|Let's go before {rivalnear} comes over.]
+- [{rivalnear} is still glaring.|Ignore {rivalnear}.]
+
+@rule tail.ctx.lewd.high
+on @tail
+when lewd>=60
+- [Hehe... you're thinking something, aren't you?|Mm, careful, I might get ideas.]
+- [Later, maybe~|Don't look at me like that. Or do.]
+
+@rule tail.ctx.interest
+on @tail
+when interest=yes
+- [I like this... talking with you.|I'm happy you came.]
+- [Stay a little longer?|My heart's going fast. Ignore it.]
+
+@rule tail.ctx.mood.cheerful
+on @tail
+when mood=cheerful
+- [What a good day!|Hehe, today's the best.]
+- [Everything's going right.|I'm so happy today.]
+
+@rule tail.ctx.mood.sleepy
+on @tail
+when mood=sleepy
+- [*yawn* Sorry.|I need a nap.]
+- [I'm so sleepy...|Wake me up next period.]
+
+@rule tail.ctx.verb.romance
+on @tail
+when verb=kissed|had_h|dated|flirted
+- [...Let's not tell anyone.|Hehe... my face is still hot.]
+- [I still think about it.|Don't make me remember it in class.]
+
+@rule tail.ctx.verb.conflict
+on @tail
+when verb=fought|insulted|cheated|broke_promise
+- [Let's put it behind us.|I feel better now.]
+- [Thanks for talking about it.|It's okay now. Mostly.]
+
+@rule tail.ctx.fplace
+on @tail
+when fplace=*
+- [I won't look at the {fplace} the same way.|Not the {fplace} again, okay?]
+- [The {fplace}, honestly...|Let's avoid the {fplace} for a while.]
+
+@rule tail.ctx.public.no
+on @tail
+when public=no
+- [At least nobody saw. Probably.|Keep it private, okay?]
+- [Behind closed doors stays there.|Let's be careful next time.]
+
+@rule tail.ctx.valence.good
+on @tail
+when valence>=1
+- [That really made me happy.|I'll remember it.]
+- [Thank you for that, really.|It was a good day.]
+
+@rule tail.ctx.valence.bad
+on @tail
+when valence<=-1
+- [It still stings a little.|Let's not do that again.]
+- [I'm okay. Really.|We'll get past it.]
+
+@rule tail.ctx.weight
+on @tail
+when weight>=2
+- [That was a big thing, you know.|I'm glad we talked about it.]
+- [I needed to say that.|It was weighing on me.]
+
+@rule tail.ctx.opinion.good
+on @tail
+when opinion>=1
+- [I'm happy for you. Really.|That's a nice thing.]
+- [It suits you.|Good. I mean it.]
+
+@rule tail.ctx.opinion.bad
+on @tail
+when opinion<=-1
+- [I still don't like it.|Just so you know where I stand.]
+- [Think about it, okay?|I won't say more.]
+
+@rule tail.ctx.distorted
+on @tail
+when distorted=yes
+- [I guess people exaggerate.|So the rumor was wrong. Good.]
+- [I'll correct the others.|People love to change stories.]
+
+@rule tail.ctx.exposure.secret
+on @tail
+when exposure=secret
+- [Our secret, okay?|Not a word to anyone.]
+- [I'll keep it to myself.|This never happened. Got it?]
+
+@rule tail.ctx.exposure.rumored
+on @tail
+when exposure=rumored|known
+- [Let people talk.|They'll forget about it soon.]
+- [The rumors will die down.|Everyone has something to say, huh.]
+
+@rule tail.ctx.subj.player
+on @tail
+when subj=player
+- [You're something else, you know.|That's so like you.]
+- [Just be careful.|I'm watching you. Hehe.]
+
+@rule tail.ctx.obj.her
+on @tail
+when obj=her
+- [Thanks for caring about me.|It means a lot that you asked.]
+- [I'm okay now.|I'll be fine.]
+
+@rule tail.ctx.aboutplayer
+on @tail
+when aboutplayer=yes
+- [You're always in the middle of things.|You and your stories.]
+- [Try to stay out of trouble.|What will you do next, I wonder.]
+
+@rule tail.ctx.whorel
+on @tail
+when whorel=friend|rival|crush
+- [Don't tell {who} I said that.|{who} doesn't need to know.]
+- [This stays between us and away from {who}.|Not a word to {who}.]
+
+@rule tail.ctx.speed
+on @tail
+when speed=same_day|fast
+- [Next time, slow down a little.|Things move fast with you.]
+- [I can barely keep up with you.|So fast...]
+
+@rule tail.ctx.romance
+on @tail
+when romance=yes
+- [Love is complicated, huh.|Hehe, romance.]
+- [My heart can't take these stories.|So sweet.]
+
+@rule tail.ctx.since
+on @tail
+when since<=2
+- [It was only a few days ago, huh.|Feels like yesterday.]
+- [So recent...|Still fresh.]
+
+@rule tail.ctx.exposure.who
+on @tail
+when who=* src=*
+- [I'll have a word with {src}.|And {src} talks too much.]
+- [Next time I'll ask {who} myself.|{src} will hear from me.]
+
+@rule tail.ctx.how
+on @tail
+when how=witness|heard|rumor
+- [I'm glad I asked you.|Better to hear it from you.]
+- [Now I know the real story.|Good. I was wondering.]
+
+@rule meopen.ctx.favor.high
+on @meopen
+when favor>=80
+- [Hey, you.|Hey, there you are.]
+- [I was hoping to see you.|Glad I found you.]
+
+@rule meopen.ctx.favor.low
+on @meopen
+when favor<=20
+- [Uh, hi.|Sorry to bother you, but...]
+- [I know you're busy, but...|Just a second.]
+
+@rule meopen.ctx.lewd.high
+on @meopen
+when lewd>=60
+- [Hey, cutie.|Hey, you look good today.]
+- [You're glowing today.|Is it hot in here, or...?]
+
+@rule meopen.ctx.mood.sleepy
+on @meopen
+when mood=sleepy
+- [You look tired.|Rough night?]
+- [Still awake?|Hey, sleepyhead.]
+
+@rule meopen.ctx.mood.upset
+on @meopen
+when mood=upset|stressed
+- [Hey, you okay?|You look like you need a break.]
+- [Hey... deep breath.|Whoa, hey, easy.]
+
+@rule meopen.ctx.mood.cheerful
+on @meopen
+when mood=cheerful
+- [You look happy.|Someone's in a good mood.]
+- [Nice smile today.|Good day, huh?]
+
+@rule meopen.ctx.mood.hungry
+on @meopen
+when mood=hungry
+- [You look like you need food.|Was that your stomach?]
+- [Hungry?|Have you eaten?]
+
+@rule meopen.ctx.mood.lonely
+on @meopen
+when mood=lonely|bored
+- [Hey, got a minute?|Mind if I keep you company?]
+- [You looked like you needed someone to talk to.|Can I sit here?]
+
+@rule meopen.ctx.period.lunch
+on @meopen
+when period=lunch
+- [Hey, lunch break.|Got a minute before the bell?]
+- [Before lunch ends...|Quick question while we eat.]
+
+@rule meopen.ctx.period.after
+on @meopen
+when period=after
+- [Hey, heading home?|School's out, so...]
+- [Before you go...|Wait up a second.]
+
+@rule meopen.ctx.place.library
+on @meopen
+when placeid=library
+- [Psst.|Hey, quietly...]
+- [Sorry, in the library and all, but...|Whispering, okay?]
+
+@rule meopen.ctx.place.rooftop
+on @meopen
+when placeid=rooftop|courtyard|field|park
+- [Nice view, huh?|Great spot.]
+- [It's nice out here.|Good place to talk.]
+
+@rule meopen.ctx.outside
+on @meopen
+when outside=yes
+- [Nice out, huh?|Fresh air's nice.]
+- [Glad we're outside.|Better than the classroom.]
+
+@rule meopen.ctx.rainlover
+on @meopen
+when rainlover=yes wet=yes
+- [You look happy about the rain.|You like this weather, don't you?]
+- [Rain suits you.|I knew you'd be smiling today.]
+
+@rule meopen.ctx.voice.chuuni
+on @meopen
+when voice=chuuni
+- [Greetings, dark one.|Hey, what do the stars say?]
+- [Is your left eye behaving today?|O mighty one...]
+
+@rule meopen.ctx.voice.gyaru
+on @meopen
+when voice=gyaru|genki
+- [Hey hey!|Yo!]
+- [What's up?|Okay, listen.]
+
+@rule meopen.ctx.tone.shy
+on @meopen
+when tone=shy
+- [Hey, it's just me.|Don't worry, it's me.]
+- [Sorry, did I startle you?|Hi, I'll be quick.]
+
+@rule meopen.ctx.tone.proper
+on @meopen
+when tone=proper
+- [Good afternoon.|Excuse me.]
+- [If you have a moment...|Pardon the interruption.]
+
+@rule meopen.ctx.tone.teasing
+on @meopen
+when tone=teasing
+- [Okay, no teasing this time.|Before you start making fun of me...]
+- [Be nice.|Don't laugh, okay?]
+
+@rule meopen.ctx.warm
+on @meopen
+when warm>=0.75
+- [Hey, thanks for always being nice to me.|Hey, you.]
+- [You're always so kind, so...|Can I ask you something?]
+
+@rule meopen.ctx.energy.high
+on @meopen
+when energy>=0.8
+- [Whoa, slow down a second.|You're full of energy today.]
+- [Hold still a second.|Where do you get all that energy?]
+
+@rule meopen.ctx.energy.low
+on @meopen
+when energy<=0.25
+- [Don't get up.|Hey, stay comfy.]
+- [Relax, it's just me.|No rush.]
+
+@rule meopen.ctx.tease
+on @meopen
+when tease>=0.75
+- [Before you say anything...|No jokes, okay?]
+- [Promise you won't laugh.|Go easy on me.]
+
+@rule meopen.ctx.shy
+on @meopen
+when shy>=0.75
+- [Hey, it's okay.|No pressure, but...]
+- [Take your time.|It's just me, relax.]
+
+@rule meopen.ctx.blunt
+on @meopen
+when blunt>=0.75
+- [Honest answer, please.|Give it to me straight.]
+- [No sugarcoating.|Be honest.]
+
+@rule meopen.ctx.profile.reserved
+on @meopen
+when profile=reserved
+- [Sorry to interrupt.|Hey, mind if I talk to you?]
+- [I'll be quick.|Just a second of your time.]
+
+@rule meopen.ctx.profile.open
+on @meopen
+when profile=open
+- [Okay, I've got one for you.|Hey, guess what.]
+- [Story time?|You'll like this.]
+
+@rule meopen.ctx.sign
+on @meopen
+when sign=*
+- [What does your horoscope say today?|Hey, what do the stars say?]
+- [Is today a lucky day for your sign?|Okay, quick horoscope question.]
+
+@rule meopen.ctx.birthday
+on @meopen
+when birthday=today|week|soon
+- [Birthday girl!|Hey, it's almost your day.]
+- [So, about your birthday...|The birthday girl herself.]
+
+@rule meopen.ctx.height.tall
+on @meopen
+when height=tall
+- [Hey, up there.|Hey, tall one.]
+- [Can you hear me from up there?|Don't step on me.]
+
+@rule meopen.ctx.height.short
+on @meopen
+when height=short
+- [Hey, down there. Kidding!|Hey, small fry. Sorry!]
+- [Found you. You're hard to spot.|Hey, there you are.]
+
+@rule meopen.ctx.bust
+on @meopen
+when bust=big|small lewd>=40
+- [Eyes up. Mine, I mean. Hi.|Hey, nice uniform today.]
+- [Is that a new ribbon?|You look nice today.]
+
+@rule meopen.ctx.interest
+on @meopen
+when interest=yes
+- [Hey... I was looking for you.|Hey, you.]
+- [I wanted to see you.|There you are.]
+
+@rule meopen.ctx.clubkind.sports
+on @meopen
+when clubkind=sports
+- [Hey, champ.|How's training?]
+- [You look strong today.|Ready for the next match?]
+
+@rule meopen.ctx.clubkind.culture
+on @meopen
+when clubkind=culture
+- [Hey, how's the club?|Busy with the club?]
+- [Working on something cool?|Club stuff going well?]
+
+@rule meopen.ctx.hasclub
+on @meopen
+when hasclub=yes
+- [Before you go to the {club}...|Hey, {club} member.]
+- [Quick, before club.|The {club} can spare you a minute.]
+
+@rule meopen.ctx.exam
+on @meopen
+when exam=yes
+- [Taking a study break?|Hey, how's the studying?]
+- [Exams are killing me too.|Need a break from the books?]
+
+@rule meopen.ctx.fight
+on @meopen
+when fight=yes
+- [Hey... I heard about {fightwho}.|You okay after what happened?]
+- [I won't bring up {fightwho}. Promise.|Hey, forget about that for a second.]
+
+@rule meopen.ctx.rivalnear
+on @meopen
+when rivalnear=*
+- [Ignore {rivalnear}.|Don't mind {rivalnear}.]
+- [Over here, away from {rivalnear}.|Let's talk somewhere else.]
+
+@rule meopen.ctx.partner
+on @meopen
+when partner=*
+- [Where's {partner}?|Not with {partner} today?]
+- [Say hi to {partner} for me.|{partner} lets you out alone?]
+
+@rule meopen.ctx.days.many
+on @meopen
+when days=many
+- [Me again.|Our usual chat.]
+- [You knew I'd come.|Same time as always.]
+
+@rule meopen.ctx.days.few
+on @meopen
+when days=few rel!=stranger
+- [Hey, we don't talk enough.|Hi. Long time, huh?]
+- [I've been meaning to talk to you.|It's been a while.]
+
+@rule move.invite.ctx.period.lunch
+on move.invite
+when period=lunch
+- Ask her to eat lunch together
+- Offer to share your lunch
+
+@rule move.invite.ctx.period.after
+on move.invite
+when period=after
+- Ask her to walk home together
+- Ask if she wants to hang out after school
+
+@rule move.invite.ctx.place.library
+on move.invite
+when placeid=library
+- Ask her to study with you here
+- Offer to find her a good book
+
+@rule move.invite.ctx.place.rooftop
+on move.invite
+when placeid=rooftop
+- Ask her to stay and watch the view
+- Suggest staying up here a little longer
+
+@rule move.invite.ctx.wet
+on move.invite
+when wet=yes
+- Offer to share your umbrella
+- Ask her to wait out the rain with you
+
+@rule move.invite.ctx.weather.clear
+on move.invite
+when weather=clear outside=yes
+- Ask her to take a walk while it's nice out
+- Suggest sitting outside a while
+
+@rule move.invite.ctx.rainlater
+on move.invite
+when rainlater=yes
+- Suggest heading home before it rains
+- Offer to walk her home before the rain
+
+@rule move.invite.ctx.outside
+on move.invite
+when outside=yes
+- Suggest sitting on the bench for a bit
+- Ask her to walk around with you
+
+@rule move.invite.ctx.rainlover
+on move.invite
+when rainlover=yes wet=yes
+- Ask her to listen to the rain with you
+- Suggest watching the rain from the window
+
+@rule move.invite.ctx.clubkind.sports
+on move.invite
+when clubkind=sports
+- Ask her to train together
+- Offer to cheer at her next match
+
+@rule move.invite.ctx.clubkind.culture
+on move.invite
+when clubkind=culture
+- Ask if you can visit her club
+- Offer to help with her club project
+
+@rule move.invite.ctx.kclub
+on move.invite
+when kclub=yes
+- Ask her to come to the club room
+- Suggest a club activity together
+
+@rule move.invite.ctx.hasclub
+on move.invite
+when hasclub=yes
+- Offer to walk her to the {club}
+- Ask if you can drop by the {club}
+
+@rule move.invite.ctx.exam
+on move.invite
+when exam=yes
+- Ask her to study for the exams together
+- Offer to quiz her before the test
+
+@rule move.invite.ctx.partner
+on move.invite
+when partner=*
+- Suggest hanging out with {partner} too
+- Ask if {partner} would mind you joining them
+
+@rule move.invite.ctx.days.many
+on move.invite
+when days=many
+- Suggest making this a regular thing
+- Ask her to meet up again tomorrow
+
+@rule move.invite.ctx.interest
+on move.invite
+when interest=yes
+- Ask her out properly
+- Ask if she wants to go somewhere, just you two
+
+@rule move.invite.ctx.favor.high
+on move.invite
+when favor>=80
+- Ask her to spend the afternoon together
+- Invite her somewhere special
+
+@rule move.invite.ctx.lewd.high
+on move.invite
+when lewd>=60
+- Suggest going somewhere quieter
+- Ask if she wants to be alone with you
+
+@rule move.invite.ctx.energy.high
+on move.invite
+when energy>=0.8
+- Challenge her to a race
+- Suggest doing something active
+
+@rule move.invite.ctx.energy.low
+on move.invite
+when energy<=0.25
+- Suggest just sitting together for a while
+- Offer to get her a drink
+
+@rule move.comfort.ctx.fight
+on move.comfort
+when fight=yes
+- Tell her {fightwho} will come around
+- Offer to listen about {fightwho}
+
+@rule move.comfort.ctx.shy
+on move.comfort
+when shy>=0.75
+- Tell her she doesn't have to be nervous with you
+- Say she's easy to talk to
+
+@rule move.comfort.ctx.profile.reserved
+on move.comfort
+when profile=reserved
+- Tell her she can take her time
+- Say you like quiet company
+
+@rule move.comfort.ctx.warm.low
+on move.comfort
+when warm<=0.3
+- Say you don't mind her being blunt
+- Tell her you like her honesty
+
+@rule move.comfort.ctx.favor.low
+on move.comfort
+when favor<=20
+- Apologize if you bothered her
+- Say you'll leave her be soon
+
+@rule move.tease.ctx.tone.shy
+on move.tease
+when tone=shy
+- Gently tease her for blushing
+- Point out she's turning red
+
+@rule move.tease.ctx.tone.proper
+on move.tease
+when tone=proper
+- Tease her for being so formal
+- Ask if she ever relaxes
+
+@rule move.tease.ctx.tone.cool
+on move.tease
+when tone=cool
+- Try to make her crack a smile
+- Tease her for being so serious
+
+@rule move.tease.ctx.voice.chuuni
+on move.tease
+when voice=chuuni
+- Ask what her dark powers say about it
+- Play along with her dark-lord act
+
+@rule move.tease.ctx.voice.gyaru
+on move.tease
+when voice=gyaru
+- Copy the way she talks
+- Ask if everything is 'literally' something
+
+@rule move.tease.ctx.height.tall
+on move.tease
+when height=tall
+- Joke about how tall she is
+- Ask how the weather is up there
+
+@rule move.tease.ctx.height.short
+on move.tease
+when height=short
+- Pat her head
+- Joke that you almost didn't see her
+
+@rule move.tease.ctx.tease
+on move.tease
+when tease>=0.75
+- Tease her back for once
+- Beat her to the teasing
+
+@rule move.tease.ctx.blunt
+on move.tease
+when blunt>=0.75
+- Say she could be a little gentler
+- Tease her for being so blunt
+
+@rule move.tease.ctx.profile.open
+on move.tease
+when profile=open
+- Joke that she never runs out of things to say
+- Tease her for talking so fast
+
+@rule move.praise.ctx.warm
+on move.praise
+when warm>=0.75
+- Tell her she's always kind
+- Say she makes people feel welcome
+
+@rule move.praise.ctx.bust
+on move.praise
+when bust=big|small lewd>=40
+- Say the uniform looks good on her
+- Compliment how she looks today
+
+@rule move.praise.ctx.energy.high
+on move.praise
+when energy>=0.8
+- Say her energy is contagious
+- Tell her she brightens the room
+
+@rule move.share.ctx.exam
+on move.share
+when exam=yes
+- Say you're nervous about the exams too
+- Admit you haven't studied
+
+@rule move.share.ctx.wet
+on move.share
+when wet=yes
+- Say you got soaked on the way in
+- Say you forgot your umbrella
+
+@rule move.share.ctx.period.after
+on move.share
+when period=after
+- Say you're tired after today
+- Tell her about your day
+
+@rule move.share.ctx.placeid
+on move.share
+when placeid=library|classroom|cafeteria|rooftop|gym
+- Say you come here often too
+- Say this is one of your favorite spots
+
+@rule move.ask.ctx.voice.lazy
+on move.ask
+when voice=lazy
+- Ask if she's awake
+- Ask what she'd rather be doing
+
+@rule move.ask.ctx.voice.ojou
+on move.ask
+when voice=ojou|proper
+- Ask what she thinks, politely
+- Ask for her opinion
+
+@rule move.ask.ctx.days.few
+on move.ask
+when days=few rel!=stranger
+- Ask her to tell you more about herself
+- Ask what she's usually like
+
+@rule move.ask.ctx.kclub
+on move.ask
+when kclub=yes
+- Ask what she thinks of the club so far
+- Ask how the club is treating her

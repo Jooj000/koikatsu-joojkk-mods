@@ -36,6 +36,9 @@ namespace Joojkk.CampusSaves
         private int _lastRow;
         private readonly List<BaseInputModule> _held = new List<BaseInputModule>();
         private readonly Dictionary<string, Texture2D> _pics = new Dictionary<string, Texture2D>();
+        // The picture's file time when it was read (-1: not read yet), and when to look at the file again.
+        private readonly Dictionary<string, long> _picStamp = new Dictionary<string, long>();
+        private readonly Dictionary<string, float> _picCheck = new Dictionary<string, float>();
 
         private GUIStyle _panel, _card, _cardHover, _rowOn, _title, _name, _nameLong, _text, _dim, _note, _center;
         private GUIStyle _btn, _blue, _red, _green, _tool, _toolText, _empty;
@@ -155,10 +158,27 @@ namespace Joojkk.CampusSaves
             _held.Clear();
         }
 
+        internal static string PicState()
+        {
+            var s = "panel " + (Shown ? "open" : "closed");
+            foreach (var c in Campuses.All)
+            {
+                var v = c.Newest();
+                if (v == null) continue;
+                var path = c.Vault.PicturePath(v.Id);
+                Texture2D t = null;
+                var cached = _me != null && _me._pics.TryGetValue(path, out t);
+                s += "; " + c.Name + " v" + v.Id + " file " + File.Exists(path) + " drawn " + (cached ? (t != null ? "picture" : "No picture") : "not yet");
+            }
+            return s;
+        }
+
         private void ClearPictures()
         {
             foreach (var t in _pics.Values) if (t != null) Destroy(t);
             _pics.Clear();
+            _picStamp.Clear();
+            _picCheck.Clear();
         }
 
         private void LateUpdate()
@@ -408,8 +428,25 @@ namespace Joojkk.CampusSaves
             Texture2D t = null;
             if (v != null)
             {
+                // picture is written in the background after the save, so a version drawn before that cached "no picture"
+                // for good. The file is looked at again once a second and read when it appears or changes (a save over
+                // the same version writes a new picture to the same file).
                 var path = c.Vault.PicturePath(v.Id);
-                if (!_pics.TryGetValue(path, out t)) _pics[path] = t = Thumbs.Load(path);
+                float next;
+                var have = _pics.TryGetValue(path, out t);
+                if (!have || !_picCheck.TryGetValue(path, out next) || Time.realtimeSinceStartup >= next)
+                {
+                    _picCheck[path] = Time.realtimeSinceStartup + 1f;
+                    long stamp = 0, old;
+                    try { stamp = File.Exists(path) ? File.GetLastWriteTimeUtc(path).Ticks : 0; } catch { }
+                    if (!have || !_picStamp.TryGetValue(path, out old) || old != stamp)
+                    {
+                        if (t != null) Destroy(t);
+                        t = stamp != 0 ? Thumbs.Load(path) : null;
+                        _pics[path] = t;
+                        _picStamp[path] = t != null ? stamp : -1;
+                    }
+                }
             }
             if (t != null)
             {

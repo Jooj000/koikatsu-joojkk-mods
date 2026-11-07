@@ -854,6 +854,7 @@ feel sad
 - [I asked you to stop...|Please... stop.] [Why are you doing it again?|I don't like this.]
 - [Again...?|No...] [I said no.|Please listen to me.]
 - [Stop it, please.|...Again?] [It's scaring me a little.|I mean it.]
+- [P-please, I said stop...|Why again...?] [You're scaring me.|Please don't.]
 
 @rule touch.again.stop.energetic
 on touch
@@ -862,6 +863,7 @@ feel pout
 - [Hey! I said quit it!|Again?! No!] [Not funny!|Seriously, stop!]
 - [Stop! I mean it!|Hands off!] [I'm getting mad!|Cut it out!]
 - [Again?! Come on!|No, no, no!] [Quit it already!|I said no!]
+- [Hey! Again?!|What did I just say?!] [Cut it out!|Hands to yourself!]
 
 @rule touch.again.stop.cool
 on touch
@@ -870,6 +872,7 @@ feel serious
 - [I told you no.|Stop.] [Don't make me repeat myself.|That's the last time.]
 - [Again? No.|Enough.] [I'm serious.|Hands down.]
 - [You heard me the first time.|No.] [Stop it.|Don't test me.]
+- [Twice. Really?|Hands off.] [I meant it.|I won't say it again.]
 
 @rule touch.again.stop.teasing
 on touch
