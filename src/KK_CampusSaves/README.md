@@ -32,6 +32,8 @@ Pictures exist from the moment this mod saves: imported saves show none, because
 
 Press Export saves first. Each version takes a slot at its full size again. The slots are normal saves and open without this mod; a save made during the day then opens the way the game opens any save, not at the saved moment.
 
-## Requirements
+## Installation
 
-BepInEx 5.4.23, KKAPI 1.45.1 and ExtensibleSaveFormat. Vaults live in `UserData\save\campus`.
+1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx) and [KKAPI 1.45.1+ / ExtensibleSaveFormat](https://github.com/IllusionMods/IllusionModdingAPI) (the HF Patch has them).
+2. Download `KK_CampusSaves-<version>.zip` from the [releases](https://github.com/Jooj000/KK_CampusSaves/releases) and unpack it over the game's folder (it puts `KK_CampusSaves.dll` in `BepInEx\plugins\Joojkk\`).
+3. Open Load or Save as usual, or press Ctrl+Shift+F6. Vaults live in `UserData\save\campus`.

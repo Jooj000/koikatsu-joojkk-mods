@@ -231,7 +231,8 @@ namespace Joojkk.CampusLife
         /// <summary>The last line of an exchange that went well takes a tail now and then: nothing comes after it to answer.</summary>
         private static string Close(string line, Dictionary<string, string> c, bool hooked = false)
         {
-            if (string.IsNullOrEmpty(line) || Heavy(c) || Random.value >= (hooked ? 0.25f : 0.35f)) return line;
+            // I'm sad. Virgos plan everything. I'm planning this.": the sign piece was another subject glued on her answer).
+            if (string.IsNullOrEmpty(line) || hooked || Heavy(c) || Random.value >= 0.35f) return line;
             var tail = Bank.Piece("tail", c, 1);
             return tail == "" ? line : line.TrimEnd() + " " + tail.Trim();
         }

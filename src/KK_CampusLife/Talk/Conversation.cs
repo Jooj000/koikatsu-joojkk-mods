@@ -535,7 +535,7 @@ namespace Joojkk.CampusLife
             Button end = null;
             try { end = Traverse.Create(_scene).Field("buttonEnd").GetValue<Button>(); } catch { }
             var shift = 0f;
-            foreach (var b in new[] { _talk, _listen, _event, end })
+            foreach (var b in new[] { _talk, _listen, _event, end, _targetBtn })   // the duo's "To:" button too
             {
                 if (b == null || !b.gameObject.activeInHierarchy) continue;
                 var br = OnScreen((RectTransform)b.transform, cam);

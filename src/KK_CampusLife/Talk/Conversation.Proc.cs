@@ -810,6 +810,8 @@ namespace Joojkk.CampusLife
             }
         }
 
+        internal static bool ForceLike;
+
         // ================= playing a topic =================
 
         private static void PlayTopic(SaveData.Heroine h, PTopic t)
@@ -830,23 +832,32 @@ namespace Joojkk.CampusLife
             if (t.Kind == "day" && gs.MoodKnownDay != S.Day)
             {
                 var unknown = GirlInfo.LikesOf(h).Where(l => (gs.KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, l))) == 0).ToList();
-                if (unknown.Count > 0 && Random.value < 0.35f + G.Int / 200f) newLike = unknown[Random.Range(0, unknown.Count)];
+                if (unknown.Count > 0 && (ForceLike || Random.value < 0.35f + G.Int / 200f)) newLike = unknown[Random.Range(0, unknown.Count)];
             }
-            if (newLike != null) ctx["newlike"] = GirlInfo.LikeLabel(newLike);
-
-            DlgRule rule;
-            var her = Bank.Pick(t.Kind, ctx, key, out rule) ?? Fallback(h, t);
+            // her day line, from a rule that already talks about it (l_<like>=yes or newlike=<like>); with none that fits, she
+            // keeps it for another day.
+            DlgRule rule = null;
+            string her = null;
+            if (newLike != null)
+            {
+                ctx["newlike"] = newLike;
+                var lk = "l_" + newLike;
+                var nl = newLike;
+                her = Bank.Pick(t.Kind, ctx, key, r => r.When.Any(c => c.Op == "=" && (c.Key == lk && c.Values.Contains("yes") || c.Key == "newlike" && c.Values.Contains(nl))), out rule);
+                if (her == null) { newLike = null; ctx.Remove("newlike"); }
+            }
+            if (her == null) her = Bank.Pick(t.Kind, ctx, key, out rule) ?? Fallback(h, t);
             // A line with a hook has one subject, so nothing is glued to it (2026-10-31, the fifth complaint: a tail on another
             // subject and a like after it left the options answering neither).
             if (rule != null && rule.Hook != "") { ctx["hook"] = rule.Hook; her = Compose(her, ctx, true); }   // only an opener, now and then
             else her = Compose(her, ctx);
             // Your line comes after hers is drawn, though you say it first: with a hook, you ask what she's about to answer.
             var me = t.Opening ? null : ComposeMe(Bank.Pick("me." + t.Kind, ctx, "player", out _ignored), ctx);
-            // The like she lets slip waits for the end of the exchange (OnMove): said here, it stood between her line and your options.
             if (newLike != null)
             {
-                ctx["closing"] = Bank.Pick("likehint", ctx, key, out _ignored) ?? Lines.LikeHint(GirlInfo.ToneOf(h), GirlInfo.LikeLabel(newLike), Lines.Closeness(h));
-                ctx["closinglike"] = newLike;
+                gs.KnownLikes |= 1 << Array.IndexOf(GirlInfo.LikeIds, newLike);
+                Toasts.Show("Learned: " + GirlInfo.FirstName(h) + " likes " + GirlInfo.LikeLabel(newLike) + ".");
+                CampusLifePlugin.Log.LogInfo("Talk like: " + GirlInfo.FirstName(h) + " " + newLike + " inside her day line (" + rule.Id + ")");
             }
             CampusLifePlugin.Log.LogInfo("Talk topic: " + GirlInfo.FirstName(h) + " " + t.Kind + " '" + t.Label + "' rule " + (rule != null ? rule.Id : "(fallback)"));
 

@@ -1,6 +1,7 @@
 # School Optimizer changelog
 
-## Unreleased
+## 1.7.1 (2026-11-08)
+- A student whose clothes were left in the shower or toilet state after she moved on (a towel in the cafeteria) is dressed again.
 - A clothes release or rebuild that got stuck (its coroutine stopped) no longer keeps a student hidden: after 20 s, or at once when she is needed on the player's map, the run is dropped and she is dressed in that frame.
 
 ## 1.7.0 (2026-10-09)

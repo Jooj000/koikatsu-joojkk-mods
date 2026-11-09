@@ -187,12 +187,13 @@ namespace Joojkk.CampusLife
             if (S.Buffs.TryGetValue("board_absent", out done) && done == stamp) return;
             S.Buffs["board_absent"] = stamp;
             DropAbsentMissing();
+            NoLunchOnSaturday();
             var dropped = 0;
             foreach (var r in S.Requests.Where(q => (q.State == RequestState.Active || q.State == RequestState.Hidden) && q.DeadlineDay <= S.Day
                                                     && (!string.IsNullOrEmpty(q.Girl) && !Truth.AtSchool(q.Girl) || !string.IsNullOrEmpty(q.Other) && !Truth.AtSchool(q.Other))).ToList())
             {
                 // today: it goes away, and a girl who is here gets one instead.
-                if (r.Kind == RequestKind.Talk && r.Source == "board")
+                if (r.Kind == RequestKind.Talk && (r.Source == "board" || r.Source == "harem" || r.Source == "happening"))
                 {
                     S.Requests.Remove(r);
                     dropped++;
@@ -205,6 +206,35 @@ namespace Joojkk.CampusLife
                 CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " waits for tomorrow (" + GirlInfo.FirstName(who) + " is not on campus; she comes first tomorrow)");
             }
             if (dropped > 0) Post(dropped);
+        }
+
+        /// <summary>
+        /// due on it (one posted on Saturday "for tomorrow", a favor, one found out by talking) could never be done and was
+        /// counted as missed on Monday. When Sunday starts, they move to Monday.
+        /// </summary>
+        public static void SkipHoliday()
+        {
+            var moved = 0;
+            foreach (var r in S.Requests.Where(q => (q.State == RequestState.Active || q.State == RequestState.Hidden) && q.DeadlineDay == S.Day))
+            {
+                r.DeadlineDay = S.Day + 1;
+                moved++;
+            }
+            if (moved > 0) CampusLifePlugin.Log.LogInfo("Board: " + moved + " request(s) due on Sunday move to Monday (no school on Sunday)");
+        }
+
+        /// <summary>
+        /// The game has no lunch on Saturday (ActionControl skips AddLunch then): a lunch request due on Saturday could
+        /// not be done. It waits for Monday, and no new one is posted on a Saturday.
+        /// </summary>
+        internal static void NoLunchOnSaturday(bool always = false)
+        {
+            if (!always && G.Weekday != Cycle.Week.Saturday) return;
+            foreach (var r in S.Requests.Where(q => (q.State == RequestState.Active || q.State == RequestState.Hidden) && q.Kind == RequestKind.Lunch && q.DeadlineDay <= S.Day))
+            {
+                r.DeadlineDay = S.Day + 2;
+                CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " waits for Monday (no lunch on Saturday)");
+            }
         }
 
         public static void GenerateDaily()
@@ -317,6 +347,23 @@ namespace Joojkk.CampusLife
                 CampusLifePlugin.Log.LogInfo("Board: " + GirlInfo.FirstName(r.Girl) + " already has a gift request open; '" + r.Title + "' not posted.");
                 return;
             }
+            // with X", "Cheer up X", "Be there for X", the arcs...), and some were made at the start of the day, before the
+            // scene knew who came. A talk with a girl who is not here today is not posted; anything else waits for tomorrow,
+            // when OptimizerLink loads her first.
+            if (Truth.Known && r.Source != "miss")
+            {
+                var away = !string.IsNullOrEmpty(r.Girl) && !Truth.AtSchool(r.Girl) ? r.Girl : !string.IsNullOrEmpty(r.Other) && !Truth.AtSchool(r.Other) ? r.Other : null;
+                if (away != null)
+                {
+                    if (r.Kind == RequestKind.Talk && r.Source != "arc")
+                    {
+                        CampusLifePlugin.Log.LogInfo("Board: '" + r.Title + "' not posted (" + GirlInfo.FirstName(away) + " is not on campus today)");
+                        return;
+                    }
+                    if (r.DeadlineDay <= S.Day) r.DeadlineDay = S.Day + 1;
+                    CampusLifePlugin.Log.LogInfo("Board: '" + r.Title + "' is for tomorrow (" + GirlInfo.FirstName(away) + " is not on campus today)");
+                }
+            }
             r.Id = S.NextRequestId++;
             r.CreatedDay = S.Day;
             if (r.DeadlineDay < S.Day) r.DeadlineDay = S.Day;
@@ -348,6 +395,7 @@ namespace Joojkk.CampusLife
                 default: options.AddRange(new[] { RequestKind.Errand, RequestKind.MeetAt, RequestKind.Talk, RequestKind.Lunch, RequestKind.Study, RequestKind.Exercise }); break;
             }
             // treat" and "X asked you to bring her something" at once): no request for another one.
+            if (G.Weekday == Cycle.Week.Saturday) { options.RemoveAll(k => k == RequestKind.Lunch); if (options.Count == 0) options.Add(RequestKind.Gift); }
             if (gs.LastGiftDay == S.Day || OpenFor(gs.Key).Any(q => q.Kind == RequestKind.Gift)) { options.RemoveAll(k => k == RequestKind.Gift); if (options.Count == 0) options.Add(RequestKind.Talk); }
             if (Random.value < 0.25f) options.Add(RequestKind.Errand);
             // Asking to meet somewhere is for a girl who knows you.
@@ -869,6 +917,7 @@ namespace Joojkk.CampusLife
             if (r.State != RequestState.Active) return;
             if (r.Source == "miss") { S.Requests.Remove(r); return; }
             r.State = RequestState.Failed;
+            CampusLifePlugin.Log.LogInfo("Board: missed '" + r.Title + "' (due day " + r.DeadlineDay + ", window " + r.Periods + "; now day " + S.Day + " " + G.Weekday + " " + G.CurrentMask + ")");
             var h = GirlInfo.Find(r.Girl);
             if (Cfg.FailedRequestPenalty.Value && h != null && r.Source != "event" && !Devotion.ForgivesMisses(h))
             {

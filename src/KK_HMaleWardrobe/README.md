@@ -15,7 +15,7 @@
 ## Installation
 
 1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx) and [KKAPI 1.30.1+](https://github.com/IllusionMods/IllusionModdingAPI) (the HF Patch has them).
-2. Download `KK_HMaleWardrobe.dll` from the [releases](https://github.com/Jooj000/KK_HMaleWardrobe/releases) and put it in `BepInEx\plugins\Joojkk\`.
+2. Download `KK_HMaleWardrobe-<version>.zip` from the [releases](https://github.com/Jooj000/KK_HMaleWardrobe/releases) and unpack it over the game's folder (it puts `KK_HMaleWardrobe.dll` in `BepInEx\plugins\Joojkk\`).
 
 ## Configuration
 

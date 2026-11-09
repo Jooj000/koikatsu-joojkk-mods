@@ -9,7 +9,7 @@
 | | |
 |---|---|
 | GUID | `joojkk.campuslife` |
-| Version | 3.5.1 |
+| Version | 3.6.0 |
 | Game | Koikatu / Koikatsu Party, main game (story mode), HF Patch recommended |
 | Menu | **F7** |
 | Language | English (the XUnity AutoTranslator does not touch it) |
@@ -101,9 +101,8 @@ Well-played days (three talks a day, good answers), averaged over two girls of e
 ## Installation
 
 1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx) and [KKAPI 1.45+ / ExtensibleSaveFormat](https://github.com/IllusionMods/IllusionModdingAPI) (the HF Patch has them).
-2. Download `KK_CampusLife.dll` from the [releases](https://github.com/Jooj000/KK_CampusLife/releases) and put it in `BepInEx\plugins\Joojkk\`.
-3. Optional: put the `backgrounds` folder next to it for the painted event backgrounds.
-4. Start the story mode and press **F7**.
+2. Download `KK_CampusLife-<version>.zip` from the [releases](https://github.com/Jooj000/KK_CampusLife/releases) and unpack it over the game's folder. It puts `KK_CampusLife.dll`, the painted event backgrounds (`backgrounds`) and the loading-screen photos of every map (`mapshots`) in `BepInEx\plugins\Joojkk\`, and the staff titles as a college in `BepInEx\Translation\en\Text\`.
+3. Start the story mode and press **F7**.
 
 Campus Life keeps its data inside your save (ExtensibleSaveFormat). Removing the mod leaves the save playable.
 

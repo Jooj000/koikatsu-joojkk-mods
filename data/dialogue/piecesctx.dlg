@@ -806,26 +806,26 @@ when lewd>=60
 @rule meopen.ctx.mood.sleepy
 on @meopen
 when mood=sleepy
-- [You look tired.|Rough night?]
-- [Still awake?|Hey, sleepyhead.]
+- [You look tired.|Hey, sleepyhead.]
+- [I'll keep it short so you can rest.|Don't fall asleep on me.]
 
 @rule meopen.ctx.mood.upset
 on @meopen
 when mood=upset|stressed
-- [Hey, you okay?|You look like you need a break.]
-- [Hey... deep breath.|Whoa, hey, easy.]
+- [Hey, deep breath.|You look like you need a break.]
+- [I'll try to take your mind off things.|Whoa, hey, easy.]
 
 @rule meopen.ctx.mood.cheerful
 on @meopen
 when mood=cheerful
 - [You look happy.|Someone's in a good mood.]
-- [Nice smile today.|Good day, huh?]
+- [Nice smile today.|Your smile's contagious.]
 
 @rule meopen.ctx.mood.hungry
 on @meopen
 when mood=hungry
 - [You look like you need food.|Was that your stomach?]
-- [Hungry?|Have you eaten?]
+- [I'll be quick, then go eat.|Quick, before you faint from hunger.]
 
 @rule meopen.ctx.mood.lonely
 on @meopen
@@ -842,7 +842,7 @@ when period=lunch
 @rule meopen.ctx.period.after
 on @meopen
 when period=after
-- [Hey, heading home?|School's out, so...]
+- [Hey, before you head home...|School's out, so...]
 - [Before you go...|Wait up a second.]
 
 @rule meopen.ctx.place.library
@@ -866,13 +866,13 @@ when outside=yes
 @rule meopen.ctx.rainlover
 on @meopen
 when rainlover=yes wet=yes
-- [You look happy about the rain.|You like this weather, don't you?]
+- [You look happy about the rain.|Perfect weather for you.]
 - [Rain suits you.|I knew you'd be smiling today.]
 
 @rule meopen.ctx.voice.chuuni
 on @meopen
 when voice=chuuni
-- [Greetings, dark one.|Hey, what do the stars say?]
+- [Greetings, dark one.|Hey, the stars sent me.]
 - [Is your left eye behaving today?|O mighty one...]
 
 @rule meopen.ctx.voice.gyaru
@@ -909,7 +909,7 @@ when warm>=0.75
 on @meopen
 when energy>=0.8
 - [Whoa, slow down a second.|You're full of energy today.]
-- [Hold still a second.|Where do you get all that energy?]
+- [Hold still a second.|You've got energy to spare.]
 
 @rule meopen.ctx.energy.low
 on @meopen
@@ -950,14 +950,14 @@ when profile=open
 @rule meopen.ctx.sign
 on @meopen
 when sign=*
-- [What does your horoscope say today?|Hey, what do the stars say?]
-- [Is today a lucky day for your sign?|Okay, quick horoscope question.]
+- [The stars sent me your way.|My horoscope said to talk to you.]
+- [Lucky day for me, finding you.|My horoscope said today's a good day to talk.]
 
 @rule meopen.ctx.birthday
 on @meopen
 when birthday=today|week|soon
 - [Birthday girl!|Hey, it's almost your day.]
-- [So, about your birthday...|The birthday girl herself.]
+- [Happy almost-birthday, by the way.|Hey, birthday girl.]
 
 @rule meopen.ctx.height.tall
 on @meopen
@@ -975,7 +975,7 @@ when height=short
 on @meopen
 when bust=big|small lewd>=40
 - [Eyes up. Mine, I mean. Hi.|Hey, nice uniform today.]
-- [Is that a new ribbon?|You look nice today.]
+- [Nice ribbon, by the way.|You look nice today.]
 
 @rule meopen.ctx.interest
 on @meopen
@@ -986,14 +986,14 @@ when interest=yes
 @rule meopen.ctx.clubkind.sports
 on @meopen
 when clubkind=sports
-- [Hey, champ.|How's training?]
-- [You look strong today.|Ready for the next match?]
+- [Hey, champ.|Hey, star athlete.]
+- [You look strong today.|Don't let me keep you from training.]
 
 @rule meopen.ctx.clubkind.culture
 on @meopen
 when clubkind=culture
-- [Hey, how's the club?|Busy with the club?]
-- [Working on something cool?|Club stuff going well?]
+- [Don't let me keep you from the club.|Taking a club break?]
+- [I won't keep you long.|You always look busy.]
 
 @rule meopen.ctx.hasclub
 on @meopen
@@ -1004,14 +1004,14 @@ when hasclub=yes
 @rule meopen.ctx.exam
 on @meopen
 when exam=yes
-- [Taking a study break?|Hey, how's the studying?]
-- [Exams are killing me too.|Need a break from the books?]
+- [Taking a study break?|Hey, bookworm.]
+- [Exams are killing me too.|Quick break from the books.]
 
 @rule meopen.ctx.fight
 on @meopen
 when fight=yes
-- [Hey... I heard about {fightwho}.|You okay after what happened?]
-- [I won't bring up {fightwho}. Promise.|Hey, forget about that for a second.]
+- [I won't bring up {fightwho}. Promise.|Hey, forget about {fightwho} for a second.]
+- [Something else, to take your mind off it.|Let's talk about anything but that.]
 
 @rule meopen.ctx.rivalnear
 on @meopen
@@ -1022,8 +1022,8 @@ when rivalnear=*
 @rule meopen.ctx.partner
 on @meopen
 when partner=*
-- [Where's {partner}?|Not with {partner} today?]
-- [Say hi to {partner} for me.|{partner} lets you out alone?]
+- [No {partner} around, huh.|Just you today, no {partner}.]
+- [Say hi to {partner} for me.|I'll steal you from {partner} for a second.]
 
 @rule meopen.ctx.days.many
 on @meopen

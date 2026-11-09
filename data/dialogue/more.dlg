@@ -1,0 +1,2883 @@
+
+@rule move.invite.dislike
+on move.invite
+when likes=no
+- Suggest doing something she'd like more
+- Ask what she'd rather do
+- Offer to do something else together
+
+@rule move.invite.state.dislike
+on move.invite
+when kind=small shape=state likes=no
+- Ask what she'd rather do instead
+- Suggest something she'd actually enjoy
+
+@rule move.invite.state.dislike.nurse
+on move.invite
+when kind=small shape=state likes=no job=nurse
+- Ask what she does to unwind instead
+- Ask what she'd rather do after work
+
+@rule move.invite.state.dislike.teacher
+on move.invite
+when kind=small shape=state likes=no role=teacher
+- Ask what she does to unwind instead
+- Ask what she'd rather do after class
+
+@rule move.praise.dislike
+on move.praise
+when kind=small likes=no
+- Say she's honest about what she likes
+- Say you like that she knows her own mind
+
+@rule move.share.state.dislike
+on move.share
+when kind=small shape=state likes=no
+- Admit you're not into {like} either
+- Say you never got {like} either
+
+@rule move.share.state.dislike.nurse
+on move.share
+when kind=small shape=state likes=no job=nurse
+- Admit you're not into {like} either, sensei
+- Say you never got {like} either
+
+@rule move.share.state.dislike.teacher
+on move.share
+when kind=small shape=state likes=no role=teacher
+- Admit you're not into {like} either, sensei
+- Say you never got {like} either
+
+@rule react.invite.dislike.good
+on react
+when move=invite fit=good kind=small likes=no
+feel smile
+- Not {like}, but... something else? I'd like that.
+- Okay, but I'm picking what we do. Deal?
+- Anything but {like}, and I'm in.
+- You'd change plans for me? ...Okay, yes.
+
+@rule react.ask.dislike
+on react
+when move=ask likes=no fit=good step<=1
+opens share,invite,praise
+feel pout
+- Honestly? {Like} just isn't for me. It never was.
+- I tried {like} once. Once was enough.
+- I don't hate it. I just don't get why people love it.
+- Don't look at me like that. Some people just don't like {like}.
+
+@rule react.shape.share.dislike
+on react
+when move=share fit=good|neutral shape=state likes=no
+feel laugh
+- Wait, you don't like {like} either? Finally, someone sane.
+- Hehe. We can not like it together.
+- Good. I was starting to think I was the only one.
+
+@rule open.ctx.rainhater
+on @open
+when rainlover=no wet=yes
+- Ugh, this rain...
+- My hair's ruined. Don't look.
+- Sorry, I'm damp and grumpy.
+- Can we talk inside? Oh, we are inside. Still.
+
+@rule meopen.ctx.rainhater
+on @meopen
+when rainlover=no wet=yes
+- You look soaked.
+- I'll keep it short so you can dry off.
+- Rain got you too, huh.
+- Nasty weather.
+
+@rule tail.rainhater
+on @tail
+when rainlover=no wet=yes
+- Talking helped. The rain didn't.
+- At least you made today less gray.
+- Okay. Now I just need it to stop raining.
+- Thanks. I'll survive this weather.
+
+@rule day.h.rain_hater
+on day
+when kind=day wet=yes rainlover=no
+hook rain_hater
+opens ask,comfort,share
+feel pout
+- Rain again. My shoes are soaked through.
+- I hate days like this. Everything's wet and gray.
+- My umbrella flipped inside out on the way here. Great start.
+
+@rule move.h.rain_hater.ask
+on move.ask
+when hook=rain_hater
+- Ask if she got caught in it
+
+@rule react.h.rain_hater.ask
+on react
+when hook=rain_hater move=ask fit=good|neutral
+- On the way in. Completely.
+- The bus splashed me. On purpose, I swear.
+
+@rule move.h.rain_hater.comfort
+on move.comfort
+when hook=rain_hater
+- Offer her your umbrella for the way home
+
+@rule react.h.rain_hater.comfort
+on react
+when hook=rain_hater move=comfort fit=good|neutral
+- ...You'd do that? Okay. Thank you.
+- Then you'll get wet. ...Fine, we'll share it.
+
+@rule move.h.rain_hater.share
+on move.share
+when hook=rain_hater
+- Say you're not a fan of the rain either
+
+@rule react.h.rain_hater.share
+on react
+when hook=rain_hater move=share fit=good|neutral
+- Right? Who likes this?
+- Finally, someone normal.
+
+@rule react.h.rain_hater.bad
+on react
+when hook=rain_hater fit=bad
+- Easy for you to say. You're dry.
+- Just let me be grumpy.
+
+@rule move.invite.ctx.rainhater
+on move.invite
+when rainlover=no wet=yes
+- Suggest waiting out the rain somewhere warm
+- Invite her to the cafeteria until it stops
+
+@rule small.h.place_rooftop_rain_hater
+on small
+when subject=place placeid=rooftop wet=yes rainlover=no
+hook place_rooftop_rain_hater
+opens ask,comfort,invite
+feel pout
+shape state
+- Why are we up here in the rain? Everything's wet.
+- I only came up because I thought it had stopped. It hadn't.
+- The bench is soaked. I'm not sitting there.
+
+@rule me.h.place_rooftop_rain_hater
+on me.small
+when hook=place_rooftop_rain_hater
+- It's pouring up here.
+- Want to go back inside?
+
+@rule move.h.place_rooftop_rain_hater.ask
+on move.ask
+when hook=place_rooftop_rain_hater
+- Ask why she came up at all
+
+@rule react.h.place_rooftop_rain_hater.ask
+on react
+when hook=place_rooftop_rain_hater move=ask fit=good|neutral
+- I wanted air. I got a shower.
+- Habit. Bad habit, today.
+
+@rule move.h.place_rooftop_rain_hater.comfort
+on move.comfort
+when hook=place_rooftop_rain_hater
+- Hold your jacket over her head
+
+@rule react.h.place_rooftop_rain_hater.comfort
+on react
+when hook=place_rooftop_rain_hater move=comfort fit=good|neutral
+- ...Okay, that's sweet. Don't let go.
+- You'll get wet. ...Thanks, though.
+
+@rule move.h.place_rooftop_rain_hater.invite
+on move.invite
+when hook=place_rooftop_rain_hater
+- Suggest going back inside
+
+@rule react.h.place_rooftop_rain_hater.invite
+on react
+when hook=place_rooftop_rain_hater move=invite fit=good|neutral
+- Yes. Please. Right now.
+- Finally, a good idea.
+
+@rule react.h.place_rooftop_rain_hater.bad
+on react
+when hook=place_rooftop_rain_hater fit=bad
+- You could've warned me.
+- Stop smiling. It's not funny.
+
+@rule small.h.weather_rain_hater
+on small
+when subject=weather wet=yes rainlover=no
+hook weather_rain_hater
+opens ask,comfort,share
+feel pout
+shape state
+- I hate this rain. Everything smells like wet socks.
+- My hair takes an hour, and the rain ruined it in a minute.
+- They said it'd stop by noon. It didn't.
+
+@rule me.h.weather_rain_hater
+on me.small
+when hook=weather_rain_hater
+- Some rain, huh?
+- This weather's awful.
+
+@rule move.h.weather_rain_hater.ask
+on move.ask
+when hook=weather_rain_hater
+- Ask what she hates most about it
+
+@rule react.h.weather_rain_hater.ask
+on react
+when hook=weather_rain_hater move=ask fit=good|neutral
+- The wet shoes. All day in wet shoes.
+- My hair. Don't look at my hair.
+
+@rule move.h.weather_rain_hater.comfort
+on move.comfort
+when hook=weather_rain_hater
+- Say she still looks fine to you
+
+@rule react.h.weather_rain_hater.comfort
+on react
+when hook=weather_rain_hater move=comfort fit=good|neutral
+- ...Liar. ...Thanks, though.
+- You're just saying that. Keep saying it.
+
+@rule move.h.weather_rain_hater.share
+on move.share
+when hook=weather_rain_hater
+- Say you'd rather be inside somewhere warm
+
+@rule react.h.weather_rain_hater.share
+on react
+when hook=weather_rain_hater move=share fit=good|neutral
+- With a blanket. And tea. Yes.
+- Don't make me want it more.
+
+@rule react.h.weather_rain_hater.bad
+on react
+when hook=weather_rain_hater fit=bad
+- You like this? Seriously?
+- Then go dance in it. Without me.
+
+@rule small.h.commute_rain_lover
+on small
+when subject=commute wet=yes rainlover=yes
+hook commute_rain_lover
+opens ask,share,tease
+feel smile
+shape state
+- I walked in the rain this morning. On purpose. Best commute all week.
+- I left the umbrella closed the whole way. Don't tell my mom.
+- Rainy mornings are the only ones I like walking to school.
+
+@rule me.h.commute_rain_lover
+on me.small
+when hook=commute_rain_lover
+- You came in this rain?
+- How was the walk in?
+
+@rule move.h.commute_rain_lover.ask
+on move.ask
+when hook=commute_rain_lover
+- Ask what she likes about walking in the rain
+
+@rule react.h.commute_rain_lover.ask
+on react
+when hook=commute_rain_lover move=ask fit=good|neutral
+- Everyone hides, and the streets are mine.
+- The sound on the umbrella. Or on my head. Both.
+
+@rule move.h.commute_rain_lover.share
+on move.share
+when hook=commute_rain_lover
+- Say you took the long way too
+
+@rule react.h.commute_rain_lover.share
+on react
+when hook=commute_rain_lover move=share fit=good|neutral
+- Really? Then you get it.
+- One of us, then.
+
+@rule move.h.commute_rain_lover.tease
+on move.tease
+when hook=commute_rain_lover
+- Say she looks like a happy wet puppy
+
+@rule react.h.commute_rain_lover.tease
+on react
+when hook=commute_rain_lover move=tease fit=good|neutral
+- ...Hey! ...Okay, that's accurate.
+- Woof. Happy now?
+
+@rule react.h.commute_rain_lover.bad
+on react
+when hook=commute_rain_lover fit=bad
+- You'd never understand.
+- Fine. Stay dry and boring.
+
+@rule day.h.animals_scared
+on day
+when mood=cheerful l_animals!=yes
+hook animals_scared
+opens ask,tease,comfort
+feel laugh
+- A dog jumped at me at the gate! I screamed. Everyone laughed. I'm laughing now too.
+- The courtyard cat followed me all morning. I don't know why it picked me.
+- Someone brought a hamster to class. I sat as far away as I could. Today was still good, though.
+
+@rule move.h.animals_scared.ask
+on move.ask
+when hook=animals_scared
+- Ask what happened with the dog
+
+@rule react.h.animals_scared.ask
+on react
+when hook=animals_scared move=ask fit=good|neutral
+- It was tiny. It wagged at me. I still ran.
+- Its owner apologized. The dog didn't.
+
+@rule move.h.animals_scared.comfort
+on move.comfort
+when hook=animals_scared
+- Say you'll walk in with her past the gate
+
+@rule react.h.animals_scared.comfort
+on react
+when hook=animals_scared move=comfort fit=good|neutral
+- ...Okay. You can be my shield.
+- You'd stand between me and a dog? My hero.
+
+@rule move.h.animals_scared.tease
+on move.tease
+when hook=animals_scared
+- Say the animals must like her
+
+@rule react.h.animals_scared.tease
+on react
+when hook=animals_scared move=tease fit=good|neutral
+- That's the problem. I don't like them back.
+- Then they have bad taste.
+
+@rule react.h.animals_scared.bad
+on react
+when hook=animals_scared fit=bad
+- Don't laugh. It was scary.
+- You'd scream too.
+
+@rule day.h.coffee_not_sleepy
+on day
+when mood=sleepy l_coffee!=yes
+hook coffee_not_sleepy
+opens ask,comfort,invite
+feel worried
+- I'm so sleepy... and no, I won't drink coffee. It's too bitter.
+- Everyone keeps offering me coffee. I can't stand the taste. I'll just suffer.
+- I tried coffee to stay awake. Now I'm sleepy and my mouth tastes bad.
+
+@rule move.h.coffee_not_sleepy.ask
+on move.ask
+when hook=coffee_not_sleepy
+- Ask what keeps her awake instead
+
+@rule react.h.coffee_not_sleepy.ask
+on react
+when hook=coffee_not_sleepy move=ask fit=good|neutral
+- Cold water on my face. And pinching myself.
+- Tea, sometimes. Sweet tea.
+
+@rule move.h.coffee_not_sleepy.comfort
+on move.comfort
+when hook=coffee_not_sleepy
+- Tell her to rest her eyes for a minute
+
+@rule react.h.coffee_not_sleepy.comfort
+on react
+when hook=coffee_not_sleepy move=comfort fit=good|neutral
+- ...Just a minute. Wake me up?
+- If I fall asleep, it's your fault.
+
+@rule move.h.coffee_not_sleepy.invite
+on move.invite
+when hook=coffee_not_sleepy
+- Offer to get her a sweet tea instead
+
+@rule react.h.coffee_not_sleepy.invite
+on react
+when hook=coffee_not_sleepy move=invite fit=good|neutral
+- Sweet tea? ...Yes. Please.
+- Not coffee? Then yes.
+
+@rule react.h.coffee_not_sleepy.bad
+on react
+when hook=coffee_not_sleepy fit=bad
+- Just drink it, you say. Easy for you.
+- I said I don't like coffee.
+
+@rule day.h.cooking_burnt
+on day
+when mood=none|cheerful l_cooking!=yes
+hook cooking_burnt
+opens ask,tease,invite
+feel laugh
+- I tried to make my own lunch today. The rice was crunchy. Never again.
+- My mom made me cook breakfast. The pan is still soaking.
+- Home economics was today. My group banned me from the stove.
+
+@rule move.h.cooking_burnt.ask
+on move.ask
+when hook=cooking_burnt
+- Ask what went wrong
+
+@rule react.h.cooking_burnt.ask
+on react
+when hook=cooking_burnt move=ask fit=good|neutral
+- Everything. I don't know how.
+- I read the recipe. The recipe lied.
+
+@rule move.h.cooking_burnt.invite
+on move.invite
+when hook=cooking_burnt
+- Offer to buy her lunch instead
+
+@rule react.h.cooking_burnt.invite
+on react
+when hook=cooking_burnt move=invite fit=good|neutral
+- Yes. Please. Food someone else made.
+- Deal. I'll stay away from kitchens.
+
+@rule move.h.cooking_burnt.tease
+on move.tease
+when hook=cooking_burnt
+- Say you'd still eat it
+
+@rule react.h.cooking_burnt.tease
+on react
+when hook=cooking_burnt move=tease fit=good|neutral
+- Then you're braver than my family.
+- You'd regret it. Trust me.
+
+@rule react.h.cooking_burnt.bad
+on react
+when hook=cooking_burnt fit=bad
+- Hey, it's not funny! ...It's a little funny.
+- You try cooking, then.
+
+@rule day.h.exercise_lazy
+on day
+when mood=bored l_exercise!=yes
+hook exercise_lazy
+opens ask,invite,tease
+feel pout
+- P.E. was laps again. I walked the whole time. So boring.
+- Everyone's training for the sports day. I'd rather sit and watch clouds.
+- The coach made me run. I don't run. I walked fast. That counts.
+
+@rule move.h.exercise_lazy.ask
+on move.ask
+when hook=exercise_lazy
+- Ask what she'd rather do
+
+@rule react.h.exercise_lazy.ask
+on react
+when hook=exercise_lazy move=ask fit=good|neutral
+- Anything sitting down. A movie. A nap.
+- Something that doesn't make me sweat.
+
+@rule move.h.exercise_lazy.invite
+on move.invite
+when hook=exercise_lazy
+- Suggest doing something lazy together
+
+@rule react.h.exercise_lazy.invite
+on react
+when hook=exercise_lazy move=invite fit=good|neutral
+- Lazy? With you? Yes.
+- Now that I'm in for.
+
+@rule move.h.exercise_lazy.tease
+on move.tease
+when hook=exercise_lazy
+- Say walking fast is still exercise
+
+@rule react.h.exercise_lazy.tease
+on react
+when hook=exercise_lazy move=tease fit=good|neutral
+- Exactly! Tell the coach that.
+- See? You get it.
+
+@rule react.h.exercise_lazy.bad
+on react
+when hook=exercise_lazy fit=bad
+- Don't tell me to try harder.
+- You sound like the coach.
+
+@rule day.h.flirty_plain
+on day
+when mood=flirty l_fashion!=yes
+hook flirty_plain
+opens ask,tease,praise
+feel shy
+- I didn't do anything special today. Same uniform, same hair. You still keep looking.
+- Clothes are just clothes to me. So if you're staring, it's not the outfit.
+- My friend wanted to do my makeup. I said no. You don't mind, right?
+
+@rule move.h.flirty_plain.ask
+on move.ask
+when hook=flirty_plain
+- Ask why she never dresses up
+
+@rule react.h.flirty_plain.ask
+on react
+when hook=flirty_plain move=ask fit=good|neutral
+- Too much work. I'd rather sleep in.
+- I don't know how, honestly.
+
+@rule move.h.flirty_plain.tease
+on move.tease
+when hook=flirty_plain
+- Say it's definitely not the outfit
+
+@rule react.h.flirty_plain.tease
+on react
+when hook=flirty_plain move=tease fit=good|neutral
+- ...Then what is it? Say it.
+- Hehe. Good answer.
+
+@rule move.h.flirty_plain.praise
+on move.praise
+when hook=flirty_plain
+- Say she doesn't need to dress up
+
+@rule react.h.flirty_plain.praise
+on react
+when hook=flirty_plain move=praise fit=good|neutral
+- ...You mean that? Okay. Good.
+- Smooth. I'll take it.
+
+@rule react.h.flirty_plain.bad
+on react
+when hook=flirty_plain fit=bad
+- So I look plain. Thanks.
+- Wow. Okay.
+
+@rule day.h.fashion_plain
+on day
+when mood=none|cheerful l_fashion!=yes
+hook fashion_plain
+opens ask,share,tease
+feel smile
+- My friends dragged me to the clothing store again. I sat outside and ate a crepe.
+- Everyone's talking about some new brand. I just nod. I have no idea.
+- I wore the same hoodie all weekend. Comfort wins.
+
+@rule move.h.fashion_plain.ask
+on move.ask
+when hook=fashion_plain
+- Ask what she did while they shopped
+
+@rule react.h.fashion_plain.ask
+on react
+when hook=fashion_plain move=ask fit=good|neutral
+- Ate. People-watched. Best part of the trip.
+- Held the bags. I'm a professional bag holder.
+
+@rule move.h.fashion_plain.share
+on move.share
+when hook=fashion_plain
+- Say you don't care about brands either
+
+@rule react.h.fashion_plain.share
+on react
+when hook=fashion_plain move=share fit=good|neutral
+- Thank you! Clothes are clothes.
+- Finally, someone gets it.
+
+@rule move.h.fashion_plain.tease
+on move.tease
+when hook=fashion_plain
+- Say she's a hoodie girl through and through
+
+@rule react.h.fashion_plain.tease
+on react
+when hook=fashion_plain move=tease fit=good|neutral
+- Guilty. And proud.
+- Don't knock the hoodie.
+
+@rule react.h.fashion_plain.bad
+on react
+when hook=fashion_plain fit=bad
+- Don't you start too.
+- I don't need fashion advice.
+
+@rule day.h.food_picky
+on day
+when mood=hungry l_food!=yes
+hook food_picky
+opens ask,comfort,invite
+feel worried
+- I'm hungry, but nothing sounds good. I'm a picky eater.
+- I skipped lunch again. I just don't like eating much. Now my stomach's angry.
+- Everyone was eating at lunch and I just had juice. Food's a chore to me.
+
+@rule move.h.food_picky.ask
+on move.ask
+when hook=food_picky
+- Ask if there's anything she does like to eat
+
+@rule react.h.food_picky.ask
+on react
+when hook=food_picky move=ask fit=good|neutral
+- Plain rice. Maybe some soup. That's it.
+- Bread. Plain bread. Don't judge.
+
+@rule move.h.food_picky.comfort
+on move.comfort
+when hook=food_picky
+- Say she should eat something small anyway
+
+@rule react.h.food_picky.comfort
+on react
+when hook=food_picky move=comfort fit=good|neutral
+- ...Okay. Something small. For you.
+- Fine. One onigiri. Happy?
+
+@rule move.h.food_picky.invite
+on move.invite
+when hook=food_picky
+- Offer to get her something light
+
+@rule react.h.food_picky.invite
+on react
+when hook=food_picky move=invite fit=good|neutral
+- Light? ...That I could eat. Thanks.
+- Nothing heavy, okay? Then yes.
+
+@rule react.h.food_picky.bad
+on react
+when hook=food_picky fit=bad
+- Don't lecture me about eating.
+- I know. I'm not a kid.
+
+@rule day.h.spicy_mild
+on day
+when mood=hungry l_spicy!=yes
+hook spicy_mild
+opens ask,tease,invite
+feel pout
+- The cafeteria only had curry. Spicy curry. I'm still starving.
+- I took one bite of the mapo tofu and cried. Now I'm hungry and sad.
+- Why does everything good have chili in it? I just want something mild.
+
+@rule move.h.spicy_mild.ask
+on move.ask
+when hook=spicy_mild
+- Ask what she can eat when it's like that
+
+@rule react.h.spicy_mild.ask
+on react
+when hook=spicy_mild move=ask fit=good|neutral
+- Rice. Plain rice. And milk. Lots of milk.
+- Anything that doesn't fight back.
+
+@rule move.h.spicy_mild.invite
+on move.invite
+when hook=spicy_mild
+- Offer to find her something mild
+
+@rule react.h.spicy_mild.invite
+on react
+when hook=spicy_mild move=invite fit=good|neutral
+- Please. Something that won't hurt me.
+- Yes. A sweet bun. Anything.
+
+@rule move.h.spicy_mild.tease
+on move.tease
+when hook=spicy_mild
+- Say her face must have been red
+
+@rule react.h.spicy_mild.tease
+on react
+when hook=spicy_mild move=tease fit=good|neutral
+- Like a tomato. Don't laugh.
+- I'm still recovering.
+
+@rule react.h.spicy_mild.bad
+on react
+when hook=spicy_mild fit=bad
+- Spicy isn't brave, it's painful.
+- Don't tell me to try it again.
+
+@rule day.h.rain_bookbored
+on day
+when kind=day wet=yes placeid=library l_study!=yes
+hook rain_bookbored
+opens ask,invite,tease
+feel pout
+- Stuck in the library because of the rain. I don't even like books.
+- Everyone came here to stay dry. Now I'm surrounded by people studying. Help.
+- The rain trapped me with the textbooks. Worst prison ever.
+
+@rule move.h.rain_bookbored.ask
+on move.ask
+when hook=rain_bookbored
+- Ask why she didn't go somewhere else
+
+@rule react.h.rain_bookbored.ask
+on react
+when hook=rain_bookbored move=ask fit=good|neutral
+- Everywhere else is packed. This was the last dry spot.
+- My umbrella's broken. So, here.
+
+@rule move.h.rain_bookbored.invite
+on move.invite
+when hook=rain_bookbored
+- Suggest sneaking out to the cafeteria
+
+@rule react.h.rain_bookbored.invite
+on react
+when hook=rain_bookbored move=invite fit=good|neutral
+- Yes. Lead the way. Quietly.
+- Finally, an escape plan.
+
+@rule move.h.rain_bookbored.tease
+on move.tease
+when hook=rain_bookbored
+- Say she could at least pretend to read
+
+@rule react.h.rain_bookbored.tease
+on react
+when hook=rain_bookbored move=tease fit=good|neutral
+- I am. The book's upside down.
+- I've been on the same page for an hour.
+
+@rule react.h.rain_bookbored.bad
+on react
+when hook=rain_bookbored fit=bad
+- Shh. The librarian's watching.
+- Don't make me study.
+
+@rule day.h.rain_bookfight_bored
+on day
+when kind=day wet=yes placeid=library l_study!=yes fight=yes
+hook rain_bookfight_bored
+opens ask,comfort,invite
+feel sad
+- I came here to avoid {fightwho}, and now the rain won't let me leave. And I hate studying.
+- Hiding in the library because of {fightwho}. With books. In the rain. Perfect day.
+
+@rule move.h.rain_bookfight_bored.ask
+on move.ask
+when hook=rain_bookfight_bored
+- Ask what happened with {fightwho}
+
+@rule react.h.rain_bookfight_bored.ask
+on react
+when hook=rain_bookfight_bored move=ask fit=good|neutral
+- Long story. I don't want to talk about it here.
+- We said things. Both of us.
+
+@rule move.h.rain_bookfight_bored.comfort
+on move.comfort
+when hook=rain_bookfight_bored
+- Sit with her for a while
+
+@rule react.h.rain_bookfight_bored.comfort
+on react
+when hook=rain_bookfight_bored move=comfort fit=good|neutral
+- ...Okay. Just sit. No studying.
+- Thanks. It's better with someone here.
+
+@rule move.h.rain_bookfight_bored.invite
+on move.invite
+when hook=rain_bookfight_bored
+- Suggest leaving once the rain eases
+
+@rule react.h.rain_bookfight_bored.invite
+on react
+when hook=rain_bookfight_bored move=invite fit=good|neutral
+- Yes. Anywhere but here.
+- When it stops, we're gone.
+
+@rule react.h.rain_bookfight_bored.bad
+on react
+when hook=rain_bookfight_bored fit=bad
+- Don't bring {fightwho} up.
+- Please don't lecture me.
+
+@rule day.h.sweets_not_hungry
+on day
+when mood=hungry l_sweets!=yes
+hook sweets_not_hungry
+opens ask,invite,comfort
+feel pout
+- I'm hungry and all anyone has is candy. I don't even like sweets.
+- My friend gave me cake. I gave it back. I need real food.
+- Valentine chocolate leftovers everywhere. I want rice.
+
+@rule move.h.sweets_not_hungry.ask
+on move.ask
+when hook=sweets_not_hungry
+- Ask what she's craving
+
+@rule react.h.sweets_not_hungry.ask
+on react
+when hook=sweets_not_hungry move=ask fit=good|neutral
+- Something salty. Chips. Rice crackers.
+- Real food. Meat. Something warm.
+
+@rule move.h.sweets_not_hungry.comfort
+on move.comfort
+when hook=sweets_not_hungry
+- Say you'll find her real food
+
+@rule react.h.sweets_not_hungry.comfort
+on react
+when hook=sweets_not_hungry move=comfort fit=good|neutral
+- Please. Before I eat my pencil.
+- Okay. I'll wait right here.
+
+@rule move.h.sweets_not_hungry.invite
+on move.invite
+when hook=sweets_not_hungry
+- Offer to get her something salty
+
+@rule react.h.sweets_not_hungry.invite
+on react
+when hook=sweets_not_hungry move=invite fit=good|neutral
+- Yes. Anything without sugar.
+- You're my favorite person right now.
+
+@rule react.h.sweets_not_hungry.bad
+on react
+when hook=sweets_not_hungry fit=bad
+- Don't offer me chocolate.
+- Sweets don't count as food.
+
+@rule small.h.place_courtyard_animals_wary
+on small
+when subject=place placeid=courtyard l_animals!=yes
+hook place_courtyard_animals_wary
+opens ask,comfort,tease
+feel worried
+shape state
+- Is that cat still around? It keeps sitting right where I want to eat.
+- The birds here are bold. One stole my bread last week.
+- Everyone loves the courtyard cat. I keep my distance.
+
+@rule me.h.place_courtyard_animals_wary
+on me.small
+when hook=place_courtyard_animals_wary
+- Nice day in the courtyard.
+- You like eating out here?
+
+@rule move.h.place_courtyard_animals_wary.ask
+on move.ask
+when hook=place_courtyard_animals_wary
+- Ask why she keeps her distance
+
+@rule react.h.place_courtyard_animals_wary.ask
+on react
+when hook=place_courtyard_animals_wary move=ask fit=good|neutral
+- It looks at me like it's planning something.
+- I got scratched as a kid. I never got over it.
+
+@rule move.h.place_courtyard_animals_wary.comfort
+on move.comfort
+when hook=place_courtyard_animals_wary
+- Say you'll keep the cat away
+
+@rule react.h.place_courtyard_animals_wary.comfort
+on react
+when hook=place_courtyard_animals_wary move=comfort fit=good|neutral
+- ...Thanks. Stand on that side.
+- You'd guard my lunch? Okay.
+
+@rule move.h.place_courtyard_animals_wary.tease
+on move.tease
+when hook=place_courtyard_animals_wary
+- Say the cat probably wants to be friends
+
+@rule react.h.place_courtyard_animals_wary.tease
+on react
+when hook=place_courtyard_animals_wary move=tease fit=good|neutral
+- Then it can want from far away.
+- No thank you.
+
+@rule react.h.place_courtyard_animals_wary.bad
+on react
+when hook=place_courtyard_animals_wary fit=bad
+- Don't call it over!
+- It's not cute. It's a menace.
+
+@rule small.h.place_gym_exercise_lazy
+on small
+when subject=place placeid=gym l_exercise!=yes
+hook place_gym_exercise_lazy
+opens ask,tease,invite
+feel pout
+shape state
+- The gym smells like effort. I don't like it.
+- Everyone's running laps and I'm hiding by the door.
+- I only come here for P.E. and leave the second it ends.
+
+@rule me.h.place_gym_exercise_lazy
+on me.small
+when hook=place_gym_exercise_lazy
+- You're in the gym?
+- Here to train?
+
+@rule move.h.place_gym_exercise_lazy.ask
+on move.ask
+when hook=place_gym_exercise_lazy
+- Ask why she's here, then
+
+@rule react.h.place_gym_exercise_lazy.ask
+on react
+when hook=place_gym_exercise_lazy move=ask fit=good|neutral
+- My friend's in the club. I'm just keeping her company.
+- The vending machine. That's it.
+
+@rule move.h.place_gym_exercise_lazy.invite
+on move.invite
+when hook=place_gym_exercise_lazy
+- Suggest getting out of here
+
+@rule react.h.place_gym_exercise_lazy.invite
+on react
+when hook=place_gym_exercise_lazy move=invite fit=good|neutral
+- Yes. Somewhere with chairs.
+- Lead the way.
+
+@rule move.h.place_gym_exercise_lazy.tease
+on move.tease
+when hook=place_gym_exercise_lazy
+- Say you'll race her around the gym
+
+@rule react.h.place_gym_exercise_lazy.tease
+on react
+when hook=place_gym_exercise_lazy move=tease fit=good|neutral
+- Race? Me? You'd win by sitting.
+- No running. That's my rule.
+
+@rule react.h.place_gym_exercise_lazy.bad
+on react
+when hook=place_gym_exercise_lazy fit=bad
+- Don't make me run.
+- I'm not here to train.
+
+@rule small.h.place_cafeteria_food_light
+on small
+when subject=place placeid=cafeteria l_food!=yes
+hook place_cafeteria_food_light
+opens ask,comfort,share
+feel smile
+shape state
+- I come for the drinks, not the food. Big meals make me sleepy.
+- Everyone's piling up their trays. I just got a juice.
+- The cafeteria's too loud for me. And the smell of fried food is everywhere.
+
+@rule me.h.place_cafeteria_food_light
+on me.small
+when hook=place_cafeteria_food_light
+- Busy cafeteria today.
+- Are you eating?
+
+@rule move.h.place_cafeteria_food_light.ask
+on move.ask
+when hook=place_cafeteria_food_light
+- Ask if she's really not eating
+
+@rule react.h.place_cafeteria_food_light.ask
+on react
+when hook=place_cafeteria_food_light move=ask fit=good|neutral
+- A little. A small bun. That counts.
+- I'm not a big eater. Never was.
+
+@rule move.h.place_cafeteria_food_light.comfort
+on move.comfort
+when hook=place_cafeteria_food_light
+- Say she should at least have something
+
+@rule react.h.place_cafeteria_food_light.comfort
+on react
+when hook=place_cafeteria_food_light move=comfort fit=good|neutral
+- ...Fine. Half a bun. For you.
+- Okay, okay. A small one.
+
+@rule move.h.place_cafeteria_food_light.share
+on move.share
+when hook=place_cafeteria_food_light
+- Say you're not that hungry either
+
+@rule react.h.place_cafeteria_food_light.share
+on react
+when hook=place_cafeteria_food_light move=share fit=good|neutral
+- See? Juice buddies.
+- Then let's just sit.
+
+@rule react.h.place_cafeteria_food_light.bad
+on react
+when hook=place_cafeteria_food_light fit=bad
+- Don't look at my tray like that.
+- I'm fine. Really.
+
+@rule small.h.place_cafeteria_sweets_salty
+on small
+when subject=place placeid=cafeteria l_sweets!=yes
+hook place_cafeteria_sweets_salty
+opens ask,share,tease
+feel smile
+shape state
+- Everyone's lining up for the cream buns. I'll take the curry bread.
+- The dessert table's a trap. I go straight for the salty stuff.
+- Melon bread is overrated. Fight me.
+
+@rule me.h.place_cafeteria_sweets_salty
+on me.small
+when hook=place_cafeteria_sweets_salty
+- Big line for the sweets.
+- Getting dessert?
+
+@rule move.h.place_cafeteria_sweets_salty.ask
+on move.ask
+when hook=place_cafeteria_sweets_salty
+- Ask what she gets instead
+
+@rule react.h.place_cafeteria_sweets_salty.ask
+on react
+when hook=place_cafeteria_sweets_salty move=ask fit=good|neutral
+- Curry bread. Or yakisoba bread. Salty wins.
+- Rice crackers from the shop. Every time.
+
+@rule move.h.place_cafeteria_sweets_salty.share
+on move.share
+when hook=place_cafeteria_sweets_salty
+- Say you'd take salty over sweet too
+
+@rule react.h.place_cafeteria_sweets_salty.share
+on react
+when hook=place_cafeteria_sweets_salty move=share fit=good|neutral
+- A fellow salt person. Finally.
+- We should start a club.
+
+@rule move.h.place_cafeteria_sweets_salty.tease
+on move.tease
+when hook=place_cafeteria_sweets_salty
+- Say melon bread fans will come for her
+
+@rule react.h.place_cafeteria_sweets_salty.tease
+on react
+when hook=place_cafeteria_sweets_salty move=tease fit=good|neutral
+- Let them. I'm right.
+- I'll fight them all.
+
+@rule react.h.place_cafeteria_sweets_salty.bad
+on react
+when hook=place_cafeteria_sweets_salty fit=bad
+- Don't buy me a cream bun.
+- Sweets are fine. For other people.
+
+@rule small.h.place_library_books_bored
+on small
+when subject=place placeid=library l_study!=yes
+hook place_library_books_bored
+opens ask,tease,invite
+feel pout
+shape state
+- The library's so quiet I can hear myself being bored.
+- I only come here when I have to. The silence makes me nervous.
+- Books make me sleepy. The chairs here don't help.
+
+@rule me.h.place_library_books_bored
+on me.small
+when hook=place_library_books_bored
+- You're in the library?
+- Here to study?
+
+@rule move.h.place_library_books_bored.ask
+on move.ask
+when hook=place_library_books_bored
+- Ask why she's here, then
+
+@rule react.h.place_library_books_bored.ask
+on react
+when hook=place_library_books_bored move=ask fit=good|neutral
+- Homework. Against my will.
+- My friend dragged me. She's studying. I'm not.
+
+@rule move.h.place_library_books_bored.invite
+on move.invite
+when hook=place_library_books_bored
+- Suggest getting some air
+
+@rule react.h.place_library_books_bored.invite
+on react
+when hook=place_library_books_bored move=invite fit=good|neutral
+- Yes. Anywhere with noise.
+- Please. Before I fall asleep.
+
+@rule move.h.place_library_books_bored.tease
+on move.tease
+when hook=place_library_books_bored
+- Say she looks like she's about to fall asleep
+
+@rule react.h.place_library_books_bored.tease
+on react
+when hook=place_library_books_bored move=tease fit=good|neutral
+- I was. You saved me.
+- Don't tell the librarian.
+
+@rule react.h.place_library_books_bored.bad
+on react
+when hook=place_library_books_bored fit=bad
+- Shh. Don't make me study.
+- Don't lecture me about books.
+
+@rule small.h.place_library_books_rain_bored
+on small
+when subject=place placeid=library l_study!=yes wet=yes
+hook place_library_books_rain_bored
+opens ask,tease,invite
+feel pout
+shape state
+- The rain chased me in here. Now I'm stuck with the books.
+- Raining outside, boring inside. Great choices.
+- Everyone came here to stay dry. I came to complain.
+
+@rule me.h.place_library_books_rain_bored
+on me.small
+when hook=place_library_books_rain_bored
+- Hiding from the rain?
+- You came in to stay dry?
+
+@rule move.h.place_library_books_rain_bored.ask
+on move.ask
+when hook=place_library_books_rain_bored
+- Ask how long she's been stuck here
+
+@rule react.h.place_library_books_rain_bored.ask
+on react
+when hook=place_library_books_rain_bored move=ask fit=good|neutral
+- An hour. It felt like a week.
+- Since lunch. Send help.
+
+@rule move.h.place_library_books_rain_bored.invite
+on move.invite
+when hook=place_library_books_rain_bored
+- Suggest waiting it out in the cafeteria
+
+@rule react.h.place_library_books_rain_bored.invite
+on react
+when hook=place_library_books_rain_bored move=invite fit=good|neutral
+- Yes. With hot drinks. Go.
+- Finally, a plan.
+
+@rule move.h.place_library_books_rain_bored.tease
+on move.tease
+when hook=place_library_books_rain_bored
+- Say the books are better company than the rain
+
+@rule react.h.place_library_books_rain_bored.tease
+on react
+when hook=place_library_books_rain_bored move=tease fit=good|neutral
+- Barely. Very barely.
+- The rain at least makes noise.
+
+@rule react.h.place_library_books_rain_bored.bad
+on react
+when hook=place_library_books_rain_bored fit=bad
+- Don't make me read.
+- It's a prison with shelves.
+
+@rule small.h.place_library_books_exam_cram
+on small
+when subject=place placeid=library l_study!=yes exam=yes
+hook place_library_books_exam_cram
+opens ask,comfort,invite
+feel worried
+shape state
+- Exam week, so here I am. I hate this. I can't focus on anything.
+- I've read this page five times. Nothing's going in.
+- Everyone else looks so calm. I just want the exams to be over.
+
+@rule me.h.place_library_books_exam_cram
+on me.small
+when hook=place_library_books_exam_cram
+- Studying for the exams?
+- Cramming?
+
+@rule move.h.place_library_books_exam_cram.ask
+on move.ask
+when hook=place_library_books_exam_cram
+- Ask which subject is giving her trouble
+
+@rule react.h.place_library_books_exam_cram.ask
+on react
+when hook=place_library_books_exam_cram move=ask fit=good|neutral
+- All of them. Math the most.
+- The one tomorrow. I haven't started.
+
+@rule move.h.place_library_books_exam_cram.comfort
+on move.comfort
+when hook=place_library_books_exam_cram
+- Offer to quiz her for a bit
+
+@rule react.h.place_library_books_exam_cram.comfort
+on react
+when hook=place_library_books_exam_cram move=comfort fit=good|neutral
+- ...That might actually help. Okay.
+- You'd do that? Then yes. Go easy.
+
+@rule move.h.place_library_books_exam_cram.invite
+on move.invite
+when hook=place_library_books_exam_cram
+- Suggest a short break first
+
+@rule react.h.place_library_books_exam_cram.invite
+on react
+when hook=place_library_books_exam_cram move=invite fit=good|neutral
+- A break? ...Five minutes.
+- Yes. My brain's melting.
+
+@rule react.h.place_library_books_exam_cram.bad
+on react
+when hook=place_library_books_exam_cram fit=bad
+- Don't tell me to study harder.
+- I know. I'm trying.
+
+@rule small.h.place_library_books_fight_hide
+on small
+when subject=place placeid=library l_study!=yes fight=yes
+hook place_library_books_fight_hide
+opens ask,comfort,invite
+feel sad
+shape state
+- I don't even like the library. I came here because {fightwho} never comes here.
+- Hiding behind a textbook. Not reading it. Just hiding.
+- It's quiet here. Nobody asks what happened with {fightwho}.
+
+@rule me.h.place_library_books_fight_hide
+on me.small
+when hook=place_library_books_fight_hide
+- You're hiding in here?
+- You okay?
+
+@rule move.h.place_library_books_fight_hide.ask
+on move.ask
+when hook=place_library_books_fight_hide
+- Ask what happened with {fightwho}
+
+@rule react.h.place_library_books_fight_hide.ask
+on react
+when hook=place_library_books_fight_hide move=ask fit=good|neutral
+- We fought. I don't want to get into it.
+- It was stupid. It still hurts.
+
+@rule move.h.place_library_books_fight_hide.comfort
+on move.comfort
+when hook=place_library_books_fight_hide
+- Say you'll keep her company
+
+@rule react.h.place_library_books_fight_hide.comfort
+on react
+when hook=place_library_books_fight_hide move=comfort fit=good|neutral
+- ...Thanks. Just don't make me read.
+- Okay. Stay a little.
+
+@rule move.h.place_library_books_fight_hide.invite
+on move.invite
+when hook=place_library_books_fight_hide
+- Suggest going somewhere she'd like more
+
+@rule react.h.place_library_books_fight_hide.invite
+on react
+when hook=place_library_books_fight_hide move=invite fit=good|neutral
+- Somewhere {fightwho} isn't? Yes.
+- Okay. Anywhere loud.
+
+@rule react.h.place_library_books_fight_hide.bad
+on react
+when hook=place_library_books_fight_hide fit=bad
+- Don't make me talk about it.
+- I just want to be alone.
+
+@rule small.h.place_library_books_rain_fight_hide
+on small
+when subject=place placeid=library l_study!=yes fight=yes wet=yes
+hook place_library_books_rain_fight_hide
+opens ask,comfort,invite
+feel sad
+shape state
+- Rain outside, {fightwho} somewhere out there, and me in here with books I don't want.
+- The rain's loud enough that I don't have to think about {fightwho}. Almost.
+
+@rule me.h.place_library_books_rain_fight_hide
+on me.small
+when hook=place_library_books_rain_fight_hide
+- Rough day?
+- Stuck in here with the rain?
+
+@rule move.h.place_library_books_rain_fight_hide.ask
+on move.ask
+when hook=place_library_books_rain_fight_hide
+- Ask if she wants to talk about {fightwho}
+
+@rule react.h.place_library_books_rain_fight_hide.ask
+on react
+when hook=place_library_books_rain_fight_hide move=ask fit=good|neutral
+- Not really. Later, maybe.
+- ...It's my fault too. That's the worst part.
+
+@rule move.h.place_library_books_rain_fight_hide.comfort
+on move.comfort
+when hook=place_library_books_rain_fight_hide
+- Sit with her until the rain stops
+
+@rule react.h.place_library_books_rain_fight_hide.comfort
+on react
+when hook=place_library_books_rain_fight_hide move=comfort fit=good|neutral
+- ...Okay. Thanks for staying.
+- You don't have to. ...But stay.
+
+@rule move.h.place_library_books_rain_fight_hide.invite
+on move.invite
+when hook=place_library_books_rain_fight_hide
+- Offer to walk her home under your umbrella
+
+@rule react.h.place_library_books_rain_fight_hide.invite
+on react
+when hook=place_library_books_rain_fight_hide move=invite fit=good|neutral
+- ...You'd do that? Yes.
+- Okay. When it eases up.
+
+@rule react.h.place_library_books_rain_fight_hide.bad
+on react
+when hook=place_library_books_rain_fight_hide fit=bad
+- Please don't.
+- I don't want advice.
+
+@rule duo3.reply.pair.praise.other.cold
+on duo3.reply
+when act=praise q!=bad otherlikes=no
+feel smile
+- Hehe. {other} doesn't mind. See?
+- Thanks. {other}, back me up here.
+- ...You're sweet. {other}, isn't he sweet?
+- (She smiles, then looks at {other} to share the joke.)
+- Thanks! Even {other} agrees.
+- Okay, that was nice.
+
+@rule duo3.reply.good.other.cold
+on duo3.reply
+when q=good otherlikes=no act!=kiss
+feel smile
+- Thanks! {other}, you heard that, right?
+- Hehe. {other} is rolling her eyes, but thanks.
+- That's nice. {other}'s jealous, I bet. Kidding.
+- (She laughs and nudges {other}.)
+- Okay, you win this round.
+- Aww. {other}, write that down.
+
+@rule day.h.like_animals_good
+on day
+when newlike=animals low=no
+hook like_animals_good
+opens ask,share,invite
+feel smile
+- Good! I stopped at the pet shop window on the way in. There's a puppy there that knows me now.
+- Pretty good. The courtyard cat sat on my lap during break. I didn't move for twenty minutes.
+- Nice, actually. I spent lunch feeding the birds behind the gym.
+
+@rule move.h.like_animals_good.ask
+on move.ask
+when hook=like_animals_good
+- Ask what the puppy looks like
+
+@rule react.h.like_animals_good.ask
+on react
+when hook=like_animals_good move=ask fit=good|neutral
+- Tiny, brown, and he tries to lick the glass.
+- Floppy ears. He's perfect.
+
+@rule move.h.like_animals_good.share
+on move.share
+when hook=like_animals_good
+- Say you like animals too
+
+@rule react.h.like_animals_good.share
+on react
+when hook=like_animals_good move=share fit=good|neutral
+- Really? Then you have to come see him.
+- Hehe. I knew there was a reason.
+
+@rule move.h.like_animals_good.invite
+on move.invite
+when hook=like_animals_good
+- Suggest going to see it together after school
+
+@rule react.h.like_animals_good.invite
+on react
+when hook=like_animals_good move=invite fit=good|neutral
+- Yes! He's there until six.
+- Okay! But he likes me best.
+
+@rule react.h.like_animals_good.bad
+on react
+when hook=like_animals_good fit=bad
+- You don't have to care. I do.
+- Fine. I'll go see him alone.
+
+@rule day.h.like_animals_low
+on day
+when newlike=animals low=yes
+hook like_animals_low
+opens ask,comfort,invite
+feel sad
+- Not great. The only good part was the stray cat by the gate letting me pet it.
+- Bad. I just want to go home and hug my dog.
+- Rough. I watched cat videos in the bathroom for ten minutes. It helped a little.
+
+@rule move.h.like_animals_low.ask
+on move.ask
+when hook=like_animals_low
+- Ask about her dog
+
+@rule react.h.like_animals_low.ask
+on react
+when hook=like_animals_low move=ask fit=good|neutral
+- He's old and lazy and the best. He'll be waiting at the door.
+- His name's Mame. He always knows when I'm sad.
+
+@rule move.h.like_animals_low.comfort
+on move.comfort
+when hook=like_animals_low
+- Say the cat clearly picked her for a reason
+
+@rule react.h.like_animals_low.comfort
+on react
+when hook=like_animals_low move=comfort fit=good|neutral
+- ...You think so? That's nice.
+- Hehe. She has good taste, then.
+
+@rule move.h.like_animals_low.invite
+on move.invite
+when hook=like_animals_low
+- Offer to walk her home so she can see her dog sooner
+
+@rule react.h.like_animals_low.invite
+on react
+when hook=like_animals_low move=invite fit=good|neutral
+- ...Yes. He'd like you.
+- Okay. Thank you.
+
+@rule react.h.like_animals_low.bad
+on react
+when hook=like_animals_low fit=bad
+- Never mind.
+- It's silly, I know.
+
+@rule day.h.like_food_good
+on day
+when newlike=food low=no
+hook like_food_good
+opens ask,share,invite
+feel laugh
+- Great! The cafeteria had fried chicken today and I got the last piece.
+- Good! I had seconds at lunch. And thirds. Don't judge.
+- I found a new bakery on the way to school. I've been thinking about it all day.
+
+@rule move.h.like_food_good.ask
+on move.ask
+when hook=like_food_good
+- Ask what the bakery sells
+
+@rule react.h.like_food_good.ask
+on react
+when hook=like_food_good move=ask fit=good|neutral
+- Everything. The curry bread is huge.
+- Cream buns as big as your face.
+
+@rule move.h.like_food_good.share
+on move.share
+when hook=like_food_good
+- Say you could eat all day too
+
+@rule react.h.like_food_good.share
+on react
+when hook=like_food_good move=share fit=good|neutral
+- Finally, someone who understands.
+- A fellow eater. I like you more now.
+
+@rule move.h.like_food_good.invite
+on move.invite
+when hook=like_food_good
+- Suggest trying the bakery together
+
+@rule react.h.like_food_good.invite
+on react
+when hook=like_food_good move=invite fit=good|neutral
+- Yes! After school, before they sell out.
+- You're paying? Then yes.
+
+@rule react.h.like_food_good.bad
+on react
+when hook=like_food_good fit=bad
+- Don't tell me I eat too much.
+- Food is happiness. That's all.
+
+@rule day.h.like_food_low
+on day
+when newlike=food low=yes
+hook like_food_low
+opens ask,comfort,invite
+feel sad
+- Bad. They ran out of yakisoba bread before I got there. I've been sad since.
+- Not good. I skipped breakfast and lunch was tiny. Food is the only thing that fixes days like this.
+- Rough. All I can think about is my mom's curry tonight.
+
+@rule move.h.like_food_low.ask
+on move.ask
+when hook=like_food_low
+- Ask what her mom's curry is like
+
+@rule react.h.like_food_low.ask
+on react
+when hook=like_food_low move=ask fit=good|neutral
+- Sweet, with big potatoes. The best in the world.
+- It's the only thing that fixes everything.
+
+@rule move.h.like_food_low.comfort
+on move.comfort
+when hook=like_food_low
+- Say there's always tomorrow's yakisoba bread
+
+@rule react.h.like_food_low.comfort
+on react
+when hook=like_food_low move=comfort fit=good|neutral
+- ...You're right. I'll run faster tomorrow.
+- Hehe. Tomorrow, then.
+
+@rule move.h.like_food_low.invite
+on move.invite
+when hook=like_food_low
+- Offer to buy her something to eat now
+
+@rule react.h.like_food_low.invite
+on react
+when hook=like_food_low move=invite fit=good|neutral
+- ...Really? Yes. Thank you.
+- You're saving my life.
+
+@rule react.h.like_food_low.bad
+on react
+when hook=like_food_low fit=bad
+- Don't laugh. It matters.
+- Never mind.
+
+@rule day.h.like_cooking_good
+on day
+when newlike=cooking low=no
+hook like_cooking_good
+opens ask,praise,invite
+feel smile
+- Good! I tried a new recipe last night and it actually came out right.
+- I made my own bento today. The tamagoyaki is perfect, if I say so myself.
+- Home economics was today. I got to teach my group how to fold dumplings.
+
+@rule move.h.like_cooking_good.ask
+on move.ask
+when hook=like_cooking_good
+- Ask what she made
+
+@rule react.h.like_cooking_good.ask
+on react
+when hook=like_cooking_good move=ask fit=good|neutral
+- Stewed pork. Three hours. Worth it.
+- Tamagoyaki, rice balls, and a tiny octopus sausage.
+
+@rule move.h.like_cooking_good.invite
+on move.invite
+when hook=like_cooking_good
+- Ask if you can try her cooking sometime
+
+@rule react.h.like_cooking_good.invite
+on react
+when hook=like_cooking_good move=invite fit=good|neutral
+- ...Really? Okay. I'll make you something.
+- Then I'll make two bentos tomorrow.
+
+@rule move.h.like_cooking_good.praise
+on move.praise
+when hook=like_cooking_good
+- Say she must be a great cook
+
+@rule react.h.like_cooking_good.praise
+on react
+when hook=like_cooking_good move=praise fit=good|neutral
+- Ehe... I'm okay. I practice a lot.
+- I'll let you decide. Want a bite?
+
+@rule react.h.like_cooking_good.bad
+on react
+when hook=like_cooking_good fit=bad
+- You don't have to pretend.
+- Fine. More for me.
+
+@rule day.h.like_cooking_low
+on day
+when newlike=cooking low=yes
+hook like_cooking_low
+opens ask,comfort,praise
+feel sad
+- Bad. I just want to go home and cook something. It's the only thing that calms me down.
+- Not good. Even my bento came out wrong this morning, and that's usually the one good thing.
+- Rough. Tonight I'm making soup. Soup fixes days like this.
+
+@rule move.h.like_cooking_low.ask
+on move.ask
+when hook=like_cooking_low
+- Ask what she'll make tonight
+
+@rule react.h.like_cooking_low.ask
+on react
+when hook=like_cooking_low move=ask fit=good|neutral
+- Miso soup. Something simple, with my hands busy.
+- Curry. Lots of chopping. It helps.
+
+@rule move.h.like_cooking_low.comfort
+on move.comfort
+when hook=like_cooking_low
+- Say cooking sounds like a good way to unwind
+
+@rule react.h.like_cooking_low.comfort
+on react
+when hook=like_cooking_low move=comfort fit=good|neutral
+- It is. It's the only quiet I get.
+- Yeah. It helps more than talking.
+
+@rule move.h.like_cooking_low.praise
+on move.praise
+when hook=like_cooking_low
+- Say her bento probably still tasted good
+
+@rule react.h.like_cooking_low.praise
+on react
+when hook=like_cooking_low move=praise fit=good|neutral
+- ...You didn't even try it. ...Thanks, though.
+- Maybe. A little.
+
+@rule react.h.like_cooking_low.bad
+on react
+when hook=like_cooking_low fit=bad
+- Never mind.
+- You wouldn't get it.
+
+@rule day.h.like_exercise_good
+on day
+when newlike=exercise low=no
+hook like_exercise_good
+opens ask,praise,invite
+feel laugh
+- Great! I beat my best time in the morning run.
+- Good! I did an extra set at practice and I still feel like running.
+- I jogged to school today. Felt amazing. I'm still buzzing.
+
+@rule move.h.like_exercise_good.ask
+on move.ask
+when hook=like_exercise_good
+- Ask how far she ran
+
+@rule react.h.like_exercise_good.ask
+on react
+when hook=like_exercise_good move=ask fit=good|neutral
+- Five kilometers. Before breakfast.
+- All the way from the station. Without stopping.
+
+@rule move.h.like_exercise_good.invite
+on move.invite
+when hook=like_exercise_good
+- Suggest running together sometime
+
+@rule react.h.like_exercise_good.invite
+on react
+when hook=like_exercise_good move=invite fit=good|neutral
+- Yes! Tomorrow morning. Don't oversleep.
+- Okay. Try to keep up.
+
+@rule move.h.like_exercise_good.praise
+on move.praise
+when hook=like_exercise_good
+- Say she's got a lot of stamina
+
+@rule react.h.like_exercise_good.praise
+on react
+when hook=like_exercise_good move=praise fit=good|neutral
+- Hehe. Years of practice.
+- I could go again right now.
+
+@rule react.h.like_exercise_good.bad
+on react
+when hook=like_exercise_good fit=bad
+- Don't call me a jock.
+- Fine. I'll run alone.
+
+@rule day.h.like_exercise_low
+on day
+when newlike=exercise low=yes
+hook like_exercise_low
+opens ask,comfort,invite
+feel sad
+- Bad. I couldn't go to practice today, and I'm going crazy without a run.
+- Not good. When days are like this, I run until I can't think. I haven't had the chance yet.
+- Rough. The track was closed. That was my only plan for feeling better.
+
+@rule move.h.like_exercise_low.ask
+on move.ask
+when hook=like_exercise_low
+- Ask why she couldn't go to practice
+
+@rule react.h.like_exercise_low.ask
+on react
+when hook=like_exercise_low move=ask fit=good|neutral
+- The coach cancelled. I need to move.
+- Too much homework. I hate it.
+
+@rule move.h.like_exercise_low.comfort
+on move.comfort
+when hook=like_exercise_low
+- Say she can run it off after school
+
+@rule react.h.like_exercise_low.comfort
+on react
+when hook=like_exercise_low move=comfort fit=good|neutral
+- ...Yeah. That's the plan.
+- Thanks. I'll feel better after.
+
+@rule move.h.like_exercise_low.invite
+on move.invite
+when hook=like_exercise_low
+- Offer to go for a run with her later
+
+@rule react.h.like_exercise_low.invite
+on react
+when hook=like_exercise_low move=invite fit=good|neutral
+- You'd come? Okay. Slowly, for you.
+- Yes. Let's go after the bell.
+
+@rule react.h.like_exercise_low.bad
+on react
+when hook=like_exercise_low fit=bad
+- Never mind.
+- You don't get it.
+
+@rule day.h.like_study_good
+on day
+when newlike=study low=no
+hook like_study_good
+opens ask,praise,share
+feel smile
+- Good! The teacher solved a problem I'd been stuck on for days. I almost clapped.
+- I spent the free period in the library and finished a whole chapter ahead.
+- Great. I got my test back. Top of the class. Don't tell anyone I'm happy about it.
+
+@rule move.h.like_study_good.ask
+on move.ask
+when hook=like_study_good
+- Ask which subject she likes most
+
+@rule react.h.like_study_good.ask
+on react
+when hook=like_study_good move=ask fit=good|neutral
+- History. All the stories.
+- Math, honestly. Problems have answers.
+
+@rule move.h.like_study_good.share
+on move.share
+when hook=like_study_good
+- Say you like learning new things too
+
+@rule react.h.like_study_good.share
+on react
+when hook=like_study_good move=share fit=good|neutral
+- Really? Then we should study together.
+- Good. Most people think I'm weird.
+
+@rule move.h.like_study_good.praise
+on move.praise
+when hook=like_study_good
+- Say she's really smart
+
+@rule react.h.like_study_good.praise
+on react
+when hook=like_study_good move=praise fit=good|neutral
+- ...I just like it. That's all.
+- Hehe. Say it louder.
+
+@rule react.h.like_study_good.bad
+on react
+when hook=like_study_good fit=bad
+- Don't call me a nerd.
+- Fine. I'll keep it to myself.
+
+@rule day.h.like_study_low
+on day
+when newlike=study low=yes
+hook like_study_low
+opens ask,comfort,praise
+feel sad
+- Bad. The only good part was the hour in the library. Books don't argue with me.
+- Not good. I've been reading under the desk all day to get through it.
+- Rough. When things go wrong, I study. It's the only thing that goes right.
+
+@rule move.h.like_study_low.ask
+on move.ask
+when hook=like_study_low
+- Ask what she's reading
+
+@rule react.h.like_study_low.ask
+on react
+when hook=like_study_low move=ask fit=good|neutral
+- A history book. Old wars. It's calming. Weirdly.
+- A math workbook. Problems I can actually solve.
+
+@rule move.h.like_study_low.comfort
+on move.comfort
+when hook=like_study_low
+- Say it's okay to hide in a book sometimes
+
+@rule react.h.like_study_low.comfort
+on react
+when hook=like_study_low move=comfort fit=good|neutral
+- ...Thanks. I needed to hear that.
+- Yeah. Just for a while.
+
+@rule move.h.like_study_low.praise
+on move.praise
+when hook=like_study_low
+- Say it's impressive that studying calms her
+
+@rule react.h.like_study_low.praise
+on react
+when hook=like_study_low move=praise fit=good|neutral
+- Hehe. Most people say it's weird.
+- Thank you. It works.
+
+@rule react.h.like_study_low.bad
+on react
+when hook=like_study_low fit=bad
+- Never mind.
+- You wouldn't understand.
+
+@rule day.h.like_fashion_good
+on day
+when newlike=fashion low=no
+hook like_fashion_good
+opens ask,praise,tease
+feel smile
+- Good! I tied my ribbon a new way this morning. Nobody noticed. You noticed, right?
+- I spent the break reading a fashion magazine. I've already planned my next three outfits.
+- Great. I found a skirt on sale yesterday. I've been dying to wear it.
+
+@rule move.h.like_fashion_good.ask
+on move.ask
+when hook=like_fashion_good
+- Ask what she's planning to wear
+
+@rule react.h.like_fashion_good.ask
+on react
+when hook=like_fashion_good move=ask fit=good|neutral
+- A blue skirt and the white cardigan. Classic.
+- It's a surprise. Weekend outfit.
+
+@rule move.h.like_fashion_good.tease
+on move.tease
+when hook=like_fashion_good
+- Say she spends more time on outfits than homework
+
+@rule react.h.like_fashion_good.tease
+on react
+when hook=like_fashion_good move=tease fit=good|neutral
+- ...Maybe. Priorities.
+- Outfits are homework.
+
+@rule move.h.like_fashion_good.praise
+on move.praise
+when hook=like_fashion_good
+- Say the ribbon looks good
+
+@rule react.h.like_fashion_good.praise
+on react
+when hook=like_fashion_good move=praise fit=good|neutral
+- ...You noticed! I knew it.
+- Hehe. Took me twenty minutes.
+
+@rule react.h.like_fashion_good.bad
+on react
+when hook=like_fashion_good fit=bad
+- You didn't notice, did you.
+- Never mind.
+
+@rule day.h.like_fashion_low
+on day
+when newlike=fashion low=yes
+hook like_fashion_low
+opens ask,comfort,praise
+feel sad
+- Bad. Even my outfit couldn't save today, and I picked it so carefully.
+- Not good. I just want to go shopping and forget about everything.
+- Rough. When I'm like this, I scroll through clothes for hours. I've been doing it all lunch.
+
+@rule move.h.like_fashion_low.ask
+on move.ask
+when hook=like_fashion_low
+- Ask what she'd buy if she could
+
+@rule react.h.like_fashion_low.ask
+on react
+when hook=like_fashion_low move=ask fit=good|neutral
+- A coat. A nice wool one. I've wanted it for months.
+- Everything in the window on the corner.
+
+@rule move.h.like_fashion_low.comfort
+on move.comfort
+when hook=like_fashion_low
+- Say a shopping trip might cheer her up
+
+@rule react.h.like_fashion_low.comfort
+on react
+when hook=like_fashion_low move=comfort fit=good|neutral
+- ...Yeah. Maybe this weekend.
+- Come with me? To hold bags?
+
+@rule move.h.like_fashion_low.praise
+on move.praise
+when hook=like_fashion_low
+- Say she still looks nice today
+
+@rule react.h.like_fashion_low.praise
+on react
+when hook=like_fashion_low move=praise fit=good|neutral
+- ...Really? Thanks. That helps.
+- You're just being nice. Keep going.
+
+@rule react.h.like_fashion_low.bad
+on react
+when hook=like_fashion_low fit=bad
+- Never mind.
+- It's not just clothes.
+
+@rule day.h.like_coffee_good
+on day
+when newlike=coffee low=no
+hook like_coffee_good
+opens ask,share,invite
+feel smile
+- Good. I found a café near the station that does real pour-over. Black. Perfect.
+- Great. I had my first coffee at six and I've been sharp all day.
+- Nice. The vending machine finally restocked the black coffee.
+
+@rule move.h.like_coffee_good.ask
+on move.ask
+when hook=like_coffee_good
+- Ask what's special about the café
+
+@rule react.h.like_coffee_good.ask
+on react
+when hook=like_coffee_good move=ask fit=good|neutral
+- They grind it right in front of you. The smell alone.
+- No sugar on the tables. They know.
+
+@rule move.h.like_coffee_good.share
+on move.share
+when hook=like_coffee_good
+- Say you drink yours black too
+
+@rule react.h.like_coffee_good.share
+on react
+when hook=like_coffee_good move=share fit=good|neutral
+- Really? Respect.
+- Finally. Everyone else drinks milk with sugar.
+
+@rule move.h.like_coffee_good.invite
+on move.invite
+when hook=like_coffee_good
+- Suggest going to the café together
+
+@rule react.h.like_coffee_good.invite
+on react
+when hook=like_coffee_good move=invite fit=good|neutral
+- Yes. I'll order for you.
+- Okay. My treat this time.
+
+@rule react.h.like_coffee_good.bad
+on react
+when hook=like_coffee_good fit=bad
+- Don't say it's bitter.
+- Fine. Drink your juice.
+
+@rule day.h.like_coffee_low
+on day
+when newlike=coffee low=yes
+hook like_coffee_low
+opens ask,comfort,invite
+feel sad
+- Bad. I didn't even get my morning coffee. That's how it started.
+- Not good. I've had three black coffees and it's still not enough.
+- Rough. All I want is a quiet café and a black coffee.
+
+@rule move.h.like_coffee_low.ask
+on move.ask
+when hook=like_coffee_low
+- Ask why she missed it
+
+@rule react.h.like_coffee_low.ask
+on react
+when hook=like_coffee_low move=ask fit=good|neutral
+- The machine was broken. The whole day went wrong after that.
+- I overslept. No time.
+
+@rule move.h.like_coffee_low.comfort
+on move.comfort
+when hook=like_coffee_low
+- Say a quiet coffee might help
+
+@rule react.h.like_coffee_low.comfort
+on react
+when hook=like_coffee_low move=comfort fit=good|neutral
+- ...Yeah. It always does.
+- Just one cup. In silence.
+
+@rule move.h.like_coffee_low.invite
+on move.invite
+when hook=like_coffee_low
+- Offer to buy her one now
+
+@rule react.h.like_coffee_low.invite
+on react
+when hook=like_coffee_low move=invite fit=good|neutral
+- ...Black, no sugar? Yes. Thank you.
+- You know the way to my heart.
+
+@rule react.h.like_coffee_low.bad
+on react
+when hook=like_coffee_low fit=bad
+- Never mind.
+- It's not about the coffee.
+
+@rule day.h.like_spicy_good
+on day
+when newlike=spicy low=no
+hook like_spicy_good
+opens ask,tease,invite
+feel laugh
+- Great! The cafeteria had the spicy curry today. I asked for extra chili.
+- Good. I found a ramen place that does level ten spicy. I finished it.
+- Nice. My lips are still tingling from lunch. Mapo tofu.
+
+@rule move.h.like_spicy_good.ask
+on move.ask
+when hook=like_spicy_good
+- Ask how spicy level ten really is
+
+@rule react.h.like_spicy_good.ask
+on react
+when hook=like_spicy_good move=ask fit=good|neutral
+- Your face would melt. Mine didn't.
+- They make you sign a paper first.
+
+@rule move.h.like_spicy_good.invite
+on move.invite
+when hook=like_spicy_good
+- Suggest trying the ramen place together
+
+@rule react.h.like_spicy_good.invite
+on react
+when hook=like_spicy_good move=invite fit=good|neutral
+- Yes! But you have to try level five at least.
+- Okay. I'll laugh at you.
+
+@rule move.h.like_spicy_good.tease
+on move.tease
+when hook=like_spicy_good
+- Say she must have a tongue of steel
+
+@rule react.h.like_spicy_good.tease
+on react
+when hook=like_spicy_good move=tease fit=good|neutral
+- Hehe. Steel and fire.
+- Try me sometime.
+
+@rule react.h.like_spicy_good.bad
+on react
+when hook=like_spicy_good fit=bad
+- Spicy isn't scary, you are.
+- Fine. More for me.
+
+@rule day.h.like_spicy_low
+on day
+when newlike=spicy low=yes
+hook like_spicy_low
+opens ask,comfort,invite
+feel sad
+- Bad. The only thing that'll fix today is something so spicy I forget about it.
+- Not good. I'm going to get the hottest curry I can find after school.
+- Rough. When I'm like this, I eat chili until I cry. Then at least I know why I'm crying.
+
+@rule move.h.like_spicy_low.ask
+on move.ask
+when hook=like_spicy_low
+- Ask where she'll get it
+
+@rule react.h.like_spicy_low.ask
+on react
+when hook=like_spicy_low move=ask fit=good|neutral
+- The ramen place by the station. Level ten.
+- My dad's chili oil. He hides it. I know where.
+
+@rule move.h.like_spicy_low.comfort
+on move.comfort
+when hook=like_spicy_low
+- Say that sounds like a plan
+
+@rule react.h.like_spicy_low.comfort
+on react
+when hook=like_spicy_low move=comfort fit=good|neutral
+- ...Yeah. It works. Every time.
+- Thanks for not calling me weird.
+
+@rule move.h.like_spicy_low.invite
+on move.invite
+when hook=like_spicy_low
+- Offer to come along
+
+@rule react.h.like_spicy_low.invite
+on react
+when hook=like_spicy_low move=invite fit=good|neutral
+- You'll cry. ...Come anyway.
+- Okay. But you're getting level three.
+
+@rule react.h.like_spicy_low.bad
+on react
+when hook=like_spicy_low fit=bad
+- Never mind.
+- It's how I deal.
+
+@rule day.h.like_sweets_good
+on day
+when newlike=sweets low=no
+hook like_sweets_good
+opens ask,share,invite
+feel smile
+- Good! The shop had the strawberry cream buns today. I bought two. Both are gone.
+- Great. My friend brought homemade cookies. I may have eaten half.
+- Nice. I'm going to the crepe stand after school. I've been thinking about it all day.
+
+@rule move.h.like_sweets_good.ask
+on move.ask
+when hook=like_sweets_good
+- Ask what kind of crepe she'll get
+
+@rule react.h.like_sweets_good.ask
+on react
+when hook=like_sweets_good move=ask fit=good|neutral
+- Strawberry, chocolate, extra cream. Always.
+- Banana and custard. It's the best.
+
+@rule move.h.like_sweets_good.share
+on move.share
+when hook=like_sweets_good
+- Say you have a sweet tooth too
+
+@rule react.h.like_sweets_good.share
+on react
+when hook=like_sweets_good move=share fit=good|neutral
+- Really? Then you have to come with me.
+- Hehe. I knew you were sweet.
+
+@rule move.h.like_sweets_good.invite
+on move.invite
+when hook=like_sweets_good
+- Suggest going to the crepe stand together
+
+@rule react.h.like_sweets_good.invite
+on react
+when hook=like_sweets_good move=invite fit=good|neutral
+- Yes! You can try mine. One bite.
+- Okay! But I'm getting two.
+
+@rule react.h.like_sweets_good.bad
+on react
+when hook=like_sweets_good fit=bad
+- Don't tell me it's unhealthy.
+- Fine. All mine.
+
+@rule day.h.like_sweets_low
+on day
+when newlike=sweets low=yes
+hook like_sweets_low
+opens ask,comfort,invite
+feel sad
+- Bad. I ate my emergency chocolate at second period. It's been downhill since.
+- Not good. I need a whole cake. Maybe two.
+- Rough. When I'm like this, only something sweet helps. I'm out of candy.
+
+@rule move.h.like_sweets_low.ask
+on move.ask
+when hook=like_sweets_low
+- Ask what her emergency chocolate is
+
+@rule react.h.like_sweets_low.ask
+on react
+when hook=like_sweets_low move=ask fit=good|neutral
+- Milk chocolate, the little squares. I always have some.
+- Strawberry chocolate. Don't laugh.
+
+@rule move.h.like_sweets_low.comfort
+on move.comfort
+when hook=like_sweets_low
+- Say a cake sounds like a fair plan
+
+@rule react.h.like_sweets_low.comfort
+on react
+when hook=like_sweets_low move=comfort fit=good|neutral
+- ...Right? It's practically medicine.
+- Thanks. I knew you'd understand.
+
+@rule move.h.like_sweets_low.invite
+on move.invite
+when hook=like_sweets_low
+- Offer to get her something sweet
+
+@rule react.h.like_sweets_low.invite
+on react
+when hook=like_sweets_low move=invite fit=good|neutral
+- ...You would? Yes. Anything with cream.
+- You're the best. Really.
+
+@rule react.h.like_sweets_low.bad
+on react
+when hook=like_sweets_low fit=bad
+- Never mind.
+- Don't judge me.
+
+@rule small.more.s1
+on small
+when subject=weekend period=after
+- Finally, the weekend's close. I can feel it.
+- One more day and I'm sleeping until noon.
+- I have nothing planned for the weekend. It's perfect.
+- My weekend plan is no plans.
+
+@rule small.more.s2
+on small
+when subject=school mood=stressed
+- Classes are piling up. I can't keep track anymore.
+- Three assignments due this week. I don't know how.
+- Every teacher thinks theirs is the only class.
+- I need a week off from school. Just one.
+
+@rule small.more.s3
+on small
+when subject=movies rel=friend
+- There's a movie I've been waiting for. Friday. I'm going.
+- I watched an old movie last night. Cried at the end. Again.
+- I like movies where nobody gets hurt. Is that boring?
+- I always fall asleep at the cinema. Always.
+
+@rule small.more.s4
+on small
+when subject=phone favor>=60
+- My phone's full of pictures of the sky. Don't ask.
+- I keep my favorite messages. I reread them sometimes.
+- My battery dies by lunch. Every day.
+- I changed my wallpaper. Guess what it is. ...No, not you.
+
+@rule small.more.s5
+on small
+when subject=season outside=yes
+- You can smell the season changing out here.
+- The trees look different every week now.
+- I like this time of year. The light's softer.
+- It's the kind of day you want to remember.
+
+@rule small.more.x1
+on small
+when subject=weekend rel=girlfriend period=after
+- So... are we doing something this weekend? I kept it free.
+- I didn't make any plans. In case someone asked me.
+- I told my mom I'd be out on Saturday. She asked with who. I didn't answer.
+- If you're free this weekend, so am I.
+
+@rule small.more.x2
+on small
+when subject=school mood=sleepy exam=yes
+- I studied until three. I don't remember any of it.
+- My notes are a mess and my eyes keep closing.
+- If I fall asleep during the exam, wake me up.
+- I dreamed about the exam. I failed it in the dream too.
+
+@rule small.more.x3
+on small
+when subject=commute wet=yes rel=friend|lover|girlfriend
+- The bus was packed with wet umbrellas. Mine poked someone.
+- My shoes are still squishing from the walk in.
+- If it's still raining later, can we walk to the station together?
+- I share umbrellas with friends. Just saying.
+
+@rule day.more.s1
+on day
+when mood=cheerful period=lunch
+- Good! Lunch was great and the afternoon's short today.
+- I'm in a good mood. The bento came out perfect.
+- Great! I got a good grade this morning, and now it's lunch.
+- Today's going well. I don't want to jinx it.
+
+@rule day.more.s2
+on day
+when mood=upset rel=acquaintance
+- Not great, honestly. But I don't really want to get into it.
+- It's been a bad one. I'll be fine.
+- ...Today was a lot. Let's leave it at that.
+- Rough. Thanks for asking, though.
+
+@rule day.more.s3
+on day
+when mood=bored placeid=classroom
+- Boring. Six hours in this chair. My legs are asleep.
+- I've been staring at the clock since second period.
+- Nothing happened. Nothing at all.
+- I counted the ceiling tiles. There are a hundred and twelve.
+
+@rule day.more.s4
+on day
+when mood=lonely hasclub!=yes
+- Kind of quiet. Everyone's off at their clubs.
+- I didn't really talk to anyone today. Until now.
+- It's been lonely. Thanks for coming by.
+- Quiet day. Too quiet.
+
+@rule day.more.s5
+on day
+when mood=sleepy period=day
+- So tired. Morning classes are a crime.
+- I can barely keep my eyes open. Talk to me so I stay awake.
+- Sleepy. I stayed up reading. Worth it. Mostly.
+- I yawned in front of the teacher. She saw.
+
+@rule day.more.x1
+on day
+when mood=cheerful rel=girlfriend period=after
+- Great, now that you're here. I was waiting for school to end.
+- Good. The best part was knowing I'd see you after class.
+- Today was fine. Now it's better.
+- I saved my good mood for you.
+
+@rule day.more.x2
+on day
+when mood=stressed exam=yes favor>=50
+- Bad. The exams are crushing me. But you being here helps.
+- Stressed. I can't stop thinking about tomorrow's test.
+- I'm a wreck. Don't look too closely.
+- My head's full of formulas and none of them stay.
+
+@rule day.more.x3
+on day
+when mood=upset fight=yes rel=friend|lover|girlfriend
+- Bad. I fought with {fightwho} and I keep replaying it.
+- Not great. {fightwho} and I aren't talking.
+- It's {fightwho}. I don't know how to fix it.
+- I said something mean to {fightwho}. I didn't mean it.
+
+@rule us.more.s1
+on us
+when verb=walked_home
+- Walking home with you was nice. The road felt shorter.
+- I liked our walk home. Let's do it again.
+- I keep thinking about the walk home.
+- The way home is better with you.
+
+@rule us.more.s2
+on us
+when verb=ate_with
+- Eating with you was fun. Lunch is better with company.
+- I liked our lunch. You eat really fast, by the way.
+- We should eat together more.
+- You stole one of my sausages. I noticed.
+
+@rule us.more.s3
+on us
+when verb=helped
+- Thanks for helping me the other day. I mean it.
+- I still owe you for that.
+- You didn't have to help, but you did.
+- I'll pay you back. Somehow.
+
+@rule us.more.s4
+on us
+when verb=gave_gift
+- I still have what you gave me.
+- Your gift's on my desk. I look at it a lot.
+- You remembered what I like. That means a lot.
+- I didn't expect a present. Thank you again.
+
+@rule us.more.s5
+on us
+when verb=kept_promise
+- You kept your promise. Not everyone does.
+- I knew I could trust you.
+- You said you would, and you did.
+- That's why I like you. You keep your word.
+
+@rule us.more.x1
+on us
+when verb=walked_home rel=girlfriend period=after
+- Walk me home again today? Same as last time?
+- I liked last time. Let's take the long way again.
+- My mom asked who walked me home. I just smiled.
+- I want to walk home with you every day.
+
+@rule us.more.x2
+on us
+when verb=gave_gift favor>=70 tone=gentle
+- I sleep with it next to my pillow. Is that weird?
+- I wrapped it back up so it wouldn't get dusty. It's too precious.
+- Every time I see it, I think of you.
+- I showed it to my mom. She said you're kind.
+
+@rule us.more.x3
+on us
+when verb=ate_with rel=friend period=lunch
+- Lunch again together? We're becoming a habit.
+- Same table as yesterday? I saved it.
+- I brought extra today. Just in case.
+- You're my lunch buddy now. No backing out.
+
+@rule you.more.s1
+on you
+when verb=helped how=witness
+- I saw you helping that girl with her books. That was nice of you.
+- You helped someone carry stuff earlier. I saw.
+- You're kinder than you look. I saw what you did.
+- Not many people would stop and help like that.
+
+@rule you.more.s2
+on you
+when verb=fought how=heard
+- I heard you got into a fight. Are you okay?
+- Someone said you argued with someone. What happened?
+- People are talking about a fight. With you in it.
+- I don't believe everything I hear, but... a fight?
+
+@rule you.more.s3
+on you
+when verb=stood_up_for
+- I heard you stood up for someone. That was brave.
+- You didn't let them push her around. I respect that.
+- Not everyone would speak up like you did.
+- Standing up for her... that was cool.
+
+@rule you.more.s4
+on you
+when verb=ignored
+- You walked right past me earlier. Did you not see me?
+- You ignored me in the hallway. I waved.
+- I said hi and you didn't answer.
+- Were you mad at me earlier?
+
+@rule you.more.s5
+on you
+when verb=seen_together how=rumor
+- People say they saw you with someone. Is it true?
+- There's a rumor about you and a girl. Just so you know.
+- I heard something about you. Don't worry, I didn't believe it.
+- Rumors travel fast here. You're in one.
+
+@rule you.more.x1
+on you
+when verb=seen_together how=witness rel=girlfriend
+- I saw you with her. Who is she? ...I'm just asking.
+- You looked close with that girl. Explain.
+- I'm not jealous. I just want to know who she was.
+- Next time, introduce me.
+
+@rule you.more.x2
+on you
+when verb=helped how=witness interest=yes
+- You helped her so easily. Would you do that for me too?
+- I saw you being nice to someone else. ...It's fine.
+- You're nice to everyone, huh. Not just me.
+- Seeing you help her made me like you more. Don't tell.
+
+@rule you.more.x3
+on you
+when verb=fought how=witness favor>=50
+- I saw the fight. I was so scared for you.
+- Are you hurt? I saw everything.
+- Please don't do that again. I couldn't watch.
+- You scared me. Really.
+
+@rule school.more.s1
+on school
+when exam=yes
+- Exam week makes everyone quiet. Even the loud ones.
+- Everyone's walking around with flashcards.
+- I can't wait for the exams to be over.
+- One more week and we're free.
+
+@rule school.more.s2
+on school
+when period=lunch
+- The cafeteria's so crowded today. It's the special menu.
+- Everyone's out in the courtyard for lunch.
+- The line for bread goes past the stairs.
+- Lunch is the only class I never miss.
+
+@rule school.more.s3
+on school
+when weather=rain
+- Rainy days make school feel smaller. Everyone's inside.
+- The hallways smell like wet umbrellas.
+- P.E. got moved inside. Again.
+- The windows are all fogged up.
+
+@rule school.more.s4
+on school
+when hasclub=yes
+- The club has a meeting after school. Big plans, supposedly.
+- Our club's been busy lately.
+- The {club} needs new members. Interested?
+- The club room's a mess. Someone has to clean it.
+
+@rule school.more.s5
+on school
+when period=after
+- After school is the best part of school.
+- Everyone's rushing out. I like taking my time.
+- The building feels different once classes end.
+- The school is so quiet now.
+
+@rule school.more.x1
+on school
+when exam=yes period=after mood=stressed
+- Everyone's staying late to study. The library's packed.
+- I'm going home to study. Again. Forever.
+- Exam week, after school, and I'm still here. Help.
+- My brain's done. I need to go home.
+
+@rule school.more.x2
+on school
+when weather=rain period=lunch outside=no
+- Everyone's eating inside because of the rain. There's no room anywhere.
+- Rainy lunch. Every desk is taken.
+- The cafeteria's like a sardine can today.
+- I ate on the stairs. Don't tell.
+
+@rule school.more.x3
+on school
+when hasclub=yes period=after rel=friend|lover|girlfriend
+- Come watch the {club} today? It's more fun with someone watching.
+- I'm heading to the club. Walk me there?
+- If you wait for me after the {club}, we can go home together.
+- The club ends at six. Just saying.
+
+@rule gossip.more.s1
+on gossip
+when verb=dated
+- Apparently they went on a date. Everyone's talking about it.
+- I heard they went out over the weekend.
+- A date! Can you believe it?
+- They looked so happy, people said.
+
+@rule gossip.more.s2
+on gossip
+when verb=broke_up
+- They broke up. I feel kind of sad for them.
+- I heard it's over between them.
+- Poor thing. She looked like she'd been crying.
+- Breakups at school are the worst. Everyone knows.
+
+@rule gossip.more.s3
+on gossip
+when verb=confessed
+- Someone confessed! In the courtyard!
+- I heard there was a confession after school.
+- A confession. How brave. I could never.
+- Everyone saw it. Poor thing, or lucky thing.
+
+@rule gossip.more.s4
+on gossip
+when verb=insulted
+- Someone said something really mean. I heard about it.
+- People are saying there was a nasty comment.
+- I don't like hearing stuff like that.
+- Words hurt more than people think.
+
+@rule gossip.more.s5
+on gossip
+when exposure=secret
+- Don't tell anyone, okay? This one's a secret.
+- I shouldn't say this, but...
+- Keep this between us.
+- If anyone asks, you didn't hear it from me.
+
+@rule gossip.more.x1
+on gossip
+when verb=dated how=rumor whobond>=40
+- People say {who} went on a date. She didn't tell me!
+- {who} on a date? She's my friend. I'd know. ...Wouldn't I?
+- If {who} is dating someone, I'll find out.
+- I'm a little hurt {who} didn't tell me first.
+
+@rule gossip.more.x2
+on gossip
+when verb=broke_up how=heard whobond>=40
+- {who} broke up? I need to check on her.
+- Poor {who}. I'll bring her something sweet.
+- She didn't tell me. I'll go see her later.
+- {who} must be so sad.
+
+@rule gossip.more.x3
+on gossip
+when verb=insulted exposure=rumored whobond<=-30
+- I heard {who} said something mean. Doesn't surprise me.
+- {who} again? Of course.
+- That's so like {who}.
+- I'm not surprised. Not even a little.
+
+@rule confide.more.s1
+on confide
+when mood=lonely
+- Sometimes I feel like nobody really sees me.
+- I have friends, but I still feel alone sometimes.
+- Can I tell you something? I get lonely a lot.
+- I don't usually say this to anyone.
+
+@rule confide.more.s2
+on confide
+when rel=lover|girlfriend
+- I'm scared of how much I like you.
+- Sometimes I worry you'll get tired of me.
+- I've never told anyone this, but I think about the future. With you.
+- You make me brave. A little.
+
+@rule confide.more.s3
+on confide
+when placeid=rooftop
+- I come up here when I need to think. Nobody else knows.
+- The rooftop's where I cried the first week of school.
+- Up here, I can say things I can't say downstairs.
+- It's easier to talk with the sky this big.
+
+@rule confide.more.s4
+on confide
+when period=after
+- I don't really want to go home today.
+- Home is... complicated. Let's stay a little longer.
+- When the school empties out, I feel like I can breathe.
+- I always stay late. It's quieter than home.
+
+@rule confide.more.s5
+on confide
+when tone=cool
+- I act like nothing bothers me. It's an act.
+- People think I'm cold. I'm just bad at showing things.
+- I don't say this often. So listen.
+- ...This stays between us.
+
+@rule confide.more.x1
+on confide
+when mood=lonely period=after rel=friend
+- Everyone left already. I didn't want to go yet.
+- I'm glad you're still here. I didn't want to be the last one.
+- The empty classroom makes me sad. Stay a bit?
+- Talking with you is the best part of my day.
+
+@rule confide.more.x2
+on confide
+when rel=girlfriend placeid=rooftop period=after
+- This is my favorite place. And now it's ours.
+- I wanted to tell you something up here. I love being with you.
+- Watching the sunset with you... I'll remember this.
+- Can we come up here every day?
+
+@rule confide.more.x3
+on confide
+when tone=cool mood=upset favor>=60
+- I don't cry in front of people. Don't make this the first time.
+- ...I'm not okay. There. I said it.
+- You're the only one I'd say this to.
+- I hate being like this. Don't look.
+
+@rule react.more.s1
+on react
+when move=praise fit=good
+feel shy
+- S-stop it... you're making me blush.
+- Hehe. Say that again.
+- You really think so? ...Thanks.
+- That made my whole day.
+
+@rule react.more.s2
+on react
+when move=comfort fit=good
+feel smile
+- ...Thanks. I feel a little better.
+- You always know what to say.
+- I needed that. Really.
+- Okay. Okay, I'm fine now.
+
+@rule react.more.s3
+on react
+when move=tease fit=bad
+feel pout
+- That's not funny.
+- I'm not in the mood for jokes.
+- Hmph. Mean.
+- Keep it up and I'm leaving.
+
+@rule react.more.s4
+on react
+when move=invite fit=neutral
+- Maybe. Let me think about it.
+- I'll see. No promises.
+- Hmm... ask me again later.
+- That depends on my mood.
+
+@rule react.more.s5
+on react
+when move=share fit=good
+feel laugh
+- Hehe, really? Me too!
+- I didn't know that about you.
+- We have more in common than I thought.
+- Tell me more.
+
+@rule react.more.x1
+on react
+when move=praise fit=good rel=girlfriend
+feel love
+- You say that every day. Don't stop.
+- ...I love when you say things like that.
+- Hehe. You're my favorite person.
+- Keep talking like that and I'll kiss you.
+
+@rule react.more.x2
+on react
+when move=comfort fit=good mood=upset
+feel sad
+- ...Sorry. I didn't mean to be like this. Thanks for staying.
+- You make it a little easier.
+- Just stay a little longer, okay?
+- ...I'm glad it was you who found me.
+
+@rule react.more.x3
+on react
+when move=invite fit=good period=after
+feel smile
+- After school? Yes. I'll wait by the gate.
+- Okay! Let's go right after the bell.
+- I was hoping you'd ask.
+- Then today's not over yet.
+
+@rule move.more.s1
+on move.ask
+when mood=sleepy
+- Ask if she slept at all
+- Ask what kept her up
+
+@rule move.more.s2
+on move.comfort
+when mood=upset
+- Tell her she can talk to you anytime
+- Say you're on her side
+
+@rule move.more.s3
+on move.tease
+when tone=proper
+- Tease her for being so polite
+- Ask if she ever relaxes
+
+@rule move.more.s4
+on move.invite
+when period=lunch
+- Invite her to eat together
+- Suggest grabbing bread from the shop
+
+@rule move.more.s5
+on move.share
+when exam=yes
+- Admit you haven't studied either
+- Say the exams scare you too
+
+@rule move.more.x1
+on move.invite
+when period=after rel=girlfriend outside=yes
+- Ask her to take the long way home with you
+- Suggest stopping somewhere on the way home
+
+@rule move.more.x2
+on move.comfort
+when mood=upset fight=yes rel=friend|lover|girlfriend
+- Say {fightwho} will come around
+- Offer to help her make up with {fightwho}
+
+@rule move.more.x3
+on move.tease
+when mood=cheerful tone=teasing lewd>=40
+- Ask what has her smiling like that
+- Say she's trouble when she's this happy
+
+@rule me.more.s1
+on me.small
+when period=lunch
+- Got a minute while we eat?
+- Before the bell rings...
+
+@rule me.more.s2
+on me.small
+when mood=sleepy
+- Stay awake for me a second.
+- Quick one, then you can nap.
+
+@rule me.more.s3
+on me.small
+when weather=rain
+- Since we're stuck inside...
+- Rain's not stopping, so...
+
+@rule me.more.s4
+on me.small
+when rel=girlfriend
+- Hey, love.
+- Hey, you. Got a second for me?
+
+@rule me.more.s5
+on me.small
+when hasclub=yes
+- Before you head to the {club}...
+- Quick, before club.
+
+@rule me.more.x1
+on me.small
+when rel=girlfriend period=after outside=yes
+- Walk with me a bit? I want to ask you something.
+- Nice evening, huh. Can I ask you something?
+
+@rule me.more.x2
+on me.small
+when mood=upset fight=yes rel=friend|lover|girlfriend
+- Let's talk about anything but {fightwho}.
+- Hey. Something else, to take your mind off it.
+
+@rule me.more.x3
+on me.small
+when exam=yes period=lunch mood=stressed
+- Lunch break from studying, okay?
+- Put the notes down for a second.

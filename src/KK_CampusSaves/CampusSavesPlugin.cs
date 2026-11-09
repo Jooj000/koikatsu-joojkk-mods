@@ -23,7 +23,7 @@ namespace Joojkk.CampusSaves
     public sealed class CampusSavesPlugin : BaseUnityPlugin
     {
         public const string GUID = "joojkk.campussaves";
-        public const string Version = "0.1.0";
+        public const string Version = "0.2.0";
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<int> Interval, KeepAutos;

@@ -41,6 +41,9 @@ namespace Joojkk.CampusLife
         private static Camera _now, _map;
         private static float _fovAdded;
         private static Vector3 _basePos, _offset;
+        private static float _bSpotsAt;
+        private static bool _baseFixSaid, _baseLockSaid;
+        private static float _baseLockAt;
         private static Quaternion _baseRot;
         private static bool _hasBase, _bGone;
         private static Transform _headA, _headB;
@@ -111,6 +114,10 @@ namespace Joojkk.CampusLife
                 PoseB("通常立ち");
                 BuildUi(font, fontMat);
                 Conversation.AddBSpots(_b);
+                _bSpotsAt = Time.realtimeSinceStartup + 0.8f;
+                _baseFixSaid = false;
+                _baseLockAt = Time.realtimeSinceStartup + 2.5f;
+                _baseLockSaid = false;
                 MoveIcons();
                 MirrorPanel();
                 RefreshPanel();
@@ -222,16 +229,33 @@ namespace Joojkk.CampusLife
                 if (_ts == null || G.TalkScene != _ts || _now == null) { End(); return; }
                 IconsTick();
                 // "as posições da dupla mudam ao começar o diálogo de saída"): she keeps her place beside the other one.
+                // How far the game moved her this frame: its camera was set from her moved spot, so the base is taken
+                // toque": the touch put her back in the middle, the game framed her there, and our shift went on top).
+                var moved = Vector3.zero;
                 if (!_bGone && _a != null && (_a.transform.position - _aSpot).sqrMagnitude > 0.0025f)
                 {
+                    moved = _aSpot - _a.transform.position;
+                    moved.y = 0f;
                     if (!_aSnapSaid) { _aSnapSaid = true; CampusLifePlugin.Log.LogInfo("Trio stage: the game moved " + _a.name + " " + (_a.transform.position - _aSpot).magnitude.ToString("0.00") + " m; kept beside her friend"); }
                     _a.transform.SetPositionAndRotation(_aSpot, _aSpotRot);
                 }
                 var gameMoves = UpdateCam == null || (bool)UpdateCam.GetValue(_ts);
+                // Once the pair has settled, the base stays: a touch has the game frame her again from its own spot, and
+                // first touch, offset 0.23 m, and she was never moved). Only the first moments follow the game's camera.
+                if (gameMoves && _hasBase && Time.realtimeSinceStartup > _baseLockAt)
+                {
+                    if (!_baseLockSaid && (_now.transform.position - (_basePos + _offset)).sqrMagnitude > 0.0004f)
+                    {
+                        _baseLockSaid = true;
+                        CampusLifePlugin.Log.LogInfo("Trio stage: the game moved the camera " + (_now.transform.position - (_basePos + _offset)).magnitude.ToString("0.00") + " m after the pair settled; kept ours");
+                    }
+                    gameMoves = false;
+                }
                 if (gameMoves || !_hasBase)
                 {
                     // The game set it this frame (or never moved it since we last did): the camera's own pose.
-                    if (gameMoves || _offset == Vector3.zero) { _basePos = _now.transform.position - (gameMoves ? Vector3.zero : _offset); _baseRot = _now.transform.rotation; }
+                    if (gameMoves || _offset == Vector3.zero) { _basePos = _now.transform.position - (gameMoves ? -moved : _offset); _baseRot = _now.transform.rotation; }
+                    if (gameMoves && moved != Vector3.zero && !_baseFixSaid) { _baseFixSaid = true; CampusLifePlugin.Log.LogInfo("Trio stage: camera base taken back " + moved.magnitude.ToString("0.00") + " m (the game framed her where it had moved her)"); }
                     _hasBase = true;
                 }
                 var fwd = _baseRot * Vector3.forward;
@@ -246,6 +270,8 @@ namespace Joojkk.CampusLife
                 if (_map != null) _map.transform.SetPositionAndRotation(_basePos + _offset, _baseRot);
                 Marker(uiVisible);
                 if (_ui != null && _ui.activeSelf != uiVisible) _ui.SetActive(uiVisible);
+                // estava com a hitbox errada"): the first ones were made in the same frame as the pose change.
+                if (_bSpotsAt > 0f && Time.realtimeSinceStartup >= _bSpotsAt && !_bGone && _b != null) { _bSpotsAt = 0f; Conversation.AddBSpots(_b); }
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Trio camera: " + e.Message); }
         }

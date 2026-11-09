@@ -1,6 +1,6 @@
 # Campus Saves changelog
 
-## Next version
+## 0.2.0 (2026-11-08), the first public release
 - The panel takes the place of the game's Save screen too, with the same look. A click on a campus saves into it.
 - Esc in story mode opens a menu with Resume, Save, Save & Quit to title, Quit to title and Quit.
 - Questions use the game's confirmation screen, with the whole sentence of what will happen.

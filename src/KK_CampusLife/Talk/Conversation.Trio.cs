@@ -403,8 +403,16 @@ namespace Joojkk.CampusLife
                     c3.Add(E("Stay in the middle", () => Settle("middle")));
                     c3.Add(E("Change the subject", () => Settle("change")));
                 }
+                else
+                {
+                    // No argument to settle: talk about the two of them.
+                    c3.Add(E("Ask if they're getting along", () => BothTalk("along")));
+                    c3.Add(E("Get them to plan something together", () => BothTalk("plan")));
+                }
                 c4.Add(E("Say you're glad to be with both", () => BothTalk("glad")));
                 c4.Add(E("Compliment them both", () => BothTalk("compliment")));
+                c4.Add(E("Ask about their ideal date", () => BothTalk("date")));
+                c4.Add(E("Tell them you can't pick a favorite", () => BothTalk("both")));
                 if (t.A.isGirlfriend && t.B.isGirlfriend && !(Share.Stance(t.A, t.B) == Share.Trio && Share.Stance(t.B, t.A) == Share.Trio) && !AskedTrioToday(t.A, t.B))
                     c4.Add(E("Ask them both about being a trio", TrioAskBoth));
                 c5.Add(E("Tease them both", () => BothTalk("tease")));
@@ -998,6 +1006,40 @@ namespace Joojkk.CampusLife
                     qb = QFromFavor(b0, 55, 25);
                     Reply(b, a, b0, "compliment", qa, qa == Q.Bad ? Tn("Ah... th-thanks...", "Eh? Uh, okay!", "...Thanks.", "Flattery won't work.") : Tn("E-eh... thank you...", "Hehe! We do, don't we?!", "...Thank you.", "Obviously~"));
                     Reply(b, b0, a, "compliment", qb, qb == Q.Bad ? Tn("Um...", "Huh?", "...Hm.", "Nice try.") : Tn("Hehe... you think so?", "Twins! Kinda!", "...Accepted.", "Say that again~"));
+                    break;
+                case "along":
+                {
+                    b.Me("So, you two getting along okay?");
+                    var rival = PairWord(a, b0) == "rival";
+                    if (rival) qa = qb = Q.Neutral; else bond = 1;
+                    Reply(b, a, b0, "along", qa, rival ? Tn("...We manage.", "Sometimes! Kinda!", "...Define \"okay\".", "We're civil. Mostly~") : Tn("Mm, we always do.", "Totally! She's the best!", "...We get along.", "Like a house on fire~"));
+                    Reply(b, b0, a, "along", qb, rival ? Tn("...Don't push it.", "Ugh, don't ask!", "...Next question.", "She'd say no. I'd say no too~") : Tn("Hehe, she puts up with me.", "Best friends forever!", "...No complaints.", "She's lucky to have me~"));
+                    break;
+                }
+                case "plan":
+                {
+                    b.Me("You two should plan something together. Like a day out.");
+                    var rival = PairWord(a, b0) == "rival";
+                    if (rival) { qa = qb = Q.Neutral; bond = 1; } else bond = 2;
+                    Reply(b, a, b0, "plan", qa, rival ? Tn("...With her? I'll think about it.", "Huh?! Us?! ...Maybe?!", "...Unlikely.", "Bold idea. Doomed, but bold~") : Tn("That sounds lovely... the weekend?", "Yes! Karaoke! Let's go!", "...I could make time.", "Ooh, a girls' day~ I'm in."));
+                    Reply(b, b0, a, "plan", qb, rival ? Tn("...I'm busy. Probably.", "No way! ...Okay, one time!", "...No.", "She'd ruin it. Watch~") : Tn("I'd like that... a lot.", "Karaoke AND crepes!", "...Fine. I'll pick the place.", "Only if he pays~"));
+                    break;
+                }
+                case "date":
+                    lvl = Lvl.Romance;
+                    b.Me("Okay, question for both of you: what's your ideal date?");
+                    qa = QFromFavor(a, 55, 25);
+                    qb = QFromFavor(b0, 55, 25);
+                    Reply(b, a, b0, "date", qa, qa == Q.Bad ? Tn("Um... why do you ask?", "Huh? Why?", "...That's private.", "Not telling you~") : Tn("Somewhere quiet... with someone I like.", "An amusement park! All the rides!", "...A bookstore. Then tea.", "Depends who's asking~ You?"));
+                    Reply(b, b0, a, "date", qb, qb == Q.Bad ? Tn("...I'd rather not say.", "Eh, no clue!", "...Pass.", "Wouldn't you like to know.") : Tn("A walk at night... hehe.", "Festival food! Fireworks!", "...Somewhere without crowds.", "Anywhere he's paying~"));
+                    break;
+                case "both":
+                    lvl = Lvl.Romance;
+                    b.Me("Honestly? I couldn't pick between you two if I tried.");
+                    qa = QFromFavor(a, 55, 25);
+                    qb = QFromFavor(b0, 55, 25);
+                    Reply(b, a, b0, "both", qa, qa == Q.Bad ? Tn("...Pick what?", "Uh, nobody asked?", "...Presumptuous.", "Pick? Cute. No.") : Tn("...You don't have to pick.", "Then don't! Easy!", "...A diplomatic answer.", "Smooth. Keep talking~"));
+                    Reply(b, b0, a, "both", qb, qb == Q.Bad ? Tn("Um... okay...?", "Weird thing to say!", "...Hm.", "Nobody's competing, dear.") : Tn("Hehe... that's sweet.", "Aww, we win! Both of us!", "...Acceptable.", "Correct answer~"));
                     break;
                 case "tease":
                     lvl = Lvl.Spicy;

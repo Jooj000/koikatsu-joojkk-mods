@@ -45,7 +45,7 @@
 ## Installation
 
 1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx), [KKAPI 1.45+, ExtensibleSaveFormat and Sideloader](https://github.com/IllusionMods) (the HF Patch has them).
-2. Download `KK_SchoolOptimizer.dll` from the [releases](https://github.com/Jooj000/KK_SchoolOptimizer/releases) and put it in `BepInEx\plugins\Joojkk\`.
+2. Download `KK_SchoolOptimizer-<version>.zip` from the [releases](https://github.com/Jooj000/KK_SchoolOptimizer/releases) and unpack it over the game's folder (it puts `KK_SchoolOptimizer.dll` in `BepInEx\plugins\Joojkk\`).
 
 ## Configuration
 

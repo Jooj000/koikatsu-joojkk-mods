@@ -2,7 +2,15 @@
 
 Until 2.5 the plugin's own version (`CampusLifePlugin.Version`) stayed at 2.0.0 and the numbers were the milestones of the combined repository. From 3.0.0 on the plugin carries the version itself; the cycles between 2.5 and 3.0 are numbered 2.6 to 2.9 below.
 
-## Next version
+## 3.6.0 (2026-11-08), the first public release
+- Each kind of request has its own talk: your line, four options written for it and her answer to each, in her tone (they were the same four options with the title glued in).
+- She tells you one of her likes inside the story of her day, not as an extra line at the end.
+- Your opening remarks no longer ask about a different subject than the one you picked.
+- No request is made for a girl who is not on campus today, whoever makes it; one due on Sunday moves to Monday, and lunch requests skip Saturday (the game has no lunch on Saturday).
+- Talk with two girls: the camera no longer drifts left after a touch, the second girl's touch areas follow her pose from the first touch, Settle has options when they are not arguing, Romance has two more, and no option sits under the "To:" button.
+- Every line that depends on a like or on the rain now has the side of a girl who does not care for it, with its own options and answers.
+- 80 new lines of context in every area of the talk.
+- The release zip also installs the staff titles as a college (`BepInEx\Translation\en\Text`).
 - A clipboard icon in the room opens the Campus Life menu at night, to plan the next day with today's information.
 - "Admit about the others" happens once for all of them and rests for a week. A long list ends in "and the others" instead of repeating names, and it costs favor when she minds, a girlfriend most of all.
 - A save that enters the mod starts with today's board, instead of counting the day before as missed.

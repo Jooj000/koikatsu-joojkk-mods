@@ -1143,18 +1143,21 @@ namespace Joojkk.CampusLife
 
         private static void RequestTalk(SaveData.Heroine h, Request r, bool hidden)
         {
-            var title = Lower(r.Title);
+            RequestTalks.Talk talk;
+            if (!RequestTalks.ByKind.TryGetValue(r.Kind, out talk)) RequestTalks.ByKind.TryGetValue(RequestKind.Talk, out talk);
+            var place = string.IsNullOrEmpty(r.Place) ? "usual spot" : Places.Name(r.Place);
+            Func<string, string> fill = x => x.Replace("{place}", place);
+            // "your note" only for what she posted on the board; told by a friend or seen, the line without it.
+            var posted = r.Source == "board" && string.IsNullOrEmpty(r.LearnedFrom);
+            var mine = talk.Me.Where(x => posted || x.IndexOf("note", StringComparison.OrdinalIgnoreCase) < 0).ToArray();
+            var me = hidden ? "You look like something's on your mind." : mine.Length > 0 ? fill(mine[UnityEngine.Random.Range(0, mine.Length)]) : "About " + Lower(r.Title) + "...";
+            var low = Low(MoodOf(h));
             Beat(h, Lvl.Friend, "req:" + r.Id, b =>
             {
-                b.Me(hidden ? "You look like something's on your mind." : "About " + title + "...");
+                b.Me(me);
                 b.Her_(Board.ProblemFirst(r, GirlInfo.ToneOf(h)));
-            }, new List<Resp>
-            {
-                Rp("Tell her it's no trouble at all", "rq_feel", Q.Good),
-                Rp("Ask what she needs exactly for " + title, "rq_ask", Q.Good, Tn("Just... a little of your time. That's all.", "Just you! And maybe snacks!", "...Your time. Not much.", "Your undivided attention. Obviously.")),
-                Rp("Promise to help with " + title + " " + Board.WindowLabel(r.Periods).ToLowerInvariant(), "rq_promise", Q.Good, Tn("...Really? I'll be waiting.", "Promise?! Yay!", "...Okay. I'll hold you to it.", "A promise. Don't break it.")),
-                Rp("Joke that " + title + " sounds like a quest", "rq_joke", Low(MoodOf(h)) ? Q.Bad : Q.Good, Tn("Hehe... a small quest.", "Ahaha! Quest accepted?!", "...Hm. A side quest.", "Then you're my hero. Don't fail.")),
-            }, x => { if (hidden) Board.Reveal(r, "her"); });
+            }, talk.Opts.Select(o => Rp(fill(o.Label), o.Tag, o.BadWhenLow && low ? Q.Bad : o.Q, o.Her.Select(x => fill(x)).ToArray())).ToList(),
+            x => { if (hidden) Board.Reveal(r, "her"); });
         }
 
         private static void GossipTalk(SaveData.Heroine h, Incident gossip)

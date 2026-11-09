@@ -24,6 +24,9 @@ foreach ($mod in $Mods) {
     # his map photos go in the zip; the activity points are already inside the DLL (spots_default.txt).
     New-Item -ItemType Directory -Force (Join-Path $dest 'mapshots') | Out-Null
     Copy-Item (Join-Path $root 'data\mapshots\*.jpg') (Join-Path $dest 'mapshots')
+    $tr = Join-Path $stage 'BepInEx\Translation\en\Text'
+    New-Item -ItemType Directory -Force $tr | Out-Null
+    Copy-Item (Join-Path $root 'data\translation\zzz_JoojkkCampus.txt') $tr
   }
   Copy-Item (Join-Path $root "src\$mod\README.md"), (Join-Path $root "src\$mod\CHANGELOG.md") $stage
   $zip = Join-Path $out "$mod-$version.zip"

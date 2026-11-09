@@ -100,6 +100,7 @@ namespace Joojkk.CampusLife
                 Spotlight.Rotate();
             }
 
+            if (day == Cycle.Week.Holiday) Board.SkipHoliday();
             Board.ExpireAll(beforeDay: S.Day);
             S.Energy = Activities.MaxEnergy;
             // Story director bookkeeping (dir:, grad:) is permanent; real buffs expire.

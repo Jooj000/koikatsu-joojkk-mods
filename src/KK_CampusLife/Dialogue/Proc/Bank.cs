@@ -317,8 +317,14 @@ namespace Joojkk.CampusLife
         /// </summary>
         public static string Pick(string on, Dictionary<string, string> ctx, string girl, out DlgRule used)
         {
+            return Pick(on, ctx, girl, null, out used);
+        }
+
+        /// talks about the like she lets slip, instead of the like glued on as an extra line).</summary>
+        public static string Pick(string on, Dictionary<string, string> ctx, string girl, Func<DlgRule, bool> only, out DlgRule used)
+        {
             used = null;
-            var all = Matching(on, ctx).ToList();
+            var all = Matching(on, ctx).Where(r => only == null || only(r)).ToList();
             if (all.Count == 0) return null;
             var top = all.Max(r => r.Score);
             var pool = all.Where(r => r.Score >= top - 1).ToList();

@@ -45,7 +45,7 @@ namespace Joojkk.SchoolOptimizer
     public class SchoolOptimizerPlugin : BaseUnityPlugin
     {
         public const string GUID = "joojkk.schooloptimizer";
-        public const string Version = "1.7.0";
+        public const string Version = "1.7.1";
 
         internal static ManualLogSource Log;
         internal static SchoolOptimizerPlugin Instance;
@@ -919,7 +919,27 @@ namespace Joojkk.SchoolOptimizer
                 LeftHalfDressed++;
                 SchoolOptimizerPlugin.Log.LogDebug("Clothes of " + (npc.heroine != null ? npc.heroine.Name : "?") + " put back (changing state left over, action " + npc.AI.actionNo + ")");
             }
+            // clothes off (AI action 2: SetClothesStateAll(3)) and the toilet the lower ones (action 1); the game puts them
+            // back only when her next action starts. Moved on without that (a summon, a director's push, a period change),
+            // she walked to the cafeteria in the shower state. Seen twice in a row away from those points, it is ended.
+            foreach (var npc in act.npcList)
+            {
+                if (npc == null || npc.chaCtrl == null || npc.chaCtrl.fileStatus == null || npc.AI == null) { continue; }
+                var st = npc.chaCtrl.fileStatus.clothesState;
+                var a2 = npc.AI.actionNo;
+                var bare = st != null && st.Length > 1 && st[0] == 3 && st[1] == 3 || st != null && st.Length > 5 && st[1] == 3 && st[3] == 3 && st[5] == 3;
+                if (!bare || a2 == 0 || a2 == 1 || a2 == 2 || a2 == 25 || npc.isLesH || npc.isOnanism || npc.chaCtrl.isChangeOfClothesRandom) { Bare.Remove(npc); continue; }
+                if (Bare.Add(npc)) continue; // the first look: her next action may be starting this very moment
+                Bare.Remove(npc);
+                npc.chaCtrl.SetClothesStateAll(0);
+                try { npc.MapShoesSetting(npc.mapNo); } catch { }
+                LeftUndressed++;
+                SchoolOptimizerPlugin.Log.LogInfo("Clothes of " + (npc.heroine != null ? npc.heroine.Name : "?") + " put back (shower or toilet state left over, action " + a2 + ", map " + npc.mapNo + ")");
+            }
         }
+
+        private static readonly HashSet<NPC> Bare = new HashSet<NPC>();
+        public static int LeftUndressed;
 
         /// <summary>She is about to be unloaded: a queued outfit change becomes data only.</summary>
         public static void Forget(NPC npc)
