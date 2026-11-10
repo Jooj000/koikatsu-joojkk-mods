@@ -91,8 +91,9 @@ namespace Joojkk.CampusLife
         private static bool _froze;
 
         /// <summary>
-        /// de prancheta aberto"): the game pauses their clocks behind a menu but not their legs. Its own "no moving" switch
-        /// (ActionScene.Regulate.Move) is on while the clipboard is open, and off when it closes. Run every frame.
+        /// Everyone stops walking while the clipboard is open: the game pauses their clocks behind a menu but not their
+        /// legs. Its own "no moving" switch (ActionScene.Regulate.Move) is on while the clipboard is open, and off when it
+        /// closes. Run every frame.
         /// </summary>
         public static void FreezeWalkers()
         {
@@ -139,6 +140,7 @@ namespace Joojkk.CampusLife
                 return;
             }
 
+            // Each part timed, to see what the first open costs (ClipboardWarm does the heavy part before).
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var parts = new List<string>();
             Action<string, Action> timed = (what, a) => { var t0 = sw.Elapsed.TotalMilliseconds; Safe(what, a); parts.Add(what + " " + (sw.Elapsed.TotalMilliseconds - t0).ToString("0")); };
@@ -189,9 +191,8 @@ namespace Joojkk.CampusLife
             }
         }
 
-        // e o que está fazendo devem ficar seguidos na mesma aba, informações sobre a relação todas juntas"): the game's
-        // pages and our two became three, by subject. Gone: "She remembers" (not something to show), Request and When
-        // (on the board), Mood and Likes (small icons in the talk, once found out).
+        // The game's pages and our two became three, by subject. Gone: "She remembers" (not something to show), Request
+        // and When (on the board), Mood and Likes (small icons in the talk, once found out).
         private static readonly string[] NowLabels = { "Location", "Doing now", "Personality", "On campus", "Best friend" };
         private static readonly string[] BondLabels = { "Relation", "Toward you", "Favor", "Devotion", "Trust in you" };
         private static readonly string[] LoveLabels = { "Her heart", "Lewdness", "Experience", "Times together", "Intimacy" };
@@ -351,6 +352,7 @@ namespace Joojkk.CampusLife
             var b2 = menu.GetComponent<Button>();
             b2.onClick = new Button.ButtonClickedEvent();
             b2.SetLabel("Campus Life");
+            // The label ran past the button's edges; it shrinks to fit now.
             var lbl = b2.GetComponentInChildren<TextMeshProUGUI>(true);
             if (lbl != null) { lbl.enableAutoSizing = true; lbl.fontSizeMax = lbl.fontSize; lbl.fontSizeMin = 12f; lbl.enableWordWrapping = false; lbl.margin = new Vector4(6f, 0f, 6f, 0f); }
             b2.onClick.AddListener(() =>
@@ -399,6 +401,7 @@ namespace Joojkk.CampusLife
             t.rectTransform.Place(16f, 50f, 400f, 220f);
             t.lineSpacing = 6f;
 
+            // The same pages as the menu's tabs, in the same order, evenly spaced.
             var y = 10f;
             foreach (var tab in new[] { PanelTab.Today, PanelTab.Calendar, PanelTab.Activities, PanelTab.Album })
             {
@@ -565,7 +568,8 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// The game's PlayerMapWarp runs its callback before the map changes, and the new map then puts the player at the
-        /// 2026-10-11). So the place is set once the new map has loaded and the player can move.
+        /// door he "came through": a position set in the callback was lost (landed at the map's spawn). So the place is
+        /// set once the new map has loaded and the player can move.
         /// </summary>
         internal static IEnumerator PlaceAfterLoad(int mapNo, Func<Vector3?> pos, Func<Quaternion> rot, Base faceTo = null)
         {
@@ -594,8 +598,8 @@ namespace Joojkk.CampusLife
                     if (look.sqrMagnitude > 0.01f) player.rotation = Quaternion.LookRotation(look);
                 }
                 else player.rotation = rot();
-                // The camera kept the door's angle and turned the player back. The game's own
-                // summon turns the camera the same way.
+                // The camera kept the door's angle and turned the player back (112-170 deg off her). The game's own summon
+                // turns the camera the same way.
                 act.CameraState.SetAngle(player.rotation.eulerAngles);
                 CampusLifePlugin.Log.LogInfo("Warp: placed on map " + mapNo + (faceTo != null ? " in front of " + faceTo.name : " at the saved spot"));
             }

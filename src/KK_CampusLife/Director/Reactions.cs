@@ -13,8 +13,8 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// The girls' reactions, decided by the director from the relationship instead of the game's fixed rules
-    /// (user, 2026-10-11: "every action of the girls' AI has to be regulated by the director"):
+    /// The girls' reactions, decided by the director from the relationship instead of the game's fixed rules ("every
+    /// action of the girls' AI has to be regulated by the director"):
     /// <list type="bullet">
     /// <item>Caught alone in H (the game's action 4): it counts as a flagra. A girlfriend (or a bold girl close to you)
     /// does not run: she asks if you want to help (no penalty for "not now", she carries on and you can still go).
@@ -483,8 +483,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The game's "is in the scene between two girls" (isLesbian) is only true for the partner (27), never for the one who
-        /// started it (26): the click that opens the H is on the partner.
+        /// The game's "is in the scene between two girls" (isLesbian) is only true for the partner (27), never for the one
+        /// who started it (26): the click that opens the H is on the partner ("she had already stopped" every time).
         /// </summary>
         private static IEnumerator JoinCo(NPC n, NPC other)
         {

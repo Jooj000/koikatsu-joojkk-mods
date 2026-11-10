@@ -8,14 +8,13 @@ using UnityEngine;
 namespace Joojkk.SchoolOptimizer
 {
     /// <summary>
-    /// Broken hair on the map, found and fixed where it happens (user, 2026-11-08: "novamente o bug de cabelos aparecendo
-    /// sem cor, com mechas bagunçadas, partes faltando. é intermitente então precisa encontrar a situação"). Every second
-    /// one student in sight (on your map, near you, fully loaded) is looked at, in turn:
+    /// Broken hair on the map, found and fixed where it happens. Every second one student in sight (on your map, near you,
+    /// fully loaded) is looked at, in turn:
     /// <list type="bullet">
     /// <item>her mod data still parked while she has a body (AbsentPark): put back and her whole look rebuilt;</item>
-    /// <item>"sem cor": a hair piece whose material lost its texture, or whose color is far from the card's hair color;</item>
-    /// <item>"partes faltando": a hair slot the card fills with nothing built, or a hair renderer gone;</item>
-    /// <item>"mechas bagunçadas": strands far from where they hung when she was first seen (physics blown up).</item>
+    /// <item>no color: a hair piece whose material lost its texture, or whose color is far from the card's hair color;</item>
+    /// <item>missing parts: a hair slot the card fills with nothing built, or a hair renderer gone;</item>
+    /// <item>messy strands: strands far from where they hung when she was first seen (physics blown up).</item>
     /// </list>
     /// Each case is fixed once (the game's own color pass, then MaterialEditor and HairAccessoryCustomizer again, or the
     /// strands reset) and written to the log with the situation around it ("Hair watch: ..."): how long she has been on
@@ -30,9 +29,10 @@ namespace Joojkk.SchoolOptimizer
             public float Repaired = -999f;
             public readonly Dictionary<DynamicBone, float> Rest = new Dictionary<DynamicBone, float>();
             public readonly HashSet<string> Tried = new HashSet<string>();
+            // Hair renderers that had a texture when she was first seen: only those can "lose" it (the hair
             // accessories of some cards never have one, that is their shader).
             public readonly HashSet<Renderer> HadTex = new HashSet<Renderer>();
-            // The color of each hair accessory when she was first seen (HairAccessoryCustomizer's): "sem cor" on these
+            // The color of each hair accessory when she was first seen (HairAccessoryCustomizer's): a color loss on these
             // cards is that color gone white.
             public readonly Dictionary<Renderer, Color> AcsColor = new Dictionary<Renderer, Color>();
             public int Fixes;
@@ -110,7 +110,7 @@ namespace Joojkk.SchoolOptimizer
                         if ((i <= 1 || hair.parts[i].id != 0) && fresh("miss" + i)) { s.Tried.Add("miss" + i); problems.Add("hair slot " + i + " (id " + hair.parts[i].id + ") not built"); Missing++; rebuild = rebuildHair = true; }
                         continue;
                     }
-                    // Its renderers: the hair component's list, or every renderer under the piece.
+                    // Its renderers: the hair component's list, or (no component found) every renderer under the piece.
                     var cmp = cha.GetCustomHairComponent(i);
                     Renderer[] rends;
                     if (cmp != null && cmp.rendHair != null && cmp.rendHair.Length > 0)
@@ -121,7 +121,7 @@ namespace Joojkk.SchoolOptimizer
                     }
                     else rends = obj.GetComponentsInChildren<Renderer>(true);
                     // A card can wear no hair of the game's own (the "none" piece, p_dummy) and all of it as hair
-                    // accessories: an empty piece then is the card, not a fault.
+                    // accessories (Nonaka, Ozen, Yumeria): an empty piece then is the card, not a fault.
                     if (rends.Length == 0 && Dummy(cha, i)) continue;
                     if (rends.Length == 0 && fresh("empty" + i)) { s.Tried.Add("empty" + i); problems.Add("hair slot " + i + " (" + obj.name + ") has no renderer"); Missing++; rebuild = rebuildHair = true; }
                     foreach (var r in rends)

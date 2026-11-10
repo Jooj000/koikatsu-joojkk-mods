@@ -1,3 +1,4 @@
+# Her first words about a request on the board (Board.ProblemFirst), by the kind and her tone. Slots: {place} where to meet, {text} the errand.
 
 @rule board.first.lunch.gentle
 on board

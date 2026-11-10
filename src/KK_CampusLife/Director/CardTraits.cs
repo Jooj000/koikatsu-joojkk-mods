@@ -7,15 +7,16 @@ namespace Joojkk.CampusLife
 {
     /// <summary>
     /// The card's markers (ChaFileParameter.Attribute: easy, lewd, closet pervert, submissive, friendly, serious...) when
-    /// easy and lewd at once). With every marker yes, or every one no, the markers are ignored and drawn instead, once per
-    /// girl and always the same for her (seeded by her key), weighted by her personality (its tone and how open or shy it
-    /// is), her likes (the card's likes are kept as they are) and her card's refusals. A card with some yes and some no
-    /// is used as it is. Only the mod's own characters: the game's story heroines keep theirs.
+    /// the player never really set them ('s cards have every marker "yes", so every girl was easy and lewd at once). With
+    /// every marker yes, or every one no, the markers are ignored and drawn instead, once per girl and always the same for
+    /// her (seeded by her key), weighted by her personality (its tone and how open or shy it is), her likes (the card's
+    /// likes are kept as they are) and her card's refusals. A card with some yes and some no is used as it is. Only the
+    /// mod's own characters: the game's story heroines keep theirs.
     ///
-    /// Measured: the pace itself mostly came out Normal, since the same cards also refuse
-    /// kisses (6 open against 6 shy), and Open for the sexy and gyaru ones. What made them easy was everything else that
-    /// reads bitch/choroi/mutturi: the wish for H (+55), the flirty mood, the sleeping tease, cheating on a partner,
-    /// sharing, slipping away with a girlfriend, the voice, and the game's own desire table.
+    /// Measured (such cards): the pace itself mostly came out Normal, since the same cards also refuse kisses (6 open
+    /// against 6 shy), and Open for the sexy and gyaru ones. What made them easy was everything else that reads
+    /// bitch/choroi/mutturi: the wish for H (+55), the flirty mood, the sleeping tease, cheating on a partner, sharing,
+    /// slipping away with a girlfriend, the voice, and the game's own desire table.
     ///
     /// Our director reads them through GirlInfo.Quirks; the game's own AI reads them through ChaInfo.GetAttribute, which a
     /// postfix gives the same drawn markers. The card itself is never changed.
@@ -70,7 +71,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// massage, condom), which is as unset as the markers; then only a reserved few refuse kisses (drawn with her markers).
+        /// Her card refuses kisses. Measured: the same cards also refuse everything (kiss, caress, anal, massage, condom),
+        /// which is as unset as the markers; then only a reserved few refuse kisses (drawn with her markers).
         /// </summary>
         public static bool RefusesKiss(SaveData.Heroine h)
         {
@@ -178,8 +180,8 @@ namespace Joojkk.CampusLife
                 if (Raw || _chafile == null || !Campus.On || Cfg.CardTraits == null || !Cfg.CardTraits.Value) return;
                 if (!Unset(_chafile.parameter.attribute)) return;
                 SaveData.Heroine h;
-                // The game's AI reads her through chaCtrl.GetAttribute(), on the ChaControl's own chaFile, which is not always
-                // the heroine's charFile.
+                // The game's AI reads her through chaCtrl.GetAttribute, on the ChaControl's own chaFile, which is not
+                // always the heroine's charFile (the AI saw 10 of 10 girls as "wants to be alone", the raw card).
                 if (!ByFile.TryGetValue(_chafile, out h) || h == null || (h.charFile != _chafile && (h.chaCtrl == null || h.chaCtrl.chaFile != _chafile)))
                 {
                     h = G.Heroines.FirstOrDefault(x => x != null && (x.charFile == _chafile || (x.chaCtrl != null && x.chaCtrl.chaFile == _chafile)));

@@ -69,8 +69,8 @@ namespace Joojkk.CampusLife
             }
         }
 
-        // ícones"): one line per activity, its map icon on the left, the name in gold and what it gives beside it; the
-        // period only when it is the reason it is closed, the reason in one short warning; your energy as a small bar.
+        // One line per activity, its map icon on the left, the name in gold and what it gives beside it; the period only
+        // when it is the reason it is closed, the reason in one short warning; your energy as a small bar.
         private const float IconSize = 46f, Pad = 14f, Gap = 8f;
 
         /// <summary>The text of the hint.</summary>

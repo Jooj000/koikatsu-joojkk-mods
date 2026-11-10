@@ -6,11 +6,11 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// de quem realmente testemunhou"). Before, every girl on the map was a witness of anything. Now a girl saw it only
-    /// if she was close enough for what it was (a whispered word carries a few meters, a kiss is seen across the room),
-    /// was looking your way (or was right next to you), and nothing stood between her and you (walls, doors, floors;
-    /// people and furniture below eye height don't count). What it was travels with the incident: hearing that you
-    /// flirted is not the same as seeing you kiss her.
+    /// Who really saw it. Before, every girl on the map was a witness of anything. Now a girl saw it only if she was
+    /// close enough for what it was (a whispered word carries a few meters, a kiss is seen across the room), was
+    /// looking your way (or was right next to you), and nothing stood between her and you (walls, doors, floors; people
+    /// and furniture below eye height don't count). What it was travels with the incident: hearing that you flirted is
+    /// not the same as seeing you kiss her.
     /// </summary>
     internal static class Witness
     {

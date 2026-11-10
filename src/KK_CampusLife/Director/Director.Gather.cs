@@ -7,11 +7,11 @@ using UnityEngine.AI;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// entre elas devem ocorrer fisicamente caso o player esteja no mapa. quando duas estão conversando ou brigando, etc,
-    /// conversar com uma deve puxar a dupla"). When the director's situation has both girls on your map, one walks over to
-    /// the other and they stand there talking (or arguing) for a while, facing each other, both stopped by the director.
-    /// Talk to either one and the talk is with both, in the situation's mood (Duo.PullIn). Leave them be and after a while
-    /// they come to you as before (Play); leave the map and they go on with their day, the situation still planned.
+    /// What happens between two girls happens where you can see it. When the director's situation has both girls on your
+    /// map, one walks over to the other and they stand there talking (or arguing) for a while, facing each other, both
+    /// stopped by the director. Talk to either one and the talk is with both, in the situation's mood (Duo.PullIn). Leave
+    /// them be and after a while they come to you as before (Play); leave the map and they go on with their day, the
+    /// situation still planned.
     /// </summary>
     internal static partial class Director
     {

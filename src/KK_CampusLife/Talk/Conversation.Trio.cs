@@ -178,7 +178,7 @@ namespace Joojkk.CampusLife
                     return;
                 case "aleft":
                     // The first girl walks off: this talk (hers) closes quietly and Duo opens a normal talk with the
-                    // second one, who stayed.
+                    // second one, who stayed (the proposal already said so).
                     FinishB();
                     t.SB = null;
                     Finish(true);
@@ -234,7 +234,7 @@ namespace Joojkk.CampusLife
         {
             ClearTargetButton();
             if (_talk == null || CatButtons.Count == 0 || CatButtons[CatButtons.Count - 1] == null) return;
-            // Under Spicy, 80% of its size, its right edge on Spicy's.
+            // Under Spicy, 80% of its size, its right edge on Spicy's (it was over Talk).
             var srt = (RectTransform)CatButtons[CatButtons.Count - 1].transform;
             var go = UnityEngine.Object.Instantiate(_talk.gameObject, srt.parent, false);
             go.name = "cl_trio_target";
@@ -265,7 +265,7 @@ namespace Joojkk.CampusLife
             // Right-aligned to the button and shrinking to fit: the button sits at the screen's edge ("To: Neferpitou" was cut).
             crt.anchorMin = crt.anchorMax = new Vector2(1f, 0f);
             crt.pivot = new Vector2(1f, 1f);
-            crt.anchoredPosition = new Vector2(-8f, -1f);
+            crt.anchoredPosition = new Vector2(-8f, -1f); // +2 put the last letter past the screen edge
             crt.sizeDelta = new Vector2(112f, 22f);
             _targetCap = cap.AddComponent<TextMeshProUGUI>();
             var tmpl = _template != null ? _template.GetComponentInChildren<TextMeshProUGUI>(true) : null;
@@ -279,7 +279,7 @@ namespace Joojkk.CampusLife
             _targetCap.enableWordWrapping = false;
             _targetCap.alignment = TextAlignmentOptions.TopRight;
             _targetCap.raycastTarget = false;
-            _targetCap.color = Color.white;   // white like its tile
+            _targetCap.color = Color.white;   // white like its tile (it was gold)
             RefreshTargetButton();
         }
 
@@ -298,8 +298,8 @@ namespace Joojkk.CampusLife
             var who = t.Target == TrioWho.A ? t.A : t.Target == TrioWho.B ? t.B : null;
             try
             {
-                // A drawing like the other buttons, not her face: the two girls as they stand,
-                // the one you talk to solid with the marker over her.
+                // A drawing like the other buttons, not her face: the two girls as they stand, the one you talk to
+                // solid with the marker over her.
                 ConvArt.Style(_targetBtn, ConvArt.Tile(t.Target == TrioWho.A ? IconArt.ToA : t.Target == TrioWho.B ? IconArt.ToB : IconArt.ToBoth, false), false);
                 _targetBtn.image.preserveAspect = true;
             }
@@ -405,7 +405,7 @@ namespace Joojkk.CampusLife
                 }
                 else
                 {
-                    // No argument to settle: talk about the two of them.
+                    // No argument to settle: talk about the two of them (Settle was grey; part 5).
                     c3.Add(E("Ask if they're getting along", () => BothTalk("along")));
                     c3.Add(E("Get them to plan something together", () => BothTalk("plan")));
                 }
@@ -666,7 +666,7 @@ namespace Joojkk.CampusLife
             var pair = PairWord(t.A, t.B);
             var first = Random.value < 0.5f ? t.A : t.B;
             var second = TrioOther(first);
-            var calm = t.Settled ? 0.3f : 1f;
+            var calm = t.Settled ? 0.3f : 1f;   // rivals started a new fight right after every settle
             var argue = !t.Disagree && Argues(t, pair, calm);
             if (argue) { t.Disagree = true; t.Argue = ArgueAbout(t.Moment); }
             var x = X("kind", kind, "argue", t.Disagree ? "yes" : "no", "idle", t.Idles.ToString());
@@ -678,8 +678,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// One exchange, line and answer written together (banter.dlg): "first >> answer", or four answers for the voice of the
-        /// second. Drawn apart they didn't answer each other (user, 2026-10-31).
+        /// One exchange, line and answer written together (banter.dlg): "first >> answer", or four answers for the voice of
+        /// the second. Drawn apart they didn't answer each other.
         /// </summary>
         private static string[] PickExchange(SaveData.Heroine first, SaveData.Heroine second, Dictionary<string, string> x, out DlgRule rule, out Dictionary<string, string> c)
         {
@@ -1080,8 +1080,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Whether the two talk to each other after your turn (context, 2026-11-07): an open disagreement keeps them at it;
-        /// close friends chat, strangers less; a silence invites it; they do not banter two beats in a row.
+        /// Whether the two talk to each other after your turn (context): an open disagreement keeps them at it; close
+        /// friends chat, strangers less; a silence invites it; they do not banter two beats in a row.
         /// </summary>
         private static bool Chats(Trio t)
         {
@@ -1106,8 +1106,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Whether two girls start arguing (context, 2026-11-07): how bad the rivalry is, their moods, and a fight you
-        /// already settled (a new one is rarer); friends do not.
+        /// Whether two girls start arguing (context): how bad the rivalry is, their moods, and a fight you already
+        /// settled (a new one is rarer); friends do not.
         /// </summary>
         private static bool Argues(Trio t, string pair, float calm)
         {

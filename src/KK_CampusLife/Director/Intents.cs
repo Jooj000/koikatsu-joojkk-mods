@@ -95,7 +95,7 @@ namespace Joojkk.CampusLife
             var q = GirlInfo.Quirks(h);
             Action<string, float> add = (id, sc) => { if (sc > 0f) l.Add(new Option { Id = id, Score = sc }); };
 
-            // Club time is club time.
+            // Club time is club time (43 of 53 went to a friend and 5 to their club).
             if (!GirlInfo.InNoClub(h)) add(Club, 0.8f + (mask == PeriodMask.Club ? 4.5f : 0f));
             add(Eat, (100 - gs.NeedFood) / 30f + (mask == PeriodMask.Lunch ? 1.5f : 0f));
             add(Rest, (100 - gs.NeedRest) / 35f);
@@ -103,7 +103,7 @@ namespace Joojkk.CampusLife
 
             // A friend she wants to see.
             var lonely = Mathf.Min(2f, (100 - gs.NeedSocial) / 30f);
-            // Popular friends are sought out more, outcasts less (Standing, 2026-10-27).
+            // Popular friends are sought out more, outcasts less (Standing).
             var best = Social.FriendsOf(h, 35).Where(f => f != h && Truth.AtSchool(f)).OrderByDescending(f => Social.Bond(h, f) + (Standing.Of(f) - 50) / 4 + Random.Range(0, 20)).FirstOrDefault();
             if (best != null) add(Friend + ":" + GirlInfo.Key(best), 0.6f + lonely + Social.Bond(h, best) / 50f);
             // A popular girl she merely gets along with draws her in too.
@@ -122,7 +122,8 @@ namespace Joojkk.CampusLife
             }
             else if (Cfg.StudentH.Value && Brain.Appetite(h) >= 45f && Pairs.GirlsOk(h) && (mask == PeriodMask.After || mask == PeriodMask.Club || mask == PeriodMask.Lunch))
             {
-                // Lewd enough, no girlfriend: a willing girl she gets along with will do.
+                // Lewd enough, no girlfriend: a willing girl she gets along with will do. from a lower appetite, with
+                // a small chance that grows.
                 var fling = LewdMatch(h);
                 if (fling != null) add(Privacy + ":" + GirlInfo.Key(fling), Mathf.Min(1.5f, 0.08f + (Brain.Appetite(h) - 45f) / 60f));
             }
@@ -132,7 +133,7 @@ namespace Joojkk.CampusLife
             if (sore != null) add(Avoid + ":" + sore.Other(GirlInfo.Key(h)), 1.6f);
 
             // You: love, feeling unseen, being torn, wanting to tell you something. Only a girl who knows you goes looking
-            // for you.
+            // for you (a stranger has attention 0, which read as "feels unseen" and sent her after you).
             if (!Pairs.IsScorned(h) && Social.KnowsYou(h))
             {
                 var you = h.favor / 45f + (100 - gs.Attention) / 70f + (Pairs.IsConflicted(h) ? 1.2f : 0f) + (string.IsNullOrEmpty(gs.Pending) ? 0f : 1.2f);
@@ -239,8 +240,8 @@ namespace Joojkk.CampusLife
             finally
             {
                 _inside = false;
-                // the same place, walking into each other): a girl already in a chat or right next to one gets another
-                // action instead.
+                // One chat per girl and one chat per spot, whoever chose it (two pairs talking in the same place,
+                // walking into each other): a girl already in a chat or right next to one gets another action instead.
                 try
                 {
                     if (Campus.On && __result != null && __result.actionNo == 7 && __result.heroine != null && !ChatFree(_heroine, __result.heroine))
@@ -376,8 +377,8 @@ namespace Joojkk.CampusLife
                     {
                         if (Stage.Max) return false; // a test: nobody comes to the player on her own
                         if (r.actionNo == 8 || !G.IsFreeRoaming || WalkTalk.Active || Scenes.Running) return false;
-                        // With an empty blue bar she has nothing left to say: she does not come over with the bubble only to
-                        // energia para conversar"). The game's own call-over (action 8) has the same rule.
+                        // With an empty blue bar she has nothing left to say: she does not come over with the bubble only
+                        // to have the talk end at once. The game's own call-over (action 8) has the same rule.
                         if (h.talkTime <= 0) return false;
                         // One girl at a time comes looking for you, each at most once a period.
                         var key = GirlInfo.Key(h);
@@ -445,7 +446,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>A girl at school with no girlfriend, open to girls, lewd too and not on bad terms with her: a fling
-        /// without dating (user, 2026-10-26: "podem fazer H entre si com lascívia alta mesmo sem namorarem").</summary>
+        /// without dating.</summary>
         public static SaveData.Heroine LewdMatch(SaveData.Heroine h)
         {
             return Social.Students.Where(o => o != h && GirlInfo.IsSpawned(o) && Pairs.PartnerOf(o) == null && Brain.Appetite(o) >= 35f && Pairs.GirlsOk(o) && Social.Bond(h, o) >= 10)
@@ -479,7 +480,7 @@ namespace Joojkk.CampusLife
                         return;
                     }
                 }
-                // A girl the director holds on its stage is not someone else's partner.
+                // A girl the director holds on its stage is not someone else's partner (two held girls were taken).
                 if (target != null && Stage.Holds(target.heroine))
                 {
                     var spare = G.Act.npcList.FirstOrDefault(x => x != null && x != me && x.heroine != null && !Stage.Holds(x.heroine) && x.AI != null && x.AI.result != null && !x.AI.result.isPriority && x.AI.isTalkSuccess && !x.AI.isPlayerResWaiting && (GirlInfo.Quirks(x.heroine).likeGirls || G.Act.actCtrl.GetDesire(26, x.heroine) >= 80));

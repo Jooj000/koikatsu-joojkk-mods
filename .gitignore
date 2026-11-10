@@ -14,3 +14,8 @@ tools/iconpreview/iconpreview.png
 # Python bytecode
 __pycache__/
 *.pyc
+
+tools/*
+!tools/package_release.ps1
+src/KK_CampusLife/Dev/
+release/

@@ -6,10 +6,10 @@ using HarmonyLib;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// se o mesmo está presente, caso não esteja, a opção sai"). Anything that names one of them (an achievement, an
-    /// option, a line) asks <see cref="Has"/> first; without the mod it does not show. The values are read by reflection,
-    /// never linked at build time, so the mod loads the same without them (a game without the HF Patch). The full list
-    /// of required and optional mods is in DEPENDENCIES.md at the repo root.
+    /// Other mods the Campus Life content talks about. Anything that names one of them (an achievement, an option, a line)
+    /// asks <see cref="Has"/> first; without the mod it does not show. The values are read by reflection, never linked at
+    /// build time, so the mod loads the same without them (a game without the HF Patch). The full list of required and
+    /// optional mods is in DEPENDENCIES.md at the repo root.
     /// </summary>
     internal static class Mods
     {

@@ -1,6 +1,7 @@
-# The romance page's plain steps, moved word for word out of RomanceLines.cs, ConvoLines.cs and Conversation.Unified.cs.
+# The romance page's plain steps, from RomanceLines.cs, ConvoLines.cs and Conversation.Unified.cs.
 # {act} hand | feelings | flirt | compliment | noticed | love | jealous | notnow | breakup | wary (what you did), {rname} who she is jealous of, {q} yes | no | again, love | plain for jealousy, date | confess | lunch | home | later for notnow (how she took it), {close} Lines.Closeness (2 = you are
 # together), {lvl} for feelings gf | deep | friend | far, for her answer to a compliment looks | other, for yours effort | club | smart | looks, set in Conversation.Romance.cs with the old thresholds. Weights in
+# weights.dlg (@weights romance). The steps with sexual content are in intimate.dlg.
 # {hook} the line you just said: flirt.share (what you feel, "Me too" answers it), flirt.praise (about her,
 # never "Me too"), flirt.spend ("I really like spending time with you"); today | yesterday for a compliment again.
 
@@ -144,7 +145,7 @@ when act=hand q=yes close<=1 tone=cool
 - Only for a little while.
 - Briefly.
 
-# Said walking down a hallway (2026-11-07: a place word only where she is).
+# Said walking down a hallway (a place word only where she is).
 @rule romance.hand.yes.far.hallway.cool
 on romance
 when act=hand q=yes close<=1 place=hallway tone=cool
@@ -1487,7 +1488,7 @@ feel pout
 - You already got my answer. Want it in writing?
 - If you have to keep asking, you already know.
 
-# Too soon (2026-11-07, "reclamei que as personagens aceitavam romance desde o começo"): her no when she has barely talked to you. Wins over the plain no of each step; the "you already asked" no stays in the pool.
+# Too soon: her no when she has barely talked to you. Wins over the plain no of each step; the "you already asked" no stays in the pool.
 
 @rule romance.early.no.gentle
 on romance
@@ -1529,7 +1530,7 @@ feel pout
 - Hmm, I'll think about it. In a few weeks.
 - Earn it first. Talk to me more, then we'll see.
 
-# Yes, again (2026-11-07): she takes a step you already tried today, and says so. Shares the pool with the yes of each step.
+# Yes, again: she takes a step you already tried today, and says so. Shares the pool with the yes of each step.
 
 @rule romance.pushed.yes.gentle
 on romance
@@ -1567,7 +1568,7 @@ feel smile
 - Hehe, you don't give up. That's kind of cute.
 - More of that already? Okay, but you owe me.
 
-# ================= your ask the game does not allow now, and her H no =================
+# ================= your ask the game does not allow now, and her H no (from Conversation.Unified.cs NotNow) =================
 @rule me.romance.notnow.date
 on me.romance
 when act=notnow lvl=date

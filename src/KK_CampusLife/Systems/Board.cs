@@ -56,7 +56,8 @@ namespace Joojkk.CampusLife
         /// <summary>The problem in her own words (for "Let her talk").</summary>
         public static string ProblemFirst(Request r, Tone t)
         {
-            // Her first words about it, from board.dlg by the kind and her tone: the request's own text and place are slots.
+            // Her first words about it, from board.dlg by the kind and her tone: the request's own text and place are
+            // slots.
             if (r.Kind == RequestKind.Intimate) return r.Text;
             return Conversation.BoardSay(GirlInfo.Find(r.Girl), r.Kind.ToString().ToLowerInvariant(), r.Place, r.Text, r.Source) ?? r.Text ?? "...";
         }
@@ -104,7 +105,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// quadro"), by the signal the moods and the weekly report already use. One with her own talk request is left out.
+        /// The girls who know you and have not heard from you, by the signal the moods and the weekly report already use.
+        /// One with her own talk request is left out.
         /// </summary>
         private static List<SaveData.Heroine> Missing()
         {
@@ -116,7 +118,7 @@ namespace Joojkk.CampusLife
             }).OrderBy(h => S.Girl(GirlInfo.Key(h)).Attention).ToList();
         }
 
-        /// <summary>One entry for all of them ("caso tenha mais de uma, use a mesma entrada"), remade each day: Item holds their keys.</summary>
+        /// <summary>One entry for all of them, remade each day: Item holds their keys.</summary>
         private static void PostMissing()
         {
             S.Requests.RemoveAll(r => r.Source == "miss" && r.State == RequestState.Active);
@@ -175,9 +177,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// A request today waits for a girl who did not come (user, 2026-10-26: "uma missão para a tatsumaki sendo que ela
-        /// hoje e a personagem faltou"): the board is made when the day starts, before the scene knows who came, so this
-        /// runs again once it knows (once per period), and the second girl of a request counts too.
+        /// A request today waits for a girl who did not come: an open one moves to tomorrow without a penalty. the board
+        /// is made when the day starts, before the scene knows who came, so this runs again once it knows (once per
+        /// period), and the second girl of a request counts too.
         /// </summary>
         public static void PostponeAbsent()
         {
@@ -192,7 +194,8 @@ namespace Joojkk.CampusLife
             foreach (var r in S.Requests.Where(q => (q.State == RequestState.Active || q.State == RequestState.Hidden) && q.DeadlineDay <= S.Day
                                                     && (!string.IsNullOrEmpty(q.Girl) && !Truth.AtSchool(q.Girl) || !string.IsNullOrEmpty(q.Other) && !Truth.AtSchool(q.Other))).ToList())
             {
-                // today: it goes away, and a girl who is here gets one instead.
+                // A board talk ("Say hi", "Check on her") is about today: it goes away, and a girl who is here gets one
+                // instead.
                 if (r.Kind == RequestKind.Talk && (r.Source == "board" || r.Source == "harem" || r.Source == "happening"))
                 {
                     S.Requests.Remove(r);
@@ -200,7 +203,7 @@ namespace Joojkk.CampusLife
                     CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " dropped (" + GirlInfo.FirstName(r.Girl) + " is not on campus; it was only for today)");
                     continue;
                 }
-                // "qualquer missão até amanhã tem que garantir que ela venha amanhã": OptimizerLink loads her first.
+                // OptimizerLink loads her first.
                 r.DeadlineDay = S.Day + 1;
                 var who = !string.IsNullOrEmpty(r.Girl) && !Truth.AtSchool(r.Girl) ? r.Girl : r.Other;
                 CampusLifePlugin.Log.LogInfo("Board: " + r.Title + " waits for tomorrow (" + GirlInfo.FirstName(who) + " is not on campus; she comes first tomorrow)");
@@ -209,8 +212,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// due on it (one posted on Saturday "for tomorrow", a favor, one found out by talking) could never be done and was
-        /// counted as missed on Monday. When Sunday starts, they move to Monday.
+        /// Sunday has no school, so a request due on it (one posted on Saturday "for tomorrow", a favor, one found out by
+        /// talking) could never be done and was counted as missed on Monday. When Sunday starts, they move to Monday.
         /// </summary>
         public static void SkipHoliday()
         {
@@ -240,8 +243,8 @@ namespace Joojkk.CampusLife
         public static void GenerateDaily()
         {
             if (!Cfg.BoardEnabled.Value || !G.IsSchoolDay) return;
-            // scene knows who came, the board asked girls who stayed home. It waits for the loaded period (EnsureToday,
-            // every second), so every request is for a girl who is here today.
+            // Made at the start of the day, before the scene knows who came, the board asked girls who stayed home. It
+            // waits for the loaded period (EnsureToday, every second), so every request is for a girl who is here today.
             if (!Truth.Known) return;
             S.Buffs["board_day"] = S.Day;
             // Clean old finished requests (keep a few days for the journal view)
@@ -266,14 +269,15 @@ namespace Joojkk.CampusLife
         public static bool Empty { get { return !S.Requests.Any(r => (r.State == RequestState.Active || r.State == RequestState.Hidden) && r.DeadlineDay >= S.Day); } }
 
         /// <summary>
-        /// horário novo (não no primeiro)"): three more, once per period. The day's first period has GenerateDaily.
+        /// A new period with the board empty: three more, once per period. The day's first period has GenerateDaily.
         /// </summary>
         public static void RefillIfEmpty()
         {
             if (!Cfg.BoardEnabled.Value || !G.IsSchoolDay || !G.InRoamingPeriod) return;
             int day;
             if (!S.Buffs.TryGetValue("board_day", out day) || day != S.Day) return; // the first period: the daily board
-            // is the last period of the day, with nothing left to do them in. The refill is for lunch and club time only.
+            // After class is the last period of the day, with nothing left to do them in. The refill is for lunch and club
+            // time only.
             if (G.CurrentMask == PeriodMask.After) return;
             var stamp = S.Day * 16 + (int)G.CurrentMask;
             int done;
@@ -342,14 +346,15 @@ namespace Joojkk.CampusLife
 
         public static void Add(Request r)
         {
+            // One gift request per girl at a time, whoever posts it (two came in through Add).
             if (r.Kind == RequestKind.Gift && !string.IsNullOrEmpty(r.Girl) && Active.Any(x => x.Kind == RequestKind.Gift && x.Girl == r.Girl))
             {
                 CampusLifePlugin.Log.LogInfo("Board: " + GirlInfo.FirstName(r.Girl) + " already has a gift request open; '" + r.Title + "' not posted.");
                 return;
             }
-            // with X", "Cheer up X", "Be there for X", the arcs...), and some were made at the start of the day, before the
-            // scene knew who came. A talk with a girl who is not here today is not posted; anything else waits for tomorrow,
-            // when OptimizerLink loads her first.
+            // Every request goes through here (harem "Time with X", "Cheer up X", "Be there for X", the arcs...), and some
+            // were made at the start of the day, before the scene knew who came. A talk with a girl who is not here today
+            // is not posted; anything else waits for tomorrow, when OptimizerLink loads her first.
             if (Truth.Known && r.Source != "miss")
             {
                 var away = !string.IsNullOrEmpty(r.Girl) && !Truth.AtSchool(r.Girl) ? r.Girl : !string.IsNullOrEmpty(r.Other) && !Truth.AtSchool(r.Other) ? r.Other : null;
@@ -394,7 +399,8 @@ namespace Joojkk.CampusLife
                 case Mood.Upset: options.Add(RequestKind.Gift); break;
                 default: options.AddRange(new[] { RequestKind.Errand, RequestKind.MeetAt, RequestKind.Talk, RequestKind.Lunch, RequestKind.Study, RequestKind.Exercise }); break;
             }
-            // treat" and "X asked you to bring her something" at once): no request for another one.
+            // Already got her gift today, or another gift request of hers is open ("X could use a treat" and "X asked
+            // you to bring her something" at once): no request for another one.
             if (G.Weekday == Cycle.Week.Saturday) { options.RemoveAll(k => k == RequestKind.Lunch); if (options.Count == 0) options.Add(RequestKind.Gift); }
             if (gs.LastGiftDay == S.Day || OpenFor(gs.Key).Any(q => q.Kind == RequestKind.Gift)) { options.RemoveAll(k => k == RequestKind.Gift); if (options.Count == 0) options.Add(RequestKind.Talk); }
             if (Random.value < 0.25f) options.Add(RequestKind.Errand);
@@ -535,7 +541,7 @@ namespace Joojkk.CampusLife
         /// <summary>
         /// A girl with an open request for this period gets one point of talk time back (once a period) when she has
         /// none: with an empty blue bar the game ends the talk at once, so the request could not be done at all (a gift
-        /// request with Nagatoro, 2026-10-11: no talk, no gift, and the next period "already got a gift today").
+        /// request with Nagatoro; no talk, no gift, and the next period "already got a gift today").
         /// </summary>
         public static void KeepTalkTime()
         {
@@ -554,8 +560,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// now, the first time you go up to her in a period with it empty, she gets one point back for a short talk: the
-        /// free options only (as the point given back for a request), and the game's goodbye once they are used.
+        /// The game ends a talk at once when her blue bar is empty; now, the first time you go up to her in a period with
+        /// it empty, she gets one point back for a short talk: the free options only (as the point given back for a
+        /// request), and the game's goodbye once they are used.
         /// </summary>
         public static bool KeepTalkFor(SaveData.Heroine h)
         {
@@ -608,7 +615,7 @@ namespace Joojkk.CampusLife
                 .Select(r => GirlInfo.FirstName(r.Girl)).Distinct().ToList();
         }
 
-        /// <summary>The color of "this fulfils a request".</summary>
+        /// <summary>The color of "this fulfils a request" (the border of the items that fit).</summary>
         public static readonly Color FitColor = new Color(1f, 0.55f, 0.8f, 1f);
 
         public static void OnGift(SaveData.Heroine h, ItemDef item)
@@ -717,8 +724,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The rooftop talk from the note in your locker: the
-        /// place, what she needs (her voice) and three ways to answer, each with its own reaction.
+        /// The rooftop talk from the note in your locker (it never had a line of its own): the place, what she needs (her
+        /// voice) and three ways to answer, each with its own reaction.
         /// </summary>
         private static void NoteScene(SceneBuilder b, SaveData.Heroine h, Tone tone, Request r)
         {
@@ -760,9 +767,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The rumor that she likes you:
-        /// you bring it up, she answers as the director has her (sure, flustered, dodging, flat no), and you choose what
-        /// to say back; telling her you like her too leads into the game's own confession when she is open to it.
+        /// The rumor that she likes you: you bring it up, she answers as the director has her (sure, flustered, dodging,
+        /// flat no), and you choose what to say back; telling her you like her too leads into the game's own confession
+        /// when she is open to it.
         /// </summary>
         private static void RumorScene(SceneBuilder b, SaveData.Heroine h, Tone tone)
         {
@@ -981,7 +988,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// dizendo que está em bad mood"): the reason written when it was posted follows her mood of this moment.
+        /// The request's text as of now: the reason written when it was posted follows her mood of this moment.
         /// </summary>
         public static string TextOf(Request r)
         {

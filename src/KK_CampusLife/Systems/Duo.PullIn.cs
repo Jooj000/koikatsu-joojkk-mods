@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// estão conversando ou brigando, etc, conversar com uma deve puxar a dupla"). The pair the director gathered on the map
+    /// Talking to one of two girls who are together pulls in the other. The pair the director gathered on the map
     /// (Director.Gather), or two in the game's own chat (Truth.ChatPartner) within 4 m: the talk opens with the one you
     /// clicked, the other stands beside her as in a duo scene, and the talk with both starts at once in their mood (an
     /// argument stays an argument). When it closes, the second girl goes on with her day.

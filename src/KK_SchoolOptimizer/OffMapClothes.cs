@@ -126,7 +126,8 @@ namespace Joojkk.SchoolOptimizer
             if (act.Map == null || act.npcList == null || act.Player == null) return;
             var map = act.Map.no;
 
-            // for minutes), or a release still running while she is needed now: dropped, and she is dressed in this frame.
+            // A release or rebuild that is stuck (her coroutine stopped; Elma kept hidden on the player's map for
+            // minutes), or a release still running while she is needed now: dropped, and she is dressed in this frame.
             if (Stripping.Count > 0 || Dressing.Count > 0) Unstick(map);
 
             // Every frame: she is on the player's map, shown, or someone tried to show her.

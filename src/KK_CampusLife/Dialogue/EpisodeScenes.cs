@@ -101,7 +101,7 @@ namespace Joojkk.CampusLife
         /// <summary>Her hand on the way back; when she takes it and you are close enough, maybe a kiss.</summary>
         private static void Close(Ctx c, SceneBuilder b, Tally t)
         {
-            var ok = Consent.Yes(c.Her, "ep:close", CloseChance(c));   // context, not a roll (2026-11-07)
+            var ok = Consent.Yes(c.Her, "ep:close", CloseChance(c));   // context, not a roll
             b.Narr("On the way back, the street is quiet. Your hands keep almost touching.");
             b.Me(c.Girlfriend ? Lines.Pick("Come here. Give me your hand.", "Let's walk like this for a while.") : Lines.Pick("Can I... hold your hand? Just until the station.", "Your hands look cold. Here."));
             if (!ok)

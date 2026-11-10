@@ -7,8 +7,8 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// mais contextuais por estarem em dupla"): the other girl is right there, so some options use her. Ask about her, get
-    /// an embarrassing story out of her friend, ask whether she talks about you, slip a note past her, invite both,
+    /// The talk with both, aimed at one of them: the other girl is right there, so some options use her. Ask about her,
+    /// get an embarrassing story out of her friend, ask whether she talks about you, slip a note past her, invite both,
     /// compliment one in front of the other, a touch she is not supposed to see. Each one once per talk; the other girl
     /// answers or notices, and the witness rules of the talk with both follow (she may be jealous, a rival may sulk).
     /// Lines from duo3.dlg ("duo3.pair.*"), stock lines here as the fallback.

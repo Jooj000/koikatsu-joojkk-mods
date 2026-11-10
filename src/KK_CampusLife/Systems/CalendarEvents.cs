@@ -7,9 +7,10 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// (<see cref="EventBackdrop"/>), three or four choices that meet again (<see cref="SceneBuilder.Goto"/>), and
-    /// rewards read from every choice taken (<see cref="Scenes.Picks"/>). Stat checks are rolled before the scene, so
-    /// the text can tell how it went.
+    /// The school calendar's events as long scenes: several parts over painted backgrounds (<see
+    /// cref="EventBackdrop"/>), three or four choices that meet again (<see cref="SceneBuilder.Goto"/>), and rewards
+    /// read from every choice taken (<see cref="Scenes.Picks"/>). Stat checks are rolled before the scene, so the
+    /// text can tell how it went.
     /// </summary>
     internal static partial class Calendar
     {
@@ -23,7 +24,7 @@ namespace Joojkk.CampusLife
         /// <summary>A stat roll without spending the lucky charm (the charm, if any, is spent once at the end).</summary>
         private static bool Roll(int stat, int difficulty, int charm)
         {
-            // Your stat against the bar (2026-11-07: context, not chance); only a tie, within two points, goes to the dice.
+            // Your stat against the bar (context, not chance); only a tie, within two points, goes to the dice.
             return Consent.Yes(null, "cal:" + difficulty + ":" + stat, 0.5f + (stat + 20 + charm - difficulty) / 50f);
         }
 
@@ -672,7 +673,7 @@ namespace Joojkk.CampusLife
             var tops = TopGirls(2);
             var b = new SceneBuilder(null, false);
 
-            b.Bg("@station2|@station|train");
+            b.Bg("@station2|@station|train"); // the game's station first
             b.Narr("Field trip day! The whole class boards the bullet train to " + (kyoto ? "Kyoto" : "a hot spring town in the mountains") + ".");
             b.Bg("train");
             b.Narr("Rice fields fly past the window. Somebody already opened the snacks. The professor has given up.");

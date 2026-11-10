@@ -1,4 +1,4 @@
-# os valores têm pesos diferentes. decida o que achar melhor para ter mais naturalidade").
+# What each condition is worth, per kind of interaction.
 # A rule's score is the sum of the weights of its conditions; the best rules (one point of slack) share the draw.
 # "@weights <on>" covers that situation; "me.small" falls back to "small", "move.ask" to "move", then "default".
 # A key not listed counts 1. Guide: 3 = what the line is about, 2-2.5 = who she is to you and how she feels,
@@ -70,7 +70,7 @@
 @weights duo3.talk
 - pers=2.5 argue=30 myrole=2 otherrole=2 trisal=1 pair=1 othermood=3 wet=4 exam=1 sameclub=4 shared=1 period=4
 
-# The romance page's plain steps: the step and how she took it; who is watching and her mood
+# The romance page's plain steps (romance.dlg): the step and how she took it; who is watching and her mood
 # only add lines, so they stay worth 1 and the base lines keep sharing the draw. The hook of your line is
 # worth 1 too: her answers to that line come first, and the ones that fit any line of the step stay in the draw.
 @weights romance

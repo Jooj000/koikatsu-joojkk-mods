@@ -48,5 +48,3 @@ No optional mods.
 
 - Campus Life: with it, each save also shows the day number. Campus Saves works without it.
 
-## Developer only
-

@@ -3,9 +3,9 @@ using System;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// One drawing per store item, in
-    /// the same signed-distance style as the activity and request drawings, so the store and the bag show what each thing
-    /// is: a chocolate bar, a cookie, a can, a bouquet... Each item also has its own color.
+    /// One drawing per store item, in the same signed-distance style as the activity and request drawings, so the store
+    /// and the bag show what each thing is: a chocolate bar, a cookie, a can, a bouquet... Each item also has its own
+    /// color.
     /// </summary>
     internal static partial class IconArt
     {

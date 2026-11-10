@@ -5,7 +5,8 @@ using System.Linq;
 namespace Joojkk.CampusLife
 {
     public enum Mood { None, Cheerful, Hungry, Bored, Stressed, Lonely, Flirty, Sleepy, Upset }
-    // A line written for four voices falls back: Shy speaks as Gentle, Proper as Cool (Lines.T, Bank tone=).
+    // Shy (timid, stammering) and Proper (polite, formal). A line written for four voices falls back: Shy speaks as
+    // Gentle, Proper as Cool (Lines.T, Bank tone=).
     public enum Tone { Gentle, Energetic, Cool, Teasing, Shy, Proper }
 
     public enum RequestKind

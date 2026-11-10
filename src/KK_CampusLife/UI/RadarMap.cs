@@ -10,13 +10,12 @@ using Object = UnityEngine.Object;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// caso a personagem no mapa esteja em outro andar ela fica menos destacada e com uma setinha bem pequena para cima ou
-    /// baixo"). The game's radar (bl_MiniMap) has a top-down orthographic camera that follows the player but draws nothing
-    /// (no map picture in this game), only the icons on top.
-    /// second looked choppy. Now the whole floor is photographed once from straight above (cut just over the head and
-    /// just under the feet, so only the floor he is on shows) into an image per map and floor, and every frame that image
-    /// is only moved and turned under the icons with the radar camera's own mapping (WorldToViewportPoint, the same one
-    /// the icons use). Girls more than a floor's height away get a dimmed icon and a tiny arrow.
+    /// The radar becomes a map. The game's radar (bl_MiniMap) has a top-down orthographic camera that follows the player
+    /// but draws nothing (no map picture in this game), only the icons on top.
+    /// Rendering that camera's view 10 times a second looked choppy. Now the whole floor is photographed once from straight above (cut just over the head and just under
+    /// the feet, so only the floor he is on shows) into an image per map and floor, and every frame that image is only
+    /// moved and turned under the icons with the radar camera's own mapping (WorldToViewportPoint, the same one the icons
+    /// use). Girls more than a floor's height away get a dimmed icon and a tiny arrow.
     /// </summary>
     internal static class RadarMap
     {
@@ -25,7 +24,7 @@ namespace Joojkk.CampusLife
         private const int MaxCached = 4;
         private const float TexelsPerMeter = 6f;
         private const int MaxTexture = 2048;
-        /// <summary>The radar shows 10% less ground than the game's (asked 2026-10-26: "dê um zoom de 10% no radar").</summary>
+        /// <summary>The radar shows 10% less ground than the game's (asked).</summary>
         private const float Zoom = 0.9f;
 
         private sealed class Floor
@@ -62,8 +61,8 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// An icon out of range (a girl with a request, an event) is kept inside the radar's square by the game, so in the
-        /// ícone de missão no radar parece não ser o centro do radar"). It now sits on the circle's edge, in her direction
-        /// from the center.
+        /// round radar it slid along the hidden corners and seemed to turn around another point (mid). It now sits on the
+        /// circle's edge, in her direction from the center.
         /// </summary>
         internal static int Clamped;
         internal static string LastClamp = "-";
@@ -137,7 +136,8 @@ namespace Joojkk.CampusLife
                 _cam.cullingMask = WorldMask(src);
                 LogSetup(src, root);
             }
-            // Inside the radar's round mask (its teal disc is the mask's own image and covered anything placed before it,
+            // Inside the radar's round mask (its teal disc is the mask's own image and covered anything placed before
+            // it), first among its children: over the disc, under the rings and the icons, cut to the circle.
             var holder = root.Cast<Transform>().FirstOrDefault(c => c.GetComponent<Mask>() != null) ?? root;
             if (_frame == null || _frame.parent != holder)
             {
@@ -193,11 +193,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The picture of the floor the player is on. 2026-10-28 ("eu já falei para o radar ser só imagem. só guardar as
-        /// imagens resultantes e utilizar ao invés de renderizar do 0"): every picture ever taken is saved as a PNG in
+        /// The picture of the floor the player is on. every picture ever taken is saved as a PNG in
         /// BepInEx/cache/joojkk_radar (one per map and floor, the same at any time of day), and from then on it is only
         /// loaded. A new picture is taken only where there is none within 1.5 m of height, and only once the player has
-        /// stood on that height for a second.
+        /// stood on that height for a second (never on the steps of a staircase).
         /// </summary>
         private static Floor FloorFor()
         {
@@ -382,8 +381,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// quase não aparecem"): where the picture changes sharply (brightness or void against floor) a dark two-pixel
-        /// line is drawn, which turns rooms and walls into a plan. Null when the picture cannot be read back.
+        /// Seen from above, the cut slice shows walls as thin bands that blend into the floor (P3): where the picture
+        /// changes sharply (brightness or void against floor) a dark two-pixel line is drawn, which turns rooms and walls
+        /// into a plan. Null when the picture cannot be read back.
         /// </summary>
         private static Texture2D Outlined(RenderTexture rt)
         {
@@ -479,7 +479,8 @@ namespace Joojkk.CampusLife
                 try { item = NpcIcon(npc); } catch { continue; }
                 if (item == null || item.iconItem == null || item.iconItem.graphic == null) continue;
                 var g = item.iconItem.graphic;
-                // game missed leaves a girl who is right here invisible on the radar.
+                // The icon follows the NPC's active switch, and a switch the game missed leaves a girl who is right here
+                // invisible on the radar.
                 if (npc.isActive && act.Map != null && npc.mapNo == act.Map.no && !item.iconItem.visible) item.SetVisible(true);
                 var dy = npc.position.y - py;
                 var other = npc.isActiveAndEnabled && Mathf.Abs(dy) > OtherFloor;
@@ -507,6 +508,7 @@ namespace Joojkk.CampusLife
                 }
                 if (!arrow.gameObject.activeSelf) arrow.gameObject.SetActive(true);
                 // Beside the icon on the screen, up or down on the screen, whichever way the radar turns (the offset in the
+                // icon's own space turned with it: "se movendo tortos ao girar o radar").
                 arrow.transform.position = g.rectTransform.position + new Vector3(9f, 9f, 0f) * g.rectTransform.lossyScale.x;
                 arrow.transform.rotation = Quaternion.Euler(0f, 0f, dy > 0f ? 0f : 180f);
                 arrow.transform.SetAsLastSibling();
@@ -518,7 +520,7 @@ namespace Joojkk.CampusLife
             }
         }
 
-        /// <summary>A white chevron with a dark line, pointing up.</summary>
+        /// <summary>A white chevron with a dark line, pointing up (it was a flat triangle).</summary>
         private static Sprite Arrow()
         {
             if (_arrow != null) return _arrow;

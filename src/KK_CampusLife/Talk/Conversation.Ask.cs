@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// "How are you?" speaks from the bank. Who asks and what it teaches you stay with the caller; only
-    /// the words come from here. {amood} is her mood, or "again" when you already asked today, and {close} is Lines.Closeness.
+    /// "How are you?" speaks from the bank (ask.dlg). Who asks and what it teaches you stay with the caller; only the words
+    /// come from here. {amood} is her mood, or "again" when you already asked today, and {close} is Lines.Closeness.
     /// </summary>
     internal static partial class Conversation
     {

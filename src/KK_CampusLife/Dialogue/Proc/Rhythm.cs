@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// How fast she lets things go (procedural dialogue, section 7; decision koikatsu-decisao-ritmo-de-5-dias-por-personalidade):
+    /// How fast she lets things go (procedural dialogue):
     /// a reserved girl gains romance and spicy at 0.7, rising with the days you know her and her trust up to normal; an
     /// open one at 1.4; dating adds 0.1. A good day builds momentum (up to x1.5 the same day) and the week's spotlight
     /// girls give x1.25.
@@ -43,7 +43,7 @@ namespace Joojkk.CampusLife
             if (h == null || S == null) return 1f;
             var key = GirlInfo.Key(h);
             var f = 1f;
-            // One pace for answers and gains.
+            // One pace for answers and gains (there were two formulas that disagreed).
             if (level > 0) f = Consent.Multiplier(h);
             f *= 1f + Mathf.Min(0.5f, Momentum(key) * 0.1f);
             if (Spotlight.IsActive && S.Spotlight.Contains(key)) f *= 1.25f;

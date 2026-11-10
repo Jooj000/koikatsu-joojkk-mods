@@ -55,8 +55,8 @@ namespace Joojkk.CampusLife
 
             _tabs = GameUi.Rect(_root, "tabs");
             _tabs.Place(16f, 14f, 1840f, 44f);
-            // help page apart after a gap, and on the right what leads out: the store (when you are at the cafeteria) and
-            // back to the cards.
+            // The four pages you play with side by side, the help page apart after a gap, and on the right what leads out:
+            // the store (when you are at the cafeteria) and back to the cards.
             var x = 0f;
             TabButtons.Clear();
             foreach (var tab in new[] { PanelTab.Today, PanelTab.Calendar, PanelTab.Activities, PanelTab.Album, PanelTab.Details })
@@ -108,7 +108,8 @@ namespace Joojkk.CampusLife
                 if (_title != null) { _savedTitle = _title.text; }
                 _lastResult = "";
             }
-            // letters showed through it), so it is hidden; the tab row and the store's heading already say where you are.
+            // The game's own title sits under the time bar while our pages are up (the letters showed through it), so it
+            // is hidden; the tab row and the store's heading already say where you are.
             if (_title != null) { _title.text = tab == PanelTab.Shop ? "Campus Store" : "Campus Life"; _title.enabled = false; }
             // The store is its own screen: no tabs.
             _tabs.gameObject.SetActive(tab != PanelTab.Shop);
@@ -130,7 +131,7 @@ namespace Joojkk.CampusLife
         public static void Refresh()
         {
             if (_root == null || !_root.gameObject.activeSelf) return;
-            // page (a purchase, a button) keeps where you were; a new page starts at the top.
+            // A refresh of the same page (a purchase, a button) keeps where you were; a new page starts at the top.
             var same = _drawnTab == _tab;
             var leftPos = _leftScroll != null ? _leftScroll.verticalNormalizedPosition : 1f;
             var rightPos = _rightScroll != null ? _rightScroll.verticalNormalizedPosition : 1f;
@@ -169,7 +170,7 @@ namespace Joojkk.CampusLife
         private static PanelTab _drawnTab = PanelTab.None;
 
         /// <summary>
-        /// Buy button does, and says where the list is after the page is drawn again.
+        /// says where the list is after the page is drawn again.
         /// </summary>
         internal static string TestBuy()
         {
@@ -273,7 +274,7 @@ namespace Joojkk.CampusLife
 
         private static string Hex(Color c) { return "#" + ColorUtility.ToHtmlStringRGB(c); }
 
-        // each girl or entry is a row with a round icon, the name in gold, a gauge of squares and the rest dimmed.
+        // Each girl or entry is a row with a round icon, the name in gold, a gauge of squares and the rest dimmed.
         private static readonly Color Pink = new Color(1f, 0.55f, 0.75f, 1f);
         private static readonly Color Blue = new Color(0.45f, 0.72f, 1f, 1f);
 
@@ -491,7 +492,8 @@ namespace Joojkk.CampusLife
                 if (mapNo >= 0 && !StatusUi.AtNight && Places.CurrentId != a.Place) SmallButton(row, Places.Name(a.Place), () => StatusUi.Warp(mapNo), 190f);
             }
 
-            // her name picked out, her mood of now, and the deadline colored by how close it is.
+            // The kind in its badge color, her name picked out, her mood of now, and the deadline colored by how close it
+            // is.
             var text = Board.TextOf(r);
             if (h != null)
             {
@@ -586,9 +588,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// each entry is one short row with an icon and a color for its kind instead of the written prefix ("Done:",
-        /// "Missed:", "Achievement:"...); the reward is a small colored tag; a day's misses are one row; the news goes last,
-        /// small and dimmed; days before yesterday are folded into one summary row with a button to open them.
+        /// Journal, newest first. each entry is one short row with an icon and a color for its kind instead of the written
+        /// prefix ("Done:", "Missed:", "Achievement:"...); the reward is a small colored tag; a day's misses are one row;
+        /// the news goes last, small and dimmed; days before yesterday are folded into one summary row with a button to
+        /// open them.
         /// </summary>
         private static void CalendarRight()
         {
@@ -909,8 +912,8 @@ namespace Joojkk.CampusLife
 
         // ---------------- School store ----------------
 
-        // its icon (the like it is for, or the bag), the price as a gold tag, the likes as their round icons instead of a
-        // sentence, and the girls you know would love it.
+        // Your money in big gold letters, every item on a row with its icon (the like it is for, or the bag), the price as
+        // a gold tag, the likes as their round icons instead of a sentence, and the girls you know would love it.
         private static void ShopLeft()
         {
             var s = Campus.S;
@@ -929,7 +932,8 @@ namespace Joojkk.CampusLife
 
         private static readonly Dictionary<string, Sprite> ItemIcons = new Dictionary<string, Sprite>();
 
-        // and color (IconArt.Items.cs), on a round badge like the board's requests, in the store and in the bag.
+        // Each item has its own drawing and color (IconArt.Items.cs), on a round badge like the board's requests, in
+        // the store and in the bag.
         private static Sprite ItemIcon(ItemDef i)
         {
             Sprite sp;
@@ -952,7 +956,9 @@ namespace Joojkk.CampusLife
                 {
                     if (i.Intimate && !Cfg.LewdRequests.Value) continue;
                     var b = GameUi.Block(_right, i.Id);
+                    // The note names who asked.
                     var fitsFor = type == ItemType.Gift ? Board.GiftFitsFor(i) : new List<string>();
+                    // No frame here; the pink border is in the talk's gift menu.
                     var r = GameUi.Row(b, "row", 46f);
                     Icon(r, ItemIcon(i), 42f);
                     var have = s.Count(i.Id) > 0 ? "  <size=18><color=" + Hex(GameUi.Green) + ">x" + s.Count(i.Id) + "</color></size>" : "";

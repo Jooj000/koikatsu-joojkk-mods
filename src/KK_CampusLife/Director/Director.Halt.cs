@@ -7,12 +7,12 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// de retirar a ia de alguém para faze-la parar, adicione a ação de parar pelo próprio diretor. como eu sempre digo, o
-    /// diretor deve estar acima do jogo"). Her AI keeps running; the director holds her feet (the mover's own stop, the
-    /// walk speed at zero, her spot kept every frame) and owns what she does next: whatever the game draws for her while
-    /// she is stopped becomes a calm thing to do where she stands (Stage.Steer), and anything that goes to the player
-    /// (call him for H, "come with me", talk to him) is swapped at once. Release gives her feet back; her AI goes on from
-    /// where it was. Each stop and its reason goes to the director's log and to Truth ("stopped: talking with you").
+    /// Stopping a girl is the director's action, not taking her AI away. Her AI keeps running; the director holds her feet
+    /// (the mover's own stop, the walk speed at zero, her spot kept every frame) and owns what she does next: whatever the
+    /// game draws for her while she is stopped becomes a calm thing to do where she stands (Stage.Steer), and anything
+    /// that goes to the player (call him for H, "come with me", talk to him) is swapped at once. Release gives her feet
+    /// back; her AI goes on from where it was. Each stop and its reason goes to the director's log and to Truth ("stopped:
+    /// talking with you").
     /// </summary>
     internal static partial class Director
     {
@@ -56,7 +56,7 @@ namespace Joojkk.CampusLife
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Director halt: " + e.Message); }
         }
 
-        /// <summary>Stopped, facing another girl.</summary>
+        /// <summary>Stopped, facing another girl (two talking on the map).</summary>
         public static void HaltFacing(NPC n, NPC other, string why)
         {
             Halt(n, why);

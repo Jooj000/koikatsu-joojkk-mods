@@ -1,5 +1,5 @@
-# The intimate steps of the romance page, moved word for word out of RomanceLines.cs and the
-# spicy answers of Conversation.Unified.cs (criterion F7 of koikatsu-decisao-criterios-falas-fixas). Same situations as
+# The intimate steps of the romance page, from RomanceLines.cs and the
+# spicy answers of Conversation.Unified.cs. Same situations as
 # romance.dlg (on romance, on me.romance) and the same weights (@weights romance); Conversation.Romance.cs fills the keys.
 # {act} feelings | tease | whisper | memories | private | sneak | bold | heldback | wary (what you did),
 # {q} how she took it: yes | no, wary for a wary yes to sneaking off, maybe for a bold line she neither took nor refused,
@@ -87,7 +87,7 @@ when act=tease close<=1
 hook tease.looks
 - You look really good today. Like, distractingly good.
 
-# "On campus" only where it is campus (2026-11-07): not in the park.
+# "On campus" only where it is campus: not in the park.
 @rule romance.tease.yes.kiss.campus.gentle
 on romance
 when act=tease q=yes hook=tease.kiss|tease.hot|tease.library place!=park tone=gentle
@@ -387,6 +387,7 @@ feel pout
 - Pathetic. Try again later.
 - Weak. Very weak.
 
+# ================= teasing about something here and now (Conversation.Unified.cs, TeaseContext) =================
 @rule romance.tease.yes.sleepy.gentle
 on romance
 when act=tease q=yes hook=tease.sleepy tone=gentle

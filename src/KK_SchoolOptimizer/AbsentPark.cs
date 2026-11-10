@@ -13,16 +13,14 @@ namespace Joojkk.SchoolOptimizer
 {
     /// <summary>
     /// Students who did not come to school today (the day's draw gave them no NPC) keep only their game data in memory.
-    /// User, 2026-10-26: "já que algumas alunas faltam, faça com que elas não sejam carregadas em nada que não vai ser
-    /// usado no dia. apenas as informações do campus life e outros mods que mexem com faltas", then "informação de corpo
-    /// não é usada, estou falando de informação real como a do campus life ou do pregnancy".
     /// <list type="bullet">
-    /// clothes overlays as bytes), with no body loaded.</item>
-    /// <item>After the day's draw, each absent girl's large mod entries go to a file in BepInEx\cache\joojkk_absent (written,
-    /// read back and checked first) and leave her card in memory. Game data stays: KK_Pregnancy, LewdCrestX, ours, and
-    /// anything small. Campus Life keeps its data in the save, not on the card.</item>
-    /// <item>They come back by themselves the moment anything asks for them: ExtendedSave's getters, a card copy (her body
-    /// being built), a card write (the game saving). After a save she is parked again if she is still away.</item>
+    /// <item>Measured: 30 absent girls held 282 MB of appearance data inside their cards (MaterialEditor textures, skin
+    /// and clothes overlays as bytes), with no body loaded.</item>
+    /// <item>After the day's draw, each absent girl's large mod entries go to a file in BepInEx\cache\joojkk_absent
+    /// (written, read back and checked first) and leave her card in memory. Game data stays: KK_Pregnancy, LewdCrestX,
+    /// ours, and anything small. Campus Life keeps its data in the save, not on the card.</item>
+    /// <item>They come back by themselves the moment anything asks for them: ExtendedSave's getters, a card copy (her
+    /// body being built), a card write (the game saving). After a save she is parked again if she is still away.</item>
     /// <item>Data a mod set again meanwhile wins: a parked entry never overwrites a newer one.</item>
     /// </list>
     /// </summary>

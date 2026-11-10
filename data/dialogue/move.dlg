@@ -1,5 +1,5 @@
 # Labels of your answers (the choices). Short; the most specific rule wins. Same context as her line, plus {move}.
-# 2026-10-27: 4+ labels per rule ("as opções minhas também são muito iguais").
+# 4+ labels per rule, so your options never all read the same.
 
 # ---------------- ask ----------------
 @rule move.ask
@@ -293,9 +293,9 @@ on move.ask
 when kind=day fight=yes
 - [Ask what happened with {fightwho}|Ask what started the fight|Ask if she'll talk to {fightwho}|Ask how bad it is with {fightwho}]
 
-# ================= 2026-10-31: the options answer what she just said =================
+# ================= the options answer what she just said =================
 # {said} is the rule of her last line: the most exact way to answer it. Below that, the topic and its subject. Her mood alone never
-# picks an option: it answered the mood, not the line (tools/dlg_fix_options.py).
+# picks an option: it answered the mood, not the line.
 
 # ---------------- small talk, by subject ----------------
 @rule move.ask.small
@@ -796,7 +796,7 @@ on move.invite
 when said=react.tease.good.go
 - {student}[Offer to make it up to her|Offer to buy her something|Suggest settling it after class|Offer a truce over a snack]
 
-# ---------------- small talk, by what kind of line hers was (2026-10-31) ----------------
+# ---------------- small talk, by what kind of line hers was ----------------
 # A statement, a question or something she offers: the options answer that. These win over the rules by subject.
 @rule move.ask.state
 on move.ask

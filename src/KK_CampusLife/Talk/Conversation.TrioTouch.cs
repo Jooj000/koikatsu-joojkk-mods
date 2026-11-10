@@ -8,11 +8,10 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// menu", as the proposal koikatsu-arquitetura-conversa-com-duas already said). The game's touch areas exist only on
-    /// the first girl, so the second one gets ours on her bones (head, lips, hands, chest, hips), answering the game's
-    /// own touch and look modes (the icons at the top). The head pats her, near the lips it is a kiss, the hands take her
-    /// hand, the chest and hips are a bold touch (or a stare in the look mode). Each goes through her own turn, with the
-    /// first girl watching.
+    /// Touching the second girl of the conversation with both. The game's touch areas exist only on the first girl, so the second one gets ours on her bones
+    /// (head, lips, hands, chest, hips), answering the game's own touch and look modes (the icons at the top). The head
+    /// pats her, near the lips it is a kiss, the hands take her hand, the chest and hips are a bold touch (or a stare in
+    /// the look mode). Each goes through her own turn, with the first girl watching.
     /// </summary>
     internal static partial class Conversation
     {

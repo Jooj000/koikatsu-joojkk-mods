@@ -63,7 +63,8 @@ namespace Joojkk.CampusLife
             if (!Cfg.StoryDirector.Value || S.DirectorDay == S.Day || !G.IsSchoolDay) return;
             var w = G.Weekday;
             if (w.HasValue && w.Value == Cycle.Week.Saturday) return; // the game has no story events on Saturdays
-            // An event with no spot of its own is for a lesson: placed in a free period it has no waiting point and the load hangs.
+            // An event with no spot of its own is for a lesson: placed in a free period it has no waiting point and the
+            // load hangs.
             var candidates = StoryGirls.Where(HasPendingEvent).Where(h => !string.IsNullOrEmpty(NextEvent(h).LayerName)).ToList();
             S.DirectorDay = S.Day;
             if (candidates.Count == 0) { S.DirectorPick = ""; return; }

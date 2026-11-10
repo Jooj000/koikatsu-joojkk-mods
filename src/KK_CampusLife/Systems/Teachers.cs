@@ -11,7 +11,7 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// Teachers, the Campus Life way (user, 2026-10-11):
+    /// Teachers, the Campus Life way:
     /// <list type="bullet">
     /// <item>They walk around the school like the story heroines (StoryCast adds them as NPCs; ClassLoan lends a
     /// timetable).</item>
@@ -37,7 +37,8 @@ namespace Joojkk.CampusLife
         /// <summary>A regular seat made from a teacher whose event is over: her lines in conversation are a teacher's.</summary>
         public static bool IsTeacherVoice(SaveData.Heroine h) { return h != null && (h.isTeacher || S != null && S.Buffs.ContainsKey(CopyKey(h))); }
 
-        /// <summary>The seat of a teacher whose event is over: a student only in the code (user, 2026-10-31), a teacher to everyone at school.</summary>
+        /// <summary>The seat of a teacher whose event is over: a student only in the code, a teacher to everyone at
+        /// school.</summary>
         public static bool Freed(SaveData.Heroine h) { return h != null && !h.isTeacher && IsTeacherVoice(h); }
 
         /// <summary>Her name as the school says it: students and colleagues alike call a teacher sensei.</summary>

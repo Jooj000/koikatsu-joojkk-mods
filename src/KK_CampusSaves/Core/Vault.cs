@@ -40,10 +40,10 @@ namespace Joojkk.CampusSaves
     /// The versions of one campus. "pack.dat" only grows: each record is the piece's SHA-1, its length and its bytes, so
     /// a crash can only leave a cut tail, which the next open drops. A version is its own small text file, replaced in one
     /// rename. The save file itself is never needed to read this, and this is never needed to play that file.
-    /// A negative length is a piece stored compressed (Deflate), kept only when it is a tenth smaller; the
-    /// pictures inside a save do not shrink, the card data does. <see cref="Compact"/> copies the pieces some version still
-    /// uses into a new pack: "compact.ok" marks the moment the new files are complete, so a crash before it drops them and
-    /// a crash after it finishes the swap.
+    /// A negative length is a piece stored compressed (Deflate), kept only when it is a tenth smaller; the pictures inside
+    /// a save do not shrink, the card data does. <see cref="Compact"/> copies the pieces some version still uses into a new
+    /// pack: "compact.ok" marks the moment the new files are complete, so a crash before it drops them and a crash after it
+    /// finishes the swap.
     /// </summary>
     internal sealed class Vault
     {

@@ -1,4 +1,3 @@
-# Built by tools\dlg_fact_hooks.py from tools\dlg_fact_hooks.txt: edit that one, not this one.
 
 @rule move.h.f_gossip_plain.ask
 on move.ask
@@ -7521,6 +7520,7 @@ feel pout
 - That attitude won't help you.
 - I'll be calling student affairs.
 
+# A gift she ate or drank (no receipt, no "using it")
 
 @rule move.h.f_us_gift_food.share
 on move.share

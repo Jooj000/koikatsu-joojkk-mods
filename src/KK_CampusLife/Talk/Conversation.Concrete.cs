@@ -114,7 +114,7 @@ namespace Joojkk.CampusLife
             if (Social.Gossip(h) != null) l.Add(C("c:rumor", "Rumor", "Ask what everyone's whispering about", 1.8f, () => AskSchool()));
             if (!s.Did.Contains("joke"))
             {
-                var jk = Random.Range(0, 3);   // the label and your line are the same joke
+                var jk = Random.Range(0, 3);   // the label and your line are the same joke (they were picked apart)
                 l.Add(C("c:joke", "Joke", new[] { "Tell her about the professor's tie with ducks", "Tell her the vending machine ate your coins again", "Tell her you saw the dean trip on the stairs" }[jk] + JokeOdds(s), 1.2f,
                     () => Joke(new[] { "Did you see the professor's tie today? It had ducks on it. DUCKS.", "The vending machine ate my coins again. I think it hates me personally.", "I saw the dean miss a step this morning. He pretended it was a dance move." }[jk])));
             }
@@ -198,7 +198,7 @@ namespace Joojkk.CampusLife
         {
             MarkAsked(h, "study");
             var tone = GirlInfo.ToneOf(h);
-            // Context (2026-11-07): trust, what you are to her, her mood (stressed: studying together helps her too) and INT.
+            // Context: trust, what you are to her, her mood (stressed: studying together helps her too) and INT.
             var m = MoodOf(h);
             var ok = Ctx(h, "study", Social.Trust(h) / 80f + (h.relation >= 1 || h.isGirlfriend ? 0.15f : 0f) + (m == CampusLife.Mood.Stressed ? 0.15f : m == CampusLife.Mood.Sleepy || m == CampusLife.Mood.Upset ? -0.15f : 0f) + G.Int / 400f);
             var b = new SceneBuilder(h, true);

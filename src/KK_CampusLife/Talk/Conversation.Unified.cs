@@ -9,12 +9,12 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// The single conversation (specification in exportar\sistema-de-conversa-campus-life-especificacao.md, 2026-10-12):
-    /// five real buttons in a column (Talk, Actions, Do together, Romance, Spicy: the game's speech bubble and copies of
-    /// it), each showing its own options in the list beside them; no scrolling list, no Back. Friendship, romance and spicy are levels of content and reward,
-    /// not pages. The game's own commands (invitations, confession, date, H, break up, apology) are the game's; our beats
-    /// pay from one table (level x how fitting the answer was), and the same beat again on the same day pays half, then
-    /// nothing.
+    /// The single conversation: five real
+    /// buttons in a column (Talk, Actions, Do together, Romance, Spicy: the game's speech bubble and copies of it), each
+    /// showing its own options in the list beside them; no scrolling list, no Back. Friendship, romance and spicy are
+    /// levels of content and reward, not pages. The game's own commands (invitations, confession, date, H, break up,
+    /// apology) are the game's; our beats pay from one table (level x how fitting the answer was), and the same beat again
+    /// on the same day pays half, then nothing.
     /// </summary>
     internal static partial class Conversation
     {
@@ -137,9 +137,9 @@ namespace Joojkk.CampusLife
                 }
                 return;
             }
-            // The five buttons beside the list choose the category; the list shows that category's options only (user,
-            // 2026-10-12: "eu falei 5 botões, não 5 opções com sub opções"). A list opened by something else (the game,
-            // after its apology) shows Talk, or the first category that has something.
+            // The five buttons beside the list choose the category; the list shows that category's options only. A list
+            // opened by something else (the game, after its apology) shows Talk, or the first category that has
+            // something.
             var open = _cat != null ? cats.FirstOrDefault(c => c.Key == _cat) : default(KeyValuePair<string, List<UEntry>>);
             if (open.Value == null) { open = cats.FirstOrDefault(c => c.Key == "Talk"); if (open.Value == null) open = cats[0]; _cat = open.Key; }
             foreach (var e in open.Value) Add(e.Label, e.Run, e.Like);
@@ -234,9 +234,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The column stands with its middle button (Together) at half the screen's height (user, 2026-10-26: "align it
-        /// with Together in the center of the screen's height"). Measured on screen, so building twice does not move it
-        /// twice; the option list follows by the same height (<see cref="KeepClear"/>), its top level with Talk's.
+        /// The column stands with its middle button (Together) at half the screen's height ("align it with Together in
+        /// the center of the screen's height"). Measured on screen, so building twice does not move it twice; the
+        /// option list follows by the same height (<see cref="KeepClear"/>), its top level with Talk's.
         /// </summary>
         private static void CenterCatBar(RectTransform parent)
         {
@@ -275,8 +275,8 @@ namespace Joojkk.CampusLife
             var k = OptionKind();
             if (k < 0) return new Color(0.96f, 0.96f, 0.96f, 1f);
             var a = IconArt.Accent[k];
-            // user, 2026-10-26: "the color got too strong, make it darker", then "80%, the green 70%"
-            // Talk's deeper blue is darkened less, or its letters sink into the graphite.
+            // "the color got too strong, make it darker", then "80%, the green 70%" Talk's deeper blue
+            // is darkened less, or its letters sink into the graphite.
             var dark = k == 2 ? 0.7f : k == 0 ? 0.95f : 0.8f;
             return new Color(a[0] * dark, a[1] * dark, a[2] * dark, 1f);
         }
@@ -530,8 +530,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The director's answer to a romance or spicy line: "yes",
-        /// "wary_yes" (she takes it, flustered), "wary_no" (she wanted to, something held her back) or "no".
+        /// The director's answer to a romance or spicy line (the wary answers count here too): "yes", "wary_yes" (she
+        /// takes it, flustered), "wary_no" (she wanted to, something held her back) or "no".
         /// </summary>
         private static string FlirtAnswer(SaveData.Heroine h, bool spicy, string what)
         {
@@ -610,7 +610,8 @@ namespace Joojkk.CampusLife
             var gs = S.Girl(key);
             var tone = GirlInfo.ToneOf(h);
 
-            // "Talk about what she heard about Rin"). Only a hurt of her own, else the place.
+            // A stranger: no gossip, rumors, stories or memories with someone she has never talked to (offered "Talk
+            // about what she heard about Rin"). Only a hurt of her own, else the place (4).
             if (h.relation < 0)
             {
                 var own = Social.OwnGrudge(h);
@@ -744,8 +745,8 @@ namespace Joojkk.CampusLife
         // ================= beats, rewards, repetition =================
 
         /// <summary>
-        /// "balancear direito o afeto para não encher tão rápido ... não colocar um limite artificial de piso de dias"):
-        /// with the daily curve (G.AddFavor) the days come out of the affection itself, measured with pacesim.
+        /// The reward table: level x how fitting the answer was (favor, H, trust). Halved: with the daily curve
+        /// (G.AddFavor) the days come out of the affection itself, measured with pacesim.
         /// </summary>
         private static int[] Table(Lvl l, Q q)
         {
@@ -806,8 +807,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// narration around a sneak are bank rules now): the option's tag first, then how she took it, then her tone and
-        /// mood. Null when the bank has nothing.
+        /// Her answer in a beat, from beat.dlg (the stock answers, Caught, Debt, the sleeping tease and the narration
+        /// around a sneak are bank rules now): the option's tag first, then how she took it, then her tone and mood.
+        /// Null when the bank has nothing.
         /// </summary>
         internal static string BeatSay(SaveData.Heroine h, string tag, string q = null)
         {
@@ -819,8 +821,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Her first words about a request on the board, from board.dlg: the kind and her tone pick the
-        /// rule; where to meet and the errand itself are slots. Null when there is no girl or no rule.
+        /// Her first words about a request on the board, from board.dlg: the kind and her tone pick the rule; where
+        /// to meet and the errand itself are slots. Null when there is no girl or no rule.
         /// </summary>
         internal static string BoardSay(SaveData.Heroine h, string kind, string place, string text, string source = "board")
         {
@@ -829,7 +831,7 @@ namespace Joojkk.CampusLife
             c["kind"] = kind ?? "";
             c["place"] = string.IsNullOrEmpty(place) ? "" : Places.Name(place);
             c["text"] = text ?? "";
-            // The errand in her own words: the board's text speaks of her in the third person.
+            // The errand in her own words ({@errand}): the board's text speaks of her in the third person.
             c["errandat"] = place ?? "";
             c["reqsrc"] = source ?? "";
             DlgRule r;
@@ -837,8 +839,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The lines with a girl's name in the middle, from incident.dlg: what you did (inc), to whom ({about};
-        /// self when it was to her, friend when to her friend), what step it was and whether she saw it. Null when no rule fits.
+        /// The lines with a girl's name in the middle, from incident.dlg: what you did (inc), to whom ({about}; self when
+        /// it was to her, friend when to her friend), what step it was and whether she saw it. Null when no rule fits.
         /// </summary>
         internal static string IncidentSay(SaveData.Heroine h, string on, string inc, string about, bool self, bool friend, string what, bool saw)
         {
@@ -1061,8 +1063,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// ter um geral"): one scene for every grudge she holds; the more there are, the harder it lands and the harder
-        /// it is to talk your way out.
+        /// Clearing the air about all of it at once: one scene for every grudge she holds; the
+        /// more there are, the harder it lands and the harder it is to talk your way out.
         /// </summary>
         private static void ClearAirAll(SaveData.Heroine h, List<Incident> all)
         {
@@ -1143,6 +1145,8 @@ namespace Joojkk.CampusLife
 
         private static void RequestTalk(SaveData.Heroine h, Request r, bool hidden)
         {
+            // One talk per kind, written whole ("Promise to help with lunch with XX lunch" came from gluing the title into
+            // four fixed options). The talks are in RequestTalks.cs.
             RequestTalks.Talk talk;
             if (!RequestTalks.ByKind.TryGetValue(r.Kind, out talk)) RequestTalks.ByKind.TryGetValue(RequestKind.Talk, out talk);
             var place = string.IsNullOrEmpty(r.Place) ? "usual spot" : Places.Name(r.Place);
@@ -1266,7 +1270,7 @@ namespace Joojkk.CampusLife
         /// <summary>Something true you noticed about her (a like you learned, a tradition, her club when you see her at it).</summary>
         /// <summary>
         /// What there is to compliment her on, the first one not said to her today: after a compliment the option moves on
-        /// cadê o update depois de ação?").
+        /// to the next thing, and goes when there is nothing new.
         /// </summary>
         private static string[] ComplimentTrait(SaveData.Heroine h, GirlState gs)
         {
@@ -1399,7 +1403,7 @@ namespace Joojkk.CampusLife
         {
             var mood = MoodOf(h);
             if (mood == CampusLife.Mood.Upset || mood == CampusLife.Mood.Stressed || Social.Grudge(h) != null) return null;
-            // Every fitting tease, the first one not used on her today.
+            // Every fitting tease, the first one not used on her today (options move on after use).
             var c = new List<string[]>();
             if (mood == CampusLife.Mood.Sleepy) c.Add(new[] { "her sleepy face", "I like your sleepy face. It's very... soft.", "tease.sleepy" });
             if (mood == CampusLife.Mood.Hungry) c.Add(new[] { "her growling stomach", "Was that your stomach? Should I feed you?", "tease.stomach" });
@@ -1486,8 +1490,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// A wary no is an almost-yes (user, 2026-10-30): she wants to, and says what held her back, the director's
-        /// biggest brake (Consent.HeldBack).
+        /// A wary no is an almost-yes: she wants to, and says what held her back, the director's biggest brake
+        /// (Consent.HeldBack).
         /// </summary>
         private static string HeldBackLine(SaveData.Heroine h, string why)
         {
@@ -1495,10 +1499,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Asking her to sneak off: the director's four answers. Yes and a wary yes both go to the
-        /// game's H (a wary one leaves her guilty after it, Consent.AfterH); a wary no is an almost-yes, "I want to, but"
-        /// with what held her back, and leaves the tension as a memory; a no costs a little trust, more when you already
-        /// heard no today.
+        /// Asking her to sneak off: the director's four answers. Yes and a wary yes both go to the game's H (a wary one
+        /// leaves her guilty after it, Consent.AfterH); a wary no is an almost-yes, "I want to, but" with what held her
+        /// back, and leaves the tension as a memory; a no costs a little trust, more when you already heard no today.
         /// </summary>
         private static void SneakU(SaveData.Heroine h)
         {
@@ -1648,12 +1651,14 @@ namespace Joojkk.CampusLife
             s.Did.Add("opening");
             var h = s.Her;
             if (Pairs.IsScorned(h) && !Pairs.CanRedeem(h)) return SceneTalk.Open(h, null, () => AfterScene());
-            // She asked you here (a note, a letter, "meet me at..."): that comes first, with its own scene (user,
+            // She asked you here (a note, a letter, "meet me at..."): that comes first, with its own scene (it was only in
+            // the old menu's opening, so the 5-button talk never played it).
             var meet = Board.MeetHere(h);
             if (meet != null && Board.PlayInTalk(meet, h, () => { s.Turns++; AfterScene(); })) return true;
             if (TrioAnswerOpening(s, h)) return true;
             if (ShareOpening(s, h)) return true;
-            // The same for the guilt after a wary H.
+            // The kiss she let happen warily: she brings it up herself the next time.
+            // The same for the guilt after a wary H (a rumor topic opened first and her scene never came).
             var waiting = S.Girl(GirlInfo.Key(h)).Pending;
             if (waiting == "SceneTalk:feelings" || waiting == "SceneTalk:after_h")
             {
@@ -1664,7 +1669,7 @@ namespace Joojkk.CampusLife
                 if (f != null) return SceneTalk.Play(h, f, d => s.Interest = Mathf.Clamp(s.Interest + d, 0, MaxInterest), () => { s.Turns++; AfterScene(); });
             }
             // Something she saw or heard about you that weighs (the H in the hallway, you in the girls' restroom): she
-            // brings it up herself.
+            // brings it up herself (two witnesses ran off and neither said a word later).
             var raise = RaiseTopic(h);
             if (raise != null) { PlayTopic(h, raise); return true; }
             Subject x = null;

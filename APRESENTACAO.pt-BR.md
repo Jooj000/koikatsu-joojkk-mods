@@ -1,10 +1,12 @@
 # Campus Life — apresentação
 
+*English: [OVERVIEW.md](OVERVIEW.md)*
+
 **Um mod de vida universitária para o modo história do Koikatsu.** As garotas da faculdade ganham humor, memória, amizades e mágoas próprias; um diretor planeja o dia de cada uma; a conversa vira uma conversa de verdade; e tudo o que você faz com elas vira parte de uma história que a escola inteira comenta.
 
-Feito por **Joojkk** · versão **3.3.0** · BepInEx 5 / KKAPI · Koikatu (HF Patch) · menu **F7** · interface e falas em inglês.
+Feito por **Joojkk** · versão **3.6.0** · BepInEx 5 / KKAPI · Koikatu (HF Patch) · menu **F7** · interface e falas em inglês.
 
-Junto vêm dois mods irmãos: **School Optimizer** (faculdade cheia sem travar) e **H Male Wardrobe** (roupa do protagonista no H, F10).
+Junto vêm três mods irmãos: **Campus Saves** (um espaço de save por campus, Ctrl+F6), **School Optimizer** (faculdade cheia sem travar) e **H Male Wardrobe** (roupa do protagonista no H, F10).
 
 ---
 
@@ -100,7 +102,7 @@ Dias bem jogados (3 conversas por dia, respostas boas), média de duas garotas d
 - **Álbum de conquistas** (F7): registro e lista de tarefas ao mesmo tempo, com estágios ("Familiar Face, 3/4"), segredos com dica e um cartãozinho estilo Steam com som quando uma cai.
 - **Relatório da semana** e diário no menu.
 
-## 6. Cards masculinos (novo na 3.2)
+## 6. Cards masculinos
 
 - Um card salvo como homem é detectado sozinho, e a pasta **male** aparece ao lado da **female** na escolha da turma. Ele usa o banheiro masculino, perde reputação se entrar nas áreas femininas e pega as garotas que entram no masculino.
 - As falas **sobre ele** dizem he/him/his e boyfriend; **ele mesmo** se chama de boyfriend ou guy; a voz e a personalidade continuam as mesmas. O cartão dele diz "Boyfriend".
@@ -113,13 +115,14 @@ Dias bem jogados (3 conversas por dia, respostas boas), média de duas garotas d
 
 ## Os mods irmãos
 
+- **Campus Saves**: um espaço de save por campus, um cofre de versões que guarda dias antigos em pouco espaço, salvar no meio do dia e autosaves espertos (Ctrl+F6).
 - **School Optimizer**: menos alunas carregadas por período com prioridade para as importantes (o Campus Life diz quem), guarda de memória, pausa de animação fora da tela, física por distância, limite de textura, correções de fora para outros mods (AmazingNewAccessoryLogic, MaterialEditor, UncensorSelector) e estacionamento dos dados de quem faltou.
 - **H Male Wardrobe**: troca a roupa do protagonista no meio do H com uma cópia do menu de roupa da garota (F10).
 
 ## Instalação
 
 1. BepInEx 5.4.23+ e KKAPI 1.45+ / ExtensibleSaveFormat (o HF Patch já tem).
-2. `KK_CampusLife.dll` em `BepInEx\plugins\Joojkk\`.
+2. Descompacte o zip da release sobre a pasta do jogo (o `KK_CampusLife.dll` vai para `BepInEx\plugins\Joojkk\`).
 3. Modo história, **F7**.
 
 Os dados ficam dentro do save; tirar o mod deixa o save jogável.

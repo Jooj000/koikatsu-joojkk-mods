@@ -12,7 +12,8 @@ namespace Joojkk.CampusLife
     internal static class Hooks
     {
         /// <summary>
-        /// back. A girl the guard had to show twice is watched; whoever hides her body next is logged with the call stack.
+        /// After a talk Nonaka's body went off again every second however often the guard gave it back. A girl the guard
+        /// had to show twice is watched; whoever hides her body next is logged with the call stack.
         /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(ChaControl), "SetActiveTop")]
@@ -59,8 +60,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The game's seat and locker moves read the objects of the map, and one of them gone throws in the middle of the end of
-        /// a talk: the screen stays on an empty map with the event never finished. The list is read again here.
+        /// The game's seat and locker moves read the objects of the map, and one of them gone throws in the middle of the
+        /// end of a talk: the screen stays on an empty map with the event never finished. The list is read again here.
         /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(ActionGame.Chara.Base), "KindMoveShift")]
@@ -91,8 +92,8 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// The talk scene stands its own copy of her where she was and hides every map body. Nothing may show her map body
-        /// again while the talk is open (a map warp, a duo letting go, a timer): her two bodies stood on top of each other
-        /// (user, 2026-10-12). The game shows her again itself once the talk has handed her root back.
+        /// again while the talk is open (a map warp, a duo letting go, a timer): her two bodies stood on top of each
+        /// other. The game shows her again itself once the talk has handed her root back.
         /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(ActionGame.Chara.Base), "SetActive")]
@@ -239,9 +240,9 @@ namespace Joojkk.CampusLife
             }
         }
         /// <summary>
-        /// muito"). The game picks the result row by how it ended (HSceneProc.EndProc: 6/7 no climax, 8 no finish, 13 a
-        /// girl with no card id and no climax) and draws a favor change from it that can be negative; for those endings a
-        /// loss becomes zero. Gains stay.
+        /// Leaving H early costs no favor. The game picks the result row by how it ended (HSceneProc.EndProc: 6/7 no
+        /// climax, 8 no finish, 13 a girl with no card id and no climax) and draws a favor change from it that can be
+        /// negative; for those endings a loss becomes zero. Gains stay.
         /// </summary>
         [HarmonyPostfix]
         [HarmonyPatch(typeof(HSceneResult), "LoadResult")]
@@ -262,9 +263,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// de convidar alguém assistindo. saiu para a tela de conversa pós H, e loading infinito"): the game only checks it
-        /// for the one-girl modes, so in 3P it stayed on and led to an endless loading. Hidden there; two girls together
-        /// (lesbian) still get it, which is the game's own way to join them.
+        /// The "invite the girl watching" button in a threesome: the game only checks it for the one-girl modes, so in 3P
+        /// it stayed on and led to an endless loading. Hidden there; two girls together (lesbian) still get it, which is
+        /// the game's own way to join them.
         /// </summary>
         [HarmonyPostfix]
         [HarmonyPatch(typeof(HSprite), nameof(HSprite.InitPointMenuAndHelp))]
@@ -286,9 +287,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// ao invés do padrão, quando não são eventos"). The game gives every fixed character the grey "?" frame with no
-        /// gauges; a teacher with Campus Life's conversations is a regular girl to talk to, so outside a step of her event
-        /// (MilestoneDue) she gets the usual frame, relation icon, favor and lewdness, as the game draws them for a student.
+        /// The status bar of a teacher you talk to. The game gives every fixed character the grey "?" frame with no gauges;
+        /// a teacher with Campus Life's conversations is a regular girl to talk to, so outside a step of her event
+        /// (MilestoneDue) she gets the usual frame, relation icon, favor and lewdness, as the game draws them for a
+        /// student.
         /// </summary>
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ParamUI), nameof(ParamUI.SetHeroine))]

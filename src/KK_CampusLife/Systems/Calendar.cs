@@ -44,7 +44,7 @@ namespace Joojkk.CampusLife
             }
         }
 
-        /// <summary>What kind of day it is, for the lines: nobody "goes to" Chocolate Day (user, 2026-11-01).</summary>
+        /// <summary>What kind of day it is, for the lines: nobody "goes to" Chocolate Day.</summary>
         public static string EventKind(string id)
         {
             switch (id)
@@ -132,7 +132,7 @@ namespace Joojkk.CampusLife
         public static void OnPeriodStart(Cycle.Type period)
         {
             _periodStartedAt = Time.realtimeSinceStartup;
-            // A moment of the last period that never found its place is over.
+            // A moment of the last period that never found its place is over (each map has its own).
             if (!(S.LastHappeningDay == S.Day && S.LastHappeningPeriod == (int)period)) S.PendingHappening = "";
             if (!Cfg.HappeningsEnabled.Value || !string.IsNullOrEmpty(S.PendingHappening)) return;
             if (S.LastHappeningDay == S.Day && S.LastHappeningPeriod == (int)period) return;
@@ -316,7 +316,7 @@ namespace Joojkk.CampusLife
             return DayNames[weekday] + ", in " + days + " days";
         }
 
-        /// <summary>The day in a sentence, no brackets.</summary>
+        /// <summary>The day in a sentence, no brackets (the festival line was full of parentheses).</summary>
         private static string SpokenWhen(int days, int weekday)
         {
             if (days <= 0) return "today";

@@ -1,7 +1,7 @@
-# The three of the staff, each in her own voice (user, 2026-11-01: "faça os diálogos especificamente para as personalidades
-# das professoras"). Chosen by {pers}, the personality number of the card: 0 Lina Roberts, the nurse (at ease, teases while
+# The three of the staff, each in her own voice.
+# Chosen by {pers}, the personality number of the card: 0 Lina Roberts, the nurse (at ease, teases while
 # she takes care of you); 16 Reina Hashimoto (goals, method, little patience); 11 Nonoka Sakurai (motherly, did you eat, did
-# you sleep). Another card in the same seat falls back to the role=teacher lines. Options and reactions: dlg_fact_hooks.txt.
+# you sleep). Another card in the same seat falls back to the role=teacher lines.
 
 # ================= Lina =================
 @rule day.t.lina.fine

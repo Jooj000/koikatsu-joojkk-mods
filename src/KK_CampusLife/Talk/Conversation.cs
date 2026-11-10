@@ -103,7 +103,8 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// What she brings up by herself (a note, something she saw) plays as soon as the game's greeting is over, not
-        /// was built, and with the list closed it never was).
+        /// after the first click on a category (and the note scene: the opening only ran when the list was built, and
+        /// with the list closed it never was).
         /// </summary>
         private static void OpenOnEntry(TalkScene ts)
         {
@@ -134,7 +135,7 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// The first fact id made after this talk opened: what happened in it (the kiss) is a topic from the next talk on
-        ///.
+        /// (""falar sobre o beijo).
         /// </summary>
         private static int _factsBefore = int.MaxValue;
 
@@ -359,7 +360,7 @@ namespace Joojkk.CampusLife
             s.Did.Add("opening");
             var h = s.Her;
             // She asked you here (a note in your locker, a letter, "meet me at..."): that comes first, with its own scene
-            //.
+            // (the rooftop talk had no dialogue and did not complete).
             var meet = Board.MeetHere(h);
             if (meet != null && Board.PlayInTalk(meet, h, () => { s.Turns++; AfterScene(); })) return true;
             if (TrioAnswerOpening(s, h)) return true;
@@ -411,7 +412,7 @@ namespace Joojkk.CampusLife
                 s.Interest = Math.Max(0, s.Interest - 1);
                 s.Did.Add("jealous");
             }
-            else if (Board.HiddenFor(GirlInfo.Key(h)).Any() && (G.Int >= 40 || Social.Trust(h) >= 50 || MoodOf(h) == CampusLife.Mood.Stressed || MoodOf(h) == CampusLife.Mood.Upset))   // you read it, she trusts you, or it shows (context, 2026-11-07)
+            else if (Board.HiddenFor(GirlInfo.Key(h)).Any() && (G.Int >= 40 || Social.Trust(h) >= 50 || MoodOf(h) == CampusLife.Mood.Stressed || MoodOf(h) == CampusLife.Mood.Upset))   // you read it, she trusts you, or it shows (context)
             {
                 b.Narr(ConvoLines.WorriedHint(GirlInfo.FirstName(h)) + " <color=#6ab4ff>[INT]</color> Ask her... > Just listen.");
             }
@@ -465,7 +466,7 @@ namespace Joojkk.CampusLife
                 x.Txt.enableAutoSizing = false;
                 x.Txt.fontSize = size;
                 x.Txt.enableWordWrapping = false;
-                // the text box is the whole card; the margins keep the letters inside its frame
+                // the text box is the whole card; the margins keep the letters inside its frame (they ran over it)
                 var trt = (RectTransform)x.Txt.transform;
                 trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one; trt.offsetMin = Vector2.zero; trt.offsetMax = Vector2.zero;
                 x.Txt.margin = Vector4.zero;
@@ -474,8 +475,8 @@ namespace Joojkk.CampusLife
                 if (have > 1f) extra = Mathf.Max(extra, need - have);
             }
             // Widen a little (all buttons alike); a label still too long goes on two lines and its card grows by a line
-            // (user, 2026-10-26: "the options that overflow the width get one more line of height"), so its text never
-            // runs out of the button over the game's buttons beside the list.
+            // ("the options that overflow the width get one more line of height"), so its text never runs out of the
+            // button over the game's buttons beside the list.
             extra = Mathf.Clamp(extra, 0f, 140f);
             foreach (var x in items)
             {
@@ -546,8 +547,9 @@ namespace Joojkk.CampusLife
                     else shift = Mathf.Max(shift, br.xMax - o.xMin + 10f);
                 }
             }
-            // Never past the right edge of the screen.
-            // a category's widened buttons covered it). The first build of a talk is the five short category buttons.
+            // Never past the right edge of the screen (a category's widened buttons ran off it, over the bubble). The list
+            // grows to the left, never past where the game put it (the speech bubble sits right of it; a category's
+            // widened buttons covered it). The first build of a talk is the five short category buttons.
             var right = opts.Max(o => o.xMax);
             if (_rightLimit < 0f) _rightLimit = Unified && _talk != null ? OnScreen((RectTransform)_talk.transform, cam).xMin - 12f : Mathf.Min(right, Screen.width - 8f);
             if (right > _rightLimit) shift = Mathf.Min(shift, _rightLimit - right);
@@ -650,7 +652,7 @@ namespace Joojkk.CampusLife
         /// <summary>The conversation's first pages as they were (chat topics, asking, compliments, a joke).</summary>
         private static void ClassicEntries(Session s)
         {
-            // Four entries at most besides the two that only show when needed:
+            // Four entries at most besides the two that only show when needed (asked many times for fewer options):
             // listening lives under "Ask her...", the game's own talk under "Chat about...".
             Add("Chat about...", () => ShowSub(TopicPage));
             Add("Ask her...", () => ShowSub(AskPage));
@@ -822,7 +824,7 @@ namespace Joojkk.CampusLife
             Action done = null;
 
             var mine = Board.HiddenFor(key).FirstOrDefault();
-            // A friend's problem comes up when she is close to that friend or trusts you with it (context, 2026-11-07).
+            // A friend's problem comes up when she is close to that friend or trusts you with it (context).
             var friendReq = mine == null
                 ? Social.FriendsOf(h).Where(f => Social.Bond(h, f) >= 50 || Social.Trust(h) >= 40).SelectMany(f => Board.HiddenFor(GirlInfo.Key(f))).FirstOrDefault() : null;
             var gossip = Social.Gossip(h);
@@ -879,7 +881,7 @@ namespace Joojkk.CampusLife
                 var friend = f;
                 Add("About " + GirlInfo.FirstName(f), () => AskFriend(friend));
             }
-            // The rival she minds most, when it is a real rivalry or she is upset (context, 2026-11-07).
+            // The rival she minds most, when it is a real rivalry or she is upset (context).
             var rival = Social.Students.Where(o => o != s.Her && Social.Bond(s.Her, o) <= -30).OrderBy(o => Social.Bond(s.Her, o)).FirstOrDefault();
             if (rival != null && (Social.Bond(s.Her, rival) <= -45 || MoodOf(s.Her) == CampusLife.Mood.Upset) && Created.Count < 4) Add("About " + GirlInfo.FirstName(rival), () => AskFriend(rival));
             Add("About the university", AskSchool);
@@ -1001,7 +1003,7 @@ namespace Joojkk.CampusLife
             s.Did.Add("joke");
             var b = new SceneBuilder(h, true);
             b.Me(mine ?? ConvoLines.PlayerJoke());
-            // Context, not a roll (2026-11-07): her tone, SEN, how the talk is going and her mood; a big laugh when it is easy.
+            // Context, not a roll: her tone, SEN, how the talk is going and her mood; a big laugh when it is easy.
             if (Ctx(h, "joke", chance)) { b.Her_(Everyday(h, "joke.good")); Play(b, chance >= 0.75f ? 2 : 1, "♪ She laughed."); return; }
             var hurt = chance < 0.3f && (tone == Tone.Gentle || MoodOf(h) == CampusLife.Mood.Upset);
             b.Her_(Everyday(h, hurt ? "joke.hurt" : "joke.bad"));
@@ -1028,7 +1030,7 @@ namespace Joojkk.CampusLife
             var what = kind == "effort" || kind == "club" || kind == "smart" ? kind : "looks";
             b.Me(mine ?? RomanceMe(h, "compliment", what));
             // The same compliment today or yesterday is a rerun, and her answer says which one ("My hair again?"); another
-            // kind is new, but a second compliment in one day sounds more like flattery (2026-11-07).
+            // kind is new, but a second compliment in one day sounds more like flattery.
             var sameDay = gs.ComplimentDay == S.Day;
             if (gs.ComplimentDay >= S.Day - 1 && (gs.ComplimentKind == what || string.IsNullOrEmpty(gs.ComplimentKind)))
             {
@@ -1062,8 +1064,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The director's days together and pushing (Consent.Familiar, Consent.Pushing; 2026-11-07) for the classic pages'
-        /// own odds: a girl you just met, or the same step again today, lands less often.
+        /// The director's days together and pushing (Consent.Familiar, Consent.Pushing) for the classic pages' own odds: a
+        /// girl you just met, or the same step again today, lands less often.
         /// </summary>
         private static float Pushy(SaveData.Heroine h, string step)
         {
@@ -1105,12 +1107,12 @@ namespace Joojkk.CampusLife
         private static string Odds(float chance) { return G.Sens >= 40 ? "  <color=#ff8ad8>(" + Read(chance) + ")</color>" : ""; }
 
         /// <summary>
-        /// The context, read (2026-11-07: "não é para ser chance. é contexto"): the score decides, so the hint says how it
-        /// stands, not a percent: "she'd like it", "hard to say" (a toss-up at the bar) or "not now".
+        /// The context, read: the score decides, so the hint says how it stands, not a percent: "she'd like it", "hard to
+        /// say" (a toss-up at the bar) or "not now".
         /// </summary>
         internal static string Read(float score) { return score >= 0.5f + Consent.Band ? "she'd like it" : score >= 0.5f - Consent.Band ? "hard to say" : "not now"; }
 
-        /// <summary>Context decides (2026-11-07); the director's dice only break a score right at the bar.</summary>
+        /// <summary>Context decides; the director's dice only break a score right at the bar.</summary>
         internal static bool Ctx(SaveData.Heroine h, string what, float score) { return Consent.Yes(h, "talk:" + what, score); }
 
         /// <summary>
@@ -1227,7 +1229,7 @@ namespace Joojkk.CampusLife
             }, ok ? 8 : 0);
         }
 
-        /// <summary>The director's chance that she says yes to H now (Consent decides it, 2026-10-26).</summary>
+        /// <summary>The director's chance that she says yes to H now (Consent decides it).</summary>
         private static float SneakChance(Session s)
         {
             string why;
@@ -1276,7 +1278,7 @@ namespace Joojkk.CampusLife
             var s = Sess;
             var h = s.Her;
             var tone = GirlInfo.ToneOf(h);
-            // se ela já estiver irritada"): mood, anger, and how much she has heard about you lately.
+            // Getting away with it reads her day too: mood, anger, and how much she has heard about you lately.
             var chance = 0.25f + G.Int / 150f + S.Reputation / 300f + Social.Trust(h) / 300f;
             var mood = MoodOf(h);
             chance += mood == CampusLife.Mood.Cheerful ? 0.12f : mood == CampusLife.Mood.Flirty ? 0.06f : mood == CampusLife.Mood.Upset ? -0.2f : mood == CampusLife.Mood.Stressed ? -0.12f : 0f;
@@ -1352,8 +1354,8 @@ namespace Joojkk.CampusLife
         // ================= turns and results =================
 
         /// <summary>
-        /// Favor for one turn, from how it went (delta -1..2). Balanced against the game: a right answer in its
-        /// small talk gives +5 to +10 after its corrections, so 4 of them (the whole blue bar) about +40; a perfect
+        /// Favor for one turn, from how it went (delta -1..2). Balanced against the game: a right answer in its small
+        /// talk gives +5 to +10 after its corrections, so 4 of them (the whole blue bar) about +40; a perfect
         /// conversation of ours (8 turns of half a point) gives 8 x 5 = 40 too, before the INT bonus of Campus.Apply.
         /// </summary>
         private static int TurnFavor(int delta)
@@ -1536,7 +1538,7 @@ namespace Joojkk.CampusLife
             S.Stat("chats");
             var gained = (s.FavorGained >= 0 ? "+" : "") + s.FavorGained + " favor" + (s.LewdGained != 0 ? ", +" + s.LewdGained + " H" : "") + (trust != 0 ? ", " + (trust > 0 ? "+" : "") + trust + " trust" : "");
             var any = s.FavorGained != 0 || s.LewdGained != 0 || trust != 0;
-            // log de saída 'conversou com xx...' só mostra o nome de uma"): the second girl's part waits for the first's.
+            // The talk with both ends with one line for the two of them: the second girl's part waits for the first's.
             if (_pairWith != null && _pairWith != h) { _pairLine = new KeyValuePair<string, bool>(GirlInfo.FirstName(h) + " " + gained, any); _pairName = GirlInfo.FirstName(h); return; }
             if (_pairLine.Key != null && _pairName != GirlInfo.FirstName(h))
             {
@@ -1568,8 +1570,8 @@ namespace Joojkk.CampusLife
         private static void Add(string label, Action onClick) { Add(label, onClick, null); }
 
         /// <summary>
-        /// A like of hers the topic is about, when you know she has it:
-        /// small talk about it, a pet she would love, a subject with a like.
+        /// A like of hers the topic is about, when you know she has it: small talk about it, a pet she would love, a
+        /// subject with a like.
         /// </summary>
         private static string TopicLike(SaveData.Heroine h, PTopic t)
         {
@@ -1597,7 +1599,7 @@ namespace Joojkk.CampusLife
             go.name = "cl_talk_option";
             go.SetActive(true);
             var btn = go.GetComponent<Button>();
-            // our card instead of the game's white button, framed in the open category's color (user, 2026-10-26)
+            // our card instead of the game's white button, framed in the open category's color
             try { ConvArt.Style(btn, ConvArt.Card(OptionKind()), true); }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Option card: " + e.Message); }
             btn.onClick = new Button.ButtonClickedEvent();
@@ -1619,7 +1621,7 @@ namespace Joojkk.CampusLife
                 txt.enableAutoSizing = true;
                 txt.fontSizeMin = 12f;   // 14 cut "Whisper something sugges..." on the card
                 txt.fontSizeMax = txt.fontSize;
-                // the letters' face in the button's color, with a black outline (user, 2026-10-26)
+                // the letters' face in the button's color, with a black outline
                 ConvArt.ColorFace(txt, onClick == null ? GameUi.Dim : OptionColor());
                 txt.text = Gender.Fix(label, null, TalkingTo);
             }

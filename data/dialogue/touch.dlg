@@ -1,5 +1,5 @@
 # Touches in the conversation. After the game's own clip she says one of these.
-# {part} hand | head | cheek | chest | face (looking) | butt (touched or stared at) | mouth, {look} yes when you only stare, {level} welcome | uneasy | stop |
+# {part} hand | head | cheek | chest | face (looking) | butt (touched or stared at) | mouth (a kiss), {look} yes when you only stare, {level} welcome | uneasy | stop |
 # angry, {again} yes after the first touch of that place in this conversation. Who is watching: {watchers} none | one |
 # few | crowd, {watcher} the one that matters, {wrel} yourgf | rival | bff | friend | other, {group} friends | rivals |
 # mixed. {kiss} yes | wary | wary_no | no for the mouth; {answer} the director's answer to every other touch. Weights per key in weights.dlg (@weights touch); the best-scoring rules
@@ -549,7 +549,7 @@ feel serious
 - [Again?!|Seriously.] [I'm leaving if you do that again.|You're making me uncomfortable.]
 - [No!|Back off.] [I really thought you were different.|Don't touch my face.]
 
-# ---- 2026-10-29: o beijo receoso (amiga próxima com H alto, mesmo fechada) ----
+# ---- the wary kiss (a close friend with high lewdness, even a reserved one) ----
 @rule touch.mouth.wary
 on touch
 when part=mouth kiss=wary

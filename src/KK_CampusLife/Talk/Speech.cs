@@ -6,12 +6,11 @@ using System.Text.RegularExpressions;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// resposta, o player solta uma frase no diálogo condizente com a opção, e o contexto"). The option label is his
-    /// intent in the imperative ("Ask which event she's in"); this turns it into his line ("Which event are you in?"),
-    /// or into a narration when it is an action ("Walk with her to the store" to "You walk with her to the store.").
-    /// The label already holds the context (the subject, her name, what she just said), so the line does too. Same
-    /// rules as tools\speech.py, which checks every label of the banks; a label that comes out wrong gets its own
-    /// line (the bank's "me.(move)" rules, or the Me of a beat answer). The word lists below come from speech.py.
+    /// What the player says when he picks an option. The option label is his intent in the imperative ("Ask which
+    /// event she's in"); this turns it into his line ("Which event are you in?"), or into a narration when it is an
+    /// action ("Walk with her to the store" to "You walk with her to the store."). The label already holds the context
+    /// (the subject, her name, what she just said), so the line does too. A label that comes out wrong gets its own
+    /// line (the bank's "me.(move)" rules, or the Me of a beat answer).
     /// </summary>
     internal static class Speech
     {

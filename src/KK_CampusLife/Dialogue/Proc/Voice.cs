@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// How one girl talks (procedural dialogue, section 3): seven axes from her personality, her quirks and her card's
+    /// How one girl talks (procedural dialogue): seven axes from her personality, her quirks and her card's
     /// numbers, and a signature drawn once from her card (favorite exclamation, filler, laugh, how she calls you, a pet
     /// theme, "~" or not, how long she talks). Two girls of the same personality sound different; the same girl always
     /// sounds like herself.
@@ -18,7 +18,8 @@ namespace Joojkk.CampusLife
         public string Exclaim = "Oh!", Filler = "Well,", Laugh = "Hehe.", CallYou = "you", Pet = "", Kind = "";
         public bool Tilde;
         public float FillerRate, StutterRate;
-        /// <summary>All the fillers that fit her; Say() uses her signature one half of the time, another one otherwise.</summary>
+        /// <summary>All the fillers that fit her; Say uses her signature one half of the time, another one otherwise ("Ya
+        /// know," on every line).</summary>
         public List<string> FillerPool = new List<string>();
         private string _lastFiller;
         public int Seed;

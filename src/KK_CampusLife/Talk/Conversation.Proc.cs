@@ -7,12 +7,12 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// koikatsu-arquitetura-dialogo-procedural, sections 4-7). The Talk list shows topics born from what she knows
-    /// (Lore): her day (one), the two of you, school, what she saw or heard about you, Gossip, and Small talk only when
-    /// nothing else is left. A topic used is gone. Her line comes from the bank (the most specific rule, in her voice);
-    /// your answers are moves on what that line left open (ask, comfort, share, tease, praise, invite, correct...), how
-    /// well each lands is computed from her voice, mood, opinion and the relation, and her reaction may open a next step
-    /// (up to 3).
+    /// The procedural Talk. The Talk list shows topics born from what
+    /// she knows (Lore): her day (one), the two of you, school, what she saw or heard about you, Gossip, and Small talk
+    /// only when nothing else is left. A topic used is gone. Her line comes from the bank (the most specific rule, in
+    /// her voice); your answers are moves on what that line left open (ask, comfort, share, tease, praise, invite,
+    /// correct...), how well each lands is computed from her voice, mood, opinion and the relation, and her reaction may
+    /// open a next step (up to 3).
     /// </summary>
     internal static partial class Conversation
     {
@@ -94,8 +94,8 @@ namespace Joojkk.CampusLife
                 if (st != null && st.Id != "rumors" && !TopicDone(key, "school:" + st.Id)) ctx.Add(new PTopic { Id = "school:" + st.Id, Kind = "school", School = st, Label = "Talk about " + st.Label, Score = 1.4f });
             }
 
-            // One topic per label (2026-10-29: Frieren had "Talk about what she saw" twice, the restroom and the
-            // changing room): the strongest stays, the rest are settled together with it.
+            // One topic per label (Frieren had "Talk about what she saw" twice, the restroom and the changing
+            // room): the strongest stays, the rest are settled together with it.
             ctx = ctx.GroupBy(t => t.Label).Select(g =>
             {
                 var top = g.OrderByDescending(t => t.Score).First();
@@ -150,7 +150,7 @@ namespace Joojkk.CampusLife
                 }
                 t.Score = 2.5f;
             }
-            // so it plays the club small talk (club.dlg), not the lines about her day.
+            // The question names her club, so it plays the club small talk (club.dlg), not the lines about her day.
             else if (t.Label.StartsWith("Ask how ", StringComparison.Ordinal) && t.Label.EndsWith(" went today", StringComparison.Ordinal))
             {
                 t.Kind = "small";
@@ -207,8 +207,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// News you could tell her (2026-10-27): a fact you know (you were told it) that she does not, about other girls
-        /// (not her, not you), fresh and of some weight. The biggest and newest first.
+        /// News you could tell her: a fact you know (you were told it) that she does not, about other girls (not her,
+        /// not you), fresh and of some weight. The biggest and newest first.
         /// </summary>
         private static PTopic TellPick(string key)
         {
@@ -246,16 +246,17 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// como se você estivesse contando. e quando tem mais de um desses, junte em um só"): your romances with other
-        /// girls in the last two weeks (and girlfriends you still have), one topic for all of them, the deepest step with
-        /// each girl. A girl told about already is left out until something new happens with her.
+        /// You tell her about you and the other girls: your romances with other girls in the last two weeks (and
+        /// girlfriends you still have), one topic for all of them, the deepest step with each girl. A girl told about
+        /// already is left out until something new happens with her.
         /// </summary>
         private static PTopic ConfidePick(SaveData.Heroine h)
         {
             if (S.Lore == null) return null;
-            // uma aleatória por estar pegando outras").
+            // Nothing to confess to a girl with no interest in you.
             if (!Interested(h)) return null;
             var key = GirlInfo.Key(h);
+            // Once said, it rests a week even if something new happens.
             int said;
             if (S.Buffs.TryGetValue("dir:confide:" + key, out said) && S.Day - said < ConfideRest) return null;
             var best = new Dictionary<string, LoreFact>();
@@ -266,7 +267,7 @@ namespace Joojkk.CampusLife
                 var other = f.Subject == Lore.Player ? f.Obj : f.Subject;
                 var oh = GirlInfo.Find(other);
                 if (oh == null || S.Day - f.Day > 14 && !(oh.isGirlfriend && f.Verb == "started_dating")) continue;
-                // "começar trisal depois admitir faz com que a terceira continue na lista de traições").
+                // Nothing to confess about a girl she agreed to share you with, or a trio she is in.
                 if (Harem.Agreed(h, oh) || h.isGirlfriend && Share.Accepts(h, oh) && Share.Said(h, oh)) continue;
                 if (TopicDone(key, "confide:" + other + ":" + f.Id)) continue;
                 told.Add(f);
@@ -275,8 +276,7 @@ namespace Joojkk.CampusLife
             }
             if (best.Count == 0) return null;
             var facts = best.Values.OrderByDescending(f => ConfideDepth(f.Verb)).ThenByDescending(f => f.Day).ToList();
-            // No names on the button:
-            // they come out in your words when you tell her.
+            // No names on the button: they come out in your words when you tell her.
             var deepest = facts.Max(f => ConfideDepth(f.Verb));
             return new PTopic { Id = "confide", Kind = "confide", Facts = facts, Told = told, Fact = facts[0], Label = "Admit about the others", Score = 1.6f + deepest * 0.3f, Hot = deepest >= 3, Times = told.Count };
         }
@@ -339,14 +339,14 @@ namespace Joojkk.CampusLife
                 MarkTopic(key, "confide:" + (f.Subject == Lore.Player ? f.Obj : f.Subject) + ":" + f.Id);
             }
             S.Buffs["dir:confide:" + key] = S.Day;
-            // the air sobre traição").
+            // Told now: what she held against you about each of them is settled too.
             foreach (var o in others) if (o != null && o != h) SettledAbout(h, o);
-            // The more times (every step with every girl, not only the deepest), the bigger it lands (mid-cycle list, item
-            // 1: "quanto mais de uma vez, maior o impacto"): it hurts more, and the honesty of saying it all counts more.
+            // The more times (every step with every girl, not only the deepest), the bigger it lands: it
+            // hurts more, and the honesty of saying it all counts more.
             var times = Math.Max(t.Times, t.Facts.Count);
             c["times"] = times <= 1 ? "once" : times <= 3 ? "few" : "many";
             if (known < knew.Count) Social.AddTrust(h, hurt ? 1 : Math.Min(1 + times / 2, 4));
-            // pays it too, more than anyone, and one who only accepts it apart still feels a little of it.
+            // Your girlfriend pays it too, more than anyone, and one who only accepts it apart still feels a little of it.
             var cost = 0;
             if (hurt)
             {
@@ -420,9 +420,9 @@ namespace Joojkk.CampusLife
                 subjects["like:" + l] = hers ? (known ? 1.6f : 1.2f) : 0.15f;
             }
             var v = Voice.Of(h);
-            // "está tendo repetição de temas de gostos"). A pet that is also a like she has talks as that like; one she
-            // does not have as a like (always hungry, but "food" not on her list) drops that like, so she never says she
-            // doesn't care about food in the same chat.
+            // Her pet theme and her likes said the same thing twice (eating as a like and as a pet). A pet that is also
+            // a like she has talks as that like; one she does not have as a like (always hungry, but "food" not on her
+            // list) drops that like, so she never says she doesn't care about food in the same chat.
             if (v.Pet != "")
             {
                 var asLike = PetLike(v.Pet);
@@ -432,7 +432,7 @@ namespace Joojkk.CampusLife
                     subjects["pet:" + v.Pet] = 1.3f;
                 }
             }
-            // The place weighs more where it has a lot to say.
+            // The place weighs more where it has a lot to say (the library and its books, the rooftop in the rain).
             var pid = Places.CurrentId ?? "";
             subjects["place:" + pid] = pid == "library" || pid == "rooftop" || pid == "infirmary" || Weather.Raining && Weather.Outdoor(G.PlayerMapNo) ? 1.1f : 0.6f;
             if (G.CurrentMask == PeriodMask.Lunch) subjects["lunch"] = 1f;
@@ -453,7 +453,8 @@ namespace Joojkk.CampusLife
             }
             NewSubjects(h, gs, subjects, stranger);
             var open = subjects.Where(x => !TopicDone(key, "st:" + x.Key)).ToList();
-            // are other subjects; with nothing else left, likes fill it.
+            // At most one like in a list of small talk, so the rest are other subjects; with nothing else left, likes
+            // fill it.
             var likesOpen = open.Where(x => x.Key.StartsWith("like:", StringComparison.Ordinal)).OrderByDescending(x => x.Value + Random.value * 0.9f).ToList();
             if (count > 1 && open.Count - likesOpen.Count >= count - 1)
                 open = open.Where(x => !x.Key.StartsWith("like:", StringComparison.Ordinal) || likesOpen.Count > 0 && x.Key == likesOpen[0].Key).ToList();
@@ -466,8 +467,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// her (a dream when she slept badly, her fears in a storm, travel in exam week, her class when she fought with a
-        /// friend). Strangers get the light ones; a teacher does not talk about her class, her commute or a part-time job.
+        /// Eighteen subjects that are not likes (topics.dlg), each weighed by what is going on with her (a dream when she
+        /// slept badly, her fears in a storm, travel in exam week, her class when she fought with a friend). Strangers get
+        /// the light ones; a teacher does not talk about her class, her commute or a part-time job.
         /// </summary>
         private static void NewSubjects(SaveData.Heroine h, GirlState gs, Dictionary<string, float> subjects, bool stranger)
         {
@@ -598,9 +600,9 @@ namespace Joojkk.CampusLife
         private static readonly string[] RomanceVerbs = { "started_dating", "dated", "kissed", "flirted", "held_hands" };
 
         /// <summary>
-        /// conhecidas reclamando de eu estar namorando ... 'you and xx? i didnt know you were her type'"): your girlfriend,
-        /// a girl who wants you, or a girl close to the other one (her friend, the girl she likes, her rival). A girl with
-        /// no stake leaves it alone; it stays a topic you can pick.
+        /// Whether your romance with another girl is hers to bring up first: your girlfriend, a girl who wants you, or a
+        /// girl close to the other one (her friend, the girl she likes, her rival). A girl with no stake leaves it alone;
+        /// it stays a topic you can pick.
         /// </summary>
         private static bool Stake(SaveData.Heroine h, LoreFact f)
         {
@@ -648,8 +650,8 @@ namespace Joojkk.CampusLife
             c["favor"] = h.favor.ToString();
             c["lewd"] = h.lewdness.ToString();
             c["profile"] = Rhythm.Of(h).ToString().ToLowerInvariant();
-            // Her card's refusals as the talk reads them: touch.dlg answers a kiss or a bold touch
-            // she refuses in her own words. A card that refuses everything only refuses kisses when her drawn traits say so.
+            // Her card's refusals as the talk reads them: touch.dlg answers a kiss or a bold touch she refuses in her own
+            // words. A card that refuses everything only refuses kisses when her drawn traits say so.
             c["nokiss"] = CardTraits.RefusesKiss(h) ? "yes" : "no";
             c["nocaress"] = CardTraits.TalkRefuses(h, "caress") ? "yes" : "no";
             var mood = MoodOf(h);
@@ -695,6 +697,7 @@ namespace Joojkk.CampusLife
                 var distort = k != null ? k.Distort : 0;
                 c["verb"] = distort > 0 && Lore.Verb(f.Verb).Distort != "" ? Lore.Verb(f.Verb).Distort : f.Verb;
                 c["realverb"] = f.Verb;
+                // A gift she ate or drank is talked of as one.
                 if (f.Verb == "gave_gift") c["giftkind"] = GiftKind(f.Note);
                 c["how"] = k != null ? k.How.ToString().ToLowerInvariant() : "participant";
                 c["deed"] = Lore.Render(f, key, distort);
@@ -714,7 +717,9 @@ namespace Joojkk.CampusLife
                 var second = new[] { f.Subject, f.Obj }.Where(x => !string.IsNullOrEmpty(x) && x != key && x != Lore.Player && x != other).Select(Teachers.Called).FirstOrDefault();
                 if (second != null) c["who2"] = second;
                 if (k != null && !string.IsNullOrEmpty(k.From)) c["src"] = k.From == Lore.Player ? "you" : Teachers.Called(k.From);
-                // the story names her as "her" ("...your promise to her"); if her name is still in it, no line names the teller.
+                // "Helen swears you broke your promise to Helen." When the one who told it is in the story herself, the
+                // story names her as "her" ("...your promise to her"); if her name is still in it, no line names the
+                // teller.
                 string srcName;
                 if (k != null && !string.IsNullOrEmpty(k.From) && k.From != Lore.Player && c.TryGetValue("src", out srcName) && !string.IsNullOrEmpty(srcName) && c["deed"].Contains(srcName))
                 {
@@ -724,7 +729,7 @@ namespace Joojkk.CampusLife
                     if (deed.Contains(srcName)) c.Remove("src");
                 }
                 if (!string.IsNullOrEmpty(t.ToldFit)) c["told"] = t.ToldFit;
-                if (!string.IsNullOrEmpty(f.Note)) c["note"] = f.Note.Replace("her Monday lunches", "the Monday lunches"); // saved like that before 2026-10-31
+                if (!string.IsNullOrEmpty(f.Note)) c["note"] = f.Note.Replace("her Monday lunches", "the Monday lunches"); // saved like that by older versions
                 if (f.Since >= 0) { c["since"] = f.Since.ToString(); c["speed"] = f.Since == 0 ? "same_day" : f.Since <= 2 ? "fast" : "normal"; }
                 c["thing"] = Thing(f, key);
                 c["tags"] = f.Tags;
@@ -834,8 +839,8 @@ namespace Joojkk.CampusLife
                 var unknown = GirlInfo.LikesOf(h).Where(l => (gs.KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, l))) == 0).ToList();
                 if (unknown.Count > 0 && (ForceLike || Random.value < 0.35f + G.Int / 200f)) newLike = unknown[Random.Range(0, unknown.Count)];
             }
-            // her day line, from a rule that already talks about it (l_<like>=yes or newlike=<like>); with none that fits, she
-            // keeps it for another day.
+            // The like comes inside her day line, from a rule that already talks about it (l_<like>=yes or newlike=<like>);
+            // with none that fits, she keeps it for another day.
             DlgRule rule = null;
             string her = null;
             if (newLike != null)
@@ -847,8 +852,8 @@ namespace Joojkk.CampusLife
                 if (her == null) { newLike = null; ctx.Remove("newlike"); }
             }
             if (her == null) her = Bank.Pick(t.Kind, ctx, key, out rule) ?? Fallback(h, t);
-            // A line with a hook has one subject, so nothing is glued to it (2026-10-31, the fifth complaint: a tail on another
-            // subject and a like after it left the options answering neither).
+            // A line with a hook has one subject, so nothing is glued to it (the fifth complaint: a tail on another subject
+            // and a like after it left the options answering neither).
             if (rule != null && rule.Hook != "") { ctx["hook"] = rule.Hook; her = Compose(her, ctx, true); }   // only an opener, now and then
             else her = Compose(her, ctx);
             // Your line comes after hers is drawn, though you say it first: with a hook, you ask what she's about to answer.
@@ -959,8 +964,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// What you say with the option you took: a written line of the bank for that move and
-        /// what she said ("me.move.(move)" rules, same context), else the label in your own words (Speech.Line).
+        /// What you say with the option you took: a written line of the bank for that move and what she said
+        /// ("me.move.(move)" rules, same context), else the label in your own words (Speech.Line).
         /// </summary>
         private static string PlayerLine(SaveData.Heroine h, Dictionary<string, string> ctx, PMove m)
         {
@@ -1088,8 +1093,8 @@ namespace Joojkk.CampusLife
             var low = c.ContainsKey("low") && c["low"] == "yes" || op < 0;
             var close = h.relation >= 1 || h.isGirlfriend;
             var score = 0f;
-            // What her line opened lands (2026-10-31): praise on anything but her day always came back as "Flattery won't
-            // get you anywhere", comfort on a line that asked for it as "I didn't say I was sad".
+            // What her line opened lands: praise on anything but her day always came back as "Flattery won't get you
+            // anywhere", comfort on a line that asked for it as "I didn't say I was sad".
             var opened = rule != null && rule.Opens.Contains(move);
             if (move == "invite" && rule != null && (rule.Shape == "offer" || rule.Shape == "show" || rule.Shape == "tell" || rule.Shape == "give")) return Q.Good; // she offered it herself
             switch (move)
@@ -1110,8 +1115,9 @@ namespace Joojkk.CampusLife
                 case "thank": score = 0.7f + v.Warm * 0.4f; break;
             }
             var q = score >= 0.8f ? Q.Good : score >= 0f ? Q.Neutral : Q.Bad;
-            // bem, porque ela falaria de forma convidativa?"): what her own warm line invited never lands badly. An invite she
-            // asked for herself (a question, smiling) is a yes; anything else she opened is at worst lukewarm.
+            // What her own warm line invited
+            // never lands badly. An invite she asked for herself (a question, smiling) is a yes; anything else she opened
+            // is at worst lukewarm.
             if (opened && WarmFeel(rule))
             {
                 if (move == "invite" && (rule.Shape == "q" || rule.Shape == "")) return Q.Good;
@@ -1187,12 +1193,11 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// (the same-day and same-talk filters left out): the note, the gift kind, the rule picked, her line and how many
-        /// different lines it has.
+        /// same-talk filters left out): the note, the gift kind, the rule picked, her line and how many different lines it
+        /// has.
         /// </summary>
         /// <summary>
-        /// every warm line of hers that opens a move, answered with that move in the worst context (a bad day, her opinion
-        /// against). None may land badly unless the rule says so itself.
+        /// bad day, her opinion against). None may land badly unless the rule says so itself.
         /// </summary>
         internal static string RuleFitReport(SaveData.Heroine h)
         {

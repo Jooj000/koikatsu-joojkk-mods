@@ -334,7 +334,7 @@ namespace Joojkk.CampusLife
                 var p = P(s);
                 switch (c)
                 {
-                    // Keeping the secret also warms them to you; teasing them stirs them up (user, 2026-10-11).
+                    // Keeping the secret also warms them to you; teasing them stirs them up.
                     case "cg_keep": Social.AddTrust(a, 6); Social.AddTrust(o, 6); G.AddFavor(a, 4, 0); G.AddFavor(o, 4, 0); Memories.Add(a, "secret", "you kept " + N(o) + "'s and my secret", 1, true, K(o)); break;
                     case "cg_tease": p.Exposure = PairState.Clamp(p.Exposure + 20); Social.AddTrust(a, -2); G.AddFavor(a, 0, 5); G.AddFavor(o, 0, 5); break;
                     case "cg_cute": p.Exposure = PairState.Clamp(p.Exposure + 30); p.Trust = PairState.Clamp(p.Trust + 5); G.AddFavor(a, 2, 0); G.AddFavor(o, 2, 0); break;
@@ -349,7 +349,7 @@ namespace Joojkk.CampusLife
                         break;
                     case "cg_walk": break;
                 }
-                // It gets out when it is the talk of campus already (her name), or one of them is a chatterbox (context, 2026-11-07).
+                // It gets out when it is the talk of campus already (her name), or one of them is a chatterbox (context).
                 if (cheating && c != "cg_truth" && c != "cg_keep" && (Standing.Of(a) >= 60 || Standing.Of(o) >= 60 || Social.Chatty(a) || Social.Chatty(o))) Rumors.Start("caught", K(a), K(o), "", 40);
             };
         }

@@ -206,8 +206,8 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// She stops and faces you (her AI paused, her path kept for later). Stopped the way the game does it
-        /// (<c>move.isStop</c> + AI pause, NPC.cs): setting only <c>agent.isStopped</c> was undone every frame by the mover,
-        /// so she slid along her path in the standing pose and even changed rooms (Pitou, 2026-10-11).
+        /// (<c>move.isStop</c> + AI pause, NPC.cs): setting only <c>agent.isStopped</c> was undone every frame by the
+        /// mover, so she slid along her path in the standing pose and even changed rooms (Pitou).
         /// </summary>
         internal static void Hold(NPC n)
         {
@@ -216,7 +216,7 @@ namespace Joojkk.CampusLife
                 if (n == null) return;
                 if (!_held.Contains(n)) _held.Add(n);
                 _heldAt[n] = n.transform.position;
-                // The director stops her, facing you.
+                // The director stops her (her AI goes on), facing you.
                 Director.Halt(n, "a scene with you", true);
                 var cam = Camera.main;
                 if (cam != null && n.chaCtrl != null)
@@ -678,8 +678,8 @@ namespace Joojkk.CampusLife
         public static bool Active { get { return _her != null; } }
 
         /// <summary>
-        /// e o texto ir fluindo enquanto caminha, passando sozinho, sem fazer parar"): one line at a time under the walk bar
-        /// (WalkHint), each for a few seconds, then the next; nobody stops. "" when nothing is said.
+        /// What is being said as you walk: one line at a time under the walk bar (WalkHint), each for a few seconds, then
+        /// the next; nobody stops. "" when nothing is said.
         /// </summary>
         public static string Flow { get { return Active && Time.realtimeSinceStartup < _flowUntil ? _flow : ""; } }
         private static string _flow = "";

@@ -127,8 +127,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Instead of "every other day": a pair and reason that just played weighs less and comes back with
-        /// time; never twice in the same period, a quarter the same day, then 65%, 95%, full.
+        /// Instead of "every other day": a pair and reason that just played weighs less and comes back with time; never
+        /// twice in the same period, a quarter the same day, then 65%, 95%, full.
         /// </summary>
         private static float Fresh(Plan p)
         {
@@ -201,6 +201,7 @@ namespace Joojkk.CampusLife
             if (bond < 35) return Everyday(na, nb, bond);
 
             // A best friend you have never talked to, brought by a girl who is already your friend (a stranger came to
+            // introduce her friend).
             if (bond >= 45)
             {
                 if (S.Girl(GirlInfo.Key(b)).TalkDays.Count == 0 && YourFriend(a)) return MakePlan(na, nb, Motive.Introduce, 2f, null);
@@ -672,8 +673,8 @@ namespace Joojkk.CampusLife
                     }
                     else if (trioEnd == "aleft" && nb != null && G.IsFreeRoaming)
                     {
-                        // The first girl walked off: the talk goes on with the second one alone, as a normal talk
-                        //. Back from the stage to her spot first, so the game opens it with her there.
+                        // The first girl walked off: the talk goes on with the second one alone, as a normal talk. Back
+                        // from the stage to her spot first, so the game opens it with her there.
                         try
                         {
                             if (!nb.gameObject.activeSelf) nb.SetActive(true);
@@ -769,7 +770,7 @@ namespace Joojkk.CampusLife
                     act.Player.isActionNow = true;
                     // The game's own 3P (free H mode 3, and a girl joining an H): category 3000 at a 3P spot. Without it
                     // the H opens in the one-girl category, the second girl has no animation and the load hangs
-                    //.
+                    // (ArgumentNullException in HSceneProc.ChangeAnimator, "Loading..." forever).
                     var pos = act.Player.position;
                     var rot = act.Player.rotation;
                     try
@@ -830,8 +831,8 @@ namespace Joojkk.CampusLife
             if (nb.move != null) nb.move.animParamSpeed = 0f;
             if (nb.isArrival) nb.SetWaitPoint(null);
             if (nb.agent != null && nb.agent.enabled) { nb.agent.enabled = false; _besideAgentOff = nb; }
-            // Both around the spot the camera looks at, as in the talk with both (user, 2026-10-31: one stood in the middle and
-            // the other at the edge of the screen until that talk began).
+            // Both around the spot the camera looks at, as in the talk with both (one stood in the middle and the other at
+            // the edge of the screen until that talk began).
             TrioStage.Frame(her, nb, cam);
             KeepStill(nb);
             nb.chaCtrl.ChangeLookEyesTarget(0, cam.transform, 0.5f, 0f, 1f, 2f);
@@ -839,9 +840,9 @@ namespace Joojkk.CampusLife
             KeepStill(nb);
         }
 
-        // The second girl of a talk stays where we put her. The game pauses everyone for the talk, but her map body is shown
-        // and NPC._isPlayerAction starts her AI again when the player's notice list changes: she left in her talk pose
-        // (user, 2026-10-31: Asuka sliding off with her arms crossed in the middle of the talk).
+        // The second girl of a talk stays where we put her. The game pauses everyone for the talk, but her map body is
+        // shown and NPC._isPlayerAction starts her AI again when the player's notice list changes: she left in her talk
+        // pose (Asuka sliding off with her arms crossed in the middle of the talk).
         private static NPC _held;
         private const string InTalk = "in the talk with you";
         private static Vector3 _heldPos;
@@ -895,7 +896,7 @@ namespace Joojkk.CampusLife
         {
             var p = G.Act.Player.transform;
             // Around the middle of the player's view, not around him: after a talk he may face the camera, and with the two
-            // measured from him one of them came up against the lens (user, 2026-10-31: one in the middle, the other at the edge).
+            // measured from him one of them came up against the lens (one in the middle, the other at the edge).
             var cam = Camera.main;
             var from = cam != null ? new Vector3(cam.transform.position.x, p.position.y, cam.transform.position.z) : p.position;
             var fwd = cam != null ? cam.transform.forward : p.forward;
@@ -1005,8 +1006,8 @@ namespace Joojkk.CampusLife
                     n.agent.enabled = true;
                     NavMeshHit hit;
                     if (!n.agent.isOnNavMesh && NavMesh.SamplePosition(n.transform.position, out hit, 3f, NavMesh.AllAreas)) n.agent.Warp(hit.position);
-                    // A girl the stage just put on the map has no AI running: the mover's brake and speed are still as it left
-                    // them, and the agent never moved.
+                    // A girl the stage just put on the map has no AI running: the mover's brake and speed are still as it
+                    // left them, and the agent never moved ("stuck 9.9 m away", both already framed).
                     if (n.move != null && n.move.isStop) n.move.isStop = false;
                     if (n.agent.isOnNavMesh) n.agent.isStopped = false;
                     if (n.agent.speed < 0.5f) n.agent.speed = 1.5f;
@@ -1031,8 +1032,8 @@ namespace Joojkk.CampusLife
                     if (retargets >= 6) { _walkAborted = true; Step("the player keeps walking away; they give up"); break; }
                     if (Retarget(girls, spots, done, best, bestAt)) { retargets++; Step("the player moved; new spots in front of him (" + retargets + ")"); }
                 }
-                // já deve começar o diálogo, e então a segunda vem mais rápido, ou teleporta caso muito longe"): the other
-                // hurries (a run), is put at her spot when still far, and gets 2.5 s at most.
+                // The first one there starts it: the other hurries (a run), is put at her spot when still far, and gets 2.5
+                // s at most.
                 if (done[0] != done[1] && girls[0] != null && girls[1] != null)
                 {
                     var late = done[0] ? 1 : 0;
@@ -1144,13 +1145,13 @@ namespace Joojkk.CampusLife
         }
 
 
-        // The second girl whose NavMeshAgent StandBeside switched off. Stop() on the way back saw it off and remembered
-        // "off", so Release never switched it on again and she stood there for good.
+        // The second girl whose NavMeshAgent StandBeside switched off. Stop on the way back saw it off and remembered
+        // "off", so Release never switched it on again and she stood there for good (Natsuki).
         private static NPC _besideAgentOff;
 
         // Their agents always go back on: they walked away from their seat or action point, so the state remembered by
-        // Stop() no longer applies. A girl who had been sitting was remembered "off" and, after the scene, stood there for
-        // good with her AI running (both girls of the gossip and "good listener" scenes, 2026-10-11).
+        // Stop no longer applies. A girl who had been sitting was remembered "off" and, after the scene, stood there for
+        // good with her AI running (both girls of the gossip and "good listener" scenes).
         private static void Release(NPC na, NPC nb, bool[] agents, bool over = true)
         {
             foreach (var n in new[] { na, nb })
@@ -1166,8 +1167,8 @@ namespace Joojkk.CampusLife
                         n.agent.Warp(NavMesh.SamplePosition(n.transform.position, out hit, 2f, NavMesh.AllAreas) ? hit.position : n.transform.position);
                     }
                     if (n.chaCtrl != null) { n.chaCtrl.ChangeLookEyesPtn(0); n.chaCtrl.ChangeLookNeckPtn(3); }
-                    // A talk still open (a wait above ran out): the game shows and restarts everyone when it closes. Showing
-                    // her now put her map body on top of the talk scene's copy of her (user, 2026-10-12).
+                    // A talk still open (a wait above ran out): the game shows and restarts everyone when it closes.
+                    // Showing her now put her map body on top of the talk scene's copy of her.
                     if (G.TalkSceneOpen) continue;
                     // Shown again when she is on this map (SetActive does nothing when the game already thinks she is).
                     if (G.Act != null && G.Act.Map != null && n.mapNo == G.Act.Map.no)

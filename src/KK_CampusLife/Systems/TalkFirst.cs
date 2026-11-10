@@ -7,10 +7,10 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// interagir"). With a door and a girl both in reach, the game's door took the action key (its trigger runs before the
-    /// scene's talk check, and the talk check gives way to any door). While a regular girl you can talk to is the one in
-    /// your sights, the touch box of the action-key doors next to you is switched off; it comes back as soon as she is not.
-    /// Walk-through doors (moveType 1) are never touched.
+    /// Talking comes before doors. With a door and a girl both in reach, the game's door took the action key (its trigger
+    /// runs before the scene's talk check, and the talk check gives way to any door). While a regular girl you can talk to
+    /// is the one in your sights, the touch box of the action-key doors next to you is switched off; it comes back as soon
+    /// as she is not. Walk-through doors (moveType 1) are never touched.
     /// </summary>
     internal static class TalkFirst
     {

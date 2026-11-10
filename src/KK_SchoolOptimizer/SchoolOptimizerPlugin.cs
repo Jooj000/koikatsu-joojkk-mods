@@ -341,8 +341,9 @@ namespace Joojkk.SchoolOptimizer
 
         /// <summary>
         /// The game's hair length update throws a NullReferenceException every frame when one of its length bones was
-        /// without the optimizer). The dead bones are dropped from its arrays, so the rest keeps working and the log
-        /// stays clean. Nothing is skipped.
+        /// destroyed (a hair part swapped or a body rebuilt while the old component lives on; 132 also seen without the
+        /// optimizer). The dead bones are dropped from its arrays, so the rest keeps working and the log stays clean.
+        /// Nothing is skipped.
         /// </summary>
         [HarmonyPrefix, HarmonyPatch(typeof(ChaCustomHairComponent), "Update")]
         private static void HairUpdatePrefix(ChaCustomHairComponent __instance)
@@ -378,7 +379,8 @@ namespace Joojkk.SchoolOptimizer
 
         /// <summary>
         /// The bust normals of a clothes piece are only let go when the game itself removes that piece. A piece gone
-        /// in BustNormal.Blend) left them pointing at a destroyed mesh. Such an entry is released the game's own way
+        /// another way (outfit rebuilt while she was being released off the map; 294 NullReferenceExceptions in
+        /// BustNormal.Blend) left them pointing at a destroyed mesh. Such an entry is released the game's own way
         /// (BustNormal.Release), so Blend just skips it; the next time the piece is built it is set up again.
         /// </summary>
         [HarmonyPrefix, HarmonyPatch(typeof(BustNormal), nameof(BustNormal.Blend))]
@@ -919,9 +921,10 @@ namespace Joojkk.SchoolOptimizer
                 LeftHalfDressed++;
                 SchoolOptimizerPlugin.Log.LogDebug("Clothes of " + (npc.heroine != null ? npc.heroine.Name : "?") + " put back (changing state left over, action " + npc.AI.actionNo + ")");
             }
-            // clothes off (AI action 2: SetClothesStateAll(3)) and the toilet the lower ones (action 1); the game puts them
-            // back only when her next action starts. Moved on without that (a summon, a director's push, a period change),
-            // she walked to the cafeteria in the shower state. Seen twice in a row away from those points, it is ended.
+            // With Campus Life, the shower takes all her clothes off (AI action 2: SetClothesStateAll(3)) and the
+            // toilet the lower ones (action 1); the game puts them back only when her next action starts. Moved on without
+            // that (a summon, a director's push, a period change), she walked to the cafeteria in the shower state. Seen
+            // twice in a row away from those points, it is ended.
             foreach (var npc in act.npcList)
             {
                 if (npc == null || npc.chaCtrl == null || npc.chaCtrl.fileStatus == null || npc.AI == null) { continue; }

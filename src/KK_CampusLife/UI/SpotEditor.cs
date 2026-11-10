@@ -8,13 +8,13 @@ using UnityEngine.AI;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// controlador simples (tela de plugin mesmo), em que eu abro por atalho, e aparecem as atividades do mapa atual, e eu
-    /// defino a posição de onde eu estou, ou a um corpo de distância na minha frente"). Alt+F7 opens and closes it. Each
-    /// activity of this map has "Here" (where you stand, facing your way), "1 body ahead" (one body length in front of you)
-    /// and "Default" (back to the game's point). They move the icon only: the animation plays at the game's point with its
-    /// own chair, except on a map without game points (the park), where it plays at the spot. The spot is kept in BepInEx\config\joojkk.campuslife.spots.txt (the same
-    /// file as the Campus Life menu's "Spot here") and the map's icons move at once. Below the list, the loading screen's
-    /// photo of this map: he stands where he likes and takes it (MapShots), or deletes it.
+    /// A plain plugin window to place the activities of the map you are on. Alt+F7 opens and closes it. Each activity of
+    /// this map has "Here" (where you stand, facing your way), "1 body ahead" (one body length in front of you) and
+    /// "Default" (back to the game's point). They move the icon only: the animation plays at the game's point with its own
+    /// chair, except on a map without game points (the park), where it plays at the spot. The spot is kept in
+    /// BepInEx\config\joojkk.campuslife.spots.txt (the same file as the Campus Life menu's "Spot here") and the map's icons
+    /// move at once. Below the list, the loading screen's photo of this map: stand where you like and take it
+    /// (MapShots), or deletes it.
     /// </summary>
     internal static class SpotEditor
     {
@@ -80,7 +80,7 @@ namespace Joojkk.CampusLife
         {
             if (!_open) return;
             if (G.Act == null || G.Act.Player == null) { _open = false; return; }
-            _rect.height = 10f;   // the window grows to what it lists
+            _rect.height = 10f;   // the window grows to what it lists (an empty band was left under the rows)
             _rect = GUILayout.Window(WindowId, _rect, Draw, "Activity spots: " + Places.MapLabel(G.PlayerMapNo));
         }
 
@@ -117,7 +117,7 @@ namespace Joojkk.CampusLife
                 }
                 GUILayout.EndScrollView();
                 TeaseRow(map);
-                // atividade". The loading screen's picture of this map is his view, taken here.
+                // The loading screen's picture of this map is the player's view, taken here.
                 var slot = EventBackdrop.TimeSlot();
                 var has = MapShots.Has(map, slot);
                 var shipped = !has && MapShots.Shipped(map, slot);
@@ -142,8 +142,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// when a girl sleeps here. "Here" and "1 body ahead" as for the activities; "Default" goes back to the floor next to
-        /// her that the player can reach.
+        /// Where the purple imp stands on this map when a girl sleeps here. "Here" and "1 body ahead" as for the
+        /// activities; "Default" goes back to the floor next to her that the player can reach.
         /// </summary>
         private static void TeaseRow(int map)
         {

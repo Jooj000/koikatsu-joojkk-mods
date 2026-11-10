@@ -107,8 +107,8 @@ namespace Joojkk.CampusLife
             }
             if (p.Stage == PairStage.Couple || p.Stage == PairStage.Strained) { p.Intimacy = PairState.Clamp(p.Intimacy + 1); p.Jealousy = Mathf.Max(0, p.Jealousy - 2); }
 
-            // Time together grows on its own, not only through you: a little closer each time, more
-            // with a popular girl; two girls into each other warm up (lewdness), a couple more so.
+            // Time together grows on its own, not only through you: a little closer each time, more with a popular girl;
+            // two girls into each other warm up (lewdness), a couple more so.
             var bond = Social.Bond(h, other);
             if (bond > -20) Arcs.AddBond(GirlInfo.Key(h), GirlInfo.Key(other), 1 + (Standing.Of(other) >= 65 || Standing.Of(h) >= 65 ? 1 : 0));
             if (Cfg.StudentH.Value && GirlsOk(h) && GirlsOk(other))
@@ -397,7 +397,7 @@ namespace Joojkk.CampusLife
             p.Jealousy = PairState.Clamp(p.Jealousy + 15);
             var partner = Social.Get(p.Other(GirlInfo.Key(h)));
             S.Girl(GirlInfo.Key(h)).Conflicted += 2;
-            // She suspects when she trusts the pair less, is the jealous kind, or it happened where people talk (context, 2026-11-07).
+            // She suspects when she trusts the pair less, is the jealous kind, or it happened where people talk (context).
             if (partner != null && (p.Trust < 50 || p.Jealousy >= 40 || Standing.Of(h) >= 60))
             {
                 Strain(p, GirlInfo.FirstName(partner) + " suspects something");

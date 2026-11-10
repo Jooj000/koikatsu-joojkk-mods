@@ -5,9 +5,11 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// The romance page's plain steps speak from the bank: holding hands, "what am I to you", being
-    /// sweet, compliments, love talk, jealousy, the "not now" answers. The answer is decided as before by the caller; only the words come from here. {act} is the step, {q} how she
-    /// took it, {close} Lines.Closeness and {lvl} how far her feelings go. The intimate steps (teasing, whispering, the
+    /// The romance page's plain steps speak from the bank (romance.dlg): holding hands, "what am I to you", being sweet,
+    /// compliments, love talk, jealousy, the "not now" answers. The answer is decided as before by the caller; only the
+    /// words come from here. {act} is the step, {q} how she took it, {close} Lines.Closeness and {lvl} how far her feelings
+    /// go. The intimate steps (teasing, whispering, the last time, sneaking off, a bold line, what held her back) are in
+    /// intimate.dlg.
     /// </summary>
     internal static partial class Conversation
     {
@@ -20,15 +22,14 @@ namespace Joojkk.CampusLife
             c["close"] = Lines.Closeness(h).ToString();
             if (lvl != null) c["lvl"] = lvl;
             if (rival != null) c["rname"] = rival;
-            // You already tried this step today (2026-11-07): her no says so. Counted when she answered (Consent.Pushed).
+            // You already tried this step today: her no says so. Counted when she answered (Consent.Pushed).
             var tries = act == "flirt" ? Consent.Tries(h, "flirt", "sweet") : act == "noticed" ? Consent.Tries(h, "compliment") : Consent.Tries(h, act);
             c["pushed"] = tries >= 2 ? "yes" : "no";
             return c;
         }
 
-        // The hook of the line you just said (2026-11-06, "todas as falas precisam ter sequência lógica"): her answer to the
-        // same step in the same frame reads it, so "Kissable?" only follows "Very kissable." Set by RomanceMe, or by
-        // RomanceSaid when your line was built in C#.
+        // The hook of the line you just said: her answer to the same step in the same frame reads it, so "Kissable?" only
+        // follows "Very kissable." Set by RomanceMe, or by RomanceSaid when your line was built in C#.
         private static string _saidAct, _saidHook;
         private static int _saidFrame = -1;
 

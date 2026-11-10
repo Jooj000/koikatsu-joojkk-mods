@@ -3,10 +3,10 @@ using System;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// Campus Life's own drawings for the conversation (user, 2026-10-26: "redo the drawings of the 5 buttons and their
-    /// options in the mod's style"): a graphite tile with a thin frame in the category's color and a white symbol (speech
-    /// bubble, gift, two people, heart, flame), and the option cards. Drawn from shape formulas (signed distances) into
-    /// plain RGBA arrays, with no Unity types, so tools/iconpreview can draw the same pictures outside the game.
+    /// Campus Life's own drawings for the conversation ("redo the drawings of the 5 buttons and their options in the
+    /// mod's style"): a graphite tile with a thin frame in the category's color and a white symbol (speech bubble, gift,
+    /// two people, heart, flame), and the option cards. Drawn from shape formulas (signed distances) into plain RGBA
+    /// arrays, with no Unity types, so tools/iconpreview can draw the same pictures outside the game.
     /// </summary>
     internal static partial class IconArt
     {
@@ -15,7 +15,7 @@ namespace Joojkk.CampusLife
         public const int ToA = 5, ToB = 6, ToBoth = 7;
 
         /// <summary>The category colors: the blue of the game's dialogue boxes, gold, green, SEN pink and STR red; who you
-        /// talk to in white.</summary>
+        /// talk to in white (Talk bluer, the target button white).</summary>
         public static readonly float[][] Accent =
         {
             new[] { 0.24f, 0.56f, 1f },
@@ -80,7 +80,8 @@ namespace Joojkk.CampusLife
             return Card(kind >= 0 ? Accent[kind] : new[] { 0.85f, 0.85f, 0.9f }, kind >= 0, size, out border);
         }
 
-        /// gift that fulfils her request has its own frame turned pink instead of the category's gold.</summary>
+        /// <summary>The same card framed (and striped, if <paramref name="strip"/>) in any color: the gift that
+        /// fulfils her request has its own frame turned pink instead of the category's gold.</summary>
         public static float[] Card(float[] a, bool strip, int size, out int border)
         {
             border = size * 3 / 8;

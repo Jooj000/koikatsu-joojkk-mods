@@ -6,12 +6,12 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// Each girl's reputation at school, 0-100 (2026-10-27: "elas também podem ter reputação, o que faz elas serem mais
-    /// populares ou excluídas"). Once a day it drifts toward what her friendships say (friends raise it, enemies lower it,
-    /// her club and your reputation if she is your girlfriend count a little) and moves with what happened: a hot rumor
-    /// about her, being rude or breaking a promise lower it; being helped, a new couple, making up raise it. Popular girls
-    /// are sought out more by the others (Intents) and are cheerful more often; excluded girls get lonely and fewer visits.
-    /// Lewd girls also warm up a little by themselves each day, so the H between them does not wait for the player.
+    /// Each girl's reputation at school, 0-100. Once a day it drifts toward what her friendships say (friends raise it,
+    /// enemies lower it, her club and your reputation if she is your girlfriend count a little) and moves with what
+    /// happened: a hot rumor about her, being rude or breaking a promise lower it; being helped, a new couple, making up
+    /// raise it. Popular girls are sought out more by the others (Intents) and are cheerful more often; excluded girls get
+    /// lonely and fewer visits. Lewd girls also warm up a little by themselves each day, so the H between them does not
+    /// wait for the player.
     /// </summary>
     internal static class Standing
     {
@@ -43,7 +43,7 @@ namespace Joojkk.CampusLife
                 if (girls.Count == 0) return;
                 var moved = 0;
                 // Relative to the school: having more friends than most makes her popular, fewer makes her left out
-                //.
+                // (an absolute count put every girl at the cap, 53 girls with many friends each).
                 var friendsOf = girls.ToDictionary(h => h, h => girls.Count(o => o != h && Social.Bond(h, o) >= 40));
                 var enemiesOf = girls.ToDictionary(h => h, h => girls.Count(o => o != h && Social.Bond(h, o) <= -30));
                 var avgF = (float)friendsOf.Values.Average();
@@ -78,6 +78,7 @@ namespace Joojkk.CampusLife
 
                     // On her own: a lewd-minded girl gets a little more so each day (Moods reads it for Flirty).
                     var q = GirlInfo.Quirks(h);
+                    // Most cards carry one of the two quirks, so it is a chance, not every day.
                     if (Cfg.StudentH.Value && h.lewdness < 90 && (gs.Mood == Mood.Flirty || (q.bitch || q.mutturi) && (gs.Mood == Mood.Bored || gs.Mood == Mood.Lonely || gs.Mood == Mood.Cheerful)))   // on a free-feeling day, not every day
                         G.AddFavor(h, 0, gs.Mood == Mood.Flirty ? 2 : 1);
                 }

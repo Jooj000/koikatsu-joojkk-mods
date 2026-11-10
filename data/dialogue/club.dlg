@@ -1,5 +1,5 @@
-# koikatsu, ter falas referentes ao clube antigo no passado, e diálogos personalizados do clube koikatsu no presente, e com
-# sentido."). Slots from Conversation.ClubCtx: {clubid} swim, manga, tea_ceremony, track_field, cheerleading, none; {kclub}
+# Her club as its own variable: a girl who joined your Koikatsu Club talks of her old club in the past and of the
+# Koikatsu Club in the present. Slots from Conversation.ClubCtx: {clubid} swim, manga, tea_ceremony, track_field, cheerleading, none; {kclub}
 # yes when she joined your Koikatsu Club; then {club} is "Koikatsu Club", {oldclub}/{oldclubid} the club she left
 # ({hadclub} yes/no), {kmate} another member (a friend first), {kmates} none/some/many.
 # Every rule here has three conditions or more, so the plain "subject=club" lines (one) never play over them.

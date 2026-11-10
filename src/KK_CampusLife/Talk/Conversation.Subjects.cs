@@ -7,10 +7,10 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// One thing to talk about, with its own lines: what the player says, how she answers when she loves it, finds it
-    /// fine or doesn't care for it (per tone: gentle, energetic, cool, teasing), and two or three ways to go on, which can
+    /// One thing to talk about, with its own lines: what the player says, how she answers when she loves it, finds it fine
+    /// or doesn't care for it (per tone: gentle, energetic, cool, teasing), and two or three ways to go on, which can
     /// teach you something about her (a <see cref="Conversation.Fact"/>) that later subjects use. Replaces the old turn
-    /// where any option fell back on a generic topic answer ("talk about the flowers" -> "my hobbies?", 2026-10-11).
+    /// where any option fell back on a generic topic answer ("talk about the flowers" -> "my hobbies?").
     /// </summary>
     internal sealed class TalkSubject
     {

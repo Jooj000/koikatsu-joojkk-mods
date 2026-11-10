@@ -33,11 +33,11 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The story plays right after the date, still on Sunday, inside the game's date coroutine (the date takes the whole
-        /// day: the first free moment after it is Monday, user 2026-10-12). It is opened the way the game opens its own
-        /// date ADVs there (<see cref="Scenes.PlayInline"/>); the first try used KKAPI's StartAdvEvent, whose list waits for
-        /// the scene fade, and the game sat on the loading screen for good (2026-10-11). If it cannot play there, it waits
-        /// for the first free moment instead.
+        /// The story plays right after the date, still on Sunday, inside the game's date coroutine (the date takes the
+        /// whole day: the first free moment after it is Monday). It is opened the way the game opens its own date ADVs
+        /// there (<see cref="Scenes.PlayInline"/>); the first try used KKAPI's StartAdvEvent, whose list waits for the
+        /// scene fade, and the game sat on the loading screen for good. If it cannot play there, it waits for the first
+        /// free moment instead.
         /// </summary>
         private static SaveData.Heroine _pending;
         private static int _pendingDay = -1;
@@ -159,6 +159,7 @@ namespace Joojkk.CampusLife
             var trad = kind == "tradition" ? Seasons.Tradition(h) : null;
 
             // Part 1: The Meeting
+            // A lazy day at home is her room (the game's picture), the painted inn only as a spare.
             b.Bg(kind == "quiet" ? "@room|inn_room_day" : plan.Bg);
             b.Narr(kind == "quiet" ? "Sunday Story: \"A Day for Doing Nothing\"" : kind == "tradition" ? "Sunday Story: \"Our Usual\"" : kind == "friend" ? "Sunday Story: \"Party of Three\"" : "Sunday Story: \"The Plan That Went Wrong\"");
             b.Narr("Part 1: The Meeting.");

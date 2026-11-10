@@ -7,14 +7,13 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// tarefas, para adicionar mais motivações para os jogadores que quiserem platinar"). Each one is a record (the day it
-    /// fell and with whom, in the Album tab of F7) and a task: its goal and progress always show ("3/10"), the secret
-    /// ones show a hint instead of their goal, and the album counts "N of M". Most read what the mod already keeps
-    /// (lore, incidents, school events, harem, reputation); the rest are counters the scenes bump (Count).
-    /// <para>Stages: one
-    /// achievement climbs through its stages, each with its own name and goal ("Familiar Face", 3/4, "Talk with 10
-    /// different girls", next: 20). Each story heroine and each teacher has one whose stages are her story's
-    /// interactions, named after the one just reached. Every stage is a record of its own and pops its own card.</para>
+    /// Achievements. Each one is a record (the day it fell and with whom, in the Album tab of F7) and a task: its goal and
+    /// progress always show ("3/10"), the secret ones show a hint instead of their goal, and the album counts "N of M".
+    /// Most read what the mod already keeps (lore, incidents, school events, harem, reputation); the rest are counters the
+    /// scenes bump (Count). <para>Stages: one achievement climbs through its stages, each with its own name and goal
+    /// ("Familiar Face", 3/4, "Talk with 10 different girls", next: 20). Each story heroine and each teacher has one whose
+    /// stages are her story's interactions, named after the one just reached. Every stage is a record of its own and pops
+    /// its own card.</para>
     /// </summary>
     internal static class Achievements
     {
@@ -141,8 +140,8 @@ namespace Joojkk.CampusLife
             catch { }
         }
 
-        // Inside each category: the simple ones first, then the specific ones, then the long run.
-        // A climb sits in the step of its first stage.
+        // Inside each category: the simple ones first, then the specific ones, then the long run. A climb sits in the
+        // step of its first stage.
         public static readonly List<Def> All = new List<Def>
         {
             // ---- Friendship ----
@@ -511,7 +510,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// taken, outdoors, in the rain. Being seen comes from Lore.FromH.
+        /// H with you. Cheating on your girlfriend (another girl is your girlfriend), with a girl who is taken, outdoors,
+        /// in the rain. Being seen comes from Lore.FromH.
         /// </summary>
         public static void AfterH(SaveData.Heroine h, List<SaveData.Heroine> all)
         {
@@ -550,6 +550,7 @@ namespace Joojkk.CampusLife
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Achievements: " + e.Message); }
         }
 
+        // 's separate ones that became a stage of a climb: old id -> (climb, stage).
         private static readonly Dictionary<string, KeyValuePair<string, int>> Moved = new Dictionary<string, KeyValuePair<string, int>>
         {
             { "familiar_face", new KeyValuePair<string, int>("first_talk", 3) },
@@ -579,6 +580,7 @@ namespace Joojkk.CampusLife
 
         private static CampusState _migrated;
 
+        /// <summary>A save: its old records become the stage they now are (day and girl kept).</summary>
         private static void Migrate()
         {
             if (_migrated == S) return;

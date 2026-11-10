@@ -194,7 +194,7 @@ namespace Joojkk.CampusLife
                         b.End();
                     }
                     b.Branch("q_joke");
-                    // Context (2026-11-07): her tone, trust, and how bad it is (upset is hard to lift).
+                    // Context: her tone, trust, and how bad it is (upset is hard to lift).
                     var jt = GirlInfo.ToneOf(h);
                     var works = Consent.Yes(h, "quietjoke", 0.35f + Social.Trust(h) / 200f + (jt == Tone.Energetic || jt == Tone.Teasing ? 0.15f : jt == Tone.Cool ? -0.1f : 0f) + (mood == Mood.Upset ? -0.25f : 0f));
                     b.Me(ConvoLines.PlayerJoke());
@@ -535,9 +535,9 @@ namespace Joojkk.CampusLife
         // ================= Scene Talk: after a wary H, her guilt =================
 
         /// <summary>
-        /// pedir pra vc assumir ela ou tentar se afastar, e você tem que resolver os problemas todos"). The director chose
-        /// which way she went (Consent.Guilt): she asks you to take responsibility, or she pulls away. Until you settle it,
-        /// her H, kiss and invitations come harder, and the scene comes back every couple of days.
+        /// She said yes warily, and now it weighs on her. The director chose which way she went (Consent.Guilt): she asks
+        /// you to take responsibility, or she pulls away. Until you settle it, her H, kiss and invitations come harder, and
+        /// the scene comes back every couple of days.
         /// </summary>
         private static Subject AfterH(SaveData.Heroine h)
         {

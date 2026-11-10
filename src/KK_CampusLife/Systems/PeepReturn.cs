@@ -9,8 +9,8 @@ namespace Joojkk.CampusLife
     /// <summary>
     /// After watching (peeping at) an H scene, the game takes the player out of that map through its nearest gate
     /// (ActionScene.ChangeHCommon), so he is not caught in a restroom or changing room. On a map that is no such
-    /// place (the 3F corridor, 2026-10-11) that just dropped him in whatever room the nearest door led to (the
-    /// traditional room). There he is put back where he stood.
+    /// place (the 3F corridor) that just dropped him in whatever room the nearest door led to (the traditional
+    /// room). There he is put back where he stood.
     /// </summary>
     internal static class PeepReturn
     {

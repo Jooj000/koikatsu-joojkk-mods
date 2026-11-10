@@ -39,8 +39,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// mapa ter seus próprios eventos"): the hallway ones in the corridors, the locker ones at the entrance floor, the
-        /// wind and the cat outside, the vending machine where there is one. Chosen when it plays, for the map you are on.
+        /// Where each moment can happen: the hallway ones in the corridors, the locker ones at the entrance floor, the wind
+        /// and the cat outside, the vending machine where there is one. Chosen when it plays, for the map you are on.
         /// </summary>
         public static bool Fits(string id, int map)
         {
@@ -107,7 +107,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// notebooks played for a girl on another map): your map, spawned, within ~15 m; none, no scene.
+        /// A girl right in front of you, for what happens to her before your eyes (the bump with her notebooks played for
+        /// a girl on another map): your map, spawned, within ~15 m; none, no scene.
         /// </summary>
         private static SaveData.Heroine Near()
         {
@@ -188,7 +189,7 @@ namespace Joojkk.CampusLife
 
                 case "locker_note":
                 {
-                    // Only a friend leaves a note.
+                    // Only a friend leaves a note (girls who barely knew him sent them).
                     var g = Girl(h => h.favor >= 30 && Duo.YourFriend(h) && Truth.AtSchool(h));
                     if (g == null) return false;
                     var initial = GirlInfo.FirstName(g).Substring(0, 1).ToUpper();

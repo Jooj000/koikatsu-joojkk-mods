@@ -8,7 +8,7 @@ namespace Joojkk.CampusLife
     internal enum How { Participant, Witness, Heard, Rumor }
 
     /// <summary>
-    /// One thing that happened (the procedural dialogue's memory, note koikatsu-arquitetura-dialogo-procedural): who did
+    /// One thing that happened (the procedural dialogue's memory): who did
     /// what to whom, where and when, how much it weighs and how hidden it is. "player" is the player's key.
     /// </summary>
     internal sealed class LoreFact

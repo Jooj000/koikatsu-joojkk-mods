@@ -504,6 +504,7 @@ when role=teacher free=yes
 - [Do you have a minute, sensei?|Nobody's around, sensei.]
 
 
+# ================= more lines =================
 # Tails and openers with the weather.
 
 @rule tail.rain

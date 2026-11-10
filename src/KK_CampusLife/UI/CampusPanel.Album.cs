@@ -5,18 +5,19 @@ using UnityEngine.UI;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// The Album tab: the achievements as a record and a to-do list. Left, the
-    /// categories with how many of each are done, the "N of M" total and, in the corner, how many characters the school
-    /// has (all of them, and how many came with the game). Right, the open category in three steps, from the simple ones
-    /// to the long run: done ones with the day and the girl (and, for "every girl", how many there were), the rest with
-    /// their goal and progress, the secret ones with a hint until they fall. Ones about another mod show only with it.
+    /// The Album tab (redone in the 11th): the achievements as a record and a to-do list. Left, the categories with how
+    /// many of each are done, the "N of M" total and, in the corner, how many characters the school has (all of them,
+    /// and how many came with the game). Right, the open category in three steps, from the simple ones to the long run:
+    /// done ones with the day and the girl (and, for "every girl", how many there were), the rest with their goal and
+    /// progress, the secret ones with a hint until they fall. Ones about another mod show only with it.
     /// </summary>
     internal static partial class CampusPanel
     {
         private static string _albumCat = "Friendship";
 
-        // icon and color, the left side shows the latest ones done, and each card has a badge, a compact gauge and the
-        // category's color when it is done.
+        // Every category has its icon and
+        // color, the left side shows the latest ones done, and each card has a badge, a compact gauge and the category's
+        // color when it is done.
         private static string CatGlyph(string cat)
         {
             switch (cat)

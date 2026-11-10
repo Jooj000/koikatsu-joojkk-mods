@@ -143,6 +143,7 @@ namespace Joojkk.SchoolOptimizer
                 // A bone we put to sleep (far or out of view) keeps the particles of the moment it slept. DynamicBone only
                 // resets them when its own distance check wakes it; turning m_DistantDisable off skips that check, so the
                 // first step pulled the hair toward where she was before (another map, or before the talk moved her: the
+                // second girl of a duo scene came out of the talk bald). Wake it with a reset.
                 var asleep = false;
                 try { asleep = b.m_DistantDisable && AsleepField != null && (bool)AsleepField.GetValue(b); } catch { }
                 b.m_UpdateRate = e.Rate[i];

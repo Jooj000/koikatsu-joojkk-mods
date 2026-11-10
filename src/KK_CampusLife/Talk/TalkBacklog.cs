@@ -6,9 +6,9 @@ using HarmonyLib;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// diálogo individual"): every line of ours plays as its own little ADV scene, and the game clears its log (BackLog)
-    /// when a scene starts, so the log only ever showed the last exchange. While one conversation lasts, what the log
-    /// received is kept here and put back at the top of each new scene; a new girl (or no talk) starts it empty.
+    /// Every line of ours plays as its own little ADV scene, and the game clears its log (BackLog) when a scene starts, so
+    /// the log only ever showed the last exchange. While one conversation lasts, what the log received is kept here and put
+    /// back at the top of each new scene; a new girl (or no talk) starts it empty.
     /// </summary>
     internal static class TalkBacklog
     {

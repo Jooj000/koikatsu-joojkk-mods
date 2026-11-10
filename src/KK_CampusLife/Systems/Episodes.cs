@@ -106,9 +106,9 @@ namespace Joojkk.CampusLife
         // ================= procedural choices =================
 
         /// <summary>
-        /// The options of one choice: each one only if the context allows it, with a weight. At most four are shown
-        ///: the ones marked always first, then the heaviest. Every shown option writes its
-        /// branch, and the branches meet again at the join label.
+        /// The options of one choice: each one only if the context allows it, with a weight. At most four are shown (asked
+        /// for few options): the ones marked always first, then the heaviest. Every shown option writes its branch, and the
+        /// branches meet again at the join label.
         /// </summary>
         internal sealed class Opts
         {

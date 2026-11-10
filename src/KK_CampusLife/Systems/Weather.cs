@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// resultado decente. isso afeta como valor nos diálogos, movimentação, eventos e etc no diretor").
+    /// Rain.
     /// <list type="bullet">
     /// <item>The weather is a value of the day, rolled by the month (June is the rainy season, September has typhoons) and
     /// kept in the save: clear, cloudy, rain or a storm, and the period the rain starts (all day, from lunch, after
@@ -136,8 +136,9 @@ namespace Joojkk.CampusLife
 
         public static int Sheltered;
 
-        /// <summary>The director keeps her off an outdoor spot while it rains (a rain lover goes anyway, half the time).</summary>
-        /// <summary>A rain lover goes out in it unless she is sleepy, upset or stressed (context, not a coin, 2026-11-07).</summary>
+        /// <summary>The director keeps her off an outdoor spot while it rains (a rain lover goes anyway, half the
+        /// time).</summary> <summary>A rain lover goes out in it unless she is sleepy, upset or stressed (context, not a
+        /// coin).</summary>
         private static bool MoodGoes(SaveData.Heroine h)
         {
             var gs = S.Girl(GirlInfo.Key(h));
@@ -181,7 +182,7 @@ namespace Joojkk.CampusLife
                 if (cam != null)
                 {
                     if (_fx == null) Build();
-                    // On a layer this camera draws: the game's cameras do not all draw Default.
+                    // On a layer this camera draws: the game's cameras do not all draw Default (nothing showed).
                     var layer = DrawnLayer(cam);
                     _fx.layer = layer;
                     Veil().layer = layer;
@@ -249,8 +250,9 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// The grey sky: one quad over the whole view (a single draw call, no fog or image effect), darker at the top
-        /// Update, it lagged a frame behind the camera and its edge showed when the view turned), so it goes with the
-        /// camera when a map unloads and is made again.
+        /// where the blue sky is and lighter at the ground. It hangs on the camera itself (placed from our Update, it
+        /// lagged a frame behind the camera and its edge showed when the view turned), so it goes with the camera
+        /// when a map unloads and is made again.
         /// </summary>
         private static GameObject Veil()
         {
@@ -294,9 +296,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The veil just past the camera's near plane, as big as the view (a child of the camera). The map load can
-        /// take the camera, and the veil with it: the new one gets the
-        /// drops' layer here, and the sizes allow for a scaled camera.
+        /// The veil just past the camera's near plane, as big as the view (a child of the camera). The map load can take
+        /// the camera, and the veil with it (after the warp only the drops showed): the new one gets the drops' layer
+        /// here, and the sizes allow for a scaled camera.
         /// </summary>
         private static void Cover(Camera cam)
         {

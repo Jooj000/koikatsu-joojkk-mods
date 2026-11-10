@@ -8,9 +8,8 @@ using UnityEngine.AI;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// andando mas não estiver se mexendo provavelmente está travado em alguma parte do mapa, ou com ação
-    /// indisponível"). Counted only while the game's clock runs (no menu, no talk, no scene, not stopped by the
-    /// director): 6 s on the same spot and she is helped, one step more each time:
+    /// A girl on your map shown as walking who does not move. Counted only while the game's clock runs (no menu, no talk,
+    /// no scene, not stopped by the director): 6 s on the same spot and she is helped, one step more each time:
     /// <list type="number">
     /// <item>back on the navmesh where she stands, and a new action (her old one may be impossible: a taken or missing spot);</item>
     /// <item>the same, a little farther from the snag (3 m);</item>

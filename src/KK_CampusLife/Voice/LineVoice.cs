@@ -3,8 +3,8 @@ using System;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// Voice for Campus Life lines: each girl reacts with a fitting clip of her own recorded game voice (see
-    /// <see cref="GameVoice"/>) while the English text is shown. The English text-to-speech (Piper/SAPI) was removed on
+    /// Voice for Campus Life lines: each girl reacts with a fitting clip of her own recorded game voice (see <see
+    /// cref="GameVoice"/>) while the English text is shown.
     /// </summary>
     internal static class LineVoice
     {

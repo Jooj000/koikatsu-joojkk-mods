@@ -138,7 +138,7 @@ namespace Joojkk.CampusLife
         /// <summary>
         /// Something changed for her (a conversation, a gift, a scene, H, a pair changing): her intention is drawn again
         /// and the situation waiting to happen is checked again, at the next tick. Before, the director set its goals at
-        /// the start of the period and never looked again (user, 2026-10-11).
+        /// the start of the period and never looked again.
         /// </summary>
         public static void Changed(SaveData.Heroine h, string why)
         {
@@ -195,7 +195,8 @@ namespace Joojkk.CampusLife
             if (!Campus.On || !Cfg.DirectorEnabled.Value) return;
             try { Refresh(); }
             catch (Exception e) { CampusLifePlugin.Log.LogError("Director refresh: " + e); }
-            // (shiro + Elma)" waited all lunch with both absent). Once the school knows, a plan with an absent girl goes.
+            // The plan is made when the period starts, before the game has drawn who came today (a plan for two
+            // girls could wait all lunch with both absent). Once the school knows, a plan with an absent girl goes.
             if (_pending != null && !Present(_pending))
             {
                 CampusLifePlugin.Log.LogInfo("Director: " + _pending + " dropped (a girl in it is not on campus today)");

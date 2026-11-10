@@ -1,4 +1,4 @@
-# The lines with a girl's name in the middle: {about} is the girl it was about.
+# The lines with a girl's name in the middle (from ConvoLines.Incident, Seen and GossipLine): {about} is the girl it was about.
 # incident: her opening when she heard of something you did (self=yes when it was to her; friend=yes when it was to her friend).
 # incident.seen: you and another girl, from a girl who saw it (saw=yes) or heard of it (saw=no); what=kiss|hand|touch|h, none for a sweet word.
 # incident.gossip: what she passes on about you; inc is the kind, what the step for a flirt.

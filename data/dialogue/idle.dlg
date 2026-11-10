@@ -296,6 +296,7 @@ when role=teacher
 - {classes}[Mm? Waiting for something?|Hm.] [Office hours are after class.|You can stay, if you're quiet.]
 
 
+# ================= more lines =================
 # Silence in the rain: the sound fills it.
 
 @rule idle.rain

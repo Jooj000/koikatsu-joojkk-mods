@@ -10,10 +10,11 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// diretamente na boca conta como beijo"). The game only has head, cheek, hands and chest. The butt gets hit areas of
-    /// ours at the sides of her hips (the talk camera sees her from the front), for touching and for staring; touching
-    /// her lips (inside the game's head and cheek areas) is a kiss she takes or turns away, with what a kiss means: the
-    /// memory, the girls who saw it, her mood. The game's own clip does not play for these: her pose, face and line are ours.
+    /// Two more places in the conversation's touch mode. The game only has head, cheek, hands and chest. The butt gets hit
+    /// areas of ours at the sides of her hips (the talk camera sees her from the front), for touching and for staring;
+    /// touching her lips (inside the game's head and cheek areas) is a kiss she takes or turns away, with what a kiss
+    /// means: the memory, the girls who saw it, her mood. The game's own clip does not play for these: her pose, face and
+    /// line are ours.
     /// </summary>
     internal static partial class Conversation
     {
@@ -21,6 +22,7 @@ namespace Joojkk.CampusLife
         private static readonly System.Reflection.MethodInfo ExitFuncMethod = AccessTools.Method(typeof(TalkScene), "ExitFunc");
         // The game's own areas: they listen from StartSelection until a touch or a command ends them (disposableTouch set).
         // Ours answer at the same moments. Not touchDisposableInfo.check (it stays true after every touch until the next
+        // one) nor isUpdateCamera (our talk opens without StartSelection).
         private static readonly System.Reflection.FieldInfo GameAreasField = AccessTools.Field(typeof(TalkScene), "lstColDisposable");
 
         private static bool GameAreasOn(TalkScene ts)
@@ -74,9 +76,9 @@ namespace Joojkk.CampusLife
         private static readonly List<Collider> TouchCols = new List<Collider>();
 
         /// <summary>
-        /// até passar hover encima de alguma área tocável"). The game ignores the exit when the mouse leaves the body onto
-        /// a button or a panel (its exit waits for "not over UI"), so the hand stayed. Every frame with a hover on: when the
-        /// mouse ray hits none of the talk's touch areas any more (or the talk is gone), the game's own exit runs.
+        /// The hand cursor stuck after leaving a touch area. The game ignores the exit when the mouse leaves the body onto
+        /// a button or a panel (its exit waits for "not over UI"), so the hand stayed. Every frame with a hover on: when
+        /// the mouse ray hits none of the talk's touch areas any more (or the talk is gone), the game's own exit runs.
         /// </summary>
         internal static void CursorWatch(TalkScene ts)
         {
@@ -152,10 +154,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Her butt area: the size and shape of the game's own hip collider cf_hit_siri_L/R (the one H grabs and the physics
-        /// mods sway; user, 2026-11-02: "utilize o mesmo método do vanilla"), copied onto a child of ours. The game's collider
-        /// itself is left alone: with our script on it, it stayed on her after the talk and was switched off under her hands,
-        /// in H too (2026-11-05). The area stays on her body between talks and answers only in a talk with her.
+        /// Her butt area: the size and shape of the game's own hip collider cf_hit_siri_L/R (the one H grabs and the
+        /// physics mods sway), copied onto a child of ours. The game's collider itself is left alone: with our script on
+        /// it, it stayed on her after the talk and was switched off under her hands, in H too. The area stays on her body
+        /// between talks and answers only in a talk with her.
         /// </summary>
         internal static TouchSpot ButtArea(ChaControl cha, string side, bool forB)
         {
@@ -235,7 +237,6 @@ namespace Joojkk.CampusLife
         /// <summary>
         /// A line is still on screen (ours or the game's), the gift menu is up or she is saying goodbye: nothing the
         /// player clicks may act until that box closes, plus a short beat after it so the click that closed it does not
-        /// also press what was under it ("as funções só devem funcionar depois de você fechar a caixa de diálogo atual",
         /// </summary>
         internal static bool TalkBusy(out string why)
         {
@@ -323,8 +324,8 @@ namespace Joojkk.CampusLife
             }
             else
             {
-                // The director's four answers, like the game's hand and chest; a no after insisting,
-                // from a girl who barely knows you, is the angry one.
+                // The director's four answers, like the game's hand and chest; a no after insisting, from a girl who
+                // barely knows you, is the angry one.
                 float c;
                 string why;
                 answer = h.isAnger ? "no" : Consent.TouchAnswer(h, part, look, n, Onlookers(h).Count, out c, out why);
@@ -342,7 +343,7 @@ namespace Joojkk.CampusLife
             // The pose comes at once, the line when her reaction can show (TickReact).
             // No game part matches these places. The kiss looks for its own poses in her whole pose table (shy, happy;
             // annoyed or surprised when she turns away); the level's touch poses are the fallback. Never one that covers
-            // the chest (mid-cycle, 2026-10-28: "ela tampa o peito ao ser beijada").
+            // the chest.
             var level2 = PosePool(_pend.Info, "touch", Mathf.Min(level, 2)).Where(x => !Covers(x)).ToList();
             var own = part == "mouth" ? (kiss == "wary" || kiss == "wary_no" ? WaryPoses(h) : KissPoses(h, kiss == "yes")) : new List<string>();
             var pose = VariedPose(own, own.Count > 0 ? own : level2, "t" + part + kiss, null, level);
@@ -386,6 +387,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
+        /// Does she take the kiss? "yes", "wary" or "no": the director's call (<see cref="Consent.Kiss"/>), with who
+        /// is watching from here.
         /// </summary>
         internal static string KissTaken(SaveData.Heroine h, int tries)
         {
@@ -464,8 +467,9 @@ namespace Joojkk.CampusLife
         internal static bool BHovering { get { return _bHover; } }
 
         /// <summary>
-        /// cursor waited for Unity's OnMouseEnter, which the player's triggers in front of her never let through, so she
-        /// looked untouchable. Once a frame, the same ray decides the hover: the game's enter and exit, as on the first girl.
+        /// Her areas took clicks by their own ray, but the hand cursor waited for Unity's OnMouseEnter, which the player's
+        /// triggers in front of her never let through, so she looked untouchable. Once a frame, the same ray decides the
+        /// hover: the game's enter and exit, as on the first girl.
         /// </summary>
         private static void BHover(Camera cam)
         {
@@ -484,8 +488,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The first girl's area stays on her body between talks: it is on only in a talk with her (off in the map, in H and in
-        /// anyone else's talk), and a hand resting on her hip, which lies inside it and would lose its clicks (Unity's mouse
+        /// The first girl's area stays on her body between talks: it is on only in a talk with her (off in the map, in H
+        /// and in anyone else's talk), and a hand resting on her hip, which lies inside it and would lose its clicks
+        /// (Unity's mouse events go only to the nearest collider), makes it step aside while the mouse is on that hand.
         /// </summary>
         private void YieldToHand()
         {
@@ -510,7 +515,8 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// The second girl's areas look for the click themselves: Unity's OnMouseDown goes only to the nearest collider,
-        /// click on her was lost). The nearest of our areas under the mouse takes it, once per click.
+        /// and the player's own "3D Sight" and "Notice" triggers sit between the camera and her (every real click on her
+        /// was lost). The nearest of our areas under the mouse takes it, once per click.
         /// </summary>
         private void Update()
         {

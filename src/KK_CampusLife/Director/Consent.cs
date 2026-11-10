@@ -13,8 +13,8 @@ namespace Joojkk.CampusLife
     internal enum Pace { Reserved, Normal, Open }
 
     /// <summary>
-    /// The director answers for her (user, 2026-10-26: "the together, anger, accepting a confession, accepting H, accepting
-    /// touch, etc., are things the director must do; the game only executes afterwards if the director says so").
+    /// The director answers for her ("the together, anger, accepting a confession, accepting H, accepting touch, etc., are
+    /// things the director must do; the game only executes afterwards if the director says so").
     /// <list type="bullet">
     /// <item>Invitations, confession, date, H (Info.GetEventADV): the game's roll becomes the director's yes or no.
     /// Where the game has no "no" scene (a girlfriend's lunch, H in private), the conversation asks first and a no is
@@ -45,7 +45,8 @@ namespace Joojkk.CampusLife
         // ================= pace profile =================
 
         /// <summary>
-        /// two different lists and a girl could be open for one and normal for the other.
+        /// Her pace profile: the same one her gains use (Rhythm.Of). answers and gains read two different lists and a girl
+        /// could be open for one and normal for the other.
         /// </summary>
         public static Pace Profile(SaveData.Heroine h)
         {
@@ -58,9 +59,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The pace multiplier (user, 2026-10-26: "little by little the reserved ones' multiplier must grow, and when
-        /// dating, everyone's goes up 0.1"): open 1.4, normal 1.0, reserved from 0.7 up to 1.0 with the days you spent
-        /// with her and her trust; +0.1 while she is your girlfriend; then times the player's "Ease" option for her pace.
+        /// The pace multiplier ("little by little the reserved ones' multiplier must grow, and when dating, everyone's
+        /// goes up 0.1"): open 1.4, normal 1.0, reserved from 0.7 up to 1.0 with the days you spent with her and her
+        /// trust; +0.1 while she is your girlfriend; then times the player's "Ease" option for her pace.
         /// </summary>
         public static float Multiplier(SaveData.Heroine h)
         {
@@ -111,16 +112,17 @@ namespace Joojkk.CampusLife
             switch (ask)
             {
                 case Ask.Confess:
-                    // No floor of days (user, 2026-10-30): the daily curve of favor (G.AddFavor) makes it take ~5 days
-                    // for a reserved girl, 4 for a normal one, 2-3 for an open one (pacesim).
+                    // No floor of days: the daily curve of favor (G.AddFavor) makes it take ~5 days for a reserved
+                    // girl, 4 for a normal one, 2-3 for an open one (pacesim).
                     c = (favor - 50f) / 40f;
-                    // H, confessar não deu certo"): a rumor that she likes you, and H you already had, are part of it.
+                    // A rumor that she likes you, and H you already had, are part of it.
                     int rumorDay;
                     if (S.Buffs.TryGetValue("rumor:" + GirlInfo.Key(h), out rumorDay) && S.Day - rumorDay <= 4) { c += 0.4f; r.Add("the rumor is true"); }
                     if (h.hCount > 0) { c += Mathf.Min(0.25f, 0.1f + h.hCount * 0.05f); r.Add("H " + h.hCount + "x"); }
                     if (lewd >= 50f) { c += 0.1f; r.Add("lewd " + (int)lewd); }
                     break;
-                // upset girlfriend under a friend who likes you a lot, and she never held your hand).
+                // A girlfriend is never below a friend with the same favor (milestones: a fixed 0.8/0.95 put an upset
+                // girlfriend under a friend who likes you a lot, and she never held your hand).
                 case Ask.Date:
                     c = h.isGirlfriend ? Mathf.Max(0.8f, 0.5f + (favor - 40f) / 100f) : h.relation >= 1 ? 0.2f + (favor - 40f) / 100f : 0.05f;
                     break;
@@ -158,11 +160,11 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// How much she wants it now, before mood, trust, a grudge and scorn (Chance adds those for every ask). No fixed
-        /// gates (user, 2026-10-30: "para todas, permita ter H sem namorar, porém, crie a restrição pelo contexto, não
-        /// artificialmente"): the base comes from what you are to her, her pace and her bars, and every other thing that
-        /// makes sense moves it: the days you have spent together, your reputation, H you already had, a recent kiss, a
-        /// wary H she still feels guilty about, another girlfriend, a perfect day, how often she already said no today.
-        /// A reserved girl who is not dating you needs very high bars and good context; a normal one needs less; an open
+        /// gates: the base comes from what you are to her, her pace and her bars, and every other thing that makes sense
+        /// moves it: the days you have spent together, your reputation, H you already had, a recent kiss, a wary H she
+        /// still feels guilty about, another girlfriend, a perfect day, how often she already said no today. A reserved
+        /// girl who is not dating you needs very high bars and good context; a normal one needs less; an open one mostly
+        /// her lewdness. A girlfriend keeps the paces tuned (pacesim).
         /// </summary>
         private static float HWant(SaveData.Heroine h, GirlState gs, Pace pace, float favor, float lewd, Mood mood, List<string> r)
         {
@@ -176,7 +178,9 @@ namespace Joojkk.CampusLife
             }
             else if (h.relation >= 1)
             {
+                // The reserved one was (H-85)/30, and with her x0.82 even maxed bars never passed 0 (no in all 54
                 // situations); she now needs maxed bars plus a good context (flirty, trust) to reach ~30%.
+                // About a day sooner than (the reserved one at 75/80, the normal one at 65/70).
                 c = pace == Pace.Reserved ? (lewd - 75f) / 40f + (favor - 80f) / 80f
                     : pace == Pace.Normal ? (lewd - 65f) / 40f + (favor - 70f) / 100f
                     : lewd / 60f;
@@ -189,7 +193,8 @@ namespace Joojkk.CampusLife
                 r.Add("barely knows you");
                 Brake(pace == Pace.Open ? "soon" : "personality", pace == Pace.Open ? 0.2f : 0.4f);
             }
-            // strangers in a flirty or cheerful mood got 10-23%).
+            // A girl who does not know you: low enough that mood and trust (Chance adds them) cannot lift it (strangers
+            // in a flirty or cheerful mood got 10-23%).
             else return pace == Pace.Open ? lewd / 120f - 0.35f : -0.6f;
             // Days together: a girl you met three days ago is not one you have known for a week.
             var days = gs.TalkDays.Distinct().Count();
@@ -269,11 +274,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The four answers (user, 2026-10-30: "o diretor lê todas as variáveis, e decide se sim, sim com receio, não com
-        /// receio ou não"). The dice against the chance say yes or no; then her unease turns a yes into a wary yes (she lets
-        /// it happen, then feels guilty), and her interest turns a no into a wary no (she wanted to, but not now). Unease
-        /// reads what you are to her, her pace, whether it is her first time, trust, another girlfriend, guilt still open,
-        /// the days together and her mood; interest reads the chance itself, her bars, her mood and old hurts.
+        /// The four answers. The dice against the chance say yes or no; then her unease turns a yes into a wary yes (she
+        /// lets it happen, then feels guilty), and her interest turns a no into a wary no (she wanted to, but not now).
+        /// Unease reads what you are to her, her pace, whether it is her first time, trust, another girlfriend, guilt still
+        /// open, the days together and her mood; interest reads the chance itself, her bars, her mood and old hurts.
         /// </summary>
         public static string HAnswer(SaveData.Heroine h, out float chance, out string why)
         {
@@ -305,10 +309,9 @@ namespace Joojkk.CampusLife
                 why += "; unease " + u.ToString("0.00");
                 return u >= 0.5f ? "wary_yes" : "yes";
             }
-            // A wary no is an almost-yes, the mirror of the wary yes (user, 2026-10-30: "não com receio seria um não só que
-            // com interesse, não aceitou por causa de outra coisa (como a personalidade, humor etc)"): she wants it, and
-            // something else held her back. Her wanting is measured apart from the brakes: her bars without her pace,
-            // what already happened, a flirty or lonely day, a perfect day, trust; a grudge or scorn take it away.
+            // A wary no is an almost-yes, the mirror of the wary yes: she wants it, and something else held her back. Her
+            // wanting is measured apart from the brakes: her bars without her pace, what already happened, a flirty or
+            // lonely day, a perfect day, trust; a grudge or scorn take it away.
             var desire = (h.lewdness - 40) / 60f + (h.favor - 50) / 100f;
             desire += h.isGirlfriend ? 0.15f : h.relation >= 1 ? 0.05f : h.relation < 0 ? -0.5f : 0f;
             if (h.hCount > 0) desire += 0.15f;
@@ -361,11 +364,10 @@ namespace Joojkk.CampusLife
         private static readonly Dictionary<string, int> WaryH = new Dictionary<string, int>();
 
         /// <summary>
-        /// The H ended (Campus.OnHEnd). If she said yes warily, the guilt comes (user, 2026-10-30: "depois ela vai se
-        /// sentir culpada, etc, pedir pra vc assumir ela ou tentar se afastar, e você tem que resolver os problemas
-        /// todos"). Which way she goes is the director's: she asks you to take responsibility when she likes you a lot,
-        /// trusts you, you have no girlfriend and it meant a lot to her; she pulls away when trust is low, you have a
-        /// girlfriend, she cares about her name at school, or you barely know each other. Her scene is next time you talk.
+        /// The H ended (Campus.OnHEnd). If she said yes warily, the guilt comes. Which way she goes is the director's: she
+        /// asks you to take responsibility when she likes you a lot, trusts you, you have no girlfriend and it meant a lot
+        /// to her; she pulls away when trust is low, you have a girlfriend, she cares about her name at school, or you
+        /// barely know each other. Her scene is next time you talk.
         /// </summary>
         public static void AfterH(SaveData.Heroine h)
         {
@@ -397,7 +399,7 @@ namespace Joojkk.CampusLife
             var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
             if (mood == Mood.Lonely) { stay += 0.1f; r.Add("lonely"); }
             else if (mood == Mood.Stressed || mood == Mood.Upset) { stay -= 0.1f; r.Add(mood.ToString().ToLowerInvariant()); }
-            // Context decides (2026-11-07); the dice only break an even score.
+            // Context decides; the dice only break an even score.
             gs.Guilt = Yes(h, "guilt", stay + 0.5f) ? 1 : 2;
             gs.GuiltDay = S.Day;
             if (gs.Guilt == 2) gs.DistanceUntil = S.Day + 1;
@@ -411,12 +413,12 @@ namespace Joojkk.CampusLife
         // ================= your girlfriend finds out =================
 
         /// <summary>
-        /// How your girlfriend takes you being sweet on another girl: "shrugs", "teases", "hurt" or "furious". Until the
-        /// 2026-10-30: "assim como a traição, que se ela estiver de bom humor é mais fácil se safar do que se ela já
-        /// estiver irritada, etc. tudo depende das variáveis"). Now the director reads: her tone and pace, her mood today,
-        /// whether she is already angry or holds a grudge, how often she already heard about you and other girls, trust,
-        /// what she decided about that girl (Share), whether that girl is her friend or her rival, how far it went and
-        /// whether she saw it, plus the dice of the day. The same thing on the same day gets the same answer.
+        /// How your girlfriend takes you being sweet on another girl: "shrugs", "teases", "hurt" or "furious". it was one
+        /// roll fixed on her name and tone, always the same answer for the same girl. Now the director reads: her tone and
+        /// pace, her mood today, whether she is already angry or holds a grudge, how often she already heard about you and
+        /// other girls, trust, what she decided about that girl (Share), whether that girl is her friend or her rival, how
+        /// far it went and whether she saw it, plus the dice of the day. The same thing on the same day gets the same
+        /// answer.
         /// </summary>
         public static string Cheat(SaveData.Heroine her, SaveData.Heroine other, int weight, bool saw, out string why)
         {
@@ -439,11 +441,12 @@ namespace Joojkk.CampusLife
             }
             if (her.isAnger) { ease -= 0.4f; r.Add("already angry"); }
             else if (her.anger > 0) { ease -= her.anger / 250f; r.Add("anger " + her.anger); }
-            // 108: the game died of a stack overflow on the first day change).
+            // Other hurts only: Social.Grudge reads the flirting through Social.Effect, which asks this method again (the
+            // game died of a stack overflow on the first day change).
             if (S.Incidents.Any(i => i.Kind != Social.Kinds.Flirted && S.Day - i.Day <= 6 && gs.Known.Contains(i.Id) && !gs.Cleared.Contains(i.Id) && Social.Effect(her, i) < -1))
             { ease -= 0.15f; r.Add("a grudge"); }
             var before =S.Incidents.Count(i => i.Kind == Social.Kinds.Flirted && i.Girl != GirlInfo.Key(her) && gs.Known.Contains(i.Id) && S.Day - i.Day <= 14);
-            // From the third, softer and capped.
+            // From the third, softer and capped (with a harem of 7 everything was furious, even cheerful at trust 70).
             if (before > 2) { ease -= Mathf.Min(0.2f, 0.05f * (before - 2)); r.Add(before + " times lately"); }
             var trust = Social.Trust(her);
             ease += Mathf.Clamp((trust - 50) / 200f, -0.2f, 0.2f);
@@ -459,7 +462,7 @@ namespace Joojkk.CampusLife
             }
             ease -= 0.06f * weight;
             if (saw) { ease -= 0.1f; r.Add("she saw it"); }
-            var score = ease; // context only (2026-11-07: "não é para ser chance. é contexto")
+            var score = ease; // context only
             var answer = score >= 0.45f ? "shrugs" : score >= 0.2f ? "teases" : score >= -0.15f ? "hurt" : "furious";
             why = score.ToString("0.00") + ": " + string.Join(", ", r.ToArray());
             var key = S.Day + "/" + GirlInfo.Key(her) + "/cheat/" + (other != null ? GirlInfo.Key(other) : "") + "/" + weight + (saw ? "s" : "");
@@ -509,11 +512,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The director decides by context, not by luck (user, 2026-11-07: "não é para ser chance. é contexto. já falei 500
-        /// vezes. chance é só pra ser algo complementar no máximo em uma situação específica em que o contexto não ajuda").
-        /// The score is everything the director read about her (0-1); at or above the bar it is a yes, under it a no. Only
-        /// a score within <see cref="Band"/> of the bar, where the context does not decide, goes to her dice, and the log
-        /// says it was a toss-up.
+        /// The director decides by context, not by luck. The score is everything the director read about her (0-1); at or
+        /// above the bar it is a yes, under it a no. Only a score within <see cref="Band"/> of the bar, where the context
+        /// does not decide, goes to her dice, and the log says it was a toss-up.
         /// </summary>
         internal static bool Yes(SaveData.Heroine h, string what, float score, ref string why, float bar = 0.5f)
         {
@@ -537,10 +538,10 @@ namespace Joojkk.CampusLife
         internal static string Score(float score, float bar = 0.5f) { return score.ToString("0.00") + " of " + bar.ToString("0.00"); }
 
         /// <summary>
-        /// personalidade não aberta e valores que contam interesse, sendo eles favor e H acima de 50% na amiga"):
-        /// "yes", "wary", "wary_no" or "no" (<see cref="KissTier"/>). Interest is favor and H above half on a friend; then mood, trust, a grudge, who is
-        /// watching and how many times you tried. A girl who says yes but is not open by nature lets it happen warily;
-        /// a girlfriend and an open girl just say yes. The same try in the same period gets the same answer.
+        /// A kiss, as the director weighs it: "yes", "wary", "wary_no" or "no" (<see cref="KissTier"/>). Interest is favor
+        /// and H above half on a friend; then mood, trust, a grudge, who is watching and how many times you tried. A girl
+        /// who says yes but is not open by nature lets it happen warily; a girlfriend and an open girl just say yes. The
+        /// same try in the same period gets the same answer.
         /// </summary>
         public static string Kiss(SaveData.Heroine h, int tries, int crowd, out string why)
         {
@@ -558,14 +559,15 @@ namespace Joojkk.CampusLife
         {
             if (h.isGirlfriend) return 0f;
             var days = gs.TalkDays.Distinct().Count();
-            // 0.4: an open friend who trusts you said a plain yes on day 3. User: "sim receoso no 3 e sim no 4".
+            // 0.4 (was 0.3): an open friend who trusts you said a plain yes on day 3..
             return pace == Pace.Open ? (days < 4 ? 0.4f : 0f) : days < 5 ? 0.1f : 0f;
         }
 
         /// <summary>
-        /// The kiss answer once the dice said yes or no: "yes", "wary" (a wary yes: she lets it happen), "wary_no" (16th
-        /// are to her, her pace, trust, who is watching, her mood and guilt; wanting reads her bars, a flirty or lonely
-        /// day, trust, a grudge, scorn and how many times you already tried.
+        /// The kiss answer once the dice said yes or no: "yes", "wary" (a wary yes: she lets it happen), "wary_no" (she
+        /// almost let you, something else held her back; no favor lost) or "no". Unease reads what you are to her, her
+        /// pace, trust, who is watching, her mood and guilt; wanting reads her bars, a flirty or lonely day, trust, a
+        /// grudge, scorn and how many times you already tried.
         /// </summary>
         internal static string KissTier(SaveData.Heroine h, int tries, int crowd, bool yes, ref string why)
         {
@@ -606,10 +608,11 @@ namespace Joojkk.CampusLife
             var gs = S.Girl(GirlInfo.Key(h));
             var mood = gs.MoodDay == S.Day ? gs.Mood : Mood.None;
             var pace = Profile(h);
-            // Her pace and its multiplier count here too.
+            // Her pace and its multiplier count here too (an open friend sooner, a reserved one later).
             var mult = Multiplier(h);
             var favor = h.favor * mult;
             var lewd = h.lewdness * mult;
+            // An open friend is interested sooner.
             var interest = pace == Pace.Open ? favor > 40 && lewd > 30 : favor > 45 && lewd > 45;
             float c;
             if (h.isGirlfriend) { c = Mathf.Max(0.92f, 0.75f + (favor - 50) / 200f + (lewd - 50) / 200f); r.Add("girlfriend"); }
@@ -634,10 +637,9 @@ namespace Joojkk.CampusLife
         // ================= how well she knows you, how hard you push =================
 
         /// <summary>
-        /// Days together for romance (2026-11-07: "as personagens aceitavam romance desde o começo"): a girl you met
-        /// today is not one you have talked to for a week. Counts the days you talked (the last 10): an acquaintance
-        /// loses up to 0.2 in her first days and gains up to 0.1 after a week, a friend half of it; your girlfriend
-        /// nothing.
+        /// Days together for romance: a girl you met today is not one you have talked to for a week. Counts the days
+        /// you talked (the last 10): an acquaintance loses up to 0.2 in her first days and gains up to 0.1 after a
+        /// week, a friend half of it; your girlfriend nothing.
         /// </summary>
         internal static float Familiar(SaveData.Heroine h, List<string> r)
         {
@@ -649,8 +651,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// How hard you are pushing (2026-11-07: "aceitam spam. então dava pra repetir sweet talk e afins até acabar o
-        /// tempo e farmar favor e H"): the same step again today costs 0.2 a try (0.1 with your girlfriend), and every
+        /// How hard you are pushing: the same step again today costs 0.2 a try (0.1 with your girlfriend), and every
         /// romance or spicy step with her today past the third costs 0.08. <paramref name="again"/> is how many times you
         /// already tried this one today. Read only; <see cref="Pushed"/> counts the try.
         /// </summary>
@@ -689,9 +690,10 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// A romance or spicy line of yours (a compliment, sweet talk, a tease, a whisper, flirting boldly, an intimate
-        /// romance/spicy"): "yes", "wary_yes" (she takes it, flustered), "wary_no" (she wanted to, something held her
-        /// back) or "no". The chance reads what you are to her, her pace and its multiplier, her bars, mood, trust, a
-        /// grudge, scorn, guilt, who is watching and whether she already turned you down in this conversation.
+        /// memory), as the director weighs it: "yes", "wary_yes" (she takes it, flustered), "wary_no" (she wanted to,
+        /// something held her back) or "no". The chance reads what you are to her, her pace and its multiplier, her
+        /// bars, mood, trust, a grudge, scorn, guilt, who is watching and whether she already turned you down in this
+        /// conversation.
         /// </summary>
         public static string Flirt(SaveData.Heroine h, bool spicy, string what, int crowd, bool refused)
         {
@@ -1018,8 +1020,9 @@ namespace Joojkk.CampusLife
                 if (h == null || h.isAnger) return;
                 var ts = G.TalkScene;
                 if (ts != _touchScene) { _touchScene = ts; TouchCount.Clear(); _touchSeen = false; }
-                // map, only the ones in range, looking and with nothing in between) knows it first-hand: "I saw", not
-                // "they told me you flirted". Your girlfriend's stance comes from it (Share).
+                // Whoever really sees you touching her (once per conversation; not every girl on the map, only the ones
+                // in range, looking and with nothing in between) knows it first-hand: "I saw", not "they told me you
+                // flirted". Your girlfriend's stance comes from it (Share).
                 if (_touch && !_touchSeen && !h.isGirlfriend)
                 {
                     var seen = Witness.Who(h, Witness.Touch);
@@ -1049,12 +1052,11 @@ namespace Joojkk.CampusLife
         // ================= touches: the same four answers =================
 
         /// <summary>
-        /// cadê o diretor onipotente que eu sempre falo?"). Every place (hand, head, cheek, chest, butt, a look) gets the
-        /// four answers of H and the kiss: the chance reads what you are to her, her pace and its multiplier, her bars,
-        /// how intimate the place is, whether you only look, her mood, trust, a grudge, scorn, guilt still open, a recent
-        /// kiss, who is watching and how many times you already touched it; the dice say yes or no; her unease turns a
-        /// yes into a wary yes and her wanting turns a no into a wary no. The same touch in the same period gets the
-        /// same answer.
+        /// A touch, as the director weighs it. Every place (hand, head, cheek, chest, butt, a look) gets the four answers
+        /// of H and the kiss: the chance reads what you are to her, her pace and its multiplier, her bars, how intimate
+        /// the place is, whether you only look, her mood, trust, a grudge, scorn, guilt still open, a recent kiss, who is
+        /// watching and how many times you already touched it; the dice say yes or no; her unease turns a yes into a wary
+        /// yes and her wanting turns a no into a wary no. The same touch in the same period gets the same answer.
         /// </summary>
         public static string TouchAnswer(SaveData.Heroine h, string part, bool look, int n, int crowd, out float chance, out string why)
         {
@@ -1095,6 +1097,7 @@ namespace Joojkk.CampusLife
             {
                 var butt = part == "butt" ? 0.08f : 0f;   // a little less personal than the chest
                 if (h.isGirlfriend) c = 0.55f + lewd / 150f + butt;
+                // A normal friend about a day sooner than (32, was 40).
                 else if (h.relation >= 1) c = (lewd - (pace == Pace.Open ? 25f : pace == Pace.Normal ? 32f : 40f)) / 50f + (favor - 50f) / 150f + butt + (pace == Pace.Open ? 0.15f : 0f);
                 else if (h.relation == 0) c = (pace == Pace.Open ? lewd / 200f - 0.15f : -0.35f) + butt;
                 else c = -0.5f;
@@ -1181,7 +1184,7 @@ namespace Joojkk.CampusLife
         private static void AngerBefore(SaveData.Heroine _heroine, ActionGame.Communication.ChangeValueAbstractInfo _value, out AngerState __state)
         {
             __state = new AngerState();
-            // Raw: the anger the game asked for; it clamps at 99/100 before our postfix sees it
+            // Raw: the anger the game asked for; it clamps at 99/100 before our postfix sees it (+60 from 56 came out +44)
             try { if (_heroine != null) __state = new AngerState { Anger = _heroine.anger, Raw = _value != null ? _value.anger : 0, Angry = _heroine.isAnger, Date = _heroine.isDate, Her = _heroine }; }
             catch { }
         }
@@ -1274,10 +1277,9 @@ namespace Joojkk.CampusLife
         private static readonly Dictionary<string, int> AngryToday = new Dictionary<string, int>();
 
         /// <summary>
-        /// She just got angry (user, 2026-10-26): it costs favor, and with the bar near 0 her level may drop, more likely
-        /// from 0. A friend becomes an acquaintance and a girlfriend breaks up with you, both with the bar at the middle;
-        /// an acquaintance is the floor. The game keeps the level as marks (girlfriend flag, talk event 2), so a drop
-        /// takes the mark off.
+        /// She just got angry: it costs favor, and with the bar near 0 her level may drop, more likely from 0. A friend
+        /// becomes an acquaintance and a girlfriend breaks up with you, both with the bar at the middle; an acquaintance
+        /// is the floor. The game keeps the level as marks (girlfriend flag, talk event 2), so a drop takes the mark off.
         /// </summary>
         private static void Fallout(SaveData.Heroine h)
         {

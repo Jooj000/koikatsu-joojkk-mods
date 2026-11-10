@@ -1296,7 +1296,7 @@ when tone=teasing
 - Come back soon~
 - Miss me~
 
-# ================= your ask in a concrete offer =================
+# ================= your ask in a concrete offer (from Conversation.Concrete.cs AskStudy) =================
 @rule me.concrete.study
 on me.concrete
 when what=study

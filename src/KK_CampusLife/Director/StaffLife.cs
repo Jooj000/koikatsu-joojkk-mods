@@ -10,9 +10,10 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// Professors and the nurse walking around are staff, not students: the director keeps them
-    /// at their own desk in the faculty room, the nurse in the infirmary, walking the corridors, at the cafeteria for lunch;
-    /// never at a student's desk, a club or the showers. The game has a waiting point for each of them on many maps (layers
+    /// Professors and the nurse walking around are staff, not students: the director keeps them at their own desk in the
+    /// faculty room, the nurse in the infirmary, walking the corridors, at the cafeteria for lunch; never at a student's
+    /// desk, a club or the showers. The game has a waiting point for each of them on many maps (layers FixHomeRoom,
+    /// FixMath, FixHealth, the ones it uses for her event spot).
     /// </summary>
     internal static class StaffLife
     {

@@ -8,10 +8,10 @@ namespace Joojkk.CampusLife
     internal static partial class Conversation
     {
         /// <summary>
-        /// The game's greeting is a fixed line of her personality, whoever she is and whatever the day ("Don't you think it'd
-        /// be fun to go on a picnic...", from a professor between classes). It keeps its voice and her pose; the words come
-        /// from the bank, by who she is to you (user, 2026-11-01, "literalmente todas as falas"). What ends the talk or says
-        /// why she's angry stays the game's: conditions 0 to 7 and 16 (the restrooms, anger, no time left), and any _isEnd.
+        /// The game's greeting is a fixed line of her personality, whoever she is and whatever the day ("Don't you think
+        /// it'd be fun to go on a picnic...", from a professor between classes). It keeps its voice and her pose; the words
+        /// come from the bank, by who she is to you ("literalmente todas as falas"). What ends the talk or says why she's
+        /// angry stays the game's: conditions 0 to 7 and 16 (the restrooms, anger, no time left), and any _isEnd.
         /// </summary>
         public static void Greeting(SaveData.Heroine h, bool ends, int condition, List<Program.Transfer> list)
         {

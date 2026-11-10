@@ -15,8 +15,9 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// "substituindo o sistema do jogo de spammar conversa"). The game's talk scene is reused, walking or at her event spot.
-    /// Its tables are by personality and a teacher's id is not in them, so during the talk she answers with her personality.
+    /// A professor's everyday talk is the same conversation as anyone's, with her own lines ("substituindo o sistema do
+    /// jogo de spammar conversa"). The game's talk scene is reused, walking or at her event spot. Its tables are by
+    /// personality and a teacher's id is not in them, so during the talk she answers with her personality.
     /// </summary>
     internal static class TeacherTalk
     {

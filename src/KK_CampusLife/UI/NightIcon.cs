@@ -4,7 +4,8 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// quarto"), to plan the next day. Painted here because the game's sprites are only captured once the clipboard opens.
+    /// The way into the Campus Life menu from the room at night, to plan the next day. Painted here because the game's
+    /// sprites are only captured once the clipboard opens.
     /// </summary>
     internal static class NightIcon
     {

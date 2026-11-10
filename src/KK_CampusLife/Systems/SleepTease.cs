@@ -11,9 +11,9 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// A girl asleep on an infirmary bed: the game only says she is sleeping and ends the talk. Now,
-    /// once that is over, you can tease her awake; half asleep she gives in far more easily than awake, and if she does,
-    /// the game's H starts where she lies (as a girl can wake you with her hand when you nap there).
+    /// A girl asleep on an infirmary bed: the game only says she is sleeping and ends the talk. Now, once that is over,
+    /// you can tease her awake; half asleep she gives in far more easily than awake, and if she does, the game's H starts
+    /// where she lies (as a girl can wake you with her hand when you nap there).
     /// </summary>
     internal static class SleepTease
     {
@@ -31,6 +31,7 @@ namespace Joojkk.CampusLife
                     _seen = ts;
                     var h = ts.targetHeroine;
                     if (!Campus.On || !Cfg.Enabled.Value || h == null || !GirlInfo.IsRegular(h) || ts.necessaryInfo == null || ts.necessaryInfo.state != 2) return;
+                    // A nap teases on any map, not just the infirmary.
                     _pending = h;
                     return;
                 }
@@ -56,8 +57,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// away when used; it stays while the scene plays (the game hides it then) and after "Let her sleep", so you can come
-        /// back to her. It goes when she gives in (H) or wakes up and says no.
+        /// The icon is not taken away when used; it stays while the scene plays (the game hides it then) and after "Let her
+        /// sleep", so you can come back to her. It goes when she gives in (H) or wakes up and says no.
         /// </summary>
         private static bool Use(SaveData.Heroine h)
         {
@@ -76,9 +77,9 @@ namespace Joojkk.CampusLife
         private static Sprite _on, _off;
 
         /// <summary>
-        /// ícone, faça um diabinho roxo." While a girl sleeps on an infirmary bed (the game's sleep action), an activity
-        /// icon with a purple imp stands by her; walking into it and pressing it offers the tease (the old way, after the
-        /// game's own "she is sleeping" talk, stays too). The icon goes when she wakes or you leave.
+        /// While a girl sleeps on an infirmary bed (the game's sleep action), an activity icon with a purple imp stands
+        /// by her; walking into it and pressing it offers the tease (the old way, after the game's own "she is sleeping"
+        /// talk, stays too). The icon goes when she wakes or you leave.
         /// </summary>
         public static void Update()
         {
@@ -99,14 +100,16 @@ namespace Joojkk.CampusLife
                 }
                 else Why = "no map (" + Places.CurrentId + "), talk open " + G.TalkSceneOpen;
                 var h = her != null ? her.heroine : null;
-                // plays and comes back after it if she is still asleep ("Let her sleep").
+                // The imp floated over her during the tease scene itself. It stays off while one of our scenes plays and
+                // comes back after it if she is still asleep ("Let her sleep").
                 if (h != null && Scenes.Running) { Why = "a scene is open (" + GirlInfo.FirstName(h) + " asleep)"; h = null; }
                 if (h == _iconFor && (h == null || _iconMap == act.Map.no)) return;
                 Drop();
                 if (h == null) return;
                 if (_on == null) _on = MapSprite.Make(IconArt.Spot("devil", Purple, 128, true), 128, 100f, "cl_tease_on");
                 if (_off == null) _off = MapSprite.Make(IconArt.Spot("devil", Purple, 128, false), 128, 100f, "cl_tease_off");
-                // Alt+F7 window wins when it is near her (a map can have more than one bed).
+                // A spot he set for this map in the Alt+F7 window wins when it is near her (a map can have more than one
+                // bed).
                 Spots.Spot mine;
                 var pos = Spots.TryGet(SpotKind, act.Map.no, out mine) && Flat(mine.Pos - her.position) <= 4f ? mine.Pos : Reachable(her, act.Player);
                 var target = h;
@@ -124,8 +127,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// the curtain, out of sight and out of reach. Now it stands on the floor
-        /// the player can walk to, as close to her as it gets, on the player's side when two spots are as close.
+        /// The icon stood 0.9 m to her right, which on the infirmary bed was inside the curtain, out of sight and out of
+        /// reach (the walk stopped 2.2 m from it). Now it stands on the floor the player can walk to, as close to her as it
+        /// gets, on the player's side when two spots are as close.
         /// </summary>
         private static Vector3 Reachable(NPC her, ActionGame.Chara.Player player)
         {
@@ -144,6 +148,7 @@ namespace Joojkk.CampusLife
                     p = hit.position;
                     var near = Flat(p - at);
                     if (near > 2.6f) continue;
+                    // A path found with every area ended 2.5 m short for the player's own agent (library). The player's
                     // agent's areas and the path's real end are what count.
                     var agent = player != null ? player.agent : null;
                     var ok = agent != null && agent.isOnNavMesh ? agent.CalculatePath(p, path) : NavMesh.CalculatePath(from, p, NavMesh.AllAreas, path);

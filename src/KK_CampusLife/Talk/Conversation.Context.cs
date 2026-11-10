@@ -7,12 +7,12 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// ex-professora, ex-vanilla, mood, local, período, clube, de personalidade, de corpo, signo, aniversário"): the
-    /// context keys the pieces of pieces.dlg read, and the composition of a line from an opener, her line and a tail.
+    /// What makes a line hers: the context keys the pieces of pieces.dlg read, and the composition of a line from an
+    /// opener, her line and a tail.
     /// </summary>
     internal static partial class Conversation
     {
-        /// <summary>What you would do together for each like (the invite says "go to the cat café", not "do animals").</summary>
+        /// <summary>What you would do together for each like (the invite says not "do animals").</summary>
         private static readonly Dictionary<string, string[]> LikeDo = new Dictionary<string, string[]>
         {
             { "animals", new[] { "visit the cat café", "feed the stray cats behind the gym", "go to the pet shop" } },
@@ -102,7 +102,8 @@ namespace Joojkk.CampusLife
             if (!c.ContainsKey("job")) c["job"] = Teachers.Job(h);
             c["pers"] = h.personality.ToString();
             c["placeid"] = Places.CurrentId ?? "";
-            // then a fight on her mind): the keys the composite lines need.
+            // Rain and what weighs most for a place (in the library, books, then the rain, then a fight on her mind):
+            // the keys the composite lines need.
             try
             {
                 c["weather"] = Weather.Now;
@@ -131,11 +132,11 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Her club for the lines: {clubid} her own club as a word, {club} the one she goes to now. A
-        /// girl in your Koikatsu Club ({kclub}=yes) talks of it in the present ({club} "the Koikatsu Club", {clubkind}
-        /// koikatsu) and of her old club in the past ({oldclub}, {oldclubid}); {kmate} is another member (a friend of hers
-        /// first), {kpres} says whether you have a report or a project going, for "X helped me with the reports" and "can
-        /// you help me with the club activity?".
+        /// Her club for the lines: {clubid} her own club as a word, {club} the one she goes to now. A girl in your
+        /// Koikatsu Club ({kclub}=yes) talks of it in the present ({club} "the Koikatsu Club", {clubkind} koikatsu) and of
+        /// her old club in the past ({oldclub}, {oldclubid}); {kmate} is another member (a friend of hers first), {kpres}
+        /// says whether you have a report or a project going, for "X helped me with the reports" and "can you help me with
+        /// the club activity?".
         /// </summary>
         internal static void ClubCtx(SaveData.Heroine h, Dictionary<string, string> c)
         {
@@ -213,12 +214,13 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The first line of a topic with, now and then, an opener before it, chosen by the context (pieces.dlg). No tail here
-        /// (2026-10-31): a tail is another subject, and it stood between her line and your options. No opener later in the
-        /// exchange either: they greet you ("Hi, you."), which made no sense as an answer.
+        /// The first line of a topic with, now and then, an opener before it, chosen by the context (pieces.dlg). No tail
+        /// here: a tail is another subject, and it stood between her line and your options. No opener later in the exchange
+        /// either: they greet you ("Hi, you."), which made no sense as an answer.
         /// </summary>
         /// <summary>
-        /// simple-context pieces reach every area; an opener comes before the line, so the options still answer it).
+        /// Her line with an opener now and then. A line with a hook takes one less often (the simple-context pieces reach
+        /// every area; an opener comes before the line, so the options still answer it).
         /// </summary>
         private static string Compose(string line, Dictionary<string, string> c, bool hooked = false)
         {
@@ -231,7 +233,8 @@ namespace Joojkk.CampusLife
         /// <summary>The last line of an exchange that went well takes a tail now and then: nothing comes after it to answer.</summary>
         private static string Close(string line, Dictionary<string, string> c, bool hooked = false)
         {
-            // I'm sad. Virgos plan everything. I'm planning this.": the sign piece was another subject glued on her answer).
+            // A reply written whole for its hook takes no tail ("His name's Mame. He always knows when I'm sad. Virgos plan
+            // everything. I'm planning this.": the sign piece was another subject glued on her answer).
             if (string.IsNullOrEmpty(line) || hooked || Heavy(c) || Random.value >= 0.35f) return line;
             var tail = Bank.Piece("tail", c, 1);
             return tail == "" ? line : line.TrimEnd() + " " + tail.Trim();

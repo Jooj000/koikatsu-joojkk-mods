@@ -7,7 +7,7 @@ namespace Joojkk.CampusLife
 {
     /// <summary>
     /// Walk and talk: a bar at the top of the screen for the whole walk (who is with you, the next stop and which door
-    /// leads there) and a gold arrow over that door. Before, only a toast at the start said where to go (2026-10-11).
+    /// leads there) and a gold arrow over that door. Before, only a toast at the start said where to go.
     /// </summary>
     internal static class WalkHint
     {

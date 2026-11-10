@@ -26,8 +26,8 @@ namespace Joojkk.CampusLife
             public float EyesOpen = 1f;
         }
 
-        // Patterns measured in game:
-        // eyes 0 open, 1 closed happy, 2 narrowed, 3 closed looking down, 4 open soft, 6 half-lidded, 22 round "O O".
+        // Patterns measured in game (close-ups of every pattern inside a talk scene; on the map the AI resets faces): eyes
+        // 0 open, 1 closed happy, 2 narrowed, 3 closed looking down, 4 open soft, 6 half-lidded, 22 round "O O".
         private static readonly Dictionary<Feel, Look> Table = new Dictionary<Feel, Look>
         {
             { Feel.Normal,    new Look { Brow = 0, Eyes = 0, Mouth = 0 } },

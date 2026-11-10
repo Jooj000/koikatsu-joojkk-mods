@@ -126,8 +126,8 @@ namespace Joojkk.CampusLife
         private static int _resumed = -1;
 
         /// <summary>
-        /// Campus Saves is coming back to the middle of a day. The game starts that period again, and to us it
-        /// would be a new one: energy back, needs down, gossip and pairs a step ahead, a second roll for a happening.
+        /// Campus Saves is coming back to the middle of a day. The game starts that period again, and to us it would be a
+        /// new one: energy back, needs down, gossip and pairs a step ahead, a second roll for a happening.
         /// </summary>
         public static void DayResumed(int period) { _resumed = period; }
 

@@ -6,18 +6,17 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// não são condizentes 'dizer que sabe que dói' para uma estranha, e sendo que o assunto nem tem a ver com isso. os
-    /// motivos no clear the air devem dar as opções, não opções genéricas"). The incident gives the five answers (an
-    /// apology for a rude word, making up a broken promise, "wrong door" for the restroom, the truth about a kiss); then,
-    /// in this order, her memory (the same thing again: "this again"), whether it happened to her or to a friend of hers,
-    /// whether she saw it, and how close you are (no "I know it hurt" to a girl you barely know). Each answer has your
-    /// own line (Resp.Me), so what you say matches what you chose.
+    /// The answers of clearing the air, by what happened. The incident gives the five answers (an apology for a rude
+    /// word, making up a broken promise, "wrong door" for the restroom, the truth about a kiss); then, in this order, her
+    /// memory (the same thing again: "this again"), whether it happened to her or to a friend of hers, whether she saw
+    /// it, and how close you are (no "I know it hurt" to a girl you barely know). Each answer has your own line
+    /// (Resp.Me), so what you say matches what you chose.
     /// </summary>
     internal static partial class Conversation
     {
         private static Resp Rm(string label, string me, string tag, Q q, string[] her) { var r = Rp(label, tag, q, her); r.Me = me; return r; }
 
-        /// <summary>The chance to talk your way out, shown and used within 5..95%.</summary>
+        /// <summary>The chance to talk your way out, shown and used within 5..95% ("136% de chance").</summary>
         private static float ClampChance(float x) { return Mathf.Clamp(x, 0.05f, 0.95f); }
 
         /// <summary>She already let one like it go: the same kind of thing, talked through before (memory first).</summary>
@@ -170,8 +169,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Admitting it settles it everywhere: the
-        /// confession topic about that girl is told, and every "you and her" grudge she holds is cleared.
+        /// Admitting it settles it everywhere: the confession topic about that girl is told, and every "you and her"
+        /// grudge she holds is cleared.
         /// </summary>
         internal static void SettledAbout(SaveData.Heroine h, SaveData.Heroine other)
         {

@@ -5,8 +5,9 @@ using System.Text.RegularExpressions;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// only the card's own sex counts, the femboy list is gone): lines about him say he/him/his and boyfriend, and his
-    /// own lines call himself a boyfriend or a guy. Tone and voice stay the same. See <see cref="Boys"/> for the rest.
+    /// Boys in the class. A card saved as male is a boy (only the card's own sex counts): lines
+    /// about him say he/him/his and boyfriend, and his own lines call himself a boyfriend or a guy. Tone and voice stay
+    /// the same. See <see cref="Boys"/> for the rest.
     /// </summary>
     internal static class Gender
     {

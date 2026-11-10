@@ -15,10 +15,9 @@ namespace Joojkk.CampusLife
     }
 
     /// <summary>
-    /// The one memory of the procedural dialogue: facts
-    /// and who knows each one, and how (in it, saw it, was told by someone, a rumor). Talk topics, gossip and her lines
-    /// all read from here; the old systems write here through small adapters (Social.Add, Memories.Add, Rumors.Start,
-    /// pairs, gifts, H).
+    /// The one memory of the procedural dialogue: facts and who knows each
+    /// one, and how (in it, saw it, was told by someone, a rumor). Talk topics, gossip and her lines all read from here;
+    /// the old systems write here through small adapters (Social.Add, Memories.Add, Rumors.Start, pairs, gifts, H).
     /// </summary>
     internal static class Lore
     {
@@ -287,8 +286,8 @@ namespace Joojkk.CampusLife
                         {
                             var ok = GirlInfo.Key(o);
                             if (x.F.Involves(ok) || S.Known.Any(k => k.Girl == ok && k.Fact == x.F.Id)) continue;
-                            // Context, not a roll (2026-11-07): how close they are, how big it is, how much she talks, and the days
-                            // it has had to come up; a story she only heard as a rumor gets twisted by a chatty teller.
+                            // Context, not a roll: how close they are, how big it is, how much she talks, and the days it
+                            // has had to come up; a story she only heard as a rumor gets twisted by a chatty teller.
                             var chance = 0.12f + Social.Bond(g, o) / 250f + x.F.Weight * 0.08f + talk + (S.Day - x.F.Day) * 0.06f;
                             if (!Consent.Yes(g, "lore:" + x.F.Id + ":" + ok, chance)) continue;
                             var twist = x.K.Distort > 0 || x.K.How == How.Rumor && Social.Chatty(g) ? 1 : 0;

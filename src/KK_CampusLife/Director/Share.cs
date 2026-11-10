@@ -7,10 +7,10 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// "elas tem que lembrar de tudo, não ficar repetindo as mesmas perguntas"). The first time she learns of you and her
-    /// (she saw it, or heard it), she makes up her mind from both personalities, their bond and her tastes:
-    /// she refuses (angry; you hide it and apologize until she comes around, or she breaks up and remembers), she lets
-    /// you see her separately, she accepts and they become friends, or (likes girls, and lewd by nature or right now) she
+    /// What your girlfriend decided about you and another girl, and that she remembers it. The first time she learns of
+    /// you and her (she saw it, or heard it), she makes up her mind from both personalities, their bond and her tastes:
+    /// she refuses (angry; you hide it and apologize until she comes around, or she breaks up and remembers), she lets you
+    /// see her separately, she accepts and they become friends, or (likes girls, and lewd by nature or right now) she
     /// would rather have her too: a trio. Once she said it is fine, she never brings it up again. What she saw is "I saw",
     /// what she heard is "they told me".
     /// </summary>
@@ -119,10 +119,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// recusar mas permitir, e recusar"). Her answer is the same decision as when she finds out (both personalities,
-        /// their bond, her tastes), and asking openly counts: a girl who trusts you, or who hears the other one already
-        /// said yes, steps up from "see her apart" to "the three of us". Returns Trio (yes), Separate/Friends (no, but you
-        /// can see her) or Refuses (no). She told you now: it is said, and nothing about it is pending.
+        /// You ask her openly about the three of you. Her answer is the same decision as when she finds out (both
+        /// personalities, their bond, her tastes), and asking openly counts: a girl who trusts you, or who hears the other
+        /// one already said yes, steps up from "see her apart" to "the three of us". Returns Trio (yes), Separate/Friends
+        /// (no, but you can see her) or Refuses (no). She told you now: it is said, and nothing about it is pending.
         /// </summary>
         public static int AskTrio(SaveData.Heroine gf, SaveData.Heroine other, bool otherSaidYes, out string why)
         {
@@ -313,11 +313,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// instantaneamente pelo toast. ela deveria ser consultada após, ou já ter sido consultada pela namorada. e tome
-        /// cuidado para que a terceira não apareça depois e peça a mesma coisa, como se não soubesse."). Nothing is decided
-        /// on the spot: she talks to her first, and the other girl gives you her answer herself, the next time you talk to
-        /// her from the next period on (TrioAnswerDue + Answer). Two days without that talk, your girlfriend tells you
-        /// (TickTrioAsks). From now on neither of them brings the trio up as news.
+        /// Your girlfriend goes to ask the other girl. Nothing is decided on the spot: she talks to her first, and the
+        /// other girl gives you her answer herself, the next time you talk to her from the next period on (TrioAnswerDue +
+        /// Answer). Two days without that talk, your girlfriend tells you (TickTrioAsks). From now on neither of them
+        /// brings the trio up as news.
         /// </summary>
         private static void ProposeTrio(SaveData.Heroine gf, SaveData.Heroine other)
         {
@@ -332,7 +331,8 @@ namespace Joojkk.CampusLife
         }
 
         private static string AskKey(string other, string gf) { return "gfasks:" + other + ":" + gf; }
-        // came in the lesson after lunch). 16 periods a day leaves room for every Cycle.Type.
+        // The day and the game's own period (lessons too: the free-period mask is 0 in class; found the answer never came
+        // in the lesson after lunch). 16 periods a day leaves room for every Cycle.Type.
         private static int Stamp { get { var p = G.Period; return S.Day * 16 + (p.HasValue ? (int)p.Value + 1 : 0); } }
 
         /// <summary>The girlfriend who asked her about the three of you and is waiting for her answer (null if none, or

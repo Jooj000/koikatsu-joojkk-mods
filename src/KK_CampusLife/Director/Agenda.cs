@@ -17,10 +17,10 @@ namespace Joojkk.CampusLife
 
     /// <summary>
     /// The director's agenda: every scene that could reach the player (duos, episodes, situations, map moments,
-    /// happenings) is a proposal, and plays only when the agenda has room. Before (2026-10-12), each source had its own
-    /// roll and its own clock, and they could follow one another within seconds. Rules per period: Personal and Social
-    /// together at most 2, 75 s apart; Ambient at most 2, 40 s apart; Consequence 30 s apart; Fixed always; nothing in
-    /// the first 15 s; a girl who comes to the player does so once a period (consequences aside).
+    /// happenings) is a proposal, and plays only when the agenda has room. Before, each source had its own roll and its
+    /// own clock, and they could follow one another within seconds. Rules per period: Personal and Social together at
+    /// most 2, 75 s apart; Ambient at most 2, 40 s apart; Consequence 30 s apart; Fixed always; nothing in the first 15
+    /// s; a girl who comes to the player does so once a period (consequences aside).
     /// </summary>
     internal static class Agenda
     {

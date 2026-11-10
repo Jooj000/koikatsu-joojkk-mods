@@ -27,10 +27,10 @@ namespace Joojkk.CampusLife
         /// <summary>Her minimap badge: the same as on the board.</summary>
         public static Sprite For(Request r) { return Badge(r); }
 
-        // tipo de missão, variando as cores para caso haja mais de uma com o mesmo ícone"): the request is a round badge with
-        // the drawing of what she asks for (a speech bubble to talk, a bowl for lunch, a book to study...). The first
-        // request of a kind has the kind's color; a second or third one with the same drawing takes the next colors, so the
-        // badge on her minimap icon matches one request on the board. The gold star stays today's story heroine.
+        // The request is a round badge with the drawing of what she asks for (a
+        // speech bubble to talk, a bowl for lunch, a book to study...). The first request of a kind has the kind's color; a
+        // second or third one with the same drawing takes the next colors, so the badge on her minimap icon matches one
+        // request on the board. The gold star stays today's story heroine.
         private static readonly Dictionary<string, Sprite> BadgeCache = new Dictionary<string, Sprite>();
 
         public static Sprite Badge(Request r)

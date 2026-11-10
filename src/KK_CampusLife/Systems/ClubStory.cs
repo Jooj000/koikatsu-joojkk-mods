@@ -4,9 +4,9 @@ using System.Linq;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// The club's rank as part of the story: the game's club report fills the gauge toward B (2000),
-    /// A (5000) and S (10000). Each rank reached becomes a chapter of the story (Anthology and the log), the members are
-    /// proud of it, and the panel says how far the next one is.
+    /// The club's rank as part of the story: the game's club report fills the gauge toward B (2000), A (5000) and S
+    /// (10000). Each rank reached becomes a chapter of the story (Anthology and the log), the members are proud of it, and
+    /// the panel says how far the next one is.
     /// </summary>
     internal static class ClubStory
     {

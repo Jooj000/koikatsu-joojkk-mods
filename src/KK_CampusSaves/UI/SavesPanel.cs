@@ -158,6 +158,7 @@ namespace Joojkk.CampusSaves
             _held.Clear();
         }
 
+        /// open panel already drew it.</summary>
         internal static string PicState()
         {
             var s = "panel " + (Shown ? "open" : "closed");
@@ -428,9 +429,9 @@ namespace Joojkk.CampusSaves
             Texture2D t = null;
             if (v != null)
             {
-                // picture is written in the background after the save, so a version drawn before that cached "no picture"
-                // for good. The file is looked at again once a second and read when it appears or changes (a save over
-                // the same version writes a new picture to the same file).
+                // The picture is written in the background after the save, so a version drawn
+                // before that cached "no picture" for good. The file is looked at again once a second and read when it
+                // appears or changes (a save over the same version writes a new picture to the same file).
                 var path = c.Vault.PicturePath(v.Id);
                 float next;
                 var have = _pics.TryGetValue(path, out t);

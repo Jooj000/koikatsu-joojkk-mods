@@ -1,3 +1,4 @@
+// The request talks, one per kind.
 using System.Collections.Generic;
 
 namespace Joojkk.CampusLife

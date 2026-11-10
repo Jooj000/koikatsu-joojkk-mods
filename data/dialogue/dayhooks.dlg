@@ -1,4 +1,3 @@
-# Built by tools\dlg_day_hooks.py from tools\dlg_day_hooks.txt: edit that file, not this one.
 
 @rule day.h.fine_quiet
 on day

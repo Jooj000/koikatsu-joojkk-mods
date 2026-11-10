@@ -84,7 +84,7 @@ namespace Joojkk.CampusLife
                     if (!InRoamingPeriod || GameAPI.InsideHScene) return false;
                     if (act.isEventNow) return false;
                     // F8 (Cycle.ActionEnd) puts the clock at 500 and the period only changes a few frames later: a scene
-                    // opened in between stayed under the period's white fade for good.
+                    // opened in between stayed under the period's white fade for good (a happening).
                     var cy = Cycle;
                     if (cy != null && cy.isActionEnd) return false;
                     if (act.Map == null || act.Map.isMapLoading) return false;
@@ -101,7 +101,8 @@ namespace Joojkk.CampusLife
             }
         }
 
-        /// <summary>Why <see cref="IsFreeRoaming"/> is false right now.</summary>
+        /// <summary>Why <see cref="IsFreeRoaming"/> is false right now (after an H in the courtyard it stayed false for 150
+        /// s).</summary>
         public static string RoamWhy()
         {
             var why = new List<string>();
@@ -243,12 +244,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Favor and H won from one girl in one day have diminishing returns (user, 2026-10-28: "tá dando pra namorar
-        /// qualquer uma em um dia só"; 2026-10-30: "balancear direito o afeto para não encher tão rápido ... não colocar
-        /// um limite artificial de piso de dias"): the first 8 favor points of the day (6 of H) count whole, as many again
-        /// at half, then a tenth; the steps grow with her pace (Consent.Multiplier: open x1.4, reserved from x0.7). So a
-        /// well-played day fills ~20 favor for a normal girl, and the days to date her come from the bar, not from a floor.
-        /// A part of a point is paid by chance (2026-11-07), so a beat late in the day often pays nothing.
+        /// Favor and H won from one girl in one day have diminishing returns: the first 8 favor points of the day (6 of H)
+        /// count whole, as many again at half, then a tenth; the steps grow with her pace (Consent.Multiplier: open x1.4,
+        /// reserved from x0.7). So a well-played day fills ~20 favor for a normal girl, and the days to date her come from
+        /// the bar, not from a floor. A part of a point is paid by chance, so a beat late in the day often pays nothing.
         /// Losses always count. Kept in the save (Buffs "fday:girl" / "hday:girl" = day x 1000 + points won).
         /// </summary>
         private static int Daily(SaveData.Heroine h, string tag, int add, float step)
@@ -268,10 +267,9 @@ namespace Joojkk.CampusLife
                 got += n < full ? 1f : n < 2f * full ? 0.5f : 0.1f;
             }
             // Past the curve a beat pays a fraction of a point; it rounds by chance instead of up to 1, so many small beats
-            // in one day no longer fill the bar (2026-11-07: "dava pra repetir sweet talk e afins até acabar o tempo e
-            // farmar favor e H").
-            // The part of a point carries to the next beat of the day (2026-11-07: context, not chance): three tenths
-            // pay nothing, the tenth tenth pays one. Kept in Buffs "frac:" + tag + girl = day x 1000 + hundredths.
+            // in one day no longer fill the bar.
+            // The part of a point carries to the next beat of the day (context, not chance): three tenths pay nothing, the
+            // tenth tenth pays one. Kept in Buffs "frac:" + tag + girl = day x 1000 + hundredths.
             var fk = "frac:" + k;
             int fv;
             var carry = s.Buffs.TryGetValue(fk, out fv) && fv / 1000 == s.Day ? (fv % 1000) / 100f : 0f;
@@ -355,6 +353,7 @@ namespace Joojkk.CampusLife
         public static bool IsTeacher(SaveData.Heroine h) { return h != null && h.isTeacher; }
 
         // ---- personality tone ----
+        // The two new voices take their personalities first.
         private static readonly string[] Shy = { "モジモジ", "もじもじ", "内気", "ネガティブ", "不幸", "無口" };
         private static readonly string[] Proper = { "大和撫子", "正統派", "誠実", "高潔", "几帳面", "お嬢", "意識高い" };
         private static readonly string[] Teasing = { "セクシー", "Ｓ", "S気", "Sッ", "不良", "姉御", "勝ち気", "勝気", "意地っ張り", "ヤンデレ", "艶やか", "小悪魔", "ビッチ" };
@@ -503,9 +502,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Her NPC of this period, from the scene's own list:
-        /// h.charaBase is not cleared when the game hands her NPC to another girl at a reshuffle, so it could name someone
-        /// else's map, and a girl on another map has her NPC switched off, which read as "not on campus".
+        /// Her NPC of this period, from the scene's own list: h.charaBase is not cleared when the game hands her NPC to
+        /// another girl at a reshuffle, so it could name someone else's map, and a girl on another map has her NPC
+        /// switched off, which read as "not on campus".
         /// </summary>
         private static ActionGame.Chara.NPC NpcNow(SaveData.Heroine h)
         {

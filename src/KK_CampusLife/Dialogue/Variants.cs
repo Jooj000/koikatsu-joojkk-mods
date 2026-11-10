@@ -5,9 +5,9 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// Simple answers vary (2026-10-27: "coloque umas 4 respostas diferentes pra cada resposta simples"). A line that is
-    /// only a short stock answer ("Maybe.", "Sure.", "I guess so.", "We'll see.", "Thanks.", "Hm.") is swapped for one of
-    /// at least five lines of the same intent in her tone, never the one she said last. Longer lines stay as written.
+    /// Simple answers vary. A line that is only a short stock answer ("Maybe.", "Sure.", "I guess so.", "We'll see.",
+    /// "Thanks.", "Hm.") is swapped for one of at least five lines of the same intent in her tone, never the one she said
+    /// last. Longer lines stay as written.
     /// </summary>
     internal static class Variants
     {

@@ -42,8 +42,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// "first || second || third": one of them. A line
-        /// without " || " comes back as it is.
+        /// "first || second || third": one of them (at least three versions of each line). A line without " || "
+        /// comes back as it is.
         /// </summary>
         public static string Alt(string s)
         {

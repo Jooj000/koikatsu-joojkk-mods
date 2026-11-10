@@ -3,9 +3,8 @@ using System;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// da barra de H na conversa... faça um ícone diferente para cada mood... nos likes, só faça um ícone e ao passar o
-    /// mouse aparecem os gostos com seus ícones"): a disc in the badge's color with a thin dark rim and a dark symbol, so
-    /// a 30 px icon still reads. Mood faces and signs, a star for the likes, and one symbol per like.
+    /// Small round badges for the talk: a disc in the badge's color with a thin dark rim and a dark symbol, so a 30 px
+    /// icon still reads. Mood faces and signs, a star for the likes, and one symbol per like.
     /// </summary>
     internal static partial class IconArt
     {
@@ -27,7 +26,8 @@ namespace Joojkk.CampusLife
             new[] { 1f, 0.86f, 0.45f },     // likes
         };
 
-        // every badge has a gradient (light top, deeper bottom) and a gloss, instead of one flat mint disc for all.
+        // Each like has its own color (LikeIds order), and every badge has a gradient (light top, deeper bottom) and
+        // a gloss, instead of one flat mint disc for all.
         private static readonly float[][] LikeColors =
         {
             new[] { 0.96f, 0.64f, 0.34f },  // animals: warm orange
@@ -176,7 +176,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// pot seen from the side: a wide body, a lip a little wider on top, a loop handle each side, three wisps of steam.
+        /// A stock pot seen from the side: a wide body, a lip a little wider on top, a loop handle each side, three wisps
+        /// of steam.
         /// </summary>
         private static float Pot(float u, float v)
         {
@@ -193,7 +194,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// eyes and a wide grin cut out of it.
+        /// An imp's head: round face, two curved horns, slanted eyes and a wide grin cut out of it.
         /// </summary>
         private static float Devil(float u, float v)
         {

@@ -26,6 +26,7 @@ namespace Joojkk.CampusLife
             new Place { Id = "classroom", Name = "Lecture Hall", Keywords = new[] { "教室", "Classroom", "Lecture" } },
             new Place { Id = "courtyard", Name = "Courtyard",    Keywords = new[] { "中庭", "Courtyard" } },
             new Place { Id = "field",     Name = "Campus Field", Keywords = new[] { "グラウンド", "校庭", "野原", "運動場", "Field", "Ground" } },
+            // The game has no park map: "park" is the backyard behind the buildings (裏庭), where the stray cats are.
             new Place { Id = "park",      Name = "Backyard",     Keywords = new[] { "裏庭", "公園", "Park", "Backyard" } },
         };
 

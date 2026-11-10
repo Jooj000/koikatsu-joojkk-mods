@@ -7,9 +7,9 @@ namespace Joojkk.CampusLife
 {
     /// <summary>
     /// When there are more students than the day's limit, professors and story heroines are almost scenery and each one
-    /// that walks around keeps a student home. The director draws them with a low chance, only
-    /// a few a day, and is sure of the ones with an event today. The seats saved go back to the students: School Optimizer
-    /// reads <see cref="SeatsSaved"/>. Whoever became a regular student is in the normal draw and never gets here.
+    /// that walks around keeps a student home. The director draws them with a low chance, only a few a day, and is sure of
+    /// the ones with an event today. The seats saved go back to the students: School Optimizer reads <see
+    /// cref="SeatsSaved"/>. Whoever became a regular student is in the normal draw and never gets here.
     /// </summary>
     internal static class Scenery
     {

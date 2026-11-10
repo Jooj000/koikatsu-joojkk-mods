@@ -1,4 +1,4 @@
-# The school nurse.
+# The school nurse: her own options and lines, not a student's.
 # Lina Roberts is the game's teacher -1: {role} is teacher and {job} is nurse, the freed copy too. She has no class of her own, so her
 # day comes from the infirmary ({tcause} n_*, Teachers.Cause) and lines marked {classes} are skipped for her.
 

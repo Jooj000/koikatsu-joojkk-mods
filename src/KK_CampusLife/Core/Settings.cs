@@ -180,7 +180,7 @@ namespace Joojkk.CampusLife
             PeriodLength = B(c, t, "Period length multiplier", 1.5f, "How much longer each free period lasts while you walk around (1 = vanilla 500 s, 1.5 = 750 s). Conversations, menus and events never use up time.", new AcceptableValueRange<float>(1f, 4f));
             StrengthReducesTalkCost = B(c, t, "Strength reduces time cost", true, "Up to -40% conversation time cost at Strength 100 (stamina).");
             ActivitiesEnabled = B(c, t, "Enable school activities", true, "Study, work out, part-time jobs, club work, etc. depending on where you are.");
-            ActivitySpots = B(c, t, "Activity spots on the map", true, "Each activity is done at a real spot of its place (next to the game's study desks, training corners...), with its own action icon and the game's animation or black-screen narration. Off: activities happen instantly from the menu. Spots can be moved with the position tools (section 11).");
+            ActivitySpots = B(c, t, "Activity spots on the map", true, "Each activity is done at a real spot of its place (next to the game's study desks, training corners...), with its own action icon and the game's animation or black-screen narration. Off: activities happen instantly from the menu. Spots can be moved with the position tools.");
             ActivitySpots.SettingChanged += (o, ea) => Joojkk.CampusLife.ActivitySpots.Reset();
             ActivitiesEnabled.SettingChanged += (o, ea) => Joojkk.CampusLife.ActivitySpots.Reset();
             EnergyEnabled = B(c, t, "Enable daily energy", true, "Activities cost energy. Energy refills every morning; Strength raises the maximum.");

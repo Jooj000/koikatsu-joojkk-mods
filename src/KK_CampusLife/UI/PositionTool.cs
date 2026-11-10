@@ -41,6 +41,7 @@ namespace Joojkk.CampusLife
             }
         }
 
+        /// over them.</summary>
         private static Dictionary<string, Spot> Defaults
         {
             get

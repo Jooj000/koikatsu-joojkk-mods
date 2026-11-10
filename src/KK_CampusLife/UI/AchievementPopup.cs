@@ -7,9 +7,9 @@ using Object = UnityEngine.Object;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// igual a steam"): a short ding (the club report's) and a small card that slides up from the bottom right corner,
-    /// stays a few seconds and slides back down. Several in a row wait their turn. While a loading screen covers the
-    /// game, the card waits too.
+    /// The achievement notice: a short ding (the club report's) and a small card that slides up from the bottom right
+    /// corner, stays a few seconds and slides back down. Several in a row wait their turn. While a loading screen
+    /// covers the game, the card waits too.
     /// </summary>
     internal static class AchievementPopup
     {

@@ -8,8 +8,8 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// Backgrounds behind our event scenes: the game's own ADV pictures first ("@place", see <c>GamePlaces</c>), the
-    /// user's painted pictures (BepInEx\plugins\Joojkk\backgrounds\*.jpg) only where the game has none.
+    /// Backgrounds behind our event scenes: the game's own ADV pictures first ("@place", see <c>GamePlaces</c>), the mod's own
+    /// painted pictures (BepInEx\plugins\Joojkk\backgrounds\*.jpg) only where the game has none.
     /// Uses the game's own ADV backdrop (<c>TextScenario.BGParam</c>, the one its BackGroundLoad command fills): the map is
     /// hidden and the picture is drawn by the backdrop camera. As in the game's story mode, a scene played in the talk
     /// screen (<see cref="Scenes.Staged"/>) keeps the girls posed in front of the picture, with the color mask on; a map
@@ -55,7 +55,7 @@ namespace Joojkk.CampusLife
         };
 
         /// <summary>
-        /// pictures in UserData\bg (the game's and Studio's backdrops), by place: day, evening and night file. The
+        /// The pictures in UserData\bg (the game's and Studio's backdrops), by place: day, evening and night file. The
         /// Elegance, Smoke and Outer Space ones are never loaded (<see cref="Banned"/>).
         /// </summary>
         private static readonly Dictionary<string, string[]> StudioPlaces = new Dictionary<string, string[]>
@@ -212,7 +212,7 @@ namespace Joojkk.CampusLife
                 else
                 {
                     // No color mask: it still draws the (hidden) characters into Amplify Color's mask and they came out
-                    // as dark see-through silhouettes over the picture.
+                    // as dark see-through silhouettes over the picture (photos).
                     Mask(scenario, false);
                     HideCharacters(scenario);
                 }

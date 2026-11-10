@@ -16,11 +16,11 @@ using UnityEngine;
 namespace Joojkk.SchoolOptimizer
 {
     /// <summary>
-    /// Missing zipmods: every card keeps, for each Sideloader item it wears, the mod's GUID,
-    /// author and name (UniversalAutoResolver's "info" list). This reads that list from the girls of the loaded save and
-    /// from the cards in UserData/chara, compares it with the zipmods Sideloader loaded, and shows what is missing and who
-    /// uses it (window opened from the plugin settings, with search and sort). The same list goes to
-    /// UserData/missing_zipmods.txt as [ zipmod ] [ creator ] > "name", "name" | "item", "item".
+    /// Missing zipmods: every card keeps, for each Sideloader item it wears, the mod's GUID, author and name
+    /// (UniversalAutoResolver's "info" list). This reads that list from the girls of the loaded save and from the cards in
+    /// UserData/chara, compares it with the zipmods Sideloader loaded, and shows what is missing and who uses it (window
+    /// opened from the plugin settings, with search and sort). The same list goes to UserData/missing_zipmods.txt as [
+    /// zipmod ] [ creator ] > "name", "name" | "item", "item".
     /// </summary>
     internal static class MissingMods
     {

@@ -54,16 +54,16 @@ namespace Joojkk.CampusLife
     }
 
     /// <summary>
-    /// The lines of the procedural dialogue (sections 4 and 6): rules from the .dlg files (built into the DLL, and the
+    /// The lines of the procedural dialogue: rules from the .dlg files (built into the DLL, and the
     /// ones in BepInEx\plugins\Joojkk\dialogue replace a file of the same name). The most specific rule that fits plays,
     /// never the same line with the same girl for a few days nor the line another girl just said; a small grammar
     /// fills the slots and picks among alternatives.
     ///
-    /// Format: "@rule id" then "on situation", "when k=v k!=v k>=n", "opens move,move", "fit move=good|neutral|bad",
-    /// "feel smile", and lines starting "- " ("key=*" holds when the key is known at all). "@list name" then "- item" lines. Inside lines: [a|b|c] picks one,
-    /// {slot} fills from the context ({Slot} capitalized), {#list} picks from a list; a line whose slot is missing is
-    /// skipped (a line never cites what she does not know). A line starting {student} is never said by a teacher, one
-    /// starting {classes} never by or to the nurse: tools\dlg_audit_vars.py lists what lacks a mark.
+    /// Format: "@rule id" then "on situation", "when k=v k!=v k>=n", "opens move,move", "fit move=good|neutral|bad", "feel
+    /// smile", and lines starting "- " ("key=*" holds when the key is known at all). "@list name" then "- item" lines.
+    /// Inside lines: [a|b|c] picks one, {slot} fills from the context ({Slot} capitalized), {#list} picks from a list; a
+    /// line whose slot is missing is skipped (a line never cites what she does not know). A line starting {student} is
+    /// never said by a teacher, one starting {classes} never by or to the nurse.
     /// </summary>
     internal static class Bank
     {
@@ -113,9 +113,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// more than the classes" "ask what happened with that professor": one hook for six different lines). A line that
-        /// starts "{hook:name}" becomes a rule of its own, the same conditions with that hook, so your options and her
-        /// answers follow that very line.
+        /// A line can carry its own subject ("how's it going with the professors?" "I like the walk home more than the
+        /// classes" "ask what happened with that professor": one hook for six different lines). A line that starts
+        /// "{hook:name}" becomes a rule of its own, the same conditions with that hook, so your options and her answers
+        /// follow that very line.
         /// </summary>
         private static void SplitLineHooks()
         {
@@ -235,6 +236,7 @@ namespace Joojkk.CampusLife
                 var key = c.Substring(0, i);
                 var val = c.Substring(i + op.Length);
                 var d = new DlgCond { Key = key, Op = op, Values = val.Split('|') };
+                // The two new voices speak the lines of the nearest old one until they have their own.
                 if (key == "tone" && (op == "=" || op == "!="))
                 {
                     var vs = d.Values.ToList();
@@ -252,10 +254,10 @@ namespace Joojkk.CampusLife
         // ================= choosing =================
 
         /// <summary>
-        /// 2026-10-28 ("para cada tipo de interação, os valores têm pesos diferentes"): what a condition is worth depends
-        /// on the interaction. In a touch, the place and how far you went matter most; in an invitation, what she likes and
-        /// the time of day; in small talk, the subject and her club. The table of the situation itself ("me.small" falls
-        /// back to "small", "move.ask" to "move"), then "default"; a key with no weight counts 1.
+        /// What a condition is worth depends on the interaction. In a touch, the place and how far you went matter most; in
+        /// an invitation, what she likes and the time of day; in small talk, the subject and her club. The table of the
+        /// situation itself ("me.small" falls back to "small", "move.ask" to "move"), then "default"; a key with no weight
+        /// counts 1.
         /// </summary>
         private static float WeightOf(string on, string key)
         {
@@ -320,7 +322,8 @@ namespace Joojkk.CampusLife
             return Pick(on, ctx, girl, null, out used);
         }
 
-        /// talks about the like she lets slip, instead of the like glued on as an extra line).</summary>
+        /// <summary>Pick among the matching rules that pass <paramref name="only"/> (her day line that already talks about
+        /// the like she lets slip, instead of the like glued on as an extra line).</summary>
         public static string Pick(string on, Dictionary<string, string> ctx, string girl, Func<DlgRule, bool> only, out DlgRule used)
         {
             used = null;
@@ -343,7 +346,7 @@ namespace Joojkk.CampusLife
                     foreach (var c in cands) { roll -= Weight(c.Key, top); if (roll <= 0f) { pick = c; break; } }
                     cands.Remove(pick);
                     // "Said lately" is the text, not the line: a line with [a|b] alternatives gives each of its
-                    // versions before it repeats (2026-10-27; before, one use of a line blocked all its versions).
+                    // versions before it repeats (before, one use of a line blocked all its versions).
                     var text = Expand(pick.Key.Say[pick.Value], ctx, 0);
                     if (text == null) continue;
                     if (pass == 0)
@@ -351,7 +354,7 @@ namespace Joojkk.CampusLife
                         for (var k = 0; k < 8 && Said(SaidId(pick.Key, text), girl); k++) text = Expand(pick.Key.Say[pick.Value], ctx, 0) ?? text;
                         if (Said(SaidId(pick.Key, text), girl)) continue;
                     }
-                    // Never the very line she said last in this situation, even when the bank has to repeat (2026-10-27).
+                    // Never the very line she said last in this situation, even when the bank has to repeat.
                     string last;
                     var lastKey = girl + "|" + on;
                     if (LastText.TryGetValue(lastKey, out last) && last == text)
@@ -425,8 +428,8 @@ namespace Joojkk.CampusLife
                     string val;
                     if (slot.StartsWith("@", StringComparison.Ordinal))
                     {
-                        // A piece: a fragment chosen by the context, from the rules "on @name"
-                        // (pieces.dlg), so one line varies by relation, role, mood, place, period, club, sign, body...
+                        // A piece: a fragment chosen by the context, from the rules "on @name" (pieces.dlg), so one line
+                        // varies by relation, role, mood, place, period, club, sign, body...
                         val = Piece(slot.Substring(1), ctx, depth + 1);
                     }
                     else if (slot.StartsWith("#", StringComparison.Ordinal))
@@ -463,7 +466,8 @@ namespace Joojkk.CampusLife
             var all = Matching("@" + name, ctx).Where(r => r.Say.Count > 0).ToList();
             if (all.Count == 0) return "";
             var top = all.Max(r => r.Score);
-            // the weak ones (her sign, her height, the weather) are heard too and not only who she is to you.
+            // Every factor that holds now may give the piece (the best one three times as often), so the weak ones (her
+            // sign, her height, the weather) are heard too and not only who she is to you.
             var pool = all;
             for (var tries = 0; tries < 6 && pool.Count > 0; tries++)
             {
@@ -507,7 +511,7 @@ namespace Joojkk.CampusLife
         {
             s = s.Trim();
             while (s.Contains("  ")) s = s.Replace("  ", " ");
-            // An ellipsis keeps the space before it ("Hey! ...Fine."): only a lone period closes up.
+            // An ellipsis keeps the space before it ("Hey!...Fine."): only a lone period closes up.
             s = s.Replace(" ...", "\u0001").Replace(" ,", ",").Replace(" .", ".").Replace(" !", "!").Replace(" ?", "?").Replace(",,", ",").Replace("..,", "...").Replace("\u0001", " ...");
             if (s.Length > 0 && char.IsLower(s[0])) s = char.ToUpperInvariant(s[0]) + s.Substring(1);
             return s;

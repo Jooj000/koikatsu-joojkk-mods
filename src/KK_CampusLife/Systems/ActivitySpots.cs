@@ -48,9 +48,9 @@ namespace Joojkk.CampusLife
         public enum Kind { Int, Str, Sens, Job, Rest }
 
         /// <summary>
-        /// preta na atividade, coloque a animação"): none uses the black screen any more; chores and jobs take the game's
-        /// closest move (0 reading standing, 2 warming up the hands, 3 squatting, 4 stretching, Desk sitting at the desk).
-        /// The black screen stays only for when the game's actions can't be read.
+        /// Animation (game action number, Desk or Dark) and icon kind of every activity. none uses the black screen any
+        /// more; chores and jobs take the game's closest move (0 reading standing, 2 warming up the hands, 3 squatting, 4
+        /// stretching, Desk sitting at the desk). The black screen stays only for when the game's actions can't be read.
         /// </summary>
         private static readonly Dictionary<string, KeyValuePair<int, Kind>> Look = new Dictionary<string, KeyValuePair<int, Kind>>
         {
@@ -277,8 +277,8 @@ namespace Joojkk.CampusLife
                     gp = points.OrderBy(p => anchors.Count(x => x.Key.StartsWith("p" + p.No + ":"))).First();
                 }
                 // Every activity has its own icon (and anchor), even when several are done at the same game point. The
-                // animation always plays at the game's point, with its own chair. A spot set in the Alt+F7 window moves only
-                // animação no lugar, é só o ícone que deve mudar com o alt f7").
+                // animation always plays at the game's point, with its own chair. A spot set in the Alt+F7 window moves
+                // only the icon.
                 var anchor = new Anchor { Key = "p" + gp.No + ":" + a.Id, Pos = gp.Pos, Rot = gp.Rot, Custom = mine };
                 if (mine) anchor.IconPos = custom.Pos;
                 anchors.Add(anchor);
@@ -286,6 +286,7 @@ namespace Joojkk.CampusLife
                 anchor.AnimFor[a.Id] = mine && custom.Anim >= 0 ? custom.Anim : anim;
             }
 
+            // Icons placed by hand first, so the automatic ones keep away from them.
             foreach (var an in anchors.Where(x => !x.Custom))
                 an.IconPos = IconSpot(an, points, anchors);
             return anchors;
@@ -451,7 +452,8 @@ namespace Joojkk.CampusLife
             var anchor = G.IsFreeRoaming ? AnchorOf(a, G.PlayerMapNo) : null;
             var anim = -1;
             if (anchor != null) anchor.AnimFor.TryGetValue(a.Id, out anim);
-            // where he stands instead of the black screen.
+            // A map without the game's action points (the park) has no anchor; the animation plays where he stands
+            // instead of the black screen.
             else if (G.IsFreeRoaming) { anim = AnimOf(a); if (anim == Desk) anim = 0; }
             var ga = ActionNo(anim);
             var block = OwnBlocker(a);
@@ -582,8 +584,9 @@ namespace Joojkk.CampusLife
                                 trot = at.Rot * inv * trot;
                                 HideTwins(target.transform, tpos);
                             }
-                            // ar na cafeteria": the cafeteria desk action moves isu07 (9), where girls sit to eat). Carried to
-                            // a moved spot or with a girl on it, a copy goes there and the real one stays.
+                            // The game's chair is someone's seat (the cafeteria desk action moves isu07 (9),
+                            // where girls sit to eat). Carried to a moved spot or with a girl on it, a copy goes there and
+                            // the real one stays.
                             var far = Vector3.Distance(target.transform.position, tpos) > 1.2f;
                             var sitter = Occupant(target.transform.position);
                             if (far || sitter != null)

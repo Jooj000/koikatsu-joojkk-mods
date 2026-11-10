@@ -1,5 +1,5 @@
-# Her answers in a conversation beat, moved word for word out of Conversation.Unified.cs and
-# SleepTease.cs (criteria D and F7 of koikatsu-decisao-criterios-falas-fixas). Read by Conversation.BeatSay.
+# Her answers in a conversation beat, from Conversation.Unified.cs and
+# SleepTease.cs. Read by Conversation.BeatSay.
 # {tag} the option you took or the moment (cg_admit, db_now, caught.intro, sleeptease...), {q} how she took it:
 # good | neutral | bad (yes | no for the sleeping tease). The rules without a tag are the stock answers for a beat
 # whose option has none of its own; @weights beat makes the tag decide first.
@@ -532,6 +532,7 @@ when tag=sleeptease.no.narr
 - She bolts upright and clutches the blanket to her chest.
 - She scrambles back against the wall, blanket up to her chin.
 
+# ================= a kiss during a touch (Conversation.React.PlayReact), by the director's answer =================
 @rule beat.kiss.yes.narr
 on beat
 when tag=kiss.yes.narr
@@ -571,6 +572,7 @@ when tag=kiss.no.narr
 - She leans back out of reach and shakes her head.
 - "No," she says quietly, and turns away.
 
+# Asleep anywhere but the infirmary (rooftop, courtyard, storehouse, showers...).
 @rule beat.sleeptease.asleep.out
 on beat
 when tag=sleeptease.asleep.out

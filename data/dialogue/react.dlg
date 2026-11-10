@@ -1,6 +1,6 @@
 # Her reaction to your answer. {move} what you did, {fit} good/neutral/bad (how well it landed), {step} 1-3.
 # A rule with "opens" carries the talk to a next step (up to 3) with those answers; without it, the topic ends here.
-# 2026-10-27: every rule has 4+ lines (each "- " line counts apart in the "said lately" memory, so one line with
+# Every rule has 4+ lines (each "- " line counts apart in the "said lately" memory, so one line with
 # alternatives repeats much sooner than four lines), and every move has its own neutral answer.
 
 # ================= generic by fit =================
@@ -1205,7 +1205,7 @@ feel sad
 - [It's the kind of fight that gets worse the longer you wait.|Each day we don't talk, it gets harder.] [I know that.|Stupid, huh?]
 - [You really want to hear all of it?|I've been telling this to my pillow.] [It's long.|You're better than a pillow.]
 
-# ---------------- 2026-10-31: answers that belong to the topic ----------------
+# ---------------- answers that belong to the topic ----------------
 @rule react.ask.small
 on react
 when kind=small|school move=ask fit=good
@@ -1226,7 +1226,7 @@ when kind=tell move=defend fit=good|neutral
 - [Okay. If you're really worried, that's different.|Hm. Maybe I was too harsh.|Fine. I believe you.] [Just be careful who you tell.|Don't let it spread.|{Who} deserves better than rumors.]
 - [I know you didn't mean it badly.|You're not the worst, I guess.] [Let's leave it there.|Thanks for saying that.]
 
-# ================= small talk: the answer to what you did with a statement, a question or an offer (2026-10-31) =================
+# ================= small talk: the answer to what you did with a statement, a question or an offer =================
 @rule react.shape.ask.state
 on react
 when move=ask fit=good|neutral shape=state

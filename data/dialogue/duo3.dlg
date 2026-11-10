@@ -1183,7 +1183,7 @@ when moment=season evkind=gift
 - [You're our official taster now.|Tell us the truth. Is it too sweet?|Don't tell anyone how many we burned.]
 - [She did the wrapping. I did the eating.|Be honest. Which one of us did better?|We argued about the ribbon for an hour.]
 
-# ================= the other girl's stock lines =================
+# ================= the other girl's stock lines (from Conversation.Trio.cs WitnessStock) =================
 @rule duo3.react.stock.bad.gentle
 on duo3.react
 when q=bad tone=gentle
@@ -1341,7 +1341,7 @@ when wrel!=yourgf wrel!=rival lvl!=friend q!=bad tone=teasing
 - Ooh, daring~
 - My, my~
 
-# ================= her chest or hips in the trio =================
+# ================= her chest or hips in the trio (from Conversation.TrioTouch.cs BGrope) =================
 @rule duo3.reply.grope.bad.gentle
 on duo3.reply
 when act=grope q=bad tone=gentle
@@ -1438,7 +1438,7 @@ feel love
 - Mm~ showing her who's yours?
 - Ooh, in front of an audience~
 
-# ================= looking at her in the trio =================
+# ================= looking at her in the trio (from Conversation.TrioTouch.cs BLook) =================
 @rule duo3.reply.look.bold.bad.gentle
 on duo3.reply
 when act=look_bold q=bad tone=gentle

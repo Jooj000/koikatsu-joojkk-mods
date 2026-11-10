@@ -3,10 +3,10 @@ using System;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// aumente um pouco), missões do quadro e radar, e o que mais está usando ícones placeholder"). A round badge like the
-    /// game's own action icons (white face, a ring in the activity's stat color, grey when out of range) with one drawing
-    /// per activity instead of one per stat: a book for studying, a ball for basketball, a wave for the pool, a paw for
-    /// the cats... Same signed-distance shapes as the conversation's tiles, so tools\iconpreview can draw them too.
+    /// Map icons in Campus Life's style. A round badge like the game's own action icons (white face, a ring in the
+    /// activity's stat color, grey when out of range) with one drawing per activity instead of one per stat: a book for
+    /// studying, a ball for basketball, a wave for the pool, a paw for the cats... Same signed-distance shapes as the
+    /// conversation's tiles, so tools\iconpreview can draw them too.
     /// </summary>
     internal static partial class IconArt
     {
@@ -91,7 +91,7 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// A board request on its badge: a disc in the given color, the drawing of what she asks for (a speech bubble, a
-        /// referente ao tipo de missão, variando as cores para caso haja mais de uma com o mesmo ícone").
+        /// bowl, a book...) in white with a dark line.
         /// </summary>
         public static float[] RequestBadge(string glyph, float[] color, int size)
         {

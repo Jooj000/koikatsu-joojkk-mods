@@ -1,4 +1,4 @@
-# mod isso vira algum diálogo contextual próprio"). The game's H still refuses these; she says it first, her way.
+# Her card's refusals, said aloud right before the game's H. The game's H still refuses these; she says it first, her way.
 # {hbound} the one that matters most: condom (she insists on one) | kiss | anal | caress | massage (toys) | all (the card
 # refuses all five). {hbound2} the next one or none. {hbounds} how many. rel, mood and tone colour it.
 # Every rule has at least three lines.
@@ -197,7 +197,7 @@ feel shy
 - [Mm...|I love you...] [I'll kiss you someday. Promise.|just not the lips. Not yet.]
 - [Okay...|Let's go...] [be patient with me?|no kissing, okay?]
 
-# ================= the old stock lines =================
+# ================= the old stock lines (from Conversation.TrioPair.cs BoundsStock) =================
 @rule bounds.condom.stock.gentle
 on bounds
 when hbound=condom tone=gentle

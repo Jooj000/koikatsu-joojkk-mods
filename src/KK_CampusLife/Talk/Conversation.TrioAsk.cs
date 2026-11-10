@@ -5,10 +5,10 @@ using System.Linq;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// conversar com duas namoradas na dupla, ou solo. com as opções de aceitar, recusar mas permitir, e recusar"). Alone
-    /// with one girlfriend you ask about the other; with both of them in the duo talk you ask them together and each one
-    /// answers, the second one hearing the first. Her answer is Share.AskTrio: yes (the three of you), no but you can
-    /// see her (each apart), or no. Two yeses make the circle (Harem); a no stays remembered like any stance.
+    /// Asking your girlfriends to be a trio. Alone with one girlfriend you ask about the other; with both of them in the
+    /// duo talk you ask them together and each one answers, the second one hearing the first. Her answer is
+    /// Share.AskTrio: yes (the three of you), no but you can see her (each apart), or no. Two yeses make the circle
+    /// (Harem); a no stays remembered like any stance.
     /// </summary>
     internal static partial class Conversation
     {

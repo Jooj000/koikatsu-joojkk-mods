@@ -58,7 +58,8 @@ namespace Joojkk.CampusLife
 
     /// <summary>
     /// The store's map icon: Campus Life's round badge (IconArt.Spot) with a shopping bag, pink when you are next to it.
-    /// icons (160 px at the same 100 pixels per unit), the bag a little bigger inside the badge.
+    /// "loja (e aumente um pouco)": the sprite is drawn at 160 px and shown at 125 % of the game's icons (160 px at the
+    /// same 100 pixels per unit), the bag a little bigger inside the badge.
     /// </summary>
     internal static class StoreIcon
     {
@@ -96,9 +97,9 @@ namespace Joojkk.CampusLife
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// Activity spot icons: one drawing per activity (a book to
-    /// study, a ball for basketball, a wave at the pool, a paw for the cats...) on the round badge, the ring in the color of
-    /// the stat it trains. A spot with several activities shows the first one of its main kind.
+    /// Activity spot icons: one drawing per activity (a book to study, a ball for basketball, a wave at the pool, a paw for
+    /// the cats...) on the round badge, the ring in the color of the stat it trains. A spot with several activities shows
+    /// the first one of its main kind.
     /// </summary>
     internal static class ActivityIcon
     {

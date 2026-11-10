@@ -31,7 +31,7 @@ opens ask,share,tease
 - [{Event}? I haven't thought about it much.|Oh, {event}.] [Should be interesting.|Everyone's talking about it.]
 - [{Event}, huh?|Ah, right, {event}.] [Time flies.|People won't stop mentioning it.]
 
-# ================= each calendar event for what it is (2026-11-01: "chocolate day [...] não é uma festa") =================
+# ================= each calendar event for what it is =================
 # {evkind}: gift (Chocolate Day), exam, sports, fair (Culture Festival), trip, wish (Tanabata), costume (Halloween), eve
 # (Christmas Eve). A line under plain "school=event" must be true of all of them. Nobody "goes to" Chocolate Day.
 

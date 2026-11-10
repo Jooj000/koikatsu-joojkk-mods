@@ -37,7 +37,8 @@ namespace Joojkk.CampusLife
             return s;
         }
 
-        /// que já existe", not a second border around it).</summary>
+        /// <summary>The option card with its frame and strip in the request's pink (not a second border around
+        /// it).</summary>
         public static Sprite FitCard()
         {
             Sprite s;
@@ -52,9 +53,9 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// The inside of an option card in the card's own units (left, top, right, bottom): past the color strip and the
-        /// frame plus a few pixels (user, 2026-10-26: the text "must stay only inside the colored border, with a margin of a
-        /// few pixels"). A sliced border scales down when the card is shorter than its two borders, so the top and bottom
-        /// follow the card's height.
+        /// frame plus a few pixels (the text "must stay only inside the colored border, with a margin of a few pixels"). A
+        /// sliced border scales down when the card is shorter than its two borders, so the top and bottom follow the card's
+        /// height.
         /// </summary>
         public static Vector4 CardInside(RectTransform card)
         {
@@ -88,9 +89,9 @@ namespace Joojkk.CampusLife
         private static bool _faceLogged;
 
         /// <summary>
-        /// The game's button text has a dark face, so a
-        /// vertex color can only darken it. A copy of its material with a white face lets the color show; the outline stays.
-        /// One copy per game material, shared by every option; its outline is black.
+        /// The game's button text has a dark face (the letters' middle came out dark, only the outline light), so a vertex
+        /// color can only darken it. A copy of its material with a white face lets the color show; the outline stays. One
+        /// copy per game material, shared by every option; its outline is black.
         /// </summary>
         public static void ColorFace(TMPro.TextMeshProUGUI txt, Color color)
         {
@@ -111,7 +112,7 @@ namespace Joojkk.CampusLife
                     {
                         white = new Material(src) { name = src.name + " (Campus Life face)" };
                         white.SetColor("_FaceColor", Color.white);
-                        // Black outline: the game's light grey one blurred the colored letters.
+                        // Black outline (his ask): the game's light grey one blurred the colored letters.
                         if (white.HasProperty("_OutlineColor")) white.SetColor("_OutlineColor", Color.black);
                         white.hideFlags = HideFlags.DontUnloadUnusedAsset;
                     }

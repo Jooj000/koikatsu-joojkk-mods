@@ -11,14 +11,11 @@ using Object = UnityEngine.Object;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// redondos abaixo da barra de H na conversa, e somente se descobrir. faça um ícone diferente para cada mood, e passando
-    /// o mouse por cima aparece o nome. nos likes, só faça um ícone e ao passar o mouse aparecem os gostos com seus
-    /// ícones"). Her mood once you know it, and one star for the likes you found out.
-    /// sólida. faça com que tenha apenas um ícone principal, em que é passado hover ou clicado e abre uma bandeja com os
-    /// ícones e seus nomes." So the row is the mood and one main likes icon, bigger and clear of the bar; hovering the star
-    /// opens a tray with each like found out (its own colored icon and its name), and a click keeps the tray open until the
-    /// next click. A like learned during the talk makes the star pulse and opens the tray for a moment with the new one
-    /// popping in. The like badges on the options, the gift menu and the shop stay.
+    /// Round icons under the talk's time bar. Her mood once you know it, and one star for the likes you found out.
+    /// So the row is the mood and one main likes icon, bigger and clear of the bar; hovering the star opens a tray with
+    /// each like found out (its own colored icon and its name), and a click keeps the tray open until the next click. A
+    /// like learned during the talk makes the star pulse and opens the tray for a moment with the new one popping in. The
+    /// like badges on the options, the gift menu and the shop stay.
     /// </summary>
     internal static class TalkBadges
     {
@@ -134,9 +131,8 @@ namespace Joojkk.CampusLife
         private static bool _overMood;
 
         /// <summary>
-        /// gostos só aparece no momento em que um gosto é descoberto, não quando há hover/clique"): the badges sit in the
-        /// time bar's canvas, where the game's event system does not reach them, so their EventTriggers never fired in
-        /// play. Hover opens the tray, a click pins it, leaving closes it.
+        /// The mouse over the star and the mood, read every frame from its position: the badges sit in the time bar's
+        /// canvas, where the game's event system does not reach them, so their EventTriggers never fired in play (the
         /// </summary>
         private static void PollPointer()
         {

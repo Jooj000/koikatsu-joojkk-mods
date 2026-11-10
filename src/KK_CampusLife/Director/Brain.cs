@@ -9,10 +9,10 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// The director's brain: every action a girl takes is the director's choice. User, 2026-10-11: "the director must
-    /// control 100%. nothing of the vanilla AI may be left." The game drew each next action from its own desire table
-    /// (that is how girls went off into H on their own); now its draw (<c>ActionControl.NextAction</c> and, at the start of
-    /// a period, <c>FirstAction</c>) is replaced by the director's, and the game only carries it out (walking, animating).
+    /// The director's brain: every action a girl takes is the director's choice. "the director must control 100%. nothing
+    /// of the vanilla AI may be left." The game drew each next action from its own desire table (that is how girls went off
+    /// into H on their own); now its draw (<c>ActionControl.NextAction</c> and, at the start of a period,
+    /// <c>FirstAction</c>) is replaced by the director's, and the game only carries it out (walking, animating).
     /// <list type="bullet">
     /// <item>Everyday actions are weighed from the period, her needs (food, rest, company), her intention, her mood and
     /// her club. Where she goes and with whom then follows the intention (<see cref="Intents"/>).</item>
@@ -86,10 +86,11 @@ namespace Joojkk.CampusLife
                 foreach (var kv in weights) { roll -= kv.Value; if (roll <= 0f) { pick = kv.Key; break; } }
                 weights.RemoveAll(kv => kv.Key == pick);
                 // The first action of a period places her at its spot while the map loads (SetAllCharaActive): it must have
-                // one, and no target.
+                // one, and no target ("talk to another girl" there threw in AI.Result and the load hung black).
                 if (first && !TargetsPoint(pick)) continue;
-                // The game's tables lack the class or club of some story girls for some actions (KeyNotFound inside SetAction):
-                // that action is not possible for her, the next one is tried (the director stays in charge of her first
+                // The game's tables lack the class or club of some story girls for some actions (KeyNotFound inside
+                // SetAction): that action is not possible for her, the next one is tried (the director stays in charge of
+                // her first action instead of leaving it to the game; "Brain first" for Sakura, Ai, Lina).
                 ActionControl.ResultInfo res = null;
                 tried = true;
                 try { res = ac.SetAction(h, pick, -1); }
@@ -129,7 +130,8 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// Each SetAction above moves her one reservation (the game keeps a single next spot per girl) to the spot it
-        /// refused every outdoor try, the game's spot was left unreserved, WaitPoint.SetWait threw inside the period load
+        /// drew. When none was kept, the game's own pick stays, so its spot must be hers again:, a rainy lunch refused
+        /// every outdoor try, the game's spot was left unreserved, WaitPoint.SetWait threw inside the period load
         /// (MapMove) and the screen stayed black.
         /// </summary>
         private static void GiveBack(ActionControl ac, SaveData.Heroine h, ActionControl.ResultInfo r)
@@ -158,7 +160,7 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// Another girl already has that spot or one right on it: the game reserves each waiting point, but one chair can
-        /// personagens sentando na mesma cadeira").
+        /// hold several points (one per pose), so two girls sat on the same chair.
         /// </summary>
         public static ActionGame.Chara.NPC SpotTaken(WaitPoint p, SaveData.Heroine h)
         {
@@ -271,7 +273,8 @@ namespace Joojkk.CampusLife
                 if (intent == Intents.Player) w[8] = 10f + h.favor / 10f;
                 if (h.lewdness >= 80 && (h.isGirlfriend || h.relation >= 2) && (mood == Mood.Flirty || h.lewdness >= 95)) w[5] = 2f;
             }
-            // and rising chance, some girls already in the first week).
+            // H on her own: rare at first and more likely as her appetite grows (lower limit, low and rising chance,
+            // some girls already in the first week).
             var app = Appetite(h, mood);
             if (!max && Cfg.StudentH.Value && app >= 30f && mask != PeriodMask.Lunch) w[4] = Mathf.Min(4f, 0.12f + (app - 30f) / 30f);
 

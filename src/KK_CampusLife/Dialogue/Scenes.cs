@@ -38,8 +38,8 @@ namespace Joojkk.CampusLife
         public readonly SaveData.Heroine Her;
         private readonly bool _inTalk;
         private readonly HashSet<string> _registeredNames = new HashSet<string>();
-        // o player solta uma frase no diálogo condizente com a opção, e o contexto"): Branch remembers the label, and the
-        // first line of that branch is preceded by his line (Speech.Line), unless the branch starts with his own Me.
+        // The player's line for the option taken: Branch remembers the label, and the first line of that branch is preceded
+        // by his line (Speech.Line), unless the branch starts with his own Me.
         private readonly Dictionary<string, string> _labels = new Dictionary<string, string>();
         private string _pendingMe;
         /// <summary>Also narrate options that are actions ("You walk her home."), not only the ones he says.</summary>
@@ -188,7 +188,7 @@ namespace Joojkk.CampusLife
         {
             // Not "multi": the Jump command already reads on from the tag by itself (TextScenario.Jump -> RequestNextLine).
             // As multi, the outer read went on too, past a choice right after the tag and into its first branch, so that
-            // branch counted as taken as well.
+            // branch counted as taken as well (finales right after a join label).
             _pendingMe = null;
             List.Add(Program.Transfer.Create(false, Command.Jump, tag));
             return this;
@@ -317,7 +317,7 @@ namespace Joojkk.CampusLife
         /// opened the way the game opens its own event ADVs there (Cycle.EventADVStart: Program.Open, then Program.Wait).
         /// The list must not wait for the scene fade (SceneFadeRegulate False, like the game's own lists): inside the
         /// wake-up coroutine the fade only ends after that coroutine returns, so a regulated list waited for good and the
-        /// game sat on the loading screen (user, 2026-10-11). Null if another scene is playing.
+        /// game sat on the loading screen. Null if another scene is playing.
         /// </summary>
         public static IEnumerator PlayInline(SceneBuilder b, Action<string> onDone)
         {
@@ -333,8 +333,9 @@ namespace Joojkk.CampusLife
             var opened = false;
             // The game's SimpleFade: Fade.In COVERS the screen (alpha 0 -> 1), Fade.Out uncovers it. The date ends with the
             // screen covered (white); our story opened under it and nothing ever uncovered it: the text ran behind a white
-            // screen and the first choice waited for a click nobody could see (user, 2026-10-12, with the game's Skip on;
-            // then uncover it; at the end cover again, so the game carries on from the state it left.
+            // screen and the first choice waited for a click nobody could see (with the game's Skip on; photographed the
+            // choice under alpha 1.00). As the game's EventADVStart: cover first, open the story, then uncover it; at the
+            // end cover again, so the game carries on from the state it left.
             var sc = Singleton<Scene>.IsInstance() ? Singleton<Scene>.Instance : null;
             if (sc != null && sc.sceneFade != null && sc.sceneFade._Fade != SimpleFade.Fade.In)
                 yield return sc.Fade(SimpleFade.Fade.In, null);

@@ -113,7 +113,7 @@ namespace Joojkk.CampusLife
                 {
                     var teller = Social.Get(kv.Key);
                     if (teller == null) continue;
-                    // She passes it on when it is hot enough for her (context, 2026-11-07): the heat, and a chatty tone tells sooner.
+                    // She passes it on when it is hot enough for her (context): the heat, and a chatty tone tells sooner.
                     var tt = GirlInfo.ToneOf(teller);
                     if (!Consent.Yes(teller, "rumor:" + s.Kind, s.Heat / 100f + (tt == Tone.Energetic || tt == Tone.Teasing ? 0.15f : tt == Tone.Cool ? -0.15f : 0f))) continue;
                     var friend = Social.FriendsOf(teller, 30).FirstOrDefault(f => !s.Versions.ContainsKey(GirlInfo.Key(f)));

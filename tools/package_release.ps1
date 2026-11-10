@@ -1,4 +1,5 @@
 # Builds the release DLLs and makes one zip per mod in dist\release, laid out to be unpacked over the game's folder
+# (BepInEx\plugins\Joojkk\...). Publishes nothing.
 # Usage:  powershell -ExecutionPolicy Bypass -File tools\package_release.ps1 [-Mods KK_CampusLife,...]
 param([string[]]$Mods = @('KK_CampusLife', 'KK_SchoolOptimizer', 'KK_HMaleWardrobe', 'KK_CampusSaves'))
 
@@ -21,9 +22,10 @@ foreach ($mod in $Mods) {
   if ($mod -eq 'KK_CampusLife') {
     New-Item -ItemType Directory -Force (Join-Path $dest 'backgrounds') | Out-Null
     Copy-Item (Join-Path $root 'data\backgrounds\*.jpg') (Join-Path $dest 'backgrounds')
-    # his map photos go in the zip; the activity points are already inside the DLL (spots_default.txt).
+    # The map photos go in the zip; the activity points are already inside the DLL (spots_default.txt).
     New-Item -ItemType Directory -Force (Join-Path $dest 'mapshots') | Out-Null
     Copy-Item (Join-Path $root 'data\mapshots\*.jpg') (Join-Path $dest 'mapshots')
+    # The game's staff titles as a college (XUnity.AutoTranslator reads BepInEx\Translation\en\Text).
     $tr = Join-Path $stage 'BepInEx\Translation\en\Text'
     New-Item -ItemType Directory -Force $tr | Out-Null
     Copy-Item (Join-Path $root 'data\translation\zzz_JoojkkCampus.txt') $tr

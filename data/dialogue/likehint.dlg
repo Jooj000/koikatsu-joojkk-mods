@@ -35,6 +35,7 @@ when voice=gyaru|open|vamp|teasing
 - [Everyone's doing whatever, but me? {Newlike}.|Forget everything else. {Newlike}.] [Always.|End of story.]
 - [If you show up with {newlike}, I'm yours.|Bring {newlike} and we'll talk.] [Maybe.|Just saying~]
 
+# Said after a hard day the like can't come out cheerful.
 @rule likehint.low
 on likehint
 when low=yes

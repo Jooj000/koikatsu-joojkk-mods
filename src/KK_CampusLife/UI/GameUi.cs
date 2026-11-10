@@ -182,7 +182,8 @@ namespace Joojkk.CampusLife
             scroll.movementType = ScrollRect.MovementType.Clamped;
             scroll.scrollSensitivity = 40f;
             // Almost clear, not white: if the mask graphic ever shows (the week report came out as a white sheet with
-            // pixels under 0.001 alpha, and then nothing inside would draw.
+            // the white text lost on it) nothing covers the list. Not alpha 0: the mask's stencil pass clips pixels
+            // under 0.001 alpha, and then nothing inside would draw.
             var viewport = Image(root.transform, "Viewport", null, new Color(1f, 1f, 1f, 0.01f));
             viewport.rectTransform.Stretch(0, 0, 14, 0);
             viewport.gameObject.AddComponent<Mask>().showMaskGraphic = false;

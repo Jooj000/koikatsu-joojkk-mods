@@ -8,10 +8,11 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// prancheta porque sempre trava na primeira vez de abrir"): the places' thumbnails come out of the map asset bundles,
-    /// the font and the sprites are looked up among every loaded object, and our icons are drawn pixel by pixel, all on
-    /// that first frame. Now that work is done beforehand while you walk around, one small piece per frame (a thumbnail,
-    /// a few icons), so the first open only lays out the cards. Each piece is timed; the log says what took longest.
+    /// The clipboard's first open used to freeze the game for a moment: the places' thumbnails come out of the map asset
+    /// bundles, the font and the sprites are looked up among every loaded object, and our icons are drawn pixel by pixel,
+    /// all on that first frame. Now that work is done beforehand while you walk around, one small piece per frame (a
+    /// thumbnail, a few icons), so the first open only lays out the cards. Each piece is timed; the log says what took
+    /// longest.
     /// </summary>
     internal static class ClipboardWarm
     {

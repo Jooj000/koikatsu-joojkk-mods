@@ -9,12 +9,12 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// Touches and silences in the conversation. The game always plays the same clip for a
-    /// place and level and the same "are you listening?" after 30 s: we pick among every clip of the same meaning at her
-    /// stage and the one below (another voice, face and pose), and after it she says a line of ours from touch.dlg /
-    /// idle.dlg that knows who she is to you, her mood, the place and who is watching. Some of it has weight: a crowd makes
-    /// touching harder, being alone makes it easier, friends tease, rivals sneer, and a girl who barely knows you walks off
-    /// if you keep staring at her in silence.
+    /// Touches and silences in the conversation. The game always plays the same clip for a place and level and the same
+    /// "are you listening?" after 30 s: we pick among every clip of the same meaning at her stage and the one below
+    /// (another voice, face and pose), and after it she says a line of ours from touch.dlg / idle.dlg that knows who she is
+    /// to you, her mood, the place and who is watching. Some of it has weight: a crowd makes touching harder, being alone
+    /// makes it easier, friends tease, rivals sneer, and a girl who barely knows you walks off if you keep staring at her
+    /// in silence.
     /// </summary>
     internal static partial class Conversation
     {
@@ -27,7 +27,8 @@ namespace Joojkk.CampusLife
             public string PartName, Kiss = "", Answer = "";   // butt / mouth (ours, TouchMore); yes / wary / wary_no / no for a kiss; the director's answer to a touch
             public float At, ReadyAt;
             public Info Info;
-            /// <summary>One click, one reaction: her line answers this touch, so the game's clip gives way and its pose goes with the line.</summary>
+            /// <summary>One click, one reaction: her line answers this touch, so the game's clip gives way and its pose
+            /// goes with the line.</summary>
             public bool Speak = true, Cut;
             public string Pose;
             public int Frame = -1;   // the frame TouchFunc asked for the game's clip (TouchClip)
@@ -70,8 +71,7 @@ namespace Joojkk.CampusLife
             LastClip[key] = t0.file;
         }
 
-        // ---------------- animations (2026-10-28: "adicionar outras animações tanto para a reação do toque quanto para
-        // ficar parada com o player sem fazer nada") ----------------
+        // ---------------- animations ----------------
 
         private static readonly System.Reflection.MethodInfo AnimePlayMethod = AccessTools.Method(typeof(TalkScene), "AnimePlay");
         private static readonly Dictionary<string, List<string>> PosePools = new Dictionary<string, List<string>>();
@@ -166,14 +166,12 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// 2026-10-28 ("a pose do toque já era essa. é para adicionar variações"): the game's own pose for that clip, and
-        /// the last pose of the same place, are never picked again; two times in three a pose of the same body part, else
-        /// any pose of the same feeling.
+        /// The game's own pose for that clip, and the last pose of the same place, are never picked again; two times in
+        /// three a pose of the same body part, else any pose of the same feeling.
         /// </summary>
         /// <summary>
-        /// Does the pose fit how she took it?
-        /// 0 welcome: no covering, no anger, no sadness; 1 uneasy: she may cover or shrink, not rage; 2-3 stop and angry:
-        /// nothing happy. -1: anything (silence).
+        /// Does the pose fit how she took it (mid)? 0 welcome: no covering, no anger, no sadness; 1 uneasy: she may cover
+        /// or shrink, not rage; 2-3 stop and angry: nothing happy. -1: anything (silence).
         /// </summary>
         internal static bool FitsReaction(string pose, int reaction)
         {
@@ -259,9 +257,9 @@ namespace Joojkk.CampusLife
                     _pend = new Pend { Her = h, Kind = "touch", Part = _parts, Look = !_touch, Level = level, Answer = h.isAnger ? "no" : Consent.LastTouch, At = Time.realtimeSinceStartup, Info = __instance, Speak = speak, Frame = Time.frameCount };
                     TouchNote("clip " + PartWord(_parts, !_touch) + (speak ? " (her line answers)" : " (only the clip)"));
                     // She used to take the clip, stand again, and take the line with another pose: two reactions to one
-                    // click (user, 2026-11-01). The pose waits for the line and her face is the line's; the voice keeps its
-                    // file, so TouchFunc and TouchEnd run as always (an empty one froze the talk and the map, 2026-11-02),
-                    // and CutTouchVoice takes it away in the same frame.
+                    // click. The pose waits for the line and her face is the line's; the voice keeps its file, so TouchFunc
+                    // and TouchEnd run as always (an empty one froze the talk and the map), and CutTouchVoice takes it away
+                    // in the same frame.
                     if (speak && OneBeat)
                     {
                         _pend.Pose = __result.pose;
@@ -349,8 +347,8 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// The game's 30 s silence timer switches itself off for good when it fires while the talk buttons are hidden (one
-        /// of our scenes, a touch reaction): after the greeting she never spoke in a silence again. Once the
-        /// buttons are back and nothing plays, a timer that is off is started again.
+        /// of our scenes, a touch reaction): after the greeting she never spoke in a silence again. Once the buttons are
+        /// back and nothing plays, a timer that is off is started again.
         /// </summary>
         private static void ReArmIdle(TalkScene ts)
         {
@@ -399,9 +397,9 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The game's voice for a touch our line answers goes away in the frame it was asked for, before it loads: no sound, and
-        /// no caption from KK_Subtitles, which showed its text apart from our box ("I told you to stop! so persistent!", always
-        /// the same; user, 2026-11-02). TouchEnd sees the voice gone and gives the talk back as usual.
+        /// The game's voice for a touch our line answers goes away in the frame it was asked for, before it loads: no
+        /// sound, and no caption from KK_Subtitles, which showed its text apart from our box ("I told you to stop! so
+        /// persistent!", always the same). TouchEnd sees the voice gone and gives the talk back as usual.
         /// </summary>
         private static void CutTouchVoice(TalkScene __instance)
         {
@@ -418,8 +416,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Manager.Voice.Stop(Transform) stops only the voices that follow that transform (a mouth), not the voice it returned:
-        /// with TalkScene's transVoice it stopped nothing, and the game's clip played to the end under our line (2026-11-05).
+        /// Manager.Voice.Stop(Transform) stops only the voices that follow that transform (a mouth), not the voice it
+        /// returned: with TalkScene's transVoice it stopped nothing, and the game's clip played to the end under our line.
         /// The voice is the object Voice.Play returned; destroying it ends the sound, its loader and its caption.
         /// </summary>
         private static void CutVoice(Transform voice)
@@ -492,22 +490,23 @@ namespace Joojkk.CampusLife
             else if (p.Kiss == "wary_no") b.Narr(BeatSay(h, "kiss.waryno.narr") ?? "...");
             else if (p.Kiss == "no") b.Narr(BeatSay(h, "kiss.no.narr") ?? "...");
             b.Face(h, p.Kiss == "yes" ? Feel.Love : p.Kiss == "wary" || p.Kiss == "wary_no" ? Feel.Shy : FeelOf(rule, c)).Her_(line);
-            // Weight: she walks off after the third silence if she barely knows you; a crowd watching you
-            // touch her gets talked about; a rival watching remembers.
+            // Weight: she walks off after the third silence if she barely knows you; a crowd watching you touch her
+            // gets talked about; a rival watching remembers.
             Action after = p.PartName != null ? SpotAfter(p) : null;
-            // walks off after the third one, whoever she is. Only the empty blue bar or your goodbye closes the talk.
+            // A silence is only her line now; she no longer walks off after the third one, whoever she is. Only the empty
+            // blue bar or your goodbye closes the talk.
             if (p.PartName == null && on == "touch" && c.ContainsKey("wrel"))
             {
                 var near = Onlookers(h);
                 if (c["wrel"] == "rival" && near.Count > 0) after = () => { foreach (var x in near.Where(x => Social.Bond(h, x) <= -30)) Arcs.AddBond(key, GirlInfo.Key(x), -2); };
                 else if (c["wrel"] == "bff" || c["wrel"] == "friend") after = () => { foreach (var x in near.Where(x => Social.Bond(h, x) >= 25)) Arcs.AddBond(key, GirlInfo.Key(x), 1); };
             }
-            // Someone who matters walks over during the second silence: her friend teases you both and the
-            // story spreads, a rival sneers and pushes her closer to you, your girlfriend sees who you are with.
+            // Someone who matters walks over during the second silence: her friend teases you both and the story
+            // spreads, a rival sneers and pushes her closer to you, your girlfriend sees who you are with.
             SaveData.Heroine by = null;
             if (on == "idle" && c["idle"] == "2" && c.ContainsKey("wrel") && c["wrel"] != "other")
                 by = Onlookers(h).FirstOrDefault(x => GirlInfo.FirstName(x) == c["watcher"]);
-            // She walks over when it matters to her (context, 2026-11-07): your girlfriend, a rival, or a close friend.
+            // She walks over when it matters to her (context): your girlfriend, a rival, or a close friend.
             if (by != null && !by.isGirlfriend && Social.Bond(h, by) > -30 && Social.Bond(h, by) < 45) by = null;
             if (by != null)
             {

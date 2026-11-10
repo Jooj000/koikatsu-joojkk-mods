@@ -111,7 +111,7 @@ namespace Joojkk.CampusLife
             if (!already)
             {
                 var unknown = GirlInfo.LikesOf(h).Where(l => (gs.KnownLikes & (1 << Array.IndexOf(GirlInfo.LikeIds, l))) == 0).ToList();
-                if (unknown.Count > 0 && Conversation.Opens(h))   // context, not a roll (2026-11-07)
+                if (unknown.Count > 0 && Conversation.Opens(h))   // context, not a roll
                 {
                     newLike = unknown[UnityEngine.Random.Range(0, unknown.Count)];
                     b.Her_(Lines.LikeHint(tone, GirlInfo.LikeLabel(newLike), close));
@@ -151,6 +151,7 @@ namespace Joojkk.CampusLife
             }
             {
                 var art = item.Name ?? "";
+                // "a bakery cookies"; a plural name takes "some".
                 var plural = art.EndsWith("s", StringComparison.OrdinalIgnoreCase) && !art.EndsWith("ss", StringComparison.OrdinalIgnoreCase);
                 art = plural ? "some " + art.ToLowerInvariant() : art.Length > 0 && "aeiouAEIOU".IndexOf(art[0]) >= 0 ? "an " + art.ToLowerInvariant() : "a " + art.ToLowerInvariant();
                 Lore.Record("gave_gift", Lore.Player, GirlInfo.Key(h), note: art);

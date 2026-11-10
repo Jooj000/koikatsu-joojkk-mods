@@ -65,6 +65,7 @@ namespace Joojkk.CampusLife
                 // Gifts she is known to like carry the like's icon.
                 var liked = item.Likes.FirstOrDefault(l => Conversation.KnownLike(_target, l));
                 var label = item.Name + " x" + s.Count(item.Id);
+                // A gift that fulfils her request has a pink border (and a star).
                 var fits = Board.ActiveFor(GirlInfo.Key(_target)).Any(r => r.Kind == RequestKind.Gift) && Board.WantsGift(_target, item);
                 if (fits) label = "<color=#FF8CCC>\u2605</color> " + label;
                 var go = Add(label, liked, () =>
@@ -82,7 +83,7 @@ namespace Joojkk.CampusLife
         private static void Add(string label, Action onClick, bool interactable) { Add(label, null, onClick, interactable); }
 
         /// <summary>
-        /// frame and strip, gold for Actions, turn pink; no outline is added around it.
+        /// The card's own frame and strip, gold for Actions, turn pink; no outline is added around it.
         /// </summary>
         internal static void Border(GameObject go)
         {

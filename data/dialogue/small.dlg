@@ -1,6 +1,6 @@
 # Small talk (only when nothing else is left). {subject} the id (a like id, pet, place, lunch, exams, weather, weekend,
 # school), {thing} its words, {like}/{likes} for likes (likes=yes when she really likes it), {pet} her pet theme.
-# 2026-10-27: more lines; small.plain was the "nothing to say" answer and repeated too much.
+# small.plain is the "nothing to say" answer, with many lines so it does not repeat.
 
 @rule me.small
 on me.small
@@ -941,10 +941,11 @@ hook shy_quiet
 opens ask,praise,comfort
 - Ah... yes, {thing}. Do you?
 
-# Pesos de implementação: em cada lugar, primeiro os valores que mudam o sentido da fala. Biblioteca: livros
-# (l_study), silêncio, prova, depois chuva (wet), depois a briga na cabeça dela (fight/{fightwho}); as falas compostas
-# (vários valores juntos) vencem sozinhas quando tudo vale, porque somam mais pontos. Chuva: weather
-# (clear|cloudy|rain|storm), wet, rainlater, outside, rainlover. Gostos como chaves: l_study, l_food, l_animals...
+# ================= more lines =================
+# In each place the values that change what the line means come first. Library: books (l_study), silence, an exam,
+# then rain (wet), then the fight on her mind (fight/{fightwho}); lines that combine several values win alone when all of
+# them hold, since they score more. Rain: weather (clear|cloudy|rain|storm), wet, rainlater, outside, rainlover. Likes as
+# keys: l_study, l_food, l_animals...
 # ---- your lines: the weather as it really is
 
 @rule me.small.weather.rain

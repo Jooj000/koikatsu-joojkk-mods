@@ -128,7 +128,7 @@ namespace Joojkk.CampusLife
             if (S == null) return null;
             try { Lore.FromIncident(kind, girl, witnesses, what); } catch (Exception e) { CampusLifePlugin.Log.LogDebug("Lore incident: " + e.Message); }
             // Seen in the girls' restroom or changing room again within a day: the same story, more witnesses (before,
-            // every visit was a new incident, each one spread and had to be explained again, 2026-10-11).
+            // every visit was a new incident, each one spread and had to be explained again).
             if (Merges(kind))
             {
                 var key = girl != null ? GirlInfo.Key(girl) : "";
@@ -160,7 +160,7 @@ namespace Joojkk.CampusLife
         private static bool SameStory(Incident a, Incident b)
         {
             if (a == null || b == null || a.Kind != b.Kind || a.Girl != b.Girl) return false;
-            // request for the same girl that week is the same story, not a new thing to clear again.
+            // A missed request for the same girl that week is the same story, not a new thing to clear again.
             return Math.Abs(a.Day - b.Day) <= (a.Kind == Kinds.BrokePromise ? 6 : 2);
         }
 
@@ -209,8 +209,8 @@ namespace Joojkk.CampusLife
                 case Kinds.Flirted:
                     {
                         if (self) return 1;
-                        // How much it weighs: a sweet word is not a kiss, and seeing it is worse than hearing about it
-                        //.
+                        // How much it weighs: a sweet word is not a kiss, and seeing it is worse than hearing about
+                        // it.
                         var w = FlirtWeight(inc.What) + (Saw(listener, inc) ? 1 : 0);
                         // What she decided about you and that girl (Share): no hurt once she accepted it.
                         // How she takes it is the director's: her mood, anger, trust, how often, that girl...
@@ -261,7 +261,7 @@ namespace Joojkk.CampusLife
             gs.Known.Add(inc.Id);
             if (gs.Known.Count > 60) gs.Known.RemoveRange(0, gs.Known.Count - 60);
             // Your girlfriend and another girl: she decides once (Share) and brings it up through that, never as gossip
-            // again.
+            // again (the same story came back at the greeting and again in the talk).
             var flirtOther = inc.Kind == Kinds.Flirted && h.isGirlfriend ? Get(inc.Girl) : null;
             if (flirtOther != null && flirtOther != h)
             {
@@ -299,8 +299,8 @@ namespace Joojkk.CampusLife
                         if (f == teller) continue;
                         var b = Bond(teller, f);
                         if (b < 10) continue;
-                        // Context, not a roll (2026-11-07): how close they are, how juicy it is to her friend, how chatty she is,
-                        // and the days it has been going around.
+                        // Context, not a roll: how close they are, how juicy it is to her friend, how chatty she is, and
+                        // the days it has been going around.
                         var tt = GirlInfo.ToneOf(teller);
                         var score = 0.15f + (b - 10) / 80f + Mathf.Abs(Effect(f, inc)) / 30f + (S.Day - inc.Day) * 0.05f
                             + (tt == Tone.Energetic || tt == Tone.Teasing ? 0.1f : tt == Tone.Cool ? -0.1f : 0f);
@@ -356,8 +356,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Something you did to her herself that she has not let go (a grudge over a friend, heard as a rumor, is not hers to
-        /// bring up as "what you said to me": a girl you never talked to opened the night market with a fight, 2026-10-12).
+        /// Something you did to her herself that she has not let go (a grudge over a friend, heard as a rumor, is not hers
+        /// to bring up as "what you said to me": a girl you never talked to opened the night market with a fight).
         /// </summary>
         public static Incident OwnGrudge(SaveData.Heroine h)
         {

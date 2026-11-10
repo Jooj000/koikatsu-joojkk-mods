@@ -7,10 +7,10 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// The world waits while you choose. A
-    /// scene on the map (an ADV over the action scene) showing its options holds the period clock where it was and has the
-    /// director stop every girl on your map (Director.Halt: her AI goes on, she does not walk off); once you answer, the
-    /// clock runs from the same second and they go on. The talk screen already stops the world (the game's own).
+    /// The world waits while you choose. A scene on the map (an ADV over the action scene) showing its options holds the
+    /// period clock where it was and has the director stop every girl on your map (Director.Halt: her AI goes on, she does
+    /// not walk off); once you answer, the clock runs from the same second and they go on. The talk screen already stops
+    /// the world (the game's own).
     /// </summary>
     internal static class ChoicePause
     {

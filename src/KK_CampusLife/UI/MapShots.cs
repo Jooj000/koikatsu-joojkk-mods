@@ -6,18 +6,18 @@ using UnityEngine;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// estão assim", pixelated). The game only has small thumbnails of its maps. The player takes the picture himself
-    ///:
-    /// he stands where he likes and presses "Take this map's photo" in the Alt+F7 window. His view is photographed without
-    /// the characters, icons and rain, at 1920x1080, for the map and time of day (day, evening, night) he is in, and kept in
-    /// BepInEx\config\joojkk_campuslife\mapshots. The loading screen shows that picture when it has one, the game's
+    /// Full-size pictures of each map for the loading screen (pixelated). The game only has small thumbnails of its maps.
+    /// The player takes the picture himself: he stands where he likes and presses "Take this map's photo" in the Alt+F7
+    /// window. His view is photographed without the characters, icons and rain, at 1920x1080, for the map and time of day
+    /// (day, evening, night) he is in, and kept in BepInEx\config\joojkk_campuslife\mapshots. The loading screen shows that
+    /// folder (TestDir).
     /// </summary>
     internal static class MapShots
     {
         private const int W = 1920, H = 1080;
         private static readonly Dictionary<string, Texture2D> Cache = new Dictionary<string, Texture2D>();
 
-        /// que estava boa a foto da sala 2-1 antes", a test's reset had deleted it).</summary>
+        /// it).</summary>
         internal static string TestDir;
 
         private static string UserDir { get { return Path.Combine(Path.Combine(BepInEx.Paths.ConfigPath, "joojkk_campuslife"), "mapshots"); } }
@@ -25,7 +25,7 @@ namespace Joojkk.CampusLife
 
         private static string FileFor(int map, int slot) { return Path.Combine(Dir, map + "_" + slot + ".jpg"); }
 
-        /// <summary>The photos that come with the mod, under his own.</summary>
+        /// <summary>The photos that come with the mod, used when the player has not taken one.</summary>
         private static string ShippedFor(int map, int slot) { return Path.Combine(Path.Combine(Path.Combine(BepInEx.Paths.PluginPath, "Joojkk"), "mapshots"), map + "_" + slot + ".jpg"); }
 
         internal static bool Shipped(int map, int slot) { return TestDir == null && File.Exists(ShippedFor(map, slot)); }
@@ -56,7 +56,7 @@ namespace Joojkk.CampusLife
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Map picture: " + e.Message); return "The photo failed: " + e.Message; }
         }
 
-        /// <summary>Does this map have his picture for this time of day?</summary>
+        /// slots of a map have a picture, his or shipped.</summary>
         internal static string SlotsOf(int map)
         {
             var o = new List<string>();
@@ -100,7 +100,8 @@ namespace Joojkk.CampusLife
                 cam.enabled = false;
                 var chara = LayerMask.NameToLayer("Chara");
                 if (chara >= 0) cam.cullingMask &= ~(1 << chara);
-                // UI layers stay out, and what is closer than 0.8 m to the camera is cut.
+                // A floating map icon and a shelf right at the lens came out in the classroom picture. Icons and UI layers
+                // stay out, and what is closer than 0.8 m to the camera is cut.
                 for (var l = 0; l < 32; l++)
                 {
                     var ln = LayerMask.LayerToName(l) ?? "";
@@ -110,9 +111,11 @@ namespace Joojkk.CampusLife
                 cam.nearClipPlane = Mathf.Max(cam.nearClipPlane, 0.8f);
                 cam.aspect = (float)W / H;
                 cam.targetTexture = rt;
-                // Every character's renderers are off for this one frame.
-                // (silhouette_template_*.prefab, shader Custom/Silhouette), the floating action icons are Sprites/Default on
-                // the Map layer, and the rain is our particles. All of them, and every character, are off for this one frame.
+                // The girls behind the walls came out as blue see-through outlines (drawn on the map layers). Every
+                // character's renderers are off for this one frame.
+                // (`mapshot shaders`): those outlines are copies of their own under Map (silhouette_template_*.prefab,
+                // shader Custom/Silhouette), the floating action icons are Sprites/Default on the Map layer, and the rain
+                // is our particles. All of them, and every character, are off for this one frame.
                 var hidden = new List<Renderer>();
                 foreach (var cha in UnityEngine.Object.FindObjectsOfType<ChaControl>())
                     foreach (var r in cha.GetComponentsInChildren<Renderer>())
@@ -161,13 +164,14 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// the photo of a map built the same (classroom 2-1, the 2F toilet) until one of their own is taken.
+        /// The roaming maps with no photo of his (classrooms 1-1 and 3-1, the 1F girls' toilet) show the photo of a map
+        /// built the same (classroom 2-1, the 2F toilet) until one of their own is taken.
         /// </summary>
         private static readonly Dictionary<int, int> Twins = new Dictionary<int, int> { { 5, 8 }, { 6, 8 }, { 7, 8 }, { 10, 9 }, { 11, 8 }, { 12, 9 }, { 13, 8 }, { 14, 15 } };
 
         /// <summary>
-        /// For the Alt+F7 window:
-        /// which picture the loading screen of this map uses now, found the way For finds it. Null when there is none.
+        /// For the Alt+F7 window (the library said "No photo yet" while the loading screen showed the mod's 21_1): which
+        /// picture the loading screen of this map uses now, found the way For finds it. Null when there is none.
         /// </summary>
         internal static string Source(int map)
         {
@@ -188,7 +192,7 @@ namespace Joojkk.CampusLife
             return null;
         }
 
-        /// <summary>The picture of a map at exactly this time of day.</summary>
+        /// <summary>The picture of a map at exactly this time of day (the loading screen's default, 33_1).</summary>
         public static Texture2D Exact(int map, int slot) { return For(map, new[] { slot }); }
 
         private static Texture2D For(int map, int[] slots)
@@ -196,8 +200,8 @@ namespace Joojkk.CampusLife
             foreach (var s in slots)
             {
                 var path = FileFor(map, s);
-                // certo"): a test writes its pictures in its own folder, but reads his and the shipped ones too (never
-                // writing there), so a test's loading screen shows the pool as he sees it.
+                // A test writes its pictures in its own folder, but reads his and the shipped ones too (never writing
+                // there), so a test's loading screen shows the pool as he sees it.
                 if (!File.Exists(path) && TestDir != null) path = Path.Combine(UserDir, map + "_" + s + ".jpg");
                 if (!File.Exists(path)) path = ShippedFor(map, s);
                 Texture2D tex;

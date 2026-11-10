@@ -11,8 +11,8 @@ namespace Joojkk.CampusLife
 {
     /// <summary>
     /// The director's stage: the girls it holds stay where it wants them (the player's map), whatever the game's AI
-    /// draws. User, 2026-10-11: "the director controls 100% of the AI, so control the director": tests put the director
-    /// at maximum weight instead of calling girls who walk off again a minute later.
+    /// draws. "the director controls 100% of the AI, so control the director": tests put the director at maximum weight
+    /// instead of calling girls who walk off again a minute later.
     /// <list type="bullet">
     /// <item>A held girl: every action the game draws for her (NextAction) becomes a calm one on the player's map
     /// (reading, phone, music, a drink, talking with another held girl). When the player changes map she walks after
@@ -37,7 +37,8 @@ namespace Joojkk.CampusLife
         private static readonly int[] ToPlayer = { 5, 8, 23, 24, 25, 28, 29, 30 };
         /// <summary>
         /// What she is doing on purpose, not interrupted: H, running off, getting dressed, waiting for the player's answer.
-        /// went to eat and never came).
+        /// Anything else the game gave her (lunch, the toilet, her club...) gives way to the director (Neferpitou went to
+        /// eat and never came).
         /// </summary>
         private static readonly int[] OnPurpose = { 0, 4, 20, 26, 27, 28, 29, 30 };
 
@@ -74,8 +75,8 @@ namespace Joojkk.CampusLife
         public static bool Steer(ActionControl ac, SaveData.Heroine h, ref ActionControl.ResultInfo r)
         {
             if (h == null || r == null || ac == null) return false;
-            // Stopped by the director: what the game draws for her becomes something calm where she
-            // stands; she is not walking anywhere until the director lets her go.
+            // Stopped by the director: what the game draws for her becomes something calm where she stands; she is not
+            // walking anywhere until the director lets her go.
             if (Director.Halted(h))
             {
                 var here = GirlInfo.CurrentMap(h);
@@ -147,7 +148,8 @@ namespace Joojkk.CampusLife
                 var am = act.Map;
                 var gate = am.NearGate(n.mapNo, map, null);
                 var from = n.mapNo;
-                // NearGate gives the last door of her route, on the map BEFORE the destination (the game's summon leaves her
+                // NearGate gives the last door of her route, on the map BEFORE the destination (the game's summon leaves
+                // her there, one door away: "now 37"). The director puts her through it: on the destination map, at the
                 // door on that side (the gate's link).
                 if (gate != null && am.gateInfoDic.ContainsKey(gate.linkID)) { n.mapNo = map; n.position = am.gateInfoDic[gate.linkID].pos; }
                 else
@@ -157,7 +159,8 @@ namespace Joojkk.CampusLife
                     n.position = g2.pos;
                 }
                 Note(GirlInfo.FirstName(n.heroine) + " brought to the door of map " + map + " (from " + from + ", now " + n.mapNo + ")");
-                // on only when the map changes, so one we put through a door had the player's map number and no body.
+                // The game switches bodies on only when the map changes, so one we put through a door had the player's map
+                // number and no body.
                 Show(n, "brought");
                 OutOfSwimsuit(act, n, map);
                 return true;
@@ -166,8 +169,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The game keeps a girl in a swimsuit off most maps (<c>swimsuitBanArea</c>); one brought here from the pool skipped
-        /// that check and stayed dressed for the pool.
+        /// The game keeps a girl in a swimsuit off most maps (<c>swimsuitBanArea</c>); one brought here from the pool
+        /// skipped that check and stayed dressed for the pool (one round of four).
         /// </summary>
         private static void OutOfSwimsuit(ActionScene act, NPC n, int map)
         {
@@ -188,8 +191,8 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// The director picks where an H happens: the game drops H on the player's map and wherever other people are
-        /// around.
-        /// Several spots are drawn and the emptiest map wins (never the player's); then that one is set.
+        /// around (its otherPeopleList; a scene between two girls set in the lunchtime cafeteria never started). Several
+        /// spots are drawn and the emptiest map wins (never the player's); then that one is set.
         /// </summary>
         public static ActionControl.ResultInfo QuietSpot(ActionControl ac, SaveData.Heroine h, int action, params SaveData.Heroine[] with)
         {
@@ -217,7 +220,8 @@ namespace Joojkk.CampusLife
         private static float _next;
         private static readonly Dictionary<SaveData.Heroine, string> _why = new Dictionary<SaveData.Heroine, string>();
 
-        /// <summary>What the tick does about her now (null: it pushes her), logged when it changes.</summary>
+        /// <summary>What the tick does about her now (null: it pushes her), logged when it changes (one push, then
+        /// silence).</summary>
         private static string Skip(ActionScene act, SaveData.Heroine h, NPC n, int map)
         {
             if (n == null) return "no NPC";
@@ -227,7 +231,8 @@ namespace Joojkk.CampusLife
             if (WalkTalk.Active && WalkTalk.Her == h) return "walk-and-talk";
             if (n.isOnanism || n.isLesbian) return "in H";
             var cur = n.AI.result;
-            // At maximum weight a held girl does not leave for an errand on another map.
+            // At maximum weight a held girl does not leave for an errand on another map (Asuka went to change and the pair
+            // never met).
             var leaving = Max && cur != null && cur.actionNo == 0 && cur.point != null && cur.point.MapNo != map;
             if (cur != null && !leaving && Array.IndexOf(OnPurpose, cur.actionNo) >= 0) return "busy on purpose (action " + cur.actionNo + ")";
             if (cur != null && IsCalmHere(cur, map)) return "calm here (action " + cur.actionNo + ")";
@@ -258,8 +263,8 @@ namespace Joojkk.CampusLife
         private static string _globalWhy;
 
         /// <summary>
-        /// Her body and touch collider on when she is on the player's map with her AI running. The
-        /// game's flag can say on while the body is off (SetActive then does nothing), so both are looked at.
+        /// Her body and touch collider on when she is on the player's map with her AI running. The game's flag can say
+        /// on while the body is off (SetActive then does nothing), so both are looked at.
         /// </summary>
         internal static bool Show(NPC n, string why)
         {
@@ -330,7 +335,7 @@ namespace Joojkk.CampusLife
                 {
                     var n = act.npcList.FirstOrDefault(x => x != null && x.heroine == h);
                     // The game only switches bodies on when the map changes (ActionMap, IsPop): one we put through a door
-                    // has the right map number and stays off, unseen and out of the scenes.
+                    // has the right map number and stays off, unseen and out of the scenes (duomotive never saw her).
                     if (n != null && act.Map.IsPop(n)) Show(n, "held");
                     var skip = Skip(act, h, n, map);
                     if (skip != null) { Why(h, skip); continue; }
@@ -338,6 +343,8 @@ namespace Joojkk.CampusLife
                     if (_lastPush.TryGetValue(h, out last) && Time.realtimeSinceStartup - last < 4f) continue;
                     _lastPush[h] = Time.realtimeSinceStartup;
                     // At maximum weight she does not cross the whole school: the game's own summon puts her behind the
+                    // nearest door of the player's map (PlayerMapNearWarp) and she walks in (watched the player stand in
+                    // a corridor while girls walked over).
                     float warped;
                     if (Max && n.mapNo != map && (!_lastWarp.TryGetValue(h, out warped) || Time.realtimeSinceStartup - warped > 20f))
                     {

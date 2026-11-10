@@ -13,14 +13,15 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// The stage of the conversation with two girls: the
-    /// talk scene's copy of the first girl to the left, the second girl (her map body, shown by Duo) to the right, the
-    /// same distance from the middle, both facing the camera and turned a little toward each other. The second girl gets
-    /// the talk poses through her own Motion (the game only animates the first one). The camera is the game's own, moved
-    /// screen and framed to mid-thigh like a normal talk, no pulling back); while the game does not update it (its ADV),
-    /// the last pose it gave is kept, so nothing piles up. The second girl's panel is a copy of the game's own (face,
-    /// heart, H, state) mirrored to the other side, with her numbers written by us; the game's touch, look and camera
-    /// icons move to the top center while it lasts. A marker over the head of whoever you are talking to.
+    /// The stage of the conversation with two girls: the talk scene's copy of
+    /// the first girl to the left, the second girl (her map body, shown by Duo) to the right, the same distance from the
+    /// middle, both facing the camera and turned a little toward each other. The second girl gets the talk poses through
+    /// her own Motion (the game only animates the first one). The camera is the game's own, moved after it each frame to
+    /// the middle of the two, at the game's distance and view (balanced on the screen and framed to mid-thigh like a
+    /// normal talk, no pulling back); while the game does not update it (its ADV), the last pose it gave is kept, so
+    /// nothing piles up. The second girl's panel is a copy of the game's own (face, heart, H, state) mirrored to the
+    /// other side, with her numbers written by us; the game's touch, look and camera icons move to the top center while
+    /// it lasts. A marker over the head of whoever you are talking to.
     /// </summary>
     internal static class TrioStage
     {
@@ -186,10 +187,10 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// Every frame after the game's Update, while Frame() holds them apart. The game's talk camera follows the first girl,
-        /// so moving her alone left her in the middle and the other at the edge (user, 2026-10-31). The camera slides sideways
-        /// until the middle of the two is on the middle of the screen, measured each frame: the game sets the camera at
-        /// different times (each frame in the talk, once for its ADV), and this gives the same pose whichever it was.
+        /// Every frame after the game's Update, while Frame holds them apart. The game's talk camera follows the first
+        /// girl, so moving her alone left her in the middle and the other at the edge. The camera slides sideways until the
+        /// middle of the two is on the middle of the screen, measured each frame: the game sets the camera at different
+        /// times (each frame in the talk, once for its ADV), and this gives the same pose whichever it was.
         /// </summary>
         public static void FrameTick()
         {
@@ -228,9 +229,10 @@ namespace Joojkk.CampusLife
             {
                 if (_ts == null || G.TalkScene != _ts || _now == null) { End(); return; }
                 IconsTick();
-                // "as posições da dupla mudam ao começar o diálogo de saída"): she keeps her place beside the other one.
-                // How far the game moved her this frame: its camera was set from her moved spot, so the base is taken
-                // toque": the touch put her back in the middle, the game framed her there, and our shift went on top).
+                // The game's goodbye puts the first girl back on her own spot, in the middle of the two: she keeps her
+                // place beside the other one. How far the game moved her this frame: its camera was set from her moved
+                // spot, so the base is taken back by the same amount (the touch put her back in the middle, the game framed
+                // her there, and our shift went on top).
                 var moved = Vector3.zero;
                 if (!_bGone && _a != null && (_a.transform.position - _aSpot).sqrMagnitude > 0.0025f)
                 {
@@ -241,7 +243,8 @@ namespace Joojkk.CampusLife
                 }
                 var gameMoves = UpdateCam == null || (bool)UpdateCam.GetValue(_ts);
                 // Once the pair has settled, the base stays: a touch has the game frame her again from its own spot, and
-                // first touch, offset 0.23 m, and she was never moved). Only the first moments follow the game's camera.
+                // taking that as the base moved the pair left by our offset (camera x -0.37 -> -0.60 after the first
+                // touch, offset 0.23 m, and she was never moved). Only the first moments follow the game's camera.
                 if (gameMoves && _hasBase && Time.realtimeSinceStartup > _baseLockAt)
                 {
                     if (!_baseLockSaid && (_now.transform.position - (_basePos + _offset)).sqrMagnitude > 0.0004f)
@@ -263,14 +266,17 @@ namespace Joojkk.CampusLife
                 var center = _bGone ? _a.transform.position : _mid;
                 var shift = center - (_a != null ? _a.transform.position : center);
                 shift.y = 0f;
-                // the middle, the other to the left, cut below the knee).
+                // The middle of the two on the middle of the screen, at the game's own distance (pushed the pair left
+                // of the option list and pulled back, and saw one girl in the middle, the other to the left, cut below
+                // the knee).
                 var want = shift;
                 _offset = Vector3.Lerp(_offset, want, Mathf.Clamp01(Time.deltaTime * 4f));
                 _now.transform.SetPositionAndRotation(_basePos + _offset, _baseRot);
                 if (_map != null) _map.transform.SetPositionAndRotation(_basePos + _offset, _baseRot);
                 Marker(uiVisible);
                 if (_ui != null && _ui.activeSelf != uiVisible) _ui.SetActive(uiVisible);
-                // estava com a hitbox errada"): the first ones were made in the same frame as the pose change.
+                // Her touch areas once more when her talk pose has settled: the first ones were made in the same frame as
+                // the pose change.
                 if (_bSpotsAt > 0f && Time.realtimeSinceStartup >= _bSpotsAt && !_bGone && _b != null) { _bSpotsAt = 0f; Conversation.AddBSpots(_b); }
             }
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Trio camera: " + e.Message); }
@@ -471,7 +477,7 @@ namespace Joojkk.CampusLife
                 var pieces = lca != null && lca != root && lca.IsChildOf(root)
                     ? new List<Transform> { lca }
                     : parts.Select(x => TopUnder(x, root)).Where(x => x != null).Distinct().ToList();
-                // Copies in the original's drawing order.
+                // Copies in the original's drawing order (her state icon was drawn under the gauges).
                 pieces = pieces.OrderBy(x => x.GetSiblingIndex()).ToList();
                 foreach (var piece in pieces)
                 {
@@ -481,7 +487,8 @@ namespace Joojkk.CampusLife
                     foreach (var sel in copy.GetComponentsInChildren<Selectable>(true)) sel.interactable = false;
                     MoveOnScreen((RectTransform)copy.transform, (RectTransform)piece, true, 0f);
                     // The gauges (a node with no image of its own) are turned over too, so the arc wraps her face on
-                    // the arc ended up far from her face). The face and the state icon keep their drawing.
+                    // the right as it wraps the first girl's on the left (only the boxes were mirrored, and the arc
+                    // ended up far from her face). The face and the state icon keep their drawing.
                     // The face's mask is turned over too (its round corner follows the arc), the picture inside is not.
                     var isFace = face.transform.IsChildOf(piece);
                     if (piece.GetComponent<Graphic>() == null || isFace) Flip((RectTransform)copy.transform);
@@ -491,7 +498,7 @@ namespace Joojkk.CampusLife
                     if (_bLewd == null && lewd != null) _bLewd = Twin<Image>(piece, copy.transform, lewd.transform);
                     if (_bFavor == null && favor != null && favor.Length > 0 && Twin<Image>(piece, copy.transform, favor[0].transform) != null)
                         _bFavor = favor.Select(f => f != null ? Twin<Image>(piece, copy.transform, f.transform) : null).ToArray();
-                    // Her own talk time.
+                    // Her own talk time (hidden, it left an empty capsule in the frame's drawing).
                     if (_bTime == null && time != null) _bTime = Twin<Image>(piece, copy.transform, time.transform);
                     // Our own badges on the first girl's panel (her mood, her likes) are hers, not this girl's.
                     foreach (var tr2 in copy.GetComponentsInChildren<Transform>(true))
@@ -571,9 +578,9 @@ namespace Joojkk.CampusLife
                     rects.Add(r);
                     box = Join(box, sb);
                 }
-                // Other mods' touch icons (KKAPI copies the first touch button next to it: the panty fairy's wind, panty and
-                // clothes) are siblings of the touch buttons, shown and hidden by their mod as it likes: all of them join the
-                // row, on or off, and the row is laid out again when one turns on.
+                // Other mods' touch icons (KKAPI copies the first touch button next to it: the panty fairy's wind, panty
+                // and clothes) are siblings of the touch buttons, shown and hidden by their mod as it likes: all of them
+                // join the row, on or off, and the row is laid out again when one turns on.
                 var parent = rects[0].parent;
                 if (parent != null)
                     foreach (Transform c in parent)
@@ -585,8 +592,8 @@ namespace Joojkk.CampusLife
                         if (c.name.IndexOf("(Clone)", StringComparison.Ordinal) < 0) continue;
                         rects.Add(r);
                     }
-                // One row: the game stands them as a corner (two over one); at the top center they go
-                // side by side, left to right as they were, level with the highest one.
+                // One row: the game stands them as a corner (two over one); at the top center they go side by side, left
+                // to right as they were, level with the highest one.
                 rects = rects.OrderBy(r => ScreenBox(r).center.x).ThenByDescending(r => ScreenBox(r).center.y).ToList();
                 foreach (var r in rects) _moved.Add(new KeyValuePair<RectTransform, Vector3>(r, r.localPosition));
                 _rowY = box.yMax - rects.Where(r => r.gameObject.activeInHierarchy).DefaultIfEmpty(rects[0]).Max(r => ScreenBox(r).height) * 0.5f;

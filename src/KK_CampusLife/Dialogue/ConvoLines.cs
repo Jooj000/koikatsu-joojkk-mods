@@ -23,7 +23,8 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// You and another girl, from a girl who saw it herself or only heard about it; what it was sets the words (9th
+        /// You and another girl, from a girl who saw it herself or only heard about it; what it was sets the words (a
+        /// sweet word is not a kiss, and "I saw" is not "people say"). incident.dlg.
         /// </summary>
         public static string Seen(SaveData.Heroine h, string what, string about, bool saw)
         {

@@ -22,8 +22,9 @@ namespace Joojkk.CampusLife
             S.Spotlight.Clear();
             S.SpotlightWeek = S.Week;
             var students = Board.Students;
-            // had one, so Today had nothing to show. Now it has 2 or 3 girls too; there they only star the week's
-            // outings and stories (Episodes.Cast), while requests and arcs stay spread over everyone (IsActive is false).
+            // A small class (under "Spotlight from class size") never had one, so Today had nothing to show. Now it has 2
+            // or 3 girls too; there they only star the week's outings and stories (Episodes.Cast), while requests and arcs
+            // stay spread over everyone (IsActive is false).
             if (!Cfg.SpotlightEnabled.Value || students.Count == 0) return;
             var size = IsActive ? Mathf.Clamp(Cfg.SpotlightSize.Value, 1, students.Count) : Mathf.Clamp(students.Count / 3, Mathf.Min(2, students.Count), 3);
             var picked = new List<SaveData.Heroine>();
@@ -86,8 +87,8 @@ namespace Joojkk.CampusLife
                 gs.Attention = Mathf.Clamp(gs.Attention - (h.isGirlfriend ? 8 : 4), 0, 100);
                 // Forgotten girls slowly cool down (girlfriends notice more); never below the vanilla floor of 0.
                 var drift = Cfg.OffscreenDrift.Value;
-                // Context (2026-11-07): your girlfriend feels it after two days without you, anyone else after four; the
-                // longer it has been, the more it costs.
+                // Context: your girlfriend feels it after two days without you, anyone else after four; the longer it
+                // has been, the more it costs.
                 var away = S.Day - gs.LastTalkDay;
                 if (drift > 0 && gs.Attention < 20 && away >= (h.isGirlfriend ? 2 : 4))
                 {

@@ -13,9 +13,7 @@ using Random = UnityEngine.Random;
 namespace Joojkk.CampusLife
 {
     /// <summary>
-    /// usam o banheiro dos meninos ao invés de vestiário, chuveiro e banheiro feminino. ele também perde reputação se
-    /// entrar nas áreas femininas, e não liga se o jogador o ver no masculino. meninas no masculino são pegas por eles
-    /// também. o 'likes girls' de todos contam para todos").
+    /// Boys in the class.
     /// <list type="bullet">
     /// <item>The class roster lists male cards too: with BrowserFolders the folder tree starts at <c>chara</c>, so
     /// <c>male</c> sits next to <c>female</c>; without it, the male folder's cards are added to the list.</item>

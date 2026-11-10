@@ -7,9 +7,9 @@ namespace Joojkk.CampusLife
     /// <summary>
     /// What is actually true in the game right now, for anything that tells the player about a girl: whether she came to
     /// school today and what she is doing this moment. The game draws who comes each day (ActionScene.NPCLoadAll takes a
-    /// shuffled MaxCharaNum of the heroines); a girl with no NPC is not at school. User, 2026-10-26: a request for Tatsumaki
-    /// on a day she was absent, "hanging out with Eris" with Eris absent, "getting something to eat" while she listened to
-    /// music in the gym storage.
+    /// shuffled MaxCharaNum of the heroines); a girl with no NPC is not at school. a request for Tatsumaki on a day she was
+    /// absent, "hanging out with Eris" with Eris absent, "getting something to eat" while she listened to music in the gym
+    /// storage.
     /// </summary>
     internal static class Truth
     {
@@ -41,8 +41,9 @@ namespace Joojkk.CampusLife
         public static bool AtSchool(string key) { var h = Social.Get(key); return h == null || AtSchool(h); }
 
         /// <summary>
-        /// do (on the way it is "going to the cafeteria to eat"), talking is who she talks to, and no "(place)" since the
-        /// card shows the place above.
+        /// What she is doing this moment ("" when unknown). what she does now, not what she means to do (on the way it is
+        /// "going to the cafeteria to eat"), talking is who she talks to, and no "(place)" since the card shows the place
+        /// above.
         /// </summary>
         public static string Doing(SaveData.Heroine h)
         {
@@ -61,15 +62,16 @@ namespace Joojkk.CampusLife
                 // Stopped by the director (a scene with you, a talk between two): what she is doing is that.
                 var halt = Director.HaltReason(h);
                 if (halt != null) return halt == "" ? "standing still" : halt.StartsWith("talking with") || halt.StartsWith("arguing with") ? halt : "stopped: " + halt;
-                // fica com outra ação"). Only the one who started the chat had isTalking; the other is read from her partner.
+                // Two talking: both show it. Only the one who started the chat had isTalking; the other is read from her
+                // partner.
                 var partner = ChatPartner(n);
                 if (n.isTalking || partner != null)
                 {
                     var p = partner ?? TalkingWith(n);
                     return p != null ? "talking with " + GirlInfo.FirstName(p) : "chatting";
                 }
-                // On the way is "going to eat" until she gets there: not
-                // arrived and her spot still away, whatever her speed at this frame (a menu open stops the clock).
+                // On the way is "going to eat" until she gets there: not arrived and her spot still away, whatever her
+                // speed at this frame (a menu open stops the clock).
                 var far = r != null && r.point != null && (r.point.MapNo != n.mapNo || (r.point.transform.position - n.transform.position).sqrMagnitude > 1.5f * 1.5f);
                 var moving = !n.isArrival && (far || n.agent != null && n.agent.enabled && n.agent.velocity.sqrMagnitude > 0.04f);
                 if (moving)
@@ -148,7 +150,7 @@ namespace Joojkk.CampusLife
             }
         }
 
-        /// <summary>The game's action numbers (koikatsu-referencia-ia-das-alunas) as a short phrase.</summary>
+        /// <summary>The game's action numbers as a short phrase.</summary>
         public static string Action(int no, string with)
         {
             switch (no)
