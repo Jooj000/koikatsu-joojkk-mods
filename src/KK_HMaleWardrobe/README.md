@@ -14,8 +14,11 @@
 
 ## Installation
 
-1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx) and [KKAPI 1.30.1+](https://github.com/IllusionMods/IllusionModdingAPI) (the HF Patch has them).
-2. Download `KK_HMaleWardrobe-<version>.zip` from the [releases](https://github.com/Jooj000/KK_HMaleWardrobe/releases) and unpack it over the game's folder (it puts `KK_HMaleWardrobe.dll` in `BepInEx\plugins\Joojkk\`).
+1. Download `KK_HMaleWardrobe-<version>.zip` from the [releases](https://github.com/Jooj000/KK_HMaleWardrobe/releases).
+2. Drop the `BepInEx` folder from the zip into the game's folder (the one with `Koikatu.exe`) and let it merge. That is all: the mod is one file, `BepInEx\plugins\Joojkk\KK_HMaleWardrobe.dll`, and it works from any folder under `BepInEx\plugins`.
+3. Start an H scene and press **F10**, or click the dress icon after hers.
+
+It needs BepInEx and KKAPI, which the HF Patch already has. To update, drop the new zip the same way.
 
 ## Configuration
 

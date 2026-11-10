@@ -20,24 +20,17 @@ This repository holds the four mods together (it is where they are developed and
 | Campus Saves | [Jooj000/KK_CampusSaves](https://github.com/Jooj000/KK_CampusSaves) | [README](src/KK_CampusSaves/README.md) · [CHANGELOG](src/KK_CampusSaves/CHANGELOG.md) |
 | H Male Wardrobe | [Jooj000/KK_HMaleWardrobe](https://github.com/Jooj000/KK_HMaleWardrobe) | [README](src/KK_HMaleWardrobe/README.md) · [CHANGELOG](src/KK_HMaleWardrobe/CHANGELOG.md) |
 
-Downloads are on each mod's Releases page. The single-mod repositories are exported from this one with `tools\split_repos.ps1`.
+## Installation
 
-## Requirements
-- Koikatsu with BepInEx 5.4.23+, KKAPI 1.45+ and ExtensibleSaveFormat (HF Patch has them).
-- The full list of required and optional mods, and what each plugin does with them: `DEPENDENCIES.md`.
-- Building: the Roslyn `csc.exe` of Visual Studio 2019 (the game runs on .NET 3.5 / Unity 5.6).
-
-## Building
-```
-powershell -ExecutionPolicy Bypass -File build.ps1 -Game "<Koikatsu folder>" [-Install]
-```
-`-Install` copies the DLLs and `data\` to `BepInEx\plugins\Joojkk\`. `-Only KK_CampusLife` builds just one (Campus Saves is built only this way: `-Only KK_CampusSaves`). `tools\package_release.ps1` makes the release zips.
+Download a mod's zip from its Releases page (links above) and drop the zip's `BepInEx` folder into the game's folder. Each mod is one DLL in `BepInEx\plugins\Joojkk\`; BepInEx and KKAPI come with the HF Patch. The optional mods each plugin can use: `DEPENDENCIES.md`.
 
 ## Layout
 - `src\` – the four plugins.
 - `tools\package_release.ps1` – builds the release zips, one per mod.
-- `data\` – files installed next to the DLLs.
-- `data\dialogue\*.dlg` – the dialogue written for Campus Life, each line with the options that answer it (built into the DLL).
+- `data\` – what Campus Life builds into its DLL: the dialogue, the painted backgrounds, the map photos, the default activity spots and the staff titles.
+- `data\dialogue\*.dlg` – the dialogue written for Campus Life, each line with the options that answer it.
+
+Only for changing the code: `build.ps1 -Game "<Koikatsu folder>"` compiles the DLLs with the Roslyn `csc.exe` of Visual Studio 2019 (.NET 3.5 / Unity 5.6) into `dist\`.
 
 ## Credits
 - Made by **Joojkk**.

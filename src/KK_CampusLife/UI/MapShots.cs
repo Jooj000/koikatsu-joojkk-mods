@@ -7,9 +7,9 @@ namespace Joojkk.CampusLife
 {
     /// <summary>
     /// Full-size pictures of each map for the loading screen (pixelated). The game only has small thumbnails of its maps.
-    /// The player takes the picture himself: he stands where he likes and presses "Take this map's photo" in the Alt+F7
-    /// window. His view is photographed without the characters, icons and rain, at 1920x1080, for the map and time of day
-    /// (day, evening, night) he is in, and kept in BepInEx\config\joojkk_campuslife\mapshots. The loading screen shows that
+    /// The mod ships photos of most maps inside its DLL. The player can take their own: stand where you like and press
+    /// "Take this map's photo" in the Alt+F7 window. The view is photographed without the characters, icons and rain, at
+    /// 1920x1080, for the map and time of day (day, evening, night), and kept in BepInEx\config\joojkk_campuslife\mapshots,
     /// folder (TestDir).
     /// </summary>
     internal static class MapShots
@@ -17,7 +17,6 @@ namespace Joojkk.CampusLife
         private const int W = 1920, H = 1080;
         private static readonly Dictionary<string, Texture2D> Cache = new Dictionary<string, Texture2D>();
 
-        /// it).</summary>
         internal static string TestDir;
 
         private static string UserDir { get { return Path.Combine(Path.Combine(BepInEx.Paths.ConfigPath, "joojkk_campuslife"), "mapshots"); } }
@@ -25,10 +24,12 @@ namespace Joojkk.CampusLife
 
         private static string FileFor(int map, int slot) { return Path.Combine(Dir, map + "_" + slot + ".jpg"); }
 
-        /// <summary>The photos that come with the mod, used when the player has not taken one.</summary>
-        private static string ShippedFor(int map, int slot) { return Path.Combine(Path.Combine(Path.Combine(BepInEx.Paths.PluginPath, "Joojkk"), "mapshots"), map + "_" + slot + ".jpg"); }
+        /// <summary>The photos that come with the mod (inside the DLL), used when the player has not taken one.</summary>
+        private const string ShippedFolder = "mapshots";
+        private static string ShippedName(int map, int slot) { return map + "_" + slot + ".jpg"; }
+        private static bool HasShipped(int map, int slot) { return Bundled.Has(ShippedFolder, ShippedName(map, slot)); }
 
-        internal static bool Shipped(int map, int slot) { return TestDir == null && File.Exists(ShippedFor(map, slot)); }
+        internal static bool Shipped(int map, int slot) { return TestDir == null && HasShipped(map, slot); }
 
         internal static readonly string[] SlotNames = { "day", "evening", "night" };
 
@@ -41,7 +42,7 @@ namespace Joojkk.CampusLife
                 : Camera.main == null ? "no camera" : null;
         }
 
-        /// <summary>Photographs his view for this map and time of day, over the old picture.</summary>
+        /// <summary>Photographs the player's view for this map and time of day, over the old picture.</summary>
         internal static string TakeHere()
         {
             try
@@ -56,14 +57,13 @@ namespace Joojkk.CampusLife
             catch (Exception e) { CampusLifePlugin.Log.LogDebug("Map picture: " + e.Message); return "The photo failed: " + e.Message; }
         }
 
-        /// slots of a map have a picture, his or shipped.</summary>
         internal static string SlotsOf(int map)
         {
             var o = new List<string>();
             for (var s = 0; s < 3; s++)
             {
-                if (File.Exists(Path.Combine(UserDir, map + "_" + s + ".jpg"))) o.Add(SlotNames[s] + " (his)");
-                else if (File.Exists(ShippedFor(map, s))) o.Add(SlotNames[s] + " (shipped)");
+                if (File.Exists(Path.Combine(UserDir, map + "_" + s + ".jpg"))) o.Add(SlotNames[s] + " (yours)");
+                else if (HasShipped(map, s)) o.Add(SlotNames[s] + " (shipped)");
             }
             return o.Count == 0 ? "none" : string.Join(", ", o.ToArray());
         }
@@ -164,7 +164,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The roaming maps with no photo of his (classrooms 1-1 and 3-1, the 1F girls' toilet) show the photo of a map
+        /// The roaming maps with no photo of their own (classrooms 1-1 and 3-1, the 1F girls' toilet) show the photo of a map
         /// built the same (classroom 2-1, the 2F toilet) until one of their own is taken.
         /// </summary>
         private static readonly Dictionary<int, int> Twins = new Dictionary<int, int> { { 5, 8 }, { 6, 8 }, { 7, 8 }, { 10, 9 }, { 11, 8 }, { 12, 9 }, { 13, 8 }, { 14, 15 } };
@@ -187,7 +187,7 @@ namespace Joojkk.CampusLife
             foreach (var s in slots)
             {
                 if (File.Exists(FileFor(map, s)) || File.Exists(Path.Combine(UserDir, map + "_" + s + ".jpg"))) return "your photo (" + SlotNames[s] + ")";
-                if (File.Exists(ShippedFor(map, s))) return "the mod's photo (" + SlotNames[s] + ")";
+                if (HasShipped(map, s)) return "the mod's photo (" + SlotNames[s] + ")";
             }
             return null;
         }
@@ -200,17 +200,21 @@ namespace Joojkk.CampusLife
             foreach (var s in slots)
             {
                 var path = FileFor(map, s);
-                // A test writes its pictures in its own folder, but reads his and the shipped ones too (never writing
-                // there), so a test's loading screen shows the pool as he sees it.
+                // A test writes its pictures in its own folder, but reads the player's and the shipped ones too (never
+                // writing there), so a test's loading screen shows the pool the player sees.
                 if (!File.Exists(path) && TestDir != null) path = Path.Combine(UserDir, map + "_" + s + ".jpg");
-                if (!File.Exists(path)) path = ShippedFor(map, s);
+                var onDisk = File.Exists(path);
+                if (!onDisk) path = "shipped:" + ShippedName(map, s);
                 Texture2D tex;
                 if (Cache.TryGetValue(path, out tex) && tex != null) return tex;
-                if (!File.Exists(path)) continue;
+                byte[] bytes = null;
+                try { bytes = onDisk ? File.ReadAllBytes(path) : Bundled.Read(ShippedFolder, ShippedName(map, s)); }
+                catch (Exception e) { CampusLifePlugin.Log.LogDebug("Map picture file " + path + ": " + e.Message); }
+                if (bytes == null) continue;
                 try
                 {
                     tex = new Texture2D(2, 2, TextureFormat.RGB24, true) { name = "cl_mapshot_" + map + "_" + s, wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Trilinear, anisoLevel = 4 };
-                    if (!tex.LoadImage(File.ReadAllBytes(path))) { UnityEngine.Object.Destroy(tex); continue; }
+                    if (!tex.LoadImage(bytes)) { UnityEngine.Object.Destroy(tex); continue; }
                     UnityEngine.Object.DontDestroyOnLoad(tex);
                     if (Cache.Count >= 6)
                     {

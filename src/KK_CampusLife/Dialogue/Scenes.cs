@@ -57,7 +57,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The next line is shown over this painted background (an id from BepInEx\plugins\Joojkk\backgrounds, or "map"
+        /// The next line is shown over this painted background (a painted background id, or "map"
         /// to see the map again). Missing pictures are skipped, so the scene still plays over the map.
         /// </summary>
         public SceneBuilder Bg(string id)

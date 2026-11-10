@@ -124,8 +124,10 @@ Dias bem jogados (3 conversas por dia, respostas boas), com o Ease padrão, méd
 
 ## Instalação
 
-1. BepInEx 5.4.23+ e KKAPI 1.45+ / ExtensibleSaveFormat (o HF Patch já tem).
-2. Descompacte o zip da release sobre a pasta do jogo (`KK_CampusLife.dll` vai para `BepInEx\plugins\Joojkk\`).
+1. Baixe o zip nas [releases](https://github.com/Jooj000/KK_CampusLife/releases).
+2. Solte a pasta `BepInEx` dele na pasta do jogo. O mod inteiro é um arquivo só, `BepInEx\plugins\Joojkk\KK_CampusLife.dll`.
 3. Modo história, **F7**.
+
+BepInEx e KKAPI vêm com o HF Patch.
 
 Os dados ficam dentro do save; tirar o mod deixa o save jogável.

@@ -9,7 +9,7 @@ namespace Joojkk.CampusLife
 {
     /// <summary>
     /// Backgrounds behind our event scenes: the game's own ADV pictures first ("@place", see <c>GamePlaces</c>), the mod's own
-    /// painted pictures (BepInEx\plugins\Joojkk\backgrounds\*.jpg) only where the game has none.
+    /// painted pictures (built into the DLL, see Bundled) only where the game has none.
     /// Uses the game's own ADV backdrop (<c>TextScenario.BGParam</c>, the one its BackGroundLoad command fills): the map is
     /// hidden and the picture is drawn by the backdrop camera. As in the game's story mode, a scene played in the talk
     /// screen (<see cref="Scenes.Staged"/>) keeps the girls posed in front of the picture, with the color mask on; a map
@@ -28,7 +28,8 @@ namespace Joojkk.CampusLife
         public static string ShownId { get { return _shownId; } }
         public static bool CharsHidden { get { return _cam != null; } }
 
-        private static string Dir { get { return Path.Combine(Path.Combine(Paths.PluginPath, "Joojkk"), "backgrounds"); } }
+        /// <summary>The painted backgrounds ship inside the DLL (<see cref="Bundled"/>).</summary>
+        private const string Folder = "backgrounds";
 
         /// <summary>
         /// The game's own ADV backdrops (abdatadvg), by place: day, evening and night picture. A scene asks for
@@ -126,7 +127,7 @@ namespace Joojkk.CampusLife
             if (string.IsNullOrEmpty(id)) return false;
             foreach (var one in id.Split('|'))
             {
-                if (one.StartsWith("@") ? GamePlaces.ContainsKey(one.Substring(1)) || StudioPlaces.ContainsKey(one.Substring(1)) : File.Exists(Path.Combine(Dir, one + ".jpg"))) return true;
+                if (one.StartsWith("@") ? GamePlaces.ContainsKey(one.Substring(1)) || StudioPlaces.ContainsKey(one.Substring(1)) : Bundled.Has(Folder, one + ".jpg")) return true;
             }
             return false;
         }
@@ -183,12 +184,12 @@ namespace Joojkk.CampusLife
             if (id.StartsWith("@")) return GetGame(id.Substring(1)) ?? GetStudio(id.Substring(1));
             Texture2D tex;
             if (Cache.TryGetValue(id, out tex) && tex != null) return tex;
-            var path = Path.Combine(Dir, id + ".jpg");
-            if (!File.Exists(path)) { CampusLifePlugin.Log.LogDebug("Event background missing: " + path); Cache[id] = null; return null; }
+            var bytes = Bundled.Read(Folder, id + ".jpg");
+            if (bytes == null) { CampusLifePlugin.Log.LogDebug("Event background missing: " + id); Cache[id] = null; return null; }
             try
             {
                 tex = new Texture2D(2, 2, TextureFormat.RGB24, true) { name = "cl_bg_" + id, wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Trilinear, anisoLevel = 4 };
-                if (!tex.LoadImage(File.ReadAllBytes(path))) { UnityEngine.Object.Destroy(tex); tex = null; }
+                if (!tex.LoadImage(bytes)) { UnityEngine.Object.Destroy(tex); tex = null; }
                 else UnityEngine.Object.DontDestroyOnLoad(tex);
             }
             catch (Exception e) { CampusLifePlugin.Log.LogWarning("Event background " + id + ": " + e.Message); tex = null; }

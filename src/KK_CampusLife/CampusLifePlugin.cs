@@ -24,7 +24,7 @@ namespace Joojkk.CampusLife
     {
         public const string GUID = "joojkk.campuslife";
         public const string PluginName = "Campus Life";
-        public const string Version = "3.6.0";
+        public const string Version = "3.6.1";
 
         internal static CampusLifePlugin Instance;
         internal static ManualLogSource Log;
@@ -69,6 +69,12 @@ namespace Joojkk.CampusLife
 #if DEBUG_TOOLS
             AutoTest.Init(gameObject);
 #endif
+        }
+
+        /// <summary>After every plugin's Awake, so the translator is ready to take the staff titles.</summary>
+        private void Start()
+        {
+            StaffTitles.Install();
         }
 
         /// <summary>After the game's own camera of the talk screen: the frame with both girls (TrioStage).</summary>

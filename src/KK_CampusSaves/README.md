@@ -4,6 +4,14 @@ One save slot per campus. The slot stays a normal Koikatsu save, and every save 
 
 Author: Joojkk.
 
+## Installation
+
+1. Download `KK_CampusSaves-<version>.zip` from the [releases](https://github.com/Jooj000/KK_CampusSaves/releases).
+2. Drop the `BepInEx` folder from the zip into the game's folder (the one with `Koikatu.exe`) and let it merge. That is all: the mod is one file, `BepInEx\plugins\Joojkk\KK_CampusSaves.dll`, and it works from any folder under `BepInEx\plugins`.
+3. Open Load or Save as usual, or press Ctrl+Shift+F6. Vaults live in `UserData\save\campus`.
+
+It needs BepInEx and KKAPI, which the HF Patch already has. To update, drop the new zip the same way.
+
 ## What it does
 
 - **Safe saving:** the game writes to a temporary file first, and the slot is replaced only when the new save is whole. A crash in the middle of a save leaves the old one.
@@ -32,8 +40,3 @@ Pictures exist from the moment this mod saves: imported saves show none, because
 
 Press Export saves first. Each version takes a slot at its full size again. The slots are normal saves and open without this mod; a save made during the day then opens the way the game opens any save, not at the saved moment.
 
-## Installation
-
-1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx) and [KKAPI 1.45.1+ / ExtensibleSaveFormat](https://github.com/IllusionMods/IllusionModdingAPI) (the HF Patch has them).
-2. Download `KK_CampusSaves-<version>.zip` from the [releases](https://github.com/Jooj000/KK_CampusSaves/releases) and unpack it over the game's folder (it puts `KK_CampusSaves.dll` in `BepInEx\plugins\Joojkk\`).
-3. Open Load or Save as usual, or press Ctrl+Shift+F6. Vaults live in `UserData\save\campus`.

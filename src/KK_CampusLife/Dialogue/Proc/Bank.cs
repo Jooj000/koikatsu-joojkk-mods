@@ -97,8 +97,8 @@ namespace Joojkk.CampusLife
             var over = 0;
             try
             {
-                var dir = Path.Combine(Path.Combine(BepInEx.Paths.PluginPath, "Joojkk"), "dialogue");
-                if (Directory.Exists(dir))
+                var dir = Bundled.DiskFolder("dialogue");
+                if (dir != null && Directory.Exists(dir))
                     foreach (var f in Directory.GetFiles(dir, "*.dlg")) { files[Path.GetFileNameWithoutExtension(f)] = File.ReadAllText(f, Encoding.UTF8); over++; }
             }
             catch (Exception e) { CampusLifePlugin.Log.LogWarning("Dialogue bank (folder): " + e.Message); }

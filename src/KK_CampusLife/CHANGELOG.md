@@ -2,6 +2,11 @@
 
 Until 2.5 the plugin's own version (`CampusLifePlugin.Version`) stayed at 2.0.0 and the numbers were the milestones of the combined repository. From 3.0.0 on the plugin carries the version itself; the milestones between 2.5 and 3.0 are numbered 2.6 to 2.9 below.
 
+## 3.6.1 (2026-11-09)
+- One DLL: the painted event backgrounds, the loading screen's map photos and the staff titles as a college are inside it, so installing is dropping the zip's `BepInEx` folder into the game and nothing else. It works from any folder under `BepInEx\plugins`.
+- The staff titles are written into XUnity.AutoTranslator's folder by the mod itself and reloaded at once (without the translator nothing changes).
+- The `backgrounds` and `mapshots` folders of 3.6.0 can stay or go: a picture in a folder next to the DLL still replaces the built-in one, and your own map photos in `BepInEx\config\joojkk_campuslife\mapshots` still win.
+
 ## 3.6.0 (2026-11-08), the first public release
 - Each kind of request has its own talk: your line, four options written for it and her answer to each, in her tone (they were the same four options with the title glued in).
 - She tells you one of her likes inside the story of her day, not as an extra line at the end.

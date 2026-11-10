@@ -9,12 +9,22 @@
 | | |
 |---|---|
 | GUID | `joojkk.campuslife` |
-| Version | 3.6.0 |
+| Version | 3.6.1 |
 | Game | Koikatu / Koikatsu Party, main game (story mode), HF Patch recommended |
 | Menu | **F7** |
 | Language | English (the XUnity AutoTranslator does not touch it) |
 
 **At a glance:** ~47k lines of C# · 37 dialogue files where each line is written with the options that answer it · six tones (gentle, energetic, cool, teasing, shy, proper) with 4+ versions of every line · 54 staged achievements plus a climb for every story heroine and professor.
+
+## Installation
+
+1. Download `KK_CampusLife-<version>.zip` from the [releases](https://github.com/Jooj000/KK_CampusLife/releases).
+2. Drop the `BepInEx` folder from the zip into the game's folder (the one with `Koikatu.exe`) and let it merge. That is all: the mod is one file, `BepInEx\plugins\Joojkk\KK_CampusLife.dll`, and it works from any folder under `BepInEx\plugins`.
+3. Start the story mode and press **F7**.
+
+It needs BepInEx and KKAPI, which the HF Patch already has. To update, drop the new zip the same way.
+
+Campus Life keeps its data inside your save (ExtensibleSaveFormat). Removing the mod leaves the save playable.
 
 ## Features
 
@@ -101,14 +111,6 @@ Well-played days (three talks a day, good answers), default Ease, averaged over 
 - A card saved as male is detected on its own, and the **male** folder shows next to **female** when you pick the class. He uses the boys' toilet, loses reputation in the girls' areas and catches girls who walk into the boys' toilet.
 - Lines **about him** say he/him/his and boyfriend; **his own** lines call himself a boyfriend or a guy; his voice and personality stay the same. His card says "Boyfriend".
 
-## Installation
-
-1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx) and [KKAPI 1.45+ / ExtensibleSaveFormat](https://github.com/IllusionMods/IllusionModdingAPI) (the HF Patch has them).
-2. Download `KK_CampusLife-<version>.zip` from the [releases](https://github.com/Jooj000/KK_CampusLife/releases) and unpack it over the game's folder. It puts `KK_CampusLife.dll`, the painted event backgrounds (`backgrounds`) and the loading-screen photos of every map (`mapshots`) in `BepInEx\plugins\Joojkk\`, and the staff titles as a college in `BepInEx\Translation\en\Text\`.
-3. Start the story mode and press **F7**.
-
-Campus Life keeps its data inside your save (ExtensibleSaveFormat). Removing the mod leaves the save playable.
-
 ## Optional mods
 
 Detected at run time, never required. Without them, every option, line or achievement about them is hidden.
@@ -128,10 +130,6 @@ Everything is in the F7 menu and in `BepInEx\config\joojkk.campuslife.cfg` (also
 
 - Harmony prefixes and postfixes only, every patch inside try/catch: on any error the game's own behaviour stays.
 - Works with the HF Patch's usual plugins (IllusionFixes, KK_Plugins, MaterialEditor, Sideloader).
-
-## Building from source
-
-See the [combined repository](https://github.com/Jooj000/koikatsu-joojkk-mods#building): `build.ps1` compiles with the Roslyn `csc.exe` of Visual Studio 2019 against the game's own DLLs (.NET 3.5 / Unity 5.6). The dialogue bank (`data\dialogue\*.dlg`) is built into the DLL.
 
 ## Changelog
 

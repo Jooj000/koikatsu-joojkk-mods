@@ -1,38 +1,27 @@
-# Builds the release DLLs and makes one zip per mod in dist\release, laid out to be unpacked over the game's folder
-# (BepInEx\plugins\Joojkk\...). Publishes nothing.
+# Builds the release DLLs and makes one zip per mod in dist\release. Each zip holds only BepInEx\plugins\Joojkk\<mod>.dll,
+# so it is unpacked straight over the game's folder. Publishes nothing.
 # Usage:  powershell -ExecutionPolicy Bypass -File tools\package_release.ps1 [-Mods KK_CampusLife,...]
 param([string[]]$Mods = @('KK_CampusLife', 'KK_SchoolOptimizer', 'KK_HMaleWardrobe', 'KK_CampusSaves'))
 
 $ErrorActionPreference = 'Stop'
+Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 & (Join-Path $root 'build.ps1')
 if ($Mods -contains 'KK_CampusSaves') { & (Join-Path $root 'build.ps1') -Only KK_CampusSaves }
 $out = Join-Path $root 'dist\release'
-if (Test-Path $out) { Remove-Item $out -Recurse -Force }
 New-Item -ItemType Directory -Force $out | Out-Null
+Get-ChildItem $out | Remove-Item -Recurse -Force
 
 foreach ($mod in $Mods) {
   $plugin = Get-ChildItem (Join-Path $root "src\$mod") -Filter '*Plugin.cs' | Select-Object -First 1
   $version = ([regex]::Match((Get-Content $plugin.FullName -Raw), 'Version = "([0-9.]+)"')).Groups[1].Value
   if (-not $version) { throw "No version in $($plugin.Name)" }
-  $stage = Join-Path $out "stage_$mod"
-  $dest = Join-Path $stage 'BepInEx\plugins\Joojkk'
-  New-Item -ItemType Directory -Force $dest | Out-Null
-  Copy-Item (Join-Path $root "dist\$mod.dll") $dest
-  if ($mod -eq 'KK_CampusLife') {
-    New-Item -ItemType Directory -Force (Join-Path $dest 'backgrounds') | Out-Null
-    Copy-Item (Join-Path $root 'data\backgrounds\*.jpg') (Join-Path $dest 'backgrounds')
-    # The map photos go in the zip; the activity points are already inside the DLL (spots_default.txt).
-    New-Item -ItemType Directory -Force (Join-Path $dest 'mapshots') | Out-Null
-    Copy-Item (Join-Path $root 'data\mapshots\*.jpg') (Join-Path $dest 'mapshots')
-    # The game's staff titles as a college (XUnity.AutoTranslator reads BepInEx\Translation\en\Text).
-    $tr = Join-Path $stage 'BepInEx\Translation\en\Text'
-    New-Item -ItemType Directory -Force $tr | Out-Null
-    Copy-Item (Join-Path $root 'data\translation\zzz_JoojkkCampus.txt') $tr
-  }
-  Copy-Item (Join-Path $root "src\$mod\README.md"), (Join-Path $root "src\$mod\CHANGELOG.md") $stage
+  # Everything the mod needs (Campus Life's backgrounds, map photos and staff titles too) is inside the DLL. The entry
+  # is written with forward slashes (Compress-Archive on Windows PowerShell writes backslashes, which some unzip tools
+  # take as part of the file name).
   $zip = Join-Path $out "$mod-$version.zip"
-  Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip
-  Remove-Item $stage -Recurse -Force
+  $archive = [System.IO.Compression.ZipFile]::Open($zip, [System.IO.Compression.ZipArchiveMode]::Create)
+  try { [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, (Join-Path $root "dist\$mod.dll"), "BepInEx/plugins/Joojkk/$mod.dll", [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null }
+  finally { $archive.Dispose() }
   Write-Host ("{0}  {1:0.0} MB" -f (Split-Path -Leaf $zip), ((Get-Item $zip).Length / 1MB))
 }

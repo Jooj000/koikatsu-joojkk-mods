@@ -12,6 +12,14 @@
 | Game | Koikatu / Koikatsu Party, main game (story mode) |
 | Works alone | Yes; Campus Life is not needed |
 
+## Installation
+
+1. Download `KK_SchoolOptimizer-<version>.zip` from the [releases](https://github.com/Jooj000/KK_SchoolOptimizer/releases).
+2. Drop the `BepInEx` folder from the zip into the game's folder (the one with `Koikatu.exe`) and let it merge. That is all: the mod is one file, `BepInEx\plugins\Joojkk\KK_SchoolOptimizer.dll`, and it works from any folder under `BepInEx\plugins`.
+3. Start the story mode. It works on its own from the first day.
+
+It needs BepInEx and KKAPI, which the HF Patch already has. To update, drop the new zip the same way.
+
 ## Features
 
 **Students**
@@ -41,11 +49,6 @@
 | KK_Plugins | Shared texture cache cleanup; accessory clothes bound back to their owner. |
 | KK_Pregnancy, KK_LewdCrestX | Their data kept when a student is parked off the map. |
 | KK_GameplayMod | Its higher student limit is respected. |
-
-## Installation
-
-1. Install [BepInEx 5.4.23+](https://github.com/BepInEx/BepInEx), [KKAPI 1.45+, ExtensibleSaveFormat and Sideloader](https://github.com/IllusionMods) (the HF Patch has them).
-2. Download `KK_SchoolOptimizer-<version>.zip` from the [releases](https://github.com/Jooj000/KK_SchoolOptimizer/releases) and unpack it over the game's folder (it puts `KK_SchoolOptimizer.dll` in `BepInEx\plugins\Joojkk\`).
 
 ## Configuration
 
