@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Joojkk.CampusLife
 {
-    /// <summary>Who says a line, for the optional TTS voice.</summary>
+    /// <summary>Who says a line, for the girl's game voice clip.</summary>
     internal sealed class VoiceTag
     {
         public string GirlKey = "";   // empty for player / narrator
