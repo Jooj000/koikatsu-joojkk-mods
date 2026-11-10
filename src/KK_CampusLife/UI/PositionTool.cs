@@ -41,6 +41,7 @@ namespace Joojkk.CampusLife
             }
         }
 
+        /// <summary>The mod's own spots: the ones placed with the Alt+F7 window, built into the DLL. The player's spots file still wins
         /// over them.</summary>
         private static Dictionary<string, Spot> Defaults
         {

@@ -484,7 +484,7 @@ namespace Joojkk.CampusLife
 
         /// <summary>
         /// The game's "is in the scene between two girls" (isLesbian) is only true for the partner (27), never for the one
-        /// who started it (26): the click that opens the H is on the partner ("she had already stopped" every time).
+        /// who started it (26): the click that opens the H is on the partner (so the starter always looked as if she had already stopped).
         /// </summary>
         private static IEnumerator JoinCo(NPC n, NPC other)
         {

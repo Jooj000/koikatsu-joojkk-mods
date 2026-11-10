@@ -4,7 +4,7 @@ BepInEx plugins for the Koikatsu main game (Koikatu / Koikatsu Party, HF Patch i
 
 | Plugin | GUID | What it does |
 |---|---|---|
-| **Campus Life** (`KK_CampusLife`) | `joojkk.campuslife` | School life on top of the story mode: a club board with requests girls tell you about, moods, gifts and a school store, activities and part-time jobs at real spots of the school (with the game's own animations), a new conversation (talk / romance / invitations pages), a social director (friendships, trust, gossip, jealousy), short stories, calendar events, story heroines walking around as students, girls voiced with clips from the game, a director that answers yes, wary yes, wary no or no by context, and male cards (he/him, boyfriend). Overview: [OVERVIEW.md](OVERVIEW.md) (Portuguese: [APRESENTACAO.pt-BR.md](APRESENTACAO.pt-BR.md)). Menu: **F7**. |
+| **Campus Life** (`KK_CampusLife`) | `joojkk.campuslife` | College life on top of the story mode: a director that plans every girl's day and answers yes, wary yes, wary no or no by context (touches, kisses, invitations, H), a new conversation in five icon categories where each option answers her last line, friendships, rivalries, gossip and real witnesses between the girls, a club board with requests, a campus store and gifts by her likes, activities and part-time jobs at real spots of the campus, professors and the nurse as staff, stories, calendar events and an achievement album, girls voiced with clips of their own game voice, and male cards (he/him, boyfriend). Overview: [OVERVIEW.md](OVERVIEW.md) (Portuguese: [APRESENTACAO.pt-BR.md](APRESENTACAO.pt-BR.md)). Menu: **F7**. |
 | **Campus Saves** (`KK_CampusSaves`) | `joojkk.campussaves` | One save slot per campus, a version vault that keeps old days in little space, saving in the middle of the day and smart autosaves. **Ctrl+F6**. |
 | **H Male Wardrobe** (`KK_HMaleWardrobe`) | `joojkk.hmalewardrobe` | Change the male character's outfit during H with a copy of the girl's outfit menu. **F10**. |
 | **School Optimizer** (`KK_SchoolOptimizer`) | `joojkk.schooloptimizer` | Fewer students loaded per period with priority for the important ones, memory guard, crowd avoidance, off-screen animation pause, hair and clothes physics by distance, background outfit changes, outfit texture size limit, and outside fixes for other mods (idle AmazingNewAccessoryLogic cameras, MaterialEditor texture size, hidden UncensorSelector parts) that cut video memory use, removal of character pieces left lying in the middle of the map, and (experimental, off) unloading students on other maps. |
@@ -37,7 +37,7 @@ powershell -ExecutionPolicy Bypass -File build.ps1 -Game "<Koikatsu folder>" [-I
 - `src\` – the four plugins.
 - `tools\package_release.ps1` – builds the release zips, one per mod.
 - `data\` – files installed next to the DLLs.
-- `DIALOGUES.md` – every line of dialogue written for Campus Life.
+- `data\dialogue\*.dlg` – the dialogue written for Campus Life, each line with the options that answer it (built into the DLL).
 
 ## Credits
 - Made by **Joojkk**.

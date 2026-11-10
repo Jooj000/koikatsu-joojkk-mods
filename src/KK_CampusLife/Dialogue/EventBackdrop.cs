@@ -33,7 +33,7 @@ namespace Joojkk.CampusLife
         /// <summary>
         /// The game's own ADV backdrops (abdatadvg), by place: day, evening and night picture. A scene asks for
         /// "@place" (or "@place|painted_id"): the game's picture comes first, the painted one only if the game's fails
-        /// (user's rule: "use the game's backgrounds by preference, mine are only an addition").
+        /// (the game's backgrounds come first; the painted ones are only an addition).
         /// </summary>
         private static readonly Dictionary<string, string[]> GamePlaces = new Dictionary<string, string[]>
         {

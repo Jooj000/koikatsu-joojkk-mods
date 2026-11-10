@@ -475,7 +475,7 @@ namespace Joojkk.CampusLife
                 if (have > 1f) extra = Mathf.Max(extra, need - have);
             }
             // Widen a little (all buttons alike); a label still too long goes on two lines and its card grows by a line
-            // ("the options that overflow the width get one more line of height"), so its text never runs out of the
+            // of height, so its text never runs out of the
             // button over the game's buttons beside the list.
             extra = Mathf.Clamp(extra, 0f, 140f);
             foreach (var x in items)

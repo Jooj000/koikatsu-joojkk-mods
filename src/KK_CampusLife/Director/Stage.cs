@@ -11,7 +11,7 @@ namespace Joojkk.CampusLife
 {
     /// <summary>
     /// The director's stage: the girls it holds stay where it wants them (the player's map), whatever the game's AI
-    /// draws. "the director controls 100% of the AI, so control the director": tests put the director at maximum weight
+    /// draws. The director controls the AI, so the stage controls the director: Max puts the director at maximum weight
     /// instead of calling girls who walk off again a minute later.
     /// <list type="bullet">
     /// <item>A held girl: every action the game draws for her (NextAction) becomes a calm one on the player's map

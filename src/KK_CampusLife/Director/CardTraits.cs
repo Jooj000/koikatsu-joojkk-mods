@@ -7,7 +7,7 @@ namespace Joojkk.CampusLife
 {
     /// <summary>
     /// The card's markers (ChaFileParameter.Attribute: easy, lewd, closet pervert, submissive, friendly, serious...) when
-    /// the player never really set them ('s cards have every marker "yes", so every girl was easy and lewd at once). With
+    /// the player never really set them (many cards have every marker "yes", so every girl was easy and lewd at once). With
     /// every marker yes, or every one no, the markers are ignored and drawn instead, once per girl and always the same for
     /// her (seeded by her key), weighted by her personality (its tone and how open or shy it is), her likes (the card's
     /// likes are kept as they are) and her card's refusals. A card with some yes and some no is used as it is. Only the

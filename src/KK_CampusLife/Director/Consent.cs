@@ -9,12 +9,12 @@ namespace Joojkk.CampusLife
     /// <summary>What a girl can be asked (or can ask you) in a conversation.</summary>
     internal enum Ask { Confess, H, Lunch, Club, GoHome, Date, Study, Exercise, KoiClub, Follow, Breakup, HoldHand }
 
-    /// <summary>How fast a girl opens up (the dialogue proposal's pace profile, read from her card).</summary>
+    /// <summary>How fast a girl opens up (her pace profile, read from her card).</summary>
     internal enum Pace { Reserved, Normal, Open }
 
     /// <summary>
-    /// The director answers for her ("the together, anger, accepting a confession, accepting H, accepting touch, etc., are
-    /// things the director must do; the game only executes afterwards if the director says so").
+    /// The director answers for her: going together, anger, accepting a confession, H or a touch are its decisions, and
+    /// the game only carries them out afterwards if the director says so.
     /// <list type="bullet">
     /// <item>Invitations, confession, date, H (Info.GetEventADV): the game's roll becomes the director's yes or no.
     /// Where the game has no "no" scene (a girlfriend's lunch, H in private), the conversation asks first and a no is
@@ -59,8 +59,7 @@ namespace Joojkk.CampusLife
         }
 
         /// <summary>
-        /// The pace multiplier ("little by little the reserved ones' multiplier must grow, and when dating, everyone's
-        /// goes up 0.1"): open 1.4, normal 1.0, reserved from 0.7 up to 1.0 with the days you spent with her and her
+        /// The pace multiplier: the reserved one's grows little by little, and dating adds 0.1 for everyone. Open 1.4, normal 1.0, reserved from 0.7 up to 1.0 with the days you spent with her and her
         /// trust; +0.1 while she is your girlfriend; then times the player's "Ease" option for her pace.
         /// </summary>
         public static float Multiplier(SaveData.Heroine h)
