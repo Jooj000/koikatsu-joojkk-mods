@@ -24,7 +24,7 @@ namespace Joojkk.CampusLife
     {
         public const string GUID = "joojkk.campuslife";
         public const string PluginName = "Campus Life";
-        public const string Version = "3.6.1";
+        public const string Version = "3.6.2";
 
         internal static CampusLifePlugin Instance;
         internal static ManualLogSource Log;
@@ -47,6 +47,8 @@ namespace Joojkk.CampusLife
                 RadarMap.Install(harmony);
                 try { Reactions.Install(harmony); }
                 catch (Exception e) { Log.LogWarning("Girls react as in the game: " + e.Message); }
+                try { StaffSeat.Install(harmony); }
+                catch (Exception e) { Log.LogWarning("Seated staff stay movable by the player: " + e.Message); }
                 try { Brain.Install(harmony); }
                 catch (Exception e) { Log.LogError(e); }
                 try { Intents.Install(harmony); }
@@ -123,6 +125,8 @@ namespace Joojkk.CampusLife
                     CafeteriaStore.Update();
                     SleepTease.Update();
                     StuckWatch.Update();
+                    StaffSeat.Tick();
+                    Teachers.WatchCamera();
                     TalkFirst.Update();
                     ClipboardWarm.Tick();
                 }

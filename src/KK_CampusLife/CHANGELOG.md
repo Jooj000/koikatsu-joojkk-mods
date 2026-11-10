@@ -2,6 +2,11 @@
 
 Until 2.5 the plugin's own version (`CampusLifePlugin.Version`) stayed at 2.0.0 and the numbers were the milestones of the combined repository. From 3.0.0 on the plugin carries the version itself; the milestones between 2.5 and 3.0 are numbered 2.6 to 2.9 below.
 
+## 3.6.2 (2026-11-09)
+- A teacher sitting at her desk (or standing at one of her staff spots) can no longer be pushed across the room by walking into her: while she is there she blocks the way like the game's own event teacher.
+- Teachers you have met but are not friends with yet talk to you when they are sitting at their desk or at one of their spots; they only say they are busy while walking somewhere.
+- After a talk the map could stay invisible (only the characters, over a black sky): if the camera is ever left drawing only the characters, the map comes back by itself within a second. Clicking a teacher again while her talk is opening is ignored instead of opening a second talk screen.
+
 ## 3.6.1 (2026-11-09)
 - One DLL: the painted event backgrounds, the loading screen's map photos and the staff titles as a college are inside it, so installing is dropping the zip's `BepInEx` folder into the game and nothing else. It works from any folder under `BepInEx\plugins`.
 - The staff titles are written into XUnity.AutoTranslator's folder by the mod itself and reloaded at once (without the translator nothing changes).

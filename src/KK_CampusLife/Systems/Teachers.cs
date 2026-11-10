@@ -129,19 +129,62 @@ namespace Joojkk.CampusLife
         {
             var h = chara != null ? chara.heroine : null;
             if (h == null || !h.isTeacher || !Campus.On || !Cfg.TeacherTalks.Value) return false;
-            var atEvent = chara is Fix;
+            // A second click while her talk is still opening would start a second talk screen on top of the first; that one
+            // would keep the first one's camera (characters only) as the map camera and give it back when it closed.
+            if (_talking || G.Act != null && G.Act.isEventNow) return true;
+            // Sitting at her desk or standing at one of her staff spots counts as her event spot: she has time.
+            var atEvent = chara is Fix || StaffSeat.Seated(chara as NPC);
+            _talking = true;
             CampusLifePlugin.Instance.StartCoroutine(TalkCo(chara, atEvent).PreventFromCrashing());
             return true;
         }
 
+        private static bool _talking;
+
         private static IEnumerator TalkCo(Base chara, bool atEvent)
         {
-            // The click came from the game's event start: wait until the map is free for our scene.
-            var t0 = Time.realtimeSinceStartup;
-            while (Time.realtimeSinceStartup - t0 < 5f && !Scenes.CanPlayOnMap) yield return null;
-            if (!Scenes.CanPlayOnMap) yield break;
-            try { Talk(chara, atEvent); }
-            catch (Exception e) { CampusLifePlugin.Log.LogError("Professor talk: " + e); }
+            try
+            {
+                // The click came from the game's event start: wait until the map is free for our scene.
+                var t0 = Time.realtimeSinceStartup;
+                while (Time.realtimeSinceStartup - t0 < 5f && !Scenes.CanPlayOnMap) yield return null;
+                if (!Scenes.CanPlayOnMap) yield break;
+                try { Talk(chara, atEvent); }
+                catch (Exception e) { CampusLifePlugin.Log.LogError("Professor talk: " + e); }
+                // Until everything it opened has closed.
+                t0 = Time.realtimeSinceStartup;
+                yield return null;
+                while (Time.realtimeSinceStartup - t0 < 900f && (Scenes.Running || G.TalkSceneOpen || G.Act != null && G.Act.isEventNow)) yield return null;
+            }
+            finally { _talking = false; }
+        }
+
+        private static int _goodMask;
+        private static float _badSince = -1f;
+
+        /// <summary>
+        /// The talk screen draws the map with a camera of its own and shows only the characters through the main one. If
+        /// that mask outlives the talk (two talk screens on top of each other would do it: the second keeps the first one's
+        /// mask as the one to give back), the map is gone: a black sky over the skybox's grey ground. Back on the map, a camera that
+        /// draws only the characters for a second gets the map's layers back.
+        /// </summary>
+        public static void WatchCamera()
+        {
+            if (Time.frameCount % 15 != 0) return;
+            try
+            {
+                var cam = Camera.main;
+                var chara = LayerMask.NameToLayer("Chara");
+                if (cam == null || chara < 0 || !G.IsFreeRoaming || G.TalkSceneOpen || Scenes.Running) { _badSince = -1f; return; }
+                if (cam.cullingMask != 1 << chara) { _goodMask = cam.cullingMask; _badSince = -1f; return; }
+                if (_goodMask == 0) return;
+                if (_badSince < 0f) { _badSince = Time.realtimeSinceStartup; return; }
+                if (Time.realtimeSinceStartup - _badSince < 1f) return;
+                cam.cullingMask = _goodMask;
+                _badSince = -1f;
+                CampusLifePlugin.Log.LogWarning("The map camera was left drawing only the characters after a talk; map layers restored");
+            }
+            catch (Exception e) { CampusLifePlugin.Log.LogDebug("Map camera watch: " + e.Message); }
         }
 
         private static int Stamp { get { return S.Day * 16 + (int)G.CurrentMask; } }
